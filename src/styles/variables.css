@@ -55,35 +55,35 @@
   --color-white: #ffffff;
   --color-black: #000000;
 
-  /* The main brand color — deep, trustworthy teal-green. */
+  /* Primary Brand */
   --color-primary: #128c7e;
   --color-primary-dark: #075e54;
-  /* Pressed state, one step below primary-dark. */
   --color-primary-darker: #064c44;
-  /* Bright green — accents, charts, highlights. Never large fills. */
   --color-primary-light: #25d366;
   --color-primary-soft: #e8f8f5;
-  /* Tints between soft and surface: nav hover, then icon-button hover. */
   --color-primary-subtle: #f1f8f7;
   --color-primary-soft-hover: #d7f3ee;
-  /* Border on secondary buttons and brand-tinted outlines. */
   --color-primary-border: #b7ded8;
 
+  /* Secondary & Accent */
   --color-secondary: #25d366;
   --color-accent: #34b7f1;
   --color-accent-soft: #eaf7fc;
+
 
   /* ----------------------------------------------------------- Neutrals */
   --color-background: #f8fafc;
   --color-surface: #ffffff;
   --color-surface-secondary: #f1f5f9;
+
   --color-border: #e2e8f0;
-  /* Input borders, chart neutrals, hovered card edges. */
   --color-border-strong: #cbd5e1;
 
+  /* Typography */
   --color-text-primary: #0f172a;
   --color-text-secondary: #475569;
-  --color-text-muted: #94a3b8;
+  --color-text-muted: #64748b;
+
 
   /* ------------------------------------------------------------- Status */
   --color-success: #16a34a;
@@ -103,15 +103,16 @@
   --color-info-soft: #dbeafe;
   --color-info-text: #1d4ed8;
 
+
   /* ------------------------------------------------------------- Charts */
-  /* Four series maximum; grid and neutral stay recessive. */
   --color-chart-1: #128c7e;
   --color-chart-2: #25d366;
   --color-chart-3: #34b7f1;
   --color-chart-neutral: #cbd5e1;
   --color-chart-grid: #e2e8f0;
 
-  /* -------------------------------------------------------- Landing page */
+
+  /* -------------------------------------------------------- Landing Page */
   --color-hero: #f8fffd;
 
   /* --------------------------------------------------------------- Radii */
