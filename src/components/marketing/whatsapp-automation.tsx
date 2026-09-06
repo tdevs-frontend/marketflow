@@ -1,10 +1,20 @@
-import { ArrowRight, Check, MessageCircle, TrendingUp, Workflow } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  MessageCircle,
+  TrendingUp,
+  Workflow,
+} from "lucide-react";
 
 import { ButtonLink } from "@/components/ui/button";
 import { APP_ROUTES } from "@/constants";
 import { WhatsAppPreview } from "./whatsapp-preview";
 
-const HIGHLIGHTS = ["Automated Follow-ups", "Personalized Messages", "Real-time Message Tracking"];
+const HIGHLIGHTS = [
+  "Automated Follow-ups",
+  "Personalized Messages",
+  "Real-time Message Tracking",
+];
 
 export function WhatsAppAutomation() {
   return (
@@ -15,12 +25,12 @@ export function WhatsAppAutomation() {
       {/* Soft brand bloom behind the product UI */}
       <div
         aria-hidden
-        className="pointer-events-none absolute top-1/2 right-[-16rem] -z-10 hidden size-[44rem] -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(37,211,102,0.18),transparent)] lg:block"
+        className="pointer-events-none absolute top-1/2 -right-64 -z-10 hidden size-176 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(37,211,102,0.18),transparent)] lg:block"
       />
 
       <div className="custom-container">
         <div className="grid items-center gap-14 lg:grid-cols-[45fr_55fr] lg:gap-16 xl:gap-20">
-          {/* ------------------------------------------------------- Message */}
+          {/* Message */}
           <div>
             <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 py-1.5 pr-4 pl-2.5 text-xs font-semibold tracking-[0.14em] text-white uppercase">
               <MessageCircle className="size-4 text-secondary" aria-hidden />
@@ -32,23 +42,35 @@ export function WhatsAppAutomation() {
               className="mt-6 text-3xl leading-[1.15] font-bold tracking-tight text-white text-balance sm:text-4xl lg:text-5xl"
             >
               Turn WhatsApp conversations into{" "}
-              <span className="text-secondary">automated customer journeys.</span>
+              <span className="text-secondary">
+                automated customer journeys.
+              </span>
             </h2>
 
-            <p className="mt-6 max-w-xl text-lg leading-[1.7] text-white/75 text-pretty">
-              Capture leads, send personalized messages, automate follow-ups and nurture customers
-              automatically — all from one powerful WhatsApp workspace.
+            <p className="mt-6  text-white/75 text-base leading-relaxed text-pretty sm:text-lg">
+              Capture leads, send personalized messages, automate follow-ups and
+              nurture customers automatically — all from one powerful WhatsApp
+              workspace.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <ButtonLink href={APP_ROUTES.whatsapp} variant="secondary" size="lg" className="group">
+              <ButtonLink
+                href={APP_ROUTES.whatsapp}
+                variant="secondary"
+                size="lg"
+                className="group"
+              >
                 WhatsApp Automation
                 <ArrowRight
                   className="transition-transform group-hover:translate-x-0.5"
                   aria-hidden
                 />
               </ButtonLink>
-              <ButtonLink href={APP_ROUTES.automation} variant="inverse" size="lg">
+              <ButtonLink
+                href={APP_ROUTES.automation}
+                variant="inverse"
+                size="lg"
+              >
                 <Workflow aria-hidden />
                 View Workflow
               </ButtonLink>
@@ -56,20 +78,23 @@ export function WhatsAppAutomation() {
 
             <ul className="mt-10 flex flex-col gap-3.5 sm:flex-row sm:flex-wrap sm:gap-x-7">
               {HIGHLIGHTS.map((item) => (
-                <li key={item} className="flex items-center gap-2.5 text-base text-white/85">
+                <li
+                  key={item}
+                  className="flex items-center gap-2.5 text-base text-white/85"
+                >
                   <span
                     aria-hidden
-                    className="grid size-5.5 shrink-0 place-items-center rounded-full bg-white/10 text-secondary"
+                    className="grid size-5 shrink-0 place-items-center rounded-full bg-white/10 text-secondary"
                   >
                     <Check className="size-3.5" strokeWidth={3} />
                   </span>
-                  <span className="font-medium">{item}</span>
+                  <span className="font-medium text-sm">{item}</span>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* ------------------------------------------------------- Product */}
+          {/* Product */}
           <div className="relative">
             <WhatsAppPreview />
 
@@ -82,7 +107,9 @@ export function WhatsAppAutomation() {
                 <span className="block text-xs leading-tight font-bold text-text-primary">
                   +124 Leads
                 </span>
-                <span className="block text-[11px] leading-tight text-text-muted">This week</span>
+                <span className="block text-[11px] leading-tight text-text-muted">
+                  This week
+                </span>
               </span>
             </div>
 

@@ -24,33 +24,43 @@
   }
 }
 
-/* Global Typography */
-body {
-  @apply font-sans antialiased;
-  background-color: var(--color-background);
-  color: var(--color-text-secondary);
-}
+/*
+ * Global typography.
+ *
+ * These MUST stay inside `@layer base`. Unlayered rules outrank every Tailwind
+ * layer, so an unlayered `h1..h6 { color }` silently beats `text-white`,
+ * `font-bold` and `tracking-*` on any heading.
+ */
+@layer base {
+  body {
+    @apply font-sans antialiased;
+    background-color: var(--color-background);
+    color: var(--color-text-secondary);
+  }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  @apply font-heading;
-  color: var(--color-text-primary);
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading;
+    color: var(--color-text-primary);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
 }
 
 /* Brand link treatment. Add `link-underline` for the left-to-right rule. */
-.link {
-  color: var(--color-primary);
-  transition: color var(--default-transition-duration) var(--default-transition-timing-function);
-}
+@layer components {
+  .link {
+    color: var(--color-primary);
+    transition: color var(--default-transition-duration) var(--default-transition-timing-function);
+  }
 
-.link:hover {
-  color: var(--color-primary-dark);
+  .link:hover {
+    color: var(--color-primary-dark);
+  }
 }
 
 @utility link-underline {

@@ -63,7 +63,13 @@ const METRICS: Metric[] = [
   { label: "Replies", value: "2,840", progress: "42%" },
 ];
 
-function Panel({ className, children }: { className?: string; children: React.ReactNode }) {
+function Panel({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) {
   return <div className={cn("bg-surface", className)}>{children}</div>;
 }
 
@@ -81,7 +87,9 @@ export function WhatsAppPreview() {
           <span className="size-2.5 rounded-full bg-border" />
           <span className="size-2.5 rounded-full bg-border" />
         </div>
-        <p className="text-xs font-semibold text-text-primary">WhatsApp workspace</p>
+        <p className="text-xs font-semibold text-text-primary">
+          WhatsApp workspace
+        </p>
         <span className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-primary-soft px-2.5 py-1 text-[11px] font-semibold text-primary-dark">
           <span className="relative flex size-1.5" aria-hidden>
             <span className="absolute inline-flex size-full animate-ping rounded-full bg-secondary opacity-75" />
@@ -92,7 +100,7 @@ export function WhatsAppPreview() {
       </div>
 
       <div className="grid gap-px bg-border sm:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
-        {/* ---------------------------------------------------- Conversation */}
+        {/* Conversation */}
         <Panel className="flex flex-col">
           <div className="flex items-center gap-3 border-b border-border px-4 py-3">
             <span className="relative">
@@ -108,9 +116,14 @@ export function WhatsAppPreview() {
               <span className="block truncate text-xs font-semibold text-text-primary">
                 Sarah Mitchell
               </span>
-              <span className="block text-[11px] text-text-muted">Online · Premium enquiry</span>
+              <span className="block text-[11px] text-text-muted">
+                Online · Premium enquiry
+              </span>
             </span>
-            <MoreVertical className="size-4 shrink-0 text-text-muted" aria-hidden />
+            <MoreVertical
+              className="size-4 shrink-0 text-text-muted"
+              aria-hidden
+            />
           </div>
 
           <div className="flex-1 space-y-3 px-4 py-4">
@@ -119,7 +132,10 @@ export function WhatsAppPreview() {
               return (
                 <div
                   key={index}
-                  className={cn("flex", business ? "justify-end" : "justify-start")}
+                  className={cn(
+                    "flex",
+                    business ? "justify-end" : "justify-start",
+                  )}
                 >
                   <div
                     className={cn(
@@ -138,7 +154,10 @@ export function WhatsAppPreview() {
                     >
                       {message.time}
                       {message.read ? (
-                        <CheckCheck className="size-3 text-accent" aria-hidden />
+                        <CheckCheck
+                          className="size-3 text-accent"
+                          aria-hidden
+                        />
                       ) : null}
                     </p>
                   </div>
@@ -156,7 +175,9 @@ export function WhatsAppPreview() {
                   <span className="block truncate text-xs font-semibold text-text-primary">
                     Product Brochure
                   </span>
-                  <span className="block text-[10px] text-text-muted">PDF · 2.4 MB</span>
+                  <span className="block text-[10px] text-text-muted">
+                    PDF · 2.4 MB
+                  </span>
                 </span>
                 <span className="text-[11px] font-semibold whitespace-nowrap text-primary">
                   Open →
@@ -168,7 +189,10 @@ export function WhatsAppPreview() {
           {/* Composer */}
           <div className="flex items-center gap-2 border-t border-border px-3 py-2.5">
             <Smile className="size-4 shrink-0 text-text-muted" aria-hidden />
-            <Paperclip className="size-4 shrink-0 text-text-muted" aria-hidden />
+            <Paperclip
+              className="size-4 shrink-0 text-text-muted"
+              aria-hidden
+            />
             <span className="flex-1 truncate rounded-full bg-surface-secondary px-3 py-1.5 text-[11px] text-text-muted">
               Type a message
             </span>
@@ -178,33 +202,43 @@ export function WhatsAppPreview() {
           </div>
         </Panel>
 
-        {/* ------------------------------------------------------- Automation */}
+        {/* 
+        
+        Automation */}
         <Panel className="flex flex-col">
           <div className="flex items-center justify-between gap-2 border-b border-border px-4 py-3">
             <span className="inline-flex items-center gap-2">
-              <span aria-hidden className="size-1.5 rounded-full bg-secondary" />
-              <span className="text-xs font-semibold text-text-primary">Automation Active</span>
+              <span
+                aria-hidden
+                className="size-1.5 rounded-full bg-secondary"
+              />
+              <span className="text-xs font-semibold text-text-primary">
+                Automation Active
+              </span>
             </span>
             <span className="text-[11px] text-text-muted">Premium flow</span>
           </div>
 
           <ol className="flex-1 space-y-0 px-4 py-4">
             {WORKFLOW.map((step, index) => (
-              <li key={step.label} className="relative flex gap-3 pb-4 last:pb-0">
+              <li
+                key={step.label}
+                className="relative flex gap-3 pb-5 last:pb-0"
+              >
                 {index < WORKFLOW.length - 1 ? (
                   <span
                     aria-hidden
-                    className="absolute top-7 left-[13px] h-[calc(100%-1.75rem)] w-px bg-border"
+                    className="absolute top-9 left-3.75 h-[calc(100%-2.25rem)] w-px bg-border"
                   />
                 ) : null}
-                <span className="relative grid size-7 shrink-0 place-items-center rounded-full border border-primary-border bg-primary-soft text-primary">
-                  <step.icon className="size-3.5" aria-hidden />
+                <span className="relative grid size-8 shrink-0 place-items-center rounded-full border border-primary-border bg-primary-soft text-primary">
+                  <step.icon className="size-4" aria-hidden />
                 </span>
-                <span className="min-w-0 pt-0.5">
-                  <span className="block truncate text-xs leading-tight font-semibold text-text-primary">
+                <span className="min-w-0 pt-1">
+                  <span className="block truncate text-sm leading-tight font-semibold text-text-primary">
                     {step.label}
                   </span>
-                  <span className="block truncate text-[11px] leading-tight text-text-muted">
+                  <span className="mt-0.5 block truncate text-xs leading-tight text-text-muted">
                     {step.detail}
                   </span>
                 </span>
@@ -214,7 +248,7 @@ export function WhatsAppPreview() {
         </Panel>
       </div>
 
-      {/* ---------------------------------------------------------- Analytics */}
+      {/* Analytics */}
       <div className="grid grid-cols-3 gap-px border-t border-border bg-border">
         {METRICS.map((metric) => (
           <div key={metric.label} className="bg-surface px-4 py-3.5">
@@ -228,7 +262,10 @@ export function WhatsAppPreview() {
               aria-hidden
               className="mt-2 block h-1 w-full overflow-hidden rounded-full bg-surface-secondary"
             >
-              <span className="block h-full rounded-full bg-primary" style={{ width: metric.progress }} />
+              <span
+                className="block h-full rounded-full bg-primary"
+                style={{ width: metric.progress }}
+              />
             </span>
           </div>
         ))}
