@@ -1,18 +1,15 @@
 import Link from "next/link";
 
 import { ButtonLink } from "@/components/ui/button";
+import { Logo } from "@/components/ui/logo";
 import { APP_ROUTES, marketingNav } from "@/constants";
-import { siteConfig } from "@/config/site";
 
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface/85 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-4">
-        <Link href={APP_ROUTES.home} className="flex items-center gap-2 font-heading text-base font-bold text-text-primary">
-          <span className="grid h-8 w-8 place-items-center rounded-btn bg-primary text-sm font-bold text-white">
-            M
-          </span>
-          {siteConfig.name}
+        <Link href={APP_ROUTES.home} className="inline-flex items-center">
+          <Logo height={32} priority />
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm md:flex">

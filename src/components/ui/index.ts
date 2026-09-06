@@ -4,4 +4,5 @@ export * from "./badge";
 export * from "./input";
 export * from "./empty-state";
 export * from "./icon";
+export * from "./logo";
 export * from "./brand-icon";

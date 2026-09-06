@@ -4,8 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Icon } from "@/components/ui/icon";
+import { Logo } from "@/components/ui/logo";
 import { APP_ROUTES, dashboardNav } from "@/constants";
-import { siteConfig } from "@/config/site";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { setMobileNavOpen } from "@/redux/features/ui/uiSlice";
 import { cn, isActiveRoute } from "@/lib/utils";
@@ -32,12 +32,9 @@ export function DashboardSidebar() {
           mobileNavOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="flex h-16 items-center gap-2 border-b border-border px-5 font-semibold">
-          <Link href={APP_ROUTES.dashboard} className="flex items-center gap-2">
-            <span className="grid h-8 w-8 place-items-center rounded-btn bg-primary text-sm font-bold text-white">
-              M
-            </span>
-            {siteConfig.name}
+        <div className="flex h-16 items-center border-b border-border px-5">
+          <Link href={APP_ROUTES.dashboard} className="inline-flex items-center">
+            <Logo height={30} priority />
           </Link>
         </div>
 

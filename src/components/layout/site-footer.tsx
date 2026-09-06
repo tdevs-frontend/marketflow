@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { BrandIcon } from "@/components/ui/brand-icon";
+import { Logo } from "@/components/ui/logo";
 import { APP_ROUTES, footerNav, footerSocials } from "@/constants";
 import { siteConfig } from "@/config/site";
 
@@ -18,14 +19,8 @@ export function SiteFooter() {
         <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[minmax(0,1.4fr)_repeat(5,minmax(0,1fr))]">
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-3 xl:col-span-1">
-            <Link
-              href={APP_ROUTES.home}
-              className="inline-flex items-center gap-2 font-heading text-base font-bold text-text-primary"
-            >
-              <span className="grid h-8 w-8 place-items-center rounded-btn bg-primary text-sm font-bold text-white">
-                M
-              </span>
-              {siteConfig.name}
+            <Link href={APP_ROUTES.home} className="inline-flex items-center">
+              <Logo height={32} />
             </Link>
 
             <p className="mt-5 max-w-sm text-sm font-medium text-text-primary text-balance">
