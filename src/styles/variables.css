@@ -1,0 +1,139 @@
+/**
+ * MarketFlow design tokens.
+ *
+ * 60-30-10: neutral surfaces carry the page, dark ink and borders give it
+ * structure, and the brand greens are spent only on CTAs, active state,
+ * key metrics, success and WhatsApp-specific surfaces.
+ */
+@theme {
+  --font-*: initial;
+  --breakpoint-*: initial;
+
+  /* ---------------------------------------------------------------- Type */
+  /* Headings — Lexend. Body — Inter. Both mapped from next/font variables. */
+  --font-heading: var(--font-lexend), "Lexend", system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-inter), "Inter", system-ui, -apple-system, sans-serif;
+
+  /* --------------------------------------------------------- Breakpoints */
+
+  /* Tiny Devices (very small phones, e.g., iPhone SE / 320px) */
+  --breakpoint-xxs: 20rem;
+
+  /* Extra Small Devices (small phones, e.g., 360px) */
+  --breakpoint-xsm: 22.5rem;
+
+  /* Small Devices (standard smartphones, e.g., 480px) */
+  --breakpoint-3xsm: 30rem;
+
+  /* Extra Small Devices (smaller smartphones, e.g., 576px) */
+  --breakpoint-xs: 36rem;
+
+  /* Small Devices (modern smartphones, e.g., 640px) */
+  --breakpoint-sm: 40rem;
+
+  /* Medium Devices (tablets, large phones in landscape, 768px) */
+  --breakpoint-md: 48rem;
+
+  /* Large Devices (tablets landscape, small laptops, 1024px) */
+  --breakpoint-lg: 64rem;
+
+  /* Extra Large Devices (laptops, desktops, 1280px) */
+  --breakpoint-xl: 80rem;
+
+  /* 2x Large Devices (large desktops, high-res monitors, 1536px) */
+  --breakpoint-2xl: 96rem;
+
+  /* 3x Large Devices (ultrawide monitors, TVs, 1600px) */
+  --breakpoint-3xl: 100rem;
+
+  /* 4x Large Devices (4K displays, TVs, 2560px) */
+  --breakpoint-4xl: 160rem;
+
+  /* -------------------------------------------------------------- Brand */
+  --color-current: currentColor;
+  --color-transparent: transparent;
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* The main brand color — deep, trustworthy teal-green. */
+  --color-primary: #128c7e;
+  --color-primary-dark: #075e54;
+  /* Pressed state, one step below primary-dark. */
+  --color-primary-darker: #064c44;
+  /* Bright green — accents, charts, highlights. Never large fills. */
+  --color-primary-light: #25d366;
+  --color-primary-soft: #e8f8f5;
+  /* Tints between soft and surface: nav hover, then icon-button hover. */
+  --color-primary-subtle: #f1f8f7;
+  --color-primary-soft-hover: #d7f3ee;
+  /* Border on secondary buttons and brand-tinted outlines. */
+  --color-primary-border: #b7ded8;
+
+  --color-secondary: #25d366;
+  --color-accent: #34b7f1;
+  --color-accent-soft: #eaf7fc;
+
+  /* ----------------------------------------------------------- Neutrals */
+  --color-background: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-secondary: #f1f5f9;
+  --color-border: #e2e8f0;
+  /* Input borders, chart neutrals, hovered card edges. */
+  --color-border-strong: #cbd5e1;
+
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+
+  /* ------------------------------------------------------------- Status */
+  --color-success: #16a34a;
+  --color-success-soft: #dcfce7;
+  --color-success-text: #15803d;
+
+  --color-warning: #f59e0b;
+  --color-warning-soft: #fef3c7;
+  --color-warning-text: #b45309;
+
+  --color-error: #dc2626;
+  --color-error-hover: #b91c1c;
+  --color-error-soft: #fee2e2;
+  --color-error-text: #b91c1c;
+
+  --color-info: #2563eb;
+  --color-info-soft: #dbeafe;
+  --color-info-text: #1d4ed8;
+
+  /* ------------------------------------------------------------- Charts */
+  /* Four series maximum; grid and neutral stay recessive. */
+  --color-chart-1: #128c7e;
+  --color-chart-2: #25d366;
+  --color-chart-3: #34b7f1;
+  --color-chart-neutral: #cbd5e1;
+  --color-chart-grid: #e2e8f0;
+
+  /* -------------------------------------------------------- Landing page */
+  --color-hero: #f8fffd;
+
+  /* --------------------------------------------------------------- Radii */
+  --radius-btn: 10px;
+  --radius-field: 10px;
+  /* Panels nested inside a card sit one step tighter than the card itself. */
+  --radius-panel: 12px;
+  --radius-card: 16px;
+
+  /* ------------------------------------------------------------ Shadows */
+  --shadow-card: 0 4px 20px rgba(15, 23, 42, 0.04);
+  --shadow-card-hover: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --shadow-btn: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-btn-hover: 0 6px 16px rgba(18, 140, 126, 0.18);
+  --shadow-float: 0 12px 32px rgba(15, 23, 42, 0.1);
+  /* Focus rings — brand by default, red on destructive controls. */
+  --shadow-focus: 0 0 0 3px rgba(18, 140, 126, 0.18);
+  --shadow-focus-field: 0 0 0 3px rgba(18, 140, 126, 0.1);
+  --shadow-focus-error: 0 0 0 3px rgba(220, 38, 38, 0.18);
+
+  /* --------------------------------------------------------- Motion base */
+  /* Every `transition-*` utility lands on the 200ms ease house style. */
+  --default-transition-duration: 200ms;
+  --default-transition-timing-function: ease;
+}

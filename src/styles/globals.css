@@ -1,0 +1,316 @@
+@import "tailwindcss";
+@import "./variables.css";
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-border, currentColor);
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  body {
+    @apply relative z-1;
+  }
+}
+
+/* Global Typography */
+body {
+  @apply font-sans antialiased;
+  background-color: var(--color-background);
+  color: var(--color-text-secondary);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-heading;
+  color: var(--color-text-primary);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* Brand link treatment. Add `link-underline` for the left-to-right rule. */
+.link {
+  color: var(--color-primary);
+  transition: color var(--default-transition-duration) var(--default-transition-timing-function);
+}
+
+.link:hover {
+  color: var(--color-primary-dark);
+}
+
+@utility link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  transition:
+    background-size 200ms ease,
+    color 200ms ease;
+
+  &:hover {
+    background-size: 100% 1px;
+  }
+}
+
+/* Landing hero ground: near-white with one soft brand bloom. */
+@utility hero-surface {
+  background-color: var(--color-hero);
+  background-image: radial-gradient(circle at 70% 30%, rgba(37, 211, 102, 0.1), transparent 45%);
+}
+
+/* Container */
+.custom-container {
+  @apply mx-auto max-sm:max-w-[90%] sm:max-w-135 md:max-w-180 lg:max-w-240 xl:max-w-285 2xl:max-w-300 3xl:max-w-330;
+}
+
+@utility webkit-box {
+  display: -webkit-box;
+}
+
+/* No Scrollbar */
+@utility no-scrollbar {
+
+  /* Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* Custom Scrollbar */
+@utility custom-scrollbar {
+  &::-webkit-scrollbar {
+    @apply size-1.5;
+  }
+
+  &::-webkit-scrollbar-track {
+    @apply rounded-full;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    @apply bg-gray-200 rounded-full;
+  }
+}
+
+/* Mobile menu open state */
+body.mobile-menu-show {
+  @apply overflow-hidden;
+}
+
+.mobile-menu {
+  @apply overflow-y-auto min-h-[calc(100dvh-60px)] pb-20;
+}
+
+.burger-menu {
+  @apply flex flex-col items-center gap-1.5 justify-center;
+}
+
+.burger-menu span {
+  @apply block w-6.5 h-0.5 bg-white transition-all duration-300 ease-[ease-in-out];
+}
+
+.burger-menu.active span:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.burger-menu.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.burger-menu.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Header sticky */
+@keyframes sticky {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Section Spacing */
+@layer utilities {
+  .section-space-py {
+    padding-block-start: clamp(3.75rem, 5vw + 1rem, 5rem);
+    padding-block-end: clamp(3.75rem, 5vw + 1rem, 5rem);
+  }
+
+  .section-space-pt {
+    padding-block-start: clamp(3.75rem, 5vw + 1rem, 5rem);
+  }
+
+  .section-space-pb {
+    padding-block-end: clamp(3.75rem, 5vw + 1rem, 5rem);
+  }
+
+  .section-title-space {
+    margin-bottom: 48px;
+  }
+
+  @media (max-width: 991px) {
+    .section-title-space {
+      margin-bottom: 44px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .section-title-space {
+      margin-bottom: 38px;
+    }
+  }
+}
+
+/* Popup Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes menuFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes menuFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.animate-menu-enter {
+  animation: menuFadeIn 0.25s ease-out;
+}
+
+.animate-menu-exit {
+  animation: menuFadeOut 0.25s ease-in forwards;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.3s ease-out;
+}
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+/* Floating hero cards */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float 8s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-float-slow {
+    animation: none;
+  }
+}
+
+/* Animation Delays */
+.delay-700 {
+  animation-delay: 700ms;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* NProgress Gradient Style */
+#nprogress .bar {
+  background: linear-gradient(
+    90deg,
+    var(--color-primary),
+    var(--color-secondary)
+  ) !important;
+  height: 2px !important;
+}
+
+/* make glow also gradient-ish */
+#nprogress .peg {
+  box-shadow:
+    0 0 10px var(--color-primary),
+    0 0 5px var(--color-secondary) !important;
+}
+
+/* Route preloader is visible only when site_preloader is "1" */
+html:not([data-site-preloader="1"]) #preloader {
+  display: none !important;
+}
