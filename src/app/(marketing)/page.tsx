@@ -1,6 +1,7 @@
 import {
   AnalyticsSection,
   HeroSection,
+  MultiChannelCampaign,
   PlatformOverview,
   TrustStats,
   WhatsAppAutomation,
@@ -14,6 +15,8 @@ export default function HomePage() {
       <PlatformOverview />
 
       <WhatsAppAutomation />
+
+      <MultiChannelCampaign />
 
       <AnalyticsSection />
 
