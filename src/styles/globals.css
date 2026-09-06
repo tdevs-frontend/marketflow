@@ -282,9 +282,25 @@ body.mobile-menu-show {
   animation-delay: 1s;
 }
 
+/* Connector flow: a dash travelling along an SVG path. */
+@keyframes flow {
+  from {
+    stroke-dashoffset: 28;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-flow {
+  animation: flow 2.4s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-float,
-  .animate-float-slow {
+  .animate-float-slow,
+  .animate-flow {
     animation: none;
   }
 }
