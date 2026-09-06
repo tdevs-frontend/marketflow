@@ -1,4 +1,4 @@
-import { HeroSection } from "@/components/marketing";
+import { HeroSection, TrustStats, WhatsAppAutomation } from "@/components/marketing";
 import { Card } from "@/components/ui/card";
 import { Icon } from "@/components/ui/icon";
 
@@ -45,6 +45,10 @@ export default function HomePage() {
         </div>
         </div>
       </section>
+
+      <WhatsAppAutomation />
+
+      <TrustStats />
     </>
   );
 }

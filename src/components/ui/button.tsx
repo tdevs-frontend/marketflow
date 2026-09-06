@@ -12,7 +12,8 @@ export type ButtonVariant =
   | "secondary"
   | "outline"
   | "ghost"
-  | "danger";
+  | "danger"
+  | "inverse";
 export type ButtonSize = "sm" | "md" | "lg" | "icon";
 
 /**
@@ -56,6 +57,17 @@ const VARIANTS: Record<ButtonVariant, string> = {
   ].join(" "),
   ghost:
     "bg-transparent text-primary hover:bg-primary-soft hover:text-primary-dark active:bg-primary-soft-hover",
+  /**
+   * For dark brand surfaces, where the ink is white rather than a token color.
+   * It exists as a variant instead of a `className` override because `cn()` is
+   * a plain join — an override would race the base variant in the stylesheet.
+   */
+  inverse: [
+    "border border-white/25 bg-transparent text-white",
+    "hover:-translate-y-px hover:border-white/45 hover:bg-white/10",
+    "active:translate-y-0 active:bg-white/15",
+    "focus-visible:shadow-[0_0_0_3px_rgba(255,255,255,0.3)]",
+  ].join(" "),
   danger: [
     "bg-error text-white shadow-btn focus-visible:shadow-focus-error",
     "hover:-translate-y-px hover:bg-error-hover hover:shadow-card-hover",
