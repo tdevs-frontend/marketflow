@@ -81,63 +81,58 @@ const JOURNEY: { label: string; icon: LucideIcon }[] = [
   { label: "Measure", icon: BarChart3 },
 ];
 
+type Side = "left" | "right";
+
 /**
- * Curves run from each module's centre to the dashboard's centre, so only the
- * span crossing the column gap is visible — the cards cover the rest. The
- * viewBox is percentage space with `preserveAspectRatio="none"`, which keeps
- * every endpoint anchored at any width; `non-scaling-stroke` stops the
- * hairlines stretching with it.
+ * Connectors are a bus, not a fan of curves: a hairline spine down each gutter,
+ * a stub from every card, and a port on the dashboard edge. Every piece is
+ * positioned off an element that already exists — the card, the rail, the
+ * dashboard — so the junctions are pixel-exact at any width instead of
+ * approximated in SVG percentage space.
  */
-const LEFT_ROWS = [17, 50, 83];
-const RIGHT_ROWS = [12.5, 37.5, 62.5, 87.5];
-
-function connectorPath(from: [number, number], to: [number, number]) {
-  const [x1, y1] = from;
-  const [x2, y2] = to;
-  const midX = (x1 + x2) / 2;
-  return `M${x1},${y1} C${midX},${y1} ${midX},${y2} ${x2},${y2}`;
-}
-
-function Connectors() {
-  const paths = [
-    ...LEFT_ROWS.map((y) => connectorPath([14, y], [50, 50])),
-    ...RIGHT_ROWS.map((y) => connectorPath([86, y], [50, 50])),
-  ];
-
+function CardConnector({ side }: { side: Side }) {
   return (
-    <svg
-      aria-hidden
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-      className="pointer-events-none absolute inset-0 hidden size-full lg:block"
-    >
-      {paths.map((d, index) => (
-        <g key={index} fill="none" vectorEffect="non-scaling-stroke">
-          <path
-            d={d}
-            stroke="var(--color-border-strong)"
-            strokeWidth="1"
-            vectorEffect="non-scaling-stroke"
-          />
-          <path
-            d={d}
-            stroke="var(--color-secondary)"
-            strokeWidth="1.5"
-            strokeDasharray="4 24"
-            strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
-            className="animate-flow"
-            style={{ animationDelay: `${index * 260}ms` }}
-          />
-        </g>
-      ))}
-    </svg>
+    <span aria-hidden className="pointer-events-none hidden lg:block">
+      <span
+        className={cn(
+          "absolute top-1/2 h-px w-6 -translate-y-1/2 bg-border-strong",
+          side === "left" ? "-right-6" : "-left-6",
+        )}
+      />
+      <span
+        className={cn(
+          "absolute top-1/2 size-1.5 -translate-y-1/2 rounded-full bg-border-strong",
+          side === "left" ? "-right-[27px]" : "-left-[27px]",
+        )}
+      />
+    </span>
   );
 }
 
-function ModuleCard({ module }: { module: Module }) {
+/** The port where a gutter meets the dashboard. */
+function DashboardPort({ side }: { side: Side }) {
+  return (
+    <span aria-hidden className="pointer-events-none hidden lg:block">
+      <span
+        className={cn(
+          "absolute top-1/2 h-px w-6 -translate-y-1/2 bg-border-strong",
+          side === "left" ? "-left-6" : "-right-6",
+        )}
+      />
+      <span
+        className={cn(
+          "absolute top-1/2 size-2 -translate-y-1/2 rounded-full bg-primary ring-4 ring-background",
+          side === "left" ? "-left-1" : "-right-1",
+        )}
+      />
+    </span>
+  );
+}
+
+function ModuleCard({ module, side }: { module: Module; side: Side }) {
   return (
     <article className="group relative rounded-card border border-border bg-surface p-4 shadow-card transition-all hover:-translate-y-0.5 hover:border-primary-border hover:shadow-card-hover">
+      <CardConnector side={side} />
       <div className="flex items-start gap-3">
         <span className="grid size-9 shrink-0 place-items-center rounded-btn bg-primary-soft text-primary transition-colors group-hover:bg-primary group-hover:text-white">
           <module.icon className="size-4" aria-hidden />
@@ -170,17 +165,27 @@ function FlowRail() {
 
 function ModuleRail({
   modules,
+  side,
   className,
 }: {
   modules: Module[];
+  side: Side;
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col justify-between", className)}>
+    <div className={cn("relative flex flex-col justify-between", className)}>
+      {/* Gutter spine, pulled in by roughly half a card so it starts and ends on a node. */}
+      <span
+        aria-hidden
+        className={cn(
+          "absolute inset-y-14 hidden w-px bg-border-strong lg:block",
+          side === "left" ? "-right-6" : "-left-6",
+        )}
+      />
       {modules.map((module, index) => (
-        <div key={module.title}>
+        <div key={module.title} className="relative">
           {index > 0 ? <FlowRail /> : null}
-          <ModuleCard module={module} />
+          <ModuleCard module={module} side={side} />
         </div>
       ))}
     </div>
@@ -228,33 +233,38 @@ export function PlatformOverview() {
         </header>
 
         {/* Command center */}
-        <div className="relative">
-          <Connectors />
+        <div className="mb-7 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+          <span className="text-[11px] font-semibold tracking-[0.14em] text-text-muted uppercase">
+            MarketFlow Command Center
+          </span>
+          <span aria-hidden className="hidden h-3.5 w-px bg-border sm:block" />
+          <span className="inline-flex items-center gap-2 text-[11px] font-medium text-primary">
+            <span className="relative flex size-1.5" aria-hidden>
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-secondary opacity-75" />
+              <span className="relative inline-flex size-1.5 rounded-full bg-secondary" />
+            </span>
+            All systems operational
+          </span>
+        </div>
 
-          <div className="relative grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2fr)_minmax(0,0.9fr)] lg:items-stretch lg:gap-8">
-            <ModuleRail
-              modules={INBOUND}
-              className="order-2 lg:order-1 lg:h-full"
-            />
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2fr)_minmax(0,0.9fr)] lg:items-stretch lg:gap-12">
+          <ModuleRail
+            modules={INBOUND}
+            side="left"
+            className="order-2 lg:order-1 lg:h-full"
+          />
 
-            <div className="order-1 lg:order-2">
-              <p className="mb-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center">
-                <span className="text-[11px] font-semibold tracking-[0.14em] text-text-muted uppercase">
-                  MarketFlow Command Center
-                </span>
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-primary">
-                  <span className="relative flex size-1.5" aria-hidden>
-                    <span className="absolute inline-flex size-full animate-ping rounded-full bg-secondary opacity-75" />
-                    <span className="relative inline-flex size-1.5 rounded-full bg-secondary" />
-                  </span>
-                  All systems operational
-                </span>
-              </p>
-              <PlatformDashboard />
-            </div>
-
-            <ModuleRail modules={OUTBOUND} className="order-3 lg:h-full" />
+          <div className="relative order-1 lg:order-2">
+            <DashboardPort side="left" />
+            <DashboardPort side="right" />
+            <PlatformDashboard />
           </div>
+
+          <ModuleRail
+            modules={OUTBOUND}
+            side="right"
+            className="order-3 lg:h-full"
+          />
         </div>
 
         {/* Journey */}
