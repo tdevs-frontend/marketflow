@@ -1,4 +1,10 @@
-import { HeroSection, PlatformOverview, TrustStats, WhatsAppAutomation } from "@/components/marketing";
+import {
+  AnalyticsSection,
+  HeroSection,
+  PlatformOverview,
+  TrustStats,
+  WhatsAppAutomation,
+} from "@/components/marketing";
 
 export default function HomePage() {
   return (
@@ -8,6 +14,8 @@ export default function HomePage() {
       <PlatformOverview />
 
       <WhatsAppAutomation />
+
+      <AnalyticsSection />
 
       <TrustStats />
     </>

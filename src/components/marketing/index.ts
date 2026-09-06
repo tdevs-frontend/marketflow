@@ -4,5 +4,7 @@ export * from "./platform-overview";
 export * from "./platform-dashboard";
 export * from "./whatsapp-automation";
 export * from "./whatsapp-preview";
+export * from "./analytics-section";
+export * from "./analytics-dashboard";
 export * from "./trust-stats";
 export * from "./stat-value";
