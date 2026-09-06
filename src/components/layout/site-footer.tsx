@@ -14,8 +14,9 @@ const FOOTER_LINKS = [
 export function SiteFooter() {
   return (
     <footer className="border-t border-border bg-background">
+      <div className="custom-container mx-auto">
       {/* Footer main */}
-      <div className="mx-auto max-w-6xl px-4 py-14 sm:py-16">
+      <div className="px-4 py-14 sm:py-16">
         <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[minmax(0,1.4fr)_repeat(5,minmax(0,1fr))]">
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-3 xl:col-span-1">
@@ -52,7 +53,7 @@ export function SiteFooter() {
             <nav key={column.title} aria-labelledby={`footer-${column.title.toLowerCase()}`}>
               <h2
                 id={`footer-${column.title.toLowerCase()}`}
-                className="text-[11px] font-semibold uppercase tracking-[0.08em] text-text-primary"
+                className="text-sm font-semibold uppercase text-text-primary"
               >
                 {column.title}
               </h2>
@@ -75,7 +76,7 @@ export function SiteFooter() {
 
       {/* Footer bottom */}
       <div className="border-t border-border">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 py-8 text-sm text-text-muted sm:flex-row">
+        <div className="flex flex-col items-center justify-between gap-4 px-4 py-8 text-sm text-text-muted sm:flex-row">
           <p>
             © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
           </p>
@@ -87,6 +88,7 @@ export function SiteFooter() {
             ))}
           </nav>
         </div>
+      </div>
       </div>
     </footer>
   );

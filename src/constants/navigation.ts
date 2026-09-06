@@ -12,9 +12,31 @@ export interface NavSection {
 }
 
 export const marketingNav: NavItem[] = [
-  { title: "Home", href: "/", icon: "home" },
-  { title: "Features", href: "/features", icon: "sparkles" },
-  { title: "Pricing", href: "/pricing", icon: "tag" },
+  {
+    title: "Home",
+    href: "/",
+    icon: "home",
+  },
+  {
+    title: "Features",
+    href: "/features",
+    icon: "sparkles",
+  },
+  {
+    title: "Solutions",
+    href: "/solutions",
+    icon: "briefcase",
+  },
+  {
+    title: "Pricing",
+    href: "/pricing",
+    icon: "tag",
+  },
+  {
+    title: "Resources",
+    href: "/resources",
+    icon: "book-open",
+  },
 ];
 
 export const dashboardNav: NavSection[] = [

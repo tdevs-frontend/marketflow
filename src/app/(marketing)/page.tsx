@@ -30,7 +30,8 @@ export default function HomePage() {
     <>
       <HeroSection />
 
-      <section className="mx-auto max-w-6xl px-4 py-24">
+      <section className="py-24">
+        <div className="custom-container">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {HIGHLIGHTS.map((item) => (
             <Card key={item.title} className="p-6" interactive>
@@ -41,6 +42,7 @@ export default function HomePage() {
               <p className="mt-2 text-sm text-text-secondary">{item.body}</p>
             </Card>
           ))}
+        </div>
         </div>
       </section>
     </>

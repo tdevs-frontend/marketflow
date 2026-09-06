@@ -7,7 +7,7 @@ import { APP_ROUTES, marketingNav } from "@/constants";
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface/85 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-4">
+      <div className="custom-container mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-4">
         <Link href={APP_ROUTES.home} className="inline-flex items-center">
           <Logo height={32} priority />
         </Link>
