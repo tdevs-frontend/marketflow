@@ -2,11 +2,9 @@ import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/site";
-
-/** Intrinsic size of `public/marketflow-logo.svg` — mark plus wordmark. */
-const SRC = "/marketflow-logo.svg";
-const INTRINSIC = { width: 2172, height: 700 };
-const RATIO = INTRINSIC.width / INTRINSIC.height;
+// Static import so the intrinsic size follows the artwork — swap the file and
+// the aspect ratio updates itself.
+import logo from "../../../public/marketflow-logo.svg";
 
 export function Logo({
   height = 32,
@@ -20,9 +18,9 @@ export function Logo({
 }) {
   return (
     <Image
-      src={SRC}
+      src={logo}
       alt={siteConfig.name}
-      width={Math.round(height * RATIO)}
+      width={Math.round((height * logo.width) / logo.height)}
       height={height}
       priority={priority}
       className={cn("w-auto", className)}
