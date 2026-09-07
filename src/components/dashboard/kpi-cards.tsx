@@ -5,7 +5,7 @@ import {
   ArrowUpRight,
   DollarSign,
   MessageCircle,
-  Target,
+  ShoppingCart,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -46,12 +46,12 @@ const KPIS: Kpi[] = [
     trend: [380, 420, 510, 490, 620, 710, 790, 880],
   },
   {
-    key: "conversion",
-    label: "Conversion Rate",
-    value: "24.8%",
-    changePercent: 8.2,
-    icon: Target,
-    trend: [19.2, 20.1, 19.8, 21.4, 22.2, 23.1, 24.0, 24.8],
+    key: "orders",
+    label: "Orders",
+    value: "1,284",
+    changePercent: 16.8,
+    icon: ShoppingCart,
+    trend: [118, 142, 136, 168, 186, 214, 226, 230],
   },
   {
     key: "revenue",

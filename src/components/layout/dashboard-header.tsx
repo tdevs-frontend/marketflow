@@ -42,12 +42,13 @@ export function DashboardHeader() {
           {unread > 0 ? (
             /* Ringed in the button's own grey, so the dot reads as a badge on
                the control rather than a white hole punched through it. */
-            <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-secondary ring-2 ring-surface-secondary" />
+            <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-secondary ring-2 ring-gray-soft" />
           ) : null}
         </IconButton>
 
-        <div className="flex h-10 items-center gap-2 rounded-btn bg-surface-secondary pr-1.5 pl-1.5 sm:pr-3">
-          <span className="grid size-7 place-items-center rounded-full border border-border-strong bg-surface text-[11px] font-bold text-text-primary">
+        {/* No pill behind the whole chip — only the initials carry the grey. */}
+        <div className="flex h-10 items-center gap-2">
+          <span className="grid size-8 place-items-center rounded-full bg-gray text-xs font-bold text-gray-ink">
             {initials(firstName, lastName)}
           </span>
           <span className="hidden text-sm font-medium text-text-primary sm:block">

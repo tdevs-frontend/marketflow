@@ -107,6 +107,20 @@
   --color-border: #e2e8f0;
   --color-border-strong: #cbd5e1;
 
+  /*
+   * True grey — equal parts, no blue cast.
+   *
+   * The surface and border ramp above is slate: #f1f5f9 and #cbd5e1 lean cool
+   * and sit with the brand teal on purpose. These are for chrome that should
+   * read as plain grey and nothing else — the header's toolbar buttons and the
+   * avatar chip. Keep the two ramps apart; mixing them is what makes a grey
+   * look faintly blue next to a real one.
+   */
+  --color-gray-soft: #f5f5f5;
+  --color-gray: #e5e5e5;
+  --color-gray-strong: #d4d4d4;
+  --color-gray-ink: #525252;
+
   /* Typography */
   /* --color-text-primary: #121420; */
   /* --color-text-primary: #10243a;

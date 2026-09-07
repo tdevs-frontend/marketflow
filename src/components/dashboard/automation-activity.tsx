@@ -1,8 +1,9 @@
 import {
-  MessageCircle,
-  UserCheck,
-  UserPlus,
   CheckCircle2,
+  MessageCircle,
+  Package,
+  Send,
+  UserPlus,
   type LucideIcon,
 } from "lucide-react";
 
@@ -23,6 +24,12 @@ interface ActivityItem {
   tone: string;
 }
 
+/**
+ * Read top to bottom this is one customer's whole journey — Sarah is captured,
+ * messaged, asks about a product, orders it, and gets a post-purchase
+ * follow-up. That is the lifecycle the rest of the dashboard measures, shown
+ * happening.
+ */
 const ACTIVITY: ActivityItem[] = [
   {
     title: "New lead captured",
@@ -39,18 +46,25 @@ const ACTIVITY: ActivityItem[] = [
     tone: "bg-primary-soft text-primary",
   },
   {
-    title: "Follow-up completed",
-    detail: "Product Inquiry Flow",
+    title: "Product inquiry received",
+    detail: "Sarah asked about Premium Package",
+    time: "12 min ago",
+    icon: Package,
+    tone: "bg-info-soft text-info-text",
+  },
+  {
+    title: "Order completed",
+    detail: "Order #MF-10248 → Premium Package",
     time: "15 min ago",
     icon: CheckCircle2,
     tone: "bg-success-soft text-success-text",
   },
   {
-    title: "Lead assigned",
-    detail: "John Smith → Sales Team",
+    title: "Follow-up sent",
+    detail: "Post Purchase Flow → Customer",
     time: "21 min ago",
-    icon: UserCheck,
-    tone: "bg-surface-secondary text-text-secondary",
+    icon: Send,
+    tone: "bg-gray text-gray-ink",
   },
 ];
 
@@ -79,40 +93,46 @@ export function AutomationActivity({ className }: { className?: string }) {
         </ButtonLink>
       </div>
 
-      <ol className="mt-5">
+      {/*
+       * One line per event at `sm` and up. In a two-column card a stacked
+       * timeline would run five items well past the height of the funnel
+       * beside it; aligning title, detail and time into columns keeps the card
+       * short and makes the sequence scannable.
+       */}
+      <ol className="mt-4">
         {ACTIVITY.map((item, index) => {
           const ItemIcon = item.icon;
           const last = index === ACTIVITY.length - 1;
 
           return (
-            <li key={item.title} className="relative flex gap-3.5 pb-5 last:pb-0">
+            <li key={item.title} className="relative flex gap-3.5 pb-4 last:pb-0">
               {/* The rail stops at the last marker rather than trailing past it. */}
               {last ? null : (
                 <span
                   aria-hidden
-                  className="absolute top-9 bottom-1 left-[1.0625rem] w-px bg-border"
+                  className="absolute top-9 bottom-0 left-4.25 w-px bg-border"
                 />
               )}
 
               <span
                 className={cn(
-                  "relative grid size-[2.125rem] shrink-0 place-items-center rounded-full",
+                  "grid size-8.5 shrink-0 place-items-center rounded-full",
                   item.tone,
                 )}
               >
                 <ItemIcon className="size-4" aria-hidden />
               </span>
 
-              <div className="min-w-0 flex-1 pt-1">
-                <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
-                  <p className="text-sm font-medium text-text-primary">{item.title}</p>
-                  <span className="shrink-0 text-[11px] text-text-muted">
-                    {item.time}
-                  </span>
-                </div>
-                <p className="mt-0.5 truncate text-[13px] text-text-secondary">
+              <div className="flex min-w-0 flex-1 flex-col gap-x-4 gap-y-0.5 pt-1.5 sm:flex-row sm:items-baseline">
+                <p className="text-sm font-medium text-text-primary sm:w-52 sm:shrink-0">
+                  {item.title}
+                </p>
+                <p className="min-w-0 flex-1 truncate text-[13px] text-text-secondary">
                   {item.detail}
                 </p>
+                <span className="shrink-0 text-[11px] text-text-muted">
+                  {item.time}
+                </span>
               </div>
             </li>
           );

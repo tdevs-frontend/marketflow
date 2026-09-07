@@ -6,6 +6,8 @@ export const APP_ROUTES = {
   register: "/register",
   forgotPassword: "/forgot-password",
   dashboard: "/dashboard",
+  products: "/dashboard/products",
+  orders: "/dashboard/orders",
   contacts: "/dashboard/contacts",
   leads: "/dashboard/leads",
   campaigns: "/dashboard/campaigns",

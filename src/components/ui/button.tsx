@@ -166,7 +166,7 @@ export function ButtonLink({
  * CTA, and two green controls in one row leave nothing for the eye to pick.
  */
 const TOOLBAR =
-  "bg-surface-secondary text-text-secondary hover:bg-border hover:text-text-primary active:bg-border-strong/60";
+  "bg-gray-soft text-gray-ink hover:bg-gray hover:text-text-primary active:bg-gray-strong";
 
 /* `compact` has no entry: IconButton's `md` is already the 40px control. */
 const ICON_SIZES: Record<Exclude<ButtonSize, "icon" | "compact">, string> = {

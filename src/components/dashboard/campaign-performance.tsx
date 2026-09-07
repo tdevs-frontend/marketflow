@@ -18,19 +18,23 @@ interface Campaign {
   name: string;
   reach: number;
   engagement: number;
-  conversions: number;
+  orders: number;
   revenue: number;
 }
 
+/**
+ * Placeholder figures, but they close the loop with the KPI row: the four
+ * campaigns account for exactly 1,284 orders and $48,200 of revenue, so
+ * "which campaign drove the month" has an answer that adds up.
+ */
 const CAMPAIGNS: Campaign[] = [
-  { name: "Summer Sale", reach: 24580, engagement: 8420, conversions: 2064, revenue: 18240 },
-  { name: "Product Launch", reach: 18240, engagement: 6180, conversions: 1258, revenue: 14820 },
-  { name: "Lead Nurture", reach: 14120, engagement: 4890, conversions: 790, revenue: 9640 },
-  { name: "Re-engagement", reach: 9480, engagement: 2940, conversions: 389, revenue: 5120 },
-  { name: "Welcome Campaign", reach: 6240, engagement: 2180, conversions: 212, revenue: 3480 },
+  { name: "Summer Sale", reach: 24580, engagement: 8420, orders: 468, revenue: 18240 },
+  { name: "Product Launch", reach: 18240, engagement: 6180, orders: 342, revenue: 14820 },
+  { name: "Lead Nurture", reach: 14120, engagement: 4890, orders: 268, revenue: 9640 },
+  { name: "Re-engagement", reach: 9480, engagement: 2940, orders: 206, revenue: 5500 },
 ];
 
-type TabKey = "engagement" | "conversions" | "revenue";
+type TabKey = "engagement" | "orders" | "revenue";
 
 const TABS: {
   value: TabKey;
@@ -39,16 +43,27 @@ const TABS: {
   seriesName: string;
 }[] = [
   { value: "engagement", label: "Engagement", format: "number", seriesName: "Engaged" },
-  { value: "conversions", label: "Conversion", format: "number", seriesName: "Conversions" },
+  { value: "orders", label: "Conversions", format: "number", seriesName: "Orders" },
   { value: "revenue", label: "Revenue", format: "currency", seriesName: "Revenue" },
 ];
+
+const TOTALS = {
+  reach: CAMPAIGNS.reduce((sum, c) => sum + c.reach, 0),
+  orders: CAMPAIGNS.reduce((sum, c) => sum + c.orders, 0),
+  revenue: CAMPAIGNS.reduce((sum, c) => sum + c.revenue, 0),
+};
 
 /* -------------------------------------------------------------------------- */
 /* Section                                                                    */
 /* -------------------------------------------------------------------------- */
 
 export function CampaignPerformance({ className }: { className?: string }) {
-  const [tab, setTab] = useState<TabKey>("engagement");
+  /*
+   * Opens on Revenue, not the first tab. Now that MarketFlow sells products,
+   * "are my campaigns making money" is the question this card exists to
+   * answer, and it should not take a click to see it.
+   */
+  const [tab, setTab] = useState<TabKey>("revenue");
 
   const active = TABS.find((item) => item.value === tab) ?? TABS[0];
 
@@ -56,21 +71,13 @@ export function CampaignPerformance({ className }: { className?: string }) {
      whichever measure is selected. */
   const ordered = [...CAMPAIGNS].sort((a, b) => b[tab] - a[tab]);
 
-  /*
-   * Exact, not `formatNumber`: that compacts above 10k, which would print
-   * "73K" beside "4,713" and "$51,300" in the same row of three.
-   */
-  const totalReach = CAMPAIGNS.reduce((sum, c) => sum + c.reach, 0).toLocaleString("en-US");
-  const totalConversions = CAMPAIGNS.reduce((sum, c) => sum + c.conversions, 0).toLocaleString("en-US");
-  const totalRevenue = formatCurrency(CAMPAIGNS.reduce((sum, c) => sum + c.revenue, 0));
-
   return (
     <Card className={cn("flex flex-col p-5", className)}>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h2 className="text-base">Campaign Performance</h2>
           <p className="mt-1 text-sm text-text-secondary">
-            Compare campaign engagement and conversion performance.
+            See which campaigns are driving engagement and sales.
           </p>
         </div>
 
@@ -101,33 +108,24 @@ export function CampaignPerformance({ className }: { className?: string }) {
         />
       </div>
 
-      {/* Totals the bars cannot show: the chart answers "which campaign", these
-          answer "how are all of them doing". */}
+      {/* Totals the bars cannot show: the chart answers "which campaign",
+          these answer "how are all of them doing". Exact, not compacted, so
+          the three read as one row. */}
       <dl className="mt-4 grid grid-cols-3 gap-4 border-t border-border pt-4">
-        <div>
-          <dt className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
-            Total reach
-          </dt>
-          <dd className="mt-1 text-sm font-bold text-text-primary">
-            {totalReach}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
-            Conversions
-          </dt>
-          <dd className="mt-1 text-sm font-bold text-text-primary">
-            {totalConversions}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
-            Revenue
-          </dt>
-          <dd className="mt-1 text-sm font-bold text-text-primary">
-            {totalRevenue}
-          </dd>
-        </div>
+        {[
+          { label: "Total reach", value: TOTALS.reach.toLocaleString("en-US") },
+          { label: "Orders", value: TOTALS.orders.toLocaleString("en-US") },
+          { label: "Revenue", value: formatCurrency(TOTALS.revenue) },
+        ].map((total) => (
+          <div key={total.label}>
+            <dt className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+              {total.label}
+            </dt>
+            <dd className="mt-1 text-sm font-bold text-text-primary tabular-nums">
+              {total.value}
+            </dd>
+          </div>
+        ))}
       </dl>
     </Card>
   );

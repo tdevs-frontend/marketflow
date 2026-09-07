@@ -26,7 +26,7 @@ interface Conversation {
 const CONVERSATIONS: Conversation[] = [
   {
     name: "Sarah Ahmed",
-    preview: "Is this product available?",
+    preview: "Is the Premium Package available?",
     time: "2 min ago",
     unread: true,
     online: true,
@@ -148,7 +148,7 @@ export function WhatsAppInbox({ className }: { className?: string }) {
               variant="outline"
               size="sm"
               aria-label={`Reply to ${conversation.name}`}
-              className="shrink-0 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 max-lg:opacity-100"
+              className="shrink-0"
             >
               <Reply aria-hidden />
             </ButtonLink>
