@@ -40,6 +40,12 @@ export const TAG_TYPES = [
   "WhatsAppAccount",
   "Automation",
   "Analytics",
+  "Product",
+  "Category",
+  "Order",
+  "Inventory",
+  "Catalog",
+  "Discount",
 ] as const;
 
 export const baseApi = createApi({
