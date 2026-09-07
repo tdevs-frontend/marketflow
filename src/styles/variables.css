@@ -101,9 +101,14 @@
   --color-border-strong: #cbd5e1;
 
   /* Typography */
-  --color-text-primary: #121420;
+  /* --color-text-primary: #121420; */
+  /* --color-text-primary: #10243a;
   --color-text-secondary: #475569;
-  --color-text-muted: #64748b;
+  --color-text-muted: #64748b; */
+
+  --color-text-primary: #17212B;
+  --color-text-secondary: #52606D;
+  --color-text-muted: #7B8794;
 
 
   /* ------------------------------------------------------------- Status */

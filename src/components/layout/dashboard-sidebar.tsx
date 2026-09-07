@@ -33,7 +33,7 @@ export function DashboardSidebar() {
         )}
       >
         <div className="flex h-16 items-center border-b border-border px-5">
-          <Link href={APP_ROUTES.dashboard} className="inline-flex items-center">
+          <Link href={APP_ROUTES.home} className="inline-flex items-center">
             <Logo height={30} priority />
           </Link>
         </div>
