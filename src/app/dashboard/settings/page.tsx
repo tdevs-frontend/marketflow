@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
-import { Field, Input, Select } from "@/components/ui/input";
+import { Field, Input } from "@/components/ui/input";
+import { TimezoneSelect } from "@/components/settings/timezone-select";
 
 export const metadata: Metadata = { title: "Settings" };
 
@@ -29,13 +30,7 @@ export default function SettingsPage() {
             htmlFor="timezone"
             hint="Campaign schedules and reports use this timezone."
           >
-            <Select id="timezone" name="timezone" defaultValue="UTC">
-              {TIMEZONES.map((zone) => (
-                <option key={zone} value={zone}>
-                  {zone}
-                </option>
-              ))}
-            </Select>
+            <TimezoneSelect id="timezone" zones={TIMEZONES} defaultValue="UTC" />
           </Field>
 
           <Button>Save changes</Button>

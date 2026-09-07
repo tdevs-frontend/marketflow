@@ -21,7 +21,7 @@ import { Button, ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { EmptyState } from "@/components/ui/empty-state";
-import { Select } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { Menu } from "@/components/ui/menu";
 import { Pagination } from "@/components/ui/pagination";
 import {
@@ -249,55 +249,46 @@ export function ProductsWorkspace() {
           onReset={resetFilters}
         >
           <Select
-            aria-label="Filter by category"
+            label="Filter by category"
             value={category}
-            onChange={(event) => {
-              setCategory(event.target.value);
+            onChange={(next) => {
+              setCategory(next);
               setPage(1);
             }}
-            className="h-10 w-full lg:w-44"
-          >
-            <option value={ALL}>All categories</option>
-            {CATEGORIES.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.name}
-              </option>
-            ))}
-          </Select>
+            options={[
+              { value: ALL, label: "All categories" },
+              ...CATEGORIES.map((item) => ({ value: item.id, label: item.name })),
+            ]}
+            className="lg:w-44"
+          />
 
           <Select
-            aria-label="Filter by status"
+            label="Filter by status"
             value={status}
-            onChange={(event) => {
-              setStatus(event.target.value as ProductStatus | typeof ALL);
+            onChange={(next) => {
+              setStatus(next as ProductStatus | typeof ALL);
               setPage(1);
             }}
-            className="h-10 w-full lg:w-36"
-          >
-            <option value={ALL}>All statuses</option>
-            {PRODUCT_STATUSES.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </Select>
+            options={[
+              { value: ALL, label: "All statuses" },
+              ...PRODUCT_STATUSES,
+            ]}
+            className="lg:w-36"
+          />
 
           <Select
-            aria-label="Filter by stock"
+            label="Filter by stock"
             value={stock}
-            onChange={(event) => {
-              setStock(event.target.value as StockStatus | typeof ALL);
+            onChange={(next) => {
+              setStock(next as StockStatus | typeof ALL);
               setPage(1);
             }}
-            className="h-10 w-full lg:w-40"
-          >
-            <option value={ALL}>All stock levels</option>
-            {STOCK_STATUSES.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </Select>
+            options={[
+              { value: ALL, label: "All stock levels" },
+              ...STOCK_STATUSES,
+            ]}
+            className="lg:w-40"
+          />
         </FilterBar>
 
         {selected.length > 0 ? (
@@ -345,8 +336,8 @@ export function ProductsWorkspace() {
                     <Checkbox
                       checked={allOnPage}
                       indeterminate={!allOnPage && someOnPage}
-                      onChange={toggleAll}
-                      aria-label="Select all products on this page"
+                      onCheckedChange={toggleAll}
+                      label="Select all products on this page"
                     />
                   </TH>
                   <SortableTH
@@ -398,8 +389,8 @@ export function ProductsWorkspace() {
                         <TD className="pr-0">
                           <Checkbox
                             checked={selected.includes(item.id)}
-                            onChange={() => toggleOne(item.id)}
-                            aria-label={`Select ${item.name}`}
+                            onCheckedChange={() => toggleOne(item.id)}
+                            label={`Select ${item.name}`}
                           />
                         </TD>
 
@@ -496,8 +487,8 @@ export function ProductsWorkspace() {
                     <div className="flex items-start gap-3">
                       <Checkbox
                         checked={selected.includes(item.id)}
-                        onChange={() => toggleOne(item.id)}
-                        aria-label={`Select ${item.name}`}
+                        onCheckedChange={() => toggleOne(item.id)}
+                        label={`Select ${item.name}`}
                         className="mt-1"
                       />
                       <ProductThumb />

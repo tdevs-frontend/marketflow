@@ -10,7 +10,7 @@ import {
 
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Drawer } from "@/components/ui/dialog";
-import { Select } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { APP_ROUTES } from "@/constants";
 import { ORDER_STATUSES } from "@/constants/commerce";
 import { formatCurrency, formatDateTime } from "@/lib/format";
@@ -257,18 +257,13 @@ export function OrderDrawer({
             </label>
             <Select
               id="order-status"
+              label="Update Status"
+              hideLabel={false}
               value={order.status}
-              className="mt-2.5 h-11"
-              onChange={(event) =>
-                onStatusChange(order.id, event.target.value as OrderStatus)
-              }
-            >
-              {ORDER_STATUSES.map((item) => (
-                <option key={item.value} value={item.value}>
-                  {item.label}
-                </option>
-              ))}
-            </Select>
+              onChange={(next) => onStatusChange(order.id, next as OrderStatus)}
+              options={ORDER_STATUSES}
+              className="mt-2.5"
+            />
           </section>
         </div>
       ) : null}

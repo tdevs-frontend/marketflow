@@ -14,7 +14,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
-import { Input, Select } from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { Menu } from "@/components/ui/menu";
 import { Pagination } from "@/components/ui/pagination";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
@@ -157,55 +158,40 @@ export function OrdersWorkspace() {
           onReset={resetFilters}
         >
           <Select
-            aria-label="Filter by order status"
+            label="Filter by order status"
             value={status}
-            onChange={(event) => {
-              setStatus(event.target.value as OrderStatus | typeof ALL);
+            onChange={(next) => {
+              setStatus(next as OrderStatus | typeof ALL);
               setPage(1);
             }}
-            className="h-10 w-full lg:w-36"
-          >
-            <option value={ALL}>All statuses</option>
-            {ORDER_STATUSES.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </Select>
+            options={[{ value: ALL, label: "All statuses" }, ...ORDER_STATUSES]}
+            className="lg:w-36"
+          />
 
           <Select
-            aria-label="Filter by payment status"
+            label="Filter by payment status"
             value={payment}
-            onChange={(event) => {
-              setPayment(event.target.value as PaymentStatus | typeof ALL);
+            onChange={(next) => {
+              setPayment(next as PaymentStatus | typeof ALL);
               setPage(1);
             }}
-            className="h-10 w-full lg:w-36"
-          >
-            <option value={ALL}>All payments</option>
-            {PAYMENT_STATUSES.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </Select>
+            options={[{ value: ALL, label: "All payments" }, ...PAYMENT_STATUSES]}
+            className="lg:w-36"
+          />
 
           <Select
-            aria-label="Filter by product"
+            label="Filter by product"
             value={productId}
-            onChange={(event) => {
-              setProductId(event.target.value);
+            onChange={(next) => {
+              setProductId(next);
               setPage(1);
             }}
-            className="h-10 w-full lg:w-44"
-          >
-            <option value={ALL}>All products</option>
-            {PRODUCTS.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.name}
-              </option>
-            ))}
-          </Select>
+            options={[
+              { value: ALL, label: "All products" },
+              ...PRODUCTS.map((item) => ({ value: item.id, label: item.name })),
+            ]}
+            className="lg:w-44"
+          />
 
           <Input
             type="date"

@@ -37,20 +37,6 @@ export function Textarea({
   );
 }
 
-export function Select({
-  className,
-  error,
-  ...props
-}: FieldState & ComponentPropsWithRef<"select">) {
-  return (
-    <select
-      aria-invalid={error || undefined}
-      className={cn(FIELD, "cursor-pointer", error && INVALID, className)}
-      {...props}
-    />
-  );
-}
-
 export function Field({
   label,
   htmlFor,

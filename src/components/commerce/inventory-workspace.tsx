@@ -14,7 +14,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog } from "@/components/ui/dialog";
-import { Field, Input, Select, Textarea } from "@/components/ui/input";
+import { Field, Input, Textarea } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
 import { STOCK_ADJUSTMENT_REASONS } from "@/constants/commerce";
 import { INVENTORY, STOCK_ACTIVITY, stockStatusOf } from "@/lib/commerce-fixtures";
@@ -310,16 +311,15 @@ export function InventoryWorkspace() {
           <Field label="Product" htmlFor="adj-product">
             <Select
               id="adj-product"
+              label="Product"
+              hideLabel={false}
               value={productId}
-              className="h-11"
-              onChange={(event) => setProductId(event.target.value)}
-            >
-              {INVENTORY.map((item) => (
-                <option key={item.productId} value={item.productId}>
-                  {item.productName}
-                </option>
-              ))}
-            </Select>
+              onChange={setProductId}
+              options={INVENTORY.map((item) => ({
+                value: item.productId,
+                label: item.productName,
+              }))}
+            />
           </Field>
 
           <div className="grid gap-5 sm:grid-cols-2">
@@ -366,18 +366,12 @@ export function InventoryWorkspace() {
           <Field label="Reason" htmlFor="adj-reason">
             <Select
               id="adj-reason"
+              label="Reason"
+              hideLabel={false}
               value={reason}
-              className="h-11"
-              onChange={(event) =>
-                setReason(event.target.value as StockAdjustmentReason)
-              }
-            >
-              {STOCK_ADJUSTMENT_REASONS.map((item) => (
-                <option key={item.value} value={item.value}>
-                  {item.label}
-                </option>
-              ))}
-            </Select>
+              onChange={(next) => setReason(next as StockAdjustmentReason)}
+              options={STOCK_ADJUSTMENT_REASONS}
+            />
           </Field>
 
           <Field label="Note" htmlFor="adj-note" hint="Optional. Shows in the activity feed.">

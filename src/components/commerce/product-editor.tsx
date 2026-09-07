@@ -5,7 +5,9 @@ import { ImagePlus, Star, Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Field, Input, Select, Textarea } from "@/components/ui/input";
+import { CheckboxField } from "@/components/ui/checkbox";
+import { Field, Input, Textarea } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { TabPanel, Tabs, type TabItem } from "@/components/ui/tabs";
 import { PRODUCT_STATUSES, PRODUCT_TYPES } from "@/constants/commerce";
 import { CATEGORIES } from "@/lib/commerce-fixtures";
@@ -75,7 +77,7 @@ function draftFrom(product?: Product): Draft {
   };
 }
 
-/** Small labelled switch row, for the boolean settings. */
+/** Boolean setting in a bordered row. */
 function Toggle({
   id,
   label,
@@ -90,19 +92,13 @@ function Toggle({
   onChange: (value: boolean) => void;
 }) {
   return (
-    <div className="flex items-start justify-between gap-4 rounded-panel border border-border px-3.5 py-3">
-      <span>
-        <label htmlFor={id} className="text-sm font-medium text-text-primary">
-          {label}
-        </label>
-        {hint ? <p className="mt-0.5 text-xs text-text-muted">{hint}</p> : null}
-      </span>
-      <input
+    <div className="rounded-panel border border-border px-3.5 py-3">
+      <CheckboxField
         id={id}
-        type="checkbox"
+        label={label}
+        hint={hint}
         checked={checked}
-        onChange={(event) => onChange(event.target.checked)}
-        className="mt-0.5 size-4 shrink-0 cursor-pointer accent-primary focus-visible:shadow-focus focus-visible:outline-none"
+        onCheckedChange={onChange}
       />
     </div>
   );
@@ -183,31 +179,26 @@ export function ProductEditor({ product }: { product?: Product }) {
               <Field label="Category" htmlFor="category">
                 <Select
                   id="category"
+                  label="Category"
+                  hideLabel={false}
                   value={draft.categoryId}
-                  className="h-11"
-                  onChange={(event) => set("categoryId", event.target.value)}
-                >
-                  {CATEGORIES.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.name}
-                    </option>
-                  ))}
-                </Select>
+                  onChange={(next) => set("categoryId", next)}
+                  options={CATEGORIES.map((item) => ({
+                    value: item.id,
+                    label: item.name,
+                  }))}
+                />
               </Field>
 
               <Field label="Product Type" htmlFor="type">
                 <Select
                   id="type"
+                  label="Product Type"
+                  hideLabel={false}
                   value={draft.type}
-                  className="h-11"
-                  onChange={(event) => set("type", event.target.value as ProductType)}
-                >
-                  {PRODUCT_TYPES.map((item) => (
-                    <option key={item.value} value={item.value}>
-                      {item.label}
-                    </option>
-                  ))}
-                </Select>
+                  onChange={(next) => set("type", next as ProductType)}
+                  options={PRODUCT_TYPES}
+                />
               </Field>
             </div>
           </TabPanel>
@@ -446,32 +437,26 @@ export function ProductEditor({ product }: { product?: Product }) {
               <Field label="Status" htmlFor="status">
                 <Select
                   id="status"
+                  label="Status"
+                  hideLabel={false}
                   value={draft.status}
-                  className="h-11"
-                  onChange={(event) =>
-                    set("status", event.target.value as ProductStatus)
-                  }
-                >
-                  {PRODUCT_STATUSES.map((item) => (
-                    <option key={item.value} value={item.value}>
-                      {item.label}
-                    </option>
-                  ))}
-                </Select>
+                  onChange={(next) => set("status", next as ProductStatus)}
+                  options={PRODUCT_STATUSES}
+                />
               </Field>
 
               <Field label="Visibility" htmlFor="visibility">
                 <Select
                   id="visibility"
+                  label="Visibility"
+                  hideLabel={false}
                   value={draft.visibility}
-                  className="h-11"
-                  onChange={(event) =>
-                    set("visibility", event.target.value as Draft["visibility"])
-                  }
-                >
-                  <option value="visible">Visible in catalog</option>
-                  <option value="hidden">Hidden — direct link only</option>
-                </Select>
+                  onChange={(next) => set("visibility", next as Draft["visibility"])}
+                  options={[
+                    { value: "visible", label: "Visible in catalog" },
+                    { value: "hidden", label: "Hidden — direct link only" },
+                  ]}
+                />
               </Field>
             </div>
 

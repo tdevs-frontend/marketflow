@@ -30,7 +30,7 @@ export function FilterBar({
   placeholder?: string;
   activeCount?: number;
   onReset?: () => void;
-  /** The `<Select>` controls. */
+  /** The `Select` controls. */
   children: ReactNode;
   className?: string;
 }) {

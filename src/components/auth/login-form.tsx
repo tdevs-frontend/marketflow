@@ -7,6 +7,7 @@ import { AlertCircle, Eye, EyeOff, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { GoogleIcon } from "@/components/ui/brand-icon";
+import { CheckboxField } from "@/components/ui/checkbox";
 import { Field, Input } from "@/components/ui/input";
 import { APP_ROUTES } from "@/constants";
 
@@ -190,20 +191,12 @@ export function LoginForm() {
         </Field>
 
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
-          <label
-            htmlFor="remember"
-            className="inline-flex cursor-pointer items-center gap-2.5 text-sm text-text-secondary select-none"
-          >
-            <input
-              id="remember"
-              name="remember"
-              type="checkbox"
-              checked={remember}
-              onChange={(event) => setRemember(event.target.checked)}
-              className="size-4 accent-primary focus-visible:shadow-focus focus-visible:outline-none"
-            />
-            Remember me
-          </label>
+          <CheckboxField
+            id="remember"
+            label="Remember me"
+            checked={remember}
+            onCheckedChange={setRemember}
+          />
 
           <Link
             href={APP_ROUTES.forgotPassword}

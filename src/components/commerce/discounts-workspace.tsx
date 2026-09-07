@@ -17,7 +17,8 @@ import {
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog } from "@/components/ui/dialog";
-import { Field, Input, Select } from "@/components/ui/input";
+import { Field, Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { Menu } from "@/components/ui/menu";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
 import { APP_ROUTES } from "@/constants";
@@ -422,16 +423,12 @@ export function DiscountsWorkspace() {
             <Field label="Discount Type" htmlFor="dsc-type">
               <Select
                 id="dsc-type"
+                label="Discount Type"
+                hideLabel={false}
                 value={draft.type}
-                className="h-11"
-                onChange={(event) => set("type", event.target.value as DiscountType)}
-              >
-                {DISCOUNT_TYPES.map((item) => (
-                  <option key={item.value} value={item.value}>
-                    {item.label}
-                  </option>
-                ))}
-              </Select>
+                onChange={(next) => set("type", next as DiscountType)}
+                options={DISCOUNT_TYPES}
+              />
             </Field>
 
             <Field
@@ -457,19 +454,15 @@ export function DiscountsWorkspace() {
           <Field label="Applies To" htmlFor="dsc-scope">
             <Select
               id="dsc-scope"
+              label="Applies To"
+              hideLabel={false}
               value={draft.scope}
-              className="h-11"
-              onChange={(event) => {
-                set("scope", event.target.value as DiscountScope);
+              onChange={(next) => {
+                set("scope", next as DiscountScope);
                 set("targetId", "");
               }}
-            >
-              {DISCOUNT_SCOPES.map((item) => (
-                <option key={item.value} value={item.value}>
-                  {item.label}
-                </option>
-              ))}
-            </Select>
+              options={DISCOUNT_SCOPES}
+            />
           </Field>
 
           {/* Only asked for once the scope needs it. */}
@@ -480,17 +473,17 @@ export function DiscountsWorkspace() {
             >
               <Select
                 id="dsc-target"
+                label={draft.scope === "products" ? "Product" : "Category"}
+                hideLabel={false}
                 value={draft.targetId}
-                className="h-11"
-                onChange={(event) => set("targetId", event.target.value)}
-              >
-                <option value="">Select…</option>
-                {(draft.scope === "products" ? PRODUCTS : CATEGORIES).map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
-                ))}
-              </Select>
+                onChange={(next) => set("targetId", next)}
+                options={[
+                  { value: "", label: "Select…" },
+                  ...(draft.scope === "products" ? PRODUCTS : CATEGORIES).map(
+                    (item) => ({ value: item.id, label: item.name }),
+                  ),
+                ]}
+              />
             </Field>
           ) : null}
 
@@ -560,18 +553,12 @@ export function DiscountsWorkspace() {
             <Field label="Status" htmlFor="dsc-status">
               <Select
                 id="dsc-status"
+                label="Status"
+                hideLabel={false}
                 value={draft.status}
-                className="h-11"
-                onChange={(event) =>
-                  set("status", event.target.value as DiscountStatus)
-                }
-              >
-                {DISCOUNT_STATUSES.map((item) => (
-                  <option key={item.value} value={item.value}>
-                    {item.label}
-                  </option>
-                ))}
-              </Select>
+                onChange={(next) => set("status", next as DiscountStatus)}
+                options={DISCOUNT_STATUSES}
+              />
             </Field>
           </div>
         </div>

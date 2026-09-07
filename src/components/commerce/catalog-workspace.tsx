@@ -18,7 +18,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog } from "@/components/ui/dialog";
-import { Field, Input, Select, Textarea } from "@/components/ui/input";
+import { Field, Input, Textarea } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { CATALOG_STATUSES } from "@/constants/commerce";
 import { CATALOGS, PRODUCTS, productById, stockStatusOf } from "@/lib/commerce-fixtures";
 import { formatCurrency, formatDate, formatNumber } from "@/lib/format";
@@ -322,16 +323,12 @@ function CreateCatalogDialog({
           <Field label="Status" htmlFor="cat-status">
             <Select
               id="cat-status"
+              label="Status"
+              hideLabel={false}
               value={status}
-              className="h-11"
-              onChange={(event) => setStatus(event.target.value as CatalogStatus)}
-            >
-              {CATALOG_STATUSES.map((item) => (
-                <option key={item.value} value={item.value}>
-                  {item.label}
-                </option>
-              ))}
-            </Select>
+              onChange={(next) => setStatus(next as CatalogStatus)}
+              options={CATALOG_STATUSES}
+            />
           </Field>
         </div>
 
@@ -358,7 +355,8 @@ function CreateCatalogDialog({
                 <label className="flex cursor-pointer items-center gap-3 p-3 transition-colors hover:bg-surface-secondary">
                   <Checkbox
                     checked={picked.includes(product.id)}
-                    onChange={() => toggle(product.id)}
+                    onCheckedChange={() => toggle(product.id)}
+                    label={`Add ${product.name} to catalog`}
                   />
                   <ProductThumb size="sm" />
                   <span className="min-w-0 flex-1">

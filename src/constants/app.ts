@@ -12,6 +12,12 @@ export const APP_ROUTES = {
   inventory: "/dashboard/inventory",
   catalog: "/dashboard/catalog",
   discounts: "/dashboard/discounts",
+  /* Marketing module. The flat /dashboard/campaigns and /dashboard/whatsapp
+     paths still resolve — they redirect here. */
+  marketing: "/dashboard/marketing",
+  marketingCampaigns: "/dashboard/marketing/campaigns",
+  marketingCampaignNew: "/dashboard/marketing/campaigns/new",
+  whatsappInbox: "/dashboard/marketing/whatsapp/inbox",
   contacts: "/dashboard/contacts",
   leads: "/dashboard/leads",
   campaigns: "/dashboard/campaigns",

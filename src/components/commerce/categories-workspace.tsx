@@ -14,7 +14,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog } from "@/components/ui/dialog";
-import { Field, Input, Select, Textarea } from "@/components/ui/input";
+import { Field, Input, Textarea } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { Menu } from "@/components/ui/menu";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
 import { CATEGORY_STATUSES } from "@/constants/commerce";
@@ -314,32 +315,26 @@ export function CategoriesWorkspace() {
           <Field label="Parent Category" htmlFor="cat-parent">
             <Select
               id="cat-parent"
+              label="Parent Category"
+              hideLabel={false}
               value={draft.parentId}
-              className="h-11"
-              onChange={(event) => set("parentId", event.target.value)}
-            >
-              <option value="">None — top level</option>
-              {parentOptions.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.name}
-                </option>
-              ))}
-            </Select>
+              onChange={(next) => set("parentId", next)}
+              options={[
+                { value: "", label: "None — top level" },
+                ...parentOptions.map((item) => ({ value: item.id, label: item.name })),
+              ]}
+            />
           </Field>
 
           <Field label="Status" htmlFor="cat-status">
             <Select
               id="cat-status"
+              label="Status"
+              hideLabel={false}
               value={draft.status}
-              className="h-11"
-              onChange={(event) => set("status", event.target.value as CategoryStatus)}
-            >
-              {CATEGORY_STATUSES.map((item) => (
-                <option key={item.value} value={item.value}>
-                  {item.label}
-                </option>
-              ))}
-            </Select>
+              onChange={(next) => set("status", next as CategoryStatus)}
+              options={CATEGORY_STATUSES}
+            />
           </Field>
         </div>
       </Dialog>

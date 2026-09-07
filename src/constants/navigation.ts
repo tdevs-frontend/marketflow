@@ -80,21 +80,44 @@ export const dashboardNav: NavSection[] = [
   {
     title: "Marketing",
     items: [
-      { title: "Campaigns", href: "/dashboard/campaigns", icon: "megaphone" },
+      { title: "Overview", href: "/dashboard/marketing", icon: "megaphone" },
+      { title: "Campaigns", href: "/dashboard/marketing/campaigns", icon: "target" },
       {
         title: "WhatsApp",
         icon: "message-circle",
         items: [
-          /* The existing WhatsApp page is the inbox, so it keeps the bare route. */
-          { title: "Inbox", href: "/dashboard/whatsapp" },
-          { title: "Campaigns", href: "/dashboard/whatsapp/campaigns" },
-          { title: "Templates", href: "/dashboard/whatsapp/templates" },
-          { title: "Contacts", href: "/dashboard/whatsapp/contacts" },
+          { title: "Inbox", href: "/dashboard/marketing/whatsapp/inbox" },
+          { title: "Campaigns", href: "/dashboard/marketing/whatsapp/campaigns" },
+          { title: "Templates", href: "/dashboard/marketing/whatsapp/templates" },
+          { title: "Contacts", href: "/dashboard/marketing/whatsapp/contacts" },
         ],
       },
-      { title: "Email Marketing", href: "/dashboard/email", icon: "mail" },
-      { title: "SMS Marketing", href: "/dashboard/sms", icon: "smartphone" },
-      { title: "Social Planner", href: "/dashboard/social-planner", icon: "calendar-days" },
+      {
+        title: "Email",
+        icon: "mail",
+        items: [
+          { title: "Overview", href: "/dashboard/marketing/email" },
+          { title: "Campaigns", href: "/dashboard/marketing/email/campaigns" },
+          { title: "Templates", href: "/dashboard/marketing/email/templates" },
+          { title: "Contacts", href: "/dashboard/marketing/email/contacts" },
+          { title: "Automations", href: "/dashboard/marketing/email/automations" },
+          { title: "Analytics", href: "/dashboard/marketing/email/analytics" },
+        ],
+      },
+      {
+        title: "SMS",
+        icon: "smartphone",
+        items: [
+          { title: "Overview", href: "/dashboard/marketing/sms" },
+          { title: "Campaigns", href: "/dashboard/marketing/sms/campaigns" },
+          { title: "Analytics", href: "/dashboard/marketing/sms/analytics" },
+        ],
+      },
+      {
+        title: "Social Planner",
+        href: "/dashboard/marketing/social-planner",
+        icon: "calendar-days",
+      },
     ],
   },
   {
