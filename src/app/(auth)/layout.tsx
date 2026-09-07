@@ -18,14 +18,30 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       <AuthBrandPanel />
 
       <main className="flex items-center justify-center px-5 py-12 sm:px-8 lg:py-16">
-        <div className="w-full max-w-[27rem]">
-          {/* Stands in for the brand panel wherever it is hidden. */}
-          <Link
-            href={APP_ROUTES.home}
-            className="mb-8 flex justify-center rounded-btn focus-visible:shadow-focus focus-visible:outline-none lg:hidden"
-          >
-            <Logo height={34} priority />
-          </Link>
+        <div className="w-full max-w-108">
+          {/*
+           * Stands in for the brand panel wherever it is hidden — the logo,
+           * the headline and one line of context, and nothing decorative. The
+           * ecosystem visual stays behind at these widths on purpose: on a
+           * phone it would push the form below the fold to say something the
+           * headline already says.
+           */}
+          <div className="mb-8 text-center lg:hidden">
+            <Link
+              href={APP_ROUTES.home}
+              className="inline-flex rounded-btn focus-visible:shadow-focus focus-visible:outline-none"
+            >
+              <Logo height={34} priority />
+            </Link>
+
+            <h2 className="mt-6 text-xl leading-tight text-balance">
+              From first <span className="text-primary">conversation</span> to
+              final sale.
+            </h2>
+            <p className="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-pretty text-text-muted">
+              Leads, conversations, campaigns and products in one workspace.
+            </p>
+          </div>
 
           <div className="rounded-card border border-border bg-surface p-6 shadow-card sm:p-8">
             {children}
