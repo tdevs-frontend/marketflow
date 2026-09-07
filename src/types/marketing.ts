@@ -114,3 +114,57 @@ export interface CampaignDraft {
   time: string;
   timezone: string;
 }
+
+/* -------------------------------------------------------------------------- */
+/* WhatsApp templates                                                         */
+/* -------------------------------------------------------------------------- */
+
+export type TemplateCategory = "marketing" | "utility" | "authentication";
+
+/** Meta reviews every template; a rejected one cannot be sent. */
+export type TemplateStatus = "approved" | "pending" | "rejected";
+
+export type TemplateButtonType = "url" | "quick-reply" | "phone";
+
+export interface TemplateButton {
+  label: string;
+  type: TemplateButtonType;
+}
+
+export interface WhatsAppTemplate {
+  id: string;
+  name: string;
+  category: TemplateCategory;
+  status: TemplateStatus;
+  language: string;
+  body: string;
+  /** Placeholder names without braces, e.g. `name`, `order_id`. */
+  variables: string[];
+  buttons: TemplateButton[];
+  footer?: string;
+  /** Set when Meta rejects it, so the card can say why. */
+  rejectionReason?: string;
+  updatedAt: string;
+}
+
+/* -------------------------------------------------------------------------- */
+/* WhatsApp contacts                                                          */
+/* -------------------------------------------------------------------------- */
+
+export type WhatsAppContactStatus = "active" | "inactive" | "blocked";
+
+export interface WhatsAppContact {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email?: string;
+  tags: string[];
+  status: WhatsAppContactStatus;
+  assignedAgent?: string;
+  lastActivityAt: string;
+  createdAt: string;
+  notes?: string;
+  /** Links the row to a thread, so "Open Conversation" lands on the right one. */
+  conversationId?: string;
+}

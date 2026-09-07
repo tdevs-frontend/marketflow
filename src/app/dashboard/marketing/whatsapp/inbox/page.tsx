@@ -5,7 +5,11 @@ import { PageHeader } from "@/components/layout/page-header";
 
 export const metadata: Metadata = { title: "WhatsApp Inbox" };
 
-export default function WhatsAppInboxPage() {
+export default async function WhatsAppInboxPage({
+  searchParams,
+}: PageProps<"/dashboard/marketing/whatsapp/inbox">) {
+  const { conversation } = await searchParams;
+
   return (
     <>
       <PageHeader
@@ -13,7 +17,11 @@ export default function WhatsAppInboxPage() {
         description="Every conversation, with the contact record beside it."
       />
 
-      <WhatsAppInbox />
+      <WhatsAppInbox
+        initialConversationId={
+          typeof conversation === "string" ? conversation : undefined
+        }
+      />
     </>
   );
 }

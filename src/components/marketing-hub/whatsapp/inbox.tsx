@@ -564,14 +564,26 @@ function ContactDetails({
  * open over it. Nothing becomes unreachable — the brief's rule about not
  * dropping functionality on mobile.
  */
-export function WhatsAppInbox() {
+export function WhatsAppInbox({
+  initialConversationId,
+}: {
+  /** Deep-link target, e.g. from a Contacts row. Falls back to the first thread. */
+  initialConversationId?: string;
+} = {}) {
   const toast = useToast();
 
   const [conversations, setConversations] = useState(CONVERSATIONS);
-  const [activeId, setActiveId] = useState<string | null>(CONVERSATIONS[0]?.id ?? null);
+  const [activeId, setActiveId] = useState<string | null>(() => {
+    const requested = CONVERSATIONS.find(
+      (item) => item.id === initialConversationId,
+    );
+    return requested?.id ?? CONVERSATIONS[0]?.id ?? null;
+  });
   const [scope, setScope] = useState<Scope>("all");
   const [search, setSearch] = useState("");
-  const [mobileView, setMobileView] = useState<"list" | "thread">("list");
+  const [mobileView, setMobileView] = useState<"list" | "thread">(
+    initialConversationId ? "thread" : "list",
+  );
   const [detailsOpen, setDetailsOpen] = useState(false);
 
   const visible = useMemo(() => {

@@ -12,4 +12,12 @@ export * from "./campaign-table";
 export * from "./marketing-overview";
 export * from "./campaigns-workspace";
 export * from "./campaign-wizard";
+
+/* WhatsApp */
 export * from "./whatsapp/inbox";
+export * from "./whatsapp/campaigns-workspace";
+export * from "./whatsapp/template-card";
+export * from "./whatsapp/template-dialogs";
+export * from "./whatsapp/templates-workspace";
+export * from "./whatsapp/contact-dialogs";
+export * from "./whatsapp/contacts-workspace";
