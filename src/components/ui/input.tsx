@@ -1,9 +1,4 @@
-import type {
-  InputHTMLAttributes,
-  ReactNode,
-  SelectHTMLAttributes,
-  TextareaHTMLAttributes,
-} from "react";
+import type { ComponentPropsWithRef, ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -18,7 +13,7 @@ export function Input({
   className,
   error,
   ...props
-}: FieldState & InputHTMLAttributes<HTMLInputElement>) {
+}: FieldState & ComponentPropsWithRef<"input">) {
   return (
     <input
       aria-invalid={error || undefined}
@@ -32,7 +27,7 @@ export function Textarea({
   className,
   error,
   ...props
-}: FieldState & TextareaHTMLAttributes<HTMLTextAreaElement>) {
+}: FieldState & ComponentPropsWithRef<"textarea">) {
   return (
     <textarea
       aria-invalid={error || undefined}
@@ -46,7 +41,7 @@ export function Select({
   className,
   error,
   ...props
-}: FieldState & SelectHTMLAttributes<HTMLSelectElement>) {
+}: FieldState & ComponentPropsWithRef<"select">) {
   return (
     <select
       aria-invalid={error || undefined}
@@ -75,10 +70,16 @@ export function Field({
         {label}
       </label>
       {children}
+      {/* Ids are derived from the control's own, so a caller can point
+          `aria-describedby` at the message without threading an id through. */}
       {error ? (
-        <p className="text-xs text-error">{error}</p>
+        <p id={`${htmlFor}-error`} className="text-xs text-error">
+          {error}
+        </p>
       ) : hint ? (
-        <p className="text-xs text-text-muted">{hint}</p>
+        <p id={`${htmlFor}-hint`} className="text-xs text-text-muted">
+          {hint}
+        </p>
       ) : null}
     </div>
   );

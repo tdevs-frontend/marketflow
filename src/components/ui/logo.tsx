@@ -5,6 +5,7 @@ import { siteConfig } from "@/config/site";
 // Static import so the intrinsic size follows the artwork — swap the file and
 // the aspect ratio updates itself.
 import logo from "../../../public/marketflow-logo.svg";
+import mark from "../../../public/favicon.svg";
 
 export function Logo({
   height = 32,
@@ -25,6 +26,39 @@ export function Logo({
       priority={priority}
       className={cn("w-auto", className)}
       style={{ height }}
+    />
+  );
+}
+
+/**
+ * The bare mark, for surfaces too tight for the full lockup.
+ *
+ * Decorative by default: it is a brand anchor, not a label, and every place it
+ * appears already names the product in the copy beside it. Pass `label` where
+ * it is the only mention.
+ */
+export function LogoMark({
+  size = 36,
+  label,
+  priority = false,
+  className,
+}: {
+  /** Rendered height. Width follows the mark's aspect ratio. */
+  size?: number;
+  label?: string;
+  priority?: boolean;
+  className?: string;
+}) {
+  return (
+    <Image
+      src={mark}
+      alt={label ?? ""}
+      aria-hidden={label ? undefined : true}
+      width={Math.round((size * mark.width) / mark.height)}
+      height={size}
+      priority={priority}
+      className={cn("w-auto", className)}
+      style={{ height: size }}
     />
   );
 }

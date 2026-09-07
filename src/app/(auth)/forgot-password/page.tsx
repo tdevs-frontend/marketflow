@@ -10,19 +10,19 @@ export const metadata: Metadata = { title: "Reset password" };
 export default function ForgotPasswordPage() {
   return (
     <div className="space-y-6">
-      <div className="space-y-1">
-        <h1 className="text-lg font-semibold">Reset your password</h1>
-        <p className="text-sm text-text-muted">
+      <div className="space-y-2">
+        <h1 className="text-2xl sm:text-[1.75rem]">Reset your password</h1>
+        <p className="text-sm leading-relaxed text-text-secondary">
           We&apos;ll email you a link to choose a new one.
         </p>
       </div>
 
-      <form className="space-y-4">
+      <form className="space-y-5">
         <Field label="Work email" htmlFor="email">
-          <Input id="email" name="email" type="email" autoComplete="email" required />
+          <Input className="h-12" id="email" name="email" type="email" autoComplete="email" required />
         </Field>
 
-        <Button type="submit" className="w-full">
+        <Button type="submit" size="lg" className="w-full">
           Send reset link
         </Button>
       </form>

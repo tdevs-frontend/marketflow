@@ -10,28 +10,28 @@ export const metadata: Metadata = { title: "Create account" };
 export default function RegisterPage() {
   return (
     <div className="space-y-6">
-      <div className="space-y-1">
-        <h1 className="text-lg font-semibold">Create your workspace</h1>
-        <p className="text-sm text-text-muted">
+      <div className="space-y-2">
+        <h1 className="text-2xl sm:text-[1.75rem]">Create your workspace</h1>
+        <p className="text-sm leading-relaxed text-text-secondary">
           Free for your first 1,000 contacts. No card required.
         </p>
       </div>
 
-      <form className="space-y-4">
+      <form className="space-y-5">
         <Field label="Full name" htmlFor="name">
-          <Input id="name" name="name" autoComplete="name" required />
+          <Input className="h-12" id="name" name="name" autoComplete="name" required />
         </Field>
 
         <Field label="Work email" htmlFor="email">
-          <Input id="email" name="email" type="email" autoComplete="email" required />
+          <Input className="h-12" id="email" name="email" type="email" autoComplete="email" required />
         </Field>
 
         <Field label="Workspace name" htmlFor="workspace" hint="You can rename this later.">
-          <Input id="workspace" name="workspace" required />
+          <Input className="h-12" id="workspace" name="workspace" required />
         </Field>
 
         <Field label="Password" htmlFor="password" hint="At least 8 characters, with a number and an uppercase letter.">
-          <Input
+          <Input className="h-12"
             id="password"
             name="password"
             type="password"
@@ -40,7 +40,7 @@ export default function RegisterPage() {
           />
         </Field>
 
-        <Button type="submit" className="w-full">
+        <Button type="submit" size="lg" className="w-full">
           Create account
         </Button>
       </form>
