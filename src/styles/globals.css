@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./circular-std-fonts.css";
 @import "./variables.css";
 
 @layer base {
@@ -46,8 +47,17 @@
   h6 {
     @apply font-heading;
     color: var(--color-text-primary);
-    font-weight: 600;
+    /* CircularStdBold is already bold; asking for 600 here would stack a
+       synthesized faux bold on top of it. */
+    font-weight: 400;
     letter-spacing: -0.02em;
+  }
+
+  /* Same reason — the UA's `bolder` would fake a heavier Book. */
+  b,
+  strong {
+    font-family: var(--font-bold);
+    font-weight: 400;
   }
 }
 

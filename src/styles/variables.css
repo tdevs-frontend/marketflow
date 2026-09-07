@@ -10,9 +10,30 @@
   --breakpoint-*: initial;
 
   /* ---------------------------------------------------------------- Type */
-  /* Headings — Lexend. Body — Inter. Both mapped from next/font variables. */
-  --font-heading: var(--font-lexend), "Lexend", system-ui, -apple-system, sans-serif;
-  --font-sans: var(--font-inter), "Inter", system-ui, -apple-system, sans-serif;
+  /*
+   * Circular Std. Weight is a family name, not a `font-weight` — see
+   * styles/circular-std-fonts.css.
+   *
+   * Tailwind resolves `font-<name>` against this `--font-*` namespace before
+   * `--font-weight-*`, so naming a token after a weight utility turns that
+   * utility into a family swap: `font-bold` emits
+   * `font-family: var(--font-bold)` and no `font-weight` at all. Variants
+   * (`md:font-bold`, `hover:font-medium`) come along for free.
+   *
+   * Keep one token per weight utility in use. Dropping one silently hands it
+   * back to Tailwind as a `font-weight`, which is a faux bold over Book.
+   * There is no semibold cut, so `font-semibold` is deliberately Bold.
+   */
+  --font-sans: "CircularStdBook";
+  --font-heading: "CircularStdBold";
+
+  --font-book: "CircularStdBook";
+  --font-normal: "CircularStdBook";
+  --font-medium: "CircularStdMedium";
+  --font-semibold: "CircularStdBold";
+  --font-bold: "CircularStdBold";
+  --font-extrabold: "CircularStdBlack";
+  --font-black: "CircularStdBlack";
 
   /* --------------------------------------------------------- Breakpoints */
 
@@ -80,7 +101,7 @@
   --color-border-strong: #cbd5e1;
 
   /* Typography */
-  --color-text-primary: #0f172a;
+  --color-text-primary: #121420;
   --color-text-secondary: #475569;
   --color-text-muted: #64748b;
 
