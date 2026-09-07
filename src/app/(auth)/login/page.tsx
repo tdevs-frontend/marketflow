@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { LoginForm } from "@/components/auth";
-import { LogoMark } from "@/components/ui/logo";
 import { APP_ROUTES } from "@/constants";
 
 export const metadata: Metadata = {

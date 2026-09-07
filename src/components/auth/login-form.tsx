@@ -195,9 +195,9 @@ export function LoginForm() {
               className="absolute inset-y-0 right-0 grid w-12 place-items-center rounded-r-field text-text-muted transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none disabled:pointer-events-none disabled:opacity-60"
             >
               {showPassword ? (
-                <EyeOff className="size-[18px]" aria-hidden />
+                <EyeOff className="size-4.5" aria-hidden />
               ) : (
-                <Eye className="size-[18px]" aria-hidden />
+                <Eye className="size-4.5" aria-hidden />
               )}
             </button>
           </div>
@@ -246,20 +246,16 @@ export function LoginForm() {
           <span aria-hidden className="h-px flex-1 bg-border" />
         </div>
 
-        <Button
-          type="button"
-          variant="outline"
-          size="lg"
-          className="w-full"
-          onClick={handleGoogle}
-        >
+        {/* `btn-google` lives in `styles/globals.css` — same look as the
+            outline button, on its own class. */}
+        <button type="button" className="btn-google" onClick={handleGoogle}>
           {pending === "google" ? (
             <Loader2 className="animate-spin" aria-hidden />
           ) : (
             <GoogleIcon />
           )}
           Continue with Google
-        </Button>
+        </button>
       </fieldset>
 
       {/* Announces the busy state to screen readers, which otherwise get no
