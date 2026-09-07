@@ -91,13 +91,6 @@
   --color-accent: #34b7f1;
   --color-accent-soft: #eaf7fc;
 
-  /*
-   * Dashboard sidebar accent. Its own token rather than `--color-primary`:
-   * the nav sits between the teal primary and the bright secondary, and the
-   * rest of the app should not shift if this one is retuned.
-   */
-  --color-nav-active: #15a667;
-
 
   /* ----------------------------------------------------------- Neutrals */
   --color-background: #f8fafc;

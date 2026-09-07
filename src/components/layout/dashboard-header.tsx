@@ -48,7 +48,7 @@ export function DashboardHeader() {
 
         {/* No pill behind the whole chip — only the initials carry the grey. */}
         <div className="flex h-10 items-center gap-2">
-          <span className="grid size-8 place-items-center rounded-full bg-gray text-xs font-bold text-gray-ink">
+          <span className="grid size-10 place-items-center rounded-full bg-gray text-xs font-bold text-gray-ink">
             {initials(firstName, lastName)}
           </span>
           <span className="hidden text-sm font-medium text-text-primary sm:block">

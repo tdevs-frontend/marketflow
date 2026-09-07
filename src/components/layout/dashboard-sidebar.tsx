@@ -48,17 +48,26 @@ const isActive = (pathname: string, href: string) =>
 const ROW =
   "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:shadow-focus";
 
+/*
+ * Straight off the brand ramp in `styles/variables.css` — `primary` for the
+ * fill, `primary-soft` and `primary-subtle` for the two tint steps, and
+ * `primary-dark` for ink on a tint. No opacity mixing: the ramp already has
+ * the steps, and a real token holds its contrast where `primary/10` over an
+ * unknown background does not.
+ */
+
 /** Active rows carry a solid fill — the emphasis the old left rail gave. */
-const ROW_ACTIVE = "bg-nav-active text-white";
+const ROW_ACTIVE = "bg-primary text-white";
 const ROW_IDLE =
-  "text-text-secondary hover:bg-nav-active/10 hover:text-nav-active";
+  "text-text-secondary hover:bg-primary-soft hover:text-primary-dark";
 /** A collapsed parent holding the active page: tinted, not filled. */
-const ROW_WITHIN = "bg-nav-active/10 text-nav-active";
+const ROW_WITHIN = "bg-primary-soft text-primary-dark";
 
 const SUB_ROW =
   "flex items-center rounded-lg px-3 py-1.5 text-[14px] font-medium transition-colors focus-visible:outline-none focus-visible:shadow-focus";
-const SUB_ACTIVE = "bg-nav-active/12 text-nav-active";
-const SUB_IDLE = "text-text-muted hover:bg-nav-active/10 hover:text-nav-active";
+const SUB_ACTIVE = "bg-primary-soft text-primary-dark";
+/* Sub-rows hover on the subtler tint, so the indent reads as a level down. */
+const SUB_IDLE = "text-text-muted hover:bg-primary-subtle hover:text-primary";
 
 /* -------------------------------------------------------------------------- */
 /* Items                                                                      */
