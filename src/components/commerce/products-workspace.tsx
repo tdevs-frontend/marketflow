@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import {
   Archive,
@@ -13,6 +14,8 @@ import {
   Trash2,
   TriangleAlert,
 } from "lucide-react";
+
+import Link from "next/link";
 
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -103,6 +106,7 @@ function kpis(): CommerceKpi[] {
 /* -------------------------------------------------------------------------- */
 
 export function ProductsWorkspace() {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<string>(ALL);
   const [status, setStatus] = useState<ProductStatus | typeof ALL>(ALL);
@@ -192,15 +196,29 @@ export function ProductsWorkspace() {
     setPage(1);
   }
 
-  /* Placeholder handlers — wire to the mutations in `redux/api/commerceApi`. */
+  const editHref = (id: string) => `${APP_ROUTES.products}/${id}/edit`;
+
+  /* Navigation is real; the writes stop at the mutations in `commerceApi`. */
   const rowActions = (item: Product) => [
-    { label: "View product", icon: <Eye className="size-4" />, onSelect: () => {} },
-    { label: "Edit product", icon: <Pencil className="size-4" />, onSelect: () => {} },
-    { label: "Duplicate", icon: <Copy className="size-4" />, onSelect: () => {} },
+    {
+      label: "View product",
+      icon: <Eye className="size-4" />,
+      onSelect: () => router.push(editHref(item.id)),
+    },
+    {
+      label: "Edit product",
+      icon: <Pencil className="size-4" />,
+      onSelect: () => router.push(editHref(item.id)),
+    },
+    {
+      label: "Duplicate",
+      icon: <Copy className="size-4" />,
+      onSelect: () => router.push(`${APP_ROUTES.products}/new`),
+    },
     {
       label: "Promote in campaign",
       icon: <Megaphone className="size-4" />,
-      onSelect: () => {},
+      onSelect: () => router.push(APP_ROUTES.campaigns),
     },
     {
       label: item.status === "archived" ? "Restore" : "Archive",
@@ -389,9 +407,12 @@ export function ProductsWorkspace() {
                           <div className="flex items-center gap-3">
                             <ProductThumb />
                             <div className="min-w-0">
-                              <p className="truncate font-medium text-text-primary">
+                              <Link
+                                href={editHref(item.id)}
+                                className="block truncate font-medium text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
+                              >
                                 {item.name}
-                              </p>
+                              </Link>
                               <ProductTypeLabel type={item.type} />
                             </div>
                           </div>
@@ -482,9 +503,12 @@ export function ProductsWorkspace() {
                       <ProductThumb />
 
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium text-text-primary">
+                        <Link
+                          href={editHref(item.id)}
+                          className="block truncate text-sm font-medium text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
+                        >
                           {item.name}
-                        </p>
+                        </Link>
                         <p className="mt-0.5 font-mono text-[11px] text-text-muted">
                           {item.sku} · {item.categoryName}
                         </p>

@@ -1,7 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Archive, FolderTree, Package, Pencil, Plus, Trash2 } from "lucide-react";
+import {
+  Archive,
+  FolderTree,
+  ImagePlus,
+  Package,
+  Pencil,
+  Plus,
+  Trash2,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -20,6 +28,7 @@ interface Draft {
   name: string;
   slug: string;
   description: string;
+  imageUrl: string;
   parentId: string;
   status: CategoryStatus;
 }
@@ -28,6 +37,7 @@ const EMPTY: Draft = {
   name: "",
   slug: "",
   description: "",
+  imageUrl: "",
   parentId: "",
   status: "active",
 };
@@ -54,6 +64,7 @@ export function CategoriesWorkspace() {
       name: category.name,
       slug: category.slug,
       description: category.description ?? "",
+      imageUrl: category.imageUrl ?? "",
       parentId: category.parentId ?? "",
       status: category.status,
     });
@@ -269,6 +280,35 @@ export function CategoriesWorkspace() {
               placeholder="What belongs in this category."
               onChange={(event) => set("description", event.target.value)}
             />
+          </Field>
+
+          {/* Shown on the storefront category tile, so it is optional here. */}
+          <Field
+            label="Image"
+            htmlFor="cat-image"
+            hint="Optional. Used on the customer-facing catalog."
+          >
+            <div className="flex items-center gap-3">
+              <span className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-panel border border-dashed border-border-strong bg-surface-secondary text-text-muted">
+                {draft.imageUrl ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img
+                    src={draft.imageUrl}
+                    alt=""
+                    className="size-full object-cover"
+                  />
+                ) : (
+                  <ImagePlus className="size-4" aria-hidden />
+                )}
+              </span>
+              <Input
+                id="cat-image"
+                value={draft.imageUrl}
+                placeholder="https://…/category.jpg"
+                className="h-11"
+                onChange={(event) => set("imageUrl", event.target.value)}
+              />
+            </div>
           </Field>
 
           <Field label="Parent Category" htmlFor="cat-parent">

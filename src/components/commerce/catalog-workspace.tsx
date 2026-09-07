@@ -13,13 +13,17 @@ import {
   QrCode,
 } from "lucide-react";
 
+import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog } from "@/components/ui/dialog";
+import { Field, Input, Select, Textarea } from "@/components/ui/input";
+import { CATALOG_STATUSES } from "@/constants/commerce";
 import { CATALOGS, PRODUCTS, productById, stockStatusOf } from "@/lib/commerce-fixtures";
 import { formatCurrency, formatDate, formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import type { Catalog } from "@/types/commerce";
+import type { Catalog, CatalogStatus } from "@/types/commerce";
 import { CatalogStatusBadge, ProductThumb } from "./commerce-badges";
 
 /* -------------------------------------------------------------------------- */
@@ -246,15 +250,178 @@ function CatalogPreview({
 }
 
 /* -------------------------------------------------------------------------- */
+/* Create                                                                     */
+/* -------------------------------------------------------------------------- */
+
+function CreateCatalogDialog({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [status, setStatus] = useState<CatalogStatus>("draft");
+  const [picked, setPicked] = useState<string[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  /* Only sellable products belong in something a customer will open. */
+  const selectable = PRODUCTS.filter((item) => item.status === "active");
+
+  function toggle(id: string) {
+    setPicked((prev) =>
+      prev.includes(id) ? prev.filter((value) => value !== id) : [...prev, id],
+    );
+  }
+
+  function submit() {
+    if (!name.trim()) {
+      setError("Name the catalog.");
+      return;
+    }
+    if (picked.length === 0) {
+      setError("Add at least one product.");
+      return;
+    }
+    /* Wire to `useCreateCatalogMutation`. */
+    onClose();
+  }
+
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      title="Create catalog"
+      description="Pick the products, then share the catalog wherever your customers are."
+      size="lg"
+      footer={
+        <>
+          <Button variant="outline" size="compact" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button size="compact" onClick={submit}>
+            Create catalog
+          </Button>
+        </>
+      }
+    >
+      <div className="space-y-5">
+        <div className="grid gap-5 sm:grid-cols-2">
+          <Field label="Catalog Name" htmlFor="cat-name" error={error ?? undefined}>
+            <Input
+              id="cat-name"
+              value={name}
+              error={Boolean(error)}
+              placeholder="Summer Collection"
+              className="h-11"
+              onChange={(event) => setName(event.target.value)}
+            />
+          </Field>
+
+          <Field label="Status" htmlFor="cat-status">
+            <Select
+              id="cat-status"
+              value={status}
+              className="h-11"
+              onChange={(event) => setStatus(event.target.value as CatalogStatus)}
+            >
+              {CATALOG_STATUSES.map((item) => (
+                <option key={item.value} value={item.value}>
+                  {item.label}
+                </option>
+              ))}
+            </Select>
+          </Field>
+        </div>
+
+        <Field label="Description" htmlFor="cat-desc">
+          <Textarea
+            id="cat-desc"
+            value={description}
+            placeholder="What this collection is for."
+            onChange={(event) => setDescription(event.target.value)}
+          />
+        </Field>
+
+        <fieldset>
+          <legend className="text-sm font-medium text-text-primary">
+            Products
+            <span className="ml-2 font-normal text-text-muted">
+              {picked.length} selected
+            </span>
+          </legend>
+
+          <ul className="mt-2.5 max-h-64 divide-y divide-border overflow-y-auto rounded-panel border border-border">
+            {selectable.map((product) => (
+              <li key={product.id}>
+                <label className="flex cursor-pointer items-center gap-3 p-3 transition-colors hover:bg-surface-secondary">
+                  <Checkbox
+                    checked={picked.includes(product.id)}
+                    onChange={() => toggle(product.id)}
+                  />
+                  <ProductThumb size="sm" />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-medium text-text-primary">
+                      {product.name}
+                    </span>
+                    <span className="block text-xs text-text-muted">
+                      {product.categoryName}
+                    </span>
+                  </span>
+                  <span className="shrink-0 text-sm font-medium text-text-primary tabular-nums">
+                    {formatCurrency(product.salePrice ?? product.price)}
+                  </span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        </fieldset>
+      </div>
+    </Dialog>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
 /* Workspace                                                                  */
 /* -------------------------------------------------------------------------- */
 
 export function CatalogWorkspace() {
   const [sharing, setSharing] = useState<Catalog | null>(null);
   const [previewing, setPreviewing] = useState<Catalog | null>(null);
+  const [creating, setCreating] = useState(false);
+
+  /* The header's Preview opens whatever customers would actually land on. */
+  const published = CATALOGS.find((item) => item.status === "published") ?? null;
 
   return (
     <>
+      {/*
+       * The header lives here rather than in the route because both of its
+       * actions open dialogs, and the dialog state belongs with the grid.
+       */}
+      <PageHeader
+        title="Product Catalog"
+        description="Create and manage the product catalog you share with customers."
+        action={
+          <div className="flex flex-wrap gap-2.5">
+            <Button
+              variant="outline"
+              size="compact"
+              disabled={!published}
+              onClick={() => setPreviewing(published)}
+            >
+              <Eye aria-hidden />
+              Preview Catalog
+            </Button>
+            <Button size="compact" onClick={() => setCreating(true)}>
+              <Plus aria-hidden />
+              Create Catalog
+            </Button>
+          </div>
+        }
+      />
+
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {CATALOGS.map((catalog) => (
           <Card key={catalog.id} className="flex flex-col p-5">
@@ -330,6 +497,7 @@ export function CatalogWorkspace() {
         {/* Create tile, in the grid so the action sits with the collection. */}
         <button
           type="button"
+          onClick={() => setCreating(true)}
           className="flex min-h-56 flex-col items-center justify-center gap-2 rounded-card border border-dashed border-border-strong bg-surface-secondary/60 p-5 text-center transition-colors hover:border-primary hover:bg-primary-subtle focus-visible:shadow-focus focus-visible:outline-none"
         >
           <span className="grid size-10 place-items-center rounded-full bg-surface text-primary">
@@ -356,6 +524,7 @@ export function CatalogWorkspace() {
 
       <ShareDialog catalog={sharing} onClose={() => setSharing(null)} />
       <CatalogPreview catalog={previewing} onClose={() => setPreviewing(null)} />
+      <CreateCatalogDialog open={creating} onClose={() => setCreating(false)} />
     </>
   );
 }

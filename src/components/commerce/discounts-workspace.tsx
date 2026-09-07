@@ -110,8 +110,27 @@ const EMPTY: Draft = {
   status: "draft",
 };
 
+/** Fills the create form from an existing discount, for the edit path. */
+function draftFrom(discount: Discount): Draft {
+  return {
+    name: discount.name,
+    code: discount.code,
+    type: discount.type,
+    value: String(discount.value),
+    scope: discount.scope,
+    targetId: discount.productIds?.[0] ?? discount.categoryIds?.[0] ?? "",
+    minimumPurchase: discount.minimumPurchase ? String(discount.minimumPurchase) : "",
+    maximumDiscount: discount.maximumDiscount ? String(discount.maximumDiscount) : "",
+    usageLimit: discount.usageLimit ? String(discount.usageLimit) : "",
+    startsAt: discount.startsAt.slice(0, 10),
+    endsAt: discount.endsAt?.slice(0, 10) ?? "",
+    status: discount.status,
+  };
+}
+
 export function DiscountsWorkspace() {
   const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState<Discount | null>(null);
   const [draft, setDraft] = useState<Draft>(EMPTY);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
@@ -161,6 +180,7 @@ export function DiscountsWorkspace() {
           <Button
             size="compact"
             onClick={() => {
+              setEditing(null);
               setDraft(EMPTY);
               setErrors({});
               setOpen(true);
@@ -241,7 +261,12 @@ export function DiscountsWorkspace() {
                         {
                           label: "Edit discount",
                           icon: <Pencil className="size-4" />,
-                          onSelect: () => {},
+                          onSelect: () => {
+                            setEditing(discount);
+                            setDraft(draftFrom(discount));
+                            setErrors({});
+                            setOpen(true);
+                          },
                         },
                         {
                           label: "Use in campaign",
@@ -251,7 +276,16 @@ export function DiscountsWorkspace() {
                         {
                           label: "Duplicate",
                           icon: <Copy className="size-4" />,
-                          onSelect: () => {},
+                          onSelect: () => {
+                            setEditing(null);
+                            setDraft({
+                              ...draftFrom(discount),
+                              code: `${discount.code}-COPY`,
+                              status: "draft",
+                            });
+                            setErrors({});
+                            setOpen(true);
+                          },
                         },
                         {
                           label: "Delete",
@@ -342,16 +376,16 @@ export function DiscountsWorkspace() {
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
-        title="Create discount"
+        title={editing ? `Edit ${editing.code}` : "Create discount"}
         description="Set the offer, who it applies to, and when it runs."
         size="lg"
         footer={
           <>
             <Button variant="outline" size="compact" onClick={() => setOpen(false)}>
-              Save Draft
+              {editing ? "Cancel" : "Save Draft"}
             </Button>
             <Button size="compact" onClick={validate}>
-              Create Discount
+              {editing ? "Save Discount" : "Create Discount"}
             </Button>
           </>
         }
