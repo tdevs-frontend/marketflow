@@ -13,10 +13,6 @@ export const metadata: Metadata = {
 export default function LoginPage() {
   return (
     <div>
-      {/* Only at `lg`, where the brand panel is showing and the card has no
-          lockup above it to answer "what am I signing in to". */}
-      <LogoMark size={34} priority className="mb-6 hidden lg:block" />
-
       <h1 className="text-2xl sm:text-[1.75rem]">Welcome back</h1>
       <p className="mt-2 text-sm leading-relaxed text-text-secondary">
         Sign in to continue to your MarketFlow workspace.
