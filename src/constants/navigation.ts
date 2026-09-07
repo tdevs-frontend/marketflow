@@ -15,11 +15,7 @@ export interface NavChild {
 export interface DashboardNavItem {
   title: string;
   icon: string;
-  /**
-   * Omitted only on items that exist purely to hold `items`. Everything with
-   * a page of its own keeps its own href, so nothing is reachable only by
-   * expanding a parent.
-   */
+  /** Omitted only on items that exist purely to hold `items`. */
   href?: string;
   items?: NavChild[];
 }
@@ -58,13 +54,9 @@ export const marketingNav: NavItem[] = [
 ];
 
 /**
- * The dashboard sidebar, top to bottom.
- *
- * Where a group's landing page already exists it keeps the bare route and the
- * rest of the group nests under it — `/dashboard/settings` is General, and
- * Profile, Billing and the others sit at `/dashboard/settings/*`. The sidebar
- * works out on its own which of those need an exact match, so adding a child
- * route never silently lights up its parent.
+ * The dashboard sidebar, top to bottom. Where a group's landing page exists it
+ * keeps the bare route and the group nests under it — `/dashboard/settings` is
+ * General. The sidebar derives which routes need an exact match.
  */
 export const dashboardNav: NavSection[] = [
   {
@@ -72,12 +64,8 @@ export const dashboardNav: NavSection[] = [
     items: [{ title: "Dashboard", href: "/dashboard", icon: "layout-dashboard" }],
   },
   {
-    /*
-     * Sits ahead of Marketing on purpose: the lifecycle runs product → order →
-     * customer → marketing → revenue, and the catalogue is what everything
-     * downstream is selling. Customers are not repeated here — they already
-     * have their own group, and one contact record serves both sides.
-     */
+    /* Ahead of Marketing: the catalogue is what everything downstream sells.
+       Customers are not repeated — they have their own group. */
     title: "Commerce",
     items: [
       { title: "Products", href: "/dashboard/products", icon: "package" },

@@ -22,7 +22,7 @@ export function AuthBrandPanel() {
       {/* Dot field, masked so it fades before it reaches any edge. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 opacity-40 [background-image:radial-gradient(var(--color-primary-border)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]"
+        className="pointer-events-none absolute inset-0 -z-10 opacity-40 bg-[radial-gradient(var(--color-primary-border)_1px,transparent_1px)] bg-size-[22px_22px] mask-[radial-gradient(ellipse_at_center,black,transparent_70%)]"
       />
 
       {/* Two long, very thin sweeps — customer journeys crossing the panel. */}

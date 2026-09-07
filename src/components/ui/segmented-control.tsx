@@ -11,7 +11,7 @@ export interface SegmentedControlProps<T extends string> {
   options: SegmentedOption<T>[];
   value: T;
   onChange: (value: T) => void;
-  /** Names the group for assistive tech — the buttons carry no visible label. */
+  /** Names the group for assistive tech. */
   label: string;
   size?: "sm" | "md";
   className?: string;
@@ -23,11 +23,8 @@ const SIZES = {
 } as const;
 
 /**
- * Filter chips in a tinted track.
- *
- * `role="tablist"` would promise arrow-key navigation between tabs and a
- * matching `tabpanel`; these switch a chart in place, so they stay ordinary
- * buttons in a labelled group and `aria-pressed` carries the state.
+ * Filter chips in a tinted track. Not `role="tablist"` — that would promise
+ * arrow-key navigation and a `tabpanel`; these just switch a chart in place.
  */
 export function SegmentedControl<T extends string>({
   options,

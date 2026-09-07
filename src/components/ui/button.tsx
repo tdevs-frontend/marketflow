@@ -81,11 +81,7 @@ const VARIANTS: Record<ButtonVariant, string> = {
  */
 const SIZES: Record<ButtonSize, string> = {
   sm: "h-9 gap-1.5 px-3.5 text-xs [&_svg]:size-4",
-  /**
-   * 40px — the dashboard's control height. It lines up with `IconButton`'s
-   * `md` and the header search field, so a CTA can sit in a toolbar row
-   * without being the tallest thing in it.
-   */
+  /* 40px — matches `IconButton` md and the header search field. */
   compact: "h-10 gap-2 px-4 text-sm [&_svg]:size-4",
   md: "h-11 gap-2 px-5 text-sm [&_svg]:size-4",
   lg: "h-12 gap-2.5 px-7 text-base [&_svg]:size-5",
@@ -158,12 +154,9 @@ export function ButtonLink({
 }
 
 /**
- * Square action button for toolbar icons — neutral grey at rest, one step
- * deeper on hover. It keeps its own compact scale rather than the text-button
- * heights, because a toolbar row wants a smaller target than a CTA.
- *
- * Grey rather than a brand tint on purpose: these sit beside the page's real
- * CTA, and two green controls in one row leave nothing for the eye to pick.
+ * Square action button for toolbar icons, on its own compact scale. Grey rather
+ * than a brand tint: these sit beside the page's real CTA, and two green
+ * controls in one row leave nothing for the eye to pick.
  */
 const TOOLBAR =
   "bg-gray-soft text-gray-ink hover:bg-gray hover:text-text-primary active:bg-gray-strong";
@@ -171,7 +164,7 @@ const TOOLBAR =
 /* `compact` has no entry: IconButton's `md` is already the 40px control. */
 const ICON_SIZES: Record<Exclude<ButtonSize, "icon" | "compact">, string> = {
   sm: "size-8 [&_svg]:size-4",
-  md: "size-10 [&_svg]:size-[18px]",
+  md: "size-10 [&_svg]:size-4.5",
   lg: "size-11 [&_svg]:size-5",
 };
 

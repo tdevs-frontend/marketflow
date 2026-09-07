@@ -25,11 +25,7 @@ export function BrandIcon({ name, className }: { name: string; className?: strin
   );
 }
 
-/**
- * Google's G. It sits apart from `BrandIcon` because Google's brand terms
- * require the four-colour mark as drawn — it cannot take `currentColor` like
- * the monochrome social marks above.
- */
+/** Apart from `BrandIcon`: the four-colour mark cannot take `currentColor`. */
 export function GoogleIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 48 48" className={className} aria-hidden focusable="false">

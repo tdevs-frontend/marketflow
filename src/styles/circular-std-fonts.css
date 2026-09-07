@@ -1,20 +1,8 @@
 /**
- * Circular Std.
- *
- * The family ships as four discrete cuts with no variable axis, and weight is
- * expressed by picking the cut's family name rather than by `font-weight`:
- *
- *   regular / body  -> CircularStdBook
- *   500 / medium    -> CircularStdMedium
- *   600 / 700, bold -> CircularStdBold
- *   heavy           -> CircularStdBlack
- *
- * Each face is therefore declared under its own family with no `font-weight`
- * descriptor. Never pair one of these with `font-weight: 500` / `700` — the
- * face is already the right weight, and the browser would synthesize a faux
- * bold on top of it. `src/styles/variables.css` maps the type tokens onto
- * these names; `globals.css` re-points the `font-medium` / `font-semibold` /
- * `font-bold` utilities at them.
+ * Circular Std — four discrete cuts, no variable axis. Weight is the cut's
+ * family name (Book / Medium / Bold / Black), so each face is declared with no
+ * `font-weight` descriptor. Never pair one with `font-weight: 500` / `700`:
+ * the face is already right and the browser would fake a bold on top.
  */
 
 @font-face {

@@ -20,11 +20,7 @@ interface Order {
   time: string;
 }
 
-/**
- * The other end of the chain the rest of the dashboard describes: the top two
- * are the customers sitting in the WhatsApp inbox, buying the product that
- * leads Product Performance.
- */
+/* The top two are the WhatsApp inbox customers, buying the leading product. */
 const ORDERS: Order[] = [
   {
     id: "#MF-10248",
@@ -95,11 +91,8 @@ export function RecentOrders({ className }: { className?: string }) {
         </ButtonLink>
       </div>
 
-      {/*
-       * Two lines a row, not six labelled fields. In a one-column card the
-       * scan is "who bought what, for how much, is it paid" — the order id and
-       * timestamp are there to confirm, so they take the quieter line.
-       */}
+      {/* The scan is who bought what, for how much, is it paid — the id and
+          timestamp only confirm, so they take the quieter line. */}
       <ul className="mt-3 divide-y divide-border">
         {ORDERS.map((order) => (
           <li key={order.id} className="py-2.5">

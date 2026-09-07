@@ -16,16 +16,10 @@ export const metadata: Metadata = { title: "Dashboard" };
 
 /**
  * The merchant overview, read as one lifecycle: campaigns bring leads, leads
- * become conversations, conversations become product interest, interest
- * becomes orders and revenue, and automation is what moved each step.
+ * become conversations, then product interest, then orders and revenue.
  *
- * Desktop is four rows of wide-card-left, narrow-card-right. Growth Overview
- * takes the full width because the funnel moved down beside Automation
- * Activity, and a hole in the top row would read as a mistake.
- *
- * Mobile order is set with `order-*` and deliberately differs: the funnel is
- * the second thing a merchant should see on a phone, even though on desktop it
- * sits at the bottom of the right rail.
+ * Desktop is rows of wide-card-left, narrow-card-right. Mobile order differs
+ * via `order-*` — the funnel belongs near the top on a phone.
  */
 export default function DashboardPage() {
   return (

@@ -8,16 +8,12 @@ import { BASE_CHART, CHART_COLORS } from "./chart-theme";
 
 export interface SparklineChartProps {
   data: number[];
-  /** Drives the stroke colour only — the shape already tells the story. */
+  /** Stroke colour only. */
   trend?: "up" | "down";
   height?: number;
 }
 
-/**
- * The KPI card trend line. No axes, no grid, no tooltip: at this size the only
- * readable signal is the shape, and a tooltip on a 40px chart is a hit target
- * nobody wants.
- */
+/** KPI trend line. No axes or tooltip — at 40px the shape is the only signal. */
 export function SparklineChart({
   data,
   trend = "up",

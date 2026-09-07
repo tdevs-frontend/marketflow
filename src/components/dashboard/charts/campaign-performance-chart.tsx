@@ -22,10 +22,7 @@ export interface CampaignPerformanceChartProps {
   format: "number" | "currency";
 }
 
-/**
- * Horizontal bars: campaign names are long enough that rotating them under a
- * vertical axis would cost more legibility than the extra height costs space.
- */
+/** Horizontal: campaign names are too long to rotate under a vertical axis. */
 export function CampaignPerformanceChart({
   campaigns,
   values,

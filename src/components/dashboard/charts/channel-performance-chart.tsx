@@ -20,10 +20,7 @@ export interface ChannelPerformanceChartProps {
   totalValue: string;
 }
 
-/**
- * A donut earns its place here because there are three parts of one whole and
- * the question is which channel dominates — not how each has moved over time.
- */
+/** Three parts of one whole, and the question is which dominates. */
 export function ChannelPerformanceChart({
   labels,
   values,

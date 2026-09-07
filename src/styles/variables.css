@@ -11,18 +11,12 @@
 
   /* ---------------------------------------------------------------- Type */
   /*
-   * Circular Std. Weight is a family name, not a `font-weight` — see
-   * styles/circular-std-fonts.css.
+   * Circular Std. Weight is a family name, not a `font-weight`.
    *
-   * Tailwind resolves `font-<name>` against this `--font-*` namespace before
-   * `--font-weight-*`, so naming a token after a weight utility turns that
-   * utility into a family swap: `font-bold` emits
-   * `font-family: var(--font-bold)` and no `font-weight` at all. Variants
-   * (`md:font-bold`, `hover:font-medium`) come along for free.
-   *
-   * Keep one token per weight utility in use. Dropping one silently hands it
-   * back to Tailwind as a `font-weight`, which is a faux bold over Book.
-   * There is no semibold cut, so `font-semibold` is deliberately Bold.
+   * Tailwind resolves `font-<name>` against `--font-*` before
+   * `--font-weight-*`, so a token named after a weight utility turns it into a
+   * family swap. Keep one per utility in use — dropping one hands it back to
+   * Tailwind as a real `font-weight`, i.e. a faux bold over Book.
    */
   --font-sans: "CircularStdBook";
   --font-heading: "CircularStdBold";
@@ -101,13 +95,9 @@
   --color-border-strong: #cbd5e1;
 
   /*
-   * True grey — equal parts, no blue cast.
-   *
-   * The surface and border ramp above is slate: #f1f5f9 and #cbd5e1 lean cool
-   * and sit with the brand teal on purpose. These are for chrome that should
-   * read as plain grey and nothing else — the header's toolbar buttons and the
-   * avatar chip. Keep the two ramps apart; mixing them is what makes a grey
-   * look faintly blue next to a real one.
+   * True grey — equal parts, no blue cast. The surface and border ramp above is
+   * slate and leans cool on purpose; keep the two apart, since mixing them is
+   * what makes one grey look faintly blue next to another.
    */
   --color-gray-soft: #f5f5f5;
   --color-gray: #e5e5e5;

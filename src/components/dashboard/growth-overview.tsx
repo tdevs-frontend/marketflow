@@ -28,18 +28,10 @@ interface RangeData {
 }
 
 /**
- * Placeholder figures — swap for `useGetGrowthQuery(range)` once the API is
- * live. Two things are deliberate about the numbers:
+ * Placeholder figures — swap for `useGetGrowthQuery(range)` once the API is live.
  *
- * 1. The day ranges plot a daily rate, so all three converge on the same
- *    end-of-May figure (470 leads, 54 orders, $1,980 a day). Switching range
- *    changes the window, never the last reading.
- * 2. The 12-month view plots monthly totals, and its final month is exactly
- *    the KPI row above — 12,480 leads, 1,284 orders, $48.2K, each against a
- *    previous-period point that reproduces the KPI's own percentage.
- *
- * Every range carries its own `previous` window so the comparison line is a
- * real series rather than the current one shifted sideways.
+ * Day ranges plot a daily rate and converge on the same end-of-May reading;
+ * the 12-month view plots monthly totals and its last month is the KPI row.
  */
 const RANGES: Record<RangeKey, RangeData> = {
   "7d": {
@@ -188,9 +180,7 @@ export function GrowthOverview({ className }: { className?: string }) {
           onChange={setMetric}
         />
 
-        {/* A two-item legend beats Apex's own — it sits with the controls
-            instead of stealing a strip of the plot area. The unit belongs
-            here too: the day ranges plot a rate, the year plots totals. */}
+        {/* Own legend, so Apex's does not steal a strip of the plot area. */}
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
           <LegendSwatch className="bg-primary">{active.label}</LegendSwatch>
           <LegendSwatch className="bg-border-strong">Previous period</LegendSwatch>

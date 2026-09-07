@@ -13,16 +13,12 @@ import { cn } from "@/lib/utils";
 /* Geometry                                                                   */
 /* -------------------------------------------------------------------------- */
 
-/**
- * A square canvas in its own coordinate space. The chips are positioned as
- * percentages of it and the connectors are drawn in the same units, so the
- * whole composition scales as one piece instead of drifting apart.
- */
+/* Chips and connectors share these units, so the composition scales as one. */
 const CANVAS = 400;
 const HUB = { x: 200, y: 200 };
 const ORBIT = 150;
 
-/** Pentagon vertices, first one straight up, going clockwise. */
+/** Pentagon vertices, first straight up, going clockwise. */
 function vertex(index: number) {
   const angle = (index * 2 * Math.PI) / 5;
   return {
@@ -31,11 +27,7 @@ function vertex(index: number) {
   };
 }
 
-/**
- * A gently bowed line from the hub. The control point sits off the midpoint
- * along the perpendicular, which curves every spoke the same way round the
- * ring rather than each one guessing.
- */
+/** Control point on the perpendicular, so every spoke bows the same way. */
 function spoke(to: { x: number; y: number }, bow = 26) {
   const dx = to.x - HUB.x;
   const dy = to.y - HUB.y;
@@ -57,11 +49,8 @@ interface Node {
   icon: LucideIcon;
 }
 
-/**
- * Clockwise from the top, the ring traces the product flow itself — a lead is
- * captured, a conversation starts, automation carries it, a product is sold,
- * and growth is measured. The arrangement is the argument.
- */
+/* Clockwise from the top, the ring traces the product flow: lead,
+   conversation, automation, sale, growth. */
 const NODES: Node[] = [
   { name: "CRM", caption: "Manage leads", icon: Users },
   { name: "WhatsApp", caption: "Engage customers", icon: MessageCircle },
@@ -74,26 +63,20 @@ const NODES: Node[] = [
 /* Visual                                                                     */
 /* -------------------------------------------------------------------------- */
 
-/**
- * One platform, five jobs.
- *
- * Decorative in full: the headline beside it already makes the claim in words,
- * so the tree is hidden from assistive tech rather than read out as a list of
- * disconnected nouns.
- */
+/** One platform, five jobs. Decorative — the headline says it in words. */
 export function EcosystemVisual({ className }: { className?: string }) {
   return (
     <div
       aria-hidden
       className={cn("relative mx-auto aspect-square w-full max-w-100", className)}
     >
-      {/* Connectors first, so the cards paint over where the lines meet them. */}
+      {/* Connectors first, so the cards paint over where lines meet them. */}
       <svg
         viewBox={`0 0 ${CANVAS} ${CANVAS}`}
         className="absolute inset-0 size-full"
         role="presentation"
       >
-        {/* The orbit ties the five together without drawing a box round them. */}
+        {/* Ties the five together without drawing a box round them. */}
         <circle
           cx={HUB.x}
           cy={HUB.y}

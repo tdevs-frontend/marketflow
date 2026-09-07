@@ -24,12 +24,8 @@ interface ActivityItem {
   tone: string;
 }
 
-/**
- * Read top to bottom this is one customer's whole journey — Sarah is captured,
- * messaged, asks about a product, orders it, and gets a post-purchase
- * follow-up. That is the lifecycle the rest of the dashboard measures, shown
- * happening.
- */
+/* One customer's whole journey, in order — the lifecycle the rest of the
+   dashboard measures, shown happening. */
 const ACTIVITY: ActivityItem[] = [
   {
     title: "New lead captured",
@@ -93,12 +89,8 @@ export function AutomationActivity({ className }: { className?: string }) {
         </ButtonLink>
       </div>
 
-      {/*
-       * One line per event at `sm` and up. In a two-column card a stacked
-       * timeline would run five items well past the height of the funnel
-       * beside it; aligning title, detail and time into columns keeps the card
-       * short and makes the sequence scannable.
-       */}
+      {/* One line per event at `sm` — a stacked timeline would run well past
+          the height of the card beside it. */}
       <ol className="mt-4">
         {ACTIVITY.map((item, index) => {
           const ItemIcon = item.icon;

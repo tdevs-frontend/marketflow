@@ -70,8 +70,7 @@ export function Field({
         {label}
       </label>
       {children}
-      {/* Ids are derived from the control's own, so a caller can point
-          `aria-describedby` at the message without threading an id through. */}
+      {/* Ids derive from the control's, so `aria-describedby` can point here. */}
       {error ? (
         <p id={`${htmlFor}-error`} className="text-xs text-error">
           {error}

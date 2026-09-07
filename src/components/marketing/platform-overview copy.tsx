@@ -102,7 +102,7 @@ function CardConnector({ side }: { side: Side }) {
       <span
         className={cn(
           "absolute top-1/2 size-1.5 -translate-y-1/2 rounded-full bg-border-strong",
-          side === "left" ? "-right-[27px]" : "-left-[27px]",
+          side === "left" ? "-right-6.75" : "-left-6.75",
         )}
       />
     </span>
@@ -201,12 +201,12 @@ export function PlatformOverview() {
       {/* Dot texture, faded out at the edges */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)] bg-[radial-gradient(var(--color-border-strong)_1px,transparent_1px)] bg-[size:22px_22px] opacity-50"
+        className="pointer-events-none absolute inset-0 -z-10 mask-[radial-gradient(ellipse_at_center,black,transparent_75%)] bg-[radial-gradient(var(--color-border-strong)_1px,transparent_1px)] bg-[size:22px_22px] opacity-50"
       />
       {/* Mint bloom behind the command center */}
       <div
         aria-hidden
-        className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-[52rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(37,211,102,0.10),transparent)]"
+        className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-208 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(37,211,102,0.10),transparent)]"
       />
 
       <div className="custom-container">

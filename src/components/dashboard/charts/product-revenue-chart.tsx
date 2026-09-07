@@ -20,13 +20,7 @@ export interface ProductRevenueChartProps {
   height?: number;
 }
 
-/**
- * Revenue by product, horizontal.
- *
- * The list beside it already ranks the products and gives exact figures; this
- * is here for the one thing a list cannot show at a glance — how far ahead the
- * leader actually is.
- */
+/** The list ranks and gives figures; this shows how far ahead the leader is. */
 export function ProductRevenueChart({
   products,
   revenue,

@@ -16,11 +16,8 @@ import { APP_ROUTES } from "@/constants";
 
 type Errors = { email?: string; password?: string };
 
-/**
- * Deliberately loose. The server is the only thing that can actually tell a
- * real address from a well-formed one, so this catches typos and nothing else
- * — a stricter pattern here only ever locks out a valid address.
- */
+/* Deliberately loose — catches typos, nothing else. Only the server can tell
+   a real address from a well-formed one. */
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function validate(email: string, password: string): Errors {
@@ -32,8 +29,7 @@ function validate(email: string, password: string): Errors {
     errors.email = "Enter a valid email address, like you@company.com.";
   }
 
-  /* No length or complexity rule on sign-in: the password either matches the
-     stored one or it does not, and hinting at its shape helps nobody. */
+  /* No complexity rule on sign-in — hinting at the shape helps nobody. */
   if (!password) {
     errors.password = "Enter your password.";
   }
@@ -48,12 +44,9 @@ function validate(email: string, password: string): Errors {
 type Pending = "credentials" | "google" | null;
 
 /**
- * NOTE — the network call is stubbed.
- *
- * `signIn` and `signInWithGoogle` below are the two seams: replace their bodies
- * with the real mutation and dispatch `setCredentials` / `setAuthError` from
- * `redux/features/auth/authSlice`. Everything around them — validation, focus
- * management, the busy and error states — is already wired for a real request.
+ * NOTE — the network call is stubbed. `handleSubmit` and `handleGoogle` are the
+ * two seams: swap their bodies for the real mutation and dispatch
+ * `setCredentials` / `setAuthError` from `redux/features/auth/authSlice`.
  */
 export function LoginForm() {
   const router = useRouter();
@@ -70,11 +63,7 @@ export function LoginForm() {
   const [formError, setFormError] = useState<string | null>(null);
   const [pending, setPending] = useState<Pending>(null);
 
-  /**
-   * Validation stays quiet until the first submit, then tracks every keystroke.
-   * Complaining about an incomplete address while it is still being typed is
-   * the single most annoying thing a sign-in form can do.
-   */
+  /* Quiet until the first submit, then tracks every keystroke. */
   const [liveValidation, setLiveValidation] = useState(false);
 
   const isPending = pending !== null;
@@ -93,8 +82,7 @@ export function LoginForm() {
     const nextErrors = validate(email, password);
     setErrors(nextErrors);
 
-    /* Send focus to the first field that failed, so keyboard and screen-reader
-       users land on the problem instead of hunting for it. */
+    /* Focus the first failed field, so keyboard users land on the problem. */
     if (nextErrors.email || nextErrors.password) {
       (nextErrors.email ? emailRef : passwordRef).current?.focus();
       return;
@@ -106,8 +94,7 @@ export function LoginForm() {
       // TODO: swap for the real sign-in mutation.
       await new Promise((resolve) => setTimeout(resolve, 900));
       router.push(APP_ROUTES.dashboard);
-      /* Left pending on purpose — the button stays busy through the route
-         change rather than flicking back to its resting state. */
+      /* Left pending — the button stays busy through the route change. */
     } catch {
       setFormError(
         "We could not sign you in. Check your email and password, then try again.",
@@ -134,8 +121,7 @@ export function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate className="mt-8">
-      {/* `disabled` on the fieldset reaches every control inside it, including
-          the buttons, so the busy state needs no per-control bookkeeping. */}
+      {/* `disabled` here reaches every control inside, buttons included. */}
       <fieldset disabled={isPending} className="space-y-5">
         {formError ? (
           <div
@@ -246,8 +232,7 @@ export function LoginForm() {
           <span aria-hidden className="h-px flex-1 bg-border" />
         </div>
 
-        {/* `btn-google` lives in `styles/globals.css` — same look as the
-            outline button, on its own class. */}
+        {/* `btn-google` is in `styles/globals.css`. */}
         <button type="button" className="btn-google" onClick={handleGoogle}>
           {pending === "google" ? (
             <Loader2 className="animate-spin" aria-hidden />
@@ -258,8 +243,7 @@ export function LoginForm() {
         </button>
       </fieldset>
 
-      {/* Announces the busy state to screen readers, which otherwise get no
-          signal that anything happened when the button label changes. */}
+      {/* Announces the busy state — a label change alone is not announced. */}
       <p role="status" aria-live="polite" className="sr-only">
         {isPending ? "Signing in, please wait." : ""}
       </p>

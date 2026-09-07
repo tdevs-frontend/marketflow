@@ -13,12 +13,12 @@ export function AnalyticsSection() {
       {/* Dot texture, faded at the edges */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(var(--color-border-strong)_1px,transparent_1px)] bg-[size:22px_22px] opacity-40 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(var(--color-border-strong)_1px,transparent_1px)] bg-[size:22px_22px] opacity-40 mask-[radial-gradient(ellipse_at_center,black,transparent_75%)]"
       />
       {/* Mint bloom behind the dashboard */}
       <div
         aria-hidden
-        className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-[56rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(37,211,102,0.08),transparent)]"
+        className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-224 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(37,211,102,0.08),transparent)]"
       />
 
       <div className="custom-container">

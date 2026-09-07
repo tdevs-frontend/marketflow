@@ -189,7 +189,7 @@ export function HeroDashboard() {
 
               <div className="relative flex-1">
                 {/* Recessive gridlines */}
-                <div aria-hidden className="absolute inset-x-0 top-0 h-[88px]">
+                <div aria-hidden className="absolute inset-x-0 top-0 h-22">
                   {[0, 1, 2].map((line) => (
                     <span
                       key={line}
@@ -199,7 +199,7 @@ export function HeroDashboard() {
                   ))}
                 </div>
 
-                <div className="relative flex h-[88px] items-end gap-1.5">
+                <div className="relative flex h-22 items-end gap-1.5">
                   {WEEK.map((point, index) => (
                     <span key={index} className="flex h-full flex-1 items-end">
                       <span

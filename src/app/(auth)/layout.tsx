@@ -19,13 +19,8 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
 
       <main className="flex items-center justify-center px-5 py-12 sm:px-8 lg:py-16">
         <div className="w-full max-w-108">
-          {/*
-           * Stands in for the brand panel wherever it is hidden — the logo,
-           * the headline and one line of context, and nothing decorative. The
-           * ecosystem visual stays behind at these widths on purpose: on a
-           * phone it would push the form below the fold to say something the
-           * headline already says.
-           */}
+          {/* Stands in for the brand panel where it is hidden. No visual —
+              on a phone it would push the form below the fold. */}
           <div className="mb-8 text-center lg:hidden">
             <Link
               href={APP_ROUTES.home}

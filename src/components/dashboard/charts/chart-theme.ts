@@ -1,12 +1,9 @@
 import type { ApexOptions } from "apexcharts";
 
 /**
- * Chart palette.
- *
- * These mirror the tokens in `styles/variables.css` and have to be literal hex:
- * ApexCharts does not just write them into `fill` attributes, it reads them
- * back to compute gradient stops and hover shades, which `var(--color-…)`
- * cannot satisfy. Any change here needs the matching token changed too.
+ * Mirrors the tokens in `styles/variables.css`, as literal hex: ApexCharts
+ * reads these back to compute gradient stops and hover shades, which
+ * `var(--color-…)` cannot satisfy. Keep both in step.
  */
 export const CHART_COLORS = {
   primary: "#128c7e",
@@ -21,11 +18,7 @@ export const CHART_COLORS = {
   error: "#dc2626",
 } as const;
 
-/**
- * The series order for anything comparing channels or campaigns. Brand green
- * leads, the blue accent supports, and everything after that is neutral — the
- * palette runs out on purpose, so a chart can never turn into a rainbow.
- */
+/* Green leads, blue supports, then neutral. Runs out on purpose — no rainbows. */
 export const SERIES_COLORS = [
   CHART_COLORS.primary,
   CHART_COLORS.accent,

@@ -17,13 +17,9 @@ function greetingFor(hour: number): string {
 const subscribe = () => () => {};
 
 /**
- * The merchant's local hour.
- *
- * Read through `useSyncExternalStore` rather than at render: the clock is a
- * browser value, and the server pass has a different one. This is the API for
- * exactly that split — the server snapshot renders, the client swaps to its own
- * on hydration, and React never reports a mismatch. Reading `new Date()`
- * inline would prerender the build machine's hour and freeze it there.
+ * The merchant's local hour. Read through `useSyncExternalStore` because the
+ * clock differs between the server pass and the client: the server snapshot
+ * renders, the client swaps on hydration, and React reports no mismatch.
  */
 function useLocalHour(): number {
   return useSyncExternalStore(

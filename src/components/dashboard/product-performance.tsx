@@ -21,11 +21,7 @@ interface Product {
   changePercent: number;
 }
 
-/**
- * Ranked by revenue, not units — the merchant question is which product earns
- * most, and the two do not always agree. Starter outsells Business on units
- * and still earns less.
- */
+/* Ranked by revenue, not units — Starter outsells Business and earns less. */
 const PRODUCTS: Product[] = [
   { name: "Premium Package", unitsSold: 184, revenue: 12840, changePercent: 18.2 },
   { name: "Starter Package", unitsSold: 142, revenue: 8920, changePercent: 9.4 },
@@ -75,7 +71,7 @@ function ProductRow({ product, rank }: { product: Product; rank: number }) {
           </span>
         </div>
 
-        {/* Share of the top seller — the ranking made visible in the row. */}
+        {/* Share of the top seller. */}
         <div
           aria-hidden
           className="mt-1.5 h-1 overflow-hidden rounded-full bg-surface-secondary"
@@ -111,8 +107,7 @@ export function ProductPerformance({ className }: { className?: string }) {
         </ButtonLink>
       </div>
 
-      {/* List and chart side by side at xl, where the card is two columns
-          wide. Stacked below that, so neither gets squeezed. */}
+      {/* Side by side at xl, where the card is two columns wide. */}
       <div className="mt-3 grid gap-x-8 gap-y-2 xl:grid-cols-2">
         <ul className="divide-y divide-border">
           {PRODUCTS.map((product, index) => (

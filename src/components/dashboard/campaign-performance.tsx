@@ -22,11 +22,7 @@ interface Campaign {
   revenue: number;
 }
 
-/**
- * Placeholder figures, but they close the loop with the KPI row: the four
- * campaigns account for exactly 1,284 orders and $48,200 of revenue, so
- * "which campaign drove the month" has an answer that adds up.
- */
+/* Sums to the KPI row exactly — 1,284 orders, $48,200 — so the month adds up. */
 const CAMPAIGNS: Campaign[] = [
   { name: "Summer Sale", reach: 24580, engagement: 8420, orders: 468, revenue: 18240 },
   { name: "Product Launch", reach: 18240, engagement: 6180, orders: 342, revenue: 14820 },
@@ -58,11 +54,7 @@ const TOTALS = {
 /* -------------------------------------------------------------------------- */
 
 export function CampaignPerformance({ className }: { className?: string }) {
-  /*
-   * Opens on Revenue, not the first tab. Now that MarketFlow sells products,
-   * "are my campaigns making money" is the question this card exists to
-   * answer, and it should not take a click to see it.
-   */
+  /* Opens on Revenue: "are my campaigns making money" should not cost a click. */
   const [tab, setTab] = useState<TabKey>("revenue");
 
   const active = TABS.find((item) => item.value === tab) ?? TABS[0];
@@ -108,9 +100,7 @@ export function CampaignPerformance({ className }: { className?: string }) {
         />
       </div>
 
-      {/* Totals the bars cannot show: the chart answers "which campaign",
-          these answer "how are all of them doing". Exact, not compacted, so
-          the three read as one row. */}
+      {/* The chart answers "which campaign"; these answer "all of them". */}
       <dl className="mt-4 grid grid-cols-3 gap-4 border-t border-border pt-4">
         {[
           { label: "Total reach", value: TOTALS.reach.toLocaleString("en-US") },

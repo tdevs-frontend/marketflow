@@ -73,13 +73,9 @@
   }
 
   /*
-   * Google sign-in button.
-   *
-   * Reproduces `Button variant="outline" size="lg"` exactly — same geometry,
-   * elevation, focus ring and reduced-motion handling — but as its own class,
-   * so the social button is a plain `<button>` rather than a design-system
-   * variant it does not really belong to. Keep it in step with `SIZES.lg` and
-   * `VARIANTS.outline` in `components/ui/button.tsx` if those change.
+   * Google sign-in button — reproduces `Button variant="outline" size="lg"` as
+   * its own class. Keep in step with `SIZES.lg` / `VARIANTS.outline` in
+   * `components/ui/button.tsx`.
    */
   .btn-google {
     @apply inline-flex w-full select-none items-center justify-center gap-2.5 whitespace-nowrap;

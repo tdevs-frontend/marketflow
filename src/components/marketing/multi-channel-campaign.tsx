@@ -305,7 +305,7 @@ function OrchestrationTimeline() {
             {index < ORCHESTRATION.length - 1 ? (
               <span
                 aria-hidden
-                className="absolute top-8 left-[15px] h-[calc(100%-2.25rem)] w-px bg-border-strong"
+                className="absolute top-8 left-3.75 h-[calc(100%-2.25rem)] w-px bg-border-strong"
               />
             ) : null}
             <span className="relative grid size-8 shrink-0 place-items-center rounded-full border border-primary-border bg-surface text-primary">
@@ -339,7 +339,7 @@ export function MultiChannelCampaign() {
         aria-hidden
         viewBox="0 0 1200 600"
         preserveAspectRatio="xMidYMid slice"
-        className="pointer-events-none absolute inset-0 -z-10 size-full opacity-[0.55] [mask-image:radial-gradient(ellipse_at_center,black,transparent_78%)]"
+        className="pointer-events-none absolute inset-0 -z-10 size-full opacity-[0.55] mask-[radial-gradient(ellipse_at_center,black,transparent_78%)]"
       >
         {[0, 1, 2, 3].map((index) => (
           <path
@@ -354,7 +354,7 @@ export function MultiChannelCampaign() {
       {/* Mint bloom behind the journey */}
       <div
         aria-hidden
-        className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-[54rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(37,211,102,0.08),transparent)]"
+        className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-216 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(37,211,102,0.08),transparent)]"
       />
 
       <div className="custom-container">

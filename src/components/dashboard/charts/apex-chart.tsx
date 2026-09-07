@@ -6,16 +6,9 @@ import type { ApexOptions } from "apexcharts";
 import { cn } from "@/lib/utils";
 
 /**
- * The single place ApexCharts enters the app.
- *
- * ApexCharts touches `window` while its module is still evaluating, so it can
- * never take part in the server pass — `ssr: false` keeps it out of the server
- * bundle entirely rather than failing at render time. `next/dynamic` with that
- * flag is only legal inside a Client Component, which is why this wrapper is
- * the boundary and every chart below it can stay a plain component.
- *
- * The outer div owns the height so the skeleton reserves the exact same box
- * the chart will occupy, and nothing on the page shifts when it swaps in.
+ * The single place ApexCharts enters the app. It touches `window` at module
+ * scope, so `ssr: false` keeps it out of the server bundle — and that flag is
+ * only legal in a Client Component, which is why this is the boundary.
  */
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -30,7 +23,7 @@ export interface ApexChartProps {
   type: ApexChartType;
   series: ApexOptions["series"];
   options: ApexOptions;
-  /** Any CSS length. Fixed, so the skeleton and the chart agree. */
+  /** Fixed, so the skeleton reserves the chart's exact box. */
   height: number | string;
   className?: string;
 }

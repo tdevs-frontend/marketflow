@@ -8,11 +8,7 @@ import { cn } from "@/lib/utils";
 /* Data                                                                       */
 /* -------------------------------------------------------------------------- */
 
-/**
- * The whole lifecycle in one column: a visitor becomes a lead, shows interest
- * in a product, orders, and stays a customer. Customers come in under Orders
- * because repeat buyers place more than one.
- */
+/* Customers sit under Orders because repeat buyers place more than one. */
 const STAGES = [
   { label: "Visitors", count: 48920 },
   { label: "Leads", count: 12480 },
@@ -24,11 +20,8 @@ const STAGES = [
 const TOP = STAGES[0].count;
 const LAST = STAGES[STAGES.length - 1];
 
-/**
- * Bars are widths of the top stage, not of each other, so the taper is the
- * real drop-off. A 34% floor keeps the last stage wide enough to hold its
- * label — Customers is 5% of Visitors and would otherwise vanish.
- */
+/* Widths are a share of the top stage, so the taper is the real drop-off. The
+   floor keeps the last stage wide enough for its label. */
 const MIN_WIDTH = 34;
 
 function barWidth(count: number): string {

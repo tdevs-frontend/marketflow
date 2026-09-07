@@ -31,11 +31,8 @@ export function Logo({
 }
 
 /**
- * The bare mark, for surfaces too tight for the full lockup.
- *
- * Decorative by default: it is a brand anchor, not a label, and every place it
- * appears already names the product in the copy beside it. Pass `label` where
- * it is the only mention.
+ * The bare mark, for surfaces too tight for the full lockup. Decorative by
+ * default — pass `label` where it is the only mention of the product.
  */
 export function LogoMark({
   size = 36,

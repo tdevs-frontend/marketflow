@@ -24,13 +24,8 @@ const ALL_HREFS = dashboardNav.flatMap((section) =>
 );
 
 /**
- * Routes that another route extends, and so cannot use a prefix match.
- *
- * `/dashboard/settings` is General *and* the parent of Profile, Billing and
- * the rest; a prefix match would leave General lit on every one of them. Same
- * for `/dashboard`, `/dashboard/integrations`, `/dashboard/automation`,
- * `/dashboard/templates` and `/dashboard/whatsapp`. Deriving the set from the
- * nav itself means a new child route can never reintroduce the bug.
+ * Routes another route extends, so they need an exact match — `/dashboard/settings`
+ * is General *and* the parent of Profile, and a prefix match would light both.
  */
 const EXACT_HREFS = new Set(
   ALL_HREFS.filter((href) =>
@@ -48,15 +43,7 @@ const isActive = (pathname: string, href: string) =>
 const ROW =
   "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:shadow-focus";
 
-/*
- * Straight off the brand ramp in `styles/variables.css` — `primary` for the
- * fill, `primary-soft` and `primary-subtle` for the two tint steps, and
- * `primary-dark` for ink on a tint. No opacity mixing: the ramp already has
- * the steps, and a real token holds its contrast where `primary/10` over an
- * unknown background does not.
- */
-
-/** Active rows carry a solid fill — the emphasis the old left rail gave. */
+/* Brand ramp tokens, not opacity mixes — the ramp already has the tint steps. */
 const ROW_ACTIVE = "bg-primary text-white";
 const ROW_IDLE =
   "text-text-secondary hover:bg-primary-soft hover:text-primary-dark";
@@ -73,11 +60,7 @@ const SUB_IDLE = "text-text-muted hover:bg-primary-subtle hover:text-primary";
 /* Items                                                                      */
 /* -------------------------------------------------------------------------- */
 
-/**
- * An item with children. The parent is a disclosure button rather than a link
- * — every child is a real destination, and the parent's own page is the first
- * of them, so there is nothing left for the parent row itself to point at.
- */
+/** The parent is a disclosure, not a link — its own page is the first child. */
 function CollapsibleItem({
   item,
   pathname,
@@ -92,15 +75,8 @@ function CollapsibleItem({
 
   const [open, setOpen] = useState(holdsActive);
 
-  /*
-   * Arriving at a child from elsewhere should reveal the group it lives in,
-   * without overriding a deliberate collapse on every render.
-   *
-   * Adjusted during render rather than from an effect: React re-runs the
-   * component before committing, so the disclosure never paints closed and
-   * then snaps open. Collapsing a group by hand sticks until navigation
-   * actually moves into it.
-   */
+  /* Reveal the group when navigation moves into it. Adjusted during render,
+     not in an effect, so it never paints closed then snaps open. */
   const [wasHoldingActive, setWasHoldingActive] = useState(holdsActive);
   if (holdsActive !== wasHoldingActive) {
     setWasHoldingActive(holdsActive);
@@ -132,7 +108,7 @@ function CollapsibleItem({
       {open ? (
         <ul
           id={submenuId}
-          className="mt-1 ml-[1.4rem] space-y-0.5 border-l border-border pl-2.5"
+          className="mt-1 ml-5 space-y-0.5 border-l border-border pl-2.5"
         >
           {children.map((child) => {
             const active = isActive(pathname, child.href);
@@ -235,7 +211,7 @@ export function DashboardSidebar() {
         >
           {dashboardNav.map((section) => (
             <div key={section.title}>
-              <p className="px-2.5 text-[11px] font-medium text-text-heading/10 uppercase">
+              <p className="px-2.5 text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
                 {section.title}
               </p>
               <ul className="mt-2 space-y-1">
