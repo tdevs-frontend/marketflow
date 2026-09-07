@@ -72,6 +72,24 @@ export const dashboardNav: NavSection[] = [
     items: [{ title: "Dashboard", href: "/dashboard", icon: "layout-dashboard" }],
   },
   {
+    /*
+     * Sits ahead of Marketing on purpose: the lifecycle runs product → order →
+     * customer → marketing → revenue, and the catalogue is what everything
+     * downstream is selling. Customers are not repeated here — they already
+     * have their own group, and one contact record serves both sides.
+     */
+    title: "Commerce",
+    items: [
+      { title: "Products", href: "/dashboard/products", icon: "package" },
+      { title: "Categories", href: "/dashboard/categories", icon: "folder-tree" },
+      { title: "Orders", href: "/dashboard/orders", icon: "shopping-cart" },
+      { title: "Inventory", href: "/dashboard/inventory", icon: "warehouse" },
+      { title: "Product Catalog", href: "/dashboard/catalog", icon: "book-open" },
+      /* Moved out of Growth, where it was "Offers & Coupons" — same feature. */
+      { title: "Discounts & Coupons", href: "/dashboard/discounts", icon: "badge-percent" },
+    ],
+  },
+  {
     title: "Marketing",
     items: [
       { title: "Campaigns", href: "/dashboard/campaigns", icon: "megaphone" },
@@ -118,7 +136,6 @@ export const dashboardNav: NavSection[] = [
       { title: "Conversion Funnel", href: "/dashboard/conversion-funnel", icon: "funnel" },
       { title: "Forms", href: "/dashboard/forms", icon: "list-checks" },
       { title: "Landing Pages", href: "/dashboard/landing-pages", icon: "globe" },
-      { title: "Offers & Coupons", href: "/dashboard/offers", icon: "ticket" },
     ],
   },
   {

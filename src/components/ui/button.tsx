@@ -14,7 +14,7 @@ export type ButtonVariant =
   | "ghost"
   | "danger"
   | "inverse";
-export type ButtonSize = "sm" | "md" | "lg" | "icon";
+export type ButtonSize = "sm" | "compact" | "md" | "lg" | "icon";
 
 /**
  * Shared shell: geometry, motion, focus and icon rules.
@@ -81,6 +81,12 @@ const VARIANTS: Record<ButtonVariant, string> = {
  */
 const SIZES: Record<ButtonSize, string> = {
   sm: "h-9 gap-1.5 px-3.5 text-xs [&_svg]:size-4",
+  /**
+   * 40px — the dashboard's control height. It lines up with `IconButton`'s
+   * `md` and the header search field, so a CTA can sit in a toolbar row
+   * without being the tallest thing in it.
+   */
+  compact: "h-10 gap-2 px-4 text-sm [&_svg]:size-4",
   md: "h-11 gap-2 px-5 text-sm [&_svg]:size-4",
   lg: "h-12 gap-2.5 px-7 text-base [&_svg]:size-5",
   icon: "size-11 gap-0 p-0 [&_svg]:size-4",
@@ -152,14 +158,18 @@ export function ButtonLink({
 }
 
 /**
- * Square action button for toolbar icons — soft brand tint at rest, one step
+ * Square action button for toolbar icons — neutral grey at rest, one step
  * deeper on hover. It keeps its own compact scale rather than the text-button
  * heights, because a toolbar row wants a smaller target than a CTA.
+ *
+ * Grey rather than a brand tint on purpose: these sit beside the page's real
+ * CTA, and two green controls in one row leave nothing for the eye to pick.
  */
 const TOOLBAR =
-  "bg-primary-soft text-primary hover:bg-primary-soft-hover hover:text-primary-dark active:bg-primary-soft-hover";
+  "bg-surface-secondary text-text-secondary hover:bg-border hover:text-text-primary active:bg-border-strong/60";
 
-const ICON_SIZES: Record<Exclude<ButtonSize, "icon">, string> = {
+/* `compact` has no entry: IconButton's `md` is already the 40px control. */
+const ICON_SIZES: Record<Exclude<ButtonSize, "icon" | "compact">, string> = {
   sm: "size-8 [&_svg]:size-4",
   md: "size-10 [&_svg]:size-[18px]",
   lg: "size-11 [&_svg]:size-5",
@@ -168,8 +178,8 @@ const ICON_SIZES: Record<Exclude<ButtonSize, "icon">, string> = {
 export type IconButtonProps = {
   /** Accessible name — the button has no visible label. */
   label: string;
-  size?: Exclude<ButtonSize, "icon">;
-  /** Defaults to the soft brand toolbar treatment; opt into a full variant here. */
+  size?: Exclude<ButtonSize, "icon" | "compact">;
+  /** Defaults to the neutral toolbar treatment; opt into a full variant here. */
   variant?: ButtonVariant;
   className?: string;
   children: ReactNode;

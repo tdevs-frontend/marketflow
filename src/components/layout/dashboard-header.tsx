@@ -40,15 +40,19 @@ export function DashboardHeader() {
         >
           <Bell className="h-4.5 w-4.5" />
           {unread > 0 ? (
-            <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-secondary ring-2 ring-surface" />
+            /* Ringed in the button's own grey, so the dot reads as a badge on
+               the control rather than a white hole punched through it. */
+            <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-secondary ring-2 ring-surface-secondary" />
           ) : null}
         </IconButton>
 
-        <div className="flex items-center gap-2 rounded-btn px-2 py-1.5">
-          <span className="grid h-8 w-8 place-items-center rounded-full bg-primary-soft text-xs font-semibold text-primary-dark">
+        <div className="flex h-10 items-center gap-2 rounded-btn bg-surface-secondary pr-1.5 pl-1.5 sm:pr-3">
+          <span className="grid size-7 place-items-center rounded-full border border-border-strong bg-surface text-[11px] font-bold text-text-primary">
             {initials(firstName, lastName)}
           </span>
-          <span className="hidden text-sm font-medium text-text-primary sm:block">{user?.name ?? "Guest User"}</span>
+          <span className="hidden text-sm font-medium text-text-primary sm:block">
+            {user?.name ?? "Guest User"}
+          </span>
         </div>
       </div>
     </header>
