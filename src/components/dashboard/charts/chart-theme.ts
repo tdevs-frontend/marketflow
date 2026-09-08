@@ -6,10 +6,10 @@ import type { ApexOptions } from "apexcharts";
  * `var(--color-…)` cannot satisfy. Keep both in step.
  */
 export const CHART_COLORS = {
-  primary: "#0f766e",
-  primaryDark: "#115e59",
-  primaryLight: "#14b8a6",
-  accent: "#3b82f6",
+  primary: "#4f46e5",
+  primaryDark: "#4338ca",
+  primaryLight: "#818cf8",
+  accent: "#06b6d4",
   neutral: "#cbd5e1",
   grid: "#e2e8f0",
   surface: "#ffffff",
@@ -18,7 +18,7 @@ export const CHART_COLORS = {
   error: "#dc2626",
 } as const;
 
-/* Teal leads, blue supports, then neutral. Runs out on purpose — no rainbows. */
+/* Indigo leads, cyan supports, then neutral. Runs out on purpose — no rainbows. */
 export const SERIES_COLORS = [
   CHART_COLORS.primary,
   CHART_COLORS.accent,
@@ -75,11 +75,11 @@ export function compactAxisCurrency(value: number): string {
  * unrelated things; it is one population losing people at each step.
  */
 export const FUNNEL_RAMP = [
-  "#115e59",
-  "#0f766e",
-  "#14b8a6",
-  "#5eead4",
-  "#99f6e4",
+  "#3730a3",
+  "#4f46e5",
+  "#6366f1",
+  "#a5b4fc",
+  "#c7d2fe",
 ] as const;
 
 /**
@@ -96,9 +96,9 @@ export const FUNNEL_RAMP = [
  * gradient stops and hover shades. Keep them in step with `CHANNEL_THEME`.
  */
 export const CHANNEL_SERIES = {
-  whatsapp: ["#0f766e", "#14b8a6", "#22c55e"],
+  whatsapp: ["#059669", "#34d399", "#cbd5e1"],
   email: ["#2563eb", "#60a5fa", "#cbd5e1"],
-  sms: ["#7c3aed", "#a78bfa", "#cbd5e1"],
+  sms: ["#9333ea", "#c084fc", "#cbd5e1"],
   social: ["#64748b", "#94a3b8", "#cbd5e1"],
 } as const satisfies Record<string, readonly [string, string, string]>;
 
@@ -132,15 +132,15 @@ export const channelPair = (channel: keyof typeof CHANNEL_SERIES) =>
  * hues far enough apart to read at a 2px stroke without implying that any of
  * them is a channel.
  */
-export const BRAND_SERIES = ["#0f766e", "#3b82f6", "#cbd5e1"] as const;
+export const BRAND_SERIES = ["#4f46e5", "#06b6d4", "#cbd5e1"] as const;
 
 /**
  * Delivery outcomes, in the order they are always stacked: the good outcome
  * first so it sits at the base of the bar, then the partial one, then failure.
  */
 export const OUTCOME_COLORS = {
-  succeeded: "#14b8a6",
-  partial: "#0f766e",
+  succeeded: "#34d399",
+  partial: "#059669",
   failed: "#dc2626",
   neutral: "#cbd5e1",
 } as const;
@@ -150,9 +150,9 @@ export const OUTCOME_COLORS = {
  * one quantity split by destination, so it takes a ramp rather than five hues.
  */
 export const SPEND_RAMP = [
-  "#7c3aed",
-  "#a78bfa",
-  "#c4b5fd",
+  "#9333ea",
+  "#c084fc",
+  "#e9d5ff",
   "#cbd5e1",
   "#e2e8f0",
 ] as const;

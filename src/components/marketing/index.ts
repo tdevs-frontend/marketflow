@@ -8,4 +8,6 @@ export * from "./multi-channel-campaign";
 export * from "./analytics-section";
 export * from "./analytics-dashboard";
 export * from "./trust-stats";
+export * from "./final-cta";
+export * from "./pricing-plans";
 export * from "./stat-value";

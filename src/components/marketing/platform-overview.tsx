@@ -139,7 +139,7 @@ function ModuleCard({ module }: { module: Module }) {
   return (
     <article className="group relative rounded-card border border-border bg-surface p-4 shadow-card transition-all hover:-translate-y-0.5 hover:border-primary-border hover:shadow-card-hover">
       <div className="flex items-start gap-3">
-        <span className="grid size-9 shrink-0 place-items-center rounded-btn bg-primary-soft text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+        <span className="grid size-9 shrink-0 place-items-center rounded-btn bg-primary-soft text-primary transition-colors group-hover:brand-gradient group-hover:text-white">
           <module.icon className="size-4" aria-hidden />
         </span>
         <div className="min-w-0 flex-1">
@@ -201,7 +201,7 @@ export function PlatformOverview() {
       {/* Mint bloom behind the command center */}
       <div
         aria-hidden
-        className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-208 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(20,184,166,0.10),transparent)]"
+        className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-208 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(99,102,241,0.10),transparent)]"
       />
 
       <div className="custom-container">

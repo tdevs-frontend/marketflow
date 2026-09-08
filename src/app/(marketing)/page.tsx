@@ -1,5 +1,6 @@
 import {
   AnalyticsSection,
+  FinalCta,
   HeroSection,
   MultiChannelCampaign,
   PlatformOverview,
@@ -21,6 +22,8 @@ export default function HomePage() {
       <AnalyticsSection />
 
       <TrustStats />
+
+      <FinalCta />
     </>
   );
 }

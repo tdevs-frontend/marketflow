@@ -28,7 +28,7 @@ export function SiteHeader() {
           <ButtonLink href={APP_ROUTES.login} variant="ghost" size="sm">
             Sign in
           </ButtonLink>
-          <ButtonLink href={APP_ROUTES.register} size="sm">
+          <ButtonLink href={APP_ROUTES.register} variant="gradient" size="sm">
             Start free
           </ButtonLink>
         </div>

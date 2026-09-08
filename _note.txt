@@ -2,3 +2,188 @@ background: #15a667;
 font changes
 color changes
 design more professional
+
+
+Update the MarketFlow landing page color system only.
+
+IMPORTANT:
+Do NOT change the existing layout, section structure, content, typography, spacing, components, images, icons, animations, responsiveness, or interactions.
+
+The ONLY thing that should change is the color combination of the landing page.
+
+Use this gradient as the main visual brand gradient throughout the landing page:
+
+linear-gradient(135deg, var(--accent), var(--accent2))
+
+Color variables:
+
+--accent: #6366F1;
+--accent2: #8B5CF6;
+
+Create a consistent premium purple/indigo SaaS color system based on these two colors.
+
+COLOR DIRECTION:
+- Primary brand color: #6366F1
+- Secondary brand color: #8B5CF6
+- Primary gradient: linear-gradient(135deg, var(--accent), var(--accent2))
+- Use the gradient for important CTAs, highlighted text, badges, active states, key visual accents, and selected UI elements.
+- Use solid #6366F1 or #8B5CF6 where a gradient would be visually too strong.
+- Keep the overall page clean, modern, premium, and professional.
+- Do NOT make the entire page purple.
+- Use white and very light neutral backgrounds for most sections.
+- Use dark navy/slate text for readability.
+- Use soft indigo/purple backgrounds for highlighted sections and cards.
+- Keep borders subtle and neutral.
+- Maintain strong contrast and accessibility.
+
+Suggested supporting colors:
+
+--accent: #6366F1;
+--accent2: #8B5CF6;
+
+--accent-soft: #EEF2FF;
+--accent-subtle: #F5F3FF;
+--accent-border: #C7D2FE;
+
+--text-primary: #111827;
+--text-secondary: #475569;
+--text-muted: #64748B;
+
+--background: #F8FAFC;
+--surface: #FFFFFF;
+--surface-secondary: #F1F5F9;
+
+--border: #E2E8F0;
+--border-strong: #CBD5E1;
+
+--success: #16A34A;
+--warning: #F59E0B;
+--error: #DC2626;
+
+SECTION COLOR APPLICATION:
+
+1. Navbar
+- Keep the navbar clean and mostly white.
+- Primary navigation text should remain dark/slate.
+- Active navigation item should use #6366F1.
+- Primary CTA should use the purple/indigo gradient.
+- Do not redesign the navbar.
+
+2. Hero Section
+- Keep the existing hero layout exactly the same.
+- Use a very light neutral/indigo background.
+- Main heading should remain dark.
+- Highlighted words should use the main gradient or #6366F1.
+- Primary CTA:
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+- CTA hover should become slightly darker/deeper purple.
+- Any existing decorative glow should use a very subtle purple/indigo glow.
+- Do not change the hero content or composition.
+
+3. Trust / Stats Section
+- Keep the existing structure.
+- Use white or neutral background.
+- Important numbers/stat highlights should use #6366F1 or #8B5CF6.
+- Keep supporting text muted.
+- Avoid excessive purple backgrounds.
+
+4. Problem Section
+- Keep the current layout and content.
+- Use neutral/light background.
+- Problem indicators can use subtle red/error colors where already appropriate.
+- Solutions/highlighted elements should use the purple gradient.
+- Do not redesign cards.
+
+5. All-in-One Platform
+- Use the purple/indigo gradient for the main visual highlight.
+- Feature icons, active states, badges, and important accents should use #6366F1 / #8B5CF6.
+- Keep cards mostly white with subtle borders.
+- Do not make every card purple.
+
+6. WhatsApp Automation Section
+- Preserve the existing WhatsApp identity where necessary.
+- Do NOT replace every WhatsApp-specific green with purple.
+- Keep WhatsApp-related UI recognizable.
+- Use the new purple/indigo gradient for MarketFlow branding, CTA buttons, highlighted UI elements, and surrounding visual accents.
+- Maintain the existing section layout.
+
+7. Automation Workflow
+- Use the purple gradient for workflow highlights, active nodes, connectors, and important actions.
+- Keep the workflow visually clear.
+- Use lighter indigo/purple shades for secondary states.
+- Do not change the workflow structure.
+
+8. Multi-Channel Campaign
+- Use purple/indigo as the primary MarketFlow campaign color.
+- WhatsApp, Email, and SMS can keep their own recognizable channel colors.
+- Campaign progress, active steps, CTA buttons, and conversion highlights should use the new gradient.
+- Keep the current layout unchanged.
+
+9. CRM & Lead Management
+- Use #6366F1 / #8B5CF6 for active lead states, tags, buttons, and important highlights.
+- Keep tables/cards mostly white.
+- Use soft indigo backgrounds for selected/active states.
+
+10. Marketing Analytics
+- Use the new purple/indigo gradient as the main chart brand color.
+- Use supporting chart colors such as blue, violet, green, amber only when needed to distinguish datasets.
+- Keep chart backgrounds clean.
+- Grid lines should remain subtle.
+- Do not change the chart library, chart structure, data, or layout.
+
+11. Self-Hosted / Data Ownership
+- Use a darker neutral background if the existing section already uses one.
+- Purple gradient can be used for key highlights and CTA.
+- Keep text highly readable.
+- Do not redesign the section.
+
+12. Pricing
+- Keep all pricing cards and layout exactly the same.
+- Featured/recommended plan should use the purple gradient as the primary highlight.
+- Featured border can use #6366F1.
+- Primary pricing button should use:
+  linear-gradient(135deg, var(--accent), var(--accent2))
+- Non-featured cards should remain mostly neutral/white.
+
+13. FAQ
+- Keep the existing layout.
+- Active/open states should use soft indigo/purple.
+- Icons or highlights can use #6366F1.
+- Keep the section mostly neutral.
+
+14. Final CTA
+- Keep the existing layout.
+- Use the purple/indigo gradient as the main CTA visual.
+- Use strong contrast between background, text, and button.
+- Do not change the CTA content or structure.
+
+15. Footer
+- DO NOT CHANGE THE FOOTER.
+- The footer color system is already correct.
+- Leave footer background, text, links, buttons, borders, and hover states exactly as they are.
+
+GLOBAL RULES:
+- ONLY change colors.
+- Do not modify JSX structure.
+- Do not modify component structure.
+- Do not modify section order.
+- Do not modify text/content.
+- Do not modify typography.
+- Do not modify font sizes.
+- Do not modify spacing/padding/margins.
+- Do not modify border radius.
+- Do not modify shadows unless they are directly color-related.
+- Do not modify animations.
+- Do not modify responsive behavior.
+- Do not replace existing components.
+- Do not add new sections.
+- Do not remove existing sections.
+- Do not change the footer.
+
+The final landing page should feel like a premium modern SaaS product using an elegant Indigo + Violet visual identity, with:
+
+linear-gradient(135deg, var(--accent), var(--accent2))
+
+as the main MarketFlow brand gradient.
+
+The result should feel polished, consistent, sophisticated, and production-ready — not overly colorful or AI-generated/template-like.

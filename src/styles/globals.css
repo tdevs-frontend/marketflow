@@ -110,15 +110,70 @@
 }
 
 /*
- * Landing hero ground: the page neutral with one soft teal bloom.
+ * The MarketFlow brand gradient — 135° indigo to violet.
  *
- * Deliberately faint. A strong green gradient here is what made the hero read
- * as a messaging app; at 8% the bloom gives the section depth without
- * announcing a colour.
+ * Defined once here rather than written out at each call site, so the angle and
+ * the stops are a single edit. Four utilities, because a gradient behaves
+ * differently depending on what it is painting:
+ *
+ *   brand-gradient         a surface with text on it — CTAs, badges. Uses the
+ *                          deeper interactive pair so white labels clear AA.
+ *   brand-gradient-hover   that ramp one step deeper again, for hover.
+ *   brand-gradient-accent  the identity pair exactly as specified. Decorative
+ *                          only: rules, dots, glows, the featured card edge.
+ *   brand-gradient-text    the identity pair clipped to the glyphs, for one
+ *                          highlighted phrase on a dark ground.
+ *
+ * `brand-gradient-text` needs a text colour of `transparent` to work, which
+ * means it silently hides its content anywhere `background-clip` is
+ * unsupported. It is only ever applied to a `<span>` inside a heading that
+ * already reads correctly without it.
+ */
+@utility brand-gradient {
+  background-image: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-secondary)
+  );
+}
+
+@utility brand-gradient-hover {
+  background-image: linear-gradient(
+    135deg,
+    var(--color-primary-dark),
+    var(--color-primary)
+  );
+}
+
+@utility brand-gradient-accent {
+  background-image: linear-gradient(
+    135deg,
+    var(--color-brand-from),
+    var(--color-brand-to)
+  );
+}
+
+@utility brand-gradient-text {
+  background-image: linear-gradient(
+    135deg,
+    var(--color-brand-from),
+    var(--color-brand-to)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/*
+ * Landing hero ground: the page neutral with one soft indigo bloom.
+ *
+ * Deliberately faint. A strong brand gradient here would compete with the
+ * gradient on the CTA a few hundred pixels below it; at 8% the bloom gives the
+ * section depth without announcing a colour.
  */
 @utility hero-surface {
   background-color: var(--color-hero);
-  background-image: radial-gradient(circle at 70% 30%, rgba(20, 184, 166, 0.08), transparent 45%);
+  background-image: radial-gradient(circle at 70% 30%, rgba(99, 102, 241, 0.08), transparent 45%);
 }
 
 /* Container */

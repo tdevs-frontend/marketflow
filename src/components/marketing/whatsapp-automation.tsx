@@ -20,12 +20,12 @@ export function WhatsAppAutomation() {
   return (
     <section
       aria-labelledby="whatsapp-automation-title"
-      className="section-space-py relative isolate overflow-hidden bg-primary-darker"
+      className="section-space-py relative isolate overflow-hidden bg-dark"
     >
       {/* Soft brand bloom behind the product UI */}
       <div
         aria-hidden
-        className="pointer-events-none absolute top-1/2 -right-64 -z-10 hidden size-176 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(20,184,166,0.18),transparent)] lg:block"
+        className="pointer-events-none absolute top-1/2 -right-64 -z-10 hidden size-176 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(99,102,241,0.18),transparent)] lg:block"
       />
 
       <div className="custom-container">
@@ -33,7 +33,7 @@ export function WhatsAppAutomation() {
           {/* Message */}
           <div>
             <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 py-1.5 pr-4 pl-2.5 text-xs font-semibold tracking-[0.14em] text-white uppercase">
-              <MessageCircle className="size-4 text-secondary" aria-hidden />
+              <MessageCircle className="size-4 text-success" aria-hidden />
               WhatsApp-first automation
             </p>
 
@@ -42,7 +42,7 @@ export function WhatsAppAutomation() {
               className="mt-6 text-3xl leading-[1.15] font-bold tracking-tight text-white text-balance sm:text-4xl lg:text-5xl"
             >
               Turn WhatsApp conversations into{" "}
-              <span className="text-secondary">
+              <span className="brand-gradient-text">
                 automated customer journeys.
               </span>
             </h2>
@@ -84,7 +84,7 @@ export function WhatsAppAutomation() {
                 >
                   <span
                     aria-hidden
-                    className="grid size-5 shrink-0 place-items-center rounded-full bg-white/10 text-secondary"
+                    className="grid size-5 shrink-0 place-items-center rounded-full bg-white/10 text-success"
                   >
                     <Check className="size-3.5" strokeWidth={3} />
                   </span>

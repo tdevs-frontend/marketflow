@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 
 export type ButtonVariant =
   | "primary"
+  | "gradient"
   | "secondary"
   | "outline"
   | "ghost"
@@ -45,9 +46,23 @@ const VARIANTS: Record<ButtonVariant, string> = {
     "hover:-translate-y-px hover:bg-primary-dark hover:shadow-btn-hover",
     "active:translate-y-0 active:bg-primary-darker active:shadow-btn",
   ].join(" "),
+  /*
+   * The brand gradient as a button. Reserved for the page-level CTAs — the hero,
+   * the featured plan, the closing block — because a gradient on every button
+   * is the fastest way to make it stop meaning anything. In-product buttons
+   * stay `primary`, which is the same indigo, solid.
+   *
+   * Hover shifts the whole ramp a step deeper rather than darkening one stop,
+   * so the gradient direction stays readable through the transition.
+   */
+  gradient: [
+    "brand-gradient text-white shadow-btn",
+    "hover:-translate-y-px hover:brand-gradient-hover hover:shadow-btn-hover",
+    "active:translate-y-0 active:shadow-btn",
+  ].join(" "),
   secondary: [
-    /* Neutral resting border, teal only on hover: a secondary CTA outlined in
-       brand colour competes with the primary button beside it. */
+    /* Neutral resting border, brand colour only on hover: a secondary CTA
+       outlined in the brand competes with the primary button beside it. */
     "border border-border-strong bg-surface text-primary shadow-btn",
     "hover:-translate-y-px hover:border-primary hover:bg-primary-soft hover:text-primary-dark hover:shadow-btn-hover",
     "active:translate-y-0 active:bg-primary-soft-hover active:shadow-btn",

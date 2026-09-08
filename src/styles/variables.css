@@ -71,39 +71,46 @@
   --color-black: #000000;
 
   /*
-   * Primary Brand — deep teal.
+   * Primary Brand — indigo, with violet as the second stop.
    *
-   * The ramp moved off WhatsApp green: MarketFlow is marketing, CRM, commerce
-   * and analytics as well as WhatsApp, and a page built on #25d366 reads as a
-   * WhatsApp clone rather than a B2B platform. Teal keeps the green family and
-   * the channel association while carrying the enterprise weight the rest of
-   * the product needs.
+   * Two pairs, because one pair cannot do both jobs.
+   *
+   * `brand-from`/`brand-to` are the identity colours exactly as specified,
+   * #6366F1 → #8B5CF6. They are the decorative signature: accent rules, glows,
+   * dots, the featured card's top edge, and gradient-clipped text on a dark
+   * ground. Every one of those is either non-text or only needs the 3:1
+   * non-text ratio, which they clear.
+   *
+   * `primary`/`secondary` are the same two hues one step deeper, and they carry
+   * anything with text on or beside it. That step is not cosmetic: white on
+   * #6366F1 is 4.47:1 and on #8B5CF6 is 4.23:1, both under AA, so a CTA built
+   * from the identity pair would fail its own label. Indigo-600 and violet-600
+   * clear it at 6.3:1 and 5.6:1 while reading as the same brand.
    */
-  --color-primary: #0f766e;
-  /* Lighter mid-step. Buttons hover to `-dark` per the brand spec; this is here
-     for interactive surfaces that need to go lighter rather than deeper. */
-  --color-primary-hover: #0d9488;
-  --color-primary-dark: #115e59;
-  --color-primary-darker: #0d5c56;
-  --color-primary-light: #14b8a6;
-  --color-primary-soft: #f0fdfa;
-  --color-primary-subtle: #ecfdf5;
-  --color-primary-soft-hover: #ccfbf1;
-  --color-primary-border: #99f6e4;
+  --color-brand-from: #6366f1;
+  --color-brand-to: #8b5cf6;
+
+  --color-primary: #4f46e5;
+  --color-primary-dark: #4338ca;
+  --color-primary-darker: #3730a3;
+  --color-primary-light: #818cf8;
+  --color-primary-soft: #eef2ff;
+  --color-primary-subtle: #f5f3ff;
+  --color-primary-soft-hover: #e0e7ff;
+  --color-primary-border: #c7d2fe;
 
   /*
    * Secondary & Accent.
    *
-   * `secondary` is the bright highlight green — live dots, growth deltas,
-   * success and selected states, and nothing with area. `accent` is the
-   * supporting *blue*: it is what stops a chart or a chip row from being three
-   * shades of the brand, which is the whole point of the restrained palette.
-   * (The soft green the brief pairs with the highlight already exists as
-   * `--color-success-soft`, so it is not duplicated here.)
+   * `secondary` is the gradient's deeper second stop — violet-600. It also
+   * stands alone wherever a full gradient would be too loud for the element's
+   * size. `accent` is the supporting *cyan*: deliberately outside the
+   * indigo-violet range, so a chart or chip row is never three shades of the
+   * same brand.
    */
-  --color-secondary: #22c55e;
-  --color-accent: #3b82f6;
-  --color-accent-soft: #eff6ff;
+  --color-secondary: #7c3aed;
+  --color-accent: #06b6d4;
+  --color-accent-soft: #ecfeff;
 
   /*
    * Dark surfaces. A deep blue-slate rather than black or bottle green, for
@@ -122,7 +129,18 @@
 
   /* --------------------------------------------------- Channel identity */
   /*
-   * WhatsApp has no tokens of its own — it reuses the brand ramp above,
+   * WhatsApp now has its own green ramp. It used to borrow the brand ramp,
+   * which worked while the brand itself was green; against an indigo brand the
+   * module would have gone indigo and the channel would stop being
+   * recognisable at a glance, which is the one thing a channel colour is for.
+   */
+  --color-whatsapp: #059669;
+  --color-whatsapp-dark: #047857;
+  --color-whatsapp-soft: #ecfdf5;
+  --color-whatsapp-border: #a7f3d0;
+
+  /*
+   * The other three channels,
    * because WhatsApp *is* this product's primary channel. The other three get
    * one hue each, spaced far enough apart to survive a legend: blue, violet,
    * slate. Social stays neutral on purpose — its colour comes from the
@@ -134,8 +152,10 @@
   --color-email-soft: #eff6ff;
   --color-email-border: #bfdbfe;
 
-  --color-sms: #7c3aed;
-  --color-sms-dark: #6d28d9;
+  /* Purple, not violet: violet-600 is now the brand's second gradient stop,
+     and a channel identity that matches the brand exactly reads as an error. */
+  --color-sms: #9333ea;
+  --color-sms-dark: #7e22ce;
   --color-sms-soft: #f5f3ff;
   --color-sms-border: #ddd6fe;
 
@@ -169,7 +189,7 @@
   --color-gray-ink: #525252;
 
   /* Typography — deep blue-slate, not near-black. */
-  --color-text-primary: #10243a;
+  --color-text-primary: #111827;
   --color-text-secondary: #475569;
   --color-text-muted: #64748b;
 
@@ -199,14 +219,14 @@
    * business tool rather than a brand showcase. Positive and negative come
    * from the status ramp below, which already owns those meanings.
    */
-  --color-chart-1: #0f766e;
-  --color-chart-2: #3b82f6;
-  --color-chart-3: #8b5cf6;
-  --color-chart-4: #f59e0b;
+  --color-chart-1: #4f46e5;
+  --color-chart-2: #06b6d4;
+  --color-chart-3: #f59e0b;
+  --color-chart-4: #10b981;
   --color-chart-neutral: #cbd5e1;
   --color-chart-grid: #e2e8f0;
   /* One per channel, for the four-way comparison charts. */
-  --color-chart-whatsapp: #0f766e;
+  --color-chart-whatsapp: #059669;
   --color-chart-email: #2563eb;
   --color-chart-sms: #7c3aed;
   --color-chart-social: #64748b;
@@ -228,11 +248,11 @@
   --shadow-card: 0 4px 20px rgba(15, 23, 42, 0.04);
   --shadow-card-hover: 0 10px 30px rgba(15, 23, 42, 0.08);
   --shadow-btn: 0 1px 2px rgba(15, 23, 42, 0.06);
-  --shadow-btn-hover: 0 6px 16px rgba(15, 118, 110, 0.18);
+  --shadow-btn-hover: 0 6px 16px rgba(99, 102, 241, 0.18);
   --shadow-float: 0 12px 32px rgba(15, 23, 42, 0.1);
   /* Focus rings — brand by default, red on destructive controls. */
-  --shadow-focus: 0 0 0 3px rgba(15, 118, 110, 0.18);
-  --shadow-focus-field: 0 0 0 3px rgba(15, 118, 110, 0.1);
+  --shadow-focus: 0 0 0 3px rgba(99, 102, 241, 0.18);
+  --shadow-focus-field: 0 0 0 3px rgba(99, 102, 241, 0.1);
   --shadow-focus-error: 0 0 0 3px rgba(220, 38, 38, 0.18);
 
   /* --------------------------------------------------------- Motion base */

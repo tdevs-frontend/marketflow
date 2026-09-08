@@ -28,7 +28,7 @@ export function HeroSection() {
 
             <h1 className="mt-6 text-[2.75rem] font-bold leading-[1.06] tracking-tight text-balance sm:text-6xl xl:text-[4.25rem]">
               Turn Every Conversation Into{" "}
-              <span className="text-primary">Growth</span>
+              <span className="brand-gradient-text">Growth</span>
             </h1>
 
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-text-secondary text-pretty">
@@ -39,6 +39,7 @@ export function HeroSection() {
             <div className="mt-9 flex flex-wrap items-center gap-3">
               <ButtonLink
                 href={APP_ROUTES.register}
+                variant="gradient"
                 size="lg"
                 className="group"
               >

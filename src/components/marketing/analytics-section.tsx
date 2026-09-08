@@ -18,7 +18,7 @@ export function AnalyticsSection() {
       {/* Mint bloom behind the dashboard */}
       <div
         aria-hidden
-        className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-224 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(20,184,166,0.08),transparent)]"
+        className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-224 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(99,102,241,0.08),transparent)]"
       />
 
       <div className="custom-container">
