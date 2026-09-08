@@ -1,10 +1,11 @@
 import {
-  AnalyticsSection,
+  // AnalyticsSection,
   FinalCta,
   HeroSection,
-  MultiChannelCampaign,
+  // MultiChannelCampaign,
   PlatformOverview,
-  TrustStats,
+  PricingSection,
+  // TrustStats,
   WhatsAppAutomation,
 } from "@/components/marketing";
 
@@ -13,15 +14,16 @@ export default function HomePage() {
     <>
       <HeroSection />
 
-      <PlatformOverview />
-
       <WhatsAppAutomation />
 
-      <MultiChannelCampaign />
+      {/* <MultiChannelCampaign /> */}
 
-      <AnalyticsSection />
+      {/* <AnalyticsSection /> */}
 
-      <TrustStats />
+      {/* <TrustStats /> */}
+      <PlatformOverview />
+
+      <PricingSection />
 
       <FinalCta />
     </>

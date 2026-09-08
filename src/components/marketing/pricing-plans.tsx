@@ -1,16 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Check, ShieldCheck } from "lucide-react";
+import { Check } from "lucide-react";
 
 import { ButtonLink } from "@/components/ui/button";
-import { Icon } from "@/components/ui/icon";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { APP_ROUTES } from "@/constants";
 import {
-  CAPABILITIES,
   PLANS,
-  PRICING_ASSURANCES,
   YEARLY_DISCOUNT,
   yearlyMonthly,
   type Plan,
@@ -28,6 +25,10 @@ import { cn } from "@/lib/utils";
  *
  * Both prices come from one monthly number — see `constants/pricing` — so the
  * "Save 20%" claim and the yearly figure cannot drift apart.
+ *
+ * Just the toggle and the tiers. The capability comparison and the reassurance
+ * strip are `PricingValue` and `PricingTrust`, composed by the pricing route —
+ * the homepage shows the title and the cards and nothing else.
  */
 
 type Billing = "monthly" | "yearly";
@@ -56,7 +57,10 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
     >
       {/* The featured tier's accent: a gradient rule on the top edge. */}
       {featured ? (
-        <span aria-hidden className="absolute inset-x-0 top-0 h-1 brand-gradient-accent" />
+        <span
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-1 brand-gradient-accent"
+        />
       ) : null}
 
       <div className="flex flex-1 flex-col p-6">
@@ -69,7 +73,7 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
           ) : null}
         </div>
 
-        <p className="mt-2 min-h-10 text-xs leading-relaxed text-text-muted">
+        <p className="mt-2 min-h-10 text-sm leading-relaxed text-text-muted">
           {plan.audience}
         </p>
 
@@ -90,7 +94,7 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
 
         {/* Kept as a fixed slot so the four cards' feature lists stay aligned
             whichever billing period is selected. */}
-        <p className="mt-1.5 min-h-4 text-[11px] text-text-muted">
+        <p className="mt-1.5 min-h-4 text-xs text-text-muted">
           {priced && billing === "yearly"
             ? `Billed yearly · $${amount! * 12} per year`
             : priced
@@ -163,65 +167,6 @@ export function PricingPlans() {
         {PLANS.map((plan) => (
           <PlanCard key={plan.id} plan={plan} billing={billing} />
         ))}
-      </div>
-
-      {/* ------------------------------------------------ Value comparison */}
-      <div className="mt-16">
-        <h3 className="text-center font-heading text-2xl font-bold tracking-tight text-text-primary text-balance sm:text-3xl">
-          Built for every stage of your growth
-        </h3>
-
-        <ul className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {CAPABILITIES.map((capability) => (
-            <li
-              key={capability.title}
-              className="rounded-card border border-border bg-surface p-5 shadow-card"
-            >
-              <span
-                aria-hidden
-                className="grid size-9 place-items-center rounded-btn bg-primary-soft text-primary"
-              >
-                <Icon name={capability.icon} className="size-4" />
-              </span>
-              <h4 className="mt-3.5 text-sm font-semibold text-text-primary">
-                {capability.title}
-              </h4>
-              <p className="mt-1.5 text-xs leading-relaxed text-text-muted">
-                {capability.description}
-              </p>
-              {/* One short accent rule per block, tying the four together. */}
-              <span
-                aria-hidden
-                className="mt-4 block h-0.5 w-8 rounded-full brand-gradient-accent"
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* ------------------------------------------------------ Trust strip */}
-      <div className="mt-14 rounded-card border border-border bg-surface-secondary px-6 py-7">
-        <p className="text-center text-sm font-semibold text-text-primary">
-          Everything you need to run your customer growth engine
-        </p>
-
-        <ul className="mt-4 flex flex-wrap items-center justify-center gap-x-7 gap-y-3">
-          {PRICING_ASSURANCES.map((item) => (
-            <li
-              key={item}
-              className="inline-flex items-center gap-2 text-xs text-text-secondary"
-            >
-              <Check className="size-3.5 shrink-0 text-primary" aria-hidden />
-              {item}
-            </li>
-          ))}
-        </ul>
-
-        <p className="mt-5 flex items-center justify-center gap-2 text-[11px] text-text-muted">
-          <ShieldCheck className="size-3.5 shrink-0 text-primary" aria-hidden />
-          Self-hosted on your own infrastructure — your customer data stays
-          yours.
-        </p>
       </div>
     </>
   );

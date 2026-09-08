@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 
-import { PricingPlans } from "@/components/marketing";
+import {
+  PricingSection,
+  PricingTrust,
+  PricingValue,
+} from "@/components/marketing";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -9,32 +13,19 @@ export const metadata: Metadata = {
 };
 
 /**
- * The pricing page. The header lives here; the plans, the capability blocks and
- * the trust strip live in `PricingPlans`, which is a client component because
- * of the billing toggle.
+ * The full pricing experience. `PricingSection` — the title and the tiers — is
+ * shared with the homepage; the capability comparison and the reassurance
+ * strip are composed here, because the homepage deliberately stops at the
+ * cards.
  */
 export default function PricingPage() {
   return (
-    <section className="section-space-py">
-      <div className="custom-container">
-        <header className="mx-auto max-w-2xl text-center">
-          <p className="text-[11px] font-bold tracking-[0.14em] text-primary uppercase">
-            Simple, scalable pricing
-          </p>
+    <>
+      <PricingSection headingLevel="h1" />
 
-          <h1 className="mt-4 text-3xl leading-[1.15] font-bold tracking-tight text-balance sm:text-4xl lg:text-5xl">
-            Everything you need to turn customer conversations into measurable
-            growth.
-          </h1>
+      <PricingValue />
 
-          <p className="mt-5 text-base leading-relaxed text-text-secondary text-pretty sm:text-lg">
-            Choose a plan that fits your business and scale your marketing,
-            automation, customers, and sales from one powerful workspace.
-          </p>
-        </header>
-
-        <PricingPlans />
-      </div>
-    </section>
+      <PricingTrust />
+    </>
   );
 }

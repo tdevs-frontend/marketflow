@@ -10,4 +10,7 @@ export * from "./analytics-dashboard";
 export * from "./trust-stats";
 export * from "./final-cta";
 export * from "./pricing-plans";
+export * from "./pricing-section";
+export * from "./pricing-value";
+export * from "./pricing-trust";
 export * from "./stat-value";
