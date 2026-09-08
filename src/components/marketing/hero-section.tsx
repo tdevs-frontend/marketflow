@@ -1,15 +1,27 @@
+import Image from "next/image";
 import { ArrowRight, CalendarCheck, ShieldCheck, Star } from "lucide-react";
 
 import { ButtonLink } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { APP_ROUTES } from "@/constants";
 import { HeroDashboard } from "./hero-dashboard";
+// Static imports, the same way `ui/logo` loads its artwork: the intrinsic size
+// travels with the file, so `next/image` needs no width/height here.
+import avatar1 from "../../../public/customer-avatar-1.jpg";
+import avatar2 from "../../../public/customer-avatar-2.jpg";
+import avatar3 from "../../../public/customer-avatar-3.jpg";
+import avatar4 from "../../../public/customer-avatar-4.jpg";
 
+/**
+ * The four faces in the trust stack.
+ *
+ * Each file is a 128px square — the avatars render at 36px, so that covers a
+ * 3x display with nothing wasted; all four together are under 15KB.
+ */
 const TRUST_AVATARS = [
-  { initials: "SK", className: "bg-surface-secondary text-text-secondary" },
-  { initials: "AR", className: "bg-surface-secondary text-text-secondary" },
-  { initials: "JM", className: "bg-accent-soft text-info-text" },
-  { initials: "TC", className: "bg-primary-soft text-primary-dark" },
+  { src: avatar1, alt: "MarketFlow customer" },
+  { src: avatar2, alt: "MarketFlow customer" },
+  { src: avatar3, alt: "MarketFlow customer" },
+  { src: avatar4, alt: "MarketFlow customer" },
 ];
 
 export function HeroSection() {
@@ -101,17 +113,17 @@ export function HeroSection() {
                   row and would not centre with the line beneath them, so the
                   block aligns internally and the row centres as a whole. */}
               <div className="flex items-center gap-3 text-left">
+                {/* Same 36px circles and the same overlap as the initials they
+                    replaced; the white ring is what keeps each face readable
+                    where it sits over its neighbour. */}
                 <div className="flex -space-x-2.5">
                   {TRUST_AVATARS.map((avatar) => (
-                    <span
-                      key={avatar.initials}
-                      className={cn(
-                        "grid h-9 w-9 place-items-center rounded-full text-[11px] font-semibold ring-2 ring-surface",
-                        avatar.className,
-                      )}
-                    >
-                      {avatar.initials}
-                    </span>
+                    <Image
+                      key={avatar.src.src}
+                      src={avatar.src}
+                      alt={avatar.alt}
+                      className="h-9 w-9 rounded-full object-cover ring-2 ring-surface"
+                    />
                   ))}
                 </div>
                 <div>
@@ -137,12 +149,6 @@ export function HeroSection() {
                 </div>
               </div>
 
-              <span className="hidden h-9 w-px bg-border sm:block" />
-
-              <p className="inline-flex items-center gap-2 text-sm text-text-muted">
-                <ShieldCheck className="h-4 w-4 text-primary" aria-hidden />
-                Official Business API · no credit card required
-              </p>
             </div>
           </div>
 
