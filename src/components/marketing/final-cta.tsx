@@ -3,7 +3,6 @@ import { ArrowRight, LayoutGrid } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button";
 import { APP_ROUTES } from "@/constants";
 
-const REASSURANCE = ["No credit card required", "Setup in minutes"];
 
 export function FinalCta() {
   return (
@@ -71,15 +70,6 @@ export function FinalCta() {
                 Explore the Platform
               </ButtonLink>
             </div>
-
-            <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-white/60">
-              {REASSURANCE.map((item, index) => (
-                <li key={item} className="inline-flex items-center gap-2">
-                  {index > 0 ? <span aria-hidden>•</span> : null}
-                  {item}
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
       </div>

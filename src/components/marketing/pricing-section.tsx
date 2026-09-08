@@ -12,25 +12,32 @@ export function PricingSection({
       aria-labelledby="pricing-title"
       className="section-space-py relative isolate overflow-hidden bg-surface"
     >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(var(--color-border-strong)_1px,transparent_1px)] bg-[size:22px_22px] opacity-30 mask-[radial-gradient(ellipse_70%_60%_at_50%_35%,black,transparent_75%)]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-40 left-1/2 -z-10 size-208 -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(99,102,241,0.1),transparent)]"
+      />
+
       <div className="custom-container">
-        <header className="mb-8  mx-auto max-w-2xl text-center">
+        <header className="mx-auto max-w-3xl text-center">
           <p className="text-[11px] font-bold tracking-[0.14em] text-primary uppercase">
             Simple, scalable pricing
           </p>
 
           <Heading
             id="pricing-title"
-            className="mt-4 text-3xl leading-[1.15] font-bold tracking-tight text-balance sm:text-4xl lg:text-5xl"
+            className="mt-5 text-[2rem] leading-[1.12] font-bold tracking-tight text-balance sm:text-[2.75rem] lg:text-5xl"
           >
             Everything you need to turn customer conversations growth
           </Heading>
-
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-text-secondary text-pretty sm:text-lg">
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-[1.7] text-text-secondary text-pretty">
             Choose a plan that fits your business and scale your marketing,
             automation, customers, and sales from one powerful workspace.
           </p>
         </header>
-
         <PricingPlans />
       </div>
     </section>
