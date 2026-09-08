@@ -6,19 +6,19 @@ import type { ApexOptions } from "apexcharts";
  * `var(--color-…)` cannot satisfy. Keep both in step.
  */
 export const CHART_COLORS = {
-  primary: "#128c7e",
-  primaryDark: "#075e54",
-  primaryLight: "#25d366",
-  accent: "#34b7f1",
+  primary: "#0f766e",
+  primaryDark: "#115e59",
+  primaryLight: "#14b8a6",
+  accent: "#3b82f6",
   neutral: "#cbd5e1",
   grid: "#e2e8f0",
   surface: "#ffffff",
-  textMuted: "#7b8794",
-  textSecondary: "#52606d",
+  textMuted: "#64748b",
+  textSecondary: "#475569",
   error: "#dc2626",
 } as const;
 
-/* Green leads, blue supports, then neutral. Runs out on purpose — no rainbows. */
+/* Teal leads, blue supports, then neutral. Runs out on purpose — no rainbows. */
 export const SERIES_COLORS = [
   CHART_COLORS.primary,
   CHART_COLORS.accent,
@@ -75,11 +75,11 @@ export function compactAxisCurrency(value: number): string {
  * unrelated things; it is one population losing people at each step.
  */
 export const FUNNEL_RAMP = [
-  "#075e54",
-  "#128c7e",
-  "#25d366",
-  "#7dd6b0",
-  "#b7ded8",
+  "#115e59",
+  "#0f766e",
+  "#14b8a6",
+  "#5eead4",
+  "#99f6e4",
 ] as const;
 
 /**
@@ -96,10 +96,10 @@ export const FUNNEL_RAMP = [
  * gradient stops and hover shades. Keep them in step with `CHANNEL_THEME`.
  */
 export const CHANNEL_SERIES = {
-  whatsapp: ["#128c7e", "#25d366", "#34b7f1"],
-  email: ["#2563eb", "#34b7f1", "#cbd5e1"],
-  sms: ["#7c3aed", "#34b7f1", "#cbd5e1"],
-  social: ["#64748b", "#34b7f1", "#cbd5e1"],
+  whatsapp: ["#0f766e", "#14b8a6", "#22c55e"],
+  email: ["#2563eb", "#60a5fa", "#cbd5e1"],
+  sms: ["#7c3aed", "#a78bfa", "#cbd5e1"],
+  social: ["#64748b", "#94a3b8", "#cbd5e1"],
 } as const satisfies Record<string, readonly [string, string, string]>;
 
 /**
@@ -110,20 +110,21 @@ export const CHANNEL_SERIES = {
  * without each one deciding for itself.
  */
 export const RATE_COLORS = {
-  warn: "#34b7f1",
+  warn: "#f59e0b",
   bad: "#dc2626",
 } as const;
 
 /**
- * The two-series pair for a channel: its own accent against the shared blue.
+ * The two-series pair for a channel: its own hue and a lighter step of it.
  *
  * Used wherever a chart compares exactly two measures of the same thing — a
- * read rate against a reply rate, an open against a click. Taken from
- * `CHANNEL_SERIES` rather than restated, so the pair can never disagree with
- * the trio in the chart above it.
+ * read rate against a reply rate, an open against a click. Same hue because
+ * they *are* the same population measured twice; two unrelated colours would
+ * imply two unrelated things. Taken from `CHANNEL_SERIES` rather than
+ * restated, so the pair can never disagree with the trio above it.
  */
 export const channelPair = (channel: keyof typeof CHANNEL_SERIES) =>
-  [CHANNEL_SERIES[channel][0], RATE_COLORS.warn] as const;
+  [CHANNEL_SERIES[channel][0], CHANNEL_SERIES[channel][1]] as const;
 
 /**
  * The default trio for a chart that is not about a single channel — lead
@@ -131,15 +132,15 @@ export const channelPair = (channel: keyof typeof CHANNEL_SERIES) =>
  * hues far enough apart to read at a 2px stroke without implying that any of
  * them is a channel.
  */
-export const BRAND_SERIES = ["#128c7e", "#34b7f1", "#cbd5e1"] as const;
+export const BRAND_SERIES = ["#0f766e", "#3b82f6", "#cbd5e1"] as const;
 
 /**
  * Delivery outcomes, in the order they are always stacked: the good outcome
  * first so it sits at the base of the bar, then the partial one, then failure.
  */
 export const OUTCOME_COLORS = {
-  succeeded: "#25d366",
-  partial: "#128c7e",
+  succeeded: "#14b8a6",
+  partial: "#0f766e",
   failed: "#dc2626",
   neutral: "#cbd5e1",
 } as const;
@@ -151,7 +152,7 @@ export const OUTCOME_COLORS = {
 export const SPEND_RAMP = [
   "#7c3aed",
   "#a78bfa",
-  "#34b7f1",
+  "#c4b5fd",
   "#cbd5e1",
   "#e2e8f0",
 ] as const;

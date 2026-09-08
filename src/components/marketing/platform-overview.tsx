@@ -201,7 +201,7 @@ export function PlatformOverview() {
       {/* Mint bloom behind the command center */}
       <div
         aria-hidden
-        className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-208 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(37,211,102,0.10),transparent)]"
+        className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-208 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(20,184,166,0.10),transparent)]"
       />
 
       <div className="custom-container">

@@ -46,7 +46,9 @@ const VARIANTS: Record<ButtonVariant, string> = {
     "active:translate-y-0 active:bg-primary-darker active:shadow-btn",
   ].join(" "),
   secondary: [
-    "border border-primary-border bg-surface text-primary shadow-btn",
+    /* Neutral resting border, teal only on hover: a secondary CTA outlined in
+       brand colour competes with the primary button beside it. */
+    "border border-border-strong bg-surface text-primary shadow-btn",
     "hover:-translate-y-px hover:border-primary hover:bg-primary-soft hover:text-primary-dark hover:shadow-btn-hover",
     "active:translate-y-0 active:bg-primary-soft-hover active:shadow-btn",
   ].join(" "),

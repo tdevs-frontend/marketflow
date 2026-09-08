@@ -70,20 +70,53 @@
   --color-white: #ffffff;
   --color-black: #000000;
 
-  /* Primary Brand */
-  --color-primary: #128c7e;
-  --color-primary-dark: #075e54;
-  --color-primary-darker: #064c44;
-  --color-primary-light: #25d366;
-  --color-primary-soft: #e8f8f5;
-  --color-primary-subtle: #f1f8f7;
-  --color-primary-soft-hover: #d7f3ee;
-  --color-primary-border: #b7ded8;
+  /*
+   * Primary Brand — deep teal.
+   *
+   * The ramp moved off WhatsApp green: MarketFlow is marketing, CRM, commerce
+   * and analytics as well as WhatsApp, and a page built on #25d366 reads as a
+   * WhatsApp clone rather than a B2B platform. Teal keeps the green family and
+   * the channel association while carrying the enterprise weight the rest of
+   * the product needs.
+   */
+  --color-primary: #0f766e;
+  /* Lighter mid-step. Buttons hover to `-dark` per the brand spec; this is here
+     for interactive surfaces that need to go lighter rather than deeper. */
+  --color-primary-hover: #0d9488;
+  --color-primary-dark: #115e59;
+  --color-primary-darker: #0d5c56;
+  --color-primary-light: #14b8a6;
+  --color-primary-soft: #f0fdfa;
+  --color-primary-subtle: #ecfdf5;
+  --color-primary-soft-hover: #ccfbf1;
+  --color-primary-border: #99f6e4;
 
-  /* Secondary & Accent */
-  --color-secondary: #25d366;
-  --color-accent: #34b7f1;
-  --color-accent-soft: #eaf7fc;
+  /*
+   * Secondary & Accent.
+   *
+   * `secondary` is the bright highlight green — live dots, growth deltas,
+   * success and selected states, and nothing with area. `accent` is the
+   * supporting *blue*: it is what stops a chart or a chip row from being three
+   * shades of the brand, which is the whole point of the restrained palette.
+   * (The soft green the brief pairs with the highlight already exists as
+   * `--color-success-soft`, so it is not duplicated here.)
+   */
+  --color-secondary: #22c55e;
+  --color-accent: #3b82f6;
+  --color-accent-soft: #eff6ff;
+
+  /*
+   * Dark surfaces. A deep blue-slate rather than black or bottle green, for
+   * the footer and any full-bleed break: pure black on a white SaaS page reads
+   * as a hole, and a dark green one reads as more WhatsApp.
+   */
+  --color-dark: #0f1f2e;
+  --color-dark-soft: #162a3a;
+  --color-dark-border: #294052;
+  /* Ink for those surfaces. Named for the scheme rather than borrowed from
+     the border ramp, so a dark section never styles text with a border token. */
+  --color-dark-text: #cbd5e1;
+  --color-dark-muted: #94a3b8;
 
 
 
@@ -135,15 +168,10 @@
   --color-gray-strong: #d4d4d4;
   --color-gray-ink: #525252;
 
-  /* Typography */
-  /* --color-text-primary: #121420; */
-  /* --color-text-primary: #10243a;
-  --color-text-secondary: #52606d;
-  --color-text-muted: #7b8794; */
-
-  --color-text-primary: #17212B;
-  --color-text-secondary: #52606D;
-  --color-text-muted: #7B8794;
+  /* Typography — deep blue-slate, not near-black. */
+  --color-text-primary: #10243a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748b;
 
 
   /* ------------------------------------------------------------- Status */
@@ -166,20 +194,28 @@
 
 
   /* ------------------------------------------------------------- Charts */
-  --color-chart-1: #128c7e;
-  --color-chart-2: #25d366;
-  --color-chart-3: #34b7f1;
+  /*
+   * Four hues from four different families, so an analytics panel reads as a
+   * business tool rather than a brand showcase. Positive and negative come
+   * from the status ramp below, which already owns those meanings.
+   */
+  --color-chart-1: #0f766e;
+  --color-chart-2: #3b82f6;
+  --color-chart-3: #8b5cf6;
+  --color-chart-4: #f59e0b;
   --color-chart-neutral: #cbd5e1;
   --color-chart-grid: #e2e8f0;
   /* One per channel, for the four-way comparison charts. */
-  --color-chart-whatsapp: #128c7e;
+  --color-chart-whatsapp: #0f766e;
   --color-chart-email: #2563eb;
   --color-chart-sms: #7c3aed;
   --color-chart-social: #64748b;
 
 
   /* -------------------------------------------------------- Landing Page */
-  --color-hero: #f8fffd;
+  /* The hero sits on the same neutral as the rest of the page; its warmth
+     comes from one soft teal bloom, not from a tinted ground. */
+  --color-hero: #f8fafc;
 
   /* --------------------------------------------------------------- Radii */
   --radius-btn: 10px;
@@ -192,11 +228,11 @@
   --shadow-card: 0 4px 20px rgba(15, 23, 42, 0.04);
   --shadow-card-hover: 0 10px 30px rgba(15, 23, 42, 0.08);
   --shadow-btn: 0 1px 2px rgba(15, 23, 42, 0.06);
-  --shadow-btn-hover: 0 6px 16px rgba(18, 140, 126, 0.18);
+  --shadow-btn-hover: 0 6px 16px rgba(15, 118, 110, 0.18);
   --shadow-float: 0 12px 32px rgba(15, 23, 42, 0.1);
   /* Focus rings — brand by default, red on destructive controls. */
-  --shadow-focus: 0 0 0 3px rgba(18, 140, 126, 0.18);
-  --shadow-focus-field: 0 0 0 3px rgba(18, 140, 126, 0.1);
+  --shadow-focus: 0 0 0 3px rgba(15, 118, 110, 0.18);
+  --shadow-focus-field: 0 0 0 3px rgba(15, 118, 110, 0.1);
   --shadow-focus-error: 0 0 0 3px rgba(220, 38, 38, 0.18);
 
   /* --------------------------------------------------------- Motion base */

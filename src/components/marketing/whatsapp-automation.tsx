@@ -25,7 +25,7 @@ export function WhatsAppAutomation() {
       {/* Soft brand bloom behind the product UI */}
       <div
         aria-hidden
-        className="pointer-events-none absolute top-1/2 -right-64 -z-10 hidden size-176 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(37,211,102,0.18),transparent)] lg:block"
+        className="pointer-events-none absolute top-1/2 -right-64 -z-10 hidden size-176 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(20,184,166,0.18),transparent)] lg:block"
       />
 
       <div className="custom-container">

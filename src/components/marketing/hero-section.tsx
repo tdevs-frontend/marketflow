@@ -28,7 +28,7 @@ export function HeroSection() {
 
             <h1 className="mt-6 text-[2.75rem] font-bold leading-[1.06] tracking-tight text-balance sm:text-6xl xl:text-[4.25rem]">
               Turn Every Conversation Into{" "}
-              <span className="text-primary-dark">Growth</span>
+              <span className="text-primary">Growth</span>
             </h1>
 
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-text-secondary text-pretty">

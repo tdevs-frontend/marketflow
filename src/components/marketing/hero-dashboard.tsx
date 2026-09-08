@@ -97,7 +97,7 @@ export function HeroDashboard() {
       {/* Soft brand glow behind the card */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-6 -z-10 rounded-[2.5rem] bg-[radial-gradient(closest-side,rgba(18,140,126,0.16),transparent)] blur-2xl"
+        className="pointer-events-none absolute -inset-6 -z-10 rounded-[2.5rem] bg-[radial-gradient(closest-side,rgba(15,118,110,0.16),transparent)] blur-2xl"
       />
 
       <div className="relative overflow-hidden rounded-card border border-border bg-surface shadow-card-hover">
@@ -306,8 +306,8 @@ export function HeroDashboard() {
         <svg viewBox="0 0 120 36" className="mt-2 h-8 w-28" role="presentation" aria-hidden>
           <defs>
             <linearGradient id="mf-hero-spark" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#128c7e" stopOpacity="0.28" />
-              <stop offset="100%" stopColor="#128c7e" stopOpacity="0" />
+              <stop offset="0%" stopColor="#0f766e" stopOpacity="0.28" />
+              <stop offset="100%" stopColor="#0f766e" stopOpacity="0" />
             </linearGradient>
           </defs>
           <path
@@ -317,12 +317,12 @@ export function HeroDashboard() {
           <path
             d="M2,30 L19,25 L36,27 L53,17 L70,20 L87,11 L104,8 L118,3"
             fill="none"
-            stroke="#128c7e"
+            stroke="#0f766e"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          <circle cx="118" cy="3" r="3.5" fill="#075e54" stroke="#ffffff" strokeWidth="2" />
+          <circle cx="118" cy="3" r="3.5" fill="#115e59" stroke="#ffffff" strokeWidth="2" />
         </svg>
       </div>
 
