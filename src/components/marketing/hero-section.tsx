@@ -15,6 +15,31 @@ const TRUST_AVATARS = [
 export function HeroSection() {
   return (
     <section className="hero-surface relative isolate overflow-hidden">
+      {/*
+       * Background decoration, in paint order. Both layers sit at `-z-10`
+       * inside the section's own stacking context — that is what `isolate` on
+       * the section is for — so they render above its ground and below every
+       * bit of content, without a positive z-index anywhere to maintain.
+       *
+       * Same construction as the dot grids in `analytics-section` and
+       * `platform-overview`: an inset layer, a repeating background, and a
+       * radial `mask-` that fades it out. Two crossed linear-gradients make a
+       * square net rather than dots; the mask is weighted to 28% down the
+       * section so the net is strongest behind the headline and gone by the
+       * edges and the bottom.
+       */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,var(--color-border-strong)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border-strong)_1px,transparent_1px)] bg-[size:64px_64px] opacity-40 mask-[radial-gradient(ellipse_75%_55%_at_50%_28%,black,transparent_72%)]"
+      />
+
+      {/* Painted after the net so it softens the lines behind the headline,
+          which is the one place they would otherwise cross live text. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-24 -left-24 -z-10 size-160 rounded-full bg-[radial-gradient(closest-side,rgba(99,102,241,0.10),transparent)]"
+      />
+
       <div className="custom-container">
         <div className="grid items-center gap-14 px-6 py-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-16 lg:py-28 xl:gap-20">
           {/* Left — message */}
