@@ -58,8 +58,6 @@ export interface MediaAsset {
    */
   tone: string;
   uploadedAt: string;
-  /** How many posts reference it, so deleting one can warn first. */
-  usedIn: number;
 }
 
 export interface MediaFolder {

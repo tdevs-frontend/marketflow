@@ -107,6 +107,13 @@ export interface PlatformTheme {
   text: string;
   soft: string;
   solid: string;
+  /**
+   * Solid background, for legend swatches and dots.
+   *
+   * Spelled out rather than built as `bg-${key}`: Tailwind scans source for
+   * literal class strings, so an interpolated one is never generated.
+   */
+  swatch: string;
   hex: string;
 }
 
@@ -118,6 +125,7 @@ export const PLATFORM_THEME: Record<SocialPlatform, PlatformTheme> = {
     text: "text-instagram",
     soft: "bg-instagram/8",
     solid: "bg-instagram text-white",
+    swatch: "bg-instagram",
     hex: "#d62976",
   },
   facebook: {
@@ -127,6 +135,7 @@ export const PLATFORM_THEME: Record<SocialPlatform, PlatformTheme> = {
     text: "text-facebook",
     soft: "bg-facebook/8",
     solid: "bg-facebook text-white",
+    swatch: "bg-facebook",
     hex: "#1877f2",
   },
   linkedin: {
@@ -136,6 +145,7 @@ export const PLATFORM_THEME: Record<SocialPlatform, PlatformTheme> = {
     text: "text-linkedin",
     soft: "bg-linkedin/8",
     solid: "bg-linkedin text-white",
+    swatch: "bg-linkedin",
     hex: "#0a66c2",
   },
   x: {
@@ -145,6 +155,7 @@ export const PLATFORM_THEME: Record<SocialPlatform, PlatformTheme> = {
     text: "text-x",
     soft: "bg-x/8",
     solid: "bg-x text-white",
+    swatch: "bg-x",
     hex: "#17212b",
   },
 };

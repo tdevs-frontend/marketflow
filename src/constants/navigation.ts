@@ -78,6 +78,13 @@ export const dashboardNav: NavSection[] = [
     ],
   },
   {
+    /*
+     * The Marketing group, matching the product's own vocabulary: Overview and
+     * Campaigns sit at the top as the cross-channel pages, then one collapsible
+     * group per channel. Each channel group opens on its own Overview, except
+     * Social Planner, whose landing page is the Calendar — that is where a
+     * content team actually starts.
+     */
     title: "Marketing",
     items: [
       { title: "Overview", href: "/dashboard/marketing", icon: "megaphone" },
@@ -86,10 +93,13 @@ export const dashboardNav: NavSection[] = [
         title: "WhatsApp",
         icon: "message-circle",
         items: [
-          { title: "Inbox", href: "/dashboard/marketing/whatsapp/inbox" },
+          { title: "Overview", href: "/dashboard/marketing/whatsapp" },
           { title: "Campaigns", href: "/dashboard/marketing/whatsapp/campaigns" },
           { title: "Templates", href: "/dashboard/marketing/whatsapp/templates" },
           { title: "Contacts", href: "/dashboard/marketing/whatsapp/contacts" },
+          { title: "Automations", href: "/dashboard/marketing/whatsapp/automations" },
+          { title: "Analytics", href: "/dashboard/marketing/whatsapp/analytics" },
+          { title: "Inbox", href: "/dashboard/marketing/whatsapp/inbox" },
         ],
       },
       {
@@ -110,14 +120,24 @@ export const dashboardNav: NavSection[] = [
         items: [
           { title: "Overview", href: "/dashboard/marketing/sms" },
           { title: "Campaigns", href: "/dashboard/marketing/sms/campaigns" },
+          { title: "Templates", href: "/dashboard/marketing/sms/templates" },
+          { title: "Contacts", href: "/dashboard/marketing/sms/contacts" },
+          { title: "Automations", href: "/dashboard/marketing/sms/automations" },
           { title: "Analytics", href: "/dashboard/marketing/sms/analytics" },
         ],
       },
       {
         title: "Social Planner",
-        href: "/dashboard/marketing/social-planner",
         icon: "calendar-days",
+        items: [
+          { title: "Calendar", href: "/dashboard/marketing/social/calendar" },
+          { title: "Posts", href: "/dashboard/marketing/social/posts" },
+          { title: "Media Library", href: "/dashboard/marketing/social/media" },
+          { title: "Accounts", href: "/dashboard/marketing/social/accounts" },
+          { title: "Analytics", href: "/dashboard/marketing/social/analytics" },
+        ],
       },
+      { title: "Audience Segments", href: "/dashboard/marketing/segments", icon: "layers" },
     ],
   },
   {

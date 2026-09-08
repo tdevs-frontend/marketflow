@@ -70,26 +70,6 @@ export function compactAxisCurrency(value: number): string {
 }
 
 /**
- * One colour per channel, matching `--color-chart-*` in `variables.css` and
- * `CHANNEL_THEME[…].hex` in `constants/channels`. Four hues far enough apart
- * to be told apart in a legend at 8px: green, blue, violet, slate.
- */
-export const CHANNEL_CHART_COLORS = {
-  whatsapp: "#128c7e",
-  email: "#2563eb",
-  sms: "#7c3aed",
-  social: "#64748b",
-} as const;
-
-/** The four platform marks, for the Social Planner's comparison charts. */
-export const PLATFORM_CHART_COLORS = {
-  instagram: "#d62976",
-  facebook: "#1877f2",
-  linkedin: "#0a66c2",
-  x: "#17212b",
-} as const;
-
-/**
  * The funnel ramp: one hue, darkest at the top of the funnel and lightening as
  * the population thins. A funnel drawn in four different hues implies four
  * unrelated things; it is one population losing people at each step.
@@ -102,12 +82,76 @@ export const FUNNEL_RAMP = [
   "#b7ded8",
 ] as const;
 
-/** Delivery outcomes, in the order they are always stacked. */
+/**
+ * The series ramp for a channel's multi-series charts.
+ *
+ * Every chart in a channel module reads its colours from here rather than
+ * passing hex literals, so a brand change is one edit and two charts in the
+ * same module can never drift apart. The channel's own accent leads; the
+ * supporting colours are chosen to stay distinguishable from it at a 2px
+ * stroke, which is why WhatsApp takes a second green from its own ramp while
+ * the others fall back to the shared blue and neutral.
+ *
+ * Literal hex, not `var(--color-…)`: ApexCharts reads these back to compute
+ * gradient stops and hover shades. Keep them in step with `CHANNEL_THEME`.
+ */
+export const CHANNEL_SERIES = {
+  whatsapp: ["#128c7e", "#25d366", "#34b7f1"],
+  email: ["#2563eb", "#34b7f1", "#cbd5e1"],
+  sms: ["#7c3aed", "#34b7f1", "#cbd5e1"],
+  social: ["#64748b", "#34b7f1", "#cbd5e1"],
+} as const satisfies Record<string, readonly [string, string, string]>;
+
+/**
+ * A rate chart's colours, keyed by what a fall in the rate means.
+ *
+ * `good` is the channel's own accent, `warn` the shared blue, and `bad` the
+ * error red — so a bounce, opt-out or failure line is red in every module
+ * without each one deciding for itself.
+ */
+export const RATE_COLORS = {
+  warn: "#34b7f1",
+  bad: "#dc2626",
+} as const;
+
+/**
+ * The two-series pair for a channel: its own accent against the shared blue.
+ *
+ * Used wherever a chart compares exactly two measures of the same thing — a
+ * read rate against a reply rate, an open against a click. Taken from
+ * `CHANNEL_SERIES` rather than restated, so the pair can never disagree with
+ * the trio in the chart above it.
+ */
+export const channelPair = (channel: keyof typeof CHANNEL_SERIES) =>
+  [CHANNEL_SERIES[channel][0], RATE_COLORS.warn] as const;
+
+/**
+ * The default trio for a chart that is not about a single channel — lead
+ * sources, for instance. Brand green, the shared blue, then neutral: three
+ * hues far enough apart to read at a 2px stroke without implying that any of
+ * them is a channel.
+ */
+export const BRAND_SERIES = ["#128c7e", "#34b7f1", "#cbd5e1"] as const;
+
+/**
+ * Delivery outcomes, in the order they are always stacked: the good outcome
+ * first so it sits at the base of the bar, then the partial one, then failure.
+ */
 export const OUTCOME_COLORS = {
-  delivered: "#128c7e",
-  read: "#25d366",
-  clicked: "#34b7f1",
-  replied: "#075e54",
+  succeeded: "#25d366",
+  partial: "#128c7e",
   failed: "#dc2626",
   neutral: "#cbd5e1",
 } as const;
+
+/**
+ * Five steps of one violet hue, for the SMS spend donut. A cost breakdown is
+ * one quantity split by destination, so it takes a ramp rather than five hues.
+ */
+export const SPEND_RAMP = [
+  "#7c3aed",
+  "#a78bfa",
+  "#34b7f1",
+  "#cbd5e1",
+  "#e2e8f0",
+] as const;

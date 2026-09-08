@@ -11,10 +11,11 @@ import type {
 /**
  * Email module data.
  *
- * Rates are computed from these counts rather than stored beside them, so a
- * hand-edited fixture cannot claim a 62% open rate on 2,430 sends and 40
- * opens. `openRate` on a template is the exception — it is an average across
- * campaigns this fixture set does not model individually.
+ * Campaign rates are computed from these counts rather than stored beside
+ * them, so a hand-edited fixture cannot claim a 62% open rate on 2,430 sends
+ * and 40 opens. The two exceptions are noted where they appear: a template's
+ * `openRate` averages campaigns this set does not model individually, and the
+ * analytics rate series are of delivered, which the daily counts do not carry.
  */
 
 /* -------------------------------------------------------------------------- */
@@ -892,7 +893,10 @@ export const EMAIL_SERIES = {
   sent: [3_460, 2_180, 4_280, 1_940, 2_640, 1_820, 2_240, 18_420, 6_820, 4_120],
   opened: [986, 842, 2_148, 764, 1_212, 698, 918, 7_046, 2_874, 1_684],
   clicked: [214, 268, 786, 296, 512, 224, 386, 1_842, 892, 604],
-  /** Percentages, so the rate chart is not derived from two scales at once. */
+  /*
+   * Rates are of *delivered*, not sent, so they are stored rather than derived
+   * from `sent` above — a bounce was never an opportunity to open.
+   */
   openRate: [30.0, 38.6, 51.0, 39.4, 45.9, 38.4, 41.0, 39.0, 43.0, 40.9],
   clickRate: [6.5, 12.3, 18.7, 15.3, 19.4, 12.3, 17.2, 10.2, 13.3, 14.7],
   bounceRate: [5.1, 2.4, 1.6, 1.9, 1.3, 1.4, 1.2, 1.9, 2.0, 1.7],

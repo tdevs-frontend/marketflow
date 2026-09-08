@@ -207,7 +207,7 @@ export function DashboardSidebar() {
 
         <nav
           aria-label="Dashboard"
-          className="flex-1 space-y-6 overflow-y-auto px-3 py-5"
+          className="custom-scrollbar flex-1 space-y-6 overflow-y-auto px-3 py-5"
         >
           {dashboardNav.map((section) => (
             <div key={section.title}>

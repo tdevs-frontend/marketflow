@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 
 import { PageHeader } from "@/components/layout/page-header";
+import { channelCrumbs } from "@/constants";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog } from "@/components/ui/dialog";
@@ -16,10 +17,12 @@ import {
   TEMPLATE_CATEGORIES,
   TEMPLATE_LANGUAGES,
   TEMPLATE_STATUSES,
+  TEMPLATE_USE_CASES,
 } from "@/lib/whatsapp-fixtures";
 import type {
   TemplateCategory,
   TemplateStatus,
+  TemplateUseCase,
   WhatsAppTemplate,
 } from "@/types/marketing";
 import { TemplateCard } from "./template-card";
@@ -34,6 +37,9 @@ export function TemplatesWorkspace() {
   const [category, setCategory] = useState<TemplateCategory | typeof ALL>(ALL);
   const [status, setStatus] = useState<TemplateStatus | typeof ALL>(ALL);
   const [language, setLanguage] = useState<string>(ALL);
+  /* The library shelf, separate from the Meta category — see
+     `TEMPLATE_USE_CASES`. */
+  const [useCase, setUseCase] = useState<TemplateUseCase | typeof ALL>(ALL);
 
   const [previewing, setPreviewing] = useState<WhatsAppTemplate | null>(null);
   const [formOpen, setFormOpen] = useState(false);
@@ -41,7 +47,10 @@ export function TemplatesWorkspace() {
   const [deleting, setDeleting] = useState<WhatsAppTemplate | null>(null);
 
   const activeFilters =
-    (category === ALL ? 0 : 1) + (status === ALL ? 0 : 1) + (language === ALL ? 0 : 1);
+    (category === ALL ? 0 : 1) +
+    (useCase === ALL ? 0 : 1) +
+    (status === ALL ? 0 : 1) +
+    (language === ALL ? 0 : 1);
 
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
@@ -55,14 +64,16 @@ export function TemplatesWorkspace() {
         return false;
       }
       if (category !== ALL && template.category !== category) return false;
+      if (useCase !== ALL && template.useCase !== useCase) return false;
       if (status !== ALL && template.status !== status) return false;
       if (language !== ALL && template.language !== language) return false;
       return true;
     });
-  }, [search, category, status, language]);
+  }, [search, category, useCase, status, language]);
 
   function resetFilters() {
     setCategory(ALL);
+    setUseCase(ALL);
     setStatus(ALL);
     setLanguage(ALL);
   }
@@ -78,6 +89,7 @@ export function TemplatesWorkspace() {
       <PageHeader
         title="WhatsApp Templates"
         description="Create and manage reusable WhatsApp message templates."
+        breadcrumb={channelCrumbs("whatsapp", "Templates")}
         action={
           <Button size="compact" onClick={openCreate}>
             <Plus aria-hidden />
@@ -101,6 +113,15 @@ export function TemplatesWorkspace() {
             onChange={(next) => setCategory(next as TemplateCategory | typeof ALL)}
             options={[{ value: ALL, label: "All categories" }, ...TEMPLATE_CATEGORIES]}
             className="lg:w-44"
+          />
+
+          <Select
+            label="Filter by use case"
+            size="sm"
+            value={useCase}
+            onChange={(next) => setUseCase(next as TemplateUseCase | typeof ALL)}
+            options={[{ value: ALL, label: "All use cases" }, ...TEMPLATE_USE_CASES]}
+            className="lg:w-40"
           />
 
           <Select

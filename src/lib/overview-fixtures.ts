@@ -148,8 +148,12 @@ export const CHANNEL_ROWS: ChannelRow[] = [
 export interface FunnelStage {
   label: string;
   count: number;
-  /** What the step actually counts, for the row's second line. */
-  hint: string;
+  /**
+   * What the step actually counts. Rendered on the first row only, where there
+   * is no drop-off percentage to show instead — optional because a funnel used
+   * as a secondary panel does not always need the gloss.
+   */
+  hint?: string;
 }
 
 /**

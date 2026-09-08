@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { CalendarDays } from "lucide-react";
 
 import { Button } from "./button";
@@ -17,9 +16,6 @@ export const RANGE_PRESETS: { value: DateRangePreset; label: string }[] = [
   { value: "ytd", label: "Year to date" },
   { value: "custom", label: "Custom range" },
 ];
-
-export const rangeLabel = (preset: DateRangePreset) =>
-  RANGE_PRESETS.find((item) => item.value === preset)?.label ?? "Last 30 days";
 
 export interface DateRangeValue {
   preset: DateRangePreset;
@@ -87,17 +83,24 @@ export function DateRangePicker({
 }
 
 /**
- * Month stepper for the social calendar — prev, next, a label and a jump back
- * to today. Not a range: a calendar is browsed a month at a time.
+ * Period stepper for the social calendar — prev, next, a label and a jump back
+ * to today. Not a range: a calendar is browsed one period at a time.
+ *
+ * `unit` names what the arrows move by. It is not cosmetic: the same control
+ * drives the month, week and day views, and an arrow that announces itself as
+ * "Previous month" while actually moving one day is worse than an unlabelled
+ * one.
  */
 export function MonthStepper({
   label,
+  unit = "month",
   onPrev,
   onNext,
   onToday,
   className,
 }: {
   label: string;
+  unit?: string;
   onPrev: () => void;
   onNext: () => void;
   onToday: () => void;
@@ -109,7 +112,7 @@ export function MonthStepper({
         <button
           type="button"
           onClick={onPrev}
-          aria-label="Previous month"
+          aria-label={`Previous ${unit}`}
           className="grid h-9 w-9 place-items-center rounded-l-btn text-text-muted transition-colors hover:bg-surface-secondary hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
         >
           <span aria-hidden>‹</span>
@@ -120,7 +123,7 @@ export function MonthStepper({
         <button
           type="button"
           onClick={onNext}
-          aria-label="Next month"
+          aria-label={`Next ${unit}`}
           className="grid h-9 w-9 place-items-center rounded-r-btn text-text-muted transition-colors hover:bg-surface-secondary hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
         >
           <span aria-hidden>›</span>
@@ -133,9 +136,4 @@ export function MonthStepper({
       </Button>
     </div>
   );
-}
-
-/** A local `useState` wrapper, for pages that only need the control's value. */
-export function useDateRange(initial: DateRangeValue = DEFAULT_RANGE) {
-  return useState<DateRangeValue>(initial);
 }

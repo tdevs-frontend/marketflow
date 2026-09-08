@@ -10,6 +10,7 @@ import { Select } from "@/components/ui/select";
 import { useToast } from "@/components/ui/toast";
 import {
   TEMPLATE_CATEGORIES,
+  TEMPLATE_USE_CASES,
   TEMPLATE_LANGUAGES,
   TEMPLATE_VARIABLES,
 } from "@/lib/whatsapp-fixtures";
@@ -17,6 +18,7 @@ import { cn, slugify } from "@/lib/utils";
 import type {
   TemplateButton,
   TemplateCategory,
+  TemplateUseCase,
   WhatsAppTemplate,
 } from "@/types/marketing";
 import { languageLabel } from "./template-card";
@@ -117,6 +119,7 @@ export function TemplatePreviewDialog({
 interface Draft {
   name: string;
   category: TemplateCategory;
+  useCase: TemplateUseCase;
   language: string;
   body: string;
   footer: string;
@@ -126,6 +129,7 @@ interface Draft {
 const EMPTY: Draft = {
   name: "",
   category: "marketing",
+  useCase: "promotion",
   language: "en_US",
   body: "",
   footer: "",
@@ -136,6 +140,7 @@ function draftFrom(template: WhatsAppTemplate): Draft {
   return {
     name: template.name,
     category: template.category,
+    useCase: template.useCase,
     language: template.language,
     body: template.body,
     footer: template.footer ?? "",
@@ -240,6 +245,21 @@ export function TemplateFormDialog({
               value={draft.category}
               onChange={(next) => set("category", next as TemplateCategory)}
               options={TEMPLATE_CATEGORIES}
+            />
+          </Field>
+
+          <Field
+            label="Use case"
+            htmlFor="tpl-use-case"
+            hint="How the library groups it. Independent of the Meta category."
+          >
+            <Select
+              id="tpl-use-case"
+              label="Use case"
+              hideLabel={false}
+              value={draft.useCase}
+              onChange={(next) => set("useCase", next as TemplateUseCase)}
+              options={TEMPLATE_USE_CASES}
             />
           </Field>
         </div>

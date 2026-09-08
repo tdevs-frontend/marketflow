@@ -18,6 +18,40 @@ export const APP_ROUTES = {
   marketingCampaigns: "/dashboard/marketing/campaigns",
   marketingCampaignNew: "/dashboard/marketing/campaigns/new",
   whatsappInbox: "/dashboard/marketing/whatsapp/inbox",
+
+  /* WhatsApp module */
+  whatsappOverview: "/dashboard/marketing/whatsapp",
+  whatsappCampaigns: "/dashboard/marketing/whatsapp/campaigns",
+  whatsappTemplates: "/dashboard/marketing/whatsapp/templates",
+  whatsappContacts: "/dashboard/marketing/whatsapp/contacts",
+  whatsappAutomations: "/dashboard/marketing/whatsapp/automations",
+  whatsappAnalytics: "/dashboard/marketing/whatsapp/analytics",
+
+  /* Email module */
+  emailOverview: "/dashboard/marketing/email",
+  emailCampaigns: "/dashboard/marketing/email/campaigns",
+  emailTemplates: "/dashboard/marketing/email/templates",
+  emailContacts: "/dashboard/marketing/email/contacts",
+  emailAutomations: "/dashboard/marketing/email/automations",
+  emailAnalytics: "/dashboard/marketing/email/analytics",
+
+  /* SMS module */
+  smsOverview: "/dashboard/marketing/sms",
+  smsCampaigns: "/dashboard/marketing/sms/campaigns",
+  smsTemplates: "/dashboard/marketing/sms/templates",
+  smsContacts: "/dashboard/marketing/sms/contacts",
+  smsAutomations: "/dashboard/marketing/sms/automations",
+  smsAnalytics: "/dashboard/marketing/sms/analytics",
+
+  /* Social Planner. Calendar is the module's landing page, not an index. */
+  socialCalendar: "/dashboard/marketing/social/calendar",
+  socialPosts: "/dashboard/marketing/social/posts",
+  socialMedia: "/dashboard/marketing/social/media",
+  socialAccounts: "/dashboard/marketing/social/accounts",
+  socialAnalytics: "/dashboard/marketing/social/analytics",
+
+  /* Audience segmentation, shared across the channels. */
+  segments: "/dashboard/marketing/segments",
   contacts: "/dashboard/contacts",
   leads: "/dashboard/leads",
   campaigns: "/dashboard/campaigns",

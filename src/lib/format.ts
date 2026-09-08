@@ -4,6 +4,19 @@ export function formatNumber(value: number): string {
   );
 }
 
+/**
+ * A count with thousands separators and no compacting.
+ *
+ * `formatNumber` switches to compact notation above 10,000, which is right in a
+ * chart axis or a dense table cell where horizontal room is the constraint.
+ * It is wrong on a headline KPI: "24,580" is only two characters longer than
+ * "24.6K" at 28px type and does not throw away the precision the number was
+ * measured to. Use this wherever a figure is the point of the element.
+ */
+export function formatCount(value: number): string {
+  return new Intl.NumberFormat("en-US").format(value);
+}
+
 export function formatCurrency(value: number, currency = "USD"): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",

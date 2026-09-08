@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { PageHeader } from "@/components/layout/page-header";
+import { channelCrumbs } from "@/constants";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -200,6 +201,7 @@ export function ContactsWorkspace() {
       <PageHeader
         title="WhatsApp Contacts"
         description="Manage your WhatsApp contacts and customer information."
+        breadcrumb={channelCrumbs("whatsapp", "Contacts")}
         action={
           <div className="flex flex-wrap gap-2.5">
             <Button

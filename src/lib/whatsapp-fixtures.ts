@@ -3,6 +3,7 @@ import type {
   Campaign,
   TemplateCategory,
   TemplateStatus,
+  TemplateUseCase,
   WhatsAppContact,
   WhatsAppContactStatus,
   WhatsAppTemplate,
@@ -30,6 +31,19 @@ export const TEMPLATE_STATUSES: Option<TemplateStatus>[] = [
   { value: "rejected", label: "Rejected" },
 ];
 
+
+/**
+ * The library shelves. Separate from `TEMPLATE_CATEGORIES`, which is Meta's
+ * own three-value classification and drives review and pricing.
+ */
+export const TEMPLATE_USE_CASES: Option<TemplateUseCase>[] = [
+  { value: "welcome", label: "Welcome" },
+  { value: "promotion", label: "Promotion" },
+  { value: "order", label: "Order" },
+  { value: "reminder", label: "Reminder" },
+  { value: "follow-up", label: "Follow-up" },
+  { value: "verification", label: "Authentication" },
+];
 export const TEMPLATE_LANGUAGES: Option<string>[] = [
   { value: "en_US", label: "English (US)" },
   { value: "en_GB", label: "English (UK)" },
@@ -86,9 +100,26 @@ export function whatsappTotals(campaigns: Campaign[]) {
 
 export const TEMPLATES: WhatsAppTemplate[] = [
   {
+    id: "tpl-welcome",
+    name: "welcome_message",
+    category: "marketing",
+    useCase: "welcome",
+    status: "approved",
+    language: "en_US",
+    body: "Welcome to {{company}}, {{name}}! You are on the list. Reply with a question any time — a real person answers.",
+    variables: ["company", "name"],
+    buttons: [
+      { label: "Browse Catalog", type: "url" },
+      { label: "Talk to us", type: "quick-reply" },
+    ],
+    footer: "Reply STOP to opt out",
+    updatedAt: "2026-09-04T09:15:00Z",
+  },
+  {
     id: "tpl-order-confirmation",
     name: "order_confirmation",
     category: "utility",
+    useCase: "order",
     status: "approved",
     language: "en_US",
     body: "Hi {{name}}, your order {{order_id}} has been confirmed. We will let you know as soon as it ships.",
@@ -101,6 +132,7 @@ export const TEMPLATES: WhatsAppTemplate[] = [
     id: "tpl-seasonal-offer",
     name: "seasonal_offer_v3",
     category: "marketing",
+    useCase: "promotion",
     status: "approved",
     language: "en_US",
     body: "Hi {{name}}, our Summer Sale is live — 20% off every package until {{date}}. Use your code at checkout.",
@@ -116,6 +148,7 @@ export const TEMPLATES: WhatsAppTemplate[] = [
     id: "tpl-shipping-update",
     name: "shipping_update",
     category: "utility",
+    useCase: "order",
     status: "approved",
     language: "en_US",
     body: "Good news {{name}} — order {{order_id}} is on its way and should arrive by {{date}}.",
@@ -127,6 +160,7 @@ export const TEMPLATES: WhatsAppTemplate[] = [
     id: "tpl-abandoned-cart",
     name: "abandoned_checkout",
     category: "marketing",
+    useCase: "reminder",
     status: "pending",
     language: "en_US",
     body: "Hi {{name}}, you left {{product}} in your basket. It is still available — shall we hold it for you?",
@@ -141,6 +175,7 @@ export const TEMPLATES: WhatsAppTemplate[] = [
     id: "tpl-otp",
     name: "login_verification",
     category: "authentication",
+    useCase: "verification",
     status: "approved",
     language: "en_US",
     body: "{{code}} is your {{company}} verification code. It expires in 10 minutes.",
@@ -152,6 +187,7 @@ export const TEMPLATES: WhatsAppTemplate[] = [
     id: "tpl-payment-reminder",
     name: "payment_reminder",
     category: "utility",
+    useCase: "reminder",
     status: "approved",
     language: "en_GB",
     body: "Hi {{name}}, invoice {{order_id}} for {{amount}} is due on {{date}}. Let us know if you need anything.",
@@ -166,6 +202,7 @@ export const TEMPLATES: WhatsAppTemplate[] = [
     id: "tpl-vip-preview",
     name: "vip_early_access",
     category: "marketing",
+    useCase: "promotion",
     status: "rejected",
     language: "en_US",
     body: "{{name}}, you get first look at our autumn range. Claim your VIP discount before anyone else — limited spots, act fast!!!",
@@ -178,6 +215,7 @@ export const TEMPLATES: WhatsAppTemplate[] = [
     id: "tpl-feedback",
     name: "post_purchase_feedback",
     category: "utility",
+    useCase: "follow-up",
     status: "approved",
     language: "en_US",
     body: "Thanks for your order, {{name}}. How did we do? Your feedback helps us improve {{company}}.",
@@ -192,6 +230,7 @@ export const TEMPLATES: WhatsAppTemplate[] = [
     id: "tpl-restock",
     name: "back_in_stock_v1",
     category: "marketing",
+    useCase: "promotion",
     status: "pending",
     language: "bn_BD",
     body: "{{name}}, {{product}} আবার স্টকে এসেছে। শেষ হওয়ার আগেই অর্ডার করুন।",
@@ -371,3 +410,98 @@ export const WHATSAPP_CONTACTS: WhatsAppContact[] = [
 
 export const contactName = (contact: WhatsAppContact) =>
   `${contact.firstName} ${contact.lastName}`.trim();
+
+/* -------------------------------------------------------------------------- */
+/* Analytics series                                                           */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Ten sample points across four weeks. Labels rather than dates because the
+ * axis is read, not computed — and a chart that recomputes its own labels from
+ * `Date.now()` shifts every time this file is opened in a different month.
+ */
+export const WA_DAY_LABELS = [
+  "Aug 12",
+  "Aug 15",
+  "Aug 18",
+  "Aug 21",
+  "Aug 24",
+  "Aug 27",
+  "Aug 30",
+  "Sep 2",
+  "Sep 5",
+  "Sep 8",
+];
+
+/**
+ * Counts only. The delivery, read and reply *rates* are derived from these by
+ * `rateSeries` below rather than stored alongside them — two fields that must
+ * agree is one field too many, and a hand-edited fixture is exactly where they
+ * stop agreeing.
+ */
+export const WA_SERIES = {
+  sent: [
+    18_420, 21_860, 19_640, 24_180, 22_460, 26_840, 28_120, 31_460, 34_280,
+    35_200,
+  ],
+  delivered: [
+    17_904, 21_422, 19_168, 23_769, 21_988, 26_331, 27_670, 30_831, 33_524,
+    34_708,
+  ],
+  read: [
+    14_037, 17_138, 15_180, 19_349, 17_327, 21_222, 22_717, 24_665, 26_684,
+    28_388,
+  ],
+  replied: [
+    2_650, 3_428, 2_913, 4_064, 3_430, 4_318, 4_925, 4_933, 5_163, 5_970,
+  ],
+  failed: [516, 438, 472, 411, 472, 509, 450, 629, 756, 492],
+  optOuts: [42, 51, 46, 58, 54, 62, 68, 74, 86, 82],
+};
+
+/** A rate series as percentages, for the charts that plot one. */
+export const rateSeries = (part: number[], total: number[]) =>
+  part.map((value, index) => (total[index] === 0 ? 0 : (value / total[index]) * 100));
+
+/** Inbound and outbound threads per day, for the conversation-volume card. */
+export const WA_CONVERSATION_VOLUME = {
+  inbound: [842, 964, 886, 1_048, 986, 1_142, 1_206, 1_318, 1_442, 1_486],
+  outbound: [1_284, 1_486, 1_342, 1_628, 1_512, 1_784, 1_886, 2_048, 2_246, 2_312],
+};
+
+/** Reply rate by audience, for the engagement panel. */
+export const WA_AUDIENCE_ENGAGEMENT = [
+  { label: "VIP Customers", contacts: 318, replyRate: 28.4 },
+  { label: "Recent Purchasers", contacts: 1_248, replyRate: 22.1 },
+  { label: "New Leads", contacts: 2_148, replyRate: 18.6 },
+  { label: "All Contacts", contacts: 12_480, replyRate: 15.8 },
+  { label: "Inactive Customers", contacts: 3_460, replyRate: 6.2 },
+];
+
+/** Best-performing templates, ranked by reply rate. */
+export const WA_TOP_TEMPLATES = [
+  { id: "tpl-order-confirmation", name: "order_confirmation", sent: 12_480, replyRate: 34.2 },
+  { id: "tpl-feedback", name: "post_purchase_feedback", sent: 11_842, replyRate: 26.8 },
+  { id: "tpl-abandoned-cart", name: "abandoned_checkout", sent: 6_842, replyRate: 21.4 },
+  { id: "tpl-seasonal-offer", name: "seasonal_offer_v3", sent: 18_420, replyRate: 14.6 },
+  { id: "tpl-shipping-update", name: "shipping_update", sent: 12_186, replyRate: 9.2 },
+];
+
+/** The WhatsApp-only funnel, from sent through to an order. */
+export const WA_FUNNEL = [
+  { label: "Sent", count: 317_800, hint: "Messages handed to Meta" },
+  { label: "Delivered", count: 311_444, hint: "Reached the handset" },
+  { label: "Read", count: 249_155, hint: "Blue ticks" },
+  { label: "Replied", count: 49_831, hint: "Started a conversation" },
+  { label: "Converted", count: 4_980, hint: "Placed an order" },
+];
+
+/** Contact and automation counts the overview reports but campaigns do not. */
+export const WA_OVERVIEW_TOTALS = {
+  contacts: 12_480,
+  contactsChange: 18.4,
+  activeAutomations: 4,
+  automationsChange: 33.3,
+  optInRate: 94.2,
+  avgResponseMinutes: 8,
+} as const;

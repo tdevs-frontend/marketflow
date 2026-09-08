@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Menu } from "@/components/ui/menu";
 import { formatRelativeTime } from "@/lib/format";
-import { TEMPLATE_LANGUAGES } from "@/lib/whatsapp-fixtures";
+import { TEMPLATE_LANGUAGES, TEMPLATE_USE_CASES } from "@/lib/whatsapp-fixtures";
 import { cn } from "@/lib/utils";
 import type {
   TemplateCategory,
   TemplateStatus,
+  TemplateUseCase,
   WhatsAppTemplate,
 } from "@/types/marketing";
 
@@ -44,6 +45,9 @@ export function TemplateStatusBadge({ status }: { status: TemplateStatus }) {
   );
 }
 
+export const useCaseLabel = (useCase: TemplateUseCase) =>
+  TEMPLATE_USE_CASES.find((item) => item.value === useCase)?.label ?? useCase;
+
 export function languageLabel(code: string) {
   return TEMPLATE_LANGUAGES.find((item) => item.value === code)?.label ?? code;
 }
@@ -70,6 +74,9 @@ export function TemplateCard({
             {template.name}
           </h3>
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            {/* Use case first: it is the shelf a merchant thinks in. The Meta
+                category sits beside it because it drives review and pricing. */}
+            <Badge tone="neutral">{useCaseLabel(template.useCase)}</Badge>
             <Badge tone={CATEGORY_TONES[template.category]}>{template.category}</Badge>
             <TemplateStatusBadge status={template.status} />
           </div>

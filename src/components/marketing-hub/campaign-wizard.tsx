@@ -11,16 +11,19 @@ import {
   MessageCircle,
   Send,
   Smartphone,
+  UserSquare2,
   Users,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { CheckboxField } from "@/components/ui/checkbox";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { useToast } from "@/components/ui/toast";
 import { APP_ROUTES } from "@/constants";
 import { AUDIENCES, TIMEZONES } from "@/lib/marketing-fixtures";
+import { segmentsForChannel } from "@/lib/segment-fixtures";
 import { formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type {
@@ -31,11 +34,13 @@ import type {
 } from "@/types/marketing";
 
 const STEPS: { value: WizardStep; label: string }[] = [
-  { value: "campaign", label: "Campaign" },
+  { value: "campaign", label: "Details" },
   { value: "audience", label: "Audience" },
   { value: "content", label: "Content" },
+  { value: "personalization", label: "Personalise" },
   { value: "schedule", label: "Schedule" },
   { value: "review", label: "Review" },
+  { value: "send", label: "Send" },
 ];
 
 const CHANNEL_CARDS: {
@@ -83,10 +88,12 @@ const EMPTY: CampaignDraft = {
   description: "",
   channel: "whatsapp",
   segment: "all",
+  savedSegmentId: "",
   templateId: "",
   message: "",
   subject: "",
   previewText: "",
+  fallbacks: {},
   sendMode: "now",
   date: "",
   time: "09:00",
@@ -97,6 +104,46 @@ const EMPTY: CampaignDraft = {
 function smsSegments(length: number) {
   if (length === 0) return 0;
   return length <= 160 ? 1 : Math.ceil(length / 153);
+}
+
+/**
+ * Placeholder names in a draft, deduplicated and in first-appearance order.
+ *
+ * Scans the subject as well as the body: a merge tag in a subject line with no
+ * fallback is the most visible way a campaign embarrasses itself.
+ */
+function placeholdersIn(draft: CampaignDraft): string[] {
+  const source = `${draft.subject} ${draft.message}`;
+  const found = source.matchAll(/\{\{\s*(\w+)\s*\}\}/g);
+  return [...new Set([...found].map((match) => match[1]))];
+}
+
+/** Sample values used for the personalisation preview. */
+const PREVIEW_CONTACT: Record<string, string> = {
+  first_name: "Sarah",
+  last_name: "Ahmed",
+  name: "Sarah Ahmed",
+  company: "Bright Retail",
+  order_id: "MF-10248",
+  amount: "$149.00",
+  product: "Premium Package",
+  date: "16 September",
+  city: "Dhaka",
+};
+
+/**
+ * Renders a draft the way a recipient would see it: the contact's value where
+ * there is one, the author's fallback where there is not, and the raw tag only
+ * when neither exists — which is exactly the case the step exists to catch.
+ */
+function renderPersonalised(
+  text: string,
+  fallbacks: Record<string, string>,
+  contact: Record<string, string> = PREVIEW_CONTACT,
+): string {
+  return text.replace(/\{\{\s*(\w+)\s*\}\}/g, (match, name: string) => {
+    return contact[name] ?? fallbacks[name] ?? match;
+  });
 }
 
 /* -------------------------------------------------------------------------- */
@@ -188,13 +235,30 @@ export function CampaignWizard() {
   const [furthest, setFurthest] = useState(0);
   const [draft, setDraft] = useState<CampaignDraft>(EMPTY);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  /* The send step asks for one explicit confirmation. Reset whenever the draft
+     changes, so a tick made before an edit never carries over. */
+  const [confirmed, setConfirmed] = useState(false);
 
   const step = STEPS[index].value;
-  const set = <K extends keyof CampaignDraft>(key: K, value: CampaignDraft[K]) =>
+  const set = <K extends keyof CampaignDraft>(key: K, value: CampaignDraft[K]) => {
     setDraft((prev) => ({ ...prev, [key]: value }));
+    setConfirmed(false);
+  };
 
-  const audience = AUDIENCES.find((item) => item.value === draft.segment);
-  const audienceSize = audience?.size ?? 0;
+  /* Segments usable on the chosen channel. A segment built from email
+     engagement has no phone numbers behind most of it, so offering it for an
+     SMS campaign would produce a send that silently fails for most of its
+     recipients. */
+  const savedSegments = segmentsForChannel(draft.channel);
+  const savedSegment = savedSegments.find((item) => item.id === draft.savedSegmentId);
+
+  const builtIn = AUDIENCES.find((item) => item.value === draft.segment);
+  /* Whichever of the two is actually selected drives every downstream step. */
+  const channelName =
+    CHANNEL_CARDS.find((card) => card.value === draft.channel)?.label ?? "";
+
+  const audienceLabel = savedSegment?.name ?? builtIn?.label ?? "";
+  const audienceSize = savedSegment?.contacts ?? builtIn?.size ?? 0;
 
   /** Each step gates the next; the review step has nothing left to check. */
   function validateStep(): boolean {
@@ -203,8 +267,15 @@ export function CampaignWizard() {
     if (step === "campaign" && !draft.name.trim()) {
       next.name = "Name the campaign.";
     }
-    if (step === "audience" && draft.segment === "custom") {
-      next.segment = "Build the segment, or pick a saved audience.";
+    /* "Custom" means "not decided yet", so it only blocks when no saved segment
+       has been chosen either — picking one is the decision the message asks
+       for. */
+    if (
+      step === "audience" &&
+      draft.segment === "custom" &&
+      !draft.savedSegmentId
+    ) {
+      next.segment = "Pick a saved segment, or choose a built-in audience.";
     }
     if (step === "content") {
       if (draft.channel === "email" && !draft.subject.trim()) {
@@ -233,6 +304,9 @@ export function CampaignWizard() {
   }
 
   const messageLength = draft.message.length;
+
+  const tags = placeholdersIn(draft);
+  const missingFallbacks = tags.filter((tag) => !draft.fallbacks[tag]?.trim());
 
   return (
     <Card className="p-5">
@@ -321,14 +395,20 @@ export function CampaignWizard() {
               </legend>
               <div className="mt-2.5 grid gap-2.5 sm:grid-cols-2">
                 {AUDIENCES.map((item) => {
-                  const selected = draft.segment === item.value;
+                  const selected =
+                    !draft.savedSegmentId && draft.segment === item.value;
 
                   return (
                     <button
                       key={item.value}
                       type="button"
                       aria-pressed={selected}
-                      onClick={() => set("segment", item.value as AudienceSegment)}
+                      onClick={() => {
+                        set("segment", item.value as AudienceSegment);
+                        /* One answer to "who receives this": choosing here
+                           drops any saved segment below. */
+                        set("savedSegmentId", "");
+                      }}
                       className={cn(
                         "flex items-start justify-between gap-3 rounded-panel border p-3.5 text-left transition-colors focus-visible:shadow-focus focus-visible:outline-none",
                         selected
@@ -354,6 +434,61 @@ export function CampaignWizard() {
               {errors.segment ? (
                 <p className="mt-2 text-xs text-error">{errors.segment}</p>
               ) : null}
+            </fieldset>
+
+            <fieldset>
+              <legend className="text-sm font-medium text-text-primary">
+                Saved segments
+              </legend>
+              <p className="mt-1 text-xs text-text-muted">
+                Built in Audience Segments and reusable across channels. Only
+                segments that can reach {channelName} are listed.
+              </p>
+
+              {savedSegments.length === 0 ? (
+                <p className="mt-2.5 rounded-panel border border-dashed border-border px-3.5 py-4 text-center text-xs text-text-muted">
+                  None of your segments carry enough {channelName} data to send
+                  to. Build one in Audience Segments, or pick a built-in
+                  audience above.
+                </p>
+              ) : (
+                <div className="mt-2.5 grid gap-2.5 sm:grid-cols-2">
+                  {savedSegments.map((item) => {
+                    const selected = draft.savedSegmentId === item.id;
+
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        aria-pressed={selected}
+                        onClick={() =>
+                          /* Toggling off returns the choice to the built-in
+                             audience rather than leaving nothing selected. */
+                          set("savedSegmentId", selected ? "" : item.id)
+                        }
+                        className={cn(
+                          "flex items-start justify-between gap-3 rounded-panel border p-3.5 text-left transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                          selected
+                            ? "border-primary bg-primary-subtle"
+                            : "border-border hover:border-border-strong",
+                        )}
+                      >
+                        <span className="min-w-0">
+                          <span className="block text-sm font-medium text-text-primary">
+                            {item.name}
+                          </span>
+                          <span className="block text-xs text-text-muted">
+                            {item.description}
+                          </span>
+                        </span>
+                        <span className="shrink-0 text-sm font-bold text-text-primary tabular-nums">
+                          {formatNumber(item.contacts)}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </fieldset>
 
             <div className="flex items-center gap-3 rounded-panel bg-primary-soft px-3.5 py-3">
@@ -469,6 +604,113 @@ export function CampaignWizard() {
           </div>
         ) : null}
 
+
+        {/* ----------------------------------------------- Personalisation */}
+        {step === "personalization" ? (
+          <div className="space-y-5">
+            {tags.length === 0 ? (
+              <div className="rounded-panel border border-dashed border-border-strong px-4 py-8 text-center">
+                <UserSquare2 className="mx-auto size-6 text-text-muted" aria-hidden />
+                <p className="mt-2 text-sm font-medium text-text-primary">
+                  No merge tags in this message
+                </p>
+                <p className="mx-auto mt-1 max-w-sm text-xs text-text-muted">
+                  Add one on the Content step — a message that opens with the
+                  recipient&apos;s first name reads noticeably better than one that
+                  does not. Or continue as is.
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-3"
+                  onClick={() => setIndex(2)}
+                >
+                  Back to content
+                </Button>
+              </div>
+            ) : (
+              <>
+                <div>
+                  <p className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+                    Fallback values
+                  </p>
+                  <p className="mt-1 text-sm text-text-secondary">
+                    Used for contacts with no value for a tag. Without one, the
+                    raw <code className="font-mono text-text-primary">{"{{tag}}"}</code>{" "}
+                    is sent as written.
+                  </p>
+
+                  <ul className="mt-3 space-y-3">
+                    {tags.map((tag) => {
+                      const covered = Boolean(draft.fallbacks[tag]?.trim());
+
+                      return (
+                        <li
+                          key={tag}
+                          className="grid gap-2 rounded-panel border border-border px-3.5 py-3 sm:grid-cols-[10rem_minmax(0,1fr)] sm:items-center"
+                        >
+                          <div className="flex items-center gap-2">
+                            <code className="rounded-btn bg-primary-soft px-1.5 py-0.5 font-mono text-[11px] text-primary-dark">
+                              {`{{${tag}}}`}
+                            </code>
+                            {covered ? null : (
+                              <span className="text-[10px] font-medium tracking-[0.06em] text-warning-text uppercase">
+                                No fallback
+                              </span>
+                            )}
+                          </div>
+
+                          <Input
+                            value={draft.fallbacks[tag] ?? ""}
+                            onChange={(event) =>
+                              set("fallbacks", {
+                                ...draft.fallbacks,
+                                [tag]: event.target.value,
+                              })
+                            }
+                            placeholder={`e.g. ${PREVIEW_CONTACT[tag] ?? "there"}`}
+                            aria-label={`Fallback for ${tag}`}
+                            className="h-10"
+                          />
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+
+                {missingFallbacks.length > 0 ? (
+                  <p className="rounded-panel border border-warning/30 bg-warning-soft px-3.5 py-2.5 text-xs text-warning-text">
+                    {missingFallbacks.length} tag
+                    {missingFallbacks.length === 1 ? " has" : "s have"} no fallback.
+                    Any contact missing that field receives the tag literally —
+                    set a fallback, or accept the risk and continue.
+                  </p>
+                ) : null}
+
+                <div>
+                  <p className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+                    Preview for a sample contact
+                  </p>
+                  <div className="mt-2.5 rounded-panel border border-border bg-surface-secondary p-4">
+                    {draft.channel === "email" && draft.subject ? (
+                      <p className="mb-2 text-sm font-bold text-text-primary">
+                        {renderPersonalised(draft.subject, draft.fallbacks)}
+                      </p>
+                    ) : null}
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap text-text-secondary">
+                      {renderPersonalised(draft.message, draft.fallbacks) ||
+                        "Nothing written yet."}
+                    </p>
+                  </div>
+                  <p className="mt-2 text-[11px] text-text-muted">
+                    Rendered for Sarah Ahmed at Bright Retail. Fields she has no
+                    value for fall back to what you set above.
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
+        ) : null}
         {/* ------------------------------------------------------ Schedule */}
         {step === "schedule" ? (
           <div className="space-y-5">
@@ -584,7 +826,7 @@ export function CampaignWizard() {
                 />
                 <SummaryRow
                   label="Audience"
-                  value={`${audience?.label ?? ""} · ${formatNumber(audienceSize)} contacts`}
+                  value={`${audienceLabel} · ${formatNumber(audienceSize)} contacts`}
                 />
                 {draft.channel === "email" ? (
                   <SummaryRow label="Subject" value={draft.subject || "—"} />
@@ -623,6 +865,84 @@ export function CampaignWizard() {
             </div>
           </div>
         ) : null}
+
+        {/* ------------------------------------------------------------ Send */}
+        {step === "send" ? (
+          <div className="space-y-5">
+            {/* The last screen before something irreversible, so it states the
+                consequence in plain numbers rather than restating the form. */}
+            <div className="rounded-panel border border-primary-border bg-primary-subtle px-4 py-4">
+              <p className="flex items-center gap-2 text-sm font-bold text-primary-dark">
+                <Send className="size-4" aria-hidden />
+                {draft.sendMode === "now"
+                  ? "Ready to send now"
+                  : `Ready to schedule for ${draft.date || "—"}`}
+              </p>
+              <p className="mt-1.5 text-sm text-text-secondary">
+                {formatNumber(audienceSize)} contacts in{" "}
+                <span className="font-medium text-text-primary">
+                  {audienceLabel}
+                </span>{" "}
+                will receive this{" "}
+                {CHANNEL_CARDS.find((card) => card.value === draft.channel)?.label}{" "}
+                message
+                {draft.sendMode === "now"
+                  ? " as soon as you launch."
+                  : ` at ${draft.time} ${draft.timezone}.`}
+              </p>
+            </div>
+
+            <dl className="grid gap-3 sm:grid-cols-3">
+              <div className="rounded-panel border border-border px-3.5 py-3">
+                <dt className="text-[10px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                  Recipients
+                </dt>
+                <dd className="mt-1 text-lg leading-none font-bold text-text-primary tabular-nums">
+                  {formatNumber(audienceSize)}
+                </dd>
+              </div>
+              <div className="rounded-panel border border-border px-3.5 py-3">
+                <dt className="text-[10px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                  Merge tags
+                </dt>
+                <dd className="mt-1 text-lg leading-none font-bold text-text-primary tabular-nums">
+                  {tags.length}
+                </dd>
+              </div>
+              <div className="rounded-panel border border-border px-3.5 py-3">
+                <dt className="text-[10px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                  {draft.channel === "sms" ? "Billed segments" : "Message length"}
+                </dt>
+                <dd className="mt-1 text-lg leading-none font-bold text-text-primary tabular-nums">
+                  {draft.channel === "sms"
+                    ? formatNumber(smsSegments(messageLength) * audienceSize)
+                    : `${messageLength} chars`}
+                </dd>
+              </div>
+            </dl>
+
+            {missingFallbacks.length > 0 ? (
+              <p className="rounded-panel border border-warning/30 bg-warning-soft px-3.5 py-2.5 text-xs text-warning-text">
+                {missingFallbacks.length} merge tag
+                {missingFallbacks.length === 1 ? "" : "s"} still{" "}
+                {missingFallbacks.length === 1 ? "has" : "have"} no fallback:{" "}
+                {missingFallbacks.map((tag) => `{{${tag}}}`).join(", ")}.
+              </p>
+            ) : null}
+
+            <CheckboxField
+              id="send-confirm"
+              checked={confirmed}
+              onCheckedChange={setConfirmed}
+              label={
+                draft.sendMode === "now"
+                  ? `Send to ${formatNumber(audienceSize)} contacts immediately`
+                  : `Schedule for ${formatNumber(audienceSize)} contacts`
+              }
+              hint="Messages already delivered cannot be recalled."
+            />
+          </div>
+        ) : null}
       </div>
 
       {/* ------------------------------------------------------------ Nav */}
@@ -646,10 +966,11 @@ export function CampaignWizard() {
             Save Draft
           </Button>
 
-          {step === "review" ? (
+          {step === "send" ? (
             draft.sendMode === "later" ? (
               <Button
                 size="compact"
+                disabled={!confirmed}
                 onClick={() => finish("Campaign scheduled successfully")}
               >
                 <Clock aria-hidden />
@@ -658,6 +979,7 @@ export function CampaignWizard() {
             ) : (
               <Button
                 size="compact"
+                disabled={!confirmed}
                 onClick={() => finish("Campaign launched successfully")}
               >
                 <Send aria-hidden />

@@ -70,7 +70,6 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["autumn", "hero", "lifestyle"],
     tone: TONES[0],
     uploadedAt: "2026-09-01T09:20:00Z",
-    usedIn: 4,
   },
   {
     id: "md-02",
@@ -83,7 +82,6 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["autumn", "hero"],
     tone: TONES[1],
     uploadedAt: "2026-09-01T09:22:00Z",
-    usedIn: 2,
   },
   {
     id: "md-03",
@@ -96,7 +94,6 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["product", "flatlay", "business"],
     tone: TONES[2],
     uploadedAt: "2026-08-28T14:10:00Z",
-    usedIn: 7,
   },
   {
     id: "md-04",
@@ -109,7 +106,6 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["product", "detail"],
     tone: TONES[3],
     uploadedAt: "2026-08-28T14:12:00Z",
-    usedIn: 3,
   },
   {
     id: "md-05",
@@ -123,7 +119,6 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["product", "demo", "automation"],
     tone: TONES[4],
     uploadedAt: "2026-08-18T10:40:00Z",
-    usedIn: 5,
   },
   {
     id: "md-06",
@@ -137,7 +132,6 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["team", "reel", "vertical"],
     tone: TONES[5],
     uploadedAt: "2026-08-24T16:00:00Z",
-    usedIn: 2,
   },
   {
     id: "md-07",
@@ -150,7 +144,6 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["logo", "brand"],
     tone: TONES[0],
     uploadedAt: "2026-05-02T08:00:00Z",
-    usedIn: 18,
   },
   {
     id: "md-08",
@@ -163,7 +156,6 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["logo", "brand"],
     tone: TONES[4],
     uploadedAt: "2026-05-02T08:00:00Z",
-    usedIn: 11,
   },
   {
     id: "md-09",
@@ -176,7 +168,6 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["customer", "ugc", "retail"],
     tone: TONES[1],
     uploadedAt: "2026-09-03T11:30:00Z",
-    usedIn: 1,
   },
   {
     id: "md-10",
@@ -189,7 +180,6 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["customer", "ugc", "wholesale"],
     tone: TONES[2],
     uploadedAt: "2026-09-03T11:34:00Z",
-    usedIn: 0,
   },
   {
     id: "md-11",
@@ -202,7 +192,6 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["graphic", "pricing", "square"],
     tone: TONES[3],
     uploadedAt: "2026-09-04T09:15:00Z",
-    usedIn: 3,
   },
   {
     id: "md-12",
@@ -215,7 +204,6 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["graphic", "webinar", "landscape"],
     tone: TONES[5],
     uploadedAt: "2026-09-06T13:00:00Z",
-    usedIn: 2,
   },
   {
     id: "md-13",
@@ -228,7 +216,6 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["office", "team", "brand"],
     tone: TONES[0],
     uploadedAt: "2026-07-18T15:20:00Z",
-    usedIn: 4,
   },
   {
     id: "md-14",
@@ -241,7 +228,6 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["carousel", "product"],
     tone: TONES[1],
     uploadedAt: "2026-08-30T10:05:00Z",
-    usedIn: 1,
   },
   {
     id: "md-15",
@@ -254,7 +240,6 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["carousel", "product"],
     tone: TONES[2],
     uploadedAt: "2026-08-30T10:06:00Z",
-    usedIn: 1,
   },
   {
     id: "md-16",
@@ -268,7 +253,6 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["testimonial", "reel", "vertical"],
     tone: TONES[3],
     uploadedAt: "2026-09-02T12:40:00Z",
-    usedIn: 1,
   },
   {
     id: "md-17",
@@ -281,7 +265,6 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["pattern", "brand"],
     tone: TONES[4],
     uploadedAt: "2026-06-14T09:00:00Z",
-    usedIn: 6,
   },
   {
     id: "md-18",
@@ -294,7 +277,6 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["event", "graphic", "square"],
     tone: TONES[5],
     uploadedAt: "2026-09-06T13:05:00Z",
-    usedIn: 2,
   },
 ];
 
@@ -629,6 +611,22 @@ export const SOCIAL_POSTS: SocialPost[] = [
     },
   },
 ];
+
+/**
+ * How many posts reference an asset.
+ *
+ * Derived rather than stored on the asset: a hand-maintained `usedIn` counter
+ * drifts the moment a post's media changes, and the one place it must be right
+ * is the delete confirmation — an asset wrongly reported as unused gets deleted
+ * out from under a scheduled post.
+ */
+export const mediaUsageCount = (assetId: string) =>
+  SOCIAL_POSTS.filter((post) => post.mediaIds.includes(assetId)).length;
+
+/** The same counts as a lookup, for lists that need every asset at once. */
+export const MEDIA_USAGE: Record<string, number> = Object.fromEntries(
+  MEDIA_ASSETS.map((asset) => [asset.id, mediaUsageCount(asset.id)]),
+);
 
 /* -------------------------------------------------------------------------- */
 /* Accounts                                                                   */

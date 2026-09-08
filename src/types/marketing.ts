@@ -94,19 +94,45 @@ export interface Conversation {
 /* Wizard                                                                     */
 /* -------------------------------------------------------------------------- */
 
-export type WizardStep = "campaign" | "audience" | "content" | "schedule" | "review";
+/**
+ * The seven steps of the campaign wizard, in order.
+ *
+ * `personalization` and `send` are separate steps rather than parts of
+ * `content` and `review`: merge tags are where a campaign most often goes
+ * wrong (a missing fallback ships "Hi ," to a thousand people), and the final
+ * send deserves a screen whose only job is confirming an irreversible action.
+ */
+export type WizardStep =
+  | "campaign"
+  | "audience"
+  | "content"
+  | "personalization"
+  | "schedule"
+  | "review"
+  | "send";
 
 export interface CampaignDraft {
   name: string;
   description: string;
   channel: MarketingChannel;
+  /** One of the built-in audiences. Ignored when `savedSegmentId` is set. */
   segment: AudienceSegment;
+  /**
+   * A segment from the Audience Segments module, which is the richer model:
+   * rule-based, and it knows which channels it can actually reach. Empty means
+   * the built-in `segment` above is the choice.
+   */
+  savedSegmentId: string;
 
   /* Content — only the fields for the chosen channel are used. */
   templateId: string;
   message: string;
   subject: string;
   previewText: string;
+
+  /* Personalisation — a fallback per placeholder, used where a contact has no
+     value for it. Keyed by placeholder name, without braces. */
+  fallbacks: Record<string, string>;
 
   /* Schedule */
   sendMode: "now" | "later";
@@ -124,6 +150,23 @@ export type TemplateCategory = "marketing" | "utility" | "authentication";
 /** Meta reviews every template; a rejected one cannot be sent. */
 export type TemplateStatus = "approved" | "pending" | "rejected";
 
+/**
+ * What a template is *for*, alongside the Meta category above.
+ *
+ * Meta only recognises three categories, and a template's category determines
+ * how it is priced and reviewed — so that field cannot be repurposed as a
+ * library label. This is the merchant-facing shelf it sits on: a Welcome and a
+ * Promotion template are both `marketing` to Meta and completely different
+ * things to the person picking one.
+ */
+export type TemplateUseCase =
+  | "welcome"
+  | "promotion"
+  | "order"
+  | "reminder"
+  | "follow-up"
+  | "verification";
+
 export type TemplateButtonType = "url" | "quick-reply" | "phone";
 
 export interface TemplateButton {
@@ -135,6 +178,8 @@ export interface WhatsAppTemplate {
   id: string;
   name: string;
   category: TemplateCategory;
+  /** The library shelf, independent of the Meta category. */
+  useCase: TemplateUseCase;
   status: TemplateStatus;
   language: string;
   body: string;

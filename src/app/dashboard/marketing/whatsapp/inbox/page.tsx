@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { WhatsAppInbox } from "@/components/marketing-hub";
 import { PageHeader } from "@/components/layout/page-header";
+import { channelCrumbs } from "@/constants";
 
 export const metadata: Metadata = { title: "WhatsApp Inbox" };
 
@@ -15,6 +16,7 @@ export default async function WhatsAppInboxPage({
       <PageHeader
         title="WhatsApp Inbox"
         description="Every conversation, with the contact record beside it."
+        breadcrumb={channelCrumbs("whatsapp", "Inbox")}
       />
 
       <WhatsAppInbox

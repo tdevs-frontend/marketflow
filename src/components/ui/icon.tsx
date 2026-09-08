@@ -8,6 +8,11 @@ import {
   CalendarDays,
   ClipboardList,
   Code,
+  Clock,
+  LogOut,
+  Pencil,
+  UserCheck,
+  UserPlus,
   CreditCard,
   FileText,
   FolderTree,
@@ -116,6 +121,13 @@ const ICONS: Record<string, LucideIcon> = {
   "credit-card": CreditCard,
   lock: Lock,
   terminal: Terminal,
+
+  /* Automation builder nodes */
+  clock: Clock,
+  "user-plus": UserPlus,
+  "user-check": UserCheck,
+  "log-out": LogOut,
+  pencil: Pencil,
 };
 
 export function Icon({ name, className }: { name: string; className?: string }) {
