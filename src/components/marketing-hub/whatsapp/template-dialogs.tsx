@@ -372,7 +372,7 @@ export function TemplateFormDialog({
             />
             <Button
               variant="outline"
-              size="compact"
+              size="md"
               disabled={!buttonLabel.trim() || draft.buttons.length >= 3}
               onClick={() => {
                 set("buttons", [

@@ -25,8 +25,15 @@ export interface SelectProps<T extends string> {
   placeholder?: string;
   disabled?: boolean;
   error?: boolean;
+  /**
+   * `sm` is 40px, for filter and toolbar rows. `md` is 44px and matches the
+   * `h-11` form inputs, so a Select sits level with the fields beside it.
+   */
+  size?: "sm" | "md";
   className?: string;
 }
+
+const SIZES = { sm: "h-10", md: "h-11" } as const;
 
 const TRIGGER =
   "inline-flex w-full items-center justify-between gap-2 rounded-field border border-border-strong bg-surface px-3.5 text-sm text-text-primary transition-all outline-none hover:border-border-strong focus-visible:border-primary focus-visible:shadow-focus-field disabled:cursor-not-allowed disabled:bg-surface-secondary disabled:opacity-60";
@@ -51,6 +58,7 @@ export function Select<T extends string>({
   placeholder = "Select…",
   disabled,
   error,
+  size = "md",
   className,
 }: SelectProps<T>) {
   const generatedId = useId();
@@ -195,7 +203,7 @@ export function Select<T extends string>({
         }}
         className={cn(
           TRIGGER,
-          "h-11",
+          SIZES[size],
           error && "border-error focus-visible:border-error focus-visible:shadow-focus-error",
         )}
       >

@@ -118,6 +118,7 @@ export function CampaignsWorkspace() {
         >
           <Select
             label="Filter by channel"
+            size="sm"
             value={channel}
             onChange={(next) => {
               setChannel(next as MarketingChannel | typeof ALL);
@@ -129,6 +130,7 @@ export function CampaignsWorkspace() {
 
           <Select
             label="Filter by status"
+            size="sm"
             value={status}
             onChange={(next) => {
               setStatus(next as CampaignStatus | typeof ALL);
@@ -140,6 +142,7 @@ export function CampaignsWorkspace() {
 
           <Select
             label="Sort campaigns"
+            size="sm"
             value={sortField}
             onChange={(next) => {
               setSortField(next as CampaignSortField);
@@ -157,7 +160,7 @@ export function CampaignsWorkspace() {
               setFrom(event.target.value);
               setPage(1);
             }}
-            className="h-11 w-full lg:w-36"
+            className="h-10 w-full lg:w-36"
           />
           <Input
             type="date"
@@ -167,7 +170,7 @@ export function CampaignsWorkspace() {
               setTo(event.target.value);
               setPage(1);
             }}
-            className="h-11 w-full lg:w-36"
+            className="h-10 w-full lg:w-36"
           />
         </FilterBar>
 

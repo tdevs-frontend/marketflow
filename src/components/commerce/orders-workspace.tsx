@@ -159,6 +159,7 @@ export function OrdersWorkspace() {
         >
           <Select
             label="Filter by order status"
+            size="sm"
             value={status}
             onChange={(next) => {
               setStatus(next as OrderStatus | typeof ALL);
@@ -170,6 +171,7 @@ export function OrdersWorkspace() {
 
           <Select
             label="Filter by payment status"
+            size="sm"
             value={payment}
             onChange={(next) => {
               setPayment(next as PaymentStatus | typeof ALL);
@@ -181,6 +183,7 @@ export function OrdersWorkspace() {
 
           <Select
             label="Filter by product"
+            size="sm"
             value={productId}
             onChange={(next) => {
               setProductId(next);

@@ -181,7 +181,7 @@ export function ContactDetailsSheet({
               />
               <Button
                 variant="outline"
-                size="compact"
+                size="md"
                 disabled={!tag}
                 onClick={() => {
                   setTags((prev) => [...prev, tag]);
@@ -451,7 +451,7 @@ export function ContactFormDialog({
             />
             <Button
               variant="outline"
-              size="compact"
+              size="md"
               disabled={!tag}
               onClick={() => {
                 set("tags", [...draft.tags, tag]);

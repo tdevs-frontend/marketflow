@@ -86,6 +86,37 @@
   --color-accent-soft: #eaf7fc;
 
 
+
+  /* --------------------------------------------------- Channel identity */
+  /*
+   * WhatsApp has no tokens of its own — it reuses the brand ramp above,
+   * because WhatsApp *is* this product's primary channel. The other three get
+   * one hue each, spaced far enough apart to survive a legend: blue, violet,
+   * slate. Social stays neutral on purpose — its colour comes from the
+   * platform marks below, and a fifth brand hue competing with four platform
+   * logos is what makes a content calendar unreadable.
+   */
+  --color-email: #2563eb;
+  --color-email-dark: #1d4ed8;
+  --color-email-soft: #eff6ff;
+  --color-email-border: #bfdbfe;
+
+  --color-sms: #7c3aed;
+  --color-sms-dark: #6d28d9;
+  --color-sms-soft: #f5f3ff;
+  --color-sms-border: #ddd6fe;
+
+  --color-social: #64748b;
+  --color-social-dark: #475569;
+  --color-social-soft: #f1f5f9;
+  --color-social-border: #cbd5e1;
+
+  /* Platform marks, each the platform's own colour. A connected-account card
+     that recolours the logo to fit the theme reads as a mock-up. */
+  --color-instagram: #d62976;
+  --color-facebook: #1877f2;
+  --color-linkedin: #0a66c2;
+  --color-x: #17212b;
   /* ----------------------------------------------------------- Neutrals */
   --color-background: #f8fafc;
   --color-surface: #ffffff;
@@ -140,6 +171,11 @@
   --color-chart-3: #34b7f1;
   --color-chart-neutral: #cbd5e1;
   --color-chart-grid: #e2e8f0;
+  /* One per channel, for the four-way comparison charts. */
+  --color-chart-whatsapp: #128c7e;
+  --color-chart-email: #2563eb;
+  --color-chart-sms: #7c3aed;
+  --color-chart-social: #64748b;
 
 
   /* -------------------------------------------------------- Landing Page */

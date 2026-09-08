@@ -68,3 +68,46 @@ export function compactAxisNumber(value: number): string {
 export function compactAxisCurrency(value: number): string {
   return `$${compactAxisNumber(value)}`;
 }
+
+/**
+ * One colour per channel, matching `--color-chart-*` in `variables.css` and
+ * `CHANNEL_THEME[…].hex` in `constants/channels`. Four hues far enough apart
+ * to be told apart in a legend at 8px: green, blue, violet, slate.
+ */
+export const CHANNEL_CHART_COLORS = {
+  whatsapp: "#128c7e",
+  email: "#2563eb",
+  sms: "#7c3aed",
+  social: "#64748b",
+} as const;
+
+/** The four platform marks, for the Social Planner's comparison charts. */
+export const PLATFORM_CHART_COLORS = {
+  instagram: "#d62976",
+  facebook: "#1877f2",
+  linkedin: "#0a66c2",
+  x: "#17212b",
+} as const;
+
+/**
+ * The funnel ramp: one hue, darkest at the top of the funnel and lightening as
+ * the population thins. A funnel drawn in four different hues implies four
+ * unrelated things; it is one population losing people at each step.
+ */
+export const FUNNEL_RAMP = [
+  "#075e54",
+  "#128c7e",
+  "#25d366",
+  "#7dd6b0",
+  "#b7ded8",
+] as const;
+
+/** Delivery outcomes, in the order they are always stacked. */
+export const OUTCOME_COLORS = {
+  delivered: "#128c7e",
+  read: "#25d366",
+  clicked: "#34b7f1",
+  replied: "#075e54",
+  failed: "#dc2626",
+  neutral: "#cbd5e1",
+} as const;

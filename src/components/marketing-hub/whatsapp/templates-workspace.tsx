@@ -96,6 +96,7 @@ export function TemplatesWorkspace() {
         >
           <Select
             label="Filter by category"
+            size="sm"
             value={category}
             onChange={(next) => setCategory(next as TemplateCategory | typeof ALL)}
             options={[{ value: ALL, label: "All categories" }, ...TEMPLATE_CATEGORIES]}
@@ -104,6 +105,7 @@ export function TemplatesWorkspace() {
 
           <Select
             label="Filter by status"
+            size="sm"
             value={status}
             onChange={(next) => setStatus(next as TemplateStatus | typeof ALL)}
             options={[{ value: ALL, label: "All statuses" }, ...TEMPLATE_STATUSES]}
@@ -112,6 +114,7 @@ export function TemplatesWorkspace() {
 
           <Select
             label="Filter by language"
+            size="sm"
             value={language}
             onChange={setLanguage}
             options={[{ value: ALL, label: "All languages" }, ...TEMPLATE_LANGUAGES]}

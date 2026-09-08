@@ -192,6 +192,7 @@ export function WhatsAppCampaignsWorkspace() {
         >
           <Select
             label="Filter by status"
+            size="sm"
             value={status}
             onChange={(next) => {
               setStatus(next as CampaignStatus | typeof ALL);
@@ -203,6 +204,7 @@ export function WhatsAppCampaignsWorkspace() {
 
           <Select
             label="Filter by audience"
+            size="sm"
             value={audience}
             onChange={(next) => {
               setAudience(next);
@@ -223,11 +225,12 @@ export function WhatsAppCampaignsWorkspace() {
               setFrom(event.target.value);
               setPage(1);
             }}
-            className="h-11 w-full lg:w-38"
+            className="h-10 w-full lg:w-38"
           />
 
           <Select
             label="Sort campaigns"
+            size="sm"
             value={sort}
             onChange={(next) => setSort(next as SortField)}
             options={[...SORT_OPTIONS]}

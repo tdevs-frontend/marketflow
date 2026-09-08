@@ -250,6 +250,7 @@ export function ProductsWorkspace() {
         >
           <Select
             label="Filter by category"
+            size="sm"
             value={category}
             onChange={(next) => {
               setCategory(next);
@@ -264,6 +265,7 @@ export function ProductsWorkspace() {
 
           <Select
             label="Filter by status"
+            size="sm"
             value={status}
             onChange={(next) => {
               setStatus(next as ProductStatus | typeof ALL);
@@ -278,6 +280,7 @@ export function ProductsWorkspace() {
 
           <Select
             label="Filter by stock"
+            size="sm"
             value={stock}
             onChange={(next) => {
               setStock(next as StockStatus | typeof ALL);

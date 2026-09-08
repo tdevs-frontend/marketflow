@@ -241,6 +241,7 @@ export function ContactsWorkspace() {
         >
           <Select
             label="Filter by tag"
+            size="sm"
             value={tag}
             onChange={(next) => {
               setTag(next);
@@ -255,6 +256,7 @@ export function ContactsWorkspace() {
 
           <Select
             label="Filter by status"
+            size="sm"
             value={status}
             onChange={(next) => {
               setStatus(next as WhatsAppContactStatus | typeof ALL);
@@ -266,6 +268,7 @@ export function ContactsWorkspace() {
 
           <Select
             label="Filter by assigned agent"
+            size="sm"
             value={agent}
             onChange={(next) => {
               setAgent(next);
@@ -289,6 +292,7 @@ export function ContactsWorkspace() {
             <div className="ml-auto flex flex-wrap items-center gap-2">
               <Select
                 label="Tag selected contacts"
+                size="sm"
                 value={bulkTag}
                 onChange={(next) => {
                   setBulkTag("");
