@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 export type ButtonVariant =
   | "primary"
   | "gradient"
+  | "dark"
   | "secondary"
   | "outline"
   | "ghost"
@@ -59,6 +60,21 @@ const VARIANTS: Record<ButtonVariant, string> = {
     "brand-gradient text-white shadow-btn",
     "hover:-translate-y-px hover:brand-gradient-hover hover:shadow-btn-hover",
     "active:translate-y-0 active:shadow-btn",
+  ].join(" "),
+  /*
+   * Solid dark. The neutral counterweight to `gradient`: on a pricing table or
+   * a feature comparison it lets one row keep the brand CTA while the rest read
+   * as equally deliberate rather than as the runner-up.
+   *
+   * `dark` is the token for the product's dark surfaces (the footer, full-bleed
+   * breaks), so the button matches them rather than introducing a second black.
+   * Hover moves one step up that same ramp — still unmistakably dark, and white
+   * labels clear AA on both (16.7:1 at rest, 14.7:1 on hover).
+   */
+  dark: [
+    "bg-dark text-white shadow-btn",
+    "hover:-translate-y-px hover:bg-dark-soft hover:shadow-card-hover",
+    "active:translate-y-0 active:bg-dark active:shadow-btn",
   ].join(" "),
   secondary: [
     /* Neutral resting border, brand colour only on hover: a secondary CTA

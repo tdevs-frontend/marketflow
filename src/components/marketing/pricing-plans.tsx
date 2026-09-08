@@ -97,7 +97,6 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
           ? [
               "border-primary/45 shadow-[0_18px_44px_-16px_rgba(79,70,229,0.3)]",
               "hover:-translate-y-1 hover:border-primary/70 hover:shadow-[0_26px_56px_-16px_rgba(79,70,229,0.38)]",
-              "xl:-my-4",
             ].join(" ")
           : [
               "border-border shadow-card",
@@ -133,7 +132,7 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
           {plan.audience}
         </p>
 
-        <p className="mt-6 flex items-baseline gap-1.5">
+        <p className="mt-5 flex items-baseline gap-1.5">
           {priced ? (
             <>
               <span className="font-heading text-[2.5rem] leading-none tracking-tight text-text-primary tabular-nums">
@@ -159,7 +158,7 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
 
         <ButtonLink
           href={priced ? APP_ROUTES.register : APP_ROUTES.pricing}
-          variant={featured ? "gradient" : "secondary"}
+          variant={featured ? "gradient" : "dark"}
           size="md"
           className="mt-6 w-full"
         >
