@@ -24,26 +24,37 @@ export function HeroSection() {
        * Same construction as the dot grids in `analytics-section` and
        * `platform-overview`: an inset layer, a repeating background, and a
        * radial `mask-` that fades it out. Two crossed linear-gradients make a
-       * square net rather than dots; the mask is weighted to 28% down the
-       * section so the net is strongest behind the headline and gone by the
-       * edges and the bottom.
+       * square net rather than dots.
+       *
+       * The mask is weighted to 20% down the section and 85% of its width: the
+       * section got much taller when the dashboard moved below the copy, so a
+       * centred ellipse would have faded out before reaching the headline. It
+       * now peaks behind the badge and headline and is gone by the left and
+       * right edges and well before the bottom.
        */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,var(--color-border-strong)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border-strong)_1px,transparent_1px)] bg-[size:64px_64px] opacity-40 mask-[radial-gradient(ellipse_75%_55%_at_50%_28%,black,transparent_72%)]"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,var(--color-border-strong)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border-strong)_1px,transparent_1px)] bg-[size:64px_64px] opacity-40 mask-[radial-gradient(ellipse_85%_45%_at_50%_20%,black,transparent_75%)]"
       />
 
       {/* Painted after the net so it softens the lines behind the headline,
-          which is the one place they would otherwise cross live text. */}
+          which is the one place they would otherwise cross live text. Centred
+          on the column now that the composition is, rather than anchored to the
+          old left-hand text block. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-24 -left-24 -z-10 size-160 rounded-full bg-[radial-gradient(closest-side,rgba(99,102,241,0.10),transparent)]"
+        className="pointer-events-none absolute -top-32 left-1/2 -z-10 size-192 -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(99,102,241,0.12),transparent)]"
       />
 
       <div className="custom-container">
-        <div className="grid items-center gap-14 px-6 py-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-16 lg:py-28 xl:gap-20">
-          {/* Left — message */}
-          <div className="max-w-xl">
+        <div className="px-6 py-20 lg:py-24">
+          {/*
+           * Centred copy on its own measure. The headline and description each
+           * take a narrower one on top of this: the headline so it breaks to
+           * two balanced lines instead of one very long one, the description so
+           * it stays inside a comfortable reading width.
+           */}
+          <div className="mx-auto max-w-240 text-center">
             <p className="inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pl-1.5 pr-3.5 text-xs font-medium text-text-secondary shadow-card">
               <span className="rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-semibold text-primary-dark">
                 New
@@ -51,17 +62,17 @@ export function HeroSection() {
               WhatsApp Business API · built for merchants
             </p>
 
-            <h1 className="mt-6 text-[2.75rem] font-bold leading-[1.06] tracking-tight text-balance sm:text-6xl xl:text-[4.25rem]">
+            <h1 className="mx-auto mt-7 max-w-4xl text-[2.75rem] font-bold leading-[1.06] tracking-tight text-balance sm:text-6xl xl:text-[4.25rem]">
               Turn Every Conversation Into{" "}
               <span className="brand-gradient-text">Growth</span>
             </h1>
 
-            <p className="mt-6 max-w-lg text-lg leading-relaxed text-text-secondary text-pretty">
+            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-text-secondary text-pretty">
               Manage leads, automate WhatsApp conversations, launch campaigns,
               and turn customer interactions into measurable business growth.
             </p>
 
-            <div className="mt-9 flex flex-wrap items-center gap-3">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <ButtonLink
                 href={APP_ROUTES.register}
                 variant="gradient"
@@ -85,8 +96,11 @@ export function HeroSection() {
             </div>
 
             {/* Trust indicator */}
-            <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
-              <div className="flex items-center gap-3">
+            <div className="mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
+              {/* `text-left` inside the centred column: the stars are a flex
+                  row and would not centre with the line beneath them, so the
+                  block aligns internally and the row centres as a whole. */}
+              <div className="flex items-center gap-3 text-left">
                 <div className="flex -space-x-2.5">
                   {TRUST_AVATARS.map((avatar) => (
                     <span
@@ -113,7 +127,7 @@ export function HeroSection() {
                       4.9/5
                     </span>
                   </div>
-                  <p className="mt-0.5 text-xs text-text-muted">
+                  <p className="mt-0.5 text-sm text-text-muted">
                     Trusted by{" "}
                     <span className="font-semibold text-text-secondary">
                       2,400+ merchants
@@ -125,15 +139,24 @@ export function HeroSection() {
 
               <span className="hidden h-9 w-px bg-border sm:block" />
 
-              <p className="inline-flex items-center gap-2 text-xs text-text-muted">
+              <p className="inline-flex items-center gap-2 text-sm text-text-muted">
                 <ShieldCheck className="h-4 w-4 text-primary" aria-hidden />
                 Official Business API · no credit card required
               </p>
             </div>
           </div>
 
-          {/* Right — product preview */}
-          <div className="lg:pl-4">
+          {/*
+           * The product preview, below the copy and on a much wider measure —
+           * it was sharing the row before, so roughly half this width.
+           *
+           * `HeroDashboard` sets no width of its own, so this wrapper is what
+           * sizes it; `custom-container` caps it below `2xl`. Its floating
+           * cards sit at 16px outward offsets inside its own `relative` root,
+           * which the container's `px-6` absorbs — and the section's
+           * `overflow-hidden` is the backstop, so neither can widen the page.
+           */}
+          <div className="mx-auto mt-16 w-full max-w-300">
             <HeroDashboard />
           </div>
         </div>
