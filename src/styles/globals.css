@@ -567,6 +567,31 @@ body.mobile-menu-show {
   animation-delay: 1.2s;
 }
 
+/*
+ * Two more phases of the same four-pixel breath, for the cards that orbit the
+ * phone. Each is a whole class rather than a delay utility on top of
+ * `.animate-drift`: these rules are unlayered, so they outrank anything
+ * Tailwind emits from its utilities layer and an `[animation-delay:…]`
+ * override would be silently dead. Four durations that share no common factor
+ * keep the group from ever falling back into step.
+ */
+.animate-drift-mid {
+  animation: drift 6.2s ease-in-out infinite;
+  animation-delay: 2.4s;
+}
+
+.animate-drift-late {
+  animation: drift 6.6s ease-in-out infinite;
+  animation-delay: 3.4s;
+}
+
+/* The handset itself, on the same curve. Deliberately the slowest thing in the
+   composition — the subject drifts, the annotations bob around it. */
+.animate-drift-phone {
+  animation: drift 6.8s ease-in-out infinite;
+  animation-delay: 0.4s;
+}
+
 /* The auto-reply indicator, breathing. Opacity only — nothing moves. */
 @keyframes soft-pulse {
   0%,
@@ -590,6 +615,9 @@ body.mobile-menu-show {
   .animate-orbit,
   .animate-drift,
   .animate-drift-slow,
+  .animate-drift-mid,
+  .animate-drift-late,
+  .animate-drift-phone,
   .animate-soft-pulse {
     animation: none;
   }

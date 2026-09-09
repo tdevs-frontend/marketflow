@@ -45,20 +45,14 @@ export function FinalCta() {
         </p>
 
         <h2 id="final-cta-title" className="section-title mt-6 text-balance">
-          Turn{" "}
-          <span className="brand-gradient-text">every conversation</span>{" "}
+          Turn <span className="brand-gradient-text">every conversation</span>{" "}
           into an opportunity.
         </h2>
 
-        <p className="mx-auto mt-6 max-w-[42rem] text-base leading-relaxed text-text-secondary text-pretty sm:text-lg">
-          Connect customer conversations, campaigns, automation, products,
-          and sales in one powerful growth platform.
+        <p className="mx-auto mt-6 max-w-[42rem] text-base leading-relaxed text-text-secondary text-pretty">
+          Connect customer conversations, campaigns, automation, products, and
+          sales in one powerful growth platform.
         </p>
-
-        <div
-          aria-hidden
-          className="mx-auto mt-8 h-0.5 w-16 rounded-full brand-gradient-accent"
-        />
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <ButtonLink
@@ -75,11 +69,7 @@ export function FinalCta() {
               aria-hidden
             />
           </ButtonLink>
-          <ButtonLink
-            href={APP_ROUTES.features}
-            variant="secondary"
-            size="lg"
-          >
+          <ButtonLink href={APP_ROUTES.features} variant="secondary" size="lg">
             <LayoutGrid className="h-4 w-4" aria-hidden />
             Explore the Platform
           </ButtonLink>

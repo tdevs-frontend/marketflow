@@ -12,20 +12,14 @@ import {
 import { cn } from "@/lib/utils";
 import { ART_HOVER, CONVERSATION } from "./automation-data";
 
-/**
- * The customer's side of the story, as a handset.
- *
- * Widths are set rather than the height, because the 9:19.5 screen derives the
- * rest: 248px wide is a 537px phone below `lg`, where the badges orbit it; 208
- * and 224 are 451 and 485 at `lg` and `xl`, where the automation column stands
- * beside it instead.
- *
- * The frame is three nested rings: a graphite edge caught by the light along
- * its top rail, a near-black body, and the screen inset inside that.
- */
 export function AutomationPhone({ className }: { className?: string }) {
   return (
-    <div className={cn("relative w-62 shrink-0 lg:w-52 xl:w-56", className)}>
+    <div
+      className={cn(
+        "relative w-54 shrink-0 xsm:w-60 sm:w-62 lg:w-52 xl:w-56",
+        className,
+      )}
+    >
       <span
         aria-hidden
         className="pointer-events-none absolute -bottom-6 left-1/2 -z-10 h-9 w-[72%] -translate-x-1/2 rounded-[50%] bg-[#1e1b4b]/45 blur-2xl"
@@ -54,19 +48,6 @@ export function AutomationPhone({ className }: { className?: string }) {
   );
 }
 
-/**
- * The thread.
- *
- * Built to the conventions a messaging app is recognised by rather than copied
- * from one: a white header over a warm chat ground, a dated thread, a plain
- * incoming bubble against a green outgoing one, receipts on what was sent, and
- * a composer under it all. That set is what makes a reader clock this as a
- * conversation before they read a word of it.
- *
- * The messages stack up from the composer because a real thread is scrolled to
- * its end — which is also what stops a 19.5:9 screen from reading as a
- * half-empty panel.
- */
 function PhoneScreen() {
   return (
     <div className="flex h-full flex-col bg-chat-ground">

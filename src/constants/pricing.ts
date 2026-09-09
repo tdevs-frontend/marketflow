@@ -57,7 +57,7 @@ export const PLANS: Plan[] = [
     id: "growth",
     name: "Growth",
     audience:
-      "For growing businesses that need automation and better customer engagement.",
+      "For growing businesses ready to scale with automation",
     monthly: 49,
     features: [
       "3 Workspaces",

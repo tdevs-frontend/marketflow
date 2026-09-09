@@ -1,33 +1,55 @@
-import { Clock3, MessageCircle, Send } from "lucide-react";
+import { Clock3, MessageCircle, Send, UserCheck } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
-export type AutomationStepData = {
+export type AutomationCardData = {
   title: string;
   /** The tiny second line — what the step *is*, never a metric. */
   status: string;
   icon: LucideIcon;
-  /**
-   * The icon tile. Indigo is the default and the automation acting; the wait
-   * takes the violet subtle instead, which is the one place the sequence pauses
-   * rather than does something. Two tints, and they are two rungs of the same
-   * brand — a third hue here would read as a third kind of step.
-   */
-  tile?: string;
+  tile: string;
+ 
+  orbit: string;
+  /** The drift phase. Four durations that never fall into step. */
+  drift: string;
 };
 
 /**
- * The three things the automation does between the message and the outcome.
- * Three, because a fourth turns an illustration into a flow-builder.
+ * The automation, as four cards: what it sends, where it waits, what it sends
+ * next, and what comes out the other end.
  */
-export const AUTOMATION_STEPS: AutomationStepData[] = [
-  { title: "Auto reply", status: "Sent instantly", icon: MessageCircle },
+export const AUTOMATION_CARDS: AutomationCardData[] = [
+  {
+    title: "Auto reply",
+    status: "Sent instantly",
+    icon: MessageCircle,
+    tile: "bg-primary-soft text-primary",
+    orbit: "top-[14%] right-[calc(100%_+_16px)] xl:right-[calc(100%_+_24px)]",
+    drift: "animate-drift",
+  },
   {
     title: "Wait 1 day",
     status: "Scheduled",
     icon: Clock3,
     tile: "bg-primary-subtle text-secondary",
+    orbit: "top-[24%] left-[calc(100%_+_16px)] xl:left-[calc(100%_+_24px)]",
+    drift: "animate-drift-mid",
   },
-  { title: "Follow-up", status: "Template sent", icon: Send },
+  {
+    title: "Follow-up",
+    status: "Template sent",
+    icon: Send,
+    tile: "bg-info-soft text-info",
+    orbit: "top-[62%] right-[calc(100%_+_16px)] xl:right-[calc(100%_+_24px)]",
+    drift: "animate-drift-slow",
+  },
+  {
+    title: "Lead qualified",
+    status: "Ready for sales",
+    icon: UserCheck,
+    tile: "bg-whatsapp-soft text-whatsapp",
+    orbit: "top-[72%] left-[calc(100%_+_16px)] xl:left-[calc(100%_+_24px)]",
+    drift: "animate-drift-late",
+  },
 ];
 
 export const CONVERSATION = {
@@ -38,21 +60,16 @@ export const CONVERSATION = {
   time: "10:24",
 } as const;
 
-/**
- * One hover curve for the whole illustration — a fast start easing to a long
- * settle. `translate` rather than `transform` in the transition list, because
- * Tailwind v4 lifts elements with the standalone `translate` property.
- */
 export const ART_HOVER =
   "transition-[translate,box-shadow,border-color] duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none";
 
 /**
- * The shell the two card kinds share: white, one hairline of indigo, and a
- * shadow soft enough that four of them stacked still read as one surface.
+ * The card shell: white, one hairline highlight, and a shadow soft enough that
+ * four of them pressed up against one phone still read as one surface.
  */
 export const CARD_SHELL =
-  "rounded-[13px] border border-white/30 bg-white/96 shadow-[0_14px_35px_rgba(30,27,75,0.16)]";
+  "rounded-[13px] border border-white/35 bg-white/96 shadow-[0_12px_35px_rgba(15,23,42,0.15)] backdrop-blur-md";
 
 /** What a card does when the pointer reaches it. */
 export const CARD_HOVER =
-  "hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_20px_44px_rgba(30,27,75,0.24)] motion-reduce:hover:translate-y-0";
+  "hover:-translate-y-0.5 hover:bg-white hover:shadow-[0_18px_44px_rgba(15,23,42,0.22)] motion-reduce:hover:translate-y-0";

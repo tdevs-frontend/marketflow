@@ -162,6 +162,14 @@
   /* The channel green for coloured grounds. On the brand ramp it holds 3.0:1,
      which carries an icon and is why it is only ever spent on one. */
   --color-whatsapp-bright: #34d399;
+  /*
+   * WhatsApp's own green, and the only place that ramp is departed from.
+   * It is spent on the logo mark and on the success ticks beside it — a brand
+   * mark drawn in a borrowed green stops being the brand mark, and the ticks
+   * read as the same "verified" family because they share it. At 3.1:1 on the
+   * section ground it carries a graphic; it is never set as text.
+   */
+  --color-whatsapp-brand: #25d366;
   --color-whatsapp-soft: #ecfdf5;
   --color-whatsapp-border: #a7f3d0;
   /*
