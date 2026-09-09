@@ -1,297 +1,106 @@
-import {
-  BadgeCheck,
-  CheckCircle2,
-  ChevronRight,
-  Clock,
-  MessageCircle,
-  Search,
-  Send,
-  TrendingUp,
-  UserPlus,
-} from "lucide-react";
-import type { ReactNode } from "react";
+import Image from "next/image";
+import { Send, TrendingUp } from "lucide-react";
+import dashboardShot from "../../../public/marketflow-dashboard.png";
 
-import { cn } from "@/lib/utils";
-
-const CONVERSATIONS = [
-  {
-    initials: "AR",
-    name: "Ayesha Rahman",
-    message: "Is the festive bundle still 20% off? ",
-    time: "2m",
-    unread: 2,
-  },
-  {
-    initials: "DO",
-    name: "Daniel Okafor",
-    message: "Payment sent — order #4821 confirmed",
-    time: "11m",
-    unread: 0,
-  },
-  {
-    initials: "ML",
-    name: "Mei Lin",
-    message: "Can you ship to Singapore this week? ",
-    time: "26m",
-    unread: 1,
-  },
-];
-
-const METRICS = [
-  { label: "Conversion rate", value: "24.8%", delta: "+4.2 pts" },
-  { label: "Active leads", value: "1,284", delta: "+186" },
-  { label: "Revenue influenced", value: "$48.2k", delta: "+12.4%" },
-];
-
-/** Conversations handled per day, Mon–Sun. One series, one hue. */
-const WEEK = [
-  { day: "M", value: 46 },
-  { day: "T", value: 58 },
-  { day: "W", value: 51 },
-  { day: "T", value: 72 },
-  { day: "F", value: 66 },
-  { day: "S", value: 84 },
-  { day: "S", value: 97 },
-];
-
-const PEAK = Math.max(...WEEK.map((point) => point.value));
-
-const PIPELINE = [
-  { stage: "New", count: 320, width: "100%" },
-  { stage: "Qualified", count: 148, width: "62%" },
-  { stage: "Proposal", count: 62, width: "34%" },
-  { stage: "Won", count: 41, width: "22%" },
-];
-
-const WORKFLOW = [
-  { label: "Lead", icon: UserPlus, caption: "Captured" },
-  { label: "Message", icon: MessageCircle, caption: "Auto-sent" },
-  { label: "Follow-up", icon: Clock, caption: "After 24h" },
-  { label: "Conversion", icon: CheckCircle2, caption: "Won" },
-];
-
-function Panel({ className, children }: { className?: string; children: ReactNode }) {
-  return (
-    <div className={cn("rounded-panel border border-border bg-surface p-3.5", className)}>
-      {children}
-    </div>
-  );
-}
-
-function PanelTitle({ children, action }: { children: ReactNode; action?: ReactNode }) {
-  return (
-    <div className="mb-3 flex items-center justify-between gap-2">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-text-muted">{children}</p>
-      {action}
-    </div>
-  );
-}
+const SHOT_SIZES = [
+  "(min-width: 1600px) 1200px",
+  "(min-width: 1280px) 1092px",
+  "(min-width: 1024px) 912px",
+  "(min-width: 768px) 672px",
+  "(min-width: 640px) 492px",
+  "90vw",
+].join(", ");
 
 export function HeroDashboard() {
   return (
     <div
       role="img"
-      aria-label="MarketFlow workspace preview: a WhatsApp inbox, conversion metrics, a seven-day conversation chart, a lead pipeline, and a Lead to Conversion automation flow."
+      aria-label="The MarketFlow dashboard: a navigation sidebar, KPI cards for total leads, WhatsApp conversations, orders and revenue, and a Growth Overview chart. Two stats float over it: reply rate, up 38%, and a new lead captured on WhatsApp."
       className="relative"
     >
-      {/* Soft brand glow behind the card */}
+      {/* Soft brand glow behind the frame. */}
       <div
         aria-hidden
         className="pointer-events-none absolute -inset-6 -z-10 rounded-[2.5rem] bg-[radial-gradient(closest-side,rgba(99,102,241,0.16),transparent)] blur-2xl"
       />
 
-      <div className="relative overflow-hidden rounded-card border border-border bg-surface shadow-card-hover">
-        {/* Window chrome */}
-        <div className="flex items-center gap-3 border-b border-border bg-surface px-4 py-3">
-          <div className="flex gap-1.5" aria-hidden>
-            <span className="h-2.5 w-2.5 rounded-full bg-border" />
-            <span className="h-2.5 w-2.5 rounded-full bg-border" />
-            <span className="h-2.5 w-2.5 rounded-full bg-border" />
-          </div>
-          <div className="flex flex-1 items-center gap-2 rounded-field border border-border bg-background px-2.5 py-1.5">
-            <Search className="h-3 w-3 text-text-muted" aria-hidden />
-            <span className="text-[11px] text-text-muted">Search contacts, campaigns, flows</span>
-          </div>
-          <span className="hidden items-center gap-1.5 rounded-full bg-primary-soft px-2.5 py-1 text-[11px] font-medium text-primary-dark sm:inline-flex">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
-            </span>
-            Live
-          </span>
-        </div>
+      {/* Contact shadow on the ground beneath it — the frame's own `shadow-float`
+          is a drop shadow and reads as flat on its own at this size. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-10 -bottom-4 -z-10 h-8 rounded-[50%] bg-text-primary/10 blur-2xl"
+      />
 
-        <div className="space-y-3.5 bg-background p-3.5">
-          {/* Conversion metrics */}
-          <div className="grid grid-cols-3 gap-3">
-            {METRICS.map((metric) => (
-              <Panel key={metric.label} className="p-3">
-                <p className="truncate text-[10px] font-medium uppercase tracking-[0.08em] text-text-muted">
-                  {metric.label}
-                </p>
-                <p className="mt-1.5 text-xl font-bold tracking-tight text-text-primary">
-                  {metric.value}
-                </p>
-                <p className="mt-0.5 inline-flex items-center gap-1 text-[11px] font-medium text-primary">
-                  <TrendingUp className="h-3 w-3" aria-hidden />
-                  {metric.delta}
-                </p>
-              </Panel>
-            ))}
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-2">
-            {/* WhatsApp inbox */}
-            <Panel>
-              <PanelTitle
-                action={
-                  <span className="rounded-full bg-primary-soft px-2 py-0.5 text-[10px] font-semibold text-primary-dark">
-                    3 new
-                  </span>
-                }
-              >
-                WhatsApp inbox
-              </PanelTitle>
-              <ul className="space-y-2.5">
-                {CONVERSATIONS.map((chat) => (
-                  <li key={chat.name} className="flex items-center gap-2.5">
-                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-surface-secondary text-[11px] font-semibold text-text-secondary">
-                      {chat.initials}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="flex items-center justify-between gap-2">
-                        <span className="truncate text-xs font-semibold text-text-primary">
-                          {chat.name}
-                        </span>
-                        <span className="shrink-0 text-[10px] text-text-muted">{chat.time}</span>
-                      </span>
-                      <span className="mt-0.5 flex items-center justify-between gap-2">
-                        <span className="truncate text-[11px] text-text-muted">{chat.message}</span>
-                        {chat.unread > 0 ? (
-                          <span className="grid h-4 min-w-4 shrink-0 place-items-center rounded-full bg-primary px-1 text-[10px] font-bold text-white">
-                            {chat.unread}
-                          </span>
-                        ) : null}
-                      </span>
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </Panel>
-
-            {/* Campaign analytics */}
-            <Panel className="flex flex-col">
-              <PanelTitle
-                action={<span className="text-[10px] font-medium text-text-muted">Last 7 days</span>}
-              >
-                Conversations
-              </PanelTitle>
-
-              <div className="relative flex-1">
-                {/* Recessive gridlines */}
-                <div aria-hidden className="absolute inset-x-0 top-0 h-22">
-                  {[0, 1, 2].map((line) => (
-                    <span
-                      key={line}
-                      className="absolute inset-x-0 border-t border-dashed border-chart-grid"
-                      style={{ top: `${line * 44}px` }}
-                    />
-                  ))}
-                </div>
-
-                <div className="relative flex h-22 items-end gap-1.5">
-                  {WEEK.map((point, index) => (
-                    <span key={index} className="flex h-full flex-1 items-end">
-                      <span
-                        className="w-full rounded-t bg-chart-1"
-                        style={{ height: `${Math.round((point.value / PEAK) * 76)}%` }}
-                      />
-                    </span>
-                  ))}
-                  <span className="absolute right-0 top-0 rounded-md bg-surface px-1.5 py-0.5 text-[10px] font-bold text-primary-dark shadow-card ring-1 ring-border">
-                    97
-                  </span>
-                </div>
-
-                <div className="mt-1.5 flex gap-1.5">
-                  {WEEK.map((point, index) => (
-                    <span key={index} className="flex-1 text-center text-[10px] text-text-muted">
-                      {point.day}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </Panel>
-          </div>
-
-          {/* Lead pipeline */}
-          <Panel>
-            <PanelTitle
-              action={
-                <span className="inline-flex items-center gap-1 text-[10px] font-medium text-primary">
-                  View leads
-                  <ChevronRight className="h-3 w-3" aria-hidden />
-                </span>
-              }
-            >
-              Lead pipeline
-            </PanelTitle>
-            <div className="grid grid-cols-2 gap-x-5 gap-y-2.5 sm:grid-cols-4">
-              {PIPELINE.map((stage) => (
-                <div key={stage.stage}>
-                  <div className="flex items-baseline justify-between gap-2">
-                    <span className="text-[11px] text-text-muted">{stage.stage}</span>
-                    <span className="text-xs font-bold text-text-primary">{stage.count}</span>
-                  </div>
-                  <span className="mt-1.5 block h-1.5 w-full overflow-hidden rounded-full bg-surface-secondary">
-                    <span
-                      className="block h-full rounded-full bg-primary"
-                      style={{ width: stage.width }}
-                    />
-                  </span>
-                </div>
-              ))}
+      {/* Bezel */}
+      <div className="rounded-[calc(var(--radius-card)+6px)] border border-border/70 bg-surface/60 p-1 shadow-float backdrop-blur-sm sm:p-1.5">
+        <div className="overflow-hidden rounded-card border border-border bg-surface">
+          {/* Window chrome */}
+          <div className="flex items-center gap-2.5 border-b border-border bg-surface px-3 py-2 sm:gap-3 sm:px-4">
+            <div className="flex gap-1.5" aria-hidden>
+              <span className="h-2.5 w-2.5 rounded-full bg-border" />
+              <span className="h-2.5 w-2.5 rounded-full bg-border" />
+              <span className="h-2.5 w-2.5 rounded-full bg-border" />
             </div>
-          </Panel>
-        </div>
 
-        {/* Automation workflow */}
-        <div className="border-t border-border bg-surface px-3.5 py-3">
-          <div className="mb-2.5 flex items-center gap-1.5">
-            <BadgeCheck className="h-3.5 w-3.5 text-primary" aria-hidden />
-            <p className="text-[11px] font-semibold text-text-primary">Automation running</p>
-            <span className="text-[11px] text-text-muted">· Welcome + recovery flow</span>
-          </div>
-          <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:gap-1.5">
-            {WORKFLOW.map((step, index) => (
-              <span key={step.label} className="flex flex-1 items-center gap-1.5">
-                <span className="flex flex-1 items-center gap-2 rounded-btn border border-border bg-surface px-2 py-1.5">
-                  <span className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-primary-soft text-primary">
-                    <step.icon className="h-3 w-3" aria-hidden />
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block truncate text-[11px] font-semibold leading-tight text-text-primary">
-                      {step.label}
-                    </span>
-                    <span className="block truncate text-[10px] leading-tight text-text-muted">
-                      {step.caption}
-                    </span>
-                  </span>
-                </span>
-                {index < WORKFLOW.length - 1 ? (
-                  <span
-                    aria-hidden
-                    className="hidden h-px w-3 shrink-0 bg-border-strong lg:block"
-                  />
-                ) : null}
+            <p className="flex min-w-0 flex-1 items-center justify-center rounded-field border border-border bg-background px-2.5 py-1">
+              <span className="truncate text-[11px] text-text-muted">
+                marketflow.app/dashboard
               </span>
-            ))}
+            </p>
+
+            <span className="hidden items-center gap-1.5 rounded-full bg-primary-soft px-2.5 py-1 text-[11px] font-medium text-primary-dark sm:inline-flex">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
+              </span>
+              Live
+            </span>
+          </div>
+
+          {/*
+           * The screenshot's viewport, sized by aspect ratio so the shot scales
+           * proportionally and never distorts — `object-cover` does the fitting,
+           * and the box's ratio alone decides how much of the shot is in view.
+           *
+           * From `md` the box matches the file exactly, so cover fills it with
+           * nothing cropped. Below that a 2.1:1 desktop capture across a phone
+           * would be a 140px letterbox strip with the type far too small to
+           * read, so the box gets squarer and `object-left-top` holds the crop
+           * on the sidebar, the greeting and the KPI cards — the part worth
+           * seeing — at roughly 1.4x the scale a full-fit would give.
+           */}
+          <div className="relative aspect-4/3 sm:aspect-video md:aspect-1908/908">
+            <Image
+              src={dashboardShot}
+              alt=""
+              fill
+              priority
+              quality={90}
+              sizes={SHOT_SIZES}
+              className="object-cover object-top-left"
+            />
+
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-1/5 bg-linear-to-b from-transparent via-hero/85 to-hero"
+            />
           </div>
         </div>
       </div>
 
-      {/* Floating: reply-rate lift */}
-      <div className="animate-float absolute -right-4 -top-6 hidden rounded-card border border-border bg-surface p-3 shadow-float md:block">
+      {/*
+       * Floating: reply-rate lift, overhanging the top-right corner. The 16px
+       * outward offset is absorbed by the hero column's own `px-6` gutter, so it
+       * holds at every width without widening the page.
+       *
+       * Both cards keep one fixed design and scale as a whole on small screens
+       * rather than restyling part by part, so the proportions never drift. The
+       * origin is the anchored corner, so shrinking pulls the card in towards
+       * the frame and its overhang stays put. `scale` is its own CSS property in
+       * Tailwind v4, so it composes with the `transform` the float animation
+       * drives instead of fighting it.
+       */}
+      <div className="animate-float absolute -top-6 -right-4 origin-top-right scale-75 rounded-card border border-border bg-surface p-3 shadow-float 3xsm:scale-90 sm:scale-100">
         <div className="flex items-center gap-2.5">
           <span className="grid h-9 w-9 place-items-center rounded-btn bg-primary text-white">
             <TrendingUp className="h-4 w-4" aria-hidden />
@@ -326,8 +135,10 @@ export function HeroDashboard() {
         </svg>
       </div>
 
-      {/* Floating: new lead toast */}
-      <div className="animate-float-slow absolute -bottom-6 -left-4 hidden items-center gap-2.5 rounded-card border border-border bg-surface px-3.5 py-2.5 shadow-float md:flex">
+      {/* Floating: new lead toast — the diagonally opposite corner, over the
+          bottom fade. It stays fully opaque there, so the dissolve behind it
+          reads as depth. Same scale-as-a-whole treatment as the card above. */}
+      <div className="animate-float-slow absolute -bottom-6 -left-4 flex origin-bottom-left scale-75 items-center gap-2.5 rounded-card border border-border bg-surface px-3.5 py-2.5 shadow-float 3xsm:scale-90 sm:scale-100">
         <span className="grid h-9 w-9 place-items-center rounded-btn bg-primary-soft text-primary">
           <Send className="h-4 w-4" aria-hidden />
         </span>
