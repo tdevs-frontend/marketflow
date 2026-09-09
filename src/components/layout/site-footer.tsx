@@ -15,80 +15,84 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-dark-border bg-dark">
       <div className="custom-container mx-auto">
-      {/* Footer main */}
-      <div className="px-4 py-14 sm:py-16">
-        <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[minmax(0,1.4fr)_repeat(5,minmax(0,1fr))]">
-          {/* Brand */}
-          <div className="sm:col-span-2 lg:col-span-3 xl:col-span-1">
-            <Link href={APP_ROUTES.home} className="inline-flex items-center">
-              <Logo height={32} tone="light" />
-            </Link>
-
-            <p className="mt-5 max-w-sm text-sm font-medium text-white text-balance">
-              Turn conversations, campaigns, and customer data into measurable growth.
-            </p>
-            <p className="mt-3 max-w-sm text-sm text-dark-muted text-pretty">
-              All-in-one digital marketing and WhatsApp automation platform for growing businesses,
-              marketers, and agencies.
-            </p>
-
-            <div className="mt-6 flex flex-wrap gap-2">
-              {footerSocials.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={social.label}
-                  className="grid h-9 w-9 place-items-center rounded-btn border border-dark-border bg-dark-soft text-dark-text transition-all hover:-translate-y-px hover:border-primary-light hover:bg-dark-border hover:text-primary-light focus-visible:outline-none focus-visible:shadow-focus"
-                >
-                  <BrandIcon name={social.icon} className="h-4 w-4" />
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Link columns */}
-          {footerNav.map((column) => (
-            <nav key={column.title} aria-labelledby={`footer-${column.title.toLowerCase()}`}>
-              <h2
-                id={`footer-${column.title.toLowerCase()}`}
-                className="text-sm font-semibold uppercase text-white"
-              >
-                {column.title}
-              </h2>
-              <ul className="mt-4 space-y-3">
-                {column.items.map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className="link-underline text-sm text-dark-text transition-colors hover:text-primary-light"
-                    >
-                      {item.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          ))}
-        </div>
-      </div>
-
-      {/* Footer bottom */}
-      <div className="border-t border-dark-border">
-        <div className="flex flex-col items-center justify-between gap-4 px-4 py-8 text-sm text-dark-muted sm:flex-row">
-          <p>
-            © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
-          </p>
-          <nav className="flex gap-6">
-            {FOOTER_LINKS.map((link) => (
-              <Link key={link.href} href={link.href} className="transition-colors hover:text-primary-light">
-                {link.title}
+        {/* Footer main */}
+        <div className="px-4 py-14 sm:py-16">
+          <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-[minmax(0,1.5fr)_repeat(4,minmax(0,1fr))] xl:gap-x-10">
+            {/* Brand */}
+            <div className="sm:col-span-2 lg:col-span-4 xl:col-span-1">
+              <Link href={APP_ROUTES.home} className="inline-flex items-center">
+                <Logo height={32} tone="light" />
               </Link>
+              <p className="mt-3 max-w-sm text-[15px] text-white/70 text-pretty">
+                All-in-one digital marketing and WhatsApp automation platform
+                for growing businesses, marketers, and agencies.
+              </p>
+
+              <div className="mt-6 flex flex-wrap gap-2">
+                {footerSocials.map((social) => (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.label}
+                    className="grid h-9 w-9 place-items-center rounded-btn border border-dark-border bg-dark-soft text-dark-text transition-all hover:-translate-y-px hover:border-primary-light hover:bg-dark-border hover:text-primary-light focus-visible:outline-none focus-visible:shadow-focus"
+                  >
+                    <BrandIcon name={social.icon} className="h-4 w-4" />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Link columns */}
+            {footerNav.map((column) => (
+              <nav
+                key={column.title}
+                aria-labelledby={`footer-${column.title.toLowerCase()}`}
+              >
+                <h2
+                  id={`footer-${column.title.toLowerCase()}`}
+                  className="text-base font-semibold uppercase text-white"
+                >
+                  {column.title}
+                </h2>
+                <ul className="mt-4 space-y-3">
+                  {column.items.map((item) => (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        className="link-underline text-[15px] text-dark-text transition-colors hover:text-primary-light"
+                      >
+                        {item.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
             ))}
-          </nav>
+          </div>
         </div>
-      </div>
+
+        {/* Footer bottom */}
+        <div className="border-t border-dark-border">
+          <div className="flex flex-col items-center justify-between gap-4 px-4 py-7 text-sm text-dark-muted sm:flex-row">
+            <p>
+              © {new Date().getFullYear()} {siteConfig.name}. All rights
+              reserved.
+            </p>
+            <nav className="flex gap-6">
+              {FOOTER_LINKS.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="transition-colors hover:text-primary-light"
+                >
+                  {link.title}
+                </Link>
+              ))}
+            </nav>
+          </div>
+        </div>
       </div>
     </footer>
   );

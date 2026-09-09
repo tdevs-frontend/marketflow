@@ -272,17 +272,6 @@ export const footerNav: FooterColumn[] = [
     ],
   },
   {
-    title: "Company",
-    items: [
-      { title: "About Us", href: "/about" },
-      { title: "Contact", href: "/contact" },
-      { title: "Pricing", href: "/pricing" },
-      { title: "Partners", href: "/partners" },
-      { title: "Careers", href: "/careers" },
-      { title: "Become a Partner", href: "/partners/apply" },
-    ],
-  },
-  {
     title: "Legal",
     items: [
       { title: "Privacy Policy", href: "/legal/privacy" },
