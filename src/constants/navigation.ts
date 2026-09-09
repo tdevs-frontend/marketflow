@@ -47,8 +47,8 @@ export const marketingNav: NavItem[] = [
     icon: "tag",
   },
   {
-    title: "Resources",
-    href: "/resources",
+    title: "Contact",
+    href: "/Contact",
     icon: "book-open",
   },
 ];

@@ -24,8 +24,13 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
-          <ButtonLink href={APP_ROUTES.login} variant="ghost" size="compact">
+        <div className="flex items-center gap-3">
+          <ButtonLink
+            href={APP_ROUTES.login}
+            variant="ghost"
+            size="compact"
+            className="border border-border hover:border-border-strong"
+          >
             Sign In
           </ButtonLink>
           <ButtonLink
