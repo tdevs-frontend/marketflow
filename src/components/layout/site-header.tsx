@@ -17,7 +17,7 @@ export function SiteHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className="link-underline font-medium text-text-secondary transition-colors hover:text-primary"
+              className="font-medium text-text-secondary transition-colors hover:text-primary"
             >
               {item.title}
             </Link>

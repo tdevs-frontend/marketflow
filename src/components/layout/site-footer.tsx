@@ -61,7 +61,7 @@ export function SiteFooter() {
                     <li key={item.href}>
                       <Link
                         href={item.href}
-                        className="link-underline text-[15px] text-dark-text transition-colors hover:text-primary-light"
+                        className="text-[15px] text-dark-text transition-colors hover:text-primary-light"
                       >
                         {item.title}
                       </Link>
