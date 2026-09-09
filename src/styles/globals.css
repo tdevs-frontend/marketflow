@@ -207,6 +207,77 @@
 }
 
 /*
+ * The automation ground — the page's one brand moment.
+ *
+ * A 115° ramp across the full width: `primary` indigo at the left where the
+ * copy is, `secondary` violet at the right behind the product. The two mid
+ * stops are the point of it — indigo straight to violet crosses through a grey
+ * waist, and four stops keep the whole transit inside the purples, which is
+ * what makes it read as one colour moving rather than as two colours meeting.
+ *
+ * Over that, two radials as lighting: violet lifted where the phone sits,
+ * indigo deepened under the copy. Both are wide and both stop well short of an
+ * edge, so they add depth without ever resolving into a circle.
+ *
+ * White clears AA against every stop (5.7:1 at the lightest, on #7c3aed),
+ * which is what lets the copy stay one colour across the whole width.
+ */
+@utility automation-ground {
+  background-color: var(--color-primary);
+  background-image:
+    radial-gradient(circle at 68% 38%, rgba(139, 92, 246, 0.3), transparent 34%),
+    radial-gradient(circle at 25% 60%, rgba(79, 70, 229, 0.2), transparent 38%),
+    linear-gradient(
+      115deg,
+      var(--color-primary) 0%,
+      var(--color-brand-mid-indigo) 32%,
+      var(--color-brand-mid-violet) 65%,
+      var(--color-secondary) 100%
+    );
+}
+
+/*
+ * The heading accent for a brand-gradient ground.
+ *
+ * `brand-gradient-text` cannot be used here: it is the same indigo-violet the
+ * section is painted in, so the phrase would sink into its own background. This
+ * is the lavender end of that ramp instead — the same hues, three rungs up, at
+ * 3.8:1 against the ramp's lightest point, which an `lg:text-5xl` heading
+ * clears. It runs 90° rather than 135° because the phrase is one line wide,
+ * where a diagonal only wastes its range.
+ *
+ * Needs `color: transparent` to work, so it silently hides its content anywhere
+ * `background-clip` is unsupported. Only ever applied to a `<span>` inside a
+ * heading that already reads correctly without it.
+ */
+@utility lavender-gradient-text {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-lavender-deep),
+    var(--color-lavender),
+    var(--color-lavender-pale)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/*
+ * The workflow canvas behind the automation illustration: a dot grid at the
+ * spacing automation tools use, faded out at the edges so it never reaches the
+ * copy in the next column. Decorative only — always `pointer-events-none`.
+ */
+@utility workflow-dots {
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.55) 1px,
+    transparent 1px
+  );
+  background-size: 28px 28px;
+  opacity: 0.035;
+  mask-image: radial-gradient(ellipse at center, black, transparent 72%);
+}
+
+/*
  * Landing hero ground: the page neutral with one soft indigo bloom.
  *
  * Deliberately faint. A strong brand gradient here would compete with the
@@ -472,11 +543,54 @@ body.mobile-menu-show {
   animation: orbit 60s linear infinite;
 }
 
+
+/* Illustration drift: a floating badge breathing four pixels. Slow and shallow
+   on purpose — enough to say the element is not glued to the page, not enough
+   to pull the eye off the phone it orbits. */
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-drift {
+  animation: drift 5.5s ease-in-out infinite;
+}
+
+.animate-drift-slow {
+  animation: drift 7s ease-in-out infinite;
+  animation-delay: 1.2s;
+}
+
+/* The auto-reply indicator, breathing. Opacity only — nothing moves. */
+@keyframes soft-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-soft-pulse {
+  animation: soft-pulse 5s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-float,
   .animate-float-slow,
   .animate-flow,
-  .animate-orbit {
+  .animate-orbit,
+  .animate-drift,
+  .animate-drift-slow,
+  .animate-soft-pulse {
     animation: none;
   }
 }

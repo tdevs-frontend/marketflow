@@ -3,7 +3,7 @@ export * from "./hero-dashboard";
 export * from "./platform-overview";
 export * from "./platform-dashboard";
 export * from "./whatsapp-automation";
-export * from "./whatsapp-preview";
+export * from "./whatsapp";
 export * from "./multi-channel-campaign";
 export * from "./analytics-section";
 export * from "./analytics-dashboard";

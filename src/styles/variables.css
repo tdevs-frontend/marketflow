@@ -90,6 +90,16 @@
   --color-brand-from: #6366f1;
   --color-brand-to: #8b5cf6;
 
+  /*
+   * The two stops between `primary` and `secondary`, for the one full-bleed
+   * ramp that runs the whole width of a section. Indigo and violet alone give a
+   * visible grey waist where the two hues cross; these keep the transit inside
+   * the purples, which is the difference between a brand gradient and a
+   * gradient that has a seam in it.
+   */
+  --color-brand-mid-indigo: #5b42ec;
+  --color-brand-mid-violet: #6738f1;
+
   --color-primary: #4f46e5;
   --color-primary-dark: #4338ca;
   --color-primary-darker: #3730a3;
@@ -109,6 +119,18 @@
    * same brand.
    */
   --color-secondary: #7c3aed;
+
+  /*
+   * Lavender — ink for a brand-gradient ground, where the brand ramp itself is
+   * the background and cannot also be the highlight.
+   *
+   * All three clear AA-large against every stop of that ramp (3.8:1 at the
+   * worst point, on #7c3aed), which is what they are for: one highlighted
+   * phrase in a section heading. They are not body-text colours.
+   */
+  --color-lavender-deep: #c7d2fe;
+  --color-lavender: #ddd6fe;
+  --color-lavender-pale: #ede9fe;
   --color-accent: #06b6d4;
   --color-accent-soft: #ecfeff;
 
@@ -127,6 +149,7 @@
 
 
 
+
   /* --------------------------------------------------- Channel identity */
   /*
    * WhatsApp now has its own green ramp. It used to borrow the brand ramp,
@@ -136,8 +159,23 @@
    */
   --color-whatsapp: #059669;
   --color-whatsapp-dark: #047857;
+  /* The channel green for coloured grounds. On the brand ramp it holds 3.0:1,
+     which carries an icon and is why it is only ever spent on one. */
+  --color-whatsapp-bright: #34d399;
   --color-whatsapp-soft: #ecfdf5;
   --color-whatsapp-border: #a7f3d0;
+  /*
+   * The chat surfaces, for the conversation mock-up.
+   *
+   * Separate from the ramp above because they are not the brand's green — they
+   * are the conventions a messaging thread is read by, and a reader clocks a
+   * chat as a chat from the warm ground and the tinted outgoing bubble before
+   * they read a word of it. `chat-ground` is warm rather than blue-grey on
+   * purpose: the rest of the product's neutrals are slate, and a slate thread
+   * reads as a dashboard panel.
+   */
+  --color-chat-ground: #f7f5f2;
+  --color-chat-outgoing: #dcf8e8;
 
   /*
    * The other three channels,
