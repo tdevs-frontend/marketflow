@@ -56,11 +56,11 @@ export function FeatureCard({
             {feature.title}
           </h3>
 
-          <p className="mt-0.5 text-xs leading-[1.5] text-text-secondary">
+          <p className="mt-0.5 text-sm leading-[1.5] text-text-secondary">
             {feature.body}
           </p>
 
-          <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-surface-secondary px-2 py-0.5 text-[11px] leading-[1.45] font-medium text-text-secondary">
+          <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-surface-secondary px-2 py-0.5 text-xs leading-[1.45] font-medium text-text-secondary">
             <span
               aria-hidden
               className={cn("size-1.5 rounded-full", TONES[feature.tone].dot)}
@@ -92,12 +92,12 @@ export function FeatureRail({
   return (
     <div
       className={cn(
-        "grid gap-4 3xsm:grid-cols-2 lg:h-full lg:grid-cols-1 lg:grid-rows-4 lg:gap-0",
+        "grid gap-5 3xsm:grid-cols-2 lg:h-full lg:grid-cols-1 lg:grid-rows-4 lg:gap-0",
         className,
       )}
     >
       {features.map((feature) => (
-        <div key={feature.title} className="lg:py-2">
+        <div key={feature.title} className="lg:py-3">
           <FeatureCard feature={feature} side={side} />
         </div>
       ))}

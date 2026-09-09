@@ -98,16 +98,15 @@ export function HeroSection() {
                       4.9/5
                     </span>
                   </div>
-                  <p className="mt-0.5 text-sm text-text-muted">
+                  <p className="mt-1 text-sm text-text-muted">
                     Trusted by{" "}
                     <span className="font-semibold text-text-secondary">
-                      2,400+ merchants
-                    </span>{" "}
-                    across 18 countries
+                      2,400+{" "}
+                    </span>
+                    merchants
                   </p>
                 </div>
               </div>
-
             </div>
           </div>
           <div className="mx-auto mt-16 w-full max-w-300">
