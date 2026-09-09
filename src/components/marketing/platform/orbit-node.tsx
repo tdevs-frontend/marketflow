@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import { ORBIT_RADIUS, TONES, type PlatformFeature } from "./platform-features";
+import { FeatureIcon } from "./feature-icon";
+import { ORBIT_RADIUS, type PlatformFeature } from "./platform-features";
 
 /**
  * One module sitting on the hub's orbit.
@@ -9,8 +9,9 @@ import { ORBIT_RADIUS, TONES, type PlatformFeature } from "./platform-features";
  * both axes, the icons stay upright with no second transform to undo, and
  * `translate` is left free for the hover lift.
  *
- * A rounded square, not a circle — it echoes the brand mark at the centre and
- * the icon tiles on the cards, so the three read as one family.
+ * The lift restates the centring offset — Tailwind v4 writes both axes into one
+ * `translate` declaration, so `hover:-translate-y-[calc(50%+3px)]` is the
+ * `-translate-y-1/2` plus three pixels, not a second transform stacked on it.
  */
 export function OrbitNode({
   feature,
@@ -21,28 +22,15 @@ export function OrbitNode({
   angle: number;
 }) {
   return (
-    <span
-      /* The card beside it already names the feature; announcing all eight
-         again would just be the rails read twice. */
-      aria-hidden
+    <FeatureIcon
+      feature={feature}
+      variant="node"
       title={feature.title}
       style={{
         left: `${50 + ORBIT_RADIUS * Math.cos(angle)}%`,
         top: `${50 + ORBIT_RADIUS * Math.sin(angle)}%`,
       }}
-      className={cn(
-        "absolute grid size-10 -translate-x-1/2 -translate-y-1/2 place-items-center",
-        "rounded-[12px] border border-border bg-surface shadow-card",
-        "sm:size-11 sm:rounded-[13px]",
-        "transition-[translate,box-shadow,border-color] duration-200",
-        "hover:-translate-y-[calc(50%+3px)] hover:border-primary-border hover:shadow-card-hover",
-        "motion-reduce:transition-none motion-reduce:hover:-translate-y-1/2",
-      )}
-    >
-      <feature.icon
-        className={cn("size-[18px]", TONES[feature.tone].ink)}
-        strokeWidth={1.75}
-      />
-    </span>
+      className="absolute -translate-x-1/2 -translate-y-1/2 transition-[translate,box-shadow,border-color] duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[calc(50%+3px)] hover:border-primary-border hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:-translate-y-1/2"
+    />
   );
 }

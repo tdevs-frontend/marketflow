@@ -105,7 +105,7 @@ export function ConnectionLines() {
             <path
               d={path.d}
               stroke={`url(#${path.fade})`}
-              strokeWidth="1.25"
+              strokeWidth="1.1"
               strokeDasharray="2 5"
               strokeLinecap="round"
               vectorEffect="non-scaling-stroke"
@@ -116,12 +116,12 @@ export function ConnectionLines() {
             <path
               d={path.d}
               stroke={`url(#${path.fade})`}
-              strokeWidth="2"
-              strokeDasharray="3 30"
+              strokeWidth="1.6"
+              strokeDasharray="3 34"
               strokeLinecap="round"
               vectorEffect="non-scaling-stroke"
               className="animate-flow"
-              style={{ animationDelay: `${index * 300}ms` }}
+              style={{ animationDelay: `${index * 450}ms` }}
             />
           </g>
         ))}

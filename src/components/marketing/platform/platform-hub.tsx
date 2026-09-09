@@ -26,28 +26,28 @@ const STEP = (2 * Math.PI) / ORBIT_FEATURES.length;
 /** The brand mark's rendered size, in px. Fixed: it is the one element in the
  *  section that should not grow with the viewport — a compact mark is what
  *  makes the ring around it read as an orbit rather than a border. */
-const MARK = 80;
+const MARK = 72;
 
 function HubCore() {
   return (
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
       <div
-        className="relative rounded-[20px] shadow-[0_18px_38px_-16px_rgba(79,70,229,0.65)]"
+        className="relative rounded-[18px] shadow-[0_18px_38px_-16px_rgba(79,70,229,0.65)]"
         style={{ width: MARK, height: MARK }}
       >
-        <LogoMark size={MARK} className="rounded-[20px]" />
+        <LogoMark size={MARK} className="rounded-[18px]" />
 
         {/* Inner highlight and the hairline that sells the tile as an object:
             a top-down white wash, plus a translucent inset edge. */}
         <span
           aria-hidden
-          className="pointer-events-none absolute inset-0 rounded-[20px] bg-[linear-gradient(180deg,rgba(255,255,255,0.28),rgba(255,255,255,0)_48%)] ring-1 ring-white/25 ring-inset"
+          className="pointer-events-none absolute inset-0 rounded-[18px] bg-[linear-gradient(180deg,rgba(255,255,255,0.28),rgba(255,255,255,0)_48%)] ring-1 ring-white/25 ring-inset"
         />
       </div>
 
       {/* `w-max` so the caption never wraps and never widens the core's box —
           it is centred on the mark and sits in the ring's empty lower gap. */}
-      <div className="absolute top-[calc(100%+14px)] left-1/2 w-max -translate-x-1/2 text-center">
+      <div className="absolute top-[calc(100%+12px)] left-1/2 w-max -translate-x-1/2 text-center">
         <p className="text-[15px] leading-none font-bold tracking-tight text-text-primary">
           {siteConfig.name}
         </p>

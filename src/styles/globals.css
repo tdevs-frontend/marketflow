@@ -417,10 +417,12 @@ body.mobile-menu-show {
   animation-delay: 1s;
 }
 
-/* Connector flow: a dash travelling along an SVG path. */
+/* Connector flow: a dash travelling along an SVG path. The offset is one full
+   dash period — 3 on, 34 off in `platform/connection-lines.tsx` — so the loop
+   closes on itself instead of jumping. */
 @keyframes flow {
   from {
-    stroke-dashoffset: 28;
+    stroke-dashoffset: 37;
   }
 
   to {
@@ -429,7 +431,7 @@ body.mobile-menu-show {
 }
 
 .animate-flow {
-  animation: flow 2.4s linear infinite;
+  animation: flow 3.6s linear infinite;
 }
 
 /* Platform hub orbit: the dashed ring turning, slowly enough to read as drift

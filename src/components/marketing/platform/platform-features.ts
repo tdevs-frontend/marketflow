@@ -1,15 +1,16 @@
 import {
-  BarChart3,
+  ChartNoAxesCombined,
   Mail,
   Megaphone,
   MessageCircle,
+  MessagesSquare,
   Package,
   Plug,
   Smartphone,
   Target,
   TrendingUp,
   UserPlus,
-  Users,
+  UsersRound,
   Zap,
   type LucideIcon,
 } from "lucide-react";
@@ -126,7 +127,7 @@ export const INBOUND_FEATURES: PlatformFeature[] = [
     title: "CRM & Leads",
     body: "Capture, organize & convert leads",
     status: "1,248 Leads",
-    icon: Users,
+    icon: UsersRound,
     tone: "email",
   },
   {
@@ -158,7 +159,7 @@ export const OUTBOUND_FEATURES: PlatformFeature[] = [
     title: "Analytics & Reports",
     body: "Measure what drives growth",
     status: "Live",
-    icon: BarChart3,
+    icon: ChartNoAxesCombined,
     tone: "primary",
   },
   {
@@ -200,7 +201,7 @@ export interface WorkflowStep {
 /** The customer journey the platform covers end to end. */
 export const WORKFLOW_STEPS: WorkflowStep[] = [
   { label: "Capture", icon: UserPlus },
-  { label: "Engage", icon: MessageCircle },
+  { label: "Engage", icon: MessagesSquare },
   { label: "Automate", icon: Zap, accent: true },
   { label: "Convert", icon: Target },
   { label: "Grow", icon: TrendingUp },

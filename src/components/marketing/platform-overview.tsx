@@ -68,9 +68,10 @@ export function PlatformOverview() {
         </header>
 
         {/* Ecosystem */}
-        <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-10">
+        <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)_minmax(0,1fr)] lg:gap-10">
           <FeatureRail
             features={INBOUND_FEATURES}
+            side="left"
             className="order-2 lg:order-1"
           />
 
@@ -82,10 +83,14 @@ export function PlatformOverview() {
             <PlatformHub />
           </div>
 
-          <FeatureRail features={OUTBOUND_FEATURES} className="order-3" />
+          <FeatureRail
+            features={OUTBOUND_FEATURES}
+            side="right"
+            className="order-3"
+          />
         </div>
 
-        <div className="mt-14">
+        <div className="mt-12">
           <WorkflowBar />
         </div>
       </div>

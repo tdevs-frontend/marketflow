@@ -11,18 +11,22 @@ import { WORKFLOW_STEPS } from "./platform-features";
  *
  * The steps are deliberately neutral except one. Automate wears the brand
  * gradient because it is the differentiator the section above it spends eight
- * cards arguing for; five brand-coloured tiles would say nothing at all.
+ * cards arguing for; five brand-coloured tiles would say nothing at all. The
+ * bar as a whole is kept small and quiet for the same reason — it summarises
+ * the ecosystem above it, it does not compete with it.
  */
 export function WorkflowBar() {
   return (
     <div className="flex justify-center">
-      <ol className="inline-flex flex-wrap items-center justify-center gap-x-1 gap-y-2 rounded-3xl border border-border bg-surface p-2 shadow-card sm:gap-x-2 sm:rounded-full sm:p-2.5">
+      <ol className="inline-flex flex-wrap items-center justify-center gap-x-0.5 gap-y-1 rounded-3xl border border-border bg-surface p-1.5 shadow-card sm:gap-x-1 sm:rounded-full">
         {WORKFLOW_STEPS.map((step, index) => (
-          <li key={step.label} className="flex items-center gap-1 sm:gap-2">
+          <li key={step.label} className="flex items-center gap-0.5 sm:gap-1">
             <span
               className={cn(
-                "flex items-center gap-2 rounded-full py-1 pr-3 pl-1",
-                step.accent && "bg-primary-soft",
+                "flex items-center gap-2 rounded-full py-1 pr-3 pl-1 transition-colors duration-200 motion-reduce:transition-none",
+                step.accent
+                  ? "bg-primary-soft hover:bg-primary-soft-hover"
+                  : "hover:bg-surface-secondary",
               )}
             >
               <span
@@ -33,7 +37,7 @@ export function WorkflowBar() {
                     : "bg-surface-secondary text-text-muted",
                 )}
               >
-                <step.icon className="size-3.5" strokeWidth={2} aria-hidden />
+                <step.icon className="size-4" strokeWidth={1.9} aria-hidden />
               </span>
               <span
                 className={cn(
