@@ -219,25 +219,29 @@
 }
 
 /*
- * `brand-gradient-text`'s counterpart for a ground that is *already* the brand.
+ * Closing-CTA ground: the page's own neutral, tinted.
  *
- * The identity pair clipped to glyphs needs a dark surface behind it; on the
- * violet CTA it would be indigo on violet, which is a phrase you cannot read.
- * This runs white to indigo-200 instead — still a gradient, still the brand
- * family, and both stops clear AA against both stops of `brand-gradient`.
+ * The panel is the last thing before the footer and it has to read as part of
+ * the landing page, not as a banner dropped onto it — so the ramp stays inside
+ * the tokens the rest of the page already uses: white, violet-50, indigo-50.
+ * The two blooms are the same brand pair as `hero-surface`'s single one, at
+ * roughly the same strength, which is what ties the top of the page to the
+ * bottom.
  *
- * Same caveat as its sibling: it sets `color: transparent`, so only ever put it
- * on a span inside a heading that still reads correctly without it.
+ * Stated as one utility for the same reason `hero-surface` is: the section that
+ * uses it should say what it is, not carry three gradients inline.
  */
-@utility brand-gradient-text-light {
-  background-image: linear-gradient(
-    135deg,
-    var(--color-white),
-    var(--color-primary-border)
-  );
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
+@utility cta-surface {
+  background-color: var(--color-surface);
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.1), transparent 35%),
+    radial-gradient(circle at 80% 75%, rgba(99, 102, 241, 0.08), transparent 40%),
+    linear-gradient(
+      135deg,
+      var(--color-surface) 0%,
+      var(--color-primary-subtle) 48%,
+      var(--color-primary-soft) 100%
+    );
 }
 
 /* Container */

@@ -15,8 +15,7 @@ export type ButtonVariant =
   | "outline"
   | "ghost"
   | "danger"
-  | "inverse"
-  | "light";
+  | "inverse";
 export type ButtonSize = "sm" | "compact" | "md" | "lg" | "icon";
 
 /**
@@ -101,22 +100,6 @@ const VARIANTS: Record<ButtonVariant, string> = {
     "hover:-translate-y-px hover:border-white/45 hover:bg-white/10",
     "active:translate-y-0 active:bg-white/15",
     "focus-visible:shadow-[0_0_0_3px_rgba(255,255,255,0.3)]",
-  ].join(" "),
-  /*
-   * White on a brand ground. The counterpart to `inverse`: where that is the
-   * outlined secondary for a dark surface, this is the solid primary for one.
-   *
-   * It exists because the closing CTA's ground *is* the brand gradient, and a
-   * `gradient` button on it is a gradient on a gradient — the one place where
-   * the page's loudest button reads as the quietest. White against violet is
-   * the highest-contrast pairing the palette can make, and the label takes the
-   * heading ink so the button belongs to the product rather than to the panel.
-   */
-  light: [
-    "bg-white text-text-primary shadow-btn",
-    "hover:-translate-y-px hover:bg-primary-soft hover:shadow-[0_12px_28px_-12px_rgba(15,23,42,0.55)]",
-    "active:translate-y-0 active:bg-primary-soft-hover active:shadow-btn",
-    "focus-visible:shadow-[0_0_0_3px_rgba(255,255,255,0.45)]",
   ].join(" "),
   danger: [
     "bg-error text-white shadow-btn focus-visible:shadow-focus-error",
