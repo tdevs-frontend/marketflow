@@ -48,7 +48,7 @@ export default function RegisterPage() {
       <p className="text-center text-sm text-text-muted">
         Already have an account?{" "}
         <Link href={APP_ROUTES.login} className="text-primary hover:underline">
-          Sign in
+          Sign In
         </Link>
       </p>
     </div>

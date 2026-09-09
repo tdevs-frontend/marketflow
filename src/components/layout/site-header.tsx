@@ -26,14 +26,14 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-2">
           <ButtonLink href={APP_ROUTES.login} variant="ghost" size="compact">
-            Sign in
+            Sign In
           </ButtonLink>
           <ButtonLink
             href={APP_ROUTES.register}
             variant="gradient"
             size="compact"
           >
-            Start free
+            Start Free
           </ButtonLink>
         </div>
       </div>

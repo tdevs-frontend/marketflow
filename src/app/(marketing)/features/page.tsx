@@ -71,7 +71,7 @@ export default function FeaturesPage() {
 
       <div className="mt-16 text-center">
         <ButtonLink href={APP_ROUTES.register} size="lg">
-          Start free
+          Start Free
         </ButtonLink>
       </div>
     </section>
