@@ -117,7 +117,7 @@ const SIZES: Record<ButtonSize, string> = {
   /* 40px — matches `IconButton` md and the header search field. */
   compact: "h-10 gap-2 px-4 text-sm [&_svg]:size-4",
   md: "h-11 gap-2 px-5 text-sm [&_svg]:size-4",
-  lg: "h-12 gap-2.5 px-7 text-base [&_svg]:size-5",
+  lg: "h-12 gap-2.5 px-6 text-base [&_svg]:size-5",
   icon: "size-11 gap-0 p-0 [&_svg]:size-4",
 };
 

@@ -41,13 +41,11 @@ export function WhatsAppAutomation() {
               id="whatsapp-automation-title"
               className="mt-6 text-3xl leading-[1.15] font-bold tracking-tight text-white text-balance sm:text-4xl lg:text-5xl"
             >
-              Turn WhatsApp conversations into{" "}
-              <span className="brand-gradient-text">
-                automated customer journeys.
-              </span>
+              Turn WhatsApp Chats Into{" "}
+              <span className="brand-gradient-text">Automated Journeys</span>
             </h2>
 
-            <p className="mt-6  text-white/75 text-base leading-relaxed text-pretty sm:text-lg">
+            <p className="mt-6 text-white/75 text-base leading-[1.7] text-pretty">
               Capture leads, send personalized messages, automate follow-ups and
               nurture customers automatically — all from one powerful WhatsApp
               workspace.
@@ -55,7 +53,7 @@ export function WhatsAppAutomation() {
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <ButtonLink
-                href={APP_ROUTES.whatsapp}
+                href={APP_ROUTES.automation}
                 variant="secondary"
                 size="lg"
                 className="group"
@@ -65,14 +63,6 @@ export function WhatsAppAutomation() {
                   className="transition-transform group-hover:translate-x-0.5"
                   aria-hidden
                 />
-              </ButtonLink>
-              <ButtonLink
-                href={APP_ROUTES.automation}
-                variant="inverse"
-                size="lg"
-              >
-                <Workflow aria-hidden />
-                View Workflow
               </ButtonLink>
             </div>
 

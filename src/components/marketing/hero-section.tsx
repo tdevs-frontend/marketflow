@@ -32,12 +32,12 @@ export function HeroSection() {
       <div className="custom-container">
         <div className="px-6 py-20 lg:py-24">
           <div className="mx-auto max-w-240 text-center">
-            <p className="inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pl-1.5 pr-3.5 text-xs font-medium text-text-secondary shadow-card">
-              <span className="rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-semibold text-primary-dark">
+            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pl-1.5 pr-3.5 text-sm font-medium text-text-secondary shadow-card">
+              <span className="rounded-full bg-primary-soft px-2 py-0.5 text-xs font-semibold text-primary-dark">
                 New
               </span>
               WhatsApp Business API · built for merchants
-            </p>
+            </span>
 
             <h1 className="mx-auto mt-7 max-w-4xl text-[2.75rem] font-bold leading-[1.06] tracking-tight text-balance sm:text-6xl xl:text-[4.25rem]">
               Turn Every Conversation Into{" "}
