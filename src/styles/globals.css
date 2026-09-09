@@ -93,6 +93,48 @@
   .btn-google svg {
     @apply pointer-events-none size-5 shrink-0;
   }
+
+  /*
+   * The landing page's section typography, as two classes.
+   *
+   * Both carry type and nothing else — no colour, no margin, no decoration.
+   * That split is deliberate: the sections sit on different grounds (light,
+   * dark, gradient), so each call site keeps its own `text-*` colour, its own
+   * `mt-*`, and its own pill treatment on the eyebrow, while the ramp itself
+   * lives in one place.
+   *
+   * `@layer components` puts them below the utilities layer, so a `text-white`
+   * or `text-balance` at the call site still wins — and above `@layer base`, so
+   * they beat the global `h1..h6` rule the way the inline utilities they replace
+   * used to.
+   */
+
+  /*
+   * Section eyebrow — the small label above a section heading. Set from the
+   * hero badge, "WhatsApp Business API · built for merchants": 14px
+   * CircularStdMedium, normal tracking, sentence case.
+   *
+   * `font-medium` is a family swap, not a weight — see the `--font-*` tokens in
+   * `variables.css`. Tracking and transform are stated rather than left to
+   * inherit, so the label reads the same wherever it is dropped.
+   */
+  .section-eyebrow {
+    @apply text-sm font-medium;
+    letter-spacing: normal;
+    text-transform: none;
+  }
+
+  /*
+   * Section heading — set from "Everything you need to turn leads into loyal
+   * customers": 30px, rising to 36px at `sm` and 48px at `lg`.
+   *
+   * One ramp for every section, so the same viewport gives the same heading
+   * size across the page. Line count is left alone: headings wrap naturally to
+   * whatever their column allows.
+   */
+  .section-title {
+    @apply text-3xl leading-[1.15] font-bold tracking-tight sm:text-4xl lg:text-5xl;
+  }
 }
 
 @utility link-underline {

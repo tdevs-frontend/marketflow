@@ -32,14 +32,14 @@ export function WhatsAppAutomation() {
         <div className="grid items-center gap-14 lg:grid-cols-[45fr_55fr] lg:gap-16 xl:gap-20">
           {/* Message */}
           <div>
-            <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 py-1.5 pr-4 pl-2.5 text-xs font-semibold tracking-[0.14em] text-white uppercase">
+            <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 py-1.5 pr-4 pl-2.5 text-white">
               <MessageCircle className="size-4 text-success" aria-hidden />
               WhatsApp-first automation
             </p>
 
             <h2
               id="whatsapp-automation-title"
-              className="mt-6 text-3xl leading-[1.15] font-bold tracking-tight text-white text-balance sm:text-4xl lg:text-5xl"
+              className="section-title mt-6 text-white text-balance"
             >
               Turn WhatsApp Chats Into{" "}
               <span className="brand-gradient-text">Automated Journeys</span>

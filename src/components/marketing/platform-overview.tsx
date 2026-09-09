@@ -206,14 +206,14 @@ export function PlatformOverview() {
 
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <p className="inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pl-3 pr-3.5 text-xs font-medium text-text-secondary shadow-card">
+          <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pl-3 pr-3.5 text-text-secondary shadow-card">
             <span aria-hidden className="size-1.5 rounded-full bg-secondary" />
             One platform. Complete marketing control.
           </p>
 
           <h2
             id="platform-overview-title"
-            className="mt-5 text-3xl leading-[1.15] font-bold tracking-tight text-balance sm:text-4xl lg:text-5xl"
+            className="section-title mt-5 text-balance"
           >
             Everything you need to turn leads into loyal customers
           </h2>

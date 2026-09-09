@@ -32,7 +32,7 @@ export function HeroSection() {
       <div className="custom-container">
         <div className="px-6 py-20 lg:py-24">
           <div className="mx-auto max-w-240 text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pl-1.5 pr-3.5 text-sm font-medium text-text-secondary shadow-card">
+            <span className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pl-1.5 pr-3.5 text-text-secondary shadow-card">
               <span className="rounded-full bg-primary-soft px-2 py-0.5 text-xs font-semibold text-primary-dark">
                 New
               </span>

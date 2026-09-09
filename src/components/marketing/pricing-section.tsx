@@ -23,13 +23,13 @@ export function PricingSection({
 
       <div className="custom-container">
         <header className="mx-auto max-w-3xl text-center">
-          <p className="text-[11px] font-bold tracking-[0.14em] text-primary uppercase">
+          <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pl-3 pr-3.5 text-text-secondary shadow-card">
+            <span aria-hidden className="size-1.5 rounded-full bg-secondary" />
             Simple, scalable pricing
           </p>
-
           <Heading
             id="pricing-title"
-            className="mt-5 text-[2rem] leading-[1.12] font-bold tracking-tight text-balance sm:text-[2.75rem] lg:text-5xl"
+            className="section-title mt-5 text-balance"
           >
             Everything you need to turn customer conversations growth
           </Heading>

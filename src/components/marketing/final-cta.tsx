@@ -22,7 +22,7 @@ export function FinalCta() {
       <div className="">
         <div className="mx-auto grid max-w-2xl items-center gap-14">
           <div className="text-center">
-            <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 py-1.5 pr-4 pl-2.5 text-xs font-semibold tracking-[0.14em] text-white uppercase">
+            <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 py-1.5 pr-4 pl-2.5 text-white">
               <span
                 aria-hidden
                 className="size-1.5 rounded-full brand-gradient-accent"
@@ -32,7 +32,7 @@ export function FinalCta() {
 
             <h2
               id="final-cta-title"
-              className="mt-6 text-3xl leading-[1.15] font-bold tracking-tight text-white text-balance sm:text-4xl lg:text-5xl"
+              className="section-title mt-6 text-white text-balance"
             >
               Turn{" "}
               <span className="brand-gradient-text">every conversation</span>{" "}
