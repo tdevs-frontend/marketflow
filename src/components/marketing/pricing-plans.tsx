@@ -39,6 +39,7 @@ function BillingToggle({
           "transition-transform duration-200 ease-out motion-reduce:transition-none",
           value === "yearly" && "translate-x-full",
         )}
+        
       />
 
       {BILLING_OPTIONS.map((option) => {

@@ -432,10 +432,23 @@ body.mobile-menu-show {
   animation: flow 2.4s linear infinite;
 }
 
+/* Platform hub orbit: the dashed ring turning, slowly enough to read as drift
+   rather than motion. One full turn a minute. */
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-orbit {
+  animation: orbit 60s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-float,
   .animate-float-slow,
-  .animate-flow {
+  .animate-flow,
+  .animate-orbit {
     animation: none;
   }
 }
