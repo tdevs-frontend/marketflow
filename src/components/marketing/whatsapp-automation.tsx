@@ -22,16 +22,18 @@ export function WhatsAppAutomation() {
           {/* Message */}
           <div className="md:col-span-6 lg:col-span-5">
             <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/8 py-1.5 pr-4 pl-3 text-white backdrop-blur-md">
-              <BrandIcon name="whatsapp" className="size-4 text-whatsapp-brand" />
-              WhatsApp first automation
+              <BrandIcon
+                name="whatsapp"
+                className="size-4 text-whatsapp-brand"
+              />
+              WhatsApp-first automation
             </p>
 
             <h2
               id="whatsapp-automation-title"
               className="section-title mt-6 text-white text-balance"
             >
-              Turn WhatsApp Chats Into{" "}
-              <span className="text-lavender-deep">Automated Journeys</span>
+              Turn WhatsApp Chats Into Automated Journeys
             </h2>
 
             <p className="mt-6 text-base leading-[1.7] text-white/82 text-pretty">
@@ -63,7 +65,7 @@ export function WhatsAppAutomation() {
             </ul>
           </div>
 
-          {/* Automation journey */}
+          {/* The product, on a monitor */}
           <div className="md:col-span-6 lg:col-span-7">
             <AutomationVisual />
           </div>

@@ -109,7 +109,7 @@ export function HeroSection() {
               </div>
             </div>
           </div>
-          <div className="mx-auto mt-16 w-full max-w-300">
+          <div className="mx-auto mt-16 w-full max-w-280">
             <HeroDashboard />
           </div>
         </div>

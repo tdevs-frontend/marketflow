@@ -131,6 +131,11 @@
   --color-lavender-deep: #c7d2fe;
   --color-lavender: #ddd6fe;
   --color-lavender-pale: #ede9fe;
+  /* The deepest rung the set goes to — violet-300, 3.1:1 on the brand ramp's
+     lightest point. It is what gives a gradient-clipped phrase somewhere to
+     travel to; on its own it is right at the AA-large line, so it is only ever
+     one stop of a ramp, never a whole word. */
+  --color-lavender-violet: #c4b5fd;
   --color-accent: #06b6d4;
   --color-accent-soft: #ecfeff;
 
