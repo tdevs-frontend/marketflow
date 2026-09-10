@@ -51,7 +51,7 @@ export function SiteFooter() {
               >
                 <h2
                   id={`footer-${column.title.toLowerCase()}`}
-                  className="text-base font-semibold uppercase text-white"
+                  className="text-xl font-semibold capitalize text-white"
                 >
                   {column.title}
                 </h2>

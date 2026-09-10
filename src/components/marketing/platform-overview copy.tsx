@@ -223,7 +223,7 @@ export function PlatformOverview() {
             Everything you need to turn leads into loyal customers
           </h2>
 
-          <p className="mt-5 text-lg leading-[1.7] text-text-secondary text-pretty">
+          <p className="mt-5 text-base leading-[1.7] text-text-secondary text-pretty">
             Capture leads, manage conversations, launch campaigns, automate
             follow-ups and measure growth — all from{" "}
             <span className="font-semibold text-primary">
