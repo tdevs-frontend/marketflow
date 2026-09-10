@@ -6,9 +6,8 @@ import { APP_ROUTES, footerNav, footerSocials } from "@/constants";
 import { siteConfig } from "@/config/site";
 
 const FOOTER_LINKS = [
-  { title: "Features", href: APP_ROUTES.features },
-  { title: "Pricing", href: APP_ROUTES.pricing },
-  { title: "Sign in", href: APP_ROUTES.login },
+  { title: "Privacy Policy", href: APP_ROUTES.features },
+  { title: "Terms of Service", href: APP_ROUTES.pricing },
 ];
 
 export function SiteFooter() {

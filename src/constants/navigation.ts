@@ -240,8 +240,6 @@ export const footerNav: FooterColumn[] = [
       { title: "Automation Builder", href: "/features#automation" },
       { title: "Email Marketing", href: "/features#email" },
       { title: "SMS Marketing", href: "/features#sms" },
-      { title: "Analytics & Reports", href: "/features#analytics" },
-      { title: "Templates", href: "/features#templates" },
       { title: "Integrations", href: "/features#integrations" },
     ],
   },
@@ -255,7 +253,6 @@ export const footerNav: FooterColumn[] = [
       { title: "Education", href: "/solutions/education" },
       { title: "Clinics & Salons", href: "/solutions/clinics-and-salons" },
       { title: "Restaurants", href: "/solutions/restaurants" },
-      { title: "Startups & Growing Brands", href: "/solutions/startups" },
     ],
   },
   {
@@ -267,8 +264,6 @@ export const footerNav: FooterColumn[] = [
       { title: "Guides", href: "/guides" },
       { title: "Automation Templates", href: "/resources/templates" },
       { title: "API Documentation", href: "/docs/api" },
-      { title: "Changelog", href: "/changelog" },
-      { title: "Community", href: "/community" },
     ],
   },
   {
@@ -289,5 +284,4 @@ export const footerSocials: SocialLink[] = [
   { label: "Facebook", href: "https://www.facebook.com/marketflow", icon: "facebook" },
   { label: "X", href: "https://x.com/marketflow", icon: "x" },
   { label: "YouTube", href: "https://www.youtube.com/@marketflow", icon: "youtube" },
-  { label: "GitHub", href: "https://github.com/marketflow", icon: "github" },
 ];
