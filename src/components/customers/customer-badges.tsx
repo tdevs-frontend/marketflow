@@ -20,9 +20,13 @@ import type { LucideIcon } from "lucide-react";
 
 import { Badge, type BadgeTone } from "@/components/ui/badge";
 import { TAG_COLORS, tagByName } from "@/lib/customer-fixtures";
-import type { ActivityKind, ContactSource, Lifecycle } from "@/lib/customer-fixtures";
+import type {
+  ActivityKind,
+  ContactSource,
+  Lifecycle,
+} from "@/lib/customer-fixtures";
 import { cn } from "@/lib/utils";
-import type { ContactStatus } from "@/types/contact";
+import type { ContactChannel, ContactStatus } from "@/types/contact";
 import type { LeadSource, LeadStage } from "@/types/lead";
 
 /* -------------------------------------------------------------------------- */
@@ -168,8 +172,76 @@ export function TagDot({
   return (
     <span
       aria-hidden
-      className={cn("size-2 shrink-0 rounded-full", TAG_COLORS[color].dot, className)}
+      className={cn(
+        "size-2 shrink-0 rounded-full",
+        TAG_COLORS[color].dot,
+        className,
+      )}
     />
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Channel consent                                                            */
+/* -------------------------------------------------------------------------- */
+
+const CHANNEL_META: Record<
+  ContactChannel,
+  { label: string; icon: LucideIcon; tone: string }
+> = {
+  whatsapp: {
+    label: "WhatsApp",
+    icon: MessageCircle,
+    tone: "bg-whatsapp-soft text-whatsapp",
+  },
+  email: { label: "Email", icon: Mail, tone: "bg-email-soft text-email" },
+  sms: { label: "SMS", icon: Smartphone, tone: "bg-sms-soft text-sms" },
+};
+
+const CHANNEL_ORDER: ContactChannel[] = ["whatsapp", "email", "sms"];
+
+/**
+ * Which channels this contact may be reached on.
+ *
+ * All three are always drawn, granted ones tinted and the rest greyed, so the
+ * column reads as a fixed three-slot state rather than a variable-length list
+ * — that is what lets a reader scan down it and spot the WhatsApp-only rows.
+ * Each carries its own channel colour, never the brand indigo.
+ *
+ * Colour is not the only signal: every icon has a title, so consent survives
+ * both a screen reader and a monochrome print.
+ */
+export function ChannelConsentBadges({
+  channels,
+  className,
+}: {
+  channels: ContactChannel[];
+  className?: string;
+}) {
+  return (
+    <span className={cn("flex items-center gap-1", className)}>
+      {CHANNEL_ORDER.map((channel) => {
+        const meta = CHANNEL_META[channel];
+        const Icon = meta.icon;
+        const granted = channels.includes(channel);
+
+        return (
+          <span
+            key={channel}
+            title={`${meta.label}: ${granted ? "opted in" : "no consent"}`}
+            className={cn(
+              "grid size-5 place-items-center rounded-[5px]",
+              granted ? meta.tone : "bg-surface-secondary text-text-muted/50",
+            )}
+          >
+            <Icon className="size-3" aria-hidden />
+            <span className="sr-only">
+              {meta.label}: {granted ? "opted in" : "no consent"}
+            </span>
+          </span>
+        );
+      })}
+    </span>
   );
 }
 
@@ -189,11 +261,19 @@ const SOURCE_META: Record<
   ContactSource | LeadSource,
   { label: string; icon: LucideIcon; className: string }
 > = {
-  whatsapp: { label: "WhatsApp", icon: MessageCircle, className: "text-whatsapp" },
+  whatsapp: {
+    label: "WhatsApp",
+    icon: MessageCircle,
+    className: "text-whatsapp",
+  },
   email: { label: "Email", icon: Mail, className: "text-email" },
   sms: { label: "SMS", icon: Smartphone, className: "text-sms" },
   website: { label: "Website", icon: Globe, className: "text-text-muted" },
-  campaign: { label: "Campaign", icon: Megaphone, className: "text-text-muted" },
+  campaign: {
+    label: "Campaign",
+    icon: Megaphone,
+    className: "text-text-muted",
+  },
   import: { label: "Import", icon: Upload, className: "text-text-muted" },
   manual: { label: "Manual", icon: UserPlus, className: "text-text-muted" },
   referral: { label: "Referral", icon: Users, className: "text-text-muted" },
@@ -246,7 +326,13 @@ const STAGE_TONE: Record<LeadStage, BadgeTone> = {
   lost: "danger",
 };
 
-export function StageBadge({ stage, label }: { stage: LeadStage; label: string }) {
+export function StageBadge({
+  stage,
+  label,
+}: {
+  stage: LeadStage;
+  label: string;
+}) {
   return <Badge tone={STAGE_TONE[stage]}>{label}</Badge>;
 }
 
@@ -266,18 +352,58 @@ export const ACTIVITY_META: Record<
   ActivityKind,
   { icon: LucideIcon; tone: string; label: string }
 > = {
-  whatsapp: { icon: MessageCircle, tone: "bg-whatsapp-soft text-whatsapp", label: "WhatsApp" },
+  whatsapp: {
+    icon: MessageCircle,
+    tone: "bg-whatsapp-soft text-whatsapp",
+    label: "WhatsApp",
+  },
   email: { icon: Mail, tone: "bg-email-soft text-email", label: "Email" },
   sms: { icon: Smartphone, tone: "bg-sms-soft text-sms", label: "SMS" },
-  social: { icon: Share2, tone: "bg-social-soft text-social-dark", label: "Social" },
-  note: { icon: StickyNote, tone: "bg-surface-secondary text-text-secondary", label: "Note" },
-  stage: { icon: ArrowRightLeft, tone: "bg-primary-soft text-primary", label: "Stage change" },
-  automation: { icon: Workflow, tone: "bg-primary-soft text-primary", label: "Automation" },
-  campaign: { icon: Megaphone, tone: "bg-primary-soft text-primary", label: "Campaign" },
-  order: { icon: ShoppingBag, tone: "bg-success-soft text-success-text", label: "Order" },
-  web: { icon: Globe, tone: "bg-surface-secondary text-text-secondary", label: "Website" },
-  form: { icon: ClipboardList, tone: "bg-surface-secondary text-text-secondary", label: "Form" },
-  score: { icon: TrendingUp, tone: "bg-primary-soft text-primary", label: "Score" },
+  social: {
+    icon: Share2,
+    tone: "bg-social-soft text-social-dark",
+    label: "Social",
+  },
+  note: {
+    icon: StickyNote,
+    tone: "bg-surface-secondary text-text-secondary",
+    label: "Note",
+  },
+  stage: {
+    icon: ArrowRightLeft,
+    tone: "bg-primary-soft text-primary",
+    label: "Stage change",
+  },
+  automation: {
+    icon: Workflow,
+    tone: "bg-primary-soft text-primary",
+    label: "Automation",
+  },
+  campaign: {
+    icon: Megaphone,
+    tone: "bg-primary-soft text-primary",
+    label: "Campaign",
+  },
+  order: {
+    icon: ShoppingBag,
+    tone: "bg-success-soft text-success-text",
+    label: "Order",
+  },
+  web: {
+    icon: Globe,
+    tone: "bg-surface-secondary text-text-secondary",
+    label: "Website",
+  },
+  form: {
+    icon: ClipboardList,
+    tone: "bg-surface-secondary text-text-secondary",
+    label: "Form",
+  },
+  score: {
+    icon: TrendingUp,
+    tone: "bg-primary-soft text-primary",
+    label: "Score",
+  },
 };
 
 /** The small tinted square a timeline row leads with. */

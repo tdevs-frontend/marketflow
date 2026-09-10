@@ -11,8 +11,10 @@ export interface TabItem<T extends string> {
   badge?: ReactNode;
 }
 
-export const tabId = (idBase: string, value: string) => `${idBase}-tab-${value}`;
-export const panelId = (idBase: string, value: string) => `${idBase}-panel-${value}`;
+export const tabId = (idBase: string, value: string) =>
+  `${idBase}-tab-${value}`;
+export const panelId = (idBase: string, value: string) =>
+  `${idBase}-panel-${value}`;
 
 /**
  * An underlined tab strip with real `tablist` semantics — arrow keys move
@@ -89,6 +91,22 @@ export function Tabs<T extends string>({
         );
       })}
     </div>
+  );
+}
+
+/**
+ * The count a tab's `badge` usually wants.
+ *
+ * An element rather than a bare number: adjacent text nodes merge into one
+ * anonymous flex item, so the tab's own `gap` never applies and the tab reads
+ * "Notes3". A span is a flex item of its own, and gives the count a shape that
+ * separates it from the label at a glance.
+ */
+export function TabCount({ value }: { value: number }) {
+  return (
+    <span className="rounded-full bg-surface-secondary px-1.5 py-0.5 text-[11px] font-semibold text-text-secondary tabular-nums">
+      {value}
+    </span>
   );
 }
 

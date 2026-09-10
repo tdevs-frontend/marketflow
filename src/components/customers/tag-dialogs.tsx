@@ -80,7 +80,9 @@ export function TagFormDialog({
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button onClick={submit}>{tag ? "Save changes" : "Create tag"}</Button>
+          <Button onClick={submit}>
+            {tag ? "Save changes" : "Create tag"}
+          </Button>
         </>
       }
     >

@@ -51,7 +51,14 @@ export function FilterBar({
   return (
     <div className={cn("space-y-3", className)}>
       <div className="flex flex-wrap items-center gap-2.5">
-        <div className="relative min-w-0 flex-1 sm:max-w-xs">
+        {/*
+         * `min-w-56` rather than `min-w-0`: as a flex item with `flex-1`,
+         * search was the only thing in this row that could shrink, so a page
+         * with six filters collapsed it to just its magnifier. A floor means
+         * the filters wrap to a second line instead — the row gets taller,
+         * which is far better than the search box disappearing.
+         */}
+        <div className="relative min-w-56 flex-1 sm:max-w-xs">
           <Search
             className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-text-muted"
             aria-hidden
@@ -67,7 +74,13 @@ export function FilterBar({
         </div>
 
         {children ? (
-          <div className="hidden items-center gap-2.5 lg:flex">{children}</div>
+          /* `flex-wrap`: a page with six filters needs 850px of selects, which
+             does not fit beside the search box at 1024 with the sidebar open.
+             Without it the row overflowed the page horizontally; with it the
+             filters take a second line, which is the right trade. */
+          <div className="hidden flex-wrap items-center gap-2.5 lg:flex">
+            {children}
+          </div>
         ) : null}
 
         {children ? (

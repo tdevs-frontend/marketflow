@@ -6,13 +6,16 @@
  * five routes.
  */
 export * from "./customer-badges";
+export * from "./customer-toolbar";
 export * from "./activity-timeline";
 export * from "./contacts-workspace";
 export * from "./contact-drawer";
 export * from "./contact-dialogs";
 export * from "./leads-board";
 export * from "./lead-drawer";
+export * from "./lead-dialogs";
+export * from "./segment-rule-builder";
+export * from "./segments-workspace";
 export * from "./tags-workspace";
 export * from "./tag-dialogs";
 export * from "./journey-workspace";
-export * from "./journey-drawer";

@@ -65,7 +65,9 @@ export function ActivityTimeline({
                 {entry.sourceName ? (
                   <>
                     <span aria-hidden>·</span>
-                    <span className="truncate text-primary">{entry.sourceName}</span>
+                    <span className="truncate text-primary">
+                      {entry.sourceName}
+                    </span>
                   </>
                 ) : null}
               </p>

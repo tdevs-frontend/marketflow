@@ -52,8 +52,22 @@ export const APP_ROUTES = {
 
   /* Audience segmentation, shared across the channels. */
   segments: "/dashboard/marketing/segments",
+
+  /*
+   * The Customers module. Five sibling routes grouped as `(customers)` in the
+   * app directory so they can share a loading and error boundary — the group
+   * is not part of the URL, so these paths are what they have always been.
+   *
+   * `customerSegments` is deliberately distinct from `segments` above: the
+   * same audience builder is reachable from Marketing (as something to send
+   * to) and from Customers (as a way to group people), and the two entries
+   * keep the sidebar's active state honest on both.
+   */
   contacts: "/dashboard/contacts",
   leads: "/dashboard/leads",
+  customerSegments: "/dashboard/segments",
+  tags: "/dashboard/tags",
+  customerJourney: "/dashboard/customer-journey",
   campaigns: "/dashboard/campaigns",
   whatsapp: "/dashboard/whatsapp",
   automation: "/dashboard/automation",

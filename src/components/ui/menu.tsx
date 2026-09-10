@@ -13,6 +13,12 @@ export interface MenuItem {
   /** Renders in the error colour and sits below a divider. */
   destructive?: boolean;
   disabled?: boolean;
+  /**
+   * Keep the menu open after choosing. Defaults to closing, which is right for
+   * an action; a menu of toggles — column visibility — would otherwise need
+   * reopening once per column.
+   */
+  closeOnSelect?: boolean;
 }
 
 /**
@@ -27,10 +33,18 @@ export function Menu({
   items,
   label = "Row actions",
   align = "right",
+  trigger,
 }: {
   items: MenuItem[];
   label?: string;
   align?: "left" | "right";
+  /**
+   * Replaces the kebab glyph inside the same button — so a labelled dropdown
+   * ("Columns") reuses this component's outside-click, Escape and
+   * focus-return behaviour instead of reimplementing it. The button element,
+   * its ARIA wiring and the panel are unchanged; only the face differs.
+   */
+  trigger?: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -67,9 +81,14 @@ export function Menu({
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
         onClick={() => setOpen((value) => !value)}
-        className="grid size-8 place-items-center rounded-btn text-text-muted transition-colors hover:bg-surface-secondary hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
+        className={cn(
+          "rounded-btn transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+          trigger
+            ? "inline-flex"
+            : "grid size-8 place-items-center text-text-muted hover:bg-surface-secondary hover:text-text-primary",
+        )}
       >
-        <MoreHorizontal className="size-4" aria-hidden />
+        {trigger ?? <MoreHorizontal className="size-4" aria-hidden />}
       </button>
 
       {open ? (
@@ -95,7 +114,7 @@ export function Menu({
                   role="menuitem"
                   disabled={item.disabled}
                   onClick={() => {
-                    setOpen(false);
+                    if (item.closeOnSelect !== false) setOpen(false);
                     item.onSelect();
                   }}
                   className={cn(
