@@ -19,6 +19,17 @@ const LEAN: Record<RailSide, string> = {
 };
 
 /**
+ * Every card is 360px wide, which is exactly its rail track from `xl` up;
+ * `max-w-full` is what lets it fall back to the track on the narrower layouts
+ * below that. Each rail keeps its cards pinned to the outer edge, never
+ * stretched toward the hub, so space freed up in the middle stays there.
+ */
+const ALIGN: Record<RailSide, string> = {
+  left: "mx-auto lg:mr-auto lg:ml-0",
+  right: "mx-auto lg:ml-auto lg:mr-0",
+};
+
+/**
  * One module in a side rail: tinted icon tile, title, one-line description and
  * a status pill.
  *
@@ -41,7 +52,8 @@ export function FeatureCard({
   return (
     <article
       className={cn(
-        "group h-full rounded-card border border-border bg-surface p-4 shadow-card sm:px-[18px]",
+        "group h-full w-[360px] max-w-full rounded-card border border-border bg-surface p-4 shadow-card sm:px-[18px]",
+        ALIGN[side],
         HOVER,
         LEAN[side],
         "hover:-translate-y-[3px] hover:border-primary-border hover:shadow-card-hover",

@@ -320,6 +320,13 @@
   @apply mx-auto max-sm:max-w-[90%] sm:max-w-135 md:max-w-180 lg:max-w-240 xl:max-w-285 2xl:max-w-300 3xl:max-w-330;
 }
 
+/* Wider variant, currently only for the platform ecosystem grid: two fixed
+   360px rails plus a centre the hub can breathe in need more room than the
+   standard container gives from `xl` up. Identical below `xl`. */
+.custom-container-wide {
+  @apply mx-auto max-sm:max-w-[90%] sm:max-w-135 md:max-w-180 lg:max-w-240 xl:max-w-300 2xl:max-w-320 3xl:max-w-330;
+}
+
 @utility webkit-box {
   display: -webkit-box;
 }

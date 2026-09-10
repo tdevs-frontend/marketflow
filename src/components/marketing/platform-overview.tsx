@@ -11,7 +11,10 @@ import {
  * The all-in-one section: MarketFlow at the centre, every module connected to
  * it, and the journey it covers along the bottom.
  *
- * The layout is one three-column grid — rail, hub, rail. Columns stretch to a
+ * The layout is one three-column grid — rail, hub, rail. From `xl` the rails
+ * are a fixed 360px each and the centre column takes everything left over, so
+ * the hub sits in open space rather than between two wide cards; below that the
+ * three columns share the width proportionally. Columns stretch to a
  * common height, which is the whole basis for the connectors: the hub column
  * ends up exactly as tall as the rails, so `ConnectionLines` can anchor to the
  * same `RAIL_ROWS` the rails lay their cards on and stay aligned at any width
@@ -69,9 +72,12 @@ export function PlatformOverview() {
             </span>
           </p>
         </header>
+      </div>
 
-        {/* Ecosystem */}
-        <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)_minmax(0,1fr)] lg:gap-10">
+      {/* Ecosystem — its own, slightly wider container from `xl` up, so the two
+          360px rails and a roomy centre fit without crowding the hub. */}
+      <div className="custom-container-wide">
+        <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)_minmax(0,1fr)] lg:gap-10 xl:grid-cols-[360px_minmax(0,1fr)_360px]">
           <FeatureRail
             features={INBOUND_FEATURES}
             side="left"
@@ -92,7 +98,9 @@ export function PlatformOverview() {
             className="order-3"
           />
         </div>
+      </div>
 
+      <div className="custom-container">
         <div className="mt-12">
           <WorkflowBar />
         </div>

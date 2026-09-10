@@ -35,7 +35,7 @@ export function SiteFooter() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className="grid h-9 w-9 place-items-center rounded-btn brand-gradient-accent text-white transition-all hover:-translate-y-px hover:shadow-[0_10px_22px_-6px_rgba(139,92,246,0.85)] focus-visible:outline-none focus-visible:shadow-focus"
+                    className="grid h-9 w-9 place-items-center rounded-btn brand-gradient text-white transition-all hover:-translate-y-px hover:shadow-[0_10px_22px_-6px_rgba(139,92,246,0.85)] focus-visible:outline-none focus-visible:shadow-focus"
                   >
                     <BrandIcon name={social.icon} className="h-4 w-4" />
                   </a>
