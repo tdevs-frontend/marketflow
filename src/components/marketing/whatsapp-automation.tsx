@@ -18,9 +18,22 @@ export function WhatsAppAutomation() {
       className="automation-ground relative isolate overflow-hidden py-25 lg:py-28"
     >
       <div className="custom-container">
-        <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-14 xl:gap-16">
+        {/*
+         * Six and six from `xl`, stacked below it.
+         *
+         * `items-center` is what centres each half against the other, and it
+         * is also what lets the monitor set the row height — the copy is the
+         * shorter of the two at every width.
+         *
+         * The split starts at `xl` rather than `lg` because an equal half of
+         * the `lg` container is 452px, and the workspace drops its whole inbox
+         * column below a 520px screen. Stacked, the same viewport gives the
+         * monitor its full 650px and every panel survives; a 6/6 that costs a
+         * panel is not the 6/6 worth having.
+         */}
+        <div className="grid items-center gap-14 xl:grid-cols-12 xl:gap-16">
           {/* Message */}
-          <div className="lg:col-span-5">
+          <div className="xl:col-span-6">
             <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/8 py-1.5 pr-4 pl-3 text-white backdrop-blur-md">
               <BrandIcon
                 name="whatsapp"
@@ -64,8 +77,16 @@ export function WhatsAppAutomation() {
             </ul>
           </div>
 
-          {/* The product, on a monitor */}
-          <div className="lg:col-span-7">
+          {/*
+           * The product, on a monitor.
+           *
+           * The monitor group centres inside its own half rather than being
+           * pushed to one side to make room for the cards — the cards cross
+           * the frame's edges, so they need no room of their own. This div is
+           * the positioning parent's parent and nothing more: everything the
+           * cards are measured against is the wrapper one level in.
+           */}
+          <div className="flex w-full items-center justify-center xl:col-span-6">
             <AutomationVisual />
           </div>
         </div>

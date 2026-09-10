@@ -153,7 +153,7 @@ export type AnnotationCardData = {
   /**
    * Where the card hangs off the monitor, and on which phase of the shared
    * float. Placement lives with the card rather than in the component that
-   * pins it, because the four are one composition: the offsets are only
+   * pins it, because the three are one composition: the offsets are only
    * legible next to each other.
    */
   pin: string;
@@ -161,21 +161,42 @@ export type AnnotationCardData = {
 };
 
 /**
- * The four states of the flow, pinned around the monitor.
+ * Three states of the flow, pinned to the monitor's edges.
  *
- * The same four the automation panel runs through on the glass, lifted out to
- * the hardware's edges — inside, they are a product feature; outside, they are
- * the claim the section is making. Deliberately the same four and no more: a
- * fifth would stop being a sequence and start being a legend.
+ * Three, not five: the outcome ("lead qualified") and the proof ("+38% reply
+ * rate") both used to hang out here too, and between them they turned the
+ * hardware into the thing in the middle of a legend. What is left is the
+ * mechanism only — a reply, a wait, a follow-up — and the outcome still reads,
+ * one panel further in, as the last step of the flow on the glass.
  *
- * They read clockwise from the top-left, and every one of them sits in the
- * band above the top bezel or the band beside the stand — never over the
- * glass. That is arithmetic rather than taste: the column this lives in is
- * 636px wide at `xl` and the monitor wants 620 of it, so a card hung off the
- * side would have nowhere to go but onto the screen, and the screen is the
- * argument the section is making. The bands are free, the stand leaves a wide
- * empty triangle to flank, and the offsets are staggered by a few pixels each
- * so the group never resolves into a row.
+ * Two on the left and one on the right, at three heights that share no line,
+ * because two cards level with each other across a screen read as a table
+ * header rather than as annotation.
+ *
+ * Each is anchored to its edge and then pushed back out across it by half its
+ * own width — `left-0 -translate-x-1/2`, `right-0 translate-x-1/2`. Half the
+ * card outside, half over the frame, and no pixel offsets, so the overlap is
+ * still half a card when the monitor is 520px wide instead of 630px.
+ *
+ * The right card translates 45% rather than 50%. At exactly 1280px the monitor
+ * fills its column and the column ends 70px from the edge of the screen, which
+ * is 6px less than half a card; 45% is 68px, and the difference is invisible
+ * where a clipped corner would not be.
+ *
+ * The heights are measured, not chosen. Half a card lands 68px onto the glass,
+ * and 68px is more than the width of anything that can be given up, so each
+ * one has to sit where the panel behind it has nothing to lose:
+ *
+ * - Left, the icon rail takes the first 44px of the overlap and the inbox list
+ *   the remaining 24px. Its names start 36px in, so they survive; what goes is
+ *   the search field's magnifier and an avatar. Both cards on that side clear
+ *   the names at any height.
+ * - Right, the automation panel has 15px of slack beside "Welcome Message" and
+ *   the card needs 68px, so there is no height inside the flow that does not
+ *   truncate a step. The flow runs 22.8%–58.5% and the metrics footer starts
+ *   at 70.7%; 58.5% drops the card into the gap between them, where its lower
+ *   edge reaches only into that footer's top padding. It is the one band on
+ *   that edge with room, which is why it is not level with the flow it names.
  */
 export const ANNOTATION_CARDS: AnnotationCardData[] = [
   {
@@ -183,32 +204,24 @@ export const ANNOTATION_CARDS: AnnotationCardData[] = [
     detail: "Sent instantly",
     icon: MessageCircle,
     tile: "bg-primary-soft text-primary",
-    pin: "-top-12 -left-4",
-    drift: "animate-drift",
+    pin: "top-[14%] left-0 -translate-x-1/2",
+    drift: "animate-drift-card",
   },
   {
     title: "Wait 1 day",
     detail: "Scheduled",
     icon: Clock3,
     tile: "bg-primary-subtle text-secondary",
-    pin: "-top-17 right-48",
-    drift: "animate-drift-mid",
+    pin: "top-[58.5%] right-0 translate-x-[45%]",
+    drift: "animate-drift-card-mid",
   },
   {
     title: "Follow-up",
     detail: "Template sent",
     icon: Send,
     tile: "bg-info-soft text-info",
-    pin: "-bottom-5 -left-3",
-    drift: "animate-drift-slow",
-  },
-  {
-    title: "Lead qualified",
-    detail: "Ready for sales",
-    icon: UserRoundCheck,
-    tile: "bg-whatsapp-soft text-whatsapp",
-    pin: "-bottom-1 -right-3",
-    drift: "animate-drift-late",
+    pin: "top-[70%] left-0 -translate-x-1/2",
+    drift: "animate-drift-card-late",
   },
 ];
 
@@ -223,7 +236,7 @@ export const ART_HOVER =
  * surface rather than as a sticker on top of it.
  */
 export const CARD_SHELL =
-  "rounded-[13px] border border-white/45 bg-white/96 shadow-[0_12px_30px_rgba(15,23,42,0.14)] backdrop-blur-md";
+  "rounded-[13px] border border-white/55 bg-white/96 shadow-[0_12px_30px_rgba(15,23,42,0.16)] backdrop-blur-md";
 
 /** What a card does when the pointer reaches it. */
 export const CARD_HOVER =

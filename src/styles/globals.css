@@ -580,52 +580,44 @@ body.mobile-menu-show {
 }
 
 
-/* Illustration drift: a floating badge breathing four pixels. Slow and shallow
-   on purpose — enough to say the element is not glued to the page, not enough
-   to pull the eye off the phone it orbits. */
-@keyframes drift {
+/*
+ * Illustration drift: an annotation card breathing two pixels.
+ *
+ * Two rather than the four these used to travel, because the cards now
+ * straddle the monitor's edges instead of orbiting it at arm's length, and
+ * travel that reads as drift in open space reads as a wobble once the thing is
+ * touching something. Slow and shallow on purpose — enough to say the card is
+ * not glued to the page, not enough to pull the eye off the screen it hangs on.
+ *
+ * Each phase is a whole class rather than a delay utility on top of the first:
+ * these rules are unlayered, so they outrank anything Tailwind emits from its
+ * utilities layer and an `[animation-delay:…]` override would be silently
+ * dead. Three durations that share no common factor keep the group from ever
+ * falling back into step.
+ */
+@keyframes drift-card {
   0%,
   100% {
     transform: translateY(0);
   }
 
   50% {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
   }
 }
 
-.animate-drift {
-  animation: drift 5.5s ease-in-out infinite;
+.animate-drift-card {
+  animation: drift-card 6.4s ease-in-out infinite;
 }
 
-.animate-drift-slow {
-  animation: drift 7s ease-in-out infinite;
-  animation-delay: 1.2s;
+.animate-drift-card-mid {
+  animation: drift-card 7.3s ease-in-out infinite;
+  animation-delay: 1.6s;
 }
 
-/*
- * Two more phases of the same four-pixel breath, for the cards that orbit the
- * phone. Each is a whole class rather than a delay utility on top of
- * `.animate-drift`: these rules are unlayered, so they outrank anything
- * Tailwind emits from its utilities layer and an `[animation-delay:…]`
- * override would be silently dead. Four durations that share no common factor
- * keep the group from ever falling back into step.
- */
-.animate-drift-mid {
-  animation: drift 6.2s ease-in-out infinite;
-  animation-delay: 2.4s;
-}
-
-.animate-drift-late {
-  animation: drift 6.6s ease-in-out infinite;
-  animation-delay: 3.4s;
-}
-
-/* A fifth phase, for the small metric badge riding above the monitor's
-   top-right corner. Slowest of the group, and the smallest object in it. */
-.animate-drift-early {
-  animation: drift 6.8s ease-in-out infinite;
-  animation-delay: 0.4s;
+.animate-drift-card-late {
+  animation: drift-card 8s ease-in-out infinite;
+  animation-delay: 3.1s;
 }
 
 /*
@@ -672,11 +664,9 @@ body.mobile-menu-show {
   .animate-float-slow,
   .animate-flow,
   .animate-orbit,
-  .animate-drift,
-  .animate-drift-slow,
-  .animate-drift-mid,
-  .animate-drift-late,
-  .animate-drift-early,
+  .animate-drift-card,
+  .animate-drift-card-mid,
+  .animate-drift-card-late,
   .animate-drift-monitor,
   .animate-soft-pulse {
     animation: none;

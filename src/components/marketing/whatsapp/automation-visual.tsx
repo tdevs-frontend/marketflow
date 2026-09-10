@@ -1,5 +1,3 @@
-import { TrendingUp } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import {
   ANNOTATION_CARDS,
@@ -11,16 +9,17 @@ import {
 import { WhatsAppWorkspaceMonitor } from "./workspace-monitor";
 
 const LABEL =
-  "The MarketFlow WhatsApp workspace on a desktop monitor: Sarah Mitchell asks about the premium package, the automation replies instantly with the plan, and the premium flow beside it runs from new lead through welcome message, a one-day wait and a follow-up to a qualified lead. Four states are called out around the screen: auto reply sent instantly, a scheduled one-day wait, a follow-up template sent, and the lead qualified and ready for sales, at a reply rate of plus 38 per cent.";
+  "The MarketFlow WhatsApp workspace on a desktop monitor: Sarah Mitchell asks about the premium plan, the automation replies instantly with the plan, and the premium flow beside it runs from new lead through welcome message, a one-day wait and a follow-up to a qualified lead. Three states are called out at the edges of the screen: auto reply sent instantly, a scheduled one-day wait, and a follow-up template sent.";
 
 /**
  * One state of the flow, called out beside the hardware.
  *
- * The shell carries no width of its own — the caller sets it. Pinned around
- * the hardware the four have to be identical or they stop reading as a set,
- * and 160px is what the longest of them ("Lead qualified") needs at this size;
- * stacked into a grid they should simply fill their track instead. The icon
- * tile carries the colour, so the type stays the product's own ink on all four.
+ * All three are the same 152px, set by the caller rather than by the shell:
+ * cards riding the edges of one object have to match or they stop reading as a
+ * set, and pinned or wrapped they are the same three cards, so there is no
+ * width worth varying between the two. The width is also what sets the
+ * overlap, since each card is pushed out across its edge by half of itself —
+ * making one wider would push it further onto the screen.
  */
 function AnnotationCard({
   card,
@@ -61,42 +60,6 @@ function AnnotationCard({
 }
 
 /**
- * The reply-rate metric, kept deliberately smaller than the four states.
- *
- * It is the number the page's hero already leads with, repeated here so the
- * section connects back to it — but it is evidence, not a step of the flow, so
- * it is sized and stacked to be read last. Half a card wide, no icon tile, and
- * the arrow is the only thing in the composition that moves on hover.
- */
-function ReplyRateMetric({ className }: { className?: string }) {
-  return (
-    <span
-      className={cn(
-        "group/metric flex w-27.5 flex-col px-2.5 py-1.5",
-        CARD_SHELL,
-        ART_HOVER,
-        CARD_HOVER,
-        className,
-      )}
-    >
-      <span className="flex items-center gap-1">
-        <TrendingUp
-          className="size-3 shrink-0 text-primary transition-transform duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/metric:-translate-y-0.5 motion-reduce:transition-none"
-          strokeWidth={2.4}
-          aria-hidden
-        />
-        <span className="text-[13px] leading-none font-bold text-text-primary">
-          +38%
-        </span>
-      </span>
-      <span className="mt-1 block text-[10px] leading-none text-text-muted">
-        Reply rate
-      </span>
-    </span>
-  );
-}
-
-/**
  * The right half of the section: one monitor, annotated, lit from behind.
  *
  * Two atmospheric layers under it, both decorative — the workflow dot canvas
@@ -105,21 +68,31 @@ function ReplyRateMetric({ className }: { className?: string }) {
  *
  * The annotations are absolutely positioned against the monitor's own box, not
  * the column and not the section, which is the whole reason they stay glued to
- * the hardware while it scales. The vertical margins on that box are the room
- * they hang in, so nothing they do can widen the page.
+ * the hardware while it scales. Each one is anchored to the edge it belongs to
+ * (`left-0` or `right-0`) and then pushed back out across it by half its own
+ * width, so the overlap is half a card at every size without a single pixel
+ * offset anywhere. Heights are percentages of the box for the same reason: the
+ * monitor is a different size in every column it lands in, and a card pinned
+ * at `top-16` would sit in a different part of the screen at each one.
  *
- * Below `xl` the monitor shares its row and the bands it hangs things in close
- * up, so the same four states move to a two-column grid underneath — still
- * four cards reading the same four words, just stacked instead of scattered.
- * The metric does not follow them down: it is the one piece here the hero has
- * already said, and the section can lose it before it loses a flow state.
+ * That box must not clip — half of every card is outside it — so nothing in
+ * this file may take `overflow-hidden`. It is stated rather than left to the
+ * default on the wrapper that would do the damage. The only clip in the whole
+ * visual is on the glass itself, inside `WhatsAppWorkspaceMonitor`, where it
+ * is what gives the screen its rounded corners.
+ *
+ * Below `xl` there is no gutter left to straddle, so the three move to a
+ * centred wrap underneath: one row of three once about 500px is available,
+ * folding to two and then one on the way down. A wrap rather than a column
+ * count per breakpoint, because what decides it is the width the cards need,
+ * not the width of the phone.
  */
 export function AutomationVisual() {
   return (
     <div
       role="img"
       aria-label={LABEL}
-      className="group/art relative flex w-full flex-col items-center"
+      className="group/art relative flex w-full flex-col items-center justify-center"
     >
       <span
         aria-hidden
@@ -130,29 +103,27 @@ export function AutomationVisual() {
         className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-[118%] min-h-120 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(139,92,246,0.28)_0%,rgba(199,210,254,0.10)_42%,transparent_68%)]"
       />
 
-      {/* The monitor, and everything pinned to it */}
-      <div className="monitor-visualization relative mx-auto w-full max-w-165 xl:mt-24 xl:mb-16">
-        <WhatsAppWorkspaceMonitor className="animate-drift-monitor" />
+      {/* The monitor, and the three states riding its edges */}
+      <div className="monitor-visualization relative mx-auto w-full max-w-[650px] overflow-visible">
+        <WhatsAppWorkspaceMonitor className="animate-drift-monitor relative z-10" />
 
         {ANNOTATION_CARDS.map((card) => (
           <AnnotationCard
             key={card.title}
             card={card}
-            className={cn("absolute hidden w-40 xl:flex", card.pin, card.drift)}
+            className={cn(
+              "absolute z-20 hidden w-38 xl:flex",
+              card.pin,
+              card.drift,
+            )}
           />
         ))}
-
-        <ReplyRateMetric className="animate-drift-early absolute -top-8 -right-3 hidden xl:flex" />
       </div>
 
-      {/* The same four states, where the bands are too tight to pin them */}
-      <div className="mt-9 grid w-full max-w-132 grid-cols-1 gap-3 xsm:grid-cols-2 md:max-w-165 md:grid-cols-4 lg:max-w-132 lg:grid-cols-2 xl:hidden">
+      {/* The same three, where there is no gutter to straddle */}
+      <div className="mt-9 flex w-full flex-wrap justify-center gap-3 xl:hidden">
         {ANNOTATION_CARDS.map((card) => (
-          <AnnotationCard
-            key={card.title}
-            card={card}
-            className="w-full min-w-0"
-          />
+          <AnnotationCard key={card.title} card={card} className="w-38" />
         ))}
       </div>
     </div>
