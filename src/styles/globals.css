@@ -344,6 +344,100 @@
     );
 }
 
+/*
+ * The footer panel's ground: a mesh, not a gradient.
+ *
+ * Six layers, and the order is the whole trick — in CSS the first
+ * `background-image` paints on top, so this reads bottom-up: an indigo-to-navy
+ * ramp underneath, then the deep corner the navigation sits against, then a
+ * lavender lift off the floor, then violet through the middle, then light
+ * falling in from the top right, then the brand indigo in the top-left corner.
+ *
+ * Every layer is an *ellipse* sized in per cent (`120% 90% at 8% 0%`) rather
+ * than a `circle`. That is what keeps it from reading as a mesh of coloured
+ * discs: an ellipse wider than the box it paints has no visible curve inside
+ * the frame, so the stops melt into each other instead of terminating. The
+ * component adds two oversized blurred glows on top of this for the actual
+ * atmosphere; this is the colour underneath them.
+ *
+ * The navies are literals rather than tokens. They are one ramp belonging to
+ * one panel — `--color-dark` is the product's dark *surface* (a blue-slate),
+ * and borrowing it here would either pull the footer grey or drag every dark
+ * surface in the app toward indigo.
+ */
+@utility footer-mesh {
+  background-color: #11143a;
+  background-image:
+    /* Top-left: periwinkle. The cool light corner, lifted past the brand
+       indigo — the reference's upper left is nearly pastel. */
+    radial-gradient(
+      105% 320px at 0% -50px,
+      rgba(178, 189, 253, 0.38) 0%,
+      rgba(129, 140, 248, 0.28) 32%,
+      rgba(99, 102, 241, 0.12) 56%,
+      transparent 80%
+    ),
+    /* Top-right: light, arriving. Lavender rather than white, and its centre
+       is above the panel, so what lands inside is only the falloff. That is
+       the difference between light on a surface and a pale disc on one. */
+    radial-gradient(
+      85% 300px at 95% -70px,
+      rgba(237, 233, 254, 0.4) 0%,
+      rgba(214, 205, 253, 0.28) 28%,
+      rgba(196, 181, 253, 0.12) 52%,
+      transparent 78%
+    ),
+    /* Centre-left: violet, the saturated middle of the panel. */
+    radial-gradient(
+      95% 380px at 18% 120px,
+      rgba(124, 58, 237, 0.32) 0%,
+      rgba(91, 64, 225, 0.16) 46%,
+      transparent 80%
+    ),
+    /* A second, weaker indigo off to the right of it. Two unequal centres in
+       the middle band is what stops the whole thing reading as one axis. */
+    radial-gradient(
+      80% 310px at 72% 110px,
+      rgba(99, 102, 241, 0.2) 0%,
+      transparent 70%
+    ),
+    /* Bottom-left: one lavender lift, so the floor is not flat navy. */
+    radial-gradient(
+      80% 220px at 8% 100%,
+      rgba(196, 181, 253, 0.14) 0%,
+      transparent 60%
+    ),
+    /* The floor: deep across the whole bottom, deepest right of centre. */
+    radial-gradient(
+      150% 440px at 68% 108%,
+      rgba(9, 13, 40, 0.96) 0%,
+      rgba(14, 18, 52, 0.8) 40%,
+      transparent 82%
+    ),
+    /* The ramp everything above sits on. */
+    linear-gradient(
+      168deg,
+      #5b55f5 0%,
+      #4a3fd2 18%,
+      #2f2c72 44%,
+      #191d45 70%,
+      #0b102d 100%
+    );
+}
+
+/*
+ * Grain, at the threshold of visible.
+ *
+ * One `feTurbulence` tile as a data URI — CSS all the way down, no asset to
+ * ship or cache. It exists because a mesh this soft bands on an 8-bit display;
+ * three per cent of noise gives the ramp something to dither against. Anything
+ * you can actually see here is too much, so the opacity lives at the call site
+ * where it can be read next to everything else.
+ */
+@utility footer-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
 /* Container */
 .custom-container {
   @apply mx-auto max-sm:max-w-[90%] sm:max-w-135 md:max-w-180 lg:max-w-240 xl:max-w-285 2xl:max-w-300 3xl:max-w-330;
