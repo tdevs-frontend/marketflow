@@ -23,7 +23,7 @@ export default function LoginPage() {
         Don&apos;t have an account?{" "}
         <Link
           href={APP_ROUTES.register}
-          className="font-medium text-primary transition-colors hover:text-primary-dark"
+          className="link font-medium"
         >
           Create your account
         </Link>

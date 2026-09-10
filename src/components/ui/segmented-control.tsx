@@ -56,7 +56,7 @@ export function SegmentedControl<T extends string>({
               "rounded-[7px] font-medium whitespace-nowrap transition-colors focus-visible:shadow-focus focus-visible:outline-none",
               SIZES[size],
               selected
-                ? "bg-surface text-text-primary shadow-btn"
+                ? "bg-surface text-primary shadow-btn"
                 : "text-text-muted hover:text-text-primary",
             )}
           >

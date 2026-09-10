@@ -160,7 +160,11 @@
  *
  *   brand-gradient         a surface with text on it — CTAs, badges. Uses the
  *                          deeper interactive pair so white labels clear AA.
- *   brand-gradient-hover   that ramp one step deeper again, for hover.
+ *                          This is what `Button variant="primary"` paints, so
+ *                          every primary action in the product is this ramp.
+ *   brand-gradient-hover   that ramp one step deeper again, for hover. Both
+ *                          stops move, so hover stays indigo-to-violet rather
+ *                          than collapsing into one hue.
  *   brand-gradient-accent  the identity pair exactly as specified. Decorative
  *                          only: rules, dots, glows, the featured card edge.
  *   brand-gradient-text    the identity pair clipped to the glyphs, for one
@@ -183,7 +187,7 @@
   background-image: linear-gradient(
     135deg,
     var(--color-primary-dark),
-    var(--color-primary)
+    var(--color-secondary-dark)
   );
 }
 
@@ -482,7 +486,7 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    @apply bg-gray-200 rounded-full;
+    @apply rounded-full bg-border;
   }
 }
 

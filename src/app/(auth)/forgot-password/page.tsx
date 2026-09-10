@@ -28,7 +28,7 @@ export default function ForgotPasswordPage() {
       </form>
 
       <p className="text-center text-sm text-text-muted">
-        <Link href={APP_ROUTES.login} className="text-primary hover:underline">
+        <Link href={APP_ROUTES.login} className="link font-medium">
           Back to sign in
         </Link>
       </p>

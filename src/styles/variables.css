@@ -119,6 +119,15 @@
    * same brand.
    */
   --color-secondary: #7c3aed;
+  /*
+   * The violet one step deeper, and the second stop of the gradient's *hover*
+   * ramp. It exists because the hover state used to run `primary-dark` to
+   * `primary` — indigo to indigo — which threw the violet away exactly when
+   * the button was being pressed. Pairing it with `primary-dark` keeps the
+   * hover the same two-hue object as the resting state, only deeper. White
+   * clears AA on it at 7.0:1, comfortably past the resting pair.
+   */
+  --color-secondary-dark: #6d28d9;
 
   /*
    * Lavender — ink for a brand-gradient ground, where the brand ramp itself is
@@ -189,6 +198,17 @@
    */
   --color-chat-ground: #f7f5f2;
   --color-chat-outgoing: #dcf8e8;
+  /*
+   * WhatsApp's own wallpaper tan, for the in-product template preview.
+   *
+   * Deliberately not `chat-ground`. That one is the light thread ground the
+   * marketing mock-up sits on, where the panel has to read as part of a white
+   * page; this is the darker tan a real WhatsApp conversation is seen against,
+   * and the preview's whole job is to look like the thing the customer will
+   * actually receive. Two values because they answer two questions, named so
+   * the next person does not merge them.
+   */
+  --color-chat-wallpaper: #e8ddd3;
 
   /*
    * The other three channels,

@@ -41,7 +41,7 @@ const RIGHT_END = 60;
 /* Mirrors `--color-secondary` in `styles/variables.css`. Literal hex because a
    gradient stop is read by the renderer, not resolved as a cascaded value —
    the same reason `dashboard/charts/chart-theme.ts` keeps its own copies. */
-const LINK = "#7c3aed";
+const LINK = "var(--color-secondary)";
 
 function curve(fromX: number, y: number, toX: number) {
   const midX = (fromX + toX) / 2;

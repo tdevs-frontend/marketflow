@@ -8,14 +8,7 @@ import type {
 import { cn } from "@/lib/utils";
 
 export type ButtonVariant =
-  | "primary"
-  | "gradient"
-  | "dark"
-  | "secondary"
-  | "outline"
-  | "ghost"
-  | "danger"
-  | "inverse";
+  "primary" | "dark" | "secondary" | "outline" | "ghost" | "danger" | "inverse";
 export type ButtonSize = "sm" | "compact" | "md" | "lg" | "icon";
 
 /**
@@ -42,27 +35,35 @@ const BASE = [
  * begin with.
  */
 const VARIANTS: Record<ButtonVariant, string> = {
-  primary: [
-    "bg-primary text-white shadow-btn",
-    "hover:-translate-y-px hover:bg-primary-dark hover:shadow-btn-hover",
-    "active:translate-y-0 active:bg-primary-darker active:shadow-btn",
-  ].join(" "),
   /*
-   * The brand gradient as a button. Reserved for the page-level CTAs — the hero,
-   * the featured plan, the closing block — because a gradient on every button
-   * is the fastest way to make it stop meaning anything. In-product buttons
-   * stay `primary`, which is the same indigo, solid.
+   * The brand gradient, and the product's one primary action.
    *
-   * Hover shifts the whole ramp a step deeper rather than darkening one stop,
-   * so the gradient direction stays readable through the transition.
+   * This used to be solid indigo with a separate `gradient` variant beside it
+   * for page-level CTAs only — which meant the landing page's "Start Free" and
+   * the dashboard's "Add contact" were different colours while being the same
+   * kind of thing. One variant now, so the journey from a marketing CTA to a
+   * dialog's confirm button is one continuous brand.
+   *
+   * Hover moves *both* stops a step deeper rather than darkening one, so the
+   * gradient stays indigo-to-violet through the transition instead of
+   * collapsing into a single hue.
+   *
+   * Disabled drops the gradient entirely. Half-opacity indigo-violet still
+   * reads as the brand's loudest object, so it is swapped for the neutral
+   * surface and muted ink — `bg-none` is what removes the gradient, since a
+   * `background-image` sits above any `background-color` beneath it.
    */
-  gradient: [
+  primary: [
     "brand-gradient text-white shadow-btn",
     "hover:-translate-y-px hover:brand-gradient-hover hover:shadow-btn-hover",
     "active:translate-y-0 active:shadow-btn",
+    /* `opacity-100` countermands the shell's `disabled:opacity-50`: that rule
+       exists to mute a solid fill, and stacking it on an already-neutral
+       surface drove the label to 3:1. Colour alone says inactive here. */
+    "disabled:bg-none disabled:bg-surface-secondary disabled:text-text-muted disabled:opacity-100",
   ].join(" "),
   /*
-   * Solid dark. The neutral counterweight to `gradient`: on a pricing table or
+   * Solid dark. The neutral counterweight to `primary`: on a pricing table or
    * a feature comparison it lets one row keep the brand CTA while the rest read
    * as equally deliberate rather than as the runner-up.
    *

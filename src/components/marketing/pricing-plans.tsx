@@ -39,7 +39,6 @@ function BillingToggle({
           "transition-transform duration-200 ease-out motion-reduce:transition-none",
           value === "yearly" && "translate-x-full",
         )}
-        
       />
 
       {BILLING_OPTIONS.map((option) => {
@@ -159,7 +158,7 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
 
         <ButtonLink
           href={priced ? APP_ROUTES.register : APP_ROUTES.pricing}
-          variant={featured ? "gradient" : "dark"}
+          variant={featured ? "primary" : "dark"}
           size="md"
           className="mt-6 w-full"
         >

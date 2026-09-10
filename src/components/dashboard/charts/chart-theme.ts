@@ -4,6 +4,12 @@ import type { ApexOptions } from "apexcharts";
  * Mirrors the tokens in `styles/variables.css`, as literal hex: ApexCharts
  * reads these back to compute gradient stops and hover shades, which
  * `var(--color-…)` cannot satisfy. Keep both in step.
+ *
+ * A few values below have no token counterpart on purpose — the mid and light
+ * stops of the per-channel ramps (`#a5b4fc`, `#60a5fa`, `#c084fc`, `#e9d5ff`).
+ * They exist only to space a three-stop series apart inside one chart, nothing
+ * in the DOM can use them, and promoting them to tokens would add theme
+ * variables that only this file could ever read.
  */
 export const CHART_COLORS = {
   primary: "#4f46e5",

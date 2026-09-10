@@ -159,8 +159,10 @@ export function PlatformDot({
   return (
     <span
       aria-hidden
-      style={{ backgroundColor: theme.hex }}
-      className={cn("size-1.5 shrink-0 rounded-full", className)}
+      /* `swatch`, not an inline `theme.hex`: the theme already carries the
+         class for exactly this and the hex field exists only for the chart
+         library, which cannot read a custom property. */
+      className={cn("size-1.5 shrink-0 rounded-full", theme.swatch, className)}
     />
   );
 }

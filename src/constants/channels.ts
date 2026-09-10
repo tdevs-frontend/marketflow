@@ -114,6 +114,13 @@ export interface PlatformTheme {
    * literal class strings, so an interpolated one is never generated.
    */
   swatch: string;
+  /**
+   * The same colour as a literal, and the only reason a hex lives in this
+   * file: ApexCharts computes gradient stops and hover shades from the value
+   * it is given, which `var(--color-…)` cannot satisfy. Chart props only —
+   * anything in the DOM uses the class fields above. Keep in step with the
+   * `--color-<platform>` tokens.
+   */
   hex: string;
 }
 

@@ -115,8 +115,8 @@ export function HeroDashboard() {
         <svg viewBox="0 0 120 36" className="mt-2 h-8 w-28" role="presentation" aria-hidden>
           <defs>
             <linearGradient id="mf-hero-spark" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#6366f1" stopOpacity="0.28" />
-              <stop offset="100%" stopColor="#6366f1" stopOpacity="0" />
+              <stop offset="0%" stopColor="var(--color-brand-from)" stopOpacity="0.28" />
+              <stop offset="100%" stopColor="var(--color-brand-from)" stopOpacity="0" />
             </linearGradient>
           </defs>
           <path
@@ -126,12 +126,12 @@ export function HeroDashboard() {
           <path
             d="M2,30 L19,25 L36,27 L53,17 L70,20 L87,11 L104,8 L118,3"
             fill="none"
-            stroke="#6366f1"
+            stroke="var(--color-brand-from)"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          <circle cx="118" cy="3" r="3.5" fill="#4f46e5" stroke="#ffffff" strokeWidth="2" />
+          <circle cx="118" cy="3" r="3.5" fill="var(--color-primary)" stroke="var(--color-surface)" strokeWidth="2" />
         </svg>
       </div>
 

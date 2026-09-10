@@ -12,11 +12,11 @@ export function AuthBrandPanel() {
     <aside className="relative isolate hidden flex-col overflow-hidden border-r border-border bg-primary-subtle px-12 py-12 lg:flex xl:px-16">
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-40 -left-32 -z-10 size-120 rounded-full bg-[radial-gradient(closest-side,rgba(37,211,102,0.13),transparent)]"
+        className="pointer-events-none absolute -top-40 -left-32 -z-10 size-120 rounded-full bg-[radial-gradient(closest-side,rgba(99,102,241,0.13),transparent)]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-48 -bottom-40 -z-10 size-144 rounded-full bg-[radial-gradient(closest-side,rgba(18,140,126,0.12),transparent)]"
+        className="pointer-events-none absolute -right-48 -bottom-40 -z-10 size-144 rounded-full bg-[radial-gradient(closest-side,rgba(139,92,246,0.12),transparent)]"
       />
 
       {/* Dot field, masked so it fades before it reaches any edge. */}

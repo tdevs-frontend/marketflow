@@ -61,7 +61,7 @@ export function TemplatePreviewDialog({
       description={template ? template.name : undefined}
     >
       {template ? (
-        <div className="rounded-card bg-[#e8ddd3] p-4">
+        <div className="rounded-card bg-chat-wallpaper p-4">
           <div className="flex items-center gap-2.5 pb-3">
             <span className="grid size-8 place-items-center rounded-full bg-primary text-[11px] font-bold text-white">
               MF
