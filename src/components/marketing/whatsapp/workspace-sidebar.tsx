@@ -15,13 +15,13 @@ export function WorkspaceSidebar() {
   return (
     <div
       aria-hidden
-      className="flex w-8 shrink-0 flex-col items-center gap-1 border-r border-border bg-surface py-1.5 @[440px]:w-11 @[440px]:gap-1.5 @[440px]:py-2.5"
+      className="flex w-8 shrink-0 flex-col items-center gap-1 border-r border-border bg-surface py-1.5 @[440px]:w-11 @[440px]:gap-1.5 @[440px]:py-2.5 @[600px]:w-12 @[600px]:gap-2 @[600px]:py-3"
     >
       {WORKSPACE_NAV.map((item) => (
         <span
           key={item.label}
           className={cn(
-            "grid size-5 place-items-center rounded-[6px] @[440px]:size-7 @[440px]:rounded-[8px]",
+            "grid size-5 place-items-center rounded-md @[440px]:size-7 @[440px]:rounded-lg @[600px]:size-8",
             item.active
               ? "bg-primary-soft text-primary"
               : "text-text-muted/70",
@@ -30,11 +30,11 @@ export function WorkspaceSidebar() {
           {item.brand ? (
             <BrandIcon
               name={item.brand}
-              className="size-2.5 @[440px]:size-3.5"
+              className="size-2.5 @[440px]:size-3.5 @[600px]:size-4"
             />
           ) : (
             <item.icon
-              className="size-2.5 @[440px]:size-3.5"
+              className="size-2.5 @[440px]:size-3.5 @[600px]:size-4"
               strokeWidth={1.8}
             />
           )}

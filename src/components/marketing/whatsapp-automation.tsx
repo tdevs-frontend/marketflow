@@ -18,9 +18,9 @@ export function WhatsAppAutomation() {
       className="automation-ground relative isolate overflow-hidden py-25 lg:py-28"
     >
       <div className="custom-container">
-        <div className="grid items-center gap-14 md:grid-cols-12 md:gap-10 lg:gap-14 xl:gap-16">
+        <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-14 xl:gap-16">
           {/* Message */}
-          <div className="md:col-span-6 lg:col-span-5">
+          <div className="lg:col-span-5">
             <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/8 py-1.5 pr-4 pl-3 text-white backdrop-blur-md">
               <BrandIcon
                 name="whatsapp"
@@ -28,7 +28,6 @@ export function WhatsAppAutomation() {
               />
               WhatsApp-first automation
             </p>
-
             <h2
               id="whatsapp-automation-title"
               className="section-title mt-6 text-white text-balance"
@@ -66,7 +65,7 @@ export function WhatsAppAutomation() {
           </div>
 
           {/* The product, on a monitor */}
-          <div className="md:col-span-6 lg:col-span-7">
+          <div className="lg:col-span-7">
             <AutomationVisual />
           </div>
         </div>

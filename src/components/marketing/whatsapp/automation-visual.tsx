@@ -1,36 +1,38 @@
-import { TrendingUp, UserRoundCheck } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { ART_HOVER, CARD_HOVER, CARD_SHELL } from "./automation-data";
+import {
+  ANNOTATION_CARDS,
+  ART_HOVER,
+  CARD_HOVER,
+  CARD_SHELL,
+  type AnnotationCardData,
+} from "./automation-data";
 import { WhatsAppWorkspaceMonitor } from "./workspace-monitor";
 
 const LABEL =
-  "The MarketFlow WhatsApp workspace on a desktop monitor: Sarah Mitchell asks about the premium package, the automation replies instantly with the plan, and the premium flow beside it runs from new lead through welcome message, a one-day wait and a follow-up to a qualified lead.";
+  "The MarketFlow WhatsApp workspace on a desktop monitor: Sarah Mitchell asks about the premium package, the automation replies instantly with the plan, and the premium flow beside it runs from new lead through welcome message, a one-day wait and a follow-up to a qualified lead. Four states are called out around the screen: auto reply sent instantly, a scheduled one-day wait, a follow-up template sent, and the lead qualified and ready for sales, at a reply rate of plus 38 per cent.";
 
 /**
- * One small annotation pinned to the monitor.
+ * One state of the flow, called out beside the hardware.
  *
- * Two of these, and only two. The monitor is the visualisation now — the old
- * four-card ring around a phone made the hardware the frame for the cards
- * instead of the other way round.
+ * The shell carries no width of its own — the caller sets it. Pinned around
+ * the hardware the four have to be identical or they stop reading as a set,
+ * and 160px is what the longest of them ("Lead qualified") needs at this size;
+ * stacked into a grid they should simply fill their track instead. The icon
+ * tile carries the colour, so the type stays the product's own ink on all four.
  */
-function FloatingCard({
-  icon: Icon,
-  value,
-  label,
-  tone,
+function AnnotationCard({
+  card,
   className,
 }: {
-  icon: typeof TrendingUp;
-  value: string;
-  label: string;
-  tone: string;
+  card: AnnotationCardData;
   className?: string;
 }) {
   return (
     <span
       className={cn(
-        "flex items-center gap-2 px-2.5 py-2",
+        "flex items-center gap-2.5 px-3 py-2.5",
         CARD_SHELL,
         ART_HOVER,
         CARD_HOVER,
@@ -39,19 +41,19 @@ function FloatingCard({
     >
       <span
         className={cn(
-          "grid size-7 shrink-0 place-items-center rounded-[8px] 3xsm:size-8",
-          tone,
+          "grid size-9 shrink-0 place-items-center rounded-[10px]",
+          card.tile,
         )}
       >
-        <Icon className="size-4" strokeWidth={1.8} aria-hidden />
+        <card.icon className="size-4.5" strokeWidth={1.8} aria-hidden />
       </span>
 
       <span className="min-w-0">
-        <span className="block truncate text-[12px] leading-tight font-semibold text-text-primary 3xsm:text-[13px]">
-          {value}
+        <span className="block truncate text-[12.5px] leading-tight font-semibold text-text-primary">
+          {card.title}
         </span>
-        <span className="mt-0.5 block truncate text-[10px] leading-none text-text-muted 3xsm:text-[11px]">
-          {label}
+        <span className="mt-0.5 block truncate text-[10.5px] leading-none text-text-muted">
+          {card.detail}
         </span>
       </span>
     </span>
@@ -59,26 +61,65 @@ function FloatingCard({
 }
 
 /**
- * The right half of the section: one monitor, lit from behind.
+ * The reply-rate metric, kept deliberately smaller than the four states.
  *
- * Two atmospheric layers under it, both decorative: the workflow dot canvas
+ * It is the number the page's hero already leads with, repeated here so the
+ * section connects back to it — but it is evidence, not a step of the flow, so
+ * it is sized and stacked to be read last. Half a card wide, no icon tile, and
+ * the arrow is the only thing in the composition that moves on hover.
+ */
+function ReplyRateMetric({ className }: { className?: string }) {
+  return (
+    <span
+      className={cn(
+        "group/metric flex w-27.5 flex-col px-2.5 py-1.5",
+        CARD_SHELL,
+        ART_HOVER,
+        CARD_HOVER,
+        className,
+      )}
+    >
+      <span className="flex items-center gap-1">
+        <TrendingUp
+          className="size-3 shrink-0 text-primary transition-transform duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/metric:-translate-y-0.5 motion-reduce:transition-none"
+          strokeWidth={2.4}
+          aria-hidden
+        />
+        <span className="text-[13px] leading-none font-bold text-text-primary">
+          +38%
+        </span>
+      </span>
+      <span className="mt-1 block text-[10px] leading-none text-text-muted">
+        Reply rate
+      </span>
+    </span>
+  );
+}
+
+/**
+ * The right half of the section: one monitor, annotated, lit from behind.
+ *
+ * Two atmospheric layers under it, both decorative — the workflow dot canvas
  * the section has always used, and a violet bloom sized to the monitor so the
  * hardware sits in the section's light rather than on top of it.
  *
- * The two annotations hang off opposite corners rather than over the glass:
- * one above the top-right bezel, one alongside the stand. The screen is the
- * argument the section is making, so nothing is allowed to sit on top of it —
- * and the wrapper's own padding is what they occupy, which is why neither can
- * push the page sideways. Below `lg` they are gone entirely: the monitor is
- * sharing its row by then, and at that width an annotation is nearly half the
- * size of the thing it is annotating.
+ * The annotations are absolutely positioned against the monitor's own box, not
+ * the column and not the section, which is the whole reason they stay glued to
+ * the hardware while it scales. The vertical margins on that box are the room
+ * they hang in, so nothing they do can widen the page.
+ *
+ * Below `xl` the monitor shares its row and the bands it hangs things in close
+ * up, so the same four states move to a two-column grid underneath — still
+ * four cards reading the same four words, just stacked instead of scattered.
+ * The metric does not follow them down: it is the one piece here the hero has
+ * already said, and the section can lose it before it loses a flow state.
  */
 export function AutomationVisual() {
   return (
     <div
       role="img"
       aria-label={LABEL}
-      className="group/art relative flex w-full items-center justify-center"
+      className="group/art relative flex w-full flex-col items-center"
     >
       <span
         aria-hidden
@@ -89,23 +130,30 @@ export function AutomationVisual() {
         className="pointer-events-none absolute top-1/2 left-1/2 -z-10 size-[118%] min-h-120 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(139,92,246,0.28)_0%,rgba(199,210,254,0.10)_42%,transparent_68%)]"
       />
 
-      <div className="relative mx-auto w-full max-w-165 pb-5 lg:pt-9">
+      {/* The monitor, and everything pinned to it */}
+      <div className="monitor-visualization relative mx-auto w-full max-w-165 xl:mt-24 xl:mb-16">
         <WhatsAppWorkspaceMonitor className="animate-drift-monitor" />
 
-        <FloatingCard
-          icon={TrendingUp}
-          value="+38%"
-          label="Reply rate"
-          tone="bg-primary-soft text-primary"
-          className="animate-drift absolute top-0 right-4 hidden lg:flex xl:right-7"
-        />
-        <FloatingCard
-          icon={UserRoundCheck}
-          value="Lead qualified"
-          label="Ready for sales"
-          tone="bg-whatsapp-soft text-whatsapp"
-          className="animate-drift-late absolute bottom-0 left-4 hidden lg:flex xl:left-7"
-        />
+        {ANNOTATION_CARDS.map((card) => (
+          <AnnotationCard
+            key={card.title}
+            card={card}
+            className={cn("absolute hidden w-40 xl:flex", card.pin, card.drift)}
+          />
+        ))}
+
+        <ReplyRateMetric className="animate-drift-early absolute -top-8 -right-3 hidden xl:flex" />
+      </div>
+
+      {/* The same four states, where the bands are too tight to pin them */}
+      <div className="mt-9 grid w-full max-w-132 grid-cols-1 gap-3 xsm:grid-cols-2 md:max-w-165 md:grid-cols-4 lg:max-w-132 lg:grid-cols-2 xl:hidden">
+        {ANNOTATION_CARDS.map((card) => (
+          <AnnotationCard
+            key={card.title}
+            card={card}
+            className="w-full min-w-0"
+          />
+        ))}
       </div>
     </div>
   );

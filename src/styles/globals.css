@@ -621,9 +621,9 @@ body.mobile-menu-show {
   animation-delay: 3.4s;
 }
 
-/* The handset itself, on the same curve. Deliberately the slowest thing in the
-   composition — the subject drifts, the annotations bob around it. */
-.animate-drift-phone {
+/* A fifth phase, for the small metric badge riding above the monitor's
+   top-right corner. Slowest of the group, and the smallest object in it. */
+.animate-drift-early {
   animation: drift 6.8s ease-in-out infinite;
   animation-delay: 0.4s;
 }
@@ -676,7 +676,7 @@ body.mobile-menu-show {
   .animate-drift-slow,
   .animate-drift-mid,
   .animate-drift-late,
-  .animate-drift-phone,
+  .animate-drift-early,
   .animate-drift-monitor,
   .animate-soft-pulse {
     animation: none;

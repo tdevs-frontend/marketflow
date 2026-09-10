@@ -25,20 +25,20 @@ export function AutomationStep({
       {last ? null : (
         <span
           aria-hidden
-          className="absolute top-4 left-[7.5px] h-2 w-px bg-border-strong @[440px]:top-5 @[440px]:left-[9.5px] @[440px]:h-3"
+          className="absolute top-3.5 left-[6.5px] h-1.5 w-px bg-border-strong @[440px]:top-5 @[440px]:left-[9.5px] @[440px]:h-3 @[600px]:top-6 @[600px]:left-[11.5px] @[600px]:h-4"
         />
       )}
 
       <span
         className={cn(
-          "grid size-4 shrink-0 place-items-center rounded-[5px] @[440px]:size-5 @[440px]:rounded-md",
+          "grid size-3.5 shrink-0 place-items-center rounded-[5px] @[440px]:size-5 @[440px]:rounded-md @[600px]:size-6",
           step.tile,
         )}
       >
-        <step.icon className="size-2.5 @[440px]:size-3" strokeWidth={2} />
+        <step.icon className="size-2 @[440px]:size-3 @[600px]:size-3.5" strokeWidth={2} />
       </span>
 
-      <span className="truncate text-[7px] leading-none font-medium text-text-primary @[440px]:text-[9px]">
+      <span className="truncate text-[7px] leading-none font-medium text-text-primary @[440px]:text-[9px] @[600px]:text-[10.5px]">
         {step.label}
       </span>
     </li>
@@ -57,23 +57,23 @@ export function AutomationFlowPanel() {
   return (
     <div
       aria-hidden
-      className="flex w-26 shrink-0 flex-col border-l border-border bg-surface @[440px]:w-33 @[620px]:w-37.5"
+      className="flex w-26 shrink-0 flex-col border-l border-border bg-surface @[440px]:w-33 @[620px]:w-41"
     >
       {/* Status */}
-      <div className="border-b border-border px-2 py-2 @[440px]:px-2.5 @[440px]:py-2.5">
+      <div className="border-b border-border px-2 py-1.5 @[440px]:px-2.5 @[440px]:py-2.5">
         <span className="flex items-center gap-1">
           <span className="animate-soft-pulse size-1.5 shrink-0 rounded-full bg-whatsapp-brand" />
-          <span className="truncate text-[8px] leading-none font-bold tracking-tight text-text-primary @[440px]:text-[9.5px]">
+          <span className="truncate text-[8px] leading-none font-bold tracking-tight text-text-primary @[440px]:text-[9.5px] @[600px]:text-[11px]">
             Automation Active
           </span>
         </span>
-        <span className="mt-1 block truncate text-[7px] leading-none text-text-muted @[440px]:text-[8px]">
+        <span className="mt-1 block truncate text-[7px] leading-none text-text-muted @[440px]:text-[8px] @[600px]:text-[9.5px]">
           Premium flow
         </span>
       </div>
 
       {/* The flow */}
-      <ol className="flex flex-col gap-2 px-2 py-2.5 @[440px]:gap-3 @[440px]:px-2.5 @[440px]:py-3">
+      <ol className="flex flex-col gap-1.5 px-2 py-1.5 @[440px]:gap-3 @[440px]:px-2.5 @[440px]:py-3">
         {FLOW_STEPS.map((step, index) => (
           <AutomationStep
             key={step.label}
@@ -90,10 +90,10 @@ export function AutomationFlowPanel() {
             key={metric.label}
             className="flex items-baseline justify-between gap-1"
           >
-            <span className="truncate text-[7px] leading-none text-text-muted @[440px]:text-[8px]">
+            <span className="truncate text-[7px] leading-none text-text-muted @[440px]:text-[8px] @[600px]:text-[9px]">
               {metric.label}
             </span>
-            <span className="text-[8px] leading-none font-bold text-text-primary @[440px]:text-[9px]">
+            <span className="text-[8px] leading-none font-bold text-text-primary @[440px]:text-[9px] @[600px]:text-[10px]">
               {metric.value}
             </span>
           </span>

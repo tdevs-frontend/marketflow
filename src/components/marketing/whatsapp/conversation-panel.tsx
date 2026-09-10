@@ -23,7 +23,7 @@ export function ConversationList() {
       className="hidden w-30.5 shrink-0 flex-col border-r border-border bg-surface @[520px]:flex @[620px]:w-35"
     >
       <div className="flex items-center justify-between px-2 pt-2.5 pb-1.5">
-        <span className="text-[9px] leading-none font-bold tracking-tight text-text-primary">
+        <span className="text-[9px] leading-none font-bold tracking-tight text-text-primary @[600px]:text-[10.5px]">
           Conversations
         </span>
         <span className="rounded-full bg-surface-secondary px-1 py-px text-[7px] leading-none font-semibold text-text-muted">
@@ -52,10 +52,10 @@ export function ConversationList() {
             </span>
 
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-[8px] leading-tight font-semibold text-text-primary">
+              <span className="block truncate text-[8px] leading-tight font-semibold text-text-primary @[600px]:text-[9.5px]">
                 {thread.name}
               </span>
-              <span className="block truncate text-[7px] leading-tight text-text-muted">
+              <span className="block truncate text-[7px] leading-tight text-text-muted @[600px]:text-[8.5px]">
                 {thread.preview}
               </span>
             </span>
@@ -85,6 +85,15 @@ export function ConversationList() {
  * before reading a word of it. Everything around them is the product: a SaaS
  * header above, a composer below, and the automated reply labelled with what
  * sent it, which is the difference between this and a WhatsApp screenshot.
+ *
+ * The thread clips rather than spills. Its height is whatever a 16:10 screen
+ * has left after the header and the composer, and on a phone-width column that
+ * is less than the two bubbles need; `justify-end` plus `overflow-hidden` runs
+ * the excess off the top of the oldest bubble, which is what a scrolled chat
+ * looks like — without the clip it overflowed onto the header instead. Three
+ * rows step out ahead of that to keep the clip rare: the day divider, the
+ * label naming the automation, then the attachment. The two messages
+ * themselves never go, in either direction.
  */
 export function ConversationPanel() {
   return (
@@ -92,17 +101,17 @@ export function ConversationPanel() {
       {/* Header */}
       <div className="flex shrink-0 items-center gap-1.5 border-b border-border bg-surface px-2 py-1.5 @[440px]:gap-2 @[440px]:px-2.5 @[440px]:py-2">
         <span className="relative shrink-0">
-          <span className="grid size-5 place-items-center rounded-full bg-whatsapp-soft text-[7px] leading-none font-bold text-whatsapp-dark @[440px]:size-6 @[440px]:text-[8px]">
+          <span className="grid size-5 place-items-center rounded-full bg-whatsapp-soft text-[7px] leading-none font-bold text-whatsapp-dark @[440px]:size-6 @[440px]:text-[8px] @[600px]:size-7 @[600px]:text-[9px]">
             {CONVERSATION.initials}
           </span>
           <span className="absolute -right-px -bottom-px size-1.5 rounded-full bg-whatsapp-brand ring-2 ring-surface @[440px]:size-2" />
         </span>
 
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-[9px] leading-tight font-bold tracking-tight text-text-primary @[440px]:text-[10px]">
+          <span className="block truncate text-[9px] leading-tight font-bold tracking-tight text-text-primary @[440px]:text-[10px] @[600px]:text-[12px]">
             {CONVERSATION.name}
           </span>
-          <span className="flex items-center gap-1 text-[7px] leading-tight font-medium text-whatsapp @[440px]:text-[8px]">
+          <span className="flex items-center gap-1 text-[7px] leading-tight font-medium text-whatsapp @[440px]:text-[8px] @[600px]:text-[9.5px]">
             <span className="size-1 rounded-full bg-whatsapp-brand" />
             {CONVERSATION.presence}
           </span>
@@ -112,14 +121,14 @@ export function ConversationPanel() {
       </div>
 
       {/* Thread */}
-      <div className="flex min-h-0 flex-1 flex-col justify-end gap-1 px-2 pt-2 pb-1.5 @[440px]:gap-1.5 @[440px]:px-3">
-        <span className="mx-auto mb-0.5 rounded-full bg-black/5 px-1.5 py-0.5 text-[6px] leading-none font-semibold tracking-[0.08em] text-text-muted uppercase @[440px]:text-[7px]">
+      <div className="flex min-h-0 flex-1 flex-col justify-end gap-1 overflow-hidden px-2 pt-2 pb-1.5 @[440px]:gap-1.5 @[440px]:px-3">
+        <span className="mx-auto mb-0.5 hidden rounded-full bg-black/5 px-1.5 py-0.5 text-[6px] leading-none font-semibold tracking-[0.08em] text-text-muted uppercase @[440px]:block @[440px]:text-[7px]">
           Today
         </span>
 
         {/* Inbound */}
         <span className="max-w-[88%] self-start rounded-[9px] rounded-bl-[3px] bg-surface px-2 py-1 shadow-[0_1px_1px_rgba(15,23,42,0.06)]">
-          <span className="block text-[8px] leading-normal text-text-primary @[440px]:text-[9.5px]">
+          <span className="block text-[8px] leading-normal text-text-primary @[440px]:text-[9.5px] @[600px]:text-[11px]">
             {CONVERSATION.inbound}
           </span>
           <span className="mt-px block text-right text-[6px] leading-none text-text-muted">
@@ -128,14 +137,14 @@ export function ConversationPanel() {
         </span>
 
         {/* Who is about to answer — the automation, named. */}
-        <span className="flex items-center gap-1 self-end pr-0.5 text-[6px] leading-none font-semibold text-primary @[440px]:text-[7px]">
+        <span className="hidden items-center gap-1 self-end pr-0.5 text-[6px] leading-none font-semibold text-primary @[380px]:flex @[440px]:text-[7px] @[600px]:text-[8.5px]">
           <Sparkles className="size-2 @[440px]:size-2.5" strokeWidth={2.2} />
           {CONVERSATION.sender}
         </span>
 
         {/* The automated reply */}
         <span className="max-w-[90%] self-end rounded-[9px] rounded-br-[3px] bg-chat-outgoing px-2 py-1 shadow-[0_1px_1px_rgba(15,23,42,0.06)]">
-          <span className="block text-[8px] leading-normal text-text-primary @[440px]:text-[9.5px]">
+          <span className="block text-[8px] leading-normal text-text-primary @[440px]:text-[9.5px] @[600px]:text-[11px]">
             {CONVERSATION.reply}
           </span>
           <span className="mt-px flex items-center justify-end gap-1 text-[6px] leading-none text-text-muted">
@@ -145,15 +154,15 @@ export function ConversationPanel() {
         </span>
 
         {/* What that reply attached. */}
-        <span className="flex w-[90%] items-center gap-1.5 self-end rounded-[9px] rounded-br-[3px] border border-border bg-surface p-1 shadow-[0_1px_1px_rgba(15,23,42,0.06)]">
+        <span className="hidden w-[90%] items-center gap-1.5 self-end rounded-[9px] rounded-br-[3px] border border-border bg-surface p-1 shadow-[0_1px_1px_rgba(15,23,42,0.06)] @[400px]:flex">
           <span className="grid size-5 shrink-0 place-items-center rounded-md bg-primary-soft text-primary @[440px]:size-6">
             <Sparkles className="size-2.5 @[440px]:size-3" strokeWidth={1.8} />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-[8px] leading-tight font-semibold text-text-primary @[440px]:text-[9px]">
+            <span className="block truncate text-[8px] leading-tight font-semibold text-text-primary @[440px]:text-[9px] @[600px]:text-[10.5px]">
               {CONVERSATION.attachment.title}
             </span>
-            <span className="mt-px flex items-center gap-px text-[7px] leading-none font-medium text-primary @[440px]:text-[8px]">
+            <span className="mt-px flex items-center gap-px text-[7px] leading-none font-medium text-primary @[440px]:text-[8px] @[600px]:text-[9.5px]">
               {CONVERSATION.attachment.action}
               <ChevronRight className="size-2" strokeWidth={2.5} />
             </span>
@@ -163,11 +172,11 @@ export function ConversationPanel() {
 
       {/* Composer */}
       <div className="flex shrink-0 items-center gap-1.5 border-t border-border bg-surface px-2 py-1.5">
-        <span className="flex-1 truncate rounded-full bg-surface-secondary px-2 py-1 text-[7px] leading-none text-text-muted @[440px]:text-[8px]">
+        <span className="flex-1 truncate rounded-full bg-surface-secondary px-2 py-1 text-[7px] leading-none text-text-muted @[440px]:text-[8px] @[600px]:text-[9.5px]">
           Type a message
         </span>
-        <span className="grid size-4 shrink-0 place-items-center rounded-full bg-whatsapp text-white @[440px]:size-5">
-          <Send className="size-2 @[440px]:size-2.5" strokeWidth={2.2} />
+        <span className="grid size-4 shrink-0 place-items-center rounded-full bg-whatsapp text-white @[440px]:size-5 @[600px]:size-6">
+          <Send className="size-2 @[440px]:size-2.5 @[600px]:size-3" strokeWidth={2.2} />
         </span>
       </div>
     </div>
