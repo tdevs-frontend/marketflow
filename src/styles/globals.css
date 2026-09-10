@@ -348,17 +348,28 @@
  * The footer panel's ground: a mesh, not a gradient.
  *
  * Six layers, and the order is the whole trick — in CSS the first
- * `background-image` paints on top, so this reads bottom-up: an indigo-to-navy
- * ramp underneath, then the deep corner the navigation sits against, then a
- * lavender lift off the floor, then violet through the middle, then light
- * falling in from the top right, then the brand indigo in the top-left corner.
+ * `background-image` paints on top, so this reads bottom-up: a 135° indigo-to
+ * navy ramp underneath, then the deep navy corner at the lower right, then a
+ * lavender lift off the floor at the lower left, then deep indigo through the
+ * centre, then pale light in from the top right, then blue-violet in the
+ * top-left corner. That is the reference's distribution, corner by corner.
  *
- * Every layer is an *ellipse* sized in per cent (`120% 90% at 8% 0%`) rather
- * than a `circle`. That is what keeps it from reading as a mesh of coloured
- * discs: an ellipse wider than the box it paints has no visible curve inside
- * the frame, so the stops melt into each other instead of terminating. The
- * component adds two oversized blurred glows on top of this for the actual
- * atmosphere; this is the colour underneath them.
+ * Two rules make it read as atmosphere rather than as six coloured discs:
+ *
+ * Every layer is an *ellipse* with an explicit size, never a `circle`. An
+ * ellipse far wider than the box it paints has no visible curve inside the
+ * frame, so its stops melt instead of terminating in an arc.
+ *
+ * And every vertical radius is in **pixels** while the horizontal stays in per
+ * cent. That asymmetry is deliberate: this panel is around 840px tall on a
+ * desktop and over 1500px on a phone, so a layer sized `65%` would put its
+ * falloff in a completely different place at each width — and on the phone the
+ * bright top would reach the link columns. Anchored in pixels, the light
+ * occupies the same first ~400px everywhere, which is what lets one set of
+ * text colours clear AA at every viewport.
+ *
+ * The component layers two oversized blurred glows and a scrim on top of this;
+ * see `FooterGround`. This is only the colour underneath them.
  *
  * The navies are literals rather than tokens. They are one ramp belonging to
  * one panel — `--color-dark` is the product's dark *surface* (a blue-slate),
@@ -366,61 +377,53 @@
  * surface in the app toward indigo.
  */
 @utility footer-mesh {
-  background-color: #11143a;
+  background-color: #11163d;
   background-image:
-    /* Top-left: periwinkle. The cool light corner, lifted past the brand
-       indigo — the reference's upper left is nearly pastel. */
+    /* Top-left: blue-violet, the reference's coolest bright corner. */
     radial-gradient(
-      105% 320px at 0% -50px,
-      rgba(178, 189, 253, 0.38) 0%,
-      rgba(129, 140, 248, 0.28) 32%,
-      rgba(99, 102, 241, 0.12) 56%,
-      transparent 80%
+      100% 400px at 4% -60px,
+      rgba(91, 85, 245, 0.85) 0%,
+      rgba(91, 85, 245, 0.42) 26%,
+      rgba(79, 70, 229, 0.16) 48%,
+      transparent 76%
     ),
-    /* Top-right: light, arriving. Lavender rather than white, and its centre
-       is above the panel, so what lands inside is only the falloff. That is
-       the difference between light on a surface and a pale disc on one. */
+    /* Top-right: the pale light. Its centre sits above the panel so only the
+       falloff lands inside — the blurred glow in the component does the rest. */
     radial-gradient(
-      85% 300px at 95% -70px,
-      rgba(237, 233, 254, 0.4) 0%,
-      rgba(214, 205, 253, 0.28) 28%,
-      rgba(196, 181, 253, 0.12) 52%,
-      transparent 78%
-    ),
-    /* Centre-left: violet, the saturated middle of the panel. */
-    radial-gradient(
-      95% 380px at 18% 120px,
-      rgba(124, 58, 237, 0.32) 0%,
-      rgba(91, 64, 225, 0.16) 46%,
-      transparent 80%
-    ),
-    /* A second, weaker indigo off to the right of it. Two unequal centres in
-       the middle band is what stops the whole thing reading as one axis. */
-    radial-gradient(
-      80% 310px at 72% 110px,
-      rgba(99, 102, 241, 0.2) 0%,
+      82% 360px at 90% -110px,
+      rgba(255, 255, 255, 0.6) 0%,
+      rgba(237, 233, 254, 0.38) 22%,
+      rgba(196, 181, 253, 0.16) 42%,
       transparent 70%
     ),
-    /* Bottom-left: one lavender lift, so the floor is not flat navy. */
+    /* Centre: deep indigo, holding the middle of the panel together. */
     radial-gradient(
-      80% 220px at 8% 100%,
-      rgba(196, 181, 253, 0.14) 0%,
+      115% 540px at 52% 260px,
+      rgba(55, 48, 163, 0.62) 0%,
+      rgba(49, 46, 129, 0.34) 38%,
+      transparent 74%
+    ),
+    /* Bottom-left: one periwinkle lift, so the floor is not flat navy. */
+    radial-gradient(
+      72% 280px at 12% 102%,
+      rgba(224, 231, 255, 0.16) 0%,
+      rgba(196, 181, 253, 0.08) 34%,
       transparent 60%
     ),
-    /* The floor: deep across the whole bottom, deepest right of centre. */
+    /* Bottom-right: the deepest corner, and the contrast the links need. */
     radial-gradient(
-      150% 440px at 68% 108%,
-      rgba(9, 13, 40, 0.96) 0%,
-      rgba(14, 18, 52, 0.8) 40%,
-      transparent 82%
+      125% 480px at 86% 106%,
+      rgba(11, 16, 45, 0.97) 0%,
+      rgba(15, 23, 65, 0.82) 44%,
+      transparent 80%
     ),
     /* The ramp everything above sits on. */
     linear-gradient(
-      168deg,
+      135deg,
       #5b55f5 0%,
-      #4a3fd2 18%,
-      #2f2c72 44%,
-      #191d45 70%,
+      #4f46e5 24%,
+      #312e81 55%,
+      #11163d 78%,
       #0b102d 100%
     );
 }
