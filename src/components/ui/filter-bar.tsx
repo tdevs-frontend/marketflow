@@ -36,8 +36,14 @@ export function FilterBar({
    * toggle, anything that is an action rather than a filter.
    */
   trailing?: ReactNode;
-  /** The `Select` controls. */
-  children: ReactNode;
+  /**
+   * The `Select` controls.
+   *
+   * Optional, because a page can legitimately have search and nothing else —
+   * Tags is one. With none, the collapsed "Filters" button and its sheet are
+   * suppressed too: a button that opens an empty panel is worse than no button.
+   */
+  children?: ReactNode;
   className?: string;
 }) {
   const [openSheet, setOpenSheet] = useState(false);
@@ -60,24 +66,28 @@ export function FilterBar({
           />
         </div>
 
-        <div className="hidden items-center gap-2.5 lg:flex">{children}</div>
+        {children ? (
+          <div className="hidden items-center gap-2.5 lg:flex">{children}</div>
+        ) : null}
 
-        <Button
-          type="button"
-          variant="outline"
-          size="compact"
-          onClick={() => setOpenSheet((value) => !value)}
-          aria-expanded={openSheet}
-          className="lg:hidden"
-        >
-          <SlidersHorizontal aria-hidden />
-          Filters
-          {activeCount > 0 ? (
-            <span className="grid size-4.5 place-items-center rounded-full bg-primary text-[10px] font-bold text-white">
-              {activeCount}
-            </span>
-          ) : null}
-        </Button>
+        {children ? (
+          <Button
+            type="button"
+            variant="outline"
+            size="compact"
+            onClick={() => setOpenSheet((value) => !value)}
+            aria-expanded={openSheet}
+            className="lg:hidden"
+          >
+            <SlidersHorizontal aria-hidden />
+            Filters
+            {activeCount > 0 ? (
+              <span className="grid size-4.5 place-items-center rounded-full bg-primary text-[10px] font-bold text-white">
+                {activeCount}
+              </span>
+            ) : null}
+          </Button>
+        ) : null}
 
         {activeCount > 0 && onReset ? (
           <Button
@@ -99,7 +109,7 @@ export function FilterBar({
         ) : null}
       </div>
 
-      {openSheet ? (
+      {openSheet && children ? (
         <div className="grid gap-2.5 rounded-panel border border-border bg-surface-secondary p-3 sm:grid-cols-2 lg:hidden">
           {children}
           {activeCount > 0 && onReset ? (

@@ -1,25 +1,18 @@
 import type { Metadata } from "next";
 
-import { PageHeader } from "@/components/layout/page-header";
-import { Button } from "@/components/ui/button";
-import { EmptyState } from "@/components/ui/empty-state";
+import { ContactsWorkspace } from "@/components/customers";
 
 export const metadata: Metadata = { title: "Contacts" };
 
+/**
+ * The master customer database, and the page every other Customers route
+ * refers back to.
+ *
+ * The workspace renders its own `PageHeader`, because both header actions open
+ * dialogs it owns — the same shape `catalog-workspace` and the WhatsApp
+ * workspaces already use. Splitting them would put the button here and its
+ * state one component away.
+ */
 export default function ContactsPage() {
-  return (
-    <>
-      <PageHeader
-        title="Contacts"
-        description="Every person in your workspace, with consent tracked per channel."
-        action={<Button>Add contact</Button>}
-      />
-
-      <EmptyState
-        title="No contacts yet"
-        description="Import a CSV or add contacts one at a time to start building your audience."
-        action={<Button size="sm">Add contact</Button>}
-      />
-    </>
-  );
+  return <ContactsWorkspace />;
 }
