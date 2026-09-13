@@ -41,7 +41,7 @@ const isActive = (pathname: string, href: string) =>
 /* -------------------------------------------------------------------------- */
 
 const ROW =
-  "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:shadow-focus";
+  "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-[15px] font-medium transition-colors focus-visible:outline-none focus-visible:shadow-focus";
 
 /* Brand ramp tokens, not opacity mixes — the ramp already has the tint steps. */
 const ROW_ACTIVE = "bg-primary text-white";

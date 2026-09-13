@@ -132,11 +132,13 @@ export const dashboardNav: NavSection[] = [
         items: [
           { title: "Calendar", href: "/dashboard/marketing/social/calendar" },
           { title: "Posts", href: "/dashboard/marketing/social/posts" },
-          { title: "Media Library", href: "/dashboard/marketing/social/media" },
           { title: "Accounts", href: "/dashboard/marketing/social/accounts" },
           { title: "Analytics", href: "/dashboard/marketing/social/analytics" },
         ],
       },
+      /* Promoted out of the old Content group: every channel draws on it, so
+         it belongs beside the channels rather than inside Social Planner. */
+      { title: "Media Library", href: "/dashboard/marketing/social/media", icon: "image" },
       { title: "Audience Segments", href: "/dashboard/marketing/segments", icon: "layers" },
     ],
   },
@@ -167,15 +169,6 @@ export const dashboardNav: NavSection[] = [
       { title: "Conversion Funnel", href: "/dashboard/conversion-funnel", icon: "funnel" },
       { title: "Forms", href: "/dashboard/forms", icon: "list-checks" },
       { title: "Landing Pages", href: "/dashboard/landing-pages", icon: "globe" },
-    ],
-  },
-  {
-    title: "Content",
-    items: [
-      { title: "Content Library", href: "/dashboard/content", icon: "library" },
-      { title: "Message Templates", href: "/dashboard/templates", icon: "file-text" },
-      { title: "Email Templates", href: "/dashboard/templates/email", icon: "mail-open" },
-      { title: "Media Library", href: "/dashboard/media", icon: "image" },
     ],
   },
   {
