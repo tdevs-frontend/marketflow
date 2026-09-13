@@ -45,16 +45,25 @@ const ROW =
 
 /* Brand ramp tokens, not opacity mixes — the ramp already has the tint steps. */
 const ROW_ACTIVE = "bg-primary text-white";
+/*
+ * Top-level rows take the primary ink rather than the secondary.
+ *
+ * The colour lives here and not in `ROW` on purpose: `ROW` is shared with
+ * `ROW_ACTIVE`, and `cn()` is a plain join, so a colour in the shell would race
+ * `text-white` in the stylesheet rather than losing to it cleanly. Keeping
+ * `ROW` to geometry means each state names its own ink and nothing collides.
+ */
 const ROW_IDLE =
-  "text-text-secondary hover:bg-primary-soft hover:text-primary-dark";
+  "text-text-primary hover:bg-primary-soft hover:text-primary-dark";
 /** A collapsed parent holding the active page: tinted, not filled. */
 const ROW_WITHIN = "bg-primary-soft text-primary-dark";
 
 const SUB_ROW =
   "flex items-center rounded-lg px-3 py-1.5 text-[14px] font-medium transition-colors focus-visible:outline-none focus-visible:shadow-focus";
 const SUB_ACTIVE = "bg-primary-soft text-primary-dark";
-/* Sub-rows hover on the subtler tint, so the indent reads as a level down. */
-const SUB_IDLE = "text-text-muted hover:bg-primary-subtle hover:text-primary";
+/* Sub-rows hover on the same tint the current page carries, so hovering a row
+   previews exactly what picking it will look like. */
+const SUB_IDLE = "text-text-muted hover:bg-primary-soft hover:text-primary-dark";
 
 /* -------------------------------------------------------------------------- */
 /* Items                                                                      */
@@ -207,7 +216,7 @@ export function DashboardSidebar() {
 
         <nav
           aria-label="Dashboard"
-          className="custom-scrollbar flex-1 space-y-6 overflow-y-auto px-3 py-5"
+          className="no-scrollbar flex-1 space-y-6 overflow-y-auto px-3 py-5"
         >
           {dashboardNav.map((section) => (
             <div key={section.title}>
