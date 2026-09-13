@@ -95,7 +95,7 @@ export function FilterBar({
             <SlidersHorizontal aria-hidden />
             Filters
             {activeCount > 0 ? (
-              <span className="grid size-4.5 place-items-center rounded-full bg-primary text-[10px] font-bold text-white">
+              <span className="grid size-4.5 place-items-center rounded-full bg-primary text-xs font-bold text-white">
                 {activeCount}
               </span>
             ) : null}

@@ -112,7 +112,7 @@ export function RecentOrders({ className }: { className?: string }) {
               </Badge>
             </div>
 
-            <p className="mt-1 flex items-center gap-1.5 text-[11px] text-text-muted">
+            <p className="mt-1 flex items-center gap-1.5 text-xs text-text-muted">
               <span className="font-medium tabular-nums">{order.id}</span>
               <span aria-hidden>·</span>
               {order.time}

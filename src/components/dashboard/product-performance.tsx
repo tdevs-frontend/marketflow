@@ -43,7 +43,7 @@ function ProductRow({ product, rank }: { product: Product; rank: number }) {
     <li className="flex items-center gap-3 py-2.5">
       <span className="relative grid size-9 shrink-0 place-items-center rounded-panel bg-primary-soft text-primary">
         <Package className="size-4" aria-hidden />
-        <span className="absolute -top-1 -right-1 grid size-4 place-items-center rounded-full bg-surface text-[9px] font-bold text-text-muted ring-1 ring-border">
+        <span className="absolute -top-1 -right-1 grid size-4 place-items-center rounded-full bg-surface text-xs font-bold text-text-muted ring-1 ring-border">
           {rank}
         </span>
       </span>

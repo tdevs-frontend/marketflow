@@ -75,7 +75,7 @@ export function ActivityTable({
                     <span className="block text-sm font-medium text-text-primary tabular-nums">
                       {timeOf(row.at)}
                     </span>
-                    <span className="block text-[11px] text-text-muted">
+                    <span className="block text-xs text-text-muted">
                       {formatRelativeTime(row.at)}
                     </span>
                   </button>
@@ -117,7 +117,7 @@ export function ActivityTable({
                     {row.event}
                   </span>
                   {channel ? (
-                    <span className={cn("text-[11px] font-medium", channel.text)}>
+                    <span className={cn("text-xs font-medium", channel.text)}>
                       {channel.label}
                     </span>
                   ) : null}
@@ -163,7 +163,7 @@ export function ActivityTable({
                 <span className="min-w-0 flex-1 truncate text-xs text-text-secondary">
                   {row.event}
                 </span>
-                <span className="text-[11px] text-text-muted tabular-nums">
+                <span className="text-xs text-text-muted tabular-nums">
                   {timeOf(row.at)} · {formatDuration(row.durationMs)}
                 </span>
               </div>

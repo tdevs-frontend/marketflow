@@ -404,7 +404,7 @@ export function ContactsWorkspace() {
                               <span className="block truncate font-medium text-text-primary">
                                 {contactName(contact)}
                               </span>
-                              <span className="block truncate text-[11px] text-text-muted">
+                              <span className="block truncate text-xs text-text-muted">
                                 {contact.email ?? contact.phone}
                               </span>
                             </span>
@@ -429,7 +429,7 @@ export function ContactsWorkspace() {
                               </li>
                             ))}
                             {contact.tags.length > 2 ? (
-                              <li className="text-[11px] text-text-muted">
+                              <li className="text-xs text-text-muted">
                                 +{contact.tags.length - 2}
                               </li>
                             ) : null}
@@ -511,7 +511,7 @@ export function ContactsWorkspace() {
                         </Badge>
                       ))}
                     </div>
-                    <span className="text-[11px] text-text-muted">
+                    <span className="text-xs text-text-muted">
                       {formatRelativeTime(contact.lastActivityAt)}
                     </span>
                   </div>

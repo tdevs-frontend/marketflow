@@ -58,7 +58,7 @@ export function ActivityTimeline({
                 </p>
               ) : null}
 
-              <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-text-muted">
+              <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-text-muted">
                 <time dateTime={entry.at} title={formatDateTime(entry.at)}>
                   {formatRelativeTime(entry.at)}
                 </time>
@@ -99,7 +99,7 @@ export function DrawerSection({
   return (
     <section className={cn("border-t border-border pt-4", className)}>
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+        <h3 className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
           {title}
         </h3>
         {action}
@@ -121,7 +121,7 @@ export function DrawerFact({
 }) {
   return (
     <div className="min-w-0">
-      <p className="text-[11px] text-text-muted">{label}</p>
+      <p className="text-xs text-text-muted">{label}</p>
       <p
         className={cn(
           "mt-0.5 truncate text-[13px]",

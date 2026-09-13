@@ -185,7 +185,7 @@ export function RuleGroupEditor({
             {/* The connective is a label, not a control: it belongs to the
                 group, and a per-row "and/or" is how mixed precedence becomes
                 unreadable. */}
-            <p className="text-[10px] font-bold tracking-[0.06em] text-text-muted uppercase">
+            <p className="text-xs font-bold tracking-[0.06em] text-text-muted uppercase">
               {index === 0 ? "Where" : rule.match === "all" ? "And" : "Or"}
             </p>
 
@@ -363,7 +363,7 @@ export function AudiencePreview({
           of {formatNumber(total)} contacts
         </span>
       </p>
-      <p className="mt-1.5 text-[11px] text-text-secondary">
+      <p className="mt-1.5 text-xs text-text-secondary">
         {type === "static"
           ? "A static segment keeps the members it was built with. Nobody is added or removed as they change."
           : conditions === 0

@@ -41,7 +41,7 @@ function StepPayload({ step }: { step: WorkflowRunStep }) {
 
   return (
     <details className="group mt-2">
-      <summary className="inline-flex cursor-pointer list-none items-center gap-1 rounded-btn text-[11px] font-medium text-text-muted transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none">
+      <summary className="inline-flex cursor-pointer list-none items-center gap-1 rounded-btn text-xs font-medium text-text-muted transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none">
         <span className="transition-transform group-open:rotate-90">›</span>
         Input and output
       </summary>
@@ -55,10 +55,10 @@ function StepPayload({ step }: { step: WorkflowRunStep }) {
         ).map(([label, payload]) =>
           payload ? (
             <div key={label}>
-              <p className="text-[10px] font-medium tracking-[0.06em] text-text-muted uppercase">
+              <p className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                 {label}
               </p>
-              <pre className="custom-scrollbar mt-1 overflow-x-auto rounded-btn bg-surface-secondary px-2.5 py-2 font-mono text-[11px] text-text-secondary">
+              <pre className="custom-scrollbar mt-1 overflow-x-auto rounded-btn bg-surface-secondary px-2.5 py-2 font-mono text-xs text-text-secondary">
                 {JSON.stringify(payload, null, 2)}
               </pre>
             </div>
@@ -96,11 +96,11 @@ function StepError({
         {step.error.message}
       </p>
 
-      <pre className="custom-scrollbar mt-2 overflow-x-auto rounded-btn bg-surface px-2.5 py-2 font-mono text-[11px] text-text-secondary">
+      <pre className="custom-scrollbar mt-2 overflow-x-auto rounded-btn bg-surface px-2.5 py-2 font-mono text-xs text-text-secondary">
         {step.error.providerResponse}
       </pre>
 
-      <p className="mt-2 text-[11px] text-text-muted">
+      <p className="mt-2 text-xs text-text-muted">
         {step.error.retries} {step.error.retries === 1 ? "retry" : "retries"} ·
         last attempt {formatDateTime(step.error.lastAttemptAt)}
       </p>
@@ -158,7 +158,7 @@ export function ExecutionTimeline({
               <div className="flex flex-wrap items-center gap-2">
                 <time
                   dateTime={step.at}
-                  className="text-[11px] font-medium text-text-muted tabular-nums"
+                  className="text-xs font-medium text-text-muted tabular-nums"
                 >
                   {timeOf(step.at)}
                 </time>
@@ -176,7 +176,7 @@ export function ExecutionTimeline({
                 ) : null}
               </p>
 
-              <p className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-text-muted">
+              <p className="mt-1 flex flex-wrap items-center gap-2 text-xs text-text-muted">
                 <span>{NODE_META[step.kind]?.label}</span>
                 {channel ? (
                   <span className={cn("font-medium", channel.text)}>{channel.label}</span>
@@ -233,7 +233,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
   return (
     <dl className="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3">
       <div className="min-w-0">
-        <dt className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+        <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
           Contact
         </dt>
         <dd className="mt-1 truncate text-sm font-medium">
@@ -248,7 +248,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
       </div>
 
       <div className="min-w-0">
-        <dt className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+        <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
           Workflow
         </dt>
         <dd className="mt-1 truncate text-sm font-medium">
@@ -263,7 +263,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
       </div>
 
       <div className="min-w-0">
-        <dt className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+        <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
           Run ID
         </dt>
         <dd className="mt-1 truncate">
@@ -272,7 +272,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
       </div>
 
       <div className="min-w-0">
-        <dt className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+        <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
           Started
         </dt>
         <dd className="mt-1 text-sm text-text-secondary">
@@ -281,7 +281,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
       </div>
 
       <div className="min-w-0">
-        <dt className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+        <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
           State
         </dt>
         <dd className="mt-1">
@@ -290,7 +290,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
       </div>
 
       <div className="min-w-0">
-        <dt className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+        <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
           Total duration
         </dt>
         <dd className="mt-1 text-sm text-text-secondary tabular-nums">

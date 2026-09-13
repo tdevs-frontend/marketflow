@@ -1000,7 +1000,7 @@ export function NodeInspector({
         <div className="min-w-0 flex-1">
           <p
             className={cn(
-              "text-[10px] font-medium tracking-[0.08em] uppercase",
+              "text-xs font-medium tracking-[0.08em] uppercase",
               theme.text,
             )}
           >
@@ -1050,7 +1050,7 @@ export function NodeInspector({
             <ul className="space-y-2">
               {draft.branches.map((branch, index) => (
                 <li key={branch.id} className="flex items-center gap-2">
-                  <span className="grid size-6 shrink-0 place-items-center rounded-full bg-surface-secondary text-[11px] font-bold text-text-secondary tabular-nums">
+                  <span className="grid size-6 shrink-0 place-items-center rounded-full bg-surface-secondary text-xs font-bold text-text-secondary tabular-nums">
                     {index + 1}
                   </span>
                   <Input
@@ -1163,7 +1163,7 @@ export function NodeInspector({
                           binding.path ? "border-border" : "border-error/40 bg-error-soft/30",
                         )}
                       >
-                        <code className="block font-mono text-[11px] text-text-secondary">
+                        <code className="block font-mono text-xs text-text-secondary">
                           {`{{${token}}}`}
                         </code>
 
@@ -1198,7 +1198,7 @@ export function NodeInspector({
                         </div>
 
                         {binding.sample && binding.path ? (
-                          <p className="text-[11px] text-text-muted">
+                          <p className="text-xs text-text-muted">
                             Preview: <span className="text-text-secondary">{binding.sample}</span>
                           </p>
                         ) : null}
@@ -1296,11 +1296,11 @@ export function NodeInspector({
             <ul className="space-y-1.5">
               {meta.outputs.map((output) => (
                 <li key={output.key} className="rounded-btn bg-surface-secondary px-2.5 py-2">
-                  <code className="font-mono text-[11px] text-text-primary">
+                  <code className="font-mono text-xs text-text-primary">
                     {output.key}
                   </code>
-                  <span className="ml-1.5 text-[10px] text-text-muted">{output.type}</span>
-                  <p className="mt-0.5 text-[11px] text-text-muted">{output.description}</p>
+                  <span className="ml-1.5 text-xs text-text-muted">{output.type}</span>
+                  <p className="mt-0.5 text-xs text-text-muted">{output.description}</p>
                 </li>
               ))}
             </ul>
@@ -1333,7 +1333,7 @@ export function NodeInspector({
             </Link>
           ) : null}
 
-          <p className="text-[11px] text-text-muted">
+          <p className="text-xs text-text-muted">
             Node ID <code className="font-mono text-text-secondary">{draft.id}</code>
           </p>
         </Section>

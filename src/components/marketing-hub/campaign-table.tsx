@@ -201,7 +201,7 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
 
                   <TD>
                     <p className="text-text-secondary">{campaign.audienceLabel}</p>
-                    <p className="text-[11px] text-text-muted">
+                    <p className="text-xs text-text-muted">
                       {formatNumber(campaign.audienceSize)} contacts
                     </p>
                   </TD>

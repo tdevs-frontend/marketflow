@@ -287,7 +287,7 @@ function GrowthChart() {
         {endLabels.map((label) => (
           <span
             key={label.name}
-            className="absolute flex -translate-y-1/2 items-center gap-1 text-[11px] font-semibold whitespace-nowrap text-text-primary"
+            className="absolute flex -translate-y-1/2 items-center gap-1 text-xs font-semibold whitespace-nowrap text-text-primary"
             style={{ left: `${label.x + 1.4}%`, top: `${label.y}%` }}
           >
             <span
@@ -305,7 +305,7 @@ function GrowthChart() {
           <span
             key={month}
             className={cn(
-              "flex-1 text-center text-[11px] text-text-muted",
+              "flex-1 text-center text-xs text-text-muted",
               index % 2 === 1 && "max-sm:hidden",
             )}
           >
@@ -330,7 +330,7 @@ function CampaignPerformance() {
                   {campaign.name}
                 </span>
                 {index === 0 ? (
-                  <span className="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap text-primary-dark">
+                  <span className="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-xs font-semibold whitespace-nowrap text-primary-dark">
                     Top performing
                   </span>
                 ) : null}
@@ -380,7 +380,7 @@ function ChannelPerformance() {
                 style={{ width: channel.delivered }}
               />
             </span>
-            <dl className="mt-2 flex items-center gap-4 text-[11px] text-text-muted">
+            <dl className="mt-2 flex items-center gap-4 text-xs text-text-muted">
               <span className="flex gap-1">
                 <dt>Delivered</dt>
                 <dd className="font-semibold text-text-secondary tabular-nums">
@@ -473,7 +473,7 @@ function LiveActivity() {
             <span className="min-w-0 flex-1 truncate text-xs text-text-secondary">
               {item.text}
             </span>
-            <span className="shrink-0 text-[11px] text-text-muted">{item.time}</span>
+            <span className="shrink-0 text-xs text-text-muted">{item.time}</span>
           </li>
         ))}
       </ul>

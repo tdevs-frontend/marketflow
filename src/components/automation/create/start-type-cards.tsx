@@ -88,7 +88,7 @@ export function StartTypeCards({
                   {type.examples.map((example) => (
                     <span
                       key={example}
-                      className="rounded-full bg-surface-secondary px-2 py-0.5 text-[11px] text-text-muted"
+                      className="rounded-full bg-surface-secondary px-2 py-0.5 text-xs text-text-muted"
                     >
                       {example}
                     </span>

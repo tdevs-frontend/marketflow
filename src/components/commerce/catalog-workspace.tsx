@@ -438,7 +438,7 @@ export function CatalogWorkspace() {
                 <ProductThumb key={id} size="sm" />
               ))}
               {catalog.productIds.length > 4 ? (
-                <span className="grid size-8 place-items-center rounded-panel border border-border bg-surface-secondary text-[11px] font-medium text-text-muted">
+                <span className="grid size-8 place-items-center rounded-panel border border-border bg-surface-secondary text-xs font-medium text-text-muted">
                   +{catalog.productIds.length - 4}
                 </span>
               ) : null}

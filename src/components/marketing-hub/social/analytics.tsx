@@ -248,7 +248,7 @@ export function SocialAnalytics() {
               {SOCIAL_ACCOUNTS.map((account) => (
                 <li
                   key={account.id}
-                  className="flex items-center gap-2 text-[11px]"
+                  className="flex items-center gap-2 text-xs"
                 >
                   <PlatformMark platform={account.platform} size="sm" />
                   <span className="min-w-0 flex-1 truncate text-text-secondary">
@@ -366,7 +366,7 @@ export function SocialAnalytics() {
                         <p className="truncate text-[13px] font-medium text-text-primary">
                           {post.title}
                         </p>
-                        <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-[11px] text-text-muted">
+                        <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-xs text-text-muted">
                           <span className="flex items-center gap-1">
                             {post.platforms.map((key) => (
                               <PlatformMark key={key} platform={key} size="sm" />
@@ -386,7 +386,7 @@ export function SocialAnalytics() {
                         <p className="text-sm font-bold text-text-primary tabular-nums">
                           {formatPercent(engagementRate)}
                         </p>
-                        <p className="text-[11px] text-text-muted">engagement</p>
+                        <p className="text-xs text-text-muted">engagement</p>
                       </div>
                     </li>
                   );

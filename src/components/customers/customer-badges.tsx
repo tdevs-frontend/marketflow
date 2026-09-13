@@ -122,7 +122,7 @@ export function TagBadge({
   return (
     <span
       className={cn(
-        "inline-flex max-w-full items-center rounded-full px-2 py-0.5 text-[11px] leading-tight font-medium",
+        "inline-flex max-w-full items-center rounded-full px-2 py-0.5 text-xs leading-tight font-medium",
         TAG_COLORS[color].pill,
         className,
       )}
@@ -155,7 +155,7 @@ export function TagBadges({
         <TagBadge key={tag} name={tag} />
       ))}
       {rest > 0 ? (
-        <span className="text-[11px] font-medium text-text-muted">+{rest}</span>
+        <span className="text-xs font-medium text-text-muted">+{rest}</span>
       ) : null}
     </span>
   );

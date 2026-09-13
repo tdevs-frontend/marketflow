@@ -363,13 +363,13 @@ export function SocialPostsWorkspace() {
                         </p>
 
                         {post.hashtags.length > 0 ? (
-                          <p className="mt-2 truncate text-[11px] text-primary">
+                          <p className="mt-2 truncate text-xs text-primary">
                             {post.hashtags.join(" ")}
                           </p>
                         ) : null}
 
                         {post.failureReason ? (
-                          <p className="mt-2.5 rounded-panel border border-error/25 bg-error-soft px-2.5 py-2 text-[11px] text-error-text">
+                          <p className="mt-2.5 rounded-panel border border-error/25 bg-error-soft px-2.5 py-2 text-xs text-error-text">
                             {post.failureReason}
                           </p>
                         ) : null}
@@ -379,7 +379,7 @@ export function SocialPostsWorkspace() {
                             /* Each figure needs its own `dt`: the icons are
                                aria-hidden, so without one a screen reader hears
                                four unlabelled numbers. */
-                            <dl className="flex items-center gap-4 border-t border-border pt-3 text-[11px]">
+                            <dl className="flex items-center gap-4 border-t border-border pt-3 text-xs">
                               {[
                                 {
                                   label: "Likes",
@@ -424,7 +424,7 @@ export function SocialPostsWorkspace() {
                               </div>
                             </dl>
                           ) : (
-                            <p className="border-t border-border pt-3 text-[11px] text-text-muted">
+                            <p className="border-t border-border pt-3 text-xs text-text-muted">
                               {post.status === "scheduled"
                                 ? `Goes out ${post.scheduledAt.slice(0, 10)} at ${post.scheduledAt.slice(11, 16)}`
                                 : post.status === "failed"
@@ -505,7 +505,7 @@ export function SocialPostsWorkspace() {
                               <span className="block max-w-40 truncate font-medium text-text-primary">
                                 {post.title}
                               </span>
-                              <span className="block text-[11px] text-text-muted">
+                              <span className="block text-xs text-text-muted">
                                 {post.author}
                               </span>
                             </span>
@@ -532,7 +532,7 @@ export function SocialPostsWorkspace() {
 
                         <TD className="text-xs whitespace-nowrap text-text-secondary">
                           {post.scheduledAt.slice(0, 10)}
-                          <span className="block text-[11px] text-text-muted tabular-nums">
+                          <span className="block text-xs text-text-muted tabular-nums">
                             {post.scheduledAt.slice(11, 16)}
                           </span>
                         </TD>
@@ -557,7 +557,7 @@ export function SocialPostsWorkspace() {
                               <span className="font-medium text-text-primary">
                                 {formatNumber(interactions(post))}
                               </span>
-                              <span className="block text-[11px] text-text-muted">
+                              <span className="block text-xs text-text-muted">
                                 {formatNumber(post.engagement.clicks)} clicks
                               </span>
                             </>
@@ -626,7 +626,7 @@ export function SocialPostsWorkspace() {
             <div className="flex flex-wrap items-center gap-2">
               <PlatformStack platforms={detail.platforms} />
               <PostStatusBadge status={detail.status} />
-              <p className="ml-auto text-[11px] text-text-muted">
+              <p className="ml-auto text-xs text-text-muted">
                 by {detail.author} · {formatRelativeTime(detail.scheduledAt)}
               </p>
             </div>
@@ -659,7 +659,7 @@ export function SocialPostsWorkspace() {
                     key={cell.label}
                     className="rounded-panel border border-border px-2.5 py-2.5 text-center"
                   >
-                    <dt className="text-[10px] tracking-[0.06em] text-text-muted uppercase">
+                    <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                       {cell.label}
                     </dt>
                     <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">

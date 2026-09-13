@@ -272,14 +272,14 @@ export function SmsOverview() {
                     <p className="truncate text-[13px] font-medium text-text-primary">
                       {campaign.name}
                     </p>
-                    <p className="truncate font-mono text-[11px] text-text-muted">
+                    <p className="truncate font-mono text-xs text-text-muted">
                       {campaign.message}
                     </p>
                   </div>
 
                   <dl className="flex shrink-0 items-center gap-4 text-right">
                     <div>
-                      <dt className="text-[10px] tracking-[0.06em] text-text-muted uppercase">
+                      <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                         Sent
                       </dt>
                       <dd className="text-[13px] font-bold text-text-primary tabular-nums">
@@ -287,7 +287,7 @@ export function SmsOverview() {
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-[10px] tracking-[0.06em] text-text-muted uppercase">
+                      <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                         Parts
                       </dt>
                       <dd className="text-[13px] font-bold text-text-primary tabular-nums">
@@ -295,7 +295,7 @@ export function SmsOverview() {
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-[10px] tracking-[0.06em] text-text-muted uppercase">
+                      <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                         Cost
                       </dt>
                       <dd className="text-[13px] font-bold text-text-primary tabular-nums">

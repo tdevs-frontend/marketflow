@@ -144,7 +144,7 @@ function ModuleCard({ module, side }: { module: Module; side: Side }) {
           <p className="mt-1 text-xs leading-relaxed text-text-secondary">
             {module.body}
           </p>
-          <p className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-surface-secondary px-2 py-0.5 text-[11px] font-medium text-text-secondary">
+          <p className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-surface-secondary px-2 py-0.5 text-xs font-medium text-text-secondary">
             <span aria-hidden className="size-1.5 rounded-full bg-secondary" />
             {module.status}
           </p>
@@ -234,11 +234,11 @@ export function PlatformOverview() {
 
         {/* Command center */}
         <div className="mb-7 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-          <span className="text-[11px] font-semibold tracking-[0.14em] text-text-muted uppercase">
+          <span className="text-xs font-semibold tracking-[0.14em] text-text-muted uppercase">
             MarketFlow Command Center
           </span>
           <span aria-hidden className="hidden h-3.5 w-px bg-border sm:block" />
-          <span className="inline-flex items-center gap-2 text-[11px] font-medium text-primary">
+          <span className="inline-flex items-center gap-2 text-xs font-medium text-primary">
             <span className="relative flex size-1.5" aria-hidden>
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-secondary opacity-75" />
               <span className="relative inline-flex size-1.5 rounded-full bg-secondary" />

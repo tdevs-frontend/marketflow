@@ -147,7 +147,7 @@ export function TemplatesWorkspace() {
               {item.label}
               <span
                 className={cn(
-                  "text-[11px] tabular-nums",
+                  "text-xs tabular-nums",
                   selected ? "text-primary/70" : "text-text-muted",
                 )}
               >

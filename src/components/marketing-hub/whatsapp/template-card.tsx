@@ -114,14 +114,14 @@ export function TemplateCard({
 
       {template.variables.length > 0 ? (
         <div className="mt-3">
-          <p className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+          <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
             Variables
           </p>
           <ul className="mt-1.5 flex flex-wrap gap-1.5">
             {template.variables.map((variable) => (
               <li
                 key={variable}
-                className="rounded-btn bg-primary-soft px-1.5 py-0.5 font-mono text-[11px] text-primary-dark"
+                className="rounded-btn bg-primary-soft px-1.5 py-0.5 font-mono text-xs text-primary-dark"
               >
                 {`{{${variable}}}`}
               </li>

@@ -141,7 +141,7 @@ export function TriggerDetail({ trigger }: { trigger: AutomationTrigger }) {
               <fact.icon className="size-4" aria-hidden />
             </span>
             <div className="min-w-0">
-              <dt className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+              <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                 {fact.label}
               </dt>
               <dd className="truncate text-lg leading-tight font-bold text-text-primary">
@@ -185,7 +185,7 @@ export function TriggerDetail({ trigger }: { trigger: AutomationTrigger }) {
                         <span className="block truncate text-[13px] font-medium text-text-primary">
                           {workflow.name}
                         </span>
-                        <span className="block truncate text-[11px] text-text-muted">
+                        <span className="block truncate text-xs text-text-muted">
                           {workflow.nodes.length} steps ·{" "}
                           {formatCount(workflow.stats.entered)} entered
                         </span>
@@ -206,7 +206,7 @@ export function TriggerDetail({ trigger }: { trigger: AutomationTrigger }) {
           />
           <CardBody className="space-y-3">
             <div>
-              <p className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+              <p className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                 Event key
               </p>
               <p className="mt-1.5">
@@ -233,10 +233,10 @@ export function TriggerDetail({ trigger }: { trigger: AutomationTrigger }) {
           <CardBody className="grid gap-4 xl:grid-cols-2">
             <div className="space-y-4">
               <div>
-                <p className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                <p className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                   Event endpoint
                 </p>
-                <pre className="custom-scrollbar mt-1.5 overflow-x-auto rounded-panel bg-surface-secondary px-3.5 py-3 font-mono text-[11px] text-text-secondary">
+                <pre className="custom-scrollbar mt-1.5 overflow-x-auto rounded-panel bg-surface-secondary px-3.5 py-3 font-mono text-xs text-text-secondary">
                   {`POST https://api.marketflow.app/v1/events
 Content-Type: application/json
 X-MarketFlow-Signature: <hmac-sha256>
@@ -246,7 +246,7 @@ X-MarketFlow-Signature: <hmac-sha256>
               </div>
 
               <div>
-                <p className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                <p className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                   Authentication
                 </p>
                 <p className="mt-1.5 text-sm text-text-secondary">
@@ -269,7 +269,7 @@ X-MarketFlow-Signature: <hmac-sha256>
 
             <div className="space-y-4">
               <div>
-                <p className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                <p className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                   Testing
                 </p>
                 <p className="mt-1.5 text-sm text-text-secondary">
@@ -291,7 +291,7 @@ X-MarketFlow-Signature: <hmac-sha256>
               </div>
 
               <div>
-                <p className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                <p className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                   Last error
                 </p>
                 {lastError ? (
@@ -299,7 +299,7 @@ X-MarketFlow-Signature: <hmac-sha256>
                     <p className="text-[13px] font-medium text-error-text">
                       Payload rejected — `contact_id` did not match a contact
                     </p>
-                    <p className="mt-1 text-[11px] text-text-muted">
+                    <p className="mt-1 text-xs text-text-muted">
                       {formatDateTime(lastError.at)} ·{" "}
                       {formatCount(trigger.failed24h)} failed in the last 24 hours
                     </p>
@@ -368,7 +368,7 @@ X-MarketFlow-Signature: <hmac-sha256>
                   </Badge>
                   <time
                     dateTime={event.at}
-                    className="shrink-0 text-[11px] text-text-muted"
+                    className="shrink-0 text-xs text-text-muted"
                   >
                     {formatDateTime(event.at)}
                   </time>

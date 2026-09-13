@@ -637,7 +637,7 @@ export function ContactsWorkspace() {
                       Import CSV
                     </Button>
                   </div>
-                  <p className="text-[11px] text-text-muted">
+                  <p className="text-xs text-text-muted">
                     CSV needs a name column plus an email or phone column.
                   </p>
                 </div>
@@ -837,7 +837,7 @@ export function ContactsWorkspace() {
 
                     <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1">
                       <ChannelConsentBadges channels={item.optedInChannels} />
-                      <span className="ml-auto text-[11px] text-text-muted">
+                      <span className="ml-auto text-xs text-text-muted">
                         {item.lastContactedAt
                           ? formatRelativeTime(item.lastContactedAt)
                           : "Never contacted"}

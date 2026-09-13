@@ -61,7 +61,7 @@ export function RecentConversations({
                   </p>
                   <time
                     dateTime={conversation.contact.lastActivityAt}
-                    className="shrink-0 text-[11px] text-text-muted"
+                    className="shrink-0 text-xs text-text-muted"
                   >
                     {formatRelativeTime(conversation.contact.lastActivityAt)}
                   </time>
@@ -82,12 +82,12 @@ export function RecentConversations({
                     {conversation.status}
                   </Badge>
                   {conversation.unread > 0 ? (
-                    <span className="grid size-4.5 place-items-center rounded-full bg-primary text-[10px] font-bold text-white">
+                    <span className="grid size-4.5 place-items-center rounded-full bg-primary text-xs font-bold text-white">
                       {conversation.unread}
                     </span>
                   ) : null}
                   {conversation.contact.assignedAgent ? (
-                    <span className="truncate text-[11px] text-text-muted">
+                    <span className="truncate text-xs text-text-muted">
                       {conversation.contact.assignedAgent}
                     </span>
                   ) : null}

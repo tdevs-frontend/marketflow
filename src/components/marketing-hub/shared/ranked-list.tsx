@@ -69,7 +69,7 @@ export function RankedList({
             />
 
             {item.secondary ? (
-              <p className="mt-1 text-[11px] text-text-muted">{item.secondary}</p>
+              <p className="mt-1 text-xs text-text-muted">{item.secondary}</p>
             ) : null}
           </div>
         </li>

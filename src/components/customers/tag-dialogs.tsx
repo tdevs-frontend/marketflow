@@ -150,10 +150,10 @@ export function TagFormDialog({
 
         {/* Preview, so the swatch choice is judged as the pill it becomes. */}
         <div className="rounded-panel bg-surface-secondary p-3.5">
-          <p className="text-[11px] text-text-muted">Preview</p>
+          <p className="text-xs text-text-muted">Preview</p>
           <span
             className={cn(
-              "mt-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-[11px] leading-tight font-medium",
+              "mt-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-xs leading-tight font-medium",
               TAG_COLORS[color].pill,
             )}
           >

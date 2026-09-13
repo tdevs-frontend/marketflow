@@ -380,7 +380,7 @@ export function ProductEditor({ product }: { product?: Product }) {
                 >
                   <ImagePlus className="size-4" aria-hidden />
                   {slot === 0 ? (
-                    <span className="absolute top-1.5 left-1.5 inline-flex items-center gap-1 rounded-full bg-surface px-1.5 py-0.5 text-[9px] font-bold text-primary uppercase">
+                    <span className="absolute top-1.5 left-1.5 inline-flex items-center gap-1 rounded-full bg-surface px-1.5 py-0.5 text-xs font-bold text-primary uppercase">
                       <Star className="size-2.5" aria-hidden />
                       Thumb
                     </span>

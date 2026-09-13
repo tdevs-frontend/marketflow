@@ -31,7 +31,7 @@ export function Table({
 export function THead({ children }: { children: ReactNode }) {
   return (
     <thead className="border-b border-border">
-      <tr className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+      <tr className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
         {children}
       </tr>
     </thead>
@@ -139,7 +139,7 @@ export function SortableTH<T extends string>({
         type="button"
         onClick={() => onSort(field)}
         className={cn(
-          "inline-flex w-full items-center gap-1.5 px-3 py-2.5 text-[11px] font-medium tracking-[0.06em] uppercase transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none",
+          "inline-flex w-full items-center gap-1.5 px-3 py-2.5 text-xs font-medium tracking-[0.06em] uppercase transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none",
           align === "right" && "justify-end",
           active ? "text-text-primary" : "text-text-muted",
         )}

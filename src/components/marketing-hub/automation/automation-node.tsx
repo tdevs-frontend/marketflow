@@ -67,7 +67,7 @@ export function FlowConnector({
     >
       <span className="absolute inset-y-0 w-px bg-border" />
       {label ? (
-        <span className="relative rounded-full border border-border bg-surface px-2 py-0.5 text-[10px] font-medium text-text-muted">
+        <span className="relative rounded-full border border-border bg-surface px-2 py-0.5 text-xs font-medium text-text-muted">
           {label}
         </span>
       ) : (
@@ -142,7 +142,7 @@ export function AutomationNode({
           >
             {step.title}
           </span>
-          <span className="text-[10px] font-medium tracking-[0.06em] text-text-muted uppercase">
+          <span className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
             {style.label}
           </span>
         </span>
@@ -156,7 +156,7 @@ export function AutomationNode({
           <span className="block text-[13px] font-bold text-text-primary tabular-nums">
             {formatNumber(step.entered)}
           </span>
-          <span className="block text-[10px] text-text-muted">reached</span>
+          <span className="block text-xs text-text-muted">reached</span>
         </span>
       ) : null}
     </Element>

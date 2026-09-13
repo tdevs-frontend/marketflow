@@ -42,7 +42,7 @@ const CONVERSATIONS: Conversation[] = [
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[11px] font-semibold tracking-[0.06em] text-text-muted uppercase">
+    <p className="text-xs font-semibold tracking-[0.06em] text-text-muted uppercase">
       {children}
     </p>
   );
@@ -61,13 +61,13 @@ export function PlatformDashboard({ className }: { className?: string }) {
       {/* Header */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-border px-5 py-4">
         <h3 className="text-sm font-bold text-text-primary">Marketing Overview</h3>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-soft px-2.5 py-1 text-[11px] font-semibold text-primary-dark">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-soft px-2.5 py-1 text-xs font-semibold text-primary-dark">
           <TrendingUp className="size-3" aria-hidden />
           32.8% overall growth
         </span>
         <ul className="ml-auto flex items-center gap-3">
           {CHANNELS.map((channel) => (
-            <li key={channel} className="flex items-center gap-1.5 text-[11px] text-text-secondary">
+            <li key={channel} className="flex items-center gap-1.5 text-xs text-text-secondary">
               <span aria-hidden className="size-1.5 rounded-full bg-secondary" />
               {channel}
             </li>
@@ -80,11 +80,11 @@ export function PlatformDashboard({ className }: { className?: string }) {
         <dl className="grid grid-cols-2 gap-3 xl:grid-cols-4">
           {KPIS.map((kpi) => (
             <div key={kpi.label} className="rounded-panel border border-border bg-surface p-3.5">
-              <dt className="truncate text-[11px] font-medium text-text-muted">{kpi.label}</dt>
+              <dt className="truncate text-xs font-medium text-text-muted">{kpi.label}</dt>
               <dd className="mt-1.5 font-heading text-xl font-bold tracking-tight text-text-primary tabular-nums">
                 {kpi.value}
               </dd>
-              <dd className="mt-1 inline-flex items-center gap-1 text-[11px] font-semibold text-primary">
+              <dd className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-primary">
                 <TrendingUp className="size-3" aria-hidden />
                 {kpi.change}
               </dd>
@@ -114,8 +114,8 @@ export function PlatformDashboard({ className }: { className?: string }) {
               {CAMPAIGNS.map((campaign) => (
                 <li key={campaign.name}>
                   <div className="flex items-baseline justify-between gap-2">
-                    <span className="truncate text-[11px] text-text-secondary">{campaign.name}</span>
-                    <span className="text-[11px] font-semibold text-text-primary tabular-nums">
+                    <span className="truncate text-xs text-text-secondary">{campaign.name}</span>
+                    <span className="text-xs font-semibold text-text-primary tabular-nums">
                       {campaign.rate}
                     </span>
                   </div>
@@ -138,14 +138,14 @@ export function PlatformDashboard({ className }: { className?: string }) {
             <ul className="mt-3 space-y-2">
               {FUNNEL.map((step) => (
                 <li key={step.label} className="flex items-center gap-2.5">
-                  <span className="w-16 shrink-0 text-[11px] text-text-secondary">{step.label}</span>
+                  <span className="w-16 shrink-0 text-xs text-text-secondary">{step.label}</span>
                   <span className="h-2 flex-1 overflow-hidden rounded-full bg-surface-secondary">
                     <span
                       className="block h-full rounded-full bg-primary"
                       style={{ width: step.width }}
                     />
                   </span>
-                  <span className="w-10 shrink-0 text-right text-[11px] font-semibold text-text-primary tabular-nums">
+                  <span className="w-10 shrink-0 text-right text-xs font-semibold text-text-primary tabular-nums">
                     {step.value}
                   </span>
                 </li>
@@ -159,18 +159,18 @@ export function PlatformDashboard({ className }: { className?: string }) {
               <ul className="mt-2.5 space-y-2">
                 {CONVERSATIONS.map((chat) => (
                   <li key={chat.name} className="flex items-center gap-2.5">
-                    <span className="grid size-7 shrink-0 place-items-center rounded-full bg-surface-secondary text-[10px] font-semibold text-text-secondary">
+                    <span className="grid size-7 shrink-0 place-items-center rounded-full bg-surface-secondary text-xs font-semibold text-text-secondary">
                       {chat.initials}
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[11px] font-semibold text-text-primary">
+                      <span className="block truncate text-xs font-semibold text-text-primary">
                         {chat.name}
                       </span>
-                      <span className="block truncate text-[11px] text-text-muted">
+                      <span className="block truncate text-xs text-text-muted">
                         {chat.preview}
                       </span>
                     </span>
-                    <span className="shrink-0 text-[10px] text-text-muted">{chat.time}</span>
+                    <span className="shrink-0 text-xs text-text-muted">{chat.time}</span>
                   </li>
                 ))}
               </ul>
@@ -184,7 +184,7 @@ export function PlatformDashboard({ className }: { className?: string }) {
                 <span className="block font-heading text-base font-bold text-text-primary">
                   8 automations
                 </span>
-                <span className="block text-[11px] text-text-muted">Running right now</span>
+                <span className="block text-xs text-text-muted">Running right now</span>
               </span>
               <span className="flex shrink-0 items-center gap-1 text-text-muted" aria-hidden>
                 <MessageCircle className="size-3.5" />

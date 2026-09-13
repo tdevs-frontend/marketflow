@@ -28,7 +28,7 @@ function HubCore() {
         <p className="text-[15px] leading-none font-bold tracking-tight text-text-primary">
           {siteConfig.name}
         </p>
-        <p className="mt-1.5 text-[9px] leading-none text-text-muted sm:text-[10px]">
+        <p className="mt-1.5 text-xs leading-none text-text-muted">
           Marketing Operating System
         </p>
       </div>

@@ -128,7 +128,7 @@ export function MediaLibrary() {
         {/* ------------------------------------------------------- Folders */}
         <Card className="h-max p-4 lg:sticky lg:top-22">
           <div className="flex items-center justify-between gap-2">
-            <p className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+            <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
               Folders
             </p>
             <button
@@ -160,7 +160,7 @@ export function MediaLibrary() {
                   >
                     <FolderOpen className="size-3.5 shrink-0" aria-hidden />
                     <span className="min-w-0 flex-1 truncate">{item.name}</span>
-                    <span className="shrink-0 text-[11px] text-text-muted tabular-nums">
+                    <span className="shrink-0 text-xs text-text-muted tabular-nums">
                       {folderCount(item.id)}
                     </span>
                   </button>
@@ -172,7 +172,7 @@ export function MediaLibrary() {
           {/* Storage. Worth showing: a library is the first thing to fill a
               plan's quota, and the warning arrives too late otherwise. */}
           <div className="mt-4 border-t border-border pt-4">
-            <p className="flex items-center gap-1.5 text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+            <p className="flex items-center gap-1.5 text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
               <HardDrive className="size-3" aria-hidden />
               Storage
             </p>
@@ -381,13 +381,13 @@ export function MediaLibrary() {
                         ) : null}
 
                         {asset.type === "video" && asset.duration ? (
-                          <span className="absolute bottom-1.5 left-1.5 rounded bg-text-primary/70 px-1 py-0.5 text-[9px] font-medium text-white tabular-nums">
+                          <span className="absolute bottom-1.5 left-1.5 rounded bg-text-primary/70 px-1 py-0.5 text-xs font-medium text-white tabular-nums">
                             {asset.duration}s
                           </span>
                         ) : null}
 
                         {MEDIA_USAGE[asset.id] > 0 ? (
-                          <span className="absolute bottom-1.5 right-1.5 rounded bg-surface/90 px-1 py-0.5 text-[9px] font-medium text-text-secondary tabular-nums">
+                          <span className="absolute bottom-1.5 right-1.5 rounded bg-surface/90 px-1 py-0.5 text-xs font-medium text-text-secondary tabular-nums">
                             {MEDIA_USAGE[asset.id]} uses
                           </span>
                         ) : null}
@@ -396,7 +396,7 @@ export function MediaLibrary() {
                       <span className="mt-1.5 block truncate text-[12px] font-medium text-text-primary">
                         {asset.name}
                       </span>
-                      <span className="block text-[10px] text-text-muted">
+                      <span className="block text-xs text-text-muted">
                         {asset.width} × {asset.height} · {formatBytes(asset.size)}
                       </span>
                     </button>
@@ -529,7 +529,7 @@ export function MediaLibrary() {
             </dl>
 
             <section>
-              <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
                 Tags
               </h3>
               <div className="mt-2">

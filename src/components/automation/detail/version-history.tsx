@@ -102,7 +102,7 @@ export function VersionHistoryDialog({
                         {formatCount(version.activeContacts)} still running
                       </Badge>
                     ) : null}
-                    <span className="ml-auto text-[11px] text-text-muted">
+                    <span className="ml-auto text-xs text-text-muted">
                       {formatRelativeTime(version.createdAt)}
                     </span>
                   </div>
@@ -112,14 +112,14 @@ export function VersionHistoryDialog({
                   ) : null}
 
                   <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-2">
-                    <span className="flex items-center gap-1.5 text-[11px] text-text-muted">
+                    <span className="flex items-center gap-1.5 text-xs text-text-muted">
                       <Avatar name={ownerName(version.authorId)} size="xs" />
                       {ownerName(version.authorId)}
                     </span>
-                    <span className="text-[11px] text-text-muted">
+                    <span className="text-xs text-text-muted">
                       {formatDateTime(version.createdAt)}
                     </span>
-                    <span className="text-[11px] text-text-muted">
+                    <span className="text-xs text-text-muted">
                       {version.nodeCount} steps
                     </span>
 
@@ -184,7 +184,7 @@ export function VersionHistoryDialog({
             >
               <span
                 className={cn(
-                  "mt-0.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold uppercase",
+                  "mt-0.5 rounded-full px-1.5 py-0.5 text-xs font-bold uppercase",
                   item.change === "added"
                     ? "bg-success-soft text-success-text"
                     : item.change === "removed"

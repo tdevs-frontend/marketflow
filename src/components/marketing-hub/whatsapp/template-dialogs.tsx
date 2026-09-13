@@ -63,14 +63,14 @@ export function TemplatePreviewDialog({
       {template ? (
         <div className="rounded-card bg-chat-wallpaper p-4">
           <div className="flex items-center gap-2.5 pb-3">
-            <span className="grid size-8 place-items-center rounded-full bg-primary text-[11px] font-bold text-white">
+            <span className="grid size-8 place-items-center rounded-full bg-primary text-xs font-bold text-white">
               MF
             </span>
             <span>
               <span className="block text-[13px] font-medium text-text-primary">
                 MarketFlow
               </span>
-              <span className="block text-[10px] text-text-muted">Business account</span>
+              <span className="block text-xs text-text-muted">Business account</span>
             </span>
           </div>
 
@@ -80,10 +80,10 @@ export function TemplatePreviewDialog({
             </p>
 
             {template.footer ? (
-              <p className="mt-2 text-[11px] text-text-muted">{template.footer}</p>
+              <p className="mt-2 text-xs text-text-muted">{template.footer}</p>
             ) : null}
 
-            <p className="mt-1.5 text-right text-[10px] text-text-muted">09:41</p>
+            <p className="mt-1.5 text-right text-xs text-text-muted">09:41</p>
 
             {template.buttons.length > 0 ? (
               <ul className="mt-2 space-y-1 border-t border-border pt-2">
@@ -103,7 +103,7 @@ export function TemplatePreviewDialog({
             ) : null}
           </div>
 
-          <p className="mt-3 text-center text-[11px] text-text-muted">
+          <p className="mt-3 text-center text-xs text-text-muted">
             {languageLabel(template.language)} · variables shown with sample data
           </p>
         </div>
@@ -308,7 +308,7 @@ export function TemplateFormDialog({
                     type="button"
                     onClick={() => insertVariable(variable.name)}
                     className={cn(
-                      "rounded-btn border px-2 py-1 font-mono text-[11px] transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                      "rounded-btn border px-2 py-1 font-mono text-xs transition-colors focus-visible:shadow-focus focus-visible:outline-none",
                       used
                         ? "border-primary bg-primary-soft text-primary-dark"
                         : "border-border text-text-secondary hover:border-primary hover:bg-primary-subtle",
@@ -350,7 +350,7 @@ export function TemplateFormDialog({
                   <span className="min-w-0 flex-1 truncate text-[13px] text-text-primary">
                     {button.label}
                   </span>
-                  <span className="shrink-0 text-[11px] text-text-muted">
+                  <span className="shrink-0 text-xs text-text-muted">
                     {button.type}
                   </span>
                   <button

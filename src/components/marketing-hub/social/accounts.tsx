@@ -174,7 +174,7 @@ export function SocialAccounts() {
                     <p className="truncate text-xs text-text-muted">
                       {account.username}
                     </p>
-                    <p className="mt-0.5 text-[11px] text-text-muted">
+                    <p className="mt-0.5 text-xs text-text-muted">
                       {theme.label}
                       {account.platform === "instagram" ? " Business" : ""}
                       {account.platform === "facebook" ? " Page" : ""}
@@ -202,14 +202,14 @@ export function SocialAccounts() {
               </div>
 
               <div className="mt-4">
-                <p className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+                <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
                   Permissions
                 </p>
                 <ul className="mt-1.5 flex flex-wrap gap-1.5">
                   {account.permissions.map((permission) => (
                     <li
                       key={permission}
-                      className="rounded-btn bg-surface-secondary px-2 py-0.5 text-[11px] font-medium text-text-secondary"
+                      className="rounded-btn bg-surface-secondary px-2 py-0.5 text-xs font-medium text-text-secondary"
                     >
                       {permission}
                     </li>
@@ -218,7 +218,7 @@ export function SocialAccounts() {
               </div>
 
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-3.5">
-                <p className="flex items-center gap-1.5 text-[11px] text-text-muted">
+                <p className="flex items-center gap-1.5 text-xs text-text-muted">
                   <RefreshCw className="size-3" aria-hidden />
                   Synced {formatRelativeTime(account.lastSyncedAt)}
                 </p>
@@ -360,7 +360,7 @@ export function SocialAccounts() {
             </dl>
 
             <section>
-              <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
                 Granted permissions
               </h3>
               <ul className="mt-2 space-y-1.5">
@@ -374,7 +374,7 @@ export function SocialAccounts() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-2 text-[11px] text-text-muted">
+              <p className="mt-2 text-xs text-text-muted">
                 Permissions are granted on {PLATFORM_THEME[managing.platform].label}{" "}
                 and can only be changed there.
               </p>
@@ -429,7 +429,7 @@ export function SocialAccounts() {
                     <span className="block text-[13px] font-medium text-text-primary">
                       {theme.label}
                     </span>
-                    <span className="block text-[11px] text-text-muted">
+                    <span className="block text-xs text-text-muted">
                       {existing
                         ? `${existing.username} already connected — this adds a second profile`
                         : "Not connected yet"}

@@ -109,7 +109,7 @@ export function OrderDrawer({
 
           {/* Customer */}
           <section>
-            <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+            <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
               Customer
             </h3>
             <div className="mt-2.5 flex items-start gap-3 rounded-panel border border-border p-3.5">
@@ -141,7 +141,7 @@ export function OrderDrawer({
 
           {/* Items */}
           <section>
-            <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+            <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
               Items
             </h3>
             <ul className="mt-2.5 divide-y divide-border rounded-panel border border-border">
@@ -181,7 +181,7 @@ export function OrderDrawer({
 
           {/* Payment */}
           <section>
-            <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+            <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
               Payment
             </h3>
             <div className="mt-2.5 rounded-panel border border-border p-3.5">
@@ -195,7 +195,7 @@ export function OrderDrawer({
 
           {/* Timeline */}
           <section>
-            <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+            <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
               Timeline
             </h3>
             <ol className="mt-3">
@@ -237,7 +237,7 @@ export function OrderDrawer({
                       >
                         {event.label}
                       </p>
-                      <p className="text-[11px] text-text-muted">
+                      <p className="text-xs text-text-muted">
                         {event.at ? formatDateTime(event.at) : "Pending"}
                       </p>
                     </div>
@@ -251,7 +251,7 @@ export function OrderDrawer({
           <section>
             <label
               htmlFor="order-status"
-              className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase"
+              className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase"
             >
               Update Status
             </label>

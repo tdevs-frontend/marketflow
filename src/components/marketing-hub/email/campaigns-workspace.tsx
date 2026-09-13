@@ -432,14 +432,14 @@ export function EmailCampaignsWorkspace() {
                           <p className="max-w-56 truncate font-medium text-text-primary">
                             {campaign.name}
                           </p>
-                          <p className="max-w-56 truncate text-[11px] text-text-muted">
+                          <p className="max-w-56 truncate text-xs text-text-muted">
                             {campaign.subject}
                           </p>
                         </TD>
 
                         <TD>
                           <p className="text-text-secondary">{campaign.audienceLabel}</p>
-                          <p className="text-[11px] text-text-muted">
+                          <p className="text-xs text-text-muted">
                             {formatNumber(campaign.audienceSize)} contacts
                           </p>
                         </TD>
@@ -451,7 +451,7 @@ export function EmailCampaignsWorkspace() {
                         <TD align="right" className="text-text-secondary tabular-nums">
                           {formatNumber(campaign.delivered)}
                           {campaign.bounced > 0 ? (
-                            <span className="block text-[11px] text-error">
+                            <span className="block text-xs text-error">
                               {formatNumber(campaign.bounced)} bounced
                             </span>
                           ) : null}
@@ -612,7 +612,7 @@ export function EmailCampaignsWorkspace() {
                         key={cell.label}
                         className="rounded-panel bg-surface-secondary py-2"
                       >
-                        <dt className="text-[10px] tracking-[0.06em] text-text-muted uppercase">
+                        <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                           {cell.label}
                         </dt>
                         <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">

@@ -122,11 +122,11 @@ function CampaignCard() {
   return (
     <article className="relative mx-auto max-w-md rounded-card border border-border bg-surface p-6 shadow-card-hover">
       <div className="flex items-center gap-3">
-        <span className="grid size-11 shrink-0 place-items-center rounded-full border border-primary-border bg-primary-soft text-[9px] leading-tight font-bold tracking-tight text-primary-dark">
+        <span className="grid size-11 shrink-0 place-items-center rounded-full border border-primary-border bg-primary-soft text-xs leading-tight font-bold tracking-tight text-primary-dark">
           ONE
         </span>
         <div className="min-w-0">
-          <p className="text-[11px] font-semibold tracking-[0.14em] text-text-muted uppercase">
+          <p className="text-xs font-semibold tracking-[0.14em] text-text-muted uppercase">
             One campaign
           </p>
           <h3 className="truncate font-heading text-lg font-bold text-text-primary">
@@ -195,7 +195,7 @@ function ChannelShell({
           </span>
           <span className="text-sm font-bold text-text-primary">{title}</span>
         </span>
-        <span className="text-[11px] whitespace-nowrap text-text-muted tabular-nums">{meta}</span>
+        <span className="text-xs whitespace-nowrap text-text-muted tabular-nums">{meta}</span>
       </div>
       {children}
       <Node side="bottom" />
@@ -211,13 +211,13 @@ function WhatsAppChannel() {
           <p className="text-xs leading-relaxed text-text-primary">
             Hi Sarah 👋 Our new collection is here. Explore the latest products →
           </p>
-          <p className="mt-1.5 flex items-center justify-end gap-1 text-[10px] text-text-muted">
+          <p className="mt-1.5 flex items-center justify-end gap-1 text-xs text-text-muted">
             09:00
             <CheckCheck className="size-3 text-accent" aria-hidden />
           </p>
         </div>
       </div>
-      <p className="mt-3 flex items-center gap-1.5 text-[11px] font-medium text-primary">
+      <p className="mt-3 flex items-center gap-1.5 text-xs font-medium text-primary">
         <Check className="size-3.5" strokeWidth={3} aria-hidden />
         Delivered
       </p>
@@ -229,19 +229,19 @@ function EmailChannel() {
   return (
     <ChannelShell icon={Mail} title="Email" meta="12,480 recipients">
       <div className="mt-4 rounded-panel border border-border bg-background p-3.5">
-        <p className="text-[10px] font-medium tracking-[0.06em] text-text-muted uppercase">
+        <p className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
           Subject
         </p>
         <p className="mt-1 text-xs font-semibold text-text-primary">
           Meet our newest collection
         </p>
-        <p className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-semibold text-primary">
+        <p className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-primary">
           Shop Collection
           <ArrowRight className="size-3" aria-hidden />
         </p>
       </div>
       <div className="mt-3 flex items-center justify-between gap-3">
-        <p className="text-[11px] text-text-muted">Open rate</p>
+        <p className="text-xs text-text-muted">Open rate</p>
         <p className="font-heading text-sm font-bold text-text-primary tabular-nums">42.8%</p>
       </div>
       <span aria-hidden className="mt-1.5 block h-1.5 w-full overflow-hidden rounded-full bg-surface-secondary">
@@ -258,9 +258,9 @@ function SmsChannel() {
         <p className="text-xs leading-relaxed text-text-primary">
           Your exclusive offer is waiting. Shop now →
         </p>
-        <p className="mt-1.5 text-[10px] text-text-muted">17:00 · 1 segment</p>
+        <p className="mt-1.5 text-xs text-text-muted">17:00 · 1 segment</p>
       </div>
-      <p className="mt-3 flex items-center gap-1.5 text-[11px] font-medium text-primary">
+      <p className="mt-3 flex items-center gap-1.5 text-xs font-medium text-primary">
         <Check className="size-3.5" strokeWidth={3} aria-hidden />
         Delivered
       </p>
@@ -285,7 +285,7 @@ function ResultsCard() {
             <dd className="font-heading text-2xl font-bold tracking-tight text-text-primary tabular-nums">
               {result.value}
             </dd>
-            <dt className="mt-0.5 text-[11px] text-text-muted">{result.label}</dt>
+            <dt className="mt-0.5 text-xs text-text-muted">{result.label}</dt>
           </div>
         ))}
       </dl>
@@ -296,7 +296,7 @@ function ResultsCard() {
 function OrchestrationTimeline() {
   return (
     <div className="rounded-card border border-border bg-background p-5">
-      <p className="text-[11px] font-semibold tracking-[0.14em] text-text-muted uppercase">
+      <p className="text-xs font-semibold tracking-[0.14em] text-text-muted uppercase">
         Orchestration
       </p>
       <ol className="mt-4">
@@ -383,13 +383,13 @@ export function MultiChannelCampaign() {
           <div className="relative order-1 lg:order-2">
             {/* Personalization badges, placed off the grid so the composition
                 reads as designed rather than tiled. */}
-            <span className="absolute -top-2 right-0 z-10 hidden rounded-full border border-border bg-surface px-3 py-1 text-[11px] font-semibold text-text-secondary shadow-card xl:block">
+            <span className="absolute -top-2 right-0 z-10 hidden rounded-full border border-border bg-surface px-3 py-1 text-xs font-semibold text-text-secondary shadow-card xl:block">
               Personalized
             </span>
-            <span className="absolute top-1/2 -left-6 z-10 hidden rounded-full border border-border bg-surface px-3 py-1 text-[11px] font-semibold text-text-secondary shadow-card xl:block">
+            <span className="absolute top-1/2 -left-6 z-10 hidden rounded-full border border-border bg-surface px-3 py-1 text-xs font-semibold text-text-secondary shadow-card xl:block">
               Segment-based
             </span>
-            <span className="absolute -right-4 bottom-24 z-10 hidden rounded-full border border-border bg-surface px-3 py-1 text-[11px] font-semibold text-text-secondary shadow-card xl:block">
+            <span className="absolute -right-4 bottom-24 z-10 hidden rounded-full border border-border bg-surface px-3 py-1 text-xs font-semibold text-text-secondary shadow-card xl:block">
               <Clock className="mr-1 inline size-3 align-[-2px]" aria-hidden />
               Scheduled
             </span>

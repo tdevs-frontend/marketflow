@@ -39,7 +39,7 @@ export function PricingTrust() {
             ))}
           </ul>
 
-          <p className="mt-5 flex items-center justify-center gap-2 text-[11px] text-text-muted">
+          <p className="mt-5 flex items-center justify-center gap-2 text-xs text-text-muted">
             <ShieldCheck className="size-3.5 shrink-0 text-primary" aria-hidden />
             Self-hosted on your own infrastructure — your customer data stays
             yours.

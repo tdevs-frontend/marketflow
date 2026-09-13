@@ -338,7 +338,7 @@ export function EmailAnalytics() {
               {EMAIL_SEND_TIMES.slice(0, 3).map((slot) => (
                 <li
                   key={slot.label}
-                  className="flex items-baseline justify-between gap-3 text-[11px]"
+                  className="flex items-baseline justify-between gap-3 text-xs"
                 >
                   <span className="text-text-muted">{slot.label}</span>
                   <span className="font-medium text-text-secondary tabular-nums">

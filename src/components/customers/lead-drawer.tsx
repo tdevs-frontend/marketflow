@@ -238,7 +238,7 @@ export function LeadDrawer({
                 <p className="text-xl leading-none font-bold text-text-primary tabular-nums">
                   {formatCurrency(lead.value)}
                 </p>
-                <p className="mt-1 text-[11px] text-text-muted">Deal value</p>
+                <p className="mt-1 text-xs text-text-muted">Deal value</p>
               </div>
             </div>
 
@@ -404,7 +404,7 @@ export function LeadDrawer({
                           <p className="text-xs font-medium text-text-primary">
                             {ownerName(note.authorId)}
                           </p>
-                          <p className="ml-auto text-[11px] text-text-muted">
+                          <p className="ml-auto text-xs text-text-muted">
                             {formatRelativeTime(note.at)}
                           </p>
                         </div>
@@ -490,7 +490,7 @@ export function LeadDrawer({
                             >
                               {task.title}
                             </p>
-                            <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[11px]">
+                            <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs">
                               <CalendarClock
                                 className={cn(
                                   "size-3.5",

@@ -204,7 +204,7 @@ export function TriggersWorkspace() {
               {item.label}
               <span
                 className={cn(
-                  "text-[11px] tabular-nums",
+                  "text-xs tabular-nums",
                   selected ? "text-primary/70" : "text-text-muted",
                 )}
               >
@@ -272,7 +272,7 @@ export function TriggersWorkspace() {
               {groups.map((group) => (
                 <section key={group.value}>
                   <div className="mb-3">
-                    <h2 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+                    <h2 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
                       {group.label}
                     </h2>
                     <p className="mt-0.5 text-xs text-text-muted">
@@ -289,7 +289,7 @@ export function TriggersWorkspace() {
             </div>
           ) : (
             <>
-              <h2 className="mb-3 text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h2 className="mb-3 text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
                 {triggerCategoryLabel(category as TriggerCategory)}
               </h2>
               <TriggerTable

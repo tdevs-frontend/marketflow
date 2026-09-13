@@ -50,7 +50,7 @@ export function TopCampaigns({
                   size="sm"
                   className="max-w-28"
                 />
-                <span className="text-[11px] text-text-muted tabular-nums">
+                <span className="text-xs text-text-muted tabular-nums">
                   {formatNumber(row.sent)} sent
                 </span>
               </span>
@@ -60,7 +60,7 @@ export function TopCampaigns({
               <span className="block text-sm font-bold text-text-primary tabular-nums">
                 {formatPercent(row.conversionRate)}
               </span>
-              <span className="block text-[11px] text-text-muted tabular-nums">
+              <span className="block text-xs text-text-muted tabular-nums">
                 {formatCurrency(row.revenue)}
               </span>
             </span>

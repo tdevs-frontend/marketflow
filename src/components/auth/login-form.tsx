@@ -217,7 +217,7 @@ export function LoginForm() {
 
         <div className="flex items-center gap-4">
           <span aria-hidden className="h-px flex-1 bg-border" />
-          <span className="text-[11px] font-medium tracking-[0.14em] text-text-muted uppercase">
+          <span className="text-xs font-medium tracking-[0.14em] text-text-muted uppercase">
             or
           </span>
           <span aria-hidden className="h-px flex-1 bg-border" />

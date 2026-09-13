@@ -97,7 +97,7 @@ function PreviewBlock({ block }: { block: EmailBlock }) {
       return (
         <div className="px-6 pt-4">
           <div className="grid aspect-[3/1] place-items-center rounded-panel bg-email-soft">
-            <p className="text-[11px] font-medium text-email">
+            <p className="text-xs font-medium text-email">
               {block.content}
               {block.meta ? ` · ${block.meta}` : ""}
             </p>
@@ -124,13 +124,13 @@ function PreviewBlock({ block }: { block: EmailBlock }) {
             {[0, 1, 2].map((index) => (
               <div key={index} className="rounded-panel border border-border p-2">
                 <div className="aspect-square rounded-btn bg-surface-secondary" />
-                <p className="mt-1.5 truncate text-[10px] text-text-muted">
+                <p className="mt-1.5 truncate text-xs text-text-muted">
                   Product {index + 1}
                 </p>
               </div>
             ))}
           </div>
-          <p className="mt-2 text-[10px] text-text-muted">
+          <p className="mt-2 text-xs text-text-muted">
             {block.content}
             {block.meta ? ` · ${block.meta}` : ""}
           </p>
@@ -149,7 +149,7 @@ function PreviewBlock({ block }: { block: EmailBlock }) {
     case "footer":
       return (
         <div className="mt-6 border-t border-border px-6 py-4 text-center">
-          <p className="text-[10px] leading-relaxed text-text-muted">
+          <p className="text-xs leading-relaxed text-text-muted">
             {block.content}
           </p>
         </div>
@@ -218,7 +218,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
     <div className="grid gap-4 xl:grid-cols-[16rem_minmax(0,1fr)_18rem]">
       {/* ------------------------------------------------------- Block list */}
       <Card className="h-max p-4 xl:sticky xl:top-22">
-        <p className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+        <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
           Blocks
         </p>
 
@@ -249,7 +249,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
                   <Icon className="size-3.5 shrink-0" aria-hidden />
                   <span className="min-w-0 flex-1">
                     <span className="block text-[12px] font-medium">{meta.label}</span>
-                    <span className="block truncate text-[10px] text-text-muted">
+                    <span className="block truncate text-xs text-text-muted">
                       {block.content}
                     </span>
                   </span>
@@ -283,7 +283,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
         </ol>
 
         <div className="mt-4 border-t border-border pt-3">
-          <p className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+          <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
             Add block
           </p>
           <div className="mt-2 grid grid-cols-2 gap-1.5">
@@ -296,7 +296,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
                   key={type}
                   type="button"
                   onClick={() => add(type)}
-                  className="flex items-center gap-1.5 rounded-btn border border-border px-2 py-1.5 text-[11px] font-medium text-text-secondary transition-colors hover:border-email hover:bg-email-soft hover:text-email-dark focus-visible:shadow-focus focus-visible:outline-none"
+                  className="flex items-center gap-1.5 rounded-btn border border-border px-2 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-email hover:bg-email-soft hover:text-email-dark focus-visible:shadow-focus focus-visible:outline-none"
                 >
                   <Icon className="size-3.5 shrink-0" aria-hidden />
                   <span className="truncate">{meta.label}</span>
@@ -344,7 +344,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
 
         {/* The inbox line — subject and preheader, as a client shows them. */}
         <div className="mt-4 rounded-panel border border-border bg-surface-secondary px-3.5 py-2.5">
-          <p className="text-[10px] font-medium tracking-[0.08em] text-text-muted uppercase">
+          <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
             Inbox preview
           </p>
           <p className="mt-1 truncate text-[13px] font-bold text-text-primary">
@@ -380,7 +380,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
           </div>
         </div>
 
-        <p className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-text-muted">
+        <p className="mt-3 flex items-center justify-center gap-1.5 text-xs text-text-muted">
           {width === "mobile" ? (
             <Smartphone className="size-3.5" aria-hidden />
           ) : (
@@ -395,7 +395,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
         {selected ? (
           <Card className="p-4">
             <div className="flex items-start justify-between gap-3">
-              <p className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+              <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
                 Block settings
               </p>
               <Badge tone="info">{BLOCK_META[selected.type].label}</Badge>
@@ -457,7 +457,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
         ) : null}
 
         <Card className="p-4">
-          <p className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+          <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
             Template
           </p>
 
@@ -488,7 +488,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
             </Field>
 
             <div className="rounded-panel bg-surface-secondary px-3 py-2.5">
-              <p className="text-[11px] text-text-secondary">
+              <p className="text-xs text-text-secondary">
                 Merge tags available:{" "}
                 <code className="font-mono text-email-dark">{"{{first_name}}"}</code>,{" "}
                 <code className="font-mono text-email-dark">{"{{company}}"}</code>,{" "}

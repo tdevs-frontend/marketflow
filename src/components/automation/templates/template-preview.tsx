@@ -128,7 +128,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
               <fact.icon className="size-4" aria-hidden />
             </span>
             <div className="min-w-0">
-              <dt className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+              <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                 {fact.label}
               </dt>
               <dd
@@ -164,7 +164,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
             <ol className="space-y-4">
               {template.steps.map((step, index) => (
                 <li key={`${step.title}-${index}`} className="flex gap-3">
-                  <span className="grid size-6 shrink-0 place-items-center rounded-full bg-surface-secondary text-[11px] font-bold text-text-secondary tabular-nums">
+                  <span className="grid size-6 shrink-0 place-items-center rounded-full bg-surface-secondary text-xs font-bold text-text-secondary tabular-nums">
                     {index + 1}
                   </span>
                   <div className="min-w-0 flex-1">
@@ -173,7 +173,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
                       <p className="text-[13px] font-semibold text-text-primary">
                         {step.title}
                       </p>
-                      <span className="text-[10px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                      <span className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                         {NODE_META[step.kind]?.label}
                       </span>
                     </div>
@@ -188,7 +188,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
                         {step.branches.map((branch) => (
                           <span
                             key={branch}
-                            className="rounded-full border border-dashed border-border-strong px-2 py-0.5 text-[11px] text-text-secondary"
+                            className="rounded-full border border-dashed border-border-strong px-2 py-0.5 text-xs text-text-secondary"
                           >
                             {branch}
                           </span>
@@ -224,7 +224,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
             />
             <CardBody className="space-y-4">
               <div>
-                <h3 className="flex items-center gap-1.5 text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                <h3 className="flex items-center gap-1.5 text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                   <Plug className="size-3.5" aria-hidden />
                   Integrations
                 </h3>
@@ -237,7 +237,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
                       {item}
                       <Link
                         href={APP_ROUTES.integrations}
-                        className="shrink-0 rounded text-[11px] font-medium text-primary transition-colors hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
+                        className="shrink-0 rounded text-xs font-medium text-primary transition-colors hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
                       >
                         Check
                       </Link>
@@ -247,7 +247,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
               </div>
 
               <div>
-                <h3 className="flex items-center gap-1.5 text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                <h3 className="flex items-center gap-1.5 text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                   <FileText className="size-3.5" aria-hidden />
                   Message templates
                 </h3>
@@ -262,12 +262,12 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
                         key={item}
                         className="flex items-center justify-between gap-2 rounded-btn border border-border px-2.5 py-1.5"
                       >
-                        <code className="truncate font-mono text-[11px] text-text-secondary">
+                        <code className="truncate font-mono text-xs text-text-secondary">
                           {item}
                         </code>
                         <Link
                           href={APP_ROUTES.whatsappTemplates}
-                          className="shrink-0 rounded text-[11px] font-medium text-primary transition-colors hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
+                          className="shrink-0 rounded text-xs font-medium text-primary transition-colors hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
                         >
                           Open
                         </Link>

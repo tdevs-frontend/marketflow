@@ -190,7 +190,7 @@ export function InventoryWorkspace() {
                       <p className="truncate text-sm font-medium text-text-primary">
                         {item.productName}
                       </p>
-                      <p className="font-mono text-[11px] text-text-muted">
+                      <p className="font-mono text-xs text-text-muted">
                         {item.sku}
                       </p>
                     </div>
@@ -207,7 +207,7 @@ export function InventoryWorkspace() {
                         key={cell.label}
                         className="rounded-panel bg-surface-secondary py-2"
                       >
-                        <dt className="text-[10px] tracking-[0.06em] text-text-muted uppercase">
+                        <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                           {cell.label}
                         </dt>
                         <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">
@@ -276,7 +276,7 @@ export function InventoryWorkspace() {
                     <p className="mt-0.5 text-xs text-text-secondary">
                       {entry.note ?? REASON_LABEL[entry.reason]}
                     </p>
-                    <p className="text-[11px] text-text-muted">
+                    <p className="text-xs text-text-muted">
                       {formatRelativeTime(entry.at)}
                     </p>
                   </div>

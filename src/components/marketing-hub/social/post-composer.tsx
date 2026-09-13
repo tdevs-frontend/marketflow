@@ -170,7 +170,7 @@ export function PostComposer({
         <div className="space-y-6">
           {/* --------------------------------------------------- 1. Platform */}
           <section>
-            <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+            <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
               1 · Select platforms
             </h3>
 
@@ -201,7 +201,7 @@ export function PostComposer({
                         </span>
                         <span
                           className={cn(
-                            "block text-[11px]",
+                            "block text-xs",
                             live ? "text-text-muted" : "text-warning-text",
                           )}
                         >
@@ -221,7 +221,7 @@ export function PostComposer({
             </ul>
 
             {platforms.some((platform) => !connected.has(platform)) ? (
-              <p className="mt-2 rounded-panel bg-warning-soft px-3 py-2 text-[11px] text-warning-text">
+              <p className="mt-2 rounded-panel bg-warning-soft px-3 py-2 text-xs text-warning-text">
                 One of the selected accounts needs reconnecting. The post saves
                 fine, but publishing to it will fail until the token is renewed.
               </p>
@@ -231,7 +231,7 @@ export function PostComposer({
           {/* ------------------------------------------------------ 2. Media */}
           <section>
             <div className="flex items-center justify-between gap-3">
-              <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
                 2 · Media
               </h3>
               <Button variant="ghost" size="sm" onClick={() => setMediaOpen(true)}>
@@ -250,7 +250,7 @@ export function PostComposer({
                 <span className="text-[13px] font-medium text-text-primary">
                   Add an image or video
                 </span>
-                <span className="text-[11px] text-text-muted">
+                <span className="text-xs text-text-muted">
                   Text-only posts are fine on X and LinkedIn, and reach far less
                   on Instagram
                 </span>
@@ -282,7 +282,7 @@ export function PostComposer({
                     >
                       <X className="size-3" aria-hidden />
                     </button>
-                    <p className="mt-1 max-w-20 truncate text-[10px] text-text-muted">
+                    <p className="mt-1 max-w-20 truncate text-xs text-text-muted">
                       {asset.name}
                     </p>
                   </li>
@@ -304,7 +304,7 @@ export function PostComposer({
 
           {/* ---------------------------------------------------- 3. Caption */}
           <section className="space-y-4">
-            <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+            <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
               3 · Caption
             </h3>
 
@@ -342,7 +342,7 @@ export function PostComposer({
                   return (
                     <li
                       key={platform}
-                      className="inline-flex items-center gap-1.5 text-[11px]"
+                      className="inline-flex items-center gap-1.5 text-xs"
                     >
                       <PlatformMark platform={platform} size="sm" />
                       <span
@@ -366,7 +366,7 @@ export function PostComposer({
             ) : null}
 
             {overLimit.length > 0 ? (
-              <p className="rounded-panel border border-error/25 bg-error-soft px-3 py-2 text-[11px] text-error-text">
+              <p className="rounded-panel border border-error/25 bg-error-soft px-3 py-2 text-xs text-error-text">
                 Too long for{" "}
                 {overLimit.map((p) => PLATFORM_THEME[p].label).join(" and ")}.
                 Publishing will fail there — trim the caption or deselect the
@@ -377,7 +377,7 @@ export function PostComposer({
 
           {/* --------------------------------------------------- 4. Hashtags */}
           <section>
-            <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+            <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
               4 · Hashtags
             </h3>
 
@@ -428,7 +428,7 @@ export function PostComposer({
               </ul>
             ) : null}
 
-            <p className="mt-3 text-[11px] text-text-muted">Suggested</p>
+            <p className="mt-3 text-xs text-text-muted">Suggested</p>
             <ul className="mt-1.5 flex flex-wrap gap-1.5">
               {SUGGESTED_HASHTAGS.filter((tag) => !hashtags.includes(tag)).map(
                 (tag) => (
@@ -436,7 +436,7 @@ export function PostComposer({
                     <button
                       type="button"
                       onClick={() => addHashtag(tag)}
-                      className="rounded-btn border border-border px-2 py-0.5 text-[11px] font-medium text-text-secondary transition-colors hover:border-primary hover:bg-primary-soft hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
+                      className="rounded-btn border border-border px-2 py-0.5 text-xs font-medium text-text-secondary transition-colors hover:border-primary hover:bg-primary-soft hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
                     >
                       {tag}
                     </button>
@@ -449,7 +449,7 @@ export function PostComposer({
           {/* ---------------------------------------------------- 5. Preview */}
           <section>
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
                 5 · Preview
               </h3>
 
@@ -480,7 +480,7 @@ export function PostComposer({
                       <p className="truncate text-[12px] font-bold text-text-primary">
                         MarketFlow
                       </p>
-                      <p className="text-[10px] text-text-muted">
+                      <p className="text-xs text-text-muted">
                         {SOCIAL_ACCOUNTS.find(
                           (account) => account.platform === activePreview,
                         )?.username ?? "@marketflow"}
@@ -527,7 +527,7 @@ export function PostComposer({
 
           {/* --------------------------------------------------- 6. Schedule */}
           <section>
-            <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+            <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
               6 · Schedule
             </h3>
 
@@ -608,16 +608,16 @@ export function PostComposer({
                     ) : null}
 
                     {asset.type === "video" && asset.duration ? (
-                      <span className="absolute bottom-1.5 left-1.5 rounded bg-text-primary/70 px-1 text-[9px] font-medium text-white tabular-nums">
+                      <span className="absolute bottom-1.5 left-1.5 rounded bg-text-primary/70 px-1 text-xs font-medium text-white tabular-nums">
                         {asset.duration}s
                       </span>
                     ) : null}
                   </span>
 
-                  <span className="mt-1.5 block truncate text-[11px] font-medium text-text-primary">
+                  <span className="mt-1.5 block truncate text-xs font-medium text-text-primary">
                     {asset.name}
                   </span>
-                  <span className="block text-[10px] text-text-muted">
+                  <span className="block text-xs text-text-muted">
                     {asset.width} × {asset.height}
                   </span>
                 </button>

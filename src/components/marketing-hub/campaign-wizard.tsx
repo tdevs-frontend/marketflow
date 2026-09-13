@@ -186,7 +186,7 @@ function Stepper({
             >
               <span
                 className={cn(
-                  "grid size-6 shrink-0 place-items-center rounded-full text-[11px] font-bold",
+                  "grid size-6 shrink-0 place-items-center rounded-full text-xs font-bold",
                   current
                     ? "bg-primary text-white"
                     : done
@@ -631,7 +631,7 @@ export function CampaignWizard() {
             ) : (
               <>
                 <div>
-                  <p className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+                  <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
                     Fallback values
                   </p>
                   <p className="mt-1 text-sm text-text-secondary">
@@ -650,11 +650,11 @@ export function CampaignWizard() {
                           className="grid gap-2 rounded-panel border border-border px-3.5 py-3 sm:grid-cols-[10rem_minmax(0,1fr)] sm:items-center"
                         >
                           <div className="flex items-center gap-2">
-                            <code className="rounded-btn bg-primary-soft px-1.5 py-0.5 font-mono text-[11px] text-primary-dark">
+                            <code className="rounded-btn bg-primary-soft px-1.5 py-0.5 font-mono text-xs text-primary-dark">
                               {`{{${tag}}}`}
                             </code>
                             {covered ? null : (
-                              <span className="text-[10px] font-medium tracking-[0.06em] text-warning-text uppercase">
+                              <span className="text-xs font-medium tracking-[0.06em] text-warning-text uppercase">
                                 No fallback
                               </span>
                             )}
@@ -688,7 +688,7 @@ export function CampaignWizard() {
                 ) : null}
 
                 <div>
-                  <p className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+                  <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
                     Preview for a sample contact
                   </p>
                   <div className="mt-2.5 rounded-panel border border-border bg-surface-secondary p-4">
@@ -702,7 +702,7 @@ export function CampaignWizard() {
                         "Nothing written yet."}
                     </p>
                   </div>
-                  <p className="mt-2 text-[11px] text-text-muted">
+                  <p className="mt-2 text-xs text-text-muted">
                     Rendered for Sarah Ahmed at Bright Retail. Fields she has no
                     value for fall back to what you set above.
                   </p>
@@ -849,7 +849,7 @@ export function CampaignWizard() {
             </div>
 
             <div>
-              <p className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+              <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
                 Message preview
               </p>
               <div className="mt-2.5 rounded-panel border border-border bg-surface-secondary p-4">
@@ -894,7 +894,7 @@ export function CampaignWizard() {
 
             <dl className="grid gap-3 sm:grid-cols-3">
               <div className="rounded-panel border border-border px-3.5 py-3">
-                <dt className="text-[10px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                   Recipients
                 </dt>
                 <dd className="mt-1 text-lg leading-none font-bold text-text-primary tabular-nums">
@@ -902,7 +902,7 @@ export function CampaignWizard() {
                 </dd>
               </div>
               <div className="rounded-panel border border-border px-3.5 py-3">
-                <dt className="text-[10px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                   Merge tags
                 </dt>
                 <dd className="mt-1 text-lg leading-none font-bold text-text-primary tabular-nums">
@@ -910,7 +910,7 @@ export function CampaignWizard() {
                 </dd>
               </div>
               <div className="rounded-panel border border-border px-3.5 py-3">
-                <dt className="text-[10px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                   {draft.channel === "sms" ? "Billed segments" : "Message length"}
                 </dt>
                 <dd className="mt-1 text-lg leading-none font-bold text-text-primary tabular-nums">

@@ -129,7 +129,7 @@ function CustomerPicker({
         />
       </div>
 
-      <p className="mt-3 text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+      <p className="mt-3 text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
         {debounced.trim() ? `${matches.length} matching` : "Most active"}
       </p>
 
@@ -191,11 +191,11 @@ function LifecycleTracker({ contact }: { contact: CustomerContact }) {
   return (
     <div>
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+        <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
           Lifecycle
         </h3>
         {churned ? (
-          <span className="rounded-full bg-error-soft px-2 py-0.5 text-[11px] font-medium text-error-text">
+          <span className="rounded-full bg-error-soft px-2 py-0.5 text-xs font-medium text-error-text">
             Churned
           </span>
         ) : null}
@@ -228,7 +228,7 @@ function LifecycleTracker({ contact }: { contact: CustomerContact }) {
                 />
                 <span
                   className={cn(
-                    "grid size-6 shrink-0 place-items-center rounded-full border-2 text-[10px] font-bold",
+                    "grid size-6 shrink-0 place-items-center rounded-full border-2 text-xs font-bold",
                     done && "border-primary bg-primary text-white",
                     current &&
                       "border-primary bg-surface text-primary ring-3 ring-primary-soft",
@@ -257,7 +257,7 @@ function LifecycleTracker({ contact }: { contact: CustomerContact }) {
               </div>
               <span
                 className={cn(
-                  "mt-1.5 text-center text-[11px] leading-tight",
+                  "mt-1.5 text-center text-xs leading-tight",
                   current
                     ? "font-semibold text-primary"
                     : done
@@ -440,7 +440,7 @@ export function JourneyWorkspace() {
                   <div className="mt-2 flex flex-wrap items-center gap-2">
                     <TagBadges tags={selected.tags} max={3} />
                     <ChannelConsentBadges channels={selected.optedInChannels} />
-                    <span className="text-[11px] text-text-muted">
+                    <span className="text-xs text-text-muted">
                       Owner {ownerName(selected.ownerId)}
                     </span>
                   </div>
@@ -654,11 +654,11 @@ export function JourneyWorkspace() {
 
                       <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1">
                         <SourceBadge source={journey.entrySource} />
-                        <span className="text-[11px] text-text-muted tabular-nums">
+                        <span className="text-xs text-text-muted tabular-nums">
                           {journey.touchpoints} touchpoints ·{" "}
                           {journey.durationDays}d
                         </span>
-                        <span className="ml-auto text-[11px] text-text-muted">
+                        <span className="ml-auto text-xs text-text-muted">
                           {formatRelativeTime(journey.lastActivityAt)}
                         </span>
                       </div>

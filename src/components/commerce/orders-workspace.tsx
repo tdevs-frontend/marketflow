@@ -269,7 +269,7 @@ export function OrdersWorkspace() {
                             {order.customer.name}
                           </p>
                           {order.sourceCampaign ? (
-                            <p className="text-[11px] text-text-muted">
+                            <p className="text-xs text-text-muted">
                               via {order.sourceCampaign}
                             </p>
                           ) : null}
@@ -350,7 +350,7 @@ export function OrdersWorkspace() {
                     <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
                       <OrderStatusBadge status={order.status} />
                       <PaymentStatusBadge status={order.paymentStatus} />
-                      <span className="ml-auto text-[11px] text-text-muted">
+                      <span className="ml-auto text-xs text-text-muted">
                         {formatDate(order.placedAt)}
                       </span>
                     </div>

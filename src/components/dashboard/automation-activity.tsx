@@ -122,7 +122,7 @@ export function AutomationActivity({ className }: { className?: string }) {
                 <p className="min-w-0 flex-1 truncate text-[13px] text-text-secondary">
                   {item.detail}
                 </p>
-                <span className="shrink-0 text-[11px] text-text-muted">
+                <span className="shrink-0 text-xs text-text-muted">
                   {item.time}
                 </span>
               </div>

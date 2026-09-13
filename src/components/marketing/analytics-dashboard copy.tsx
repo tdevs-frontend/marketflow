@@ -175,7 +175,7 @@ function PanelHead({
     <div className="mb-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
       <div>
         <h3 className="text-sm font-bold text-text-primary">{title}</h3>
-        {note ? <p className="mt-0.5 text-[11px] text-text-muted">{note}</p> : null}
+        {note ? <p className="mt-0.5 text-xs text-text-muted">{note}</p> : null}
       </div>
       {action}
     </div>
@@ -200,7 +200,7 @@ function KpiCards() {
           <dd className="mt-3 font-heading text-3xl font-bold tracking-tight text-text-primary tabular-nums">
             {kpi.value}
           </dd>
-          <dd className="mt-1.5 flex items-center gap-1.5 text-[11px]">
+          <dd className="mt-1.5 flex items-center gap-1.5 text-xs">
             <span className="inline-flex items-center gap-1 rounded-full bg-primary-soft px-1.5 py-0.5 font-semibold text-primary-dark">
               <TrendingUp className="size-3" aria-hidden />
               {kpi.change}
@@ -228,7 +228,7 @@ function GrowthChart() {
         note="Indexed to period start = 100"
         action={
           <div className="flex items-center gap-2">
-            <span className="hidden items-center gap-1.5 rounded-full bg-primary-soft px-2.5 py-1 text-[11px] font-semibold text-primary-dark sm:inline-flex">
+            <span className="hidden items-center gap-1.5 rounded-full bg-primary-soft px-2.5 py-1 text-xs font-semibold text-primary-dark sm:inline-flex">
               <TrendingUp className="size-3" aria-hidden />
               32.8% growth this month
             </span>
@@ -242,7 +242,7 @@ function GrowthChart() {
                   key={range}
                   aria-current={index === 1 ? "true" : undefined}
                   className={cn(
-                    "rounded-[7px] px-2 py-1 text-[11px] font-medium whitespace-nowrap transition-colors",
+                    "rounded-[7px] px-2 py-1 text-xs font-medium whitespace-nowrap transition-colors",
                     index === 1
                       ? "bg-surface text-text-primary shadow-card"
                       : "text-text-muted hover:text-text-secondary",
@@ -259,7 +259,7 @@ function GrowthChart() {
       {/* Legend — identity never rests on color alone. */}
       <ul className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-1.5">
         {SERIES.map((series) => (
-          <li key={series.name} className="flex items-center gap-1.5 text-[11px] text-text-secondary">
+          <li key={series.name} className="flex items-center gap-1.5 text-xs text-text-secondary">
             <span
               aria-hidden
               className="size-2 rounded-full"
@@ -332,7 +332,7 @@ function GrowthChart() {
         {endLabels.map((label) => (
           <span
             key={label.name}
-            className="absolute flex -translate-y-1/2 items-center gap-1 text-[10px] font-semibold whitespace-nowrap text-text-primary"
+            className="absolute flex -translate-y-1/2 items-center gap-1 text-xs font-semibold whitespace-nowrap text-text-primary"
             style={{ left: `${label.x + 1.4}%`, top: `${label.y}%` }}
           >
             <span
@@ -350,7 +350,7 @@ function GrowthChart() {
           <span
             key={month}
             className={cn(
-              "flex-1 text-center text-[10px] text-text-muted",
+              "flex-1 text-center text-xs text-text-muted",
               index % 2 === 1 && "max-sm:hidden",
             )}
           >
@@ -375,12 +375,12 @@ function CampaignPerformance() {
                   {campaign.name}
                 </span>
                 {index === 0 ? (
-                  <span className="shrink-0 rounded-full bg-primary-soft px-1.5 py-0.5 text-[10px] font-semibold whitespace-nowrap text-primary-dark">
+                  <span className="shrink-0 rounded-full bg-primary-soft px-1.5 py-0.5 text-xs font-semibold whitespace-nowrap text-primary-dark">
                     Top performing
                   </span>
                 ) : null}
               </span>
-              <span className="shrink-0 text-[11px] text-text-muted tabular-nums">
+              <span className="shrink-0 text-xs text-text-muted tabular-nums">
                 {campaign.reach} reach
               </span>
             </div>
@@ -394,7 +394,7 @@ function CampaignPerformance() {
                   style={{ width: campaign.width }}
                 />
               </span>
-              <span className="w-10 shrink-0 text-right text-[11px] font-semibold text-text-primary tabular-nums">
+              <span className="w-10 shrink-0 text-right text-xs font-semibold text-text-primary tabular-nums">
                 {campaign.conversion}
               </span>
             </div>
@@ -417,7 +417,7 @@ function ChannelPerformance() {
                 <channel.icon className="size-3.5" aria-hidden />
               </span>
               <span className="flex-1 text-xs font-semibold text-text-primary">{channel.name}</span>
-              <span className="text-[11px] text-text-muted tabular-nums">
+              <span className="text-xs text-text-muted tabular-nums">
                 {channel.messages} msgs
               </span>
             </div>
@@ -427,7 +427,7 @@ function ChannelPerformance() {
                 style={{ width: channel.delivered }}
               />
             </span>
-            <dl className="mt-1.5 flex items-center gap-4 text-[10px] text-text-muted">
+            <dl className="mt-1.5 flex items-center gap-4 text-xs text-text-muted">
               <span className="flex gap-1">
                 <dt>Delivered</dt>
                 <dd className="font-semibold text-text-secondary tabular-nums">
@@ -458,7 +458,7 @@ function ConversionFunnel() {
       <PanelHead
         title="Conversion Funnel"
         action={
-          <span className="rounded-full bg-primary-soft px-2.5 py-1 text-[11px] font-semibold text-primary-dark">
+          <span className="rounded-full bg-primary-soft px-2.5 py-1 text-xs font-semibold text-primary-dark">
             24.8% lead-to-customer
           </span>
         }
@@ -471,13 +471,13 @@ function ConversionFunnel() {
               <div className="flex items-baseline justify-between gap-2">
                 <span
                   className={cn(
-                    "text-[11px]",
+                    "text-xs",
                     last ? "font-semibold text-primary-dark" : "text-text-secondary",
                   )}
                 >
                   {step.stage}
                 </span>
-                <span className="text-[11px] font-semibold text-text-primary tabular-nums">
+                <span className="text-xs font-semibold text-text-primary tabular-nums">
                   {step.value}
                 </span>
               </div>
@@ -504,7 +504,7 @@ function LiveActivity() {
       <PanelHead
         title="Live Activity"
         action={
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-text-secondary">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-text-secondary">
             <span className="relative flex size-1.5" aria-hidden>
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-secondary opacity-75" />
               <span className="relative inline-flex size-1.5 rounded-full bg-secondary" />
@@ -517,10 +517,10 @@ function LiveActivity() {
         {ACTIVITY.map((item) => (
           <li key={item.text} className="flex items-center gap-2.5">
             <span aria-hidden className="size-1.5 shrink-0 rounded-full bg-secondary" />
-            <span className="min-w-0 flex-1 truncate text-[11px] text-text-secondary">
+            <span className="min-w-0 flex-1 truncate text-xs text-text-secondary">
               {item.text}
             </span>
-            <span className="shrink-0 text-[10px] text-text-muted">{item.time}</span>
+            <span className="shrink-0 text-xs text-text-muted">{item.time}</span>
           </li>
         ))}
       </ul>

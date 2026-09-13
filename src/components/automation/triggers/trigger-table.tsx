@@ -124,7 +124,7 @@ export function TriggerTable({
                   {formatCount(trigger.events24h)}
                 </span>
                 {trigger.failed24h > 0 ? (
-                  <span className="ml-1.5 text-[11px] font-medium text-error tabular-nums">
+                  <span className="ml-1.5 text-xs font-medium text-error tabular-nums">
                     {trigger.failed24h} failed
                   </span>
                 ) : null}
@@ -173,18 +173,18 @@ export function TriggerTable({
 
             <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5">
               <TriggerStatusBadge status={trigger.status} />
-              <span className="text-[11px] text-text-muted">
+              <span className="text-xs text-text-muted">
                 {trigger.workflowIds.length} workflows
               </span>
               <span
                 className={cn(
-                  "text-[11px] tabular-nums",
+                  "text-xs tabular-nums",
                   trigger.failed24h > 0 ? "text-error" : "text-text-muted",
                 )}
               >
                 {formatCount(trigger.events24h)} events / 24h
               </span>
-              <span className="ml-auto text-[11px] text-text-muted">
+              <span className="ml-auto text-xs text-text-muted">
                 {trigger.lastEventAt
                   ? formatRelativeTime(trigger.lastEventAt)
                   : "Never fired"}

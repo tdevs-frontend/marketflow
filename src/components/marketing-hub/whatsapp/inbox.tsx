@@ -149,7 +149,7 @@ function ConversationList({
                       >
                         {conversation.contact.name}
                       </span>
-                      <span className="shrink-0 text-[11px] text-text-muted">
+                      <span className="shrink-0 text-xs text-text-muted">
                         {time(last.at)}
                       </span>
                     </span>
@@ -160,7 +160,7 @@ function ConversationList({
                         {last.body}
                       </span>
                       {conversation.unread > 0 ? (
-                        <span className="grid size-5 shrink-0 place-items-center rounded-full bg-primary text-[10px] font-bold text-white">
+                        <span className="grid size-5 shrink-0 place-items-center rounded-full bg-primary text-xs font-bold text-white">
                           {conversation.unread}
                         </span>
                       ) : null}
@@ -277,7 +277,7 @@ function ChatWindow({
                 </p>
                 <p
                   className={cn(
-                    "mt-1 flex items-center justify-end gap-1 text-[10px]",
+                    "mt-1 flex items-center justify-end gap-1 text-xs",
                     outbound ? "text-white/70" : "text-text-muted",
                   )}
                 >
@@ -425,7 +425,7 @@ function ContactDetails({
 
         {/* Tags */}
         <section>
-          <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+          <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
             Tags
           </h3>
           <ul className="mt-2 flex flex-wrap gap-1.5">
@@ -474,7 +474,7 @@ function ContactDetails({
 
         {/* Agent */}
         <section>
-          <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+          <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
             Assigned agent
           </h3>
           <Select
@@ -494,7 +494,7 @@ function ContactDetails({
 
         {/* Notes */}
         <section>
-          <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+          <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
             Notes
           </h3>
           <ul className="mt-2 space-y-1.5">

@@ -451,7 +451,7 @@ export function SmsContactsWorkspace() {
                             {formatNumber(contact.replies)}
                           </span>
                           {contact.messages > 0 ? (
-                            <span className="block text-[11px] text-text-muted">
+                            <span className="block text-xs text-text-muted">
                               {formatPercent(rate(contact.replies, contact.messages))}
                             </span>
                           ) : null}
@@ -537,7 +537,7 @@ export function SmsContactsWorkspace() {
 
                     <div className="mt-3 flex items-center justify-between gap-3">
                       <TagList tags={contact.tags} />
-                      <p className="shrink-0 text-[11px] text-text-muted tabular-nums">
+                      <p className="shrink-0 text-xs text-text-muted tabular-nums">
                         {formatNumber(contact.messages)} sent ·{" "}
                         {formatNumber(contact.replies)} replies
                       </p>
@@ -629,7 +629,7 @@ export function SmsContactsWorkspace() {
             </div>
 
             <section>
-              <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
                 Profile
               </h3>
               <dl className="mt-2 space-y-2 text-sm">
@@ -657,7 +657,7 @@ export function SmsContactsWorkspace() {
             </section>
 
             <section>
-              <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
                 Tags
               </h3>
               <div className="mt-2">
@@ -666,7 +666,7 @@ export function SmsContactsWorkspace() {
             </section>
 
             <section>
-              <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
                 Campaign history
               </h3>
               {detail.messages === 0 ? (
@@ -683,10 +683,10 @@ export function SmsContactsWorkspace() {
                       <p className="truncate text-[13px] font-medium text-text-primary">
                         {campaign.name}
                       </p>
-                      <p className="mt-0.5 line-clamp-2 font-mono text-[11px] text-text-muted">
+                      <p className="mt-0.5 line-clamp-2 font-mono text-xs text-text-muted">
                         {campaign.message}
                       </p>
-                      <p className="mt-1 text-[11px] text-text-muted">
+                      <p className="mt-1 text-xs text-text-muted">
                         {formatDate(campaign.createdAt)}
                       </p>
                     </li>

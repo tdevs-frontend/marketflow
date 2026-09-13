@@ -156,10 +156,10 @@ function MonthCard({ post, onSelect }: { post: SocialPost; onSelect: () => void 
     >
       <PlatformStack platforms={post.platforms} size="sm" />
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-[11px] leading-tight font-medium text-text-primary">
+        <span className="block truncate text-xs leading-tight font-medium text-text-primary">
           {post.title}
         </span>
-        <span className="block text-[10px] text-text-muted tabular-nums">
+        <span className="block text-xs text-text-muted tabular-nums">
           {postTime(post)}
         </span>
       </span>
@@ -185,11 +185,11 @@ function DetailCard({ post, onSelect }: { post: SocialPost; onSelect: () => void
           <span className="truncate text-[12px] font-medium text-text-primary">
             {post.title}
           </span>
-          <span className="shrink-0 text-[10px] text-text-muted tabular-nums">
+          <span className="shrink-0 text-xs text-text-muted tabular-nums">
             {postTime(post)}
           </span>
         </span>
-        <span className="mt-0.5 line-clamp-2 block text-[11px] leading-snug text-text-muted">
+        <span className="mt-0.5 line-clamp-2 block text-xs leading-snug text-text-muted">
           {post.caption}
         </span>
         <span className="mt-1.5 flex items-center gap-1.5">
@@ -354,7 +354,7 @@ export function SocialCalendar() {
           {POST_STATUSES.map((item) => (
             <li
               key={item.value}
-              className="inline-flex items-center gap-1.5 text-[11px] text-text-muted"
+              className="inline-flex items-center gap-1.5 text-xs text-text-muted"
             >
               <span
                 aria-hidden
@@ -371,7 +371,7 @@ export function SocialCalendar() {
             {PLATFORM_ORDER.map((key) => (
               <span
                 key={key}
-                className="inline-flex items-center gap-1.5 text-[11px] text-text-muted"
+                className="inline-flex items-center gap-1.5 text-xs text-text-muted"
               >
                 <PlatformDot platform={key} />
                 {PLATFORM_THEME[key].label}
@@ -388,7 +388,7 @@ export function SocialCalendar() {
             {WEEKDAYS.map((day) => (
               <div
                 key={day}
-                className="px-2 py-2 text-center text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase"
+                className="px-2 py-2 text-center text-xs font-medium tracking-[0.06em] text-text-muted uppercase"
               >
                 <span className="hidden sm:inline">{day}</span>
                 <span className="sm:hidden">{day.charAt(0)}</span>
@@ -420,7 +420,7 @@ export function SocialCalendar() {
                   <div className="flex items-center justify-between">
                     <span
                       className={cn(
-                        "grid size-5 place-items-center rounded-full text-[11px] font-medium tabular-nums",
+                        "grid size-5 place-items-center rounded-full text-xs font-medium tabular-nums",
                         isToday
                           ? "bg-primary text-white"
                           : inMonth
@@ -431,7 +431,7 @@ export function SocialCalendar() {
                       {date.getDate()}
                     </span>
                     {dayPosts.length > 2 ? (
-                      <span className="text-[10px] text-text-muted">
+                      <span className="text-xs text-text-muted">
                         {dayPosts.length}
                       </span>
                     ) : null}
@@ -452,7 +452,7 @@ export function SocialCalendar() {
                         setAnchor(date);
                         setView("day");
                       }}
-                      className="w-full rounded px-1.5 py-0.5 text-left text-[10px] font-medium text-primary transition-colors hover:bg-primary-soft focus-visible:shadow-focus focus-visible:outline-none"
+                      className="w-full rounded px-1.5 py-0.5 text-left text-xs font-medium text-primary transition-colors hover:bg-primary-soft focus-visible:shadow-focus focus-visible:outline-none"
                     >
                       +{dayPosts.length - 2} more
                     </button>
@@ -485,7 +485,7 @@ export function SocialCalendar() {
                   )}
                 >
                   <div className="flex items-baseline gap-1.5 pb-2">
-                    <span className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                    <span className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                       {WEEKDAYS[index]}
                     </span>
                     <span
@@ -497,7 +497,7 @@ export function SocialCalendar() {
                       {date.getDate()}
                     </span>
                     {dayPosts.length > 0 ? (
-                      <span className="ml-auto text-[10px] text-text-muted">
+                      <span className="ml-auto text-xs text-text-muted">
                         {dayPosts.length}
                       </span>
                     ) : null}
@@ -507,7 +507,7 @@ export function SocialCalendar() {
                     <button
                       type="button"
                       onClick={() => setComposeOpen(true)}
-                      className="w-full rounded-panel border border-dashed border-border px-2 py-3 text-[11px] text-text-muted transition-colors hover:border-primary hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
+                      className="w-full rounded-panel border border-dashed border-border px-2 py-3 text-xs text-text-muted transition-colors hover:border-primary hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
                     >
                       + Add
                     </button>
@@ -562,7 +562,7 @@ export function SocialCalendar() {
               {(byDay.get(dayKey(anchor)) ?? []).map((post) => (
                 <li key={post.id} className="flex gap-3">
                   <div className="w-12 shrink-0 pt-2.5 text-right">
-                    <p className="text-[11px] font-medium text-text-secondary tabular-nums">
+                    <p className="text-xs font-medium text-text-secondary tabular-nums">
                       {postTime(post)}
                     </p>
                   </div>
@@ -639,7 +639,7 @@ export function SocialCalendar() {
                     key={cell.label}
                     className="rounded-panel border border-border px-3 py-2.5 text-center"
                   >
-                    <dt className="text-[10px] tracking-[0.06em] text-text-muted uppercase">
+                    <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                       {cell.label}
                     </dt>
                     <dd className="mt-0.5 text-base font-bold text-text-primary tabular-nums">
@@ -655,7 +655,7 @@ export function SocialCalendar() {
               </p>
             )}
 
-            <p className="text-[11px] text-text-muted">Created by {selected.author}</p>
+            <p className="text-xs text-text-muted">Created by {selected.author}</p>
           </div>
         ) : null}
       </Dialog>

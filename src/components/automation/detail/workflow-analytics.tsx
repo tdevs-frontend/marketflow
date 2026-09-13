@@ -176,7 +176,7 @@ function NodeAnalyticsRow({
           <p className="truncate text-[13px] font-medium text-text-primary">
             {node.title}
           </p>
-          <p className="truncate text-[11px] text-text-muted">{node.summary}</p>
+          <p className="truncate text-xs text-text-muted">{node.summary}</p>
         </div>
 
         <div className="w-28 shrink-0 max-sm:hidden">
@@ -192,19 +192,19 @@ function NodeAnalyticsRow({
           <p className="text-[13px] font-bold text-text-primary tabular-nums">
             {formatCount(entered)}
           </p>
-          <p className="text-[11px] text-text-muted tabular-nums">
+          <p className="text-xs text-text-muted tabular-nums">
             {formatPercent(share, 1)}
           </p>
         </div>
 
         <div className="w-16 shrink-0 text-right max-sm:hidden">
           {drop > 0 ? (
-            <span className="inline-flex items-center gap-0.5 text-[11px] font-medium text-error tabular-nums">
+            <span className="inline-flex items-center gap-0.5 text-xs font-medium text-error tabular-nums">
               <ArrowDownRight className="size-3" aria-hidden />
               {formatCount(drop)}
             </span>
           ) : (
-            <span className="text-[11px] text-text-muted">—</span>
+            <span className="text-xs text-text-muted">—</span>
           )}
         </div>
       </div>
@@ -214,7 +214,7 @@ function NodeAnalyticsRow({
           {node.branches.map((branch) => (
             <li
               key={branch.id}
-              className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-border-strong px-2.5 py-0.5 text-[11px] text-text-secondary"
+              className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-border-strong px-2.5 py-0.5 text-xs text-text-secondary"
             >
               {branch.label}
               <span className="font-medium text-text-primary tabular-nums">

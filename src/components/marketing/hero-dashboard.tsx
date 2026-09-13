@@ -43,12 +43,12 @@ export function HeroDashboard() {
             </div>
 
             <p className="flex min-w-0 flex-1 items-center justify-center rounded-field border border-border bg-background px-2.5 py-1">
-              <span className="truncate text-[11px] text-text-muted">
+              <span className="truncate text-xs text-text-muted">
                 marketflow.app/dashboard
               </span>
             </p>
 
-            <span className="hidden items-center gap-1.5 rounded-full bg-primary-soft px-2.5 py-1 text-[11px] font-medium text-primary-dark sm:inline-flex">
+            <span className="hidden items-center gap-1.5 rounded-full bg-primary-soft px-2.5 py-1 text-xs font-medium text-primary-dark sm:inline-flex">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
@@ -106,7 +106,7 @@ export function HeroDashboard() {
             <TrendingUp className="h-4 w-4" aria-hidden />
           </span>
           <span>
-            <span className="block text-[10px] font-medium uppercase tracking-[0.08em] text-text-muted">
+            <span className="block text-xs font-medium uppercase tracking-[0.08em] text-text-muted">
               Reply rate
             </span>
             <span className="block text-base font-bold leading-tight text-text-primary">+38%</span>
@@ -146,7 +146,7 @@ export function HeroDashboard() {
           <span className="block text-xs font-semibold leading-tight text-text-primary">
             New lead captured
           </span>
-          <span className="block text-[11px] leading-tight text-text-muted">
+          <span className="block text-xs leading-tight text-text-muted">
             Fatima R. · WhatsApp · replied in 8s
           </span>
         </span>

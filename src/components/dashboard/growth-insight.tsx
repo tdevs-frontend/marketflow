@@ -28,7 +28,7 @@ export function GrowthInsight({ className }: { className?: string }) {
         <div>
           <h2
             id="growth-insight-title"
-            className="text-[11px] font-medium tracking-[0.1em] text-primary-dark uppercase"
+            className="text-xs font-medium tracking-[0.1em] text-primary-dark uppercase"
           >
             Growth Insight
           </h2>

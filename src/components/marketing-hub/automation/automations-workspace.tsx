@@ -339,7 +339,7 @@ export function AutomationsWorkspace({ channel }: { channel: MarketingChannel })
                         { label: "Success", value: formatPercent(flow.successRate) },
                       ].map((cell) => (
                         <div key={cell.label}>
-                          <dt className="text-[10px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                          <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                             {cell.label}
                           </dt>
                           <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">
@@ -363,7 +363,7 @@ export function AutomationsWorkspace({ channel }: { channel: MarketingChannel })
                     ) : null}
 
                     <div className="mt-auto flex items-center justify-between gap-3 border-t border-border pt-3.5">
-                      <p className="text-[11px] text-text-muted">
+                      <p className="text-xs text-text-muted">
                         Active {formatRelativeTime(flow.lastActivityAt)}
                       </p>
                       <div className="flex gap-2">
@@ -411,7 +411,7 @@ export function AutomationsWorkspace({ channel }: { channel: MarketingChannel })
                       <p className="max-w-56 truncate font-medium text-text-primary">
                         {flow.name}
                       </p>
-                      <p className="max-w-56 truncate text-[11px] text-text-muted">
+                      <p className="max-w-56 truncate text-xs text-text-muted">
                         {flow.description}
                       </p>
                     </TD>

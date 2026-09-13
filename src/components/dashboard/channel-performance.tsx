@@ -104,7 +104,7 @@ export function ChannelPerformance({ className }: { className?: string }) {
             Channel metrics for WhatsApp, Email and SMS
           </caption>
           <thead>
-            <tr className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+            <tr className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
               <th scope="col" className="pb-2 font-medium">
                 Metric
               </th>

@@ -244,12 +244,12 @@ export function SmsTemplatesWorkspace() {
 
                     <div className="mt-3">
                       <div className="flex items-baseline justify-between gap-3">
-                        <p className="text-[11px] text-text-muted">
+                        <p className="text-xs text-text-muted">
                           {characters} characters when personalised
                         </p>
                         <p
                           className={cn(
-                            "text-[11px] font-medium tabular-nums",
+                            "text-xs font-medium tabular-nums",
                             multipart ? "text-warning-text" : "text-sms",
                           )}
                         >
@@ -270,7 +270,7 @@ export function SmsTemplatesWorkspace() {
                         {template.variables.map((variable) => (
                           <li
                             key={variable}
-                            className="rounded-btn bg-sms-soft px-1.5 py-0.5 font-mono text-[11px] text-sms-dark"
+                            className="rounded-btn bg-sms-soft px-1.5 py-0.5 font-mono text-xs text-sms-dark"
                           >
                             {`{{${variable}}}`}
                           </li>
@@ -278,7 +278,7 @@ export function SmsTemplatesWorkspace() {
                       </ul>
                     ) : null}
 
-                    <dl className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-3.5 text-[11px]">
+                    <dl className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-3.5 text-xs">
                       <div>
                         <dt className="text-text-muted">Used</dt>
                         <dd className="font-bold text-text-primary tabular-nums">
@@ -293,7 +293,7 @@ export function SmsTemplatesWorkspace() {
                       </div>
                     </dl>
 
-                    <p className="mt-2.5 text-[11px] text-text-muted">
+                    <p className="mt-2.5 text-xs text-text-muted">
                       Updated {formatRelativeTime(template.updatedAt)}
                     </p>
 
@@ -373,7 +373,7 @@ export function SmsTemplatesWorkspace() {
           <SmsComposer value={draftBody} onChange={setDraftBody} id="tpl-body" />
 
           <div>
-            <p className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+            <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
               Preview
             </p>
             <SmsPreview message={draftBody} className="mt-2" />
@@ -416,7 +416,7 @@ export function SmsTemplatesWorkspace() {
             <SmsPreview message={previewing.body} />
 
             <div className="rounded-panel border border-border px-3.5 py-3">
-              <p className="text-[10px] font-medium tracking-[0.08em] text-text-muted uppercase">
+              <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
                 Raw template
               </p>
               <p className="mt-1.5 font-mono text-[12px] leading-relaxed text-text-secondary">

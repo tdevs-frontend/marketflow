@@ -94,7 +94,7 @@ function ConsentRow({ contact }: { contact: CustomerContact }) {
             </span>
             <span
               className={cn(
-                "text-[11px] font-medium",
+                "text-xs font-medium",
                 granted ? "text-success-text" : "text-text-muted",
               )}
             >
@@ -421,7 +421,7 @@ export function ContactDrawer({
                           <span className="block truncate text-[13px] font-medium text-text-primary">
                             {item.title}
                           </span>
-                          <span className="text-[11px] text-text-muted">
+                          <span className="text-xs text-text-muted">
                             {formatCurrency(item.value)} ·{" "}
                             {ownerName(item.ownerId)}
                           </span>
@@ -532,7 +532,7 @@ export function ContactDrawer({
             </TabPanel>
           ) : null}
 
-          <p className="border-t border-border pt-3 text-[11px] text-text-muted">
+          <p className="border-t border-border pt-3 text-xs text-text-muted">
             Last contacted{" "}
             {contact.lastContactedAt
               ? formatRelativeTime(contact.lastContactedAt)

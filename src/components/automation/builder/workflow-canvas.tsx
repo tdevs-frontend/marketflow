@@ -380,7 +380,7 @@ export function WorkflowCanvas({
           return (
             <span
               key={`${edge.id}-label`}
-              className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full border border-border bg-surface px-2 py-0.5 text-[10px] font-medium whitespace-nowrap text-text-secondary shadow-btn"
+              className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full border border-border bg-surface px-2 py-0.5 text-xs font-medium whitespace-nowrap text-text-secondary shadow-btn"
               style={{
                 left: (from.position.x + to.position.x) / 2,
                 top: (from.position.y + NODE_H + to.position.y) / 2,

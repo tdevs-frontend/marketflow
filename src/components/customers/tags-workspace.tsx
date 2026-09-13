@@ -212,7 +212,7 @@ function TagDrawer({
                   </li>
                 ))}
                 {counts.contacts > holders.length ? (
-                  <li className="text-[11px] text-text-muted">
+                  <li className="text-xs text-text-muted">
                     +{counts.contacts - holders.length} more
                   </li>
                 ) : null}
@@ -423,7 +423,7 @@ export function TagsWorkspace() {
                         <span className="text-[13px] font-medium text-text-primary">
                           {tag.name}
                         </span>
-                        <span className="ml-auto text-[11px] text-text-muted">
+                        <span className="ml-auto text-xs text-text-muted">
                           {tag.lastUsedAt
                             ? formatRelativeTime(tag.lastUsedAt)
                             : "Never used"}
@@ -436,7 +436,7 @@ export function TagsWorkspace() {
                         </p>
                       ) : null}
 
-                      <p className="mt-2 text-[11px] text-text-muted">
+                      <p className="mt-2 text-xs text-text-muted">
                         {formatNumber(counts.contacts)} contacts ·{" "}
                         {formatNumber(counts.leads)} leads
                         {dependants(tag)

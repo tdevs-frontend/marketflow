@@ -51,7 +51,7 @@ export function SalesFunnel({ className }: { className?: string }) {
           return (
             <li key={stage.label}>
               {stepRate !== null ? (
-                <p className="flex items-center gap-1 py-0.5 pl-1 text-[11px] font-medium text-text-muted">
+                <p className="flex items-center gap-1 py-0.5 pl-1 text-xs font-medium text-text-muted">
                   <ChevronDown className="size-3" aria-hidden />
                   {stepRate.toFixed(1)}%
                 </p>

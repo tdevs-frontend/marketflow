@@ -360,7 +360,7 @@ export function WhatsAppCampaignsWorkspace() {
                             {campaign.name}
                           </p>
                           {campaign.description ? (
-                            <p className="max-w-56 truncate text-[11px] text-text-muted">
+                            <p className="max-w-56 truncate text-xs text-text-muted">
                               {campaign.description}
                             </p>
                           ) : null}
@@ -368,7 +368,7 @@ export function WhatsAppCampaignsWorkspace() {
 
                         <TD>
                           <p className="text-text-secondary">{campaign.audienceLabel}</p>
-                          <p className="text-[11px] text-text-muted">
+                          <p className="text-xs text-text-muted">
                             {formatNumber(campaign.audienceSize)} contacts
                           </p>
                         </TD>
@@ -386,7 +386,7 @@ export function WhatsAppCampaignsWorkspace() {
                             {formatNumber(campaign.opened)}
                           </span>
                           {campaign.delivered > 0 ? (
-                            <span className="block text-[11px] text-text-muted">
+                            <span className="block text-xs text-text-muted">
                               {formatPercent(rateOf(campaign.opened, campaign.delivered))}
                             </span>
                           ) : null}
@@ -499,7 +499,7 @@ export function WhatsAppCampaignsWorkspace() {
                           key={cell.label}
                           className="rounded-panel bg-surface-secondary py-2"
                         >
-                          <dt className="text-[10px] tracking-[0.06em] text-text-muted uppercase">
+                          <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                             {cell.label}
                           </dt>
                           <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">

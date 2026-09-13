@@ -231,7 +231,7 @@ export function TestWorkflowDialog({
                   </div>
                   <p className="mt-1 text-xs text-text-secondary">{step.outcome}</p>
                   {step.detail ? (
-                    <p className="mt-0.5 text-[11px] text-text-muted">{step.detail}</p>
+                    <p className="mt-0.5 text-xs text-text-muted">{step.detail}</p>
                   ) : null}
                 </div>
               </li>

@@ -333,11 +333,11 @@ export function EmailTemplatesWorkspace() {
                     ) : null}
                   </div>
 
-                  <p className="mt-3 truncate rounded-panel bg-surface-secondary px-3 py-2 text-[11px] text-text-secondary">
+                  <p className="mt-3 truncate rounded-panel bg-surface-secondary px-3 py-2 text-xs text-text-secondary">
                     {template.subject}
                   </p>
 
-                  <dl className="mt-3 flex items-center justify-between gap-3 border-t border-border pt-3 text-[11px]">
+                  <dl className="mt-3 flex items-center justify-between gap-3 border-t border-border pt-3 text-xs">
                     <div>
                       <dt className="text-text-muted">Used in</dt>
                       <dd className="font-bold text-text-primary tabular-nums">
@@ -359,7 +359,7 @@ export function EmailTemplatesWorkspace() {
                     </div>
                   </dl>
 
-                  <p className="mt-2.5 text-[11px] text-text-muted">
+                  <p className="mt-2.5 text-xs text-text-muted">
                     Updated {formatRelativeTime(template.updatedAt)}
                   </p>
 
@@ -421,7 +421,7 @@ export function EmailTemplatesWorkspace() {
         {previewing ? (
           <div className="space-y-4">
             <div className="rounded-panel border border-border bg-surface-secondary px-3.5 py-3">
-              <p className="flex items-center gap-1.5 text-[10px] font-medium tracking-[0.08em] text-text-muted uppercase">
+              <p className="flex items-center gap-1.5 text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
                 <MailOpen className="size-3" aria-hidden />
                 Inbox preview
               </p>
@@ -437,18 +437,18 @@ export function EmailTemplatesWorkspace() {
                   key={block.id}
                   className="flex gap-3 rounded-panel border border-border px-3.5 py-2.5"
                 >
-                  <span className="w-4 shrink-0 text-[11px] font-bold text-text-muted tabular-nums">
+                  <span className="w-4 shrink-0 text-xs font-bold text-text-muted tabular-nums">
                     {index + 1}
                   </span>
                   <span className="min-w-0">
-                    <span className="block text-[10px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                    <span className="block text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                       {block.type.replace("-", " ")}
                     </span>
                     <span className="mt-0.5 block text-[13px] text-text-secondary">
                       {block.content || <em className="text-text-muted">Empty</em>}
                     </span>
                     {block.meta ? (
-                      <span className="mt-0.5 block font-mono text-[11px] text-email-dark">
+                      <span className="mt-0.5 block font-mono text-xs text-email-dark">
                         {block.meta}
                       </span>
                     ) : null}

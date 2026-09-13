@@ -44,7 +44,7 @@ export function ConversionFunnel({
               /* The gap carries the drop — the interesting number. */
               <div className="flex items-center gap-2 py-1.5 pl-1">
                 <ChevronDown className="size-3.5 shrink-0 text-border-strong" aria-hidden />
-                <p className="text-[11px] text-text-muted">
+                <p className="text-xs text-text-muted">
                   <span className="font-medium text-text-secondary">
                     {formatPercent(stepRate)}
                   </span>{" "}
@@ -77,7 +77,7 @@ export function ConversionFunnel({
                 <p className="text-sm font-bold text-text-primary tabular-nums">
                   {formatNumber(stage.count)}
                 </p>
-                <p className="text-[11px] text-text-muted">
+                <p className="text-xs text-text-muted">
                   {index === 0 ? stage.hint : formatPercent(share)}
                 </p>
               </div>
@@ -111,7 +111,7 @@ export function FunnelStrip({
 
         return (
           <li key={stage.label} className="min-w-0">
-            <p className="truncate text-[10px] font-medium tracking-[0.06em] text-text-muted uppercase">
+            <p className="truncate text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
               {stage.label}
             </p>
             <p className="mt-1 text-base leading-none font-bold text-text-primary tabular-nums">
@@ -123,7 +123,7 @@ export function FunnelStrip({
                 style={{ width: `${Math.max(share, 3)}%`, opacity: 1 - index * 0.16 }}
               />
             </div>
-            <p className="mt-1.5 text-[11px] text-text-muted tabular-nums">
+            <p className="mt-1.5 text-xs text-text-muted tabular-nums">
               {formatPercent(share)}
             </p>
           </li>

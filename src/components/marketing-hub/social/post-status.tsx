@@ -66,7 +66,7 @@ export function PostThumb({
         /* A play triangle rather than a film icon — it reads at 24px. */
         <span className="ml-0.5 block size-0 border-y-[4px] border-l-[7px] border-y-transparent border-l-text-muted" />
       ) : asset ? null : (
-        <span className="text-[9px] font-bold text-text-muted">TXT</span>
+        <span className="text-xs font-bold text-text-muted">TXT</span>
       )}
     </span>
   );

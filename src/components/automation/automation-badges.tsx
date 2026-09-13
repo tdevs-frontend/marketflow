@@ -188,7 +188,7 @@ export function ChannelChips({
             key={channel}
             className={cn(
               "inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-medium",
-              size === "sm" ? "text-[10px]" : "text-[11px]",
+              size === "sm" ? "text-xs" : "text-xs",
               theme.soft,
               theme.text,
             )}
@@ -207,7 +207,7 @@ export function EventKey({ value, className }: { value: string; className?: stri
   return (
     <code
       className={cn(
-        "rounded-btn bg-surface-secondary px-1.5 py-0.5 font-mono text-[11px] text-text-secondary",
+        "rounded-btn bg-surface-secondary px-1.5 py-0.5 font-mono text-xs text-text-secondary",
         className,
       )}
     >

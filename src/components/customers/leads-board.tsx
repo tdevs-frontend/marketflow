@@ -209,7 +209,7 @@ function LeadCard({
         <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1">
           <SourceBadge source={lead.source} />
           {lead.ownerId ? (
-            <span className="flex items-center gap-1.5 text-[11px] text-text-muted">
+            <span className="flex items-center gap-1.5 text-xs text-text-muted">
               <Avatar name={ownerName(lead.ownerId)} size="xs" />
               {ownerName(lead.ownerId).split(" ")[0]}
             </span>
@@ -222,7 +222,7 @@ function LeadCard({
           </div>
         ) : null}
 
-        <p className="mt-2 truncate text-[11px] text-text-muted">
+        <p className="mt-2 truncate text-xs text-text-muted">
           {lead.lastActivity} · {formatRelativeTime(lead.lastActivityAt)}
         </p>
       </button>
@@ -569,7 +569,7 @@ export function LeadsBoard() {
                       <div className="flex items-center gap-1">
                         <span
                           className={cn(
-                            "rounded-full px-1.5 py-0.5 text-[11px] font-medium tabular-nums",
+                            "rounded-full px-1.5 py-0.5 text-xs font-medium tabular-nums",
                             column.stage === "won"
                               ? "bg-success-soft text-success-text"
                               : "bg-surface text-text-secondary",
@@ -592,7 +592,7 @@ export function LeadsBoard() {
                     {/* The badge already carries the count, so this line carries
                         only the money — the two together are the "stage counter"
                         and "pipeline value" that have to move when a card does. */}
-                    <p className="mt-0.5 text-[11px] text-text-muted tabular-nums">
+                    <p className="mt-0.5 text-xs text-text-muted tabular-nums">
                       {column.value
                         ? compactMoney(column.value)
                         : "No value yet"}
@@ -601,7 +601,7 @@ export function LeadsBoard() {
 
                   <div className="flex flex-col gap-2.5">
                     {column.items.length === 0 ? (
-                      <p className="rounded-panel border border-dashed border-border px-3 py-6 text-center text-[11px] text-text-muted">
+                      <p className="rounded-panel border border-dashed border-border px-3 py-6 text-center text-xs text-text-muted">
                         {dropTarget === column.stage
                           ? "Drop here"
                           : "Nothing here"}

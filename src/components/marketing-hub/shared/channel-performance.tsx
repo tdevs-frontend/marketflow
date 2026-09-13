@@ -46,7 +46,7 @@ export function ChannelPerformanceTable({ rows }: { rows: ChannelRow[] }) {
                 <span className="font-medium text-text-primary">
                   {formatNumber(row.sent)}
                 </span>
-                <span className="block text-[11px] text-text-muted">
+                <span className="block text-xs text-text-muted">
                   {row.channel === "social" ? "posts" : "messages"}
                 </span>
               </TD>
@@ -61,7 +61,7 @@ export function ChannelPerformanceTable({ rows }: { rows: ChannelRow[] }) {
                     <span className="text-text-secondary">
                       {formatNumber(row.engaged)}
                     </span>
-                    <span className="block text-[11px] text-text-muted">
+                    <span className="block text-xs text-text-muted">
                       {row.channel === "social"
                         ? "impressions"
                         : formatPercent(rate(row.engaged, row.delivered))}
@@ -76,7 +76,7 @@ export function ChannelPerformanceTable({ rows }: { rows: ChannelRow[] }) {
                 </span>
                 <span
                   className={cn(
-                    "flex items-center justify-end gap-0.5 text-[11px] font-medium",
+                    "flex items-center justify-end gap-0.5 text-xs font-medium",
                     rising ? "text-primary" : "text-error",
                   )}
                 >

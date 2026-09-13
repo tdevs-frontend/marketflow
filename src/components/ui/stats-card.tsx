@@ -134,13 +134,13 @@ export function MiniStat({
         className,
       )}
     >
-      <p className="text-[10px] font-medium tracking-[0.06em] text-text-muted uppercase">
+      <p className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
         {label}
       </p>
       <p className="mt-1 text-lg leading-none font-bold text-text-primary tabular-nums">
         {value}
       </p>
-      {hint ? <p className="mt-1 text-[11px] text-text-muted">{hint}</p> : null}
+      {hint ? <p className="mt-1 text-xs text-text-muted">{hint}</p> : null}
     </div>
   );
 }

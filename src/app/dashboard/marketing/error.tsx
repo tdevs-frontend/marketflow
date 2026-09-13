@@ -56,7 +56,7 @@ export default function MarketingError({
       </div>
 
       {error.digest ? (
-        <p className="mt-5 border-t border-border pt-4 text-[11px] text-text-muted">
+        <p className="mt-5 border-t border-border pt-4 text-xs text-text-muted">
           Reference{" "}
           <code className="font-mono text-text-secondary">{error.digest}</code> —
           quote this if you contact support.

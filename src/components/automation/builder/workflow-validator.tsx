@@ -350,7 +350,7 @@ export function WorkflowValidator({
         {issues.length > 0 ? (
           <>
             {errors > 0 && (warnings > 0 || tips > 0) ? (
-              <span className="text-[11px] opacity-80 tabular-nums">
+              <span className="text-xs opacity-80 tabular-nums">
                 +{warnings + tips} more
               </span>
             ) : null}
@@ -383,7 +383,7 @@ export function WorkflowValidator({
                   <span className="block text-[13px] font-medium text-text-primary">
                     {issue.message}
                   </span>
-                  <span className="block text-[11px] text-text-muted">
+                  <span className="block text-xs text-text-muted">
                     <span className="sr-only">{SEVERITY_LABEL[issue.severity]}. </span>
                     {issue.fix}
                   </span>

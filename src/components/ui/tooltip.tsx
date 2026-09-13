@@ -72,7 +72,7 @@ export function InfoHint({ content }: { content: ReactNode }) {
       <button
         type="button"
         aria-label="What this means"
-        className="grid size-4 place-items-center rounded-full border border-border-strong text-[9px] font-bold text-text-muted transition-colors hover:border-primary hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
+        className="grid size-4 place-items-center rounded-full border border-border-strong text-xs font-bold text-text-muted transition-colors hover:border-primary hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
       >
         ?
       </button>

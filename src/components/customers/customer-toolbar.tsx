@@ -50,14 +50,14 @@ export function ActiveFilterChips({
 
   return (
     <div className={cn("flex flex-wrap items-center gap-2", className)}>
-      <span className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+      <span className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
         Filtered by
       </span>
 
       <ul className="flex flex-wrap items-center gap-1.5">
         {chips.map((chip) => (
           <li key={chip.key}>
-            <span className="inline-flex items-center gap-1 rounded-full border border-primary-border bg-primary-soft py-0.5 pr-1 pl-2.5 text-[11px] font-medium text-primary-dark">
+            <span className="inline-flex items-center gap-1 rounded-full border border-primary-border bg-primary-soft py-0.5 pr-1 pl-2.5 text-xs font-medium text-primary-dark">
               <span className="text-primary/70">{chip.label}:</span>
               {chip.value}
               <button
@@ -124,7 +124,7 @@ export function ColumnsMenu<T extends string>({
           <Columns3 className="size-4" aria-hidden />
           Columns
           {hiddenCount > 0 ? (
-            <span className="grid size-4.5 place-items-center rounded-full bg-primary text-[10px] font-bold text-white">
+            <span className="grid size-4.5 place-items-center rounded-full bg-primary text-xs font-bold text-white">
               {hiddenCount}
             </span>
           ) : null}

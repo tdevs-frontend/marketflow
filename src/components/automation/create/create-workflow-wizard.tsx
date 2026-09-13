@@ -93,7 +93,7 @@ function Steps({ step }: { step: 1 | 2 }) {
             >
               <span
                 className={cn(
-                  "grid size-5 place-items-center rounded-full text-[11px] font-bold tabular-nums",
+                  "grid size-5 place-items-center rounded-full text-xs font-bold tabular-nums",
                   active || done ? "bg-primary text-white" : "bg-surface-secondary text-text-muted",
                 )}
               >
@@ -351,7 +351,7 @@ export function CreateWorkflowWizard() {
                             <span className="mt-1 block">
                               <EventKey value={item.eventKey} />
                             </span>
-                            <span className="mt-1.5 block text-[11px] text-text-muted">
+                            <span className="mt-1.5 block text-xs text-text-muted">
                               {item.description}
                             </span>
                           </button>
@@ -482,10 +482,10 @@ export function CreateWorkflowWizard() {
                   </Field>
 
                   <div>
-                    <p className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                    <p className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                       Endpoint
                     </p>
-                    <pre className="custom-scrollbar mt-1.5 overflow-x-auto rounded-panel bg-surface-secondary px-3.5 py-3 font-mono text-[11px] text-text-secondary">
+                    <pre className="custom-scrollbar mt-1.5 overflow-x-auto rounded-panel bg-surface-secondary px-3.5 py-3 font-mono text-xs text-text-secondary">
 {`POST https://api.marketflow.app/v1/events
 {
   "event": "${customKey}",

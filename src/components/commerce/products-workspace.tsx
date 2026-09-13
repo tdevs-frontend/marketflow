@@ -503,7 +503,7 @@ export function ProductsWorkspace() {
                         >
                           {item.name}
                         </Link>
-                        <p className="mt-0.5 font-mono text-[11px] text-text-muted">
+                        <p className="mt-0.5 font-mono text-xs text-text-muted">
                           {item.sku} · {item.categoryName}
                         </p>
                       </div>

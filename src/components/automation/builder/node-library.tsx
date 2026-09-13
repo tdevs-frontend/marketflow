@@ -88,7 +88,7 @@ export function NodeLibrary({
                           : [...list, group.category],
                       )
                     }
-                    className="flex w-full items-center gap-1.5 rounded-btn px-1 py-2 text-[10px] font-medium tracking-[0.08em] text-text-muted uppercase transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
+                    className="flex w-full items-center gap-1.5 rounded-btn px-1 py-2 text-xs font-medium tracking-[0.08em] text-text-muted uppercase transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
                   >
                     <ChevronDown
                       className={cn(
@@ -128,7 +128,7 @@ export function NodeLibrary({
                               <span className="block truncate text-[13px] font-medium text-text-primary">
                                 {meta.label}
                               </span>
-                              <span className="block truncate text-[11px] text-text-muted">
+                              <span className="block truncate text-xs text-text-muted">
                                 {meta.description}
                               </span>
                             </span>
@@ -148,7 +148,7 @@ export function NodeLibrary({
         )}
       </div>
 
-      <p className="shrink-0 border-t border-border px-4 py-2.5 text-[11px] text-text-muted">
+      <p className="shrink-0 border-t border-border px-4 py-2.5 text-xs text-text-muted">
         Drag a node onto the canvas, or click to add it after the selected step.
       </p>
     </div>

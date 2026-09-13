@@ -299,7 +299,7 @@ export function NewLeadDialog({
                     )
                   }
                   className={cn(
-                    "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                    "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
                     picked
                       ? "border-primary bg-primary-soft text-primary-dark"
                       : "border-border text-text-secondary hover:border-border-strong",

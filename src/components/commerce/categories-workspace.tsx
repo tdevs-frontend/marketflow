@@ -129,7 +129,7 @@ export function CategoriesWorkspace() {
                         <p className="truncate font-medium text-text-primary">
                           {item.name}
                         </p>
-                        <p className="font-mono text-[11px] text-text-muted">
+                        <p className="font-mono text-xs text-text-muted">
                           /{item.slug}
                         </p>
                       </div>

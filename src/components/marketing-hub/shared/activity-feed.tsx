@@ -69,7 +69,7 @@ export function ActivityFeed({
               </p>
               <p className="mt-0.5 text-xs text-text-secondary">{entry.detail}</p>
 
-              <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-text-muted">
+              <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-text-muted">
                 {channel ? (
                   <span className="inline-flex items-center gap-1">
                     <span

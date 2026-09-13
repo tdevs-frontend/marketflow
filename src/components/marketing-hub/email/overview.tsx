@@ -253,7 +253,7 @@ export function EmailOverview() {
                     <p className="mt-1.5 text-[13px] font-bold text-text-primary tabular-nums">
                       {formatPercent(rate(item.value, deviceTotal))}
                     </p>
-                    <p className="text-[11px] text-text-muted">{item.label}</p>
+                    <p className="text-xs text-text-muted">{item.label}</p>
                   </li>
                 );
               })}
@@ -309,7 +309,7 @@ export function EmailOverview() {
             })}
           </ul>
 
-          <p className="mt-4 rounded-panel bg-email-soft px-3 py-2.5 text-[11px] text-email-dark">
+          <p className="mt-4 rounded-panel bg-email-soft px-3 py-2.5 text-xs text-email-dark">
             Scheduling the September Newsletter into the 09:00 slot would have
             reached roughly 1,760 more opens.
           </p>
@@ -337,14 +337,14 @@ export function EmailOverview() {
                   <p className="truncate text-[13px] font-medium text-text-primary">
                     {campaign.name}
                   </p>
-                  <p className="truncate text-[11px] text-text-muted">
+                  <p className="truncate text-xs text-text-muted">
                     {campaign.subject}
                   </p>
                 </div>
 
                 <dl className="flex shrink-0 items-center gap-4 text-right">
                   <div>
-                    <dt className="text-[10px] tracking-[0.06em] text-text-muted uppercase">
+                    <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                       Sent
                     </dt>
                     <dd className="text-[13px] font-bold text-text-primary tabular-nums">
@@ -352,7 +352,7 @@ export function EmailOverview() {
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-[10px] tracking-[0.06em] text-text-muted uppercase">
+                    <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                       Open
                     </dt>
                     <dd className="text-[13px] font-bold text-text-primary tabular-nums">
@@ -362,7 +362,7 @@ export function EmailOverview() {
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-[10px] tracking-[0.06em] text-text-muted uppercase">
+                    <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
                       Click
                     </dt>
                     <dd className="text-[13px] font-bold text-text-primary tabular-nums">

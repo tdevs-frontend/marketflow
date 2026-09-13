@@ -70,7 +70,7 @@ export function MeterRow({
         </p>
       </div>
       <ProgressBar value={value} label={label} tone={tone} className="mt-2" />
-      {hint ? <p className="mt-1.5 text-[11px] text-text-muted">{hint}</p> : null}
+      {hint ? <p className="mt-1.5 text-xs text-text-muted">{hint}</p> : null}
     </div>
   );
 }

@@ -3,8 +3,8 @@ import { cn, initials } from "@/lib/utils";
 export type AvatarSize = "xs" | "sm" | "md" | "lg";
 
 const SIZES: Record<AvatarSize, string> = {
-  xs: "size-6 text-[10px]",
-  sm: "size-8 text-[11px]",
+  xs: "size-6 text-xs",
+  sm: "size-8 text-xs",
   md: "size-10 text-xs",
   lg: "size-12 text-sm",
 };

@@ -37,7 +37,7 @@ export function ContactAvatar({
   contact: WhatsAppContact;
   size?: "sm" | "md" | "lg";
 }) {
-  const box = { sm: "size-8 text-[10px]", md: "size-9 text-xs", lg: "size-14 text-sm" }[
+  const box = { sm: "size-8 text-xs", md: "size-9 text-xs", lg: "size-14 text-sm" }[
     size
   ];
 
@@ -154,7 +154,7 @@ export function ContactDetailsSheet({
           </dl>
 
           <section>
-            <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+            <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
               Tags
             </h3>
             <ul className="mt-2 flex flex-wrap gap-1.5">
@@ -196,7 +196,7 @@ export function ContactDetailsSheet({
           </section>
 
           <section>
-            <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+            <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
               Assigned agent
             </h3>
             <Select
@@ -216,7 +216,7 @@ export function ContactDetailsSheet({
 
           {contact.notes ? (
             <section>
-              <h3 className="text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
                 Notes
               </h3>
               <p className="mt-2 rounded-panel bg-surface-secondary px-3 py-2.5 text-[13px] text-text-secondary">

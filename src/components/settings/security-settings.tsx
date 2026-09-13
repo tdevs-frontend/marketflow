@@ -229,7 +229,7 @@ export function SecuritySettings() {
                           <Badge tone="brand">This device</Badge>
                         ) : null}
                       </span>
-                      <span className="block truncate text-[11px] text-text-muted">
+                      <span className="block truncate text-xs text-text-muted">
                         {session.where} · active{" "}
                         {formatRelativeTime(session.lastActive)}
                       </span>
