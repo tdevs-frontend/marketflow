@@ -68,7 +68,10 @@ export function EcosystemVisual({ className }: { className?: string }) {
   return (
     <div
       aria-hidden
-      className={cn("relative mx-auto aspect-square w-full max-w-100", className)}
+      className={cn(
+        "relative mx-auto aspect-square w-full max-w-100",
+        className,
+      )}
     >
       {/* Connectors first, so the cards paint over where lines meet them. */}
       <svg
@@ -100,10 +103,8 @@ export function EcosystemVisual({ className }: { className?: string }) {
       </svg>
 
       <div className="absolute top-1/2 left-1/2 w-38 -translate-x-1/2 -translate-y-1/2 rounded-card border border-primary-border bg-surface px-4 py-3.5 text-center shadow-float">
-        <p className="text-[10px] font-bold tracking-[0.18em] text-primary uppercase">
-          MarketFlow
-        </p>
-        <p className="mt-1 text-[11px] leading-tight text-text-secondary">
+        <p className="text-sm font-bold text-text-primary">MarketFlow</p>
+        <p className="mt-1 text-xs leading-tight text-text-secondary">
           Your growth workspace
         </p>
       </div>
@@ -125,10 +126,10 @@ export function EcosystemVisual({ className }: { className?: string }) {
               <span className="grid size-7 place-items-center rounded-full bg-primary-soft text-primary">
                 <NodeIcon className="size-3.5" />
               </span>
-              <span className="text-[11px] leading-none font-medium text-text-primary">
+              <span className="text-sm leading-none font-medium text-text-primary">
                 {node.name}
               </span>
-              <span className="text-[10px] leading-tight text-text-muted">
+              <span className="text-xs leading-tight text-text-muted">
                 {node.caption}
               </span>
             </div>
