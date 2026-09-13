@@ -19,7 +19,7 @@ export function DashboardHeader() {
   const [firstName, lastName] = (user?.name ?? "Guest User").split(" ");
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-surface/85 px-4 backdrop-blur">
+    <header className="sticky top-0 z-30 flex h-18 items-center gap-3 border-b border-border bg-surface/85 px-4 backdrop-blur">
       <IconButton
         label="Open navigation"
         onClick={() => dispatch(setMobileNavOpen(true))}

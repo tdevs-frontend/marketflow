@@ -208,7 +208,7 @@ export function DashboardSidebar() {
           mobileNavOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="flex h-16 shrink-0 items-center border-b border-border px-5">
+        <div className="flex h-18 shrink-0 items-center border-b border-border px-5">
           <Link href={APP_ROUTES.home} className="inline-flex items-center">
             <Logo height={30} priority />
           </Link>

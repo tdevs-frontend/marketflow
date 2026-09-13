@@ -139,7 +139,7 @@ export function SortableTH<T extends string>({
         type="button"
         onClick={() => onSort(field)}
         className={cn(
-          "inline-flex w-full items-center gap-1.5 px-3 py-2.5 text-sm font-medium tracking-[0.06em] uppercase transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none",
+          "inline-flex w-full items-center gap-1.5 px-3 py-2.5 text-sm font-medium transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none",
           align === "right" && "justify-end",
           active ? "text-text-primary" : "text-text-muted",
         )}
