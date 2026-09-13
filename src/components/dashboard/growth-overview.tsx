@@ -1,17 +1,23 @@
 "use client";
 
 import { useState } from "react";
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { SegmentedControl } from "@/components/ui/segmented-control";
+import { formatCurrency, formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { GrowthOverviewChart } from "./charts/growth-overview-chart";
+import {
+  DashboardRangeChips,
+  useDashboardRange,
+  type RangeKey,
+} from "./dashboard-range";
 
 /* -------------------------------------------------------------------------- */
 /* Data                                                                       */
 /* -------------------------------------------------------------------------- */
 
-type RangeKey = "7d" | "30d" | "90d" | "12m";
 type MetricKey = "leads" | "orders" | "revenue";
 
 interface MetricSeries {
@@ -19,24 +25,20 @@ interface MetricSeries {
   previous: number[];
 }
 
-interface RangeData {
-  label: string;
+interface RangeSeries {
   categories: string[];
-  /** What one point means. Shown by the legend so the scale is never a guess. */
-  unit: string;
   metrics: Record<MetricKey, MetricSeries>;
 }
 
 /**
- * Placeholder figures — swap for `useGetGrowthQuery(range)` once the API is live.
+ * Placeholder figures — swap for `useGetGrowthQuery(range, metric)` once the
+ * API is live.
  *
  * Day ranges plot a daily rate and converge on the same end-of-May reading;
  * the 12-month view plots monthly totals and its last month is the KPI row.
  */
-const RANGES: Record<RangeKey, RangeData> = {
+const SERIES: Record<RangeKey, RangeSeries> = {
   "7d": {
-    label: "7 Days",
-    unit: "per day",
     categories: ["May 24", "May 25", "May 26", "May 27", "May 28", "May 29", "May 30"],
     metrics: {
       leads: {
@@ -54,8 +56,6 @@ const RANGES: Record<RangeKey, RangeData> = {
     },
   },
   "30d": {
-    label: "30 Days",
-    unit: "per day",
     categories: ["May 1", "May 5", "May 10", "May 15", "May 20", "May 25", "May 30"],
     metrics: {
       leads: {
@@ -73,8 +73,6 @@ const RANGES: Record<RangeKey, RangeData> = {
     },
   },
   "90d": {
-    label: "90 Days",
-    unit: "per day",
     categories: ["Mar 1", "Mar 15", "Apr 1", "Apr 15", "May 1", "May 15", "May 30"],
     metrics: {
       leads: {
@@ -92,8 +90,6 @@ const RANGES: Record<RangeKey, RangeData> = {
     },
   },
   "12m": {
-    label: "12 Months",
-    unit: "per month",
     categories: [
       "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
       "Dec", "Jan", "Feb", "Mar", "Apr", "May",
@@ -121,11 +117,6 @@ const RANGES: Record<RangeKey, RangeData> = {
   },
 };
 
-const RANGE_OPTIONS = (Object.keys(RANGES) as RangeKey[]).map((key) => ({
-  value: key,
-  label: RANGES[key].label,
-}));
-
 const METRICS: { value: MetricKey; label: string; format: "number" | "currency" }[] = [
   { value: "leads", label: "Leads", format: "number" },
   { value: "orders", label: "Orders", format: "number" },
@@ -145,30 +136,44 @@ function LegendSwatch({ className, children }: { className: string; children: st
   );
 }
 
+/**
+ * The page's main visualisation.
+ *
+ * One metric at a time against its own previous period, rather than all three
+ * at once: leads, orders and revenue differ by orders of magnitude, so plotting
+ * them together flattens two of the three into the axis.
+ *
+ * The range chips drive the whole page rather than this card alone — they are
+ * the header picker in a second form, which is why the reading below them and
+ * the KPI row above never disagree about what window they describe.
+ */
 export function GrowthOverview({ className }: { className?: string }) {
-  const [range, setRange] = useState<RangeKey>("30d");
+  const { range, meta } = useDashboardRange();
   const [metric, setMetric] = useState<MetricKey>("leads");
 
   const active = METRICS.find((item) => item.value === metric) ?? METRICS[0];
-  const data = RANGES[range].metrics[metric];
+  const data = SERIES[range].metrics[metric];
+
+  /* The headline is the latest reading, so the card says where the business is
+     now before the reader has to interpret the curve. */
+  const latest = data.current[data.current.length - 1] ?? 0;
+  const latestPrevious = data.previous[data.previous.length - 1] ?? 0;
+  const change =
+    latestPrevious === 0 ? 0 : ((latest - latestPrevious) / latestPrevious) * 100;
+  const positive = change >= 0;
+  const TrendIcon = positive ? ArrowUpRight : ArrowDownRight;
 
   return (
     <Card className={cn("flex flex-col p-5", className)}>
       <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-        <div>
+        <div className="min-w-0">
           <h2 className="text-base">Growth Overview</h2>
           <p className="mt-1 text-sm text-text-secondary">
             Track leads, orders and revenue over time.
           </p>
         </div>
 
-        <SegmentedControl
-          label="Date range"
-          options={RANGE_OPTIONS}
-          value={range}
-          onChange={setRange}
-          className="max-xl:-mx-1 max-xl:overflow-x-auto"
-        />
+        <DashboardRangeChips className="max-xl:-mx-1 max-xl:overflow-x-auto" />
       </div>
 
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
@@ -184,13 +189,33 @@ export function GrowthOverview({ className }: { className?: string }) {
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
           <LegendSwatch className="bg-primary">{active.label}</LegendSwatch>
           <LegendSwatch className="bg-border-strong">Previous period</LegendSwatch>
-          <span className="text-sm text-text-muted">{RANGES[range].unit}</span>
         </div>
       </div>
 
-      <div className="mt-2 -ml-2.5">
+      <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1.5">
+        <p className="text-[1.75rem] leading-none font-bold text-text-primary tabular-nums">
+          {active.format === "currency" ? formatCurrency(latest) : formatNumber(latest)}
+        </p>
+        <span className="text-sm text-text-muted">{meta.unit}</span>
+        <span
+          className={cn(
+            "inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-sm font-bold",
+            positive
+              ? "bg-primary-soft text-primary-dark"
+              : "bg-error-soft text-error-text",
+          )}
+        >
+          <TrendIcon className="size-3.5" aria-hidden />
+          {Math.abs(change).toFixed(1)}%
+        </span>
+        <span className="text-sm text-text-muted">{meta.comparison}</span>
+      </div>
+
+      {/* The negative left margin pulls the y-axis labels back to the card's
+          padding — Apex reserves more gutter than the axis text needs. */}
+      <div className="mt-2 -ml-2.5 flex-1">
         <GrowthOverviewChart
-          categories={RANGES[range].categories}
+          categories={SERIES[range].categories}
           current={data.current}
           previous={data.previous}
           seriesName={active.label}

@@ -1,9 +1,12 @@
-import { MessageCircle, Reply } from "lucide-react";
+import Link from "next/link";
+import { MessageCircle } from "lucide-react";
 
+import { Avatar } from "@/components/ui/avatar";
 import { ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
 import { APP_ROUTES } from "@/constants";
-import { cn, initials } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 /* -------------------------------------------------------------------------- */
 /* Data                                                                       */
@@ -45,23 +48,33 @@ const CONVERSATIONS: Conversation[] = [
     unread: false,
     online: true,
   },
+  {
+    name: "David Chen",
+    preview: "Thanks — order received.",
+    time: "24 min ago",
+    unread: false,
+    online: false,
+  },
 ];
 
 /* -------------------------------------------------------------------------- */
 /* Section                                                                    */
 /* -------------------------------------------------------------------------- */
 
-function Avatar({ name, online }: { name: string; online: boolean }) {
-  const [first, last] = name.split(" ");
-
+/**
+ * The shared `Avatar` plus a presence dot.
+ *
+ * The dot needs a positioned wrapper and the avatar itself has no business
+ * knowing about online state, so it is composed here rather than added to the
+ * primitive — every other avatar in the product is a plain initials chip.
+ */
+function ConversationAvatar({ name, online }: { name: string; online: boolean }) {
   return (
     <span className="relative shrink-0">
-      <span className="grid size-10 place-items-center rounded-full bg-primary-soft text-sm font-bold text-primary-dark">
-        {initials(first, last)}
-      </span>
+      <Avatar name={name} tone="bg-primary-soft text-primary-dark" />
       {online ? (
         <span
-          className="absolute right-0 bottom-0 size-2.5 rounded-full bg-secondary ring-2 ring-surface"
+          className="absolute right-0 bottom-0 size-2.5 rounded-full bg-whatsapp ring-2 ring-surface"
           aria-label="Online"
           role="img"
         />
@@ -70,19 +83,27 @@ function Avatar({ name, online }: { name: string; online: boolean }) {
   );
 }
 
+/**
+ * The inbox, as a queue rather than a report.
+ *
+ * The three counts at the top are the state of the queue; the rows under them
+ * are the front of it. Each row is a link rather than a row with a reply button
+ * beside it: the button only ever went to the same place the row describes, and
+ * a 40px target per row beats a 32px one at the end of it.
+ */
 export function WhatsAppInbox({ className }: { className?: string }) {
   return (
     <Card className={cn("flex flex-col p-5", className)}>
       <div className="flex items-start justify-between gap-3">
         <h2 className="flex items-center gap-2 text-base">
-          <span className="grid size-7 place-items-center rounded-btn bg-primary-soft text-primary">
+          <span className="grid size-7 shrink-0 place-items-center rounded-btn bg-whatsapp-soft text-whatsapp">
             <MessageCircle className="size-4" aria-hidden />
           </span>
           WhatsApp Inbox
         </h2>
 
         <ButtonLink
-          href={APP_ROUTES.whatsapp}
+          href={APP_ROUTES.whatsappInbox}
           variant="ghost"
           size="sm"
           className="shrink-0"
@@ -95,66 +116,76 @@ export function WhatsAppInbox({ className }: { className?: string }) {
         {STATS.map((stat) => (
           <div
             key={stat.label}
-            className="rounded-panel bg-surface-secondary px-3 py-2.5"
+            className="rounded-panel bg-surface-secondary px-3.5 py-2.5"
           >
             <dt className="flex items-center gap-1.5 text-sm font-medium text-text-muted">
-              <span aria-hidden className={cn("size-1.5 rounded-full", stat.tone)} />
-              {stat.label}
+              <span aria-hidden className={cn("size-1.5 shrink-0 rounded-full", stat.tone)} />
+              <span className="truncate">{stat.label}</span>
             </dt>
-            <dd className="mt-1 text-lg leading-none font-bold text-text-primary">
+            <dd className="mt-1 text-lg leading-none font-bold text-text-primary tabular-nums">
               {stat.value}
             </dd>
           </div>
         ))}
       </dl>
 
-      <ul className="mt-4 divide-y divide-border border-t border-border">
-        {CONVERSATIONS.map((conversation) => (
-          <li
-            key={conversation.name}
-            className="group flex items-center gap-3 py-3 transition-colors"
-          >
-            <Avatar name={conversation.name} online={conversation.online} />
+      {CONVERSATIONS.length === 0 ? (
+        <div className="mt-5 flex-1">
+          <EmptyState
+            compact
+            title="No conversations yet"
+            description="Connect WhatsApp Business and incoming messages will land here."
+            action={
+              <ButtonLink href={APP_ROUTES.whatsappOverview} size="sm">
+                Connect WhatsApp
+              </ButtonLink>
+            }
+          />
+        </div>
+      ) : (
+        <ul className="mt-4 flex-1 divide-y divide-border border-t border-border">
+          {CONVERSATIONS.map((conversation) => (
+            <li key={conversation.name}>
+              <Link
+                href={APP_ROUTES.whatsappInbox}
+                className="-mx-2 flex items-center gap-3 rounded-panel px-2 py-3 transition-colors hover:bg-surface-secondary focus-visible:shadow-focus focus-visible:outline-none"
+              >
+                <ConversationAvatar
+                  name={conversation.name}
+                  online={conversation.online}
+                />
 
-            <div className="min-w-0 flex-1">
-              <div className="flex items-baseline justify-between gap-2">
-                <p
-                  className={cn(
-                    "truncate text-sm text-text-primary",
-                    conversation.unread ? "font-bold" : "font-medium",
-                  )}
-                >
-                  {conversation.name}
-                </p>
-                <span className="shrink-0 text-sm text-text-muted">
-                  {conversation.time}
-                </span>
-              </div>
-              <p className="mt-0.5 truncate text-sm text-text-secondary">
-                {conversation.preview}
-              </p>
-            </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <p
+                      className={cn(
+                        "truncate text-sm text-text-primary",
+                        conversation.unread ? "font-bold" : "font-medium",
+                      )}
+                    >
+                      {conversation.name}
+                    </p>
+                    <span className="shrink-0 text-sm text-text-muted">
+                      {conversation.time}
+                    </span>
+                  </div>
+                  <p className="mt-0.5 truncate text-sm text-text-secondary">
+                    {conversation.preview}
+                  </p>
+                </div>
 
-            {conversation.unread ? (
-              <span
-                aria-label="Unread"
-                role="img"
-                className="size-2 shrink-0 rounded-full bg-primary"
-              />
-            ) : null}
-
-            <ButtonLink
-              href={APP_ROUTES.whatsapp}
-              variant="outline"
-              size="sm"
-              aria-label={`Reply to ${conversation.name}`}
-              className="shrink-0"
-            >
-              <Reply aria-hidden />
-            </ButtonLink>
-          </li>
-        ))}
-      </ul>
+                {conversation.unread ? (
+                  <span
+                    aria-label="Unread"
+                    role="img"
+                    className="size-2 shrink-0 rounded-full bg-primary"
+                  />
+                ) : null}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </Card>
   );
 }

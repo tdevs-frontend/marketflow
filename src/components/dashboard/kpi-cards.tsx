@@ -1,8 +1,6 @@
 "use client";
 
 import {
-  ArrowDownRight,
-  ArrowUpRight,
   DollarSign,
   MessageCircle,
   ShoppingCart,
@@ -10,97 +8,85 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { Card } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { StatsGrid, type StatItem } from "@/components/ui/stats-card";
+import { useDashboardRange, type RangeKey } from "./dashboard-range";
 
 /* -------------------------------------------------------------------------- */
 /* Data                                                                       */
 /* -------------------------------------------------------------------------- */
 
-interface Kpi {
+interface KpiDefinition {
   key: string;
   label: string;
-  value: string;
-  changePercent: number;
   icon: LucideIcon;
+  /** Totals for the window, pre-formatted, one per selectable period. */
+  values: Record<RangeKey, string>;
+  /** Change against the same window one period back. */
+  change: Record<RangeKey, number>;
 }
 
-const KPIS: Kpi[] = [
+/**
+ * Placeholder figures — swap for `useGetOverviewKpisQuery(range)` once the API
+ * is live.
+ *
+ * Every metric is a *total for the window*, not a running count, which is why
+ * each one grows with the range. The 30-day column is the page's baseline: the
+ * campaign card's totals add up to its orders and revenue exactly.
+ */
+const KPIS: KpiDefinition[] = [
   {
     key: "leads",
     label: "Total Leads",
-    value: "12,480",
-    changePercent: 18.4,
     icon: Users,
+    values: { "7d": "3,092", "30d": "12,480", "90d": "34,860", "12m": "118,420" },
+    change: { "7d": 12.4, "30d": 18.4, "90d": 22.1, "12m": 31.6 },
   },
   {
     key: "conversations",
     label: "WhatsApp Conversations",
-    value: "8,420",
-    changePercent: 24.6,
     icon: MessageCircle,
+    values: { "7d": "2,140", "30d": "8,420", "90d": "23,940", "12m": "79,260" },
+    change: { "7d": 15.2, "30d": 24.6, "90d": 27.3, "12m": 38.2 },
   },
   {
     key: "orders",
     label: "Orders",
-    value: "1,284",
-    changePercent: 16.8,
     icon: ShoppingCart,
+    values: { "7d": "334", "30d": "1,284", "90d": "3,610", "12m": "12,146" },
+    change: { "7d": 11.6, "30d": 16.8, "90d": 19.4, "12m": 26.9 },
   },
   {
     key: "revenue",
     label: "Revenue Generated",
-    value: "$48.2K",
-    changePercent: 21.5,
     icon: DollarSign,
+    values: { "7d": "$12.7K", "30d": "$48.2K", "90d": "$136.8K", "12m": "$432.4K" },
+    change: { "7d": 14.1, "30d": 21.5, "90d": 24.7, "12m": 29.8 },
   },
 ];
 
 /* -------------------------------------------------------------------------- */
-/* Card                                                                       */
+/* Section                                                                    */
 /* -------------------------------------------------------------------------- */
 
-function KpiCard({ kpi }: { kpi: Kpi }) {
-  const positive = kpi.changePercent >= 0;
-  const TrendIcon = positive ? ArrowUpRight : ArrowDownRight;
-  const Icon = kpi.icon;
-
-  return (
-    <Card className="p-5">
-      <div className="flex items-start justify-between gap-3">
-        <p className="text-sm font-medium text-text-secondary">{kpi.label}</p>
-        <span className="grid size-8 shrink-0 place-items-center rounded-btn bg-surface-secondary text-text-muted">
-          <Icon className="size-4" aria-hidden />
-        </span>
-      </div>
-
-      <p className="mt-3 text-[1.75rem] leading-none font-bold text-text-primary">
-        {kpi.value}
-      </p>
-
-      <p className="mt-3 flex items-center gap-1 text-sm">
-        {/* Brand green marks growth and nothing else on this card. */}
-        <span
-          className={cn(
-            "inline-flex items-center gap-0.5 font-medium",
-            positive ? "text-primary" : "text-error",
-          )}
-        >
-          <TrendIcon className="size-3.5" aria-hidden />
-          {Math.abs(kpi.changePercent).toFixed(1)}%
-        </span>
-        <span className="text-text-muted">vs last period</span>
-      </p>
-    </Card>
-  );
-}
-
+/**
+ * The overview's four headline numbers.
+ *
+ * Built on the shared `StatsGrid` rather than a private copy of it: this row
+ * and the KPI row on every channel module are the same object, and keeping two
+ * implementations is how they end up a pixel apart. The comparison line reads
+ * from the page's reporting period, so it always names the window the figure
+ * above it was measured over.
+ */
 export function KpiCards() {
-  return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {KPIS.map((kpi) => (
-        <KpiCard key={kpi.key} kpi={kpi} />
-      ))}
-    </div>
-  );
+  const { range, meta } = useDashboardRange();
+
+  const items: StatItem[] = KPIS.map((kpi) => ({
+    label: kpi.label,
+    value: kpi.values[range],
+    changePercent: kpi.change[range],
+    icon: kpi.icon,
+    hint: meta.comparison,
+  }));
+
+  return <StatsGrid items={items} columns={4} />;
 }

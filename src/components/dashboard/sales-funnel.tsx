@@ -1,7 +1,7 @@
 import { ChevronDown } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
-import { formatNumber } from "@/lib/format";
+import { formatCount, formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 /* -------------------------------------------------------------------------- */
@@ -32,18 +32,29 @@ function barWidth(count: number): string {
 /* Section                                                                    */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * The lifecycle as one shape.
+ *
+ * The step between two bars carries both readings a funnel is read for: the
+ * share that continued, and the count that did not. The second used to be left
+ * for the reader to subtract, which is the arithmetic that makes people stop
+ * looking at funnels.
+ */
 export function SalesFunnel({ className }: { className?: string }) {
   return (
     <Card className={cn("flex flex-col p-5", className)}>
-      <h2 className="text-base">Sales Funnel</h2>
-      <p className="mt-1 text-sm text-text-secondary">
-        See how prospects move from first interaction to purchase.
-      </p>
+      <div className="min-w-0">
+        <h2 className="text-base">Sales Funnel</h2>
+        <p className="mt-1 text-sm text-text-secondary">
+          How prospects move from first interaction to purchase.
+        </p>
+      </div>
 
-      <ol className="mt-5">
+      <ol className="mt-5 flex-1">
         {STAGES.map((stage, index) => {
           const previous = index > 0 ? STAGES[index - 1] : null;
           const stepRate = previous ? (stage.count / previous.count) * 100 : null;
+          const dropped = previous ? previous.count - stage.count : 0;
           /* One hue deepening toward `primary-dark`, not five colours: the
              stages are one funnel, and the taper already carries the reading. */
           const tint = 1 - index * 0.16;
@@ -51,9 +62,18 @@ export function SalesFunnel({ className }: { className?: string }) {
           return (
             <li key={stage.label}>
               {stepRate !== null ? (
-                <p className="flex items-center gap-1 py-0.5 pl-1 text-sm font-medium text-text-muted">
-                  <ChevronDown className="size-3" aria-hidden />
-                  {stepRate.toFixed(1)}%
+                <p className="flex flex-wrap items-center gap-x-1.5 py-1 pl-1 text-sm">
+                  <ChevronDown className="size-3 shrink-0 text-text-muted" aria-hidden />
+                  <span className="font-medium text-text-secondary tabular-nums">
+                    {stepRate.toFixed(1)}%
+                  </span>
+                  <span className="text-text-muted">continue</span>
+                  <span aria-hidden className="text-text-muted">
+                    ·
+                  </span>
+                  <span className="text-text-muted tabular-nums">
+                    {formatCount(dropped)} dropped off
+                  </span>
                 </p>
               ) : null}
 
@@ -74,9 +94,9 @@ export function SalesFunnel({ className }: { className?: string }) {
         })}
       </ol>
 
-      <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
-        <span className="text-sm text-text-secondary">Visitor to customer</span>
-        <span className="text-sm font-bold text-primary">
+      <div className="mt-5 flex items-center justify-between gap-3 border-t border-border pt-4">
+        <span className="text-sm text-text-secondary">Visitor → Customer</span>
+        <span className="text-lg leading-none font-bold text-primary tabular-nums">
           {((LAST.count / TOP) * 100).toFixed(1)}%
         </span>
       </div>

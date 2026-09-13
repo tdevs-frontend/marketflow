@@ -1,6 +1,8 @@
-import { ButtonLink } from "@/components/ui/button";
 import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
 import { APP_ROUTES } from "@/constants";
 import { formatCurrency } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -75,11 +77,24 @@ const STATUS_TONE: Record<OrderStatus, BadgeTone> = {
 /* Section                                                                    */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * The latest five orders, as a real table.
+ *
+ * The stacked three-line rows this used to use could not put two orders'
+ * amounts or statuses under one another, which is the whole reason to look at a
+ * list of orders. `Table` owns the horizontal scroll, so the six columns stay
+ * six columns in a half-width card instead of reflowing into a paragraph.
+ */
 export function RecentOrders({ className }: { className?: string }) {
   return (
     <Card className={cn("flex flex-col p-5", className)}>
       <div className="flex items-start justify-between gap-3">
-        <h2 className="text-base">Recent Orders</h2>
+        <div className="min-w-0">
+          <h2 className="text-base">Recent Orders</h2>
+          <p className="mt-1 text-sm text-text-secondary">
+            The five most recent orders across every channel.
+          </p>
+        </div>
 
         <ButtonLink
           href={APP_ROUTES.orders}
@@ -87,39 +102,62 @@ export function RecentOrders({ className }: { className?: string }) {
           size="sm"
           className="shrink-0"
         >
-          View All
+          View All Orders
         </ButtonLink>
       </div>
 
-      {/* The scan is who bought what, for how much, is it paid — the id and
-          timestamp only confirm, so they take the quieter line. */}
-      <ul className="mt-3 divide-y divide-border">
-        {ORDERS.map((order) => (
-          <li key={order.id} className="py-2.5">
-            <div className="flex items-baseline justify-between gap-2">
-              <p className="truncate text-sm font-medium text-text-primary">
-                {order.customer}
-              </p>
-              <span className="shrink-0 text-sm font-bold text-text-primary tabular-nums">
-                {formatCurrency(order.amount)}
-              </span>
-            </div>
-
-            <div className="mt-1 flex items-center justify-between gap-2">
-              <p className="truncate text-sm text-text-secondary">{order.product}</p>
-              <Badge tone={STATUS_TONE[order.status]} className="shrink-0 normal-case">
-                {order.status}
-              </Badge>
-            </div>
-
-            <p className="mt-1 flex items-center gap-1.5 text-sm text-text-muted">
-              <span className="font-medium tabular-nums">{order.id}</span>
-              <span aria-hidden>·</span>
-              {order.time}
-            </p>
-          </li>
-        ))}
-      </ul>
+      {ORDERS.length === 0 ? (
+        <div className="mt-5 flex-1">
+          <EmptyState
+            compact
+            title="No orders yet"
+            description="Launch a campaign or add a product, and orders will appear here as they come in."
+            action={
+              <ButtonLink href={APP_ROUTES.marketingCampaignNew} size="sm">
+                Start Campaign
+              </ButtonLink>
+            }
+          />
+        </div>
+      ) : (
+        <div className="mt-3 flex-1">
+          <Table minWidth="34rem">
+            <THead>
+              <TH>Order</TH>
+              <TH>Customer</TH>
+              <TH>Product</TH>
+              <TH align="right">Amount</TH>
+              <TH>Status</TH>
+              <TH align="right">Time</TH>
+            </THead>
+            <TBody>
+              {ORDERS.map((order) => (
+                <TR key={order.id}>
+                  <TD className="whitespace-nowrap text-text-secondary tabular-nums">
+                    {order.id}
+                  </TD>
+                  <TD className="text-text-primary">{order.customer}</TD>
+                  <TD className="font-normal text-text-secondary">{order.product}</TD>
+                  <TD align="right" className="font-bold text-text-primary tabular-nums">
+                    {formatCurrency(order.amount)}
+                  </TD>
+                  <TD>
+                    <Badge tone={STATUS_TONE[order.status]} className="normal-case">
+                      {order.status}
+                    </Badge>
+                  </TD>
+                  <TD
+                    align="right"
+                    className="font-normal whitespace-nowrap text-text-muted"
+                  >
+                    {order.time}
+                  </TD>
+                </TR>
+              ))}
+            </TBody>
+          </Table>
+        </div>
+      )}
     </Card>
   );
 }
