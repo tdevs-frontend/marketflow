@@ -1,6 +1,10 @@
 import { NODE_META } from "@/constants/automation";
 import type {
   ActivityRow,
+  StartTypeKey,
+  WorkflowGoal,
+  WorkflowStart,
+  WorkflowVersion,
   AutomationTemplate,
   AutomationTrigger,
   ExecutionStatus,
@@ -98,6 +102,14 @@ type StepSpec = [NodeKind, string, string];
 interface ForkSpec {
   fork: StepSpec;
   branches: { label: string; steps: StepSpec[] }[];
+  /**
+   * Steps every branch converges back onto.
+   *
+   * Branches that never rejoin force you to duplicate the tail of a journey
+   * once per path, and the copies drift. A rejoin is what lets "WhatsApp or
+   * email, then wait three days and ask for a review" be written once.
+   */
+  rejoin?: StepSpec[];
 }
 
 type Spec = StepSpec | ForkSpec;
@@ -108,6 +120,47 @@ const isFork = (spec: Spec): spec is ForkSpec =>
 /** Canvas geometry. Node width is 240 in `workflow-node`; keep these in step. */
 const COLUMN = 300;
 const ROW = 150;
+
+const DURATION = /(\d+)\s*(minute|hour|day|week)/i;
+
+/**
+ * The config a seeded node arrives with, read back out of its summary.
+ *
+ * The summary is the human sentence — "1 day", "welcome_new_lead" — and the
+ * config is what the inspector and the validator read. Deriving one from the
+ * other keeps the fixture terse *and* keeps the two honest: a seeded workflow
+ * that the validator flags on open would read as a bug in the validator rather
+ * than a gap in the fixture.
+ */
+function nodeConfig(kind: NodeKind, summary: string): Record<string, unknown> {
+  const meta = NODE_META[kind];
+
+  if (meta?.category === "messaging") {
+    return { connection: "main", template: summary };
+  }
+
+  if (kind === "wait") {
+    const match = summary.match(DURATION);
+    return match
+      ? { duration: Number(match[1]), unit: `${match[2].toLowerCase()}s` }
+      : { duration: 1, unit: "hours" };
+  }
+
+  if (kind === "wait_until_event") {
+    const match = summary.match(/max (\d+) (\w+)/i);
+    return {
+      event: "whatsapp_reply",
+      timeout: match ? Number(match[1]) : 3,
+      timeoutUnit: match ? match[2].toLowerCase() : "days",
+    };
+  }
+
+  if (meta?.category === "wait") {
+    return { value: summary };
+  }
+
+  return {};
+}
 
 /**
  * Walks a spec list into positioned nodes and the edges between them.
@@ -145,7 +198,10 @@ function build(
       kind,
       title,
       summary,
-      config: {},
+      /* Nodes arrive configured, because every workflow in this fixture set is
+         one somebody has already published — and a published workflow the
+         validator complains about on open reads as a bug in the validator. */
+      config: nodeConfig(kind, summary),
       position,
       entered: Math.round(count),
     };
@@ -179,7 +235,7 @@ function build(
     const base =
       kind === "send_whatsapp" || kind === "send_email" || kind === "send_sms"
         ? 0.94
-        : kind === "wait" || kind === "wait_until"
+        : NODE_META[kind]?.category === "wait"
           ? 0.97
           : 0.995;
     return base - seeded(nodeId) * 0.03;
@@ -194,6 +250,9 @@ function build(
 
       const forkY = y;
       let deepest = forkY;
+      /* The last node of each branch, and how many contacts reach it — what a
+         rejoin has to connect back together. */
+      const tails: { id: string; count: number }[] = [];
 
       spec.branches.forEach((branch, order) => {
         const offset = (order - (spec.branches.length - 1) / 2) * COLUMN;
@@ -219,9 +278,35 @@ function build(
         });
 
         deepest = Math.max(deepest, branchY);
+        tails.push({ id: branchPrevious, count: branchCount });
       });
 
-      /* A fork ends the trunk — everything after it belongs to a branch. */
+      if (spec.rejoin?.length) {
+        /* Every branch tail feeds the first rejoined step, and the counts add
+           back up — which is the whole point of a rejoin: one tail, and the
+           numbers on it are the population again rather than a fragment. */
+        let mergedCount = tails.reduce((sum, tail) => sum + tail.count, 0);
+        let mergeY = deepest;
+        let mergePrevious: string[] = tails.map((tail) => tail.id);
+
+        for (const mergedSpec of spec.rejoin) {
+          const merged = push(mergedSpec, { x: 0, y: mergeY }, mergedCount);
+          for (const from of mergePrevious) {
+            edges.push({ id: `${from}->${merged.id}`, from, to: merged.id });
+          }
+          mergedCount *= decay(mergedSpec[0], merged.id);
+          mergePrevious = [merged.id];
+          mergeY += ROW;
+        }
+
+        previous = mergePrevious[0];
+        reaching = mergedCount;
+        y = mergeY;
+        continue;
+      }
+
+      /* No rejoin: the fork ends the trunk, and everything after it belongs to
+         a branch. */
       previous = null;
       y = deepest;
       continue;
@@ -243,24 +328,47 @@ function build(
 /* Settings                                                                   */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * The settings a workflow gets unless it says otherwise.
+ *
+ * Every default here is the conservative one: enter once, never message the
+ * unsubscribed, hold promotional sends overnight, stop on a critical error.
+ * A marketing tool whose defaults are the permissive ones is a tool whose
+ * first mistake is sent to ten thousand people.
+ */
 const defaultSettings = (
   overrides: Partial<WorkflowSettings> = {},
 ): WorkflowSettings => ({
-  entry: { mode: "once", maxEntries: 1, cooldownHours: 24 },
+  enrollment: { mode: "once", cooldownDays: 7, maxEntries: 1 },
+  suppression: {
+    unsubscribed: true,
+    suppressionList: true,
+    invalidContact: true,
+    blockedWhatsApp: true,
+    segmentIds: [],
+    tags: [],
+  },
   exit: {
     goalReached: true,
-    leavesSegment: false,
+    purchased: false,
+    leadWon: false,
+    enteredSegment: false,
     unsubscribes: true,
+    tagAdded: false,
     manualStop: true,
   },
+  goal: { enabled: false, type: "order_completed", windowDays: 14 },
   timing: {
-    timezone: "Workspace timezone (GMT+4)",
-    quietHours: { enabled: true, from: "21:00", to: "08:00" },
+    timezone: "workspace",
     days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    sendFrom: "09:00",
+    sendTo: "18:00",
+    quietHours: { enabled: true, from: "21:00", to: "08:00" },
   },
   failure: {
     retry: true,
     maxRetries: 3,
+    retryIntervalMinutes: 5,
     continueOnNonCritical: true,
     stopOnCritical: true,
   },
@@ -276,6 +384,16 @@ interface WorkflowSeed {
   name: string;
   description: string;
   status: WorkflowStatus;
+  /** Defaults to `event`, which is how all but a handful of these start. */
+  startType?: StartTypeKey;
+  /** Schedule-based journeys state their cadence in words. */
+  schedule?: string;
+  /** The goal analytics measures conversion against. */
+  goal?: WorkflowGoal;
+  /** Versions published so far. One means it has been published once. */
+  published?: number;
+  /** Edits sitting behind the running version. */
+  draftChanges?: boolean;
   triggerKey: string;
   triggerLabel: string;
   channels: MarketingChannel[];
@@ -398,7 +516,7 @@ const SEEDS: WorkflowSeed[] = [
     specs: [
       ["trigger", "Order Created", "Any sales channel"],
       ["send_whatsapp", "WhatsApp Confirmation", "order_confirmation"],
-      ["wait_until", "Wait Until", "Order fulfilled"],
+      ["wait_until_event", "Wait Until", "Order fulfilled"],
       ["send_whatsapp", "Delivery Message", "order_delivery_update"],
       ["wait", "Wait", "3 days"],
       ["send_email", "Review Request", "post_purchase_review"],
@@ -509,6 +627,53 @@ const SEEDS: WorkflowSeed[] = [
     ],
   },
   {
+    /*
+     * The rejoin example, and a real pattern: pick the channel the customer
+     * actually reads, then put everybody back on the same path afterwards.
+     * Without a rejoin the review request has to be written twice, and the two
+     * copies drift.
+     */
+    id: "wf-feedback-loop",
+    name: "Delivery Feedback Loop",
+    description:
+      "Ask for feedback on whichever channel the customer uses, then run one shared follow-up for everyone.",
+    status: "active",
+    triggerKey: "order.fulfilled",
+    triggerLabel: "Order Fulfilled",
+    channels: ["whatsapp", "email"],
+    ownerId: "own-3",
+    entered: 9480,
+    completion: 90.6,
+    conversion: 23.4,
+    updatedAt: hoursAgo(30),
+    createdAt: daysAgo(58),
+    goal: { enabled: true, type: "form_submitted", windowDays: 10 },
+    published: 4,
+    draftChanges: true,
+    specs: [
+      ["trigger", "Order Fulfilled", "Delivered orders only"],
+      ["wait", "Wait", "2 days"],
+      {
+        fork: ["if_else", "Opted in to WhatsApp?", "WhatsApp consent is true"],
+        branches: [
+          {
+            label: "WhatsApp",
+            steps: [["send_whatsapp", "Ask on WhatsApp", "feedback_request_wa"]],
+          },
+          {
+            label: "Email",
+            steps: [["send_email", "Ask by Email", "feedback_request_email"]],
+          },
+        ],
+        rejoin: [
+          ["wait_until_event", "Wait for an answer", "Submits a form, max 3 days"],
+          ["add_tag", "Add Tag", "Feedback Given"],
+          ["end", "End Workflow", "Goal reached"],
+        ],
+      },
+    ],
+  },
+  {
     id: "wf-vip-journey",
     name: "VIP Customer Journey",
     description:
@@ -554,7 +719,7 @@ const SEEDS: WorkflowSeed[] = [
     specs: [
       ["trigger", "Appointment Date", "24 hours before appointment"],
       ["send_whatsapp", "Day-before Reminder", "appointment_reminder_24h"],
-      ["wait_until", "Wait Until", "1 hour before appointment"],
+      ["wait_until_time", "Wait Until", "1 hour before appointment"],
       ["send_sms", "Final Reminder", "See you in an hour"],
       {
         fork: ["condition", "Did customer attend?", "Appointment marked complete"],
@@ -635,9 +800,9 @@ const SEEDS: WorkflowSeed[] = [
     specs: [
       ["trigger", "Order Fulfilled", "All warehouses"],
       ["send_whatsapp", "Shipped Notification", "order_shipped"],
-      ["wait_until", "Wait Until", "Carrier marks out for delivery"],
+      ["wait_until_event", "Wait Until", "Carrier marks out for delivery"],
       ["send_sms", "Out For Delivery", "Your order arrives today"],
-      ["wait_until", "Wait Until", "Delivered"],
+      ["wait_until_event", "Wait Until", "Delivered"],
       ["send_whatsapp", "Delivered Confirmation", "order_delivered"],
     ],
   },
@@ -663,7 +828,7 @@ const SEEDS: WorkflowSeed[] = [
       ["send_whatsapp", "How is it going?", "post_purchase_checkin"],
       ["wait", "Wait", "2 days"],
       ["send_email", "Recommended For You", "cross_sell_recommendations"],
-      ["update_field", "Update Contact Field", "Lifecycle = Repeat"],
+      ["update_contact", "Update Contact", "Lifecycle = Repeat"],
     ],
   },
   {
@@ -740,7 +905,7 @@ const SEEDS: WorkflowSeed[] = [
     templateId: "tpl-webinar",
     specs: [
       ["trigger", "Campaign Clicked", "Webinar registration campaign"],
-      ["wait_until", "Wait Until", "Webinar end time"],
+      ["wait_until_date", "Wait Until", "Webinar end time"],
       {
         fork: ["condition", "Did they attend?", "Attendance recorded"],
         branches: [
@@ -830,6 +995,73 @@ const SEEDS: WorkflowSeed[] = [
   },
 ];
 
+const VERSION_NOTES = [
+  "Shortened the first wait to one hour",
+  "Added the WhatsApp follow-up branch",
+  "Swapped the email template for the new design",
+  "Tightened the entry filter to exclude existing customers",
+  "Added an End step to the timeout path",
+];
+
+/**
+ * A workflow's version list, newest first.
+ *
+ * Only the newest can be a draft, exactly one is published, and the rest are
+ * superseded — which is the whole invariant version history has to hold. The
+ * superseded ones keep a count of contacts still running on them, because that
+ * is the number that explains why an old version cannot simply be deleted.
+ */
+function versionHistory(seed: WorkflowSeed): WorkflowVersion[] {
+  if (seed.status === "draft") {
+    return [
+      {
+        version: 1,
+        state: "draft",
+        createdAt: seed.updatedAt,
+        authorId: seed.ownerId,
+        note: "First draft",
+        nodeCount: seed.specs.length,
+        activeContacts: 0,
+      },
+    ];
+  }
+
+  const published = seed.published ?? 3;
+  const versions: WorkflowVersion[] = [];
+
+  if (seed.draftChanges) {
+    versions.push({
+      version: published + 1,
+      state: "draft",
+      createdAt: seed.updatedAt,
+      authorId: seed.ownerId,
+      note: VERSION_NOTES[published % VERSION_NOTES.length],
+      nodeCount: seed.specs.length,
+      activeContacts: 0,
+    });
+  }
+
+  for (let version = published; version >= 1; version -= 1) {
+    versions.push({
+      version,
+      state: version === published ? "published" : "superseded",
+      /* Spaced back through the workflow's life, newest closest to now. */
+      createdAt: minutesAgo(
+        (published - version + 1) * 60 * 24 * (6 + Math.round(seeded(`${seed.id}-v${version}`) * 20)),
+      ),
+      authorId: version % 2 === 0 ? seed.ownerId : "own-3",
+      note: VERSION_NOTES[version % VERSION_NOTES.length],
+      nodeCount: Math.max(2, seed.specs.length - (published - version)),
+      activeContacts:
+        version === published
+          ? 0
+          : Math.round(seeded(`${seed.id}-a${version}`) * 40 * (version / published)),
+    });
+  }
+
+  return versions;
+}
+
 /** `GET /automation/workflows`. */
 export const WORKFLOWS: Workflow[] = SEEDS.map((seed) => {
   const { nodes, edges } = build(seed.id, seed.specs, seed.entered);
@@ -849,11 +1081,27 @@ export const WORKFLOWS: Workflow[] = SEEDS.map((seed) => {
     seed.failed ??
     Math.round(seed.entered * (0.012 + seeded(`${seed.id}-failures`) * 0.028));
 
+  const running = Math.max(0, seed.entered - completed - failed);
+
+  /* Some of the people who left did so because the goal was met early, and
+     some unsubscribed. Either way they are neither completed nor failed, so
+     the four figures have to be told apart or the analytics do not add up. */
+  const exitedEarly = Math.round(
+    seed.entered * (0.02 + seeded(`${seed.id}-exits`) * 0.05),
+  );
+
+  const startType = seed.startType ?? "event";
+
   return {
     id: seed.id,
     name: seed.name,
     description: seed.description,
     status: seed.status,
+    start: {
+      type: startType,
+      eventKey: startType === "event" ? seed.triggerKey : undefined,
+      schedule: seed.schedule,
+    },
     triggerKey: seed.triggerKey,
     triggerLabel: seed.triggerLabel,
     channels: seed.channels,
@@ -864,10 +1112,30 @@ export const WORKFLOWS: Workflow[] = SEEDS.map((seed) => {
       entered: seed.entered,
       completed,
       converted,
-      running: Math.max(0, seed.entered - completed - failed),
+      running,
       failed,
+      exitedEarly,
+      /* Between a few hours and a fortnight, depending on how many waits the
+         journey has — derived from the graph rather than invented, so a
+         seven-day nurture never reports a two-minute average. */
+      averageCompletionMs: Math.round(
+        nodes.filter((node) => NODE_META[node.kind]?.category === "wait").length *
+          86_400_000 *
+          (0.6 + seeded(`${seed.id}-duration`) * 1.4) +
+          3_600_000,
+      ),
     },
-    settings: defaultSettings(seed.settings),
+    settings: defaultSettings({
+      ...seed.settings,
+      goal: seed.goal ?? {
+        enabled: seed.conversion > 0,
+        type: "order_completed",
+        windowDays: 14,
+      },
+    }),
+    publishedVersion: seed.status === "draft" ? 0 : (seed.published ?? 3),
+    hasDraftChanges: seed.draftChanges ?? false,
+    versions: versionHistory(seed),
     templateId: seed.templateId,
     createdAt: seed.createdAt,
     updatedAt: seed.updatedAt,
@@ -908,6 +1176,7 @@ export function createDraftWorkflow({
   triggerLabel,
   ownerId = "own-1",
   template,
+  start,
 }: {
   name: string;
   description: string;
@@ -915,6 +1184,8 @@ export function createDraftWorkflow({
   triggerLabel: string;
   ownerId?: string;
   template?: AutomationTemplate;
+  /** What the creation wizard chose. Defaults to an event-based start. */
+  start?: WorkflowStart;
 }): Workflow {
   const id = localId("wf-draft");
   const now = AUTOMATION_NOW;
@@ -937,14 +1208,38 @@ export function createDraftWorkflow({
     name,
     description,
     status: "draft",
+    start: start ?? { type: "event", eventKey: triggerKey },
     triggerKey,
     triggerLabel,
     channels: template?.channels ?? [],
     nodes,
     edges,
     ownerId,
-    stats: { entered: 0, completed: 0, converted: 0, running: 0, failed: 0 },
+    stats: {
+      entered: 0,
+      completed: 0,
+      converted: 0,
+      running: 0,
+      failed: 0,
+      exitedEarly: 0,
+      averageCompletionMs: 0,
+    },
     settings: defaultSettings(),
+    /* Nothing is published until somebody publishes it — which is the whole
+       point of the draft lifecycle. */
+    publishedVersion: 0,
+    hasDraftChanges: true,
+    versions: [
+      {
+        version: 1,
+        state: "draft",
+        createdAt: now,
+        authorId: ownerId,
+        note: template ? `Created from ${template.name}` : "First draft",
+        nodeCount: nodes.length,
+        activeContacts: 0,
+      },
+    ],
     templateId: template?.id,
     createdAt: now,
     updatedAt: now,
@@ -966,6 +1261,7 @@ const step = (
 export const AUTOMATION_TEMPLATES: AutomationTemplate[] = [
   {
     id: "tpl-new-lead-welcome",
+    goal: "Lead replies or is assigned to an agent",
     name: "New Lead Welcome",
     category: "lead-nurture",
     description:
@@ -991,6 +1287,7 @@ export const AUTOMATION_TEMPLATES: AutomationTemplate[] = [
   },
   {
     id: "tpl-lead-nurture",
+    goal: "Lead reaches the Qualified stage",
     name: "Lead Nurture",
     category: "lead-nurture",
     description:
@@ -1015,6 +1312,7 @@ export const AUTOMATION_TEMPLATES: AutomationTemplate[] = [
   },
   {
     id: "tpl-lead-qualification",
+    goal: "Lead is routed to an owner",
     name: "Lead Qualification",
     category: "sales",
     description:
@@ -1037,6 +1335,7 @@ export const AUTOMATION_TEMPLATES: AutomationTemplate[] = [
   },
   {
     id: "tpl-whatsapp-inquiry",
+    goal: "Conversation reaches a sales agent",
     name: "WhatsApp Inquiry Follow-up",
     category: "sales",
     description:
@@ -1058,6 +1357,7 @@ export const AUTOMATION_TEMPLATES: AutomationTemplate[] = [
   },
   {
     id: "tpl-abandoned-cart",
+    goal: "Checkout is completed",
     name: "Abandoned Cart Recovery",
     category: "ecommerce",
     description:
@@ -1080,6 +1380,7 @@ export const AUTOMATION_TEMPLATES: AutomationTemplate[] = [
   },
   {
     id: "tpl-order-confirmation",
+    goal: "Order confirmation is delivered",
     name: "Order Confirmation",
     category: "ecommerce",
     description:
@@ -1100,6 +1401,7 @@ export const AUTOMATION_TEMPLATES: AutomationTemplate[] = [
   },
   {
     id: "tpl-delivery-update",
+    goal: "Order is marked delivered",
     name: "Order Delivery Update",
     category: "ecommerce",
     description:
@@ -1112,7 +1414,7 @@ export const AUTOMATION_TEMPLATES: AutomationTemplate[] = [
     steps: [
       step("trigger", "Order Fulfilled", "All warehouses"),
       step("send_whatsapp", "Shipped", "order_shipped"),
-      step("wait_until", "Wait Until", "Out for delivery"),
+      step("wait_until_event", "Wait Until", "Out for delivery"),
       step("send_sms", "Out For Delivery", "Arrives today"),
       step("send_whatsapp", "Delivered", "order_delivered"),
     ],
@@ -1122,6 +1424,7 @@ export const AUTOMATION_TEMPLATES: AutomationTemplate[] = [
   },
   {
     id: "tpl-post-purchase",
+    goal: "A second order is placed",
     name: "Post-Purchase Follow-up",
     category: "customer-success",
     description:
@@ -1143,6 +1446,7 @@ export const AUTOMATION_TEMPLATES: AutomationTemplate[] = [
   },
   {
     id: "tpl-review-request",
+    goal: "A review is submitted",
     name: "Review Request",
     category: "customer-success",
     description:
@@ -1164,6 +1468,7 @@ export const AUTOMATION_TEMPLATES: AutomationTemplate[] = [
   },
   {
     id: "tpl-appointment-reminder",
+    goal: "The appointment is attended",
     name: "Appointment Reminder",
     category: "appointments",
     description:
@@ -1176,7 +1481,7 @@ export const AUTOMATION_TEMPLATES: AutomationTemplate[] = [
     steps: [
       step("trigger", "Appointment Date", "24 hours before"),
       step("send_whatsapp", "Day-before Reminder", "appointment_reminder_24h"),
-      step("wait_until", "Wait Until", "1 hour before"),
+      step("wait_until_time", "Wait Until", "1 hour before"),
       step("send_sms", "Final Reminder", "See you in an hour"),
       step("condition", "Attended?", "Marked complete", ["Tag attended", "Offer rebooking"]),
     ],
@@ -1186,6 +1491,7 @@ export const AUTOMATION_TEMPLATES: AutomationTemplate[] = [
   },
   {
     id: "tpl-winback",
+    goal: "An order is placed within 30 days",
     name: "Inactive Customer Win-back",
     category: "re-engagement",
     description:
@@ -1208,6 +1514,7 @@ export const AUTOMATION_TEMPLATES: AutomationTemplate[] = [
   },
   {
     id: "tpl-vip-journey",
+    goal: "VIP places an order in the quarter",
     name: "VIP Customer Journey",
     category: "customer-success",
     description:
@@ -1230,6 +1537,7 @@ export const AUTOMATION_TEMPLATES: AutomationTemplate[] = [
   },
   {
     id: "tpl-webinar",
+    goal: "Attendee books a demo",
     name: "Webinar Follow-up",
     category: "lead-nurture",
     description:
@@ -1241,7 +1549,7 @@ export const AUTOMATION_TEMPLATES: AutomationTemplate[] = [
     triggerKey: "campaign.clicked",
     steps: [
       step("trigger", "Campaign Clicked", "Registration campaign"),
-      step("wait_until", "Wait Until", "Webinar end time"),
+      step("wait_until_date", "Wait Until", "Webinar end time"),
       step("condition", "Did they attend?", "Attendance recorded", ["Thanks & slides", "Send recording"]),
       step("assign_owner", "Assign Owner", "Sales team"),
     ],
@@ -1251,6 +1559,7 @@ export const AUTOMATION_TEMPLATES: AutomationTemplate[] = [
   },
   {
     id: "tpl-reengagement",
+    goal: "Contact opens or replies within 14 days",
     name: "Re-engagement Campaign",
     category: "re-engagement",
     description:
@@ -2056,6 +2365,64 @@ const RUN_SEEDS: RunSeed[] = [
   },
 ];
 
+/**
+ * What a step was handed, and what it produced.
+ *
+ * Derived from the node rather than written per step, because sixty hand-typed
+ * payloads would drift from the nodes they claim to describe within a week.
+ * Both are shown in the execution detail: "the message failed" is not
+ * debuggable, and "we sent it to a number with no country code" is.
+ */
+function stepIO(
+  node: WorkflowNode | undefined,
+  contactId: string,
+  status: ExecutionStatus,
+): { input?: Record<string, unknown>; output?: Record<string, unknown> } {
+  if (!node) return {};
+
+  const meta = NODE_META[node.kind];
+  const base = { contact_id: contactId };
+
+  if (meta?.category === "messaging") {
+    return {
+      input: { ...base, template: node.summary, channel: meta.channel },
+      output:
+        status === "failed"
+          ? { delivered: false }
+          : { message_id: `wamid.${node.id.slice(-8)}`, status: "delivered" },
+    };
+  }
+
+  if (meta?.category === "wait") {
+    return {
+      input: { ...base, wait: node.summary },
+      output: status === "completed" ? { outcome: "elapsed" } : undefined,
+    };
+  }
+
+  if (node.branches?.length) {
+    return {
+      input: { ...base, rule: node.summary },
+      output:
+        status === "completed"
+          ? { branch: node.branches[0].label, matched: true }
+          : undefined,
+    };
+  }
+
+  if (node.kind === "trigger") {
+    return {
+      input: { ...base, event: node.summary },
+      output: { enrolled: true },
+    };
+  }
+
+  return {
+    input: { ...base, value: node.summary },
+    output: status === "completed" ? { applied: true } : undefined,
+  };
+}
+
 /** `GET /automation/runs`. */
 export const WORKFLOW_RUNS: WorkflowRun[] = RUN_SEEDS.map((seed) => {
   const workflow = workflowById(seed.workflowId);
@@ -2064,10 +2431,18 @@ export const WORKFLOW_RUNS: WorkflowRun[] = RUN_SEEDS.map((seed) => {
     const node = workflow?.nodes[stepSeed.nodeIndex];
     const kind = node?.kind ?? "end";
 
+    const { input, output } = stepIO(node, seed.contactId, stepSeed.status);
+
     return {
       id: `${seed.id}-s${order}`,
       nodeId: node?.id ?? `${seed.id}-missing-${order}`,
       at: minutesAgo(stepSeed.minutesAgo),
+      finishedAt:
+        stepSeed.durationMs === undefined
+          ? undefined
+          : new Date(
+              NOW_MS - stepSeed.minutesAgo * 60_000 + stepSeed.durationMs,
+            ).toISOString(),
       kind,
       title: node?.title ?? "Step",
       detail: node?.summary ?? "",
@@ -2075,6 +2450,12 @@ export const WORKFLOW_RUNS: WorkflowRun[] = RUN_SEEDS.map((seed) => {
       status: stepSeed.status,
       durationMs: stepSeed.durationMs,
       channel: stepSeed.channel ?? NODE_META[kind]?.channel,
+      input,
+      output,
+      /* A failed step has been through the retry policy; everything else ran
+         once. Showing "attempt 4 of 4" is what tells a reader the retries have
+         already happened and the failure is final. */
+      attempt: stepSeed.error ? stepSeed.error.retries + 1 : 1,
       error: stepSeed.error,
     };
   });

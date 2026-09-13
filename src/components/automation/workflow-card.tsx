@@ -98,7 +98,7 @@ export function WorkflowCard({
 }) {
   const router = useRouter();
   const href = AUTOMATION_ROUTES.workflow(workflow.id);
-  const { entered, converted } = workflow.stats;
+  const { entered, running } = workflow.stats;
 
   return (
     <Card className="flex h-full flex-col p-4" interactive>
@@ -138,21 +138,24 @@ export function WorkflowCard({
         </span>
       </div>
 
+      {/* Active, entered, conversion. The first is what is happening now, the
+          second is the scale it has run at, the third is whether it works —
+          three questions, and nothing on the card that answers none of them. */}
       <dl className="mt-3 grid grid-cols-3 gap-2 border-t border-border pt-3">
+        <div>
+          <dt className="text-[10px] font-medium tracking-[0.06em] text-text-muted uppercase">
+            Active
+          </dt>
+          <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">
+            {formatCount(running)}
+          </dd>
+        </div>
         <div>
           <dt className="text-[10px] font-medium tracking-[0.06em] text-text-muted uppercase">
             Entered
           </dt>
           <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">
             {formatCount(entered)}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-[10px] font-medium tracking-[0.06em] text-text-muted uppercase">
-            Converted
-          </dt>
-          <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">
-            {formatCount(converted)}
           </dd>
         </div>
         <div>

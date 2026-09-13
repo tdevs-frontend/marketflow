@@ -1,7 +1,17 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ArrowDownRight, CheckCircle2, Target, TrendingUp, Users } from "lucide-react";
+import {
+  Activity,
+  ArrowDownRight,
+  CheckCircle2,
+  LogOut,
+  Target,
+  Timer,
+  TrendingUp,
+  Users,
+  XCircle,
+} from "lucide-react";
 
 import { BarsChart, TrendChart } from "@/components/dashboard/charts";
 import { BRAND_SERIES, CHART_COLORS } from "@/components/dashboard/charts/chart-theme";
@@ -10,6 +20,7 @@ import { KpiStrip, type Kpi } from "@/components/ui/kpi-strip";
 import { ProgressBar } from "@/components/ui/progress";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { CHANNEL_THEME } from "@/constants/channels";
+import { goalLabel } from "@/constants/automation";
 import { formatCount, formatPercent, rate } from "@/lib/format";
 import {
   TREND_DAYS,
@@ -32,8 +43,18 @@ import { NodeIcon } from "../node-icon";
 
 type Period = "7" | "14";
 
+/** Milliseconds as the coarse figure a completion time wants. */
+function formatSpan(ms: number): string {
+  if (ms <= 0) return "—";
+  const hours = ms / 3_600_000;
+  if (hours < 1) return `${Math.round(ms / 60_000)}m`;
+  if (hours < 48) return `${hours.toFixed(1)}h`;
+  return `${(hours / 24).toFixed(1)}d`;
+}
+
 function kpis(workflow: Workflow): Kpi[] {
   const { entered, completed, converted } = workflow.stats;
+  const goal = workflow.settings.goal;
 
   return [
     { label: "Entered", value: formatCount(entered), icon: Users, tone: "brand" },
@@ -44,13 +65,60 @@ function kpis(workflow: Workflow): Kpi[] {
       tone: "success",
       hint: `${formatPercent(rate(completed, entered), 1)} of everyone who entered`,
     },
-    { label: "Converted", value: formatCount(converted), icon: Target },
     {
-      label: "Conversion rate",
+      label: "Converted",
+      value: formatCount(converted),
+      icon: Target,
+      hint: goal.enabled ? `Goal: ${goalLabel(goal.type)}` : "No goal set",
+    },
+    {
+      label: goal.enabled ? "Goal conversion" : "Conversion rate",
       value: formatPercent(conversionRate(workflow)),
       icon: TrendingUp,
       tone: conversionRate(workflow) >= 15 ? "success" : "neutral",
-      hint: "Reached the workflow's goal",
+      hint: goal.enabled
+        ? `Within ${goal.windowDays} days of entry`
+        : "Reached the last step",
+    },
+  ];
+}
+
+/**
+ * The second row: the figures you need when the first row looks wrong.
+ *
+ * Separated rather than crammed into one strip of eight, because these are
+ * diagnostic — how many are still inside, how many left early, how many
+ * failed, how long it takes. Nobody opens Analytics to read them first, and
+ * everybody needs them the moment conversion drops.
+ */
+function secondaryKpis(workflow: Workflow): Kpi[] {
+  const { running, exitedEarly, failed, averageCompletionMs, entered } = workflow.stats;
+
+  return [
+    {
+      label: "Currently active",
+      value: formatCount(running),
+      icon: Activity,
+      hint: "Inside the journey right now",
+    },
+    {
+      label: "Exited early",
+      value: formatCount(exitedEarly),
+      icon: LogOut,
+      hint: `${formatPercent(rate(exitedEarly, entered), 1)} — goal met, unsubscribed or stopped`,
+    },
+    {
+      label: "Failed runs",
+      value: formatCount(failed),
+      icon: XCircle,
+      tone: failed > 0 ? "warning" : "neutral",
+      hint: failed > 0 ? "Open Activity to see why" : "Nothing failing",
+    },
+    {
+      label: "Average completion",
+      value: formatSpan(averageCompletionMs),
+      icon: Timer,
+      hint: "From entry to the last step",
     },
   ];
 }
@@ -199,6 +267,7 @@ export function WorkflowAnalytics({ workflow }: { workflow: Workflow }) {
   return (
     <div className="space-y-6">
       <KpiStrip items={kpis(workflow)} />
+      <KpiStrip items={secondaryKpis(workflow)} />
 
       <div className="grid gap-4 xl:grid-cols-2">
         <ChartCard

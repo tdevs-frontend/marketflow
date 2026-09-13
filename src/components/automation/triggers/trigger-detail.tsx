@@ -3,10 +3,20 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Activity, ChevronLeft, Clock, Pause, Play, Plus, Workflow as WorkflowIcon } from "lucide-react";
+import {
+  Activity,
+  ChevronLeft,
+  Clock,
+  KeyRound,
+  Pause,
+  Play,
+  Plus,
+  Send,
+  Workflow as WorkflowIcon,
+} from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useToast } from "@/components/ui/toast";
@@ -14,6 +24,7 @@ import {
   AUTOMATION_ROUTES,
   triggerCategoryLabel,
 } from "@/constants/automation";
+import { APP_ROUTES } from "@/constants/app";
 import { formatCount, formatDateTime, formatRelativeTime } from "@/lib/format";
 import { createDraftWorkflow, workflowById } from "@/lib/workflow-fixtures";
 import { cn } from "@/lib/utils";
@@ -39,6 +50,11 @@ export function TriggerDetail({ trigger }: { trigger: AutomationTrigger }) {
   const workflows = trigger.workflowIds
     .map((id) => workflowById(id))
     .filter((workflow) => workflow !== undefined);
+
+  /* Webhooks, API events and anything the workspace registered itself: these
+     are the three that somebody has to integrate against. */
+  const developer = trigger.category === "developer" || Boolean(trigger.custom);
+  const lastError = trigger.recentEvents.find((event) => event.status === "failed");
 
   function createWorkflow() {
     const workflow = createDraftWorkflow({
@@ -201,6 +217,103 @@ export function TriggerDetail({ trigger }: { trigger: AutomationTrigger }) {
           </CardBody>
         </Card>
       </div>
+
+      {/*
+        The developer half, and only for the triggers that have one.
+        A marketer reading "Contact Created" has no use for an endpoint or a
+        signing secret, and putting one on every trigger page is how a registry
+        starts reading like API docs.
+      */}
+      {developer ? (
+        <Card>
+          <CardHeader
+            title="Integration"
+            description="How to raise this event from your own systems."
+          />
+          <CardBody className="grid gap-4 xl:grid-cols-2">
+            <div className="space-y-4">
+              <div>
+                <p className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                  Event endpoint
+                </p>
+                <pre className="custom-scrollbar mt-1.5 overflow-x-auto rounded-panel bg-surface-secondary px-3.5 py-3 font-mono text-[11px] text-text-secondary">
+                  {`POST https://api.marketflow.app/v1/events
+Content-Type: application/json
+X-MarketFlow-Signature: <hmac-sha256>
+
+{ "event": "${trigger.eventKey}", "contact_id": "CT-8451" }`}
+                </pre>
+              </div>
+
+              <div>
+                <p className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                  Authentication
+                </p>
+                <p className="mt-1.5 text-sm text-text-secondary">
+                  Requests are signed with your workspace secret and verified
+                  before the payload is read. An unsigned request is rejected
+                  with <code className="font-mono text-xs">401</code> and never
+                  starts a workflow.
+                </p>
+                <ButtonLink
+                  href={APP_ROUTES.integrations}
+                  variant="outline"
+                  size="sm"
+                  className="mt-2.5"
+                >
+                  <KeyRound aria-hidden />
+                  Manage API keys
+                </ButtonLink>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <p className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                  Testing
+                </p>
+                <p className="mt-1.5 text-sm text-text-secondary">
+                  Send a sample event to check the payload maps the way you
+                  expect. Test events are logged here but never enrol a real
+                  contact.
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-2.5"
+                  onClick={() =>
+                    toast(`Test ${trigger.eventKey} event sent`, "success")
+                  }
+                >
+                  <Send aria-hidden />
+                  Send test event
+                </Button>
+              </div>
+
+              <div>
+                <p className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                  Last error
+                </p>
+                {lastError ? (
+                  <div className="mt-1.5 rounded-panel border border-error/40 bg-error-soft/40 px-3.5 py-3">
+                    <p className="text-[13px] font-medium text-error-text">
+                      Payload rejected — `contact_id` did not match a contact
+                    </p>
+                    <p className="mt-1 text-[11px] text-text-muted">
+                      {formatDateTime(lastError.at)} ·{" "}
+                      {formatCount(trigger.failed24h)} failed in the last 24 hours
+                    </p>
+                  </div>
+                ) : (
+                  <p className="mt-1.5 text-sm text-text-secondary">
+                    No delivery errors in the last 24 hours.
+                  </p>
+                )}
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+      ) : null}
 
       <Card>
         <CardHeader

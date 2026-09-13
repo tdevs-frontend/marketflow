@@ -1,175 +1,23 @@
 "use client";
 
 import { useId, useState } from "react";
-import { FileJson, LayoutTemplate, Upload } from "lucide-react";
+import { FileJson, Upload } from "lucide-react";
 
-import { ButtonLink, Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { Field, Input, Textarea } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
 import { useToast } from "@/components/ui/toast";
-import { AUTOMATION_ROUTES } from "@/constants/automation";
-import { OWNERS } from "@/lib/customer-fixtures";
-import { AUTOMATION_TRIGGERS, createDraftWorkflow } from "@/lib/workflow-fixtures";
 import type { Workflow } from "@/types/workflow";
 
 /**
- * The three dialogs the workflow list owns.
+ * The two dialogs the workflow list owns.
  *
  * Dialogs, not drawers: each is a short form with a single decision at the end
  * of it, and a modal is the right shape for a step you either finish or
- * abandon. Node editing — the long, exploratory kind — goes to the inspector
- * instead, which is why there is no "edit workflow" dialog here.
+ * abandon. Creating a workflow is not one of those — it is a two-step question
+ * with a rule builder in it, so it has a route of its own. Node editing goes to
+ * the inspector.
  */
-
-const ACTIVE_TRIGGERS = AUTOMATION_TRIGGERS.filter(
-  (trigger) => trigger.status !== "disabled",
-);
-
-export function NewWorkflowDialog({
-  open,
-  onClose,
-  onCreate,
-}: {
-  open: boolean;
-  onClose: () => void;
-  onCreate: (workflow: Workflow) => void;
-}) {
-  const id = useId();
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [triggerKey, setTriggerKey] = useState(ACTIVE_TRIGGERS[0]?.eventKey ?? "");
-  const [ownerId, setOwnerId] = useState(OWNERS[0]?.id ?? "own-1");
-  const [touched, setTouched] = useState(false);
-
-  /*
-   * Reset on open rather than on close, so the fields do not visibly clear
-   * while the dialog is still animating away — and adjusted during render
-   * rather than in an effect, which is React's own shape for state derived
-   * from a prop and avoids a frame of the previous values.
-   */
-  const [lastOpen, setLastOpen] = useState(open);
-  if (open !== lastOpen) {
-    setLastOpen(open);
-    if (open) {
-      setName("");
-      setDescription("");
-      setTriggerKey(ACTIVE_TRIGGERS[0]?.eventKey ?? "");
-      setOwnerId(OWNERS[0]?.id ?? "own-1");
-      setTouched(false);
-    }
-  }
-
-  const invalid = name.trim().length === 0;
-
-  function submit() {
-    setTouched(true);
-    if (invalid) return;
-
-    const trigger = ACTIVE_TRIGGERS.find((item) => item.eventKey === triggerKey);
-    onCreate(
-      createDraftWorkflow({
-        name: name.trim(),
-        description:
-          description.trim() ||
-          `Automated journey starting from ${trigger?.name ?? "an event"}.`,
-        triggerKey,
-        triggerLabel: trigger?.name ?? "Trigger",
-        ownerId,
-      }),
-    );
-  }
-
-  return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      title="New workflow"
-      description="Name it, choose what starts it, and the builder opens on an empty canvas."
-      footer={
-        <>
-          <Button variant="outline" size="compact" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button size="compact" onClick={submit}>
-            Create workflow
-          </Button>
-        </>
-      }
-    >
-      <div className="space-y-4">
-        <Field
-          label="Workflow name"
-          htmlFor={`${id}-name`}
-          error={touched && invalid ? "Give the workflow a name." : undefined}
-        >
-          <Input
-            id={`${id}-name`}
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            placeholder="Abandoned Checkout Recovery"
-            error={touched && invalid}
-            autoFocus
-          />
-        </Field>
-
-        <Field
-          label="Description"
-          htmlFor={`${id}-description`}
-          hint="One line explaining what this journey does. Shown on the workflow card."
-        >
-          <Textarea
-            id={`${id}-description`}
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-            placeholder="Recover abandoned carts using automated WhatsApp and Email follow-ups."
-            rows={3}
-          />
-        </Field>
-
-        <Field
-          label="Trigger"
-          htmlFor={`${id}-trigger`}
-          hint="The event that puts a contact into this workflow. You can change it later."
-        >
-          <Select
-            id={`${id}-trigger`}
-            hideLabel={false}
-            label="Trigger"
-            value={triggerKey}
-            onChange={setTriggerKey}
-            options={ACTIVE_TRIGGERS.map((trigger) => ({
-              value: trigger.eventKey,
-              label: trigger.name,
-              hint: trigger.eventKey,
-            }))}
-          />
-        </Field>
-
-        <Field label="Owner" htmlFor={`${id}-owner`}>
-          <Select
-            id={`${id}-owner`}
-            hideLabel={false}
-            label="Owner"
-            value={ownerId}
-            onChange={setOwnerId}
-            options={OWNERS.map((owner) => ({ value: owner.id, label: owner.name }))}
-          />
-        </Field>
-
-        <div className="flex flex-wrap items-center gap-2 rounded-panel border border-border bg-surface-secondary px-3.5 py-3">
-          <LayoutTemplate className="size-4 shrink-0 text-text-muted" aria-hidden />
-          <p className="min-w-0 flex-1 text-xs text-text-secondary">
-            Starting from a proven journey is usually faster than an empty canvas.
-          </p>
-          <ButtonLink href={AUTOMATION_ROUTES.templates} variant="ghost" size="sm">
-            Browse templates
-          </ButtonLink>
-        </div>
-      </div>
-    </Dialog>
-  );
-}
 
 export function RenameWorkflowDialog({
   workflow,

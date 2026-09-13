@@ -9,6 +9,7 @@ import {
   FileText,
   Layers,
   Plug,
+  Target,
   Users,
 } from "lucide-react";
 
@@ -23,6 +24,7 @@ import {
 import { APP_ROUTES } from "@/constants/app";
 import { formatCount } from "@/lib/format";
 import { createDraftWorkflow } from "@/lib/workflow-fixtures";
+import { cn } from "@/lib/utils";
 import type { AutomationTemplate } from "@/types/workflow";
 import { ChannelChips, ComplexityBadge } from "../automation-badges";
 import { NodeIcon } from "../node-icon";
@@ -59,6 +61,14 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
   }
 
   const facts = [
+    {
+      icon: Target,
+      label: "Goal",
+      value: template.goal,
+      /* A sentence, not a figure — it needs to wrap rather than set the row's
+         type scale. */
+      wrap: true,
+    },
     {
       icon: Layers,
       label: "Steps",
@@ -111,7 +121,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
         </div>
       </div>
 
-      <dl className="grid gap-4 sm:grid-cols-3">
+      <dl className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {facts.map((fact) => (
           <Card key={fact.label} className="flex items-center gap-3 p-4">
             <span className="grid size-9 shrink-0 place-items-center rounded-btn bg-primary-soft text-primary">
@@ -121,7 +131,12 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
               <dt className="text-[11px] font-medium tracking-[0.06em] text-text-muted uppercase">
                 {fact.label}
               </dt>
-              <dd className="text-lg leading-tight font-bold text-text-primary">
+              <dd
+                className={cn(
+                  "font-bold text-text-primary",
+                  fact.wrap ? "text-[13px] leading-snug" : "text-lg leading-tight",
+                )}
+              >
                 {fact.value}
               </dd>
             </div>

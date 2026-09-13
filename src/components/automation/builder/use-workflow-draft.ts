@@ -121,6 +121,22 @@ export function useWorkflowDraft(workflow: Workflow) {
     setDirty(true);
   }, []);
 
+  /**
+   * Throw the draft away and go back to what is published.
+   *
+   * Recorded on the undo stack like any other change, because discarding an
+   * afternoon's work by accident and having no way back would be a far worse
+   * bug than the one the confirmation dialog is guarding against.
+   */
+  const reset = useCallback(() => {
+    setHistory((current) => ({
+      graph: { nodes: workflow.nodes, edges: workflow.edges },
+      past: [...current.past, current.graph].slice(-HISTORY_LIMIT),
+      future: [],
+    }));
+    setDirty(false);
+  }, [workflow.edges, workflow.nodes]);
+
   /* Snapshot before the gesture starts, so a whole drag is one undo. */
   const beginGesture = useCallback(() => {
     setHistory((current) => ({
@@ -388,6 +404,7 @@ export function useWorkflowDraft(workflow: Workflow) {
     canRedo: history.future.length > 0,
     undo,
     redo,
+    reset,
     beginGesture,
     moveNode,
     updateNode,

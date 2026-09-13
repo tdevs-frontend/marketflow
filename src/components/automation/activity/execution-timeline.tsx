@@ -29,6 +29,47 @@ const timeOf = (iso: string) =>
   );
 
 /**
+ * What the step was given and what it gave back.
+ *
+ * Collapsed by default, because a timeline of nine steps each showing two JSON
+ * objects is unreadable — and because the payload only matters once something
+ * has gone wrong. A `<details>` rather than React state: the browser already
+ * knows how to do this, and it stays open across a re-render for free.
+ */
+function StepPayload({ step }: { step: WorkflowRunStep }) {
+  if (!step.input && !step.output) return null;
+
+  return (
+    <details className="group mt-2">
+      <summary className="inline-flex cursor-pointer list-none items-center gap-1 rounded-btn text-[11px] font-medium text-text-muted transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none">
+        <span className="transition-transform group-open:rotate-90">›</span>
+        Input and output
+      </summary>
+
+      <div className="mt-2 grid gap-2 sm:grid-cols-2">
+        {(
+          [
+            ["Input", step.input],
+            ["Output", step.output],
+          ] as const
+        ).map(([label, payload]) =>
+          payload ? (
+            <div key={label}>
+              <p className="text-[10px] font-medium tracking-[0.06em] text-text-muted uppercase">
+                {label}
+              </p>
+              <pre className="custom-scrollbar mt-1 overflow-x-auto rounded-btn bg-surface-secondary px-2.5 py-2 font-mono text-[11px] text-text-secondary">
+                {JSON.stringify(payload, null, 2)}
+              </pre>
+            </div>
+          ) : null,
+        )}
+      </div>
+    </details>
+  );
+}
+
+/**
  * What a failed step actually says.
  *
  * The provider's own response is shown verbatim, in mono, because "Recipient
@@ -143,7 +184,19 @@ export function ExecutionTimeline({
                 {step.durationMs !== undefined ? (
                   <span className="tabular-nums">{formatDuration(step.durationMs)}</span>
                 ) : null}
+                {step.finishedAt ? (
+                  <span className="tabular-nums">
+                    finished {timeOf(step.finishedAt)}
+                  </span>
+                ) : null}
+                {step.attempt && step.attempt > 1 ? (
+                  <span className="font-medium text-warning-text tabular-nums">
+                    attempt {step.attempt}
+                  </span>
+                ) : null}
               </p>
+
+              <StepPayload step={step} />
 
               <StepError
                 step={step}

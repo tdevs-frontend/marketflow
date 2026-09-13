@@ -1,52 +1,60 @@
 "use client";
 
 import { useId, useState } from "react";
-import { Archive, Trash2 } from "lucide-react";
+import { Archive, History, Target, Trash2 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { CheckboxField } from "@/components/ui/checkbox";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { Tag } from "@/components/ui/tag";
 import { useToast } from "@/components/ui/toast";
-import { OWNERS } from "@/lib/customer-fixtures";
+import { GOAL_TYPES } from "@/constants/automation";
+import { CUSTOMER_SEGMENTS, OWNERS, TAG_NAMES } from "@/lib/customer-fixtures";
 import { cn } from "@/lib/utils";
 import type { Workflow, WorkflowSettings as Settings } from "@/types/workflow";
+import { VersionHistoryDialog } from "./version-history";
 
 /**
  * Everything about the workflow that is not a step.
  *
- * Grouped by the question each section answers — who can get in, what takes
- * them out, when it is allowed to send, and what happens when a send fails —
- * rather than as one long form, because those are four separate decisions and
- * only one of them is usually being changed.
+ * Grouped by the question each section answers — who gets in, who is never let
+ * in, what takes them out, what counts as success, when we are allowed to
+ * send, and what happens when a send fails. Six questions, six cards. One long
+ * form would be shorter to write and far harder to audit, and these are the
+ * settings a marketing team is actually held to.
  *
- * Entry and exit rules are the two that quietly cause the most support
- * tickets ("why did this customer get it twice?"), so they are stated in full
- * sentences rather than as toggle labels.
+ * Enrollment and suppression sit first because they cause the most support
+ * tickets: "why did this customer get it twice" and "why did an unsubscribed
+ * contact get anything at all".
  */
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const TIMEZONES = [
-  { value: "Workspace timezone (GMT+4)", label: "Workspace timezone (GMT+4)" },
-  { value: "Contact timezone", label: "Contact timezone" },
-  { value: "UTC", label: "UTC" },
+  { value: "workspace", label: "Workspace timezone (GMT+4)" },
+  { value: "contact", label: "Contact timezone" },
 ];
 
 function Section({
   title,
   description,
+  action,
+  className,
   children,
 }: {
   title: string;
   description: string;
+  action?: React.ReactNode;
+  className?: string;
   children: React.ReactNode;
 }) {
   return (
-    <Card>
-      <CardHeader title={title} description={description} />
+    <Card className={className}>
+      <CardHeader title={title} description={description} action={action} />
       <CardBody className="space-y-4">{children}</CardBody>
     </Card>
   );
@@ -56,10 +64,13 @@ export function WorkflowSettings({
   workflow,
   onArchive,
   onDelete,
+  onRestoreVersion,
 }: {
   workflow: Workflow;
   onArchive: () => void;
   onDelete: () => void;
+  /** Brings an old version back as the working draft. */
+  onRestoreVersion?: (version: number) => void;
 }) {
   const id = useId();
   const toast = useToast();
@@ -70,6 +81,7 @@ export function WorkflowSettings({
   const [settings, setSettings] = useState<Settings>(workflow.settings);
   const [confirmArchive, setConfirmArchive] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   const patch = <K extends keyof Settings>(key: K, value: Partial<Settings[K]>) =>
     setSettings((current) => ({
@@ -77,7 +89,8 @@ export function WorkflowSettings({
       [key]: { ...current[key], ...value },
     }));
 
-  const reEntry = settings.entry.mode === "re_entry";
+  const { enrollment, suppression, exit, goal, timing, failure } = settings;
+  const repeatable = enrollment.mode !== "once";
 
   return (
     <>
@@ -85,6 +98,16 @@ export function WorkflowSettings({
         <Section
           title="General"
           description="What this workflow is called, and who is responsible for it."
+          action={
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setHistoryOpen(true)}
+            >
+              <History aria-hidden />
+              Version history
+            </Button>
+          }
         >
           <Field label="Workflow name" htmlFor={`${id}-name`}>
             <Input
@@ -124,32 +147,56 @@ export function WorkflowSettings({
         </Section>
 
         <Section
-          title="Entry rules"
+          title="Enrollment"
           description="Who is allowed into this journey, and how often."
         >
-          <Field label="Entry" htmlFor={`${id}-entry`}>
+          <Field label="A contact may enter" htmlFor={`${id}-entry`}>
             <Select
               id={`${id}-entry`}
               hideLabel={false}
-              label="Entry"
-              value={settings.entry.mode}
-              onChange={(mode) => patch("entry", { mode: mode as Settings["entry"]["mode"] })}
+              label="A contact may enter"
+              value={enrollment.mode}
+              onChange={(mode) =>
+                patch("enrollment", { mode: mode as Settings["enrollment"]["mode"] })
+              }
               options={[
                 {
                   value: "once",
-                  label: "Allow a contact to enter once",
+                  label: "Only once",
                   hint: "The safe default for anything that sends a message",
                 },
                 {
-                  value: "re_entry",
-                  label: "Allow re-entry",
-                  hint: "For recurring journeys — orders, appointments, birthdays",
+                  value: "every_time",
+                  label: "Every time the trigger fires",
+                  hint: "For recurring events — orders, appointments, birthdays",
+                },
+                {
+                  value: "cooldown",
+                  label: "Again after a cooldown",
+                  hint: "Repeatable, but never twice in the same week",
                 },
               ]}
             />
           </Field>
 
-          <div className={cn("grid gap-4 sm:grid-cols-2", !reEntry && "opacity-60")}>
+          <div className={cn("grid gap-4 sm:grid-cols-2", !repeatable && "opacity-60")}>
+            <Field
+              label="Cooldown (days)"
+              htmlFor={`${id}-cooldown`}
+              hint="The gap before the same contact can re-enter."
+            >
+              <Input
+                id={`${id}-cooldown`}
+                type="number"
+                min={0}
+                value={enrollment.cooldownDays}
+                disabled={enrollment.mode !== "cooldown"}
+                onChange={(event) =>
+                  patch("enrollment", { cooldownDays: Number(event.target.value) })
+                }
+              />
+            </Field>
+
             <Field
               label="Maximum entries"
               htmlFor={`${id}-max`}
@@ -159,28 +206,177 @@ export function WorkflowSettings({
                 id={`${id}-max`}
                 type="number"
                 min={1}
-                value={settings.entry.maxEntries}
-                disabled={!reEntry}
+                value={enrollment.maxEntries}
+                disabled={!repeatable}
                 onChange={(event) =>
-                  patch("entry", { maxEntries: Number(event.target.value) })
+                  patch("enrollment", { maxEntries: Number(event.target.value) })
                 }
               />
             </Field>
+          </div>
+        </Section>
+
+        <Section
+          title="Suppression"
+          description="Contacts who are never enrolled, whatever the trigger says."
+        >
+          <CheckboxField
+            id={`${id}-sup-unsub`}
+            checked={suppression.unsubscribed}
+            onCheckedChange={(checked) => patch("suppression", { unsubscribed: checked })}
+            label="Unsubscribed contacts"
+            hint="Consent is per channel, and this respects it. Turning it off is almost never right."
+          />
+          <CheckboxField
+            id={`${id}-sup-list`}
+            checked={suppression.suppressionList}
+            onCheckedChange={(checked) =>
+              patch("suppression", { suppressionList: checked })
+            }
+            label="Anyone on the workspace suppression list"
+          />
+          <CheckboxField
+            id={`${id}-sup-invalid`}
+            checked={suppression.invalidContact}
+            onCheckedChange={(checked) =>
+              patch("suppression", { invalidContact: checked })
+            }
+            label="Invalid or unreachable contacts"
+            hint="No usable phone or email for the channels this workflow sends on."
+          />
+          <CheckboxField
+            id={`${id}-sup-blocked`}
+            checked={suppression.blockedWhatsApp}
+            onCheckedChange={(checked) =>
+              patch("suppression", { blockedWhatsApp: checked })
+            }
+            label="Contacts who blocked your WhatsApp number"
+          />
+
+          <Field
+            label="Also exclude a segment"
+            htmlFor={`${id}-sup-segment`}
+            hint="Anyone in it is skipped, even if they match the trigger."
+          >
+            <Select
+              id={`${id}-sup-segment`}
+              hideLabel={false}
+              label="Also exclude a segment"
+              value={suppression.segmentIds[0] ?? ""}
+              placeholder="No segment excluded"
+              onChange={(next) =>
+                patch("suppression", { segmentIds: next ? [next] : [] })
+              }
+              options={[
+                { value: "", label: "No segment excluded" },
+                ...CUSTOMER_SEGMENTS.map((segment) => ({
+                  value: segment.id,
+                  label: segment.name,
+                })),
+              ]}
+            />
+          </Field>
+
+          <Field label="Also exclude a tag" htmlFor={`${id}-sup-tag`}>
+            <Select
+              id={`${id}-sup-tag`}
+              hideLabel={false}
+              label="Also exclude a tag"
+              value={suppression.tags[0] ?? ""}
+              placeholder="No tag excluded"
+              onChange={(next) => patch("suppression", { tags: next ? [next] : [] })}
+              options={[
+                { value: "", label: "No tag excluded" },
+                ...TAG_NAMES.map((tag) => ({ value: tag, label: tag })),
+              ]}
+            />
+          </Field>
+
+          {suppression.segmentIds.length > 0 || suppression.tags.length > 0 ? (
+            <div className="flex flex-wrap gap-1.5">
+              {suppression.segmentIds.map((segmentId) => (
+                <Tag
+                  key={segmentId}
+                  label={
+                    CUSTOMER_SEGMENTS.find((segment) => segment.id === segmentId)?.name ??
+                    segmentId
+                  }
+                  onRemove={() => patch("suppression", { segmentIds: [] })}
+                />
+              ))}
+              {suppression.tags.map((tag) => (
+                <Tag key={tag} label={tag} onRemove={() => patch("suppression", { tags: [] })} />
+              ))}
+            </div>
+          ) : null}
+        </Section>
+
+        <Section
+          title="Goal"
+          description="What success looks like. Conversion is measured against this."
+          action={
+            goal.enabled ? (
+              <Badge tone="brand">
+                <Target className="size-3" aria-hidden />
+                Set
+              </Badge>
+            ) : null
+          }
+        >
+          <CheckboxField
+            id={`${id}-goal-on`}
+            checked={goal.enabled}
+            onCheckedChange={(checked) => patch("goal", { enabled: checked })}
+            label="Measure this workflow against a goal"
+            hint="Without one, conversion is just 'reached the last step', which is not the same thing."
+          />
+
+          <div className={cn("space-y-4", !goal.enabled && "opacity-60")}>
+            <Field label="Goal" htmlFor={`${id}-goal`}>
+              <Select
+                id={`${id}-goal`}
+                hideLabel={false}
+                label="Goal"
+                value={goal.type}
+                disabled={!goal.enabled}
+                onChange={(next) => patch("goal", { type: next as Settings["goal"]["type"] })}
+                options={GOAL_TYPES.map((item) => ({
+                  value: item.value,
+                  label: item.label,
+                  hint: item.hint,
+                }))}
+              />
+            </Field>
+
+            {goal.type === "purchase_value" ? (
+              <Field
+                label="Minimum order value"
+                htmlFor={`${id}-goal-value`}
+                hint="Orders below this do not count as a conversion."
+              >
+                <Input
+                  id={`${id}-goal-value`}
+                  type="number"
+                  min={0}
+                  value={goal.value ?? 100}
+                  disabled={!goal.enabled}
+                  onChange={(event) => patch("goal", { value: Number(event.target.value) })}
+                />
+              </Field>
+            ) : null}
 
             <Field
-              label="Cooldown (hours)"
-              htmlFor={`${id}-cooldown`}
-              hint="The gap before the same contact can re-enter."
+              label="Attribution window (days)"
+              htmlFor={`${id}-goal-window`}
+              hint="How long after entry the goal can still be credited to this workflow."
             >
               <Input
-                id={`${id}-cooldown`}
+                id={`${id}-goal-window`}
                 type="number"
-                min={0}
-                value={settings.entry.cooldownHours}
-                disabled={!reEntry}
-                onChange={(event) =>
-                  patch("entry", { cooldownHours: Number(event.target.value) })
-                }
+                min={1}
+                value={goal.windowDays}
+                disabled={!goal.enabled}
+                onChange={(event) => patch("goal", { windowDays: Number(event.target.value) })}
               />
             </Field>
           </div>
@@ -192,31 +388,81 @@ export function WorkflowSettings({
         >
           <CheckboxField
             id={`${id}-exit-goal`}
-            checked={settings.exit.goalReached}
+            checked={exit.goalReached}
             onCheckedChange={(checked) => patch("exit", { goalReached: checked })}
-            label="Goal reached"
-            hint="Exit as soon as the workflow's goal is met — a purchase, a reply, a booking."
+            label="The goal is reached"
+            hint="Stop messaging somebody about a cart they have already bought."
+          />
+          <CheckboxField
+            id={`${id}-exit-purchase`}
+            checked={exit.purchased}
+            onCheckedChange={(checked) => patch("exit", { purchased: checked })}
+            label="They place an order"
+          />
+          <CheckboxField
+            id={`${id}-exit-won`}
+            checked={exit.leadWon}
+            onCheckedChange={(checked) => patch("exit", { leadWon: checked })}
+            label="Their lead is marked Won"
           />
           <CheckboxField
             id={`${id}-exit-segment`}
-            checked={settings.exit.leavesSegment}
-            onCheckedChange={(checked) => patch("exit", { leavesSegment: checked })}
-            label="Contact leaves the entry segment"
-            hint="Only applies to workflows triggered by segment membership."
+            checked={exit.enteredSegment}
+            onCheckedChange={(checked) => patch("exit", { enteredSegment: checked })}
+            label="They enter a segment"
           />
+
+          {exit.enteredSegment ? (
+            <Field label="Which segment" htmlFor={`${id}-exit-segment-id`}>
+              <Select
+                id={`${id}-exit-segment-id`}
+                hideLabel={false}
+                label="Which segment"
+                value={exit.segmentId ?? ""}
+                placeholder="Choose a segment"
+                onChange={(next) => patch("exit", { segmentId: next })}
+                options={CUSTOMER_SEGMENTS.map((segment) => ({
+                  value: segment.id,
+                  label: segment.name,
+                }))}
+              />
+            </Field>
+          ) : null}
+
+          <CheckboxField
+            id={`${id}-exit-tag`}
+            checked={exit.tagAdded}
+            onCheckedChange={(checked) => patch("exit", { tagAdded: checked })}
+            label="A tag is added to them"
+          />
+
+          {exit.tagAdded ? (
+            <Field label="Which tag" htmlFor={`${id}-exit-tag-name`}>
+              <Select
+                id={`${id}-exit-tag-name`}
+                hideLabel={false}
+                label="Which tag"
+                value={exit.tag ?? ""}
+                placeholder="Choose a tag"
+                onChange={(next) => patch("exit", { tag: next })}
+                options={TAG_NAMES.map((tag) => ({ value: tag, label: tag }))}
+              />
+            </Field>
+          ) : null}
+
           <CheckboxField
             id={`${id}-exit-unsub`}
-            checked={settings.exit.unsubscribes}
+            checked={exit.unsubscribes}
             onCheckedChange={(checked) => patch("exit", { unsubscribes: checked })}
-            label="Contact unsubscribes"
-            hint="Strongly recommended. Consent is per channel, and this respects it."
+            label="They unsubscribe"
+            hint="Strongly recommended, and required on most channels."
           />
           <CheckboxField
             id={`${id}-exit-manual`}
-            checked={settings.exit.manualStop}
+            checked={exit.manualStop}
             onCheckedChange={(checked) => patch("exit", { manualStop: checked })}
-            label="Allow manual stop"
-            hint="Lets an agent remove someone from the journey from Activity."
+            label="An agent stops them manually"
+            hint="Lets support remove someone from the journey from Activity."
           />
         </Section>
 
@@ -229,55 +475,71 @@ export function WorkflowSettings({
               id={`${id}-tz`}
               hideLabel={false}
               label="Timezone"
-              value={settings.timing.timezone}
-              onChange={(timezone) => patch("timing", { timezone })}
+              value={timing.timezone}
+              onChange={(next) =>
+                patch("timing", { timezone: next as Settings["timing"]["timezone"] })
+              }
               options={TIMEZONES}
             />
           </Field>
 
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Send from" htmlFor={`${id}-send-from`}>
+              <Input
+                id={`${id}-send-from`}
+                type="time"
+                value={timing.sendFrom}
+                onChange={(event) => patch("timing", { sendFrom: event.target.value })}
+              />
+            </Field>
+            <Field label="Send until" htmlFor={`${id}-send-to`}>
+              <Input
+                id={`${id}-send-to`}
+                type="time"
+                value={timing.sendTo}
+                onChange={(event) => patch("timing", { sendTo: event.target.value })}
+              />
+            </Field>
+          </div>
+
           <CheckboxField
             id={`${id}-quiet`}
-            checked={settings.timing.quietHours.enabled}
+            checked={timing.quietHours.enabled}
             onCheckedChange={(checked) =>
-              patch("timing", {
-                quietHours: { ...settings.timing.quietHours, enabled: checked },
-              })
+              patch("timing", { quietHours: { ...timing.quietHours, enabled: checked } })
             }
-            label="Hold messages during quiet hours"
-            hint="Anything due inside the window is sent when it closes."
+            label="Hold promotional messages during quiet hours"
+            hint="Anything due inside the window is sent when it closes. Transactional steps can opt out per node."
           />
 
           <div
             className={cn(
               "grid gap-4 sm:grid-cols-2",
-              !settings.timing.quietHours.enabled && "opacity-60",
+              !timing.quietHours.enabled && "opacity-60",
             )}
           >
-            <Field label="From" htmlFor={`${id}-quiet-from`}>
+            <Field label="Quiet from" htmlFor={`${id}-quiet-from`}>
               <Input
                 id={`${id}-quiet-from`}
                 type="time"
-                value={settings.timing.quietHours.from}
-                disabled={!settings.timing.quietHours.enabled}
+                value={timing.quietHours.from}
+                disabled={!timing.quietHours.enabled}
                 onChange={(event) =>
                   patch("timing", {
-                    quietHours: {
-                      ...settings.timing.quietHours,
-                      from: event.target.value,
-                    },
+                    quietHours: { ...timing.quietHours, from: event.target.value },
                   })
                 }
               />
             </Field>
-            <Field label="Until" htmlFor={`${id}-quiet-to`}>
+            <Field label="Quiet until" htmlFor={`${id}-quiet-to`}>
               <Input
                 id={`${id}-quiet-to`}
                 type="time"
-                value={settings.timing.quietHours.to}
-                disabled={!settings.timing.quietHours.enabled}
+                value={timing.quietHours.to}
+                disabled={!timing.quietHours.enabled}
                 onChange={(event) =>
                   patch("timing", {
-                    quietHours: { ...settings.timing.quietHours, to: event.target.value },
+                    quietHours: { ...timing.quietHours, to: event.target.value },
                   })
                 }
               />
@@ -290,7 +552,7 @@ export function WorkflowSettings({
             </legend>
             <div className="flex flex-wrap gap-1.5">
               {DAYS.map((day) => {
-                const on = settings.timing.days.includes(day);
+                const on = timing.days.includes(day);
 
                 return (
                   <button
@@ -300,8 +562,8 @@ export function WorkflowSettings({
                     onClick={() =>
                       patch("timing", {
                         days: on
-                          ? settings.timing.days.filter((item) => item !== day)
-                          : [...settings.timing.days, day],
+                          ? timing.days.filter((item) => item !== day)
+                          : [...timing.days, day],
                       })
                     }
                     className={cn(
@@ -322,49 +584,68 @@ export function WorkflowSettings({
         <Section
           title="Failure handling"
           description="What happens when a step cannot complete."
+          className="xl:col-span-2"
         >
-          <CheckboxField
-            id={`${id}-retry`}
-            checked={settings.failure.retry}
-            onCheckedChange={(checked) => patch("failure", { retry: checked })}
-            label="Retry failed actions"
-            hint="Retries use exponential backoff, starting at one minute."
-          />
+          <div className="grid gap-4 xl:grid-cols-2">
+            <div className="space-y-4">
+              <CheckboxField
+                id={`${id}-retry`}
+                checked={failure.retry}
+                onCheckedChange={(checked) => patch("failure", { retry: checked })}
+                label="Retry failed actions automatically"
+                hint="Retries back off exponentially from the interval below."
+              />
 
-          <Field
-            label="Maximum retries"
-            htmlFor={`${id}-retries`}
-            hint="After this, the step is marked failed and the rules below apply."
-          >
-            <Input
-              id={`${id}-retries`}
-              type="number"
-              min={0}
-              max={10}
-              value={settings.failure.maxRetries}
-              disabled={!settings.failure.retry}
-              onChange={(event) =>
-                patch("failure", { maxRetries: Number(event.target.value) })
-              }
-            />
-          </Field>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Maximum retries" htmlFor={`${id}-retries`}>
+                  <Input
+                    id={`${id}-retries`}
+                    type="number"
+                    min={0}
+                    max={10}
+                    value={failure.maxRetries}
+                    disabled={!failure.retry}
+                    onChange={(event) =>
+                      patch("failure", { maxRetries: Number(event.target.value) })
+                    }
+                  />
+                </Field>
+                <Field label="First retry after (minutes)" htmlFor={`${id}-interval`}>
+                  <Input
+                    id={`${id}-interval`}
+                    type="number"
+                    min={1}
+                    value={failure.retryIntervalMinutes}
+                    disabled={!failure.retry}
+                    onChange={(event) =>
+                      patch("failure", {
+                        retryIntervalMinutes: Number(event.target.value),
+                      })
+                    }
+                  />
+                </Field>
+              </div>
+            </div>
 
-          <CheckboxField
-            id={`${id}-continue`}
-            checked={settings.failure.continueOnNonCritical}
-            onCheckedChange={(checked) =>
-              patch("failure", { continueOnNonCritical: checked })
-            }
-            label="Continue on a non-critical error"
-            hint="A tag that could not be written should not stop a delivery message."
-          />
-          <CheckboxField
-            id={`${id}-stop`}
-            checked={settings.failure.stopOnCritical}
-            onCheckedChange={(checked) => patch("failure", { stopOnCritical: checked })}
-            label="Stop the workflow on a critical error"
-            hint="A revoked WhatsApp connection stops the journey rather than failing every contact in turn."
-          />
+            <div className="space-y-4">
+              <CheckboxField
+                id={`${id}-continue`}
+                checked={failure.continueOnNonCritical}
+                onCheckedChange={(checked) =>
+                  patch("failure", { continueOnNonCritical: checked })
+                }
+                label="Continue on a non-critical error"
+                hint="A tag that could not be written should not stop a delivery message."
+              />
+              <CheckboxField
+                id={`${id}-stop`}
+                checked={failure.stopOnCritical}
+                onCheckedChange={(checked) => patch("failure", { stopOnCritical: checked })}
+                label="Stop the workflow on a critical error"
+                hint="A revoked WhatsApp connection stops the journey rather than failing every contact in turn."
+              />
+            </div>
+          </div>
         </Section>
 
         <Card className="xl:col-span-2">
@@ -375,8 +656,8 @@ export function WorkflowSettings({
           <CardBody className="flex flex-wrap items-center justify-between gap-3">
             <p className="max-w-xl text-sm text-text-secondary">
               Archiving stops new contacts entering and holds everyone already
-              inside. The workflow stays available under the Archived filter, and
-              its runs remain in Activity.
+              inside. The workflow stays available under the Archived filter,
+              and its runs remain in Activity.
             </p>
             <Button variant="outline" onClick={() => setConfirmArchive(true)}>
               <Archive aria-hidden />
@@ -386,15 +667,12 @@ export function WorkflowSettings({
         </Card>
 
         <Card className="border-error/40 xl:col-span-2">
-          <CardHeader
-            title="Danger zone"
-            description="Irreversible, and immediate."
-          />
+          <CardHeader title="Danger zone" description="Irreversible, and immediate." />
           <CardBody className="flex flex-wrap items-center justify-between gap-3">
             <p className="max-w-xl text-sm text-text-secondary">
-              Deleting removes the workflow, its steps, its settings and its
-              execution history. Contacts inside the journey are stopped at once
-              and no scheduled message will be sent.
+              Deleting removes the workflow, every version of it, its settings
+              and its execution history. Contacts inside the journey are stopped
+              at once and no scheduled message will be sent.
             </p>
             <Button variant="danger" onClick={() => setConfirmDelete(true)}>
               <Trash2 aria-hidden />
@@ -406,8 +684,8 @@ export function WorkflowSettings({
 
       <div className="sticky bottom-4 z-10 flex flex-wrap items-center justify-end gap-2.5 rounded-card border border-border bg-surface/95 px-4 py-3 shadow-float backdrop-blur">
         <p className="mr-auto text-xs text-text-muted">
-          Changes apply to contacts entering from now on — people already inside
-          keep the rules they entered under.
+          Settings apply to contacts entering from now on — people already
+          inside keep the rules they entered under.
         </p>
         <Button
           variant="outline"
@@ -426,6 +704,16 @@ export function WorkflowSettings({
           Save settings
         </Button>
       </div>
+
+      <VersionHistoryDialog
+        open={historyOpen}
+        onClose={() => setHistoryOpen(false)}
+        workflow={workflow}
+        onRestore={(version) => {
+          setHistoryOpen(false);
+          onRestoreVersion?.(version);
+        }}
+      />
 
       <ConfirmDialog
         open={confirmArchive}

@@ -61,7 +61,7 @@ function simulate(
         ? `Trigger passed for ${who}`
         : meta?.category === "messaging"
           ? `${meta.label.replace("Send ", "")} simulated — nothing sent`
-          : current.kind === "wait" || current.kind === "wait_until"
+          : meta?.category === "wait"
             ? `Delay skipped in test mode (${current.summary})`
             : branch
               ? `Condition evaluated — "${branch.label}" branch selected`
@@ -73,10 +73,7 @@ function simulate(
       detail: current.summary,
       kind: current.kind,
       outcome,
-      status:
-        current.kind === "wait" || current.kind === "wait_until"
-          ? "skipped"
-          : "completed",
+      status: meta?.category === "wait" ? "skipped" : "completed",
     });
 
     if (current.kind === "end") break;

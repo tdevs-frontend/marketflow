@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { PanelRight, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Drawer } from "@/components/ui/dialog";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
@@ -45,6 +46,16 @@ export function WorkflowBuilder({
   const viewportRef = useRef<HTMLDivElement>(null);
   const [viewport, setViewport] = useState<Viewport>({ zoom: 1, x: 0, y: 0 });
   const [libraryOpen, setLibraryOpen] = useState(false);
+  /*
+   * Two readings of the same canvas.
+   *
+   * Performance hangs the entered count off every node and turns editing off,
+   * because a drag while reading analytics is never intentional. A mode rather
+   * than a separate screen: the drop-off you are looking at and the node you
+   * would fix are the same object, and splitting them in two is how people
+   * stop acting on their own analytics.
+   */
+  const [view, setView] = useState<"builder" | "performance">("builder");
   const [inspectorOpen, setInspectorOpen] = useState(false);
 
   const wideInspector = useMediaQuery("(min-width: 80rem)");
@@ -165,7 +176,9 @@ export function WorkflowBuilder({
           onDropKind={(kind, position) => addNode(kind as NodeKind, position)}
           onDuplicate={draft.duplicateNode}
           onDelete={draft.deleteNode}
-          invalidIds={draft.invalidIds}
+          invalidIds={view === "builder" ? draft.invalidIds : undefined}
+          showAnalytics={view === "performance"}
+          readOnly={view === "performance"}
         />
 
         <BuilderToolbar
@@ -197,8 +210,21 @@ export function WorkflowBuilder({
           className="absolute right-3 bottom-3 left-3 z-10 max-w-md shadow-float sm:left-auto sm:w-96"
         />
 
+        <div className="absolute top-3 right-3 z-10">
+          <SegmentedControl
+            label="Canvas view"
+            value={view}
+            onChange={setView}
+            options={[
+              { value: "builder", label: "Builder" },
+              { value: "performance", label: "Performance" },
+            ]}
+            className="bg-surface/95 shadow-btn backdrop-blur"
+          />
+        </div>
+
         {/* The compact controls the side panels leave behind. */}
-        <div className="absolute top-3 right-3 z-10 flex gap-2 lg:hidden">
+        <div className="absolute top-14 right-3 z-10 flex gap-2 lg:hidden">
           <Button size="sm" variant="outline" onClick={() => setLibraryOpen(true)}>
             <Plus aria-hidden />
             Add step

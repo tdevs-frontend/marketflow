@@ -51,7 +51,7 @@ import type { MarketingChannel } from "@/types/marketing";
 import type { Workflow, WorkflowStatus } from "@/types/workflow";
 import { ChannelChips, WorkflowStatusBadge } from "./automation-badges";
 import { WorkflowCard, completionRate, workflowMenuItems } from "./workflow-card";
-import { ImportWorkflowDialog, NewWorkflowDialog, RenameWorkflowDialog } from "./workflow-dialogs";
+import { ImportWorkflowDialog, RenameWorkflowDialog } from "./workflow-dialogs";
 
 /**
  * The Automation command centre.
@@ -151,7 +151,6 @@ export function WorkflowsWorkspace() {
   const [names, setNames] = useState<Record<string, string>>({});
   const [deleted, setDeleted] = useState<string[]>([]);
 
-  const [creating, setCreating] = useState(false);
   const [importing, setImporting] = useState(false);
   const [renaming, setRenaming] = useState<Workflow | null>(null);
   const [confirmPause, setConfirmPause] = useState<Workflow | null>(null);
@@ -268,7 +267,17 @@ export function WorkflowsWorkspace() {
         id: localId(workflow.id),
         name: `${workflow.name} (copy)`,
         status: "draft" as const,
-        stats: { entered: 0, completed: 0, converted: 0, running: 0, failed: 0 },
+        publishedVersion: 0,
+        hasDraftChanges: true,
+        stats: {
+          entered: 0,
+          completed: 0,
+          converted: 0,
+          running: 0,
+          failed: 0,
+          exitedEarly: 0,
+          averageCompletionMs: 0,
+        },
         updatedAt: new Date().toISOString(),
       };
       setCreated((list) => [copy, ...list]);
@@ -319,10 +328,13 @@ export function WorkflowsWorkspace() {
           </>
         }
         action={
-          <Button onClick={() => setCreating(true)}>
+          /* A link, not a dialog: creating an automation starts with "how do
+             people get in", which is a two-step question with a rule builder
+             in it — more than a modal should carry. */
+          <ButtonLink href={AUTOMATION_ROUTES.create}>
             <Plus aria-hidden />
             New Workflow
-          </Button>
+          </ButtonLink>
         }
       />
 
@@ -430,10 +442,10 @@ export function WorkflowsWorkspace() {
                 description="Automate customer journeys using triggers, conditions, delays and multi-channel actions."
                 action={
                   <div className="flex flex-wrap items-center justify-center gap-2">
-                    <Button size="sm" onClick={() => setCreating(true)}>
+                    <ButtonLink href={AUTOMATION_ROUTES.create} size="sm">
                       <Plus aria-hidden />
                       Create Workflow
-                    </Button>
+                    </ButtonLink>
                     <ButtonLink
                       href={AUTOMATION_ROUTES.templates}
                       size="sm"
@@ -480,6 +492,10 @@ export function WorkflowsWorkspace() {
                 <TH>Status</TH>
                 <TH>Trigger</TH>
                 <TH>Channels</TH>
+                {/* Active before Entered: "how many people are in this right
+                    now" is the operational question, and the lifetime total is
+                    the historical one. */}
+                <TH align="right">Active</TH>
                 <SortableTH
                   field="entered"
                   activeField={table.sortField as SortField | null}
@@ -535,6 +551,16 @@ export function WorkflowsWorkspace() {
                     </TD>
                     <TD>
                       <ChannelChips channels={workflow.channels} size="sm" />
+                    </TD>
+                    <TD
+                      align="right"
+                      className="text-xs font-medium whitespace-nowrap text-text-primary tabular-nums"
+                    >
+                      {workflow.stats.running > 0 ? (
+                        formatCount(workflow.stats.running)
+                      ) : (
+                        <span className="text-text-muted">—</span>
+                      )}
                     </TD>
                     <TD align="right" className="text-xs font-medium text-text-primary tabular-nums">
                       {formatCount(workflow.stats.entered)}
@@ -602,17 +628,6 @@ export function WorkflowsWorkspace() {
           </div>
         ) : null}
       </Card>
-
-      <NewWorkflowDialog
-        open={creating}
-        onClose={() => setCreating(false)}
-        onCreate={(workflow) => {
-          setCreating(false);
-          setCreated((list) => [workflow, ...list]);
-          toast(`${workflow.name} created as a draft`, "success");
-          router.push(AUTOMATION_ROUTES.workflow(workflow.id));
-        }}
-      />
 
       <ImportWorkflowDialog open={importing} onClose={() => setImporting(false)} />
 
