@@ -201,7 +201,7 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
 
                   <TD>
                     <p className="text-text-secondary">{campaign.audienceLabel}</p>
-                    <p className="text-xs text-text-muted">
+                    <p className="text-sm text-text-muted">
                       {formatNumber(campaign.audienceSize)} contacts
                     </p>
                   </TD>
@@ -234,7 +234,7 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
                     <CampaignStatusBadge status={campaign.status} />
                   </TD>
 
-                  <TD className="text-xs whitespace-nowrap text-text-muted">
+                  <TD className="text-sm whitespace-nowrap text-text-muted">
                     {formatDate(campaign.createdAt)}
                   </TD>
 

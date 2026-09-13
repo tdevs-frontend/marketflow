@@ -129,7 +129,7 @@ export function CategoriesWorkspace() {
                         <p className="truncate font-medium text-text-primary">
                           {item.name}
                         </p>
-                        <p className="font-mono text-xs text-text-muted">
+                        <p className="font-mono text-sm text-text-muted">
                           /{item.slug}
                         </p>
                       </div>
@@ -153,7 +153,7 @@ export function CategoriesWorkspace() {
                     <CategoryStatusBadge status={item.status} />
                   </TD>
 
-                  <TD className="text-xs whitespace-nowrap text-text-muted">
+                  <TD className="text-sm whitespace-nowrap text-text-muted">
                     {formatDate(item.updatedAt)}
                   </TD>
 

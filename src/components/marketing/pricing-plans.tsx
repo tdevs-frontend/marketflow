@@ -148,7 +148,7 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
             </span>
           )}
         </p>
-        <p className="mt-2.5 min-h-4 text-xs text-text-muted">
+        <p className="mt-2.5 min-h-4 text-sm text-text-muted">
           {priced && billing === "yearly"
             ? `Billed yearly · $${amount! * 12} per year`
             : priced
@@ -192,7 +192,7 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
               >
                 <Check className="size-2.5" strokeWidth={3.5} />
               </span>
-              <span className="text-text-secondary">{feature}</span>
+              <span className="text-text-secondary font-medium">{feature}</span>
             </li>
           ))}
         </ul>

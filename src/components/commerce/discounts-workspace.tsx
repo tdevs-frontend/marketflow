@@ -214,7 +214,7 @@ export function DiscountsWorkspace() {
                     <button
                       type="button"
                       onClick={() => copyCode(discount.code)}
-                      className="inline-flex items-center gap-1.5 rounded-btn bg-surface-secondary px-2 py-1 font-mono text-xs font-medium text-text-primary transition-colors hover:bg-border focus-visible:shadow-focus focus-visible:outline-none"
+                      className="inline-flex items-center gap-1.5 rounded-btn bg-surface-secondary px-2 py-1 font-mono text-sm font-medium text-text-primary transition-colors hover:bg-border focus-visible:shadow-focus focus-visible:outline-none"
                     >
                       {discount.code}
                       {copiedCode === discount.code ? (
@@ -247,11 +247,11 @@ export function DiscountsWorkspace() {
                     <DiscountStatusBadge status={discount.status} />
                   </TD>
 
-                  <TD className="text-xs whitespace-nowrap text-text-muted">
+                  <TD className="text-sm whitespace-nowrap text-text-muted">
                     {formatDate(discount.startsAt)}
                   </TD>
 
-                  <TD className="text-xs whitespace-nowrap text-text-muted">
+                  <TD className="text-sm whitespace-nowrap text-text-muted">
                     {discount.endsAt ? formatDate(discount.endsAt) : "No end date"}
                   </TD>
 

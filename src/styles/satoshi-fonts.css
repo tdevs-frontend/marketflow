@@ -1,117 +1,109 @@
 /**
- * Satoshi — five discrete cuts, declared the way Circular Std already is.
+ * Satoshi — the Font Squirrel kit, exactly as generated.
  *
- * The project's whole type system rests on one unusual decision: **weight is
- * the family name**, not a `font-weight`. `font-medium` resolves to the
- * *Medium cut* rather than to `font-weight: 500`, because Tailwind matches
- * `font-<name>` against `--font-*` before `--font-weight-*` (see the Type
- * block in `variables.css`). Satoshi ships as separate static files per
- * weight, exactly like Circular Std, so it slots into that system unchanged.
+ * Ten families, one per cut, with the generator's own lowercase names
+ * (`satoshiregular`, `satoshimedium`, …). They are *not* collapsed into a
+ * single "Satoshi" family with weights, because that is not what these files
+ * are: each declares `font-weight: normal`, so asking for `font-weight: 700`
+ * on `satoshiregular` gets you a browser-synthesised fake bold over the
+ * regular cut, not `satoshibold`. The family name *is* the weight.
  *
- * Which means: no `font-weight` descriptor on any face below, and the global
- * `font-weight: 400` rules in `globals.css` stay correct. A descriptor here
- * would let the browser synthesise a bold *on top of* an already-bold cut —
- * the one failure mode this structure exists to prevent.
+ * That happens to be exactly how this project already spends type — see the
+ * `--font-*` tokens in `variables.css`, where Tailwind's `font-medium` and
+ * `font-bold` resolve to families rather than weights. Circular Std is built
+ * the same way, which is why the two are interchangeable.
  *
- * Paths are relative and resolved by the bundler rather than served from
- * `/fonts`, matching `circular-std-fonts.css`. Keeping both files on the same
- * mechanism is what makes swapping between them a one-line change.
- *
- * Nothing here is active on its own. `font-themes.css` decides which family
- * the tokens point at.
+ * Paths are absolute from `public/`, so the files are served as-is rather than
+ * hashed through the bundler. `circular-std-fonts.css` still uses bundler
+ * paths; both work, and this one follows the kit's own convention.
  */
 
-/* ----------------------------------------------------------------- Light */
-/*
- * 300. Registered for completeness and deliberately wired to no token —
- * Circular Std has no Light cut, so giving one a token would make the two
- * themes render differently rather than interchangeably. It is here for the
- * day somebody wants it.
- */
 @font-face {
-  font-family: "SatoshiLight";
-  font-display: swap;
-  src:
-    url("../../public/fonts/satoshi/satoshi-light-webfont.woff2") format("woff2"),
-    url("../../public/fonts/satoshi/satoshi-light-webfont.woff") format("woff");
+    font-family: 'satoshiblack';
+    src: url('/fonts/satoshi/satoshi-black-webfont.woff2') format('woff2'),
+         url('/fonts/satoshi/satoshi-black-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "SatoshiLightItalic";
-  font-display: swap;
-  src:
-    url("../../public/fonts/satoshi/satoshi-lightitalic-webfont.woff2") format("woff2"),
-    url("../../public/fonts/satoshi/satoshi-lightitalic-webfont.woff") format("woff");
-}
-
-/* ---------------------------------------------------------------- Regular */
-/* The body cut. Stands in for Circular Std's Book. */
-@font-face {
-  font-family: "SatoshiRegular";
-  font-display: swap;
-  src:
-    url("../../public/fonts/satoshi/satoshi-regular-webfont.woff2") format("woff2"),
-    url("../../public/fonts/satoshi/satoshi-regular-webfont.woff") format("woff");
+    font-family: 'satoshiblack_italic';
+    src: url('/fonts/satoshi/satoshi-blackitalic-webfont.woff2') format('woff2'),
+         url('/fonts/satoshi/satoshi-blackitalic-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "SatoshiRegularItalic";
-  font-display: swap;
-  src:
-    url("../../public/fonts/satoshi/satoshi-italic-webfont.woff2") format("woff2"),
-    url("../../public/fonts/satoshi/satoshi-italic-webfont.woff") format("woff");
-}
-
-/* ---------------------------------------------------------------- Medium */
-/* 500 — navigation, buttons, labels, table headers, card titles. */
-@font-face {
-  font-family: "SatoshiMedium";
-  font-display: swap;
-  src:
-    url("../../public/fonts/satoshi/satoshi-medium-webfont.woff2") format("woff2"),
-    url("../../public/fonts/satoshi/satoshi-medium-webfont.woff") format("woff");
+    font-family: 'satoshibold';
+    src: url('/fonts/satoshi/satoshi-bold-webfont.woff2') format('woff2'),
+         url('/fonts/satoshi/satoshi-bold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "SatoshiMediumItalic";
-  font-display: swap;
-  src:
-    url("../../public/fonts/satoshi/satoshi-mediumitalic-webfont.woff2") format("woff2"),
-    url("../../public/fonts/satoshi/satoshi-mediumitalic-webfont.woff") format("woff");
-}
-
-/* ------------------------------------------------------------------ Bold */
-/* 700 — headings, KPI values, `<strong>`. */
-@font-face {
-  font-family: "SatoshiBold";
-  font-display: swap;
-  src:
-    url("../../public/fonts/satoshi/satoshi-bold-webfont.woff2") format("woff2"),
-    url("../../public/fonts/satoshi/satoshi-bold-webfont.woff") format("woff");
+    font-family: 'satoshibold_italic';
+    src: url('/fonts/satoshi/satoshi-bolditalic-webfont.woff2') format('woff2'),
+         url('/fonts/satoshi/satoshi-bolditalic-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "SatoshiBoldItalic";
-  font-display: swap;
-  src:
-    url("../../public/fonts/satoshi/satoshi-bolditalic-webfont.woff2") format("woff2"),
-    url("../../public/fonts/satoshi/satoshi-bolditalic-webfont.woff") format("woff");
-}
-
-/* ----------------------------------------------------------------- Black */
-/* 900 — the marketing hero only, same as Circular Std's Black. */
-@font-face {
-  font-family: "SatoshiBlack";
-  font-display: swap;
-  src:
-    url("../../public/fonts/satoshi/satoshi-black-webfont.woff2") format("woff2"),
-    url("../../public/fonts/satoshi/satoshi-black-webfont.woff") format("woff");
+    font-family: 'satoshiitalic';
+    src: url('/fonts/satoshi/satoshi-italic-webfont.woff2') format('woff2'),
+         url('/fonts/satoshi/satoshi-italic-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "SatoshiBlackItalic";
-  font-display: swap;
-  src:
-    url("../../public/fonts/satoshi/satoshi-blackitalic-webfont.woff2") format("woff2"),
-    url("../../public/fonts/satoshi/satoshi-blackitalic-webfont.woff") format("woff");
+    font-family: 'satoshilight';
+    src: url('/fonts/satoshi/satoshi-light-webfont.woff2') format('woff2'),
+         url('/fonts/satoshi/satoshi-light-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'satoshilight_italic';
+    src: url('/fonts/satoshi/satoshi-lightitalic-webfont.woff2') format('woff2'),
+         url('/fonts/satoshi/satoshi-lightitalic-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'satoshimedium';
+    src: url('/fonts/satoshi/satoshi-medium-webfont.woff2') format('woff2'),
+         url('/fonts/satoshi/satoshi-medium-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'satoshimedium_italic';
+    src: url('/fonts/satoshi/satoshi-mediumitalic-webfont.woff2') format('woff2'),
+         url('/fonts/satoshi/satoshi-mediumitalic-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'satoshiregular';
+    src: url('/fonts/satoshi/satoshi-regular-webfont.woff2') format('woff2'),
+         url('/fonts/satoshi/satoshi-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
 }

@@ -85,13 +85,13 @@ export function TriggerTable({
                   <span className="block truncate text-sm font-medium text-text-primary transition-colors hover:text-primary">
                     {trigger.name}
                   </span>
-                  <span className="block truncate text-xs text-text-muted">
+                  <span className="block truncate text-sm text-text-muted">
                     {trigger.description}
                   </span>
                 </Link>
               </TD>
 
-              <TD className="text-xs whitespace-nowrap text-text-secondary">
+              <TD className="text-sm whitespace-nowrap text-text-secondary">
                 {trigger.source}
               </TD>
 
@@ -101,7 +101,7 @@ export function TriggerTable({
 
               <TD align="right">
                 {trigger.workflowIds.length === 0 ? (
-                  <span className="text-xs text-text-muted">—</span>
+                  <span className="text-sm text-text-muted">—</span>
                 ) : (
                   <Tooltip
                     content={`${trigger.workflowIds.length} workflow${
@@ -110,7 +110,7 @@ export function TriggerTable({
                   >
                     <span
                       tabIndex={0}
-                      className="inline-flex items-center gap-1 rounded-btn text-xs font-medium text-text-primary tabular-nums focus-visible:shadow-focus focus-visible:outline-none"
+                      className="inline-flex items-center gap-1 rounded-btn text-sm font-medium text-text-primary tabular-nums focus-visible:shadow-focus focus-visible:outline-none"
                     >
                       <WorkflowIcon className="size-3.5 text-text-muted" aria-hidden />
                       {trigger.workflowIds.length}
@@ -120,17 +120,17 @@ export function TriggerTable({
               </TD>
 
               <TD align="right" className="whitespace-nowrap">
-                <span className="text-xs font-medium text-text-primary tabular-nums">
+                <span className="text-sm font-medium text-text-primary tabular-nums">
                   {formatCount(trigger.events24h)}
                 </span>
                 {trigger.failed24h > 0 ? (
-                  <span className="ml-1.5 text-xs font-medium text-error tabular-nums">
+                  <span className="ml-1.5 text-sm font-medium text-error tabular-nums">
                     {trigger.failed24h} failed
                   </span>
                 ) : null}
               </TD>
 
-              <TD className="text-xs whitespace-nowrap text-text-muted">
+              <TD className="text-sm whitespace-nowrap text-text-muted">
                 {trigger.lastEventAt ? formatRelativeTime(trigger.lastEventAt) : "Never"}
               </TD>
 

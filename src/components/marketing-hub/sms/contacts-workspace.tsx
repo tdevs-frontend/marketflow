@@ -417,12 +417,13 @@ export function SmsContactsWorkspace() {
                             <AvatarLabel
                               name={name}
                               secondary={contact.phone}
+                              secondarySize="sm"
                               size="sm"
                             />
                           </button>
                         </TD>
 
-                        <TD className="text-xs whitespace-nowrap text-text-secondary">
+                        <TD className="text-sm whitespace-nowrap text-text-secondary">
                           {contact.country}
                         </TD>
 
@@ -430,7 +431,7 @@ export function SmsContactsWorkspace() {
                           <TagList tags={contact.tags} />
                         </TD>
 
-                        <TD className="text-xs text-text-secondary">
+                        <TD className="text-sm text-text-secondary">
                           {contact.leadStatus}
                         </TD>
 
@@ -451,13 +452,13 @@ export function SmsContactsWorkspace() {
                             {formatNumber(contact.replies)}
                           </span>
                           {contact.messages > 0 ? (
-                            <span className="block text-xs text-text-muted">
+                            <span className="block text-sm text-text-muted">
                               {formatPercent(rate(contact.replies, contact.messages))}
                             </span>
                           ) : null}
                         </TD>
 
-                        <TD className="text-xs whitespace-nowrap text-text-muted">
+                        <TD className="text-sm whitespace-nowrap text-text-muted">
                           {formatRelativeTime(contact.lastActivityAt)}
                         </TD>
 

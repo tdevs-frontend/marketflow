@@ -354,11 +354,11 @@ export function TagsWorkspace() {
                           >
                             <TagDot color={tag.color} />
                             <span className="min-w-0">
-                              <span className="block text-[13px] font-medium text-text-primary">
+                              <span className="block text-sm font-medium text-text-primary">
                                 {tag.name}
                               </span>
                               {tag.description ? (
-                                <span className="block max-w-64 truncate text-xs text-text-muted">
+                                <span className="block max-w-64 truncate text-sm text-text-muted">
                                   {tag.description}
                                 </span>
                               ) : null}
@@ -368,27 +368,27 @@ export function TagsWorkspace() {
 
                         <TD
                           align="right"
-                          className="text-xs text-text-secondary tabular-nums"
+                          className="text-sm text-text-secondary tabular-nums"
                         >
                           {formatNumber(counts.contacts)}
                         </TD>
 
                         <TD
                           align="right"
-                          className="text-xs text-text-secondary tabular-nums"
+                          className="text-sm text-text-secondary tabular-nums"
                         >
                           {formatNumber(counts.leads)}
                         </TD>
 
-                        <TD className="text-xs text-text-muted">
+                        <TD className="text-sm text-text-muted">
                           {dependants(tag) === 0 ? "—" : dependantSummary(tag)}
                         </TD>
 
-                        <TD className="text-xs whitespace-nowrap text-text-muted">
+                        <TD className="text-sm whitespace-nowrap text-text-muted">
                           {formatDate(tag.createdAt)}
                         </TD>
 
-                        <TD className="text-xs whitespace-nowrap text-text-muted">
+                        <TD className="text-sm whitespace-nowrap text-text-muted">
                           {tag.lastUsedAt
                             ? formatRelativeTime(tag.lastUsedAt)
                             : "Never"}

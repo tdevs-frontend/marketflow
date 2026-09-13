@@ -220,7 +220,7 @@ export function DashboardSidebar() {
         >
           {dashboardNav.map((section) => (
             <div key={section.title}>
-              <p className="px-2.5 text-[11px] font-medium tracking-[0.08em] text-text-muted uppercase">
+              <p className="px-2.5 text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
                 {section.title}
               </p>
               <ul className="mt-2 space-y-1">

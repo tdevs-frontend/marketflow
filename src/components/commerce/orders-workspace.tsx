@@ -258,7 +258,7 @@ export function OrdersWorkspace() {
                           <button
                             type="button"
                             onClick={() => setActive(order)}
-                            className="font-mono text-xs font-medium text-primary hover:underline focus-visible:shadow-focus focus-visible:outline-none"
+                            className="font-mono text-sm font-medium text-primary hover:underline focus-visible:shadow-focus focus-visible:outline-none"
                           >
                             {order.reference}
                           </button>
@@ -269,7 +269,7 @@ export function OrdersWorkspace() {
                             {order.customer.name}
                           </p>
                           {order.sourceCampaign ? (
-                            <p className="text-xs text-text-muted">
+                            <p className="text-sm text-text-muted">
                               via {order.sourceCampaign}
                             </p>
                           ) : null}
@@ -303,7 +303,7 @@ export function OrdersWorkspace() {
                           <OrderStatusBadge status={order.status} />
                         </TD>
 
-                        <TD className="text-xs whitespace-nowrap text-text-muted">
+                        <TD className="text-sm whitespace-nowrap text-text-muted">
                           {formatDate(order.placedAt)}
                         </TD>
 

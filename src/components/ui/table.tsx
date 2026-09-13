@@ -31,7 +31,7 @@ export function Table({
 export function THead({ children }: { children: ReactNode }) {
   return (
     <thead className="border-b border-border">
-      <tr className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+      <tr className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
         {children}
       </tr>
     </thead>
@@ -72,7 +72,7 @@ export function TH({
     <th
       scope="col"
       className={cn(
-        "px-3 py-2.5 font-medium whitespace-nowrap first:pl-0 last:pr-0",
+        "px-3 py-2.5 text-sm font-medium whitespace-nowrap first:pl-0 last:pr-0",
         align === "right" && "text-right",
         align === "center" && "text-center",
         className,
@@ -93,7 +93,7 @@ export function TD({
   return (
     <td
       className={cn(
-        "px-3 py-3 align-middle first:pl-0 last:pr-0",
+        "px-3 py-3 align-middle text-sm font-medium first:pl-0 last:pr-0",
         align === "right" && "text-right",
         align === "center" && "text-center",
         className,
@@ -139,7 +139,7 @@ export function SortableTH<T extends string>({
         type="button"
         onClick={() => onSort(field)}
         className={cn(
-          "inline-flex w-full items-center gap-1.5 px-3 py-2.5 text-xs font-medium tracking-[0.06em] uppercase transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none",
+          "inline-flex w-full items-center gap-1.5 px-3 py-2.5 text-sm font-medium tracking-[0.06em] uppercase transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none",
           align === "right" && "justify-end",
           active ? "text-text-primary" : "text-text-muted",
         )}

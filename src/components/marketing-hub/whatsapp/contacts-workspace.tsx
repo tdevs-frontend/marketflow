@@ -404,7 +404,7 @@ export function ContactsWorkspace() {
                               <span className="block truncate font-medium text-text-primary">
                                 {contactName(contact)}
                               </span>
-                              <span className="block truncate text-xs text-text-muted">
+                              <span className="block truncate text-sm text-text-muted">
                                 {contact.email ?? contact.phone}
                               </span>
                             </span>
@@ -429,7 +429,7 @@ export function ContactsWorkspace() {
                               </li>
                             ))}
                             {contact.tags.length > 2 ? (
-                              <li className="text-xs text-text-muted">
+                              <li className="text-sm text-text-muted">
                                 +{contact.tags.length - 2}
                               </li>
                             ) : null}
@@ -446,11 +446,11 @@ export function ContactsWorkspace() {
                           )}
                         </TD>
 
-                        <TD className="text-xs whitespace-nowrap text-text-muted">
+                        <TD className="text-sm whitespace-nowrap text-text-muted">
                           {formatRelativeTime(contact.lastActivityAt)}
                         </TD>
 
-                        <TD className="text-xs whitespace-nowrap text-text-muted">
+                        <TD className="text-sm whitespace-nowrap text-text-muted">
                           {formatDate(contact.createdAt)}
                         </TD>
 

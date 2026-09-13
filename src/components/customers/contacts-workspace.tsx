@@ -723,13 +723,14 @@ export function ContactsWorkspace() {
                         <AvatarLabel
                           name={contactName(item)}
                           secondary={item.email ?? item.phone ?? undefined}
+                          secondarySize="sm"
                           size="sm"
                         />
                       </button>
                     </TD>
 
                     {table.isVisible("phone") ? (
-                      <TD className="text-xs whitespace-nowrap text-text-secondary">
+                      <TD className="text-sm whitespace-nowrap text-text-secondary">
                         {item.phone ?? "—"}
                       </TD>
                     ) : null}
@@ -764,7 +765,7 @@ export function ContactsWorkspace() {
                     {table.isVisible("value") ? (
                       <TD
                         align="right"
-                        className="text-xs font-medium whitespace-nowrap text-text-primary tabular-nums"
+                        className="text-sm font-medium whitespace-nowrap text-text-primary tabular-nums"
                       >
                         {item.lifetimeValue
                           ? formatCurrency(item.lifetimeValue)
@@ -773,7 +774,7 @@ export function ContactsWorkspace() {
                     ) : null}
 
                     {table.isVisible("activity") ? (
-                      <TD className="text-xs whitespace-nowrap text-text-muted">
+                      <TD className="text-sm whitespace-nowrap text-text-muted">
                         {item.lastContactedAt
                           ? formatRelativeTime(item.lastContactedAt)
                           : "Never"}
@@ -781,7 +782,7 @@ export function ContactsWorkspace() {
                     ) : null}
 
                     {table.isVisible("created") ? (
-                      <TD className="text-xs whitespace-nowrap text-text-muted">
+                      <TD className="text-sm whitespace-nowrap text-text-muted">
                         {formatDate(item.createdAt)}
                       </TD>
                     ) : null}

@@ -8,7 +8,7 @@ export function ChannelPerformanceTable({ rows }: { rows: ChannelPerformance[] }
   return (
     <Card className="overflow-x-auto">
       <table className="w-full min-w-160 text-sm">
-        <thead className="border-b border-border bg-surface-secondary/60 text-left text-xs font-medium uppercase tracking-[0.08em] text-text-muted">
+        <thead className="border-b border-border bg-surface-secondary/60 text-left text-sm font-medium uppercase tracking-[0.08em] text-text-muted">
           <tr>
             {COLUMNS.map((column) => (
               <th key={column} scope="col" className="px-5 py-3 font-medium">
@@ -23,11 +23,11 @@ export function ChannelPerformanceTable({ rows }: { rows: ChannelPerformance[] }
               <th scope="row" className="px-5 py-3 text-left font-semibold capitalize text-text-primary">
                 {row.channel}
               </th>
-              <td className="px-5 py-3">{formatNumber(row.sent)}</td>
-              <td className="px-5 py-3">{formatNumber(row.delivered)}</td>
-              <td className="px-5 py-3">{formatPercent(rate(row.opened, row.delivered))}</td>
-              <td className="px-5 py-3">{formatPercent(rate(row.clicked, row.delivered))}</td>
-              <td className="px-5 py-3">{formatCurrency(row.revenue)}</td>
+              <td className="px-5 py-3 font-medium">{formatNumber(row.sent)}</td>
+              <td className="px-5 py-3 font-medium">{formatNumber(row.delivered)}</td>
+              <td className="px-5 py-3 font-medium">{formatPercent(rate(row.opened, row.delivered))}</td>
+              <td className="px-5 py-3 font-medium">{formatPercent(rate(row.clicked, row.delivered))}</td>
+              <td className="px-5 py-3 font-medium">{formatCurrency(row.revenue)}</td>
             </tr>
           ))}
         </tbody>

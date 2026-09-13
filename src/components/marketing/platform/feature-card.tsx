@@ -10,7 +10,8 @@ export type RailSide = "left" | "right";
  * lift reads as weight rather than as a slide. Shared by the cards and the
  * orbit nodes; nothing else in the section moves on hover.
  */
-const HOVER = "transition-[translate,box-shadow,border-color] duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none";
+const HOVER =
+  "transition-[translate,box-shadow,border-color] duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none";
 
 /** Lean toward the hub, two pixels, on top of the three-pixel lift. */
 const LEAN: Record<RailSide, string> = {
@@ -68,7 +69,7 @@ export function FeatureCard({
             {feature.title}
           </h3>
 
-          <p className="mt-0.5 text-sm leading-[1.5] text-text-secondary">
+          <p className="mt-0.5 text-sm leading-normal text-text-secondary font-medium">
             {feature.body}
           </p>
 

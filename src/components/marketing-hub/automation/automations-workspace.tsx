@@ -411,13 +411,13 @@ export function AutomationsWorkspace({ channel }: { channel: MarketingChannel })
                       <p className="max-w-56 truncate font-medium text-text-primary">
                         {flow.name}
                       </p>
-                      <p className="max-w-56 truncate text-xs text-text-muted">
+                      <p className="max-w-56 truncate text-sm text-text-muted">
                         {flow.description}
                       </p>
                     </TD>
 
                     <TD>
-                      <span className="inline-flex items-center gap-1.5 text-xs text-text-secondary">
+                      <span className="inline-flex items-center gap-1.5 text-sm text-text-secondary">
                         <Icon name={flow.triggerIcon} className="size-3.5 shrink-0" />
                         {flow.triggerLabel}
                       </span>
@@ -432,7 +432,7 @@ export function AutomationsWorkspace({ channel }: { channel: MarketingChannel })
                     </TD>
 
                     <TD className="w-40">
-                      <p className="text-xs font-medium text-text-primary tabular-nums">
+                      <p className="text-sm font-medium text-text-primary tabular-nums">
                         {formatPercent(flow.successRate)}
                       </p>
                       <ProgressBar
@@ -448,7 +448,7 @@ export function AutomationsWorkspace({ channel }: { channel: MarketingChannel })
                       <Badge tone={STATUS_TONES[flow.status]}>{flow.status}</Badge>
                     </TD>
 
-                    <TD className="text-xs whitespace-nowrap text-text-muted">
+                    <TD className="text-sm whitespace-nowrap text-text-muted">
                       {formatRelativeTime(flow.lastActivityAt)}
                     </TD>
 

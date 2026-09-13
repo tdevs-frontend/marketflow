@@ -37,10 +37,15 @@ export function RecentConversations({
         const waiting = last?.direction === "inbound";
 
         return (
-          <li key={conversation.id}>
+          /* `first:`/`last:` must key off the list item — on the anchor they
+             match every row (it is an only child) and cancel `py-3` entirely. */
+          <li
+            key={conversation.id}
+            className="first:[&>a]:pt-0 last:[&>a]:pb-0"
+          >
             <Link
               href={`${hrefBase}?conversation=${conversation.id}`}
-              className="flex items-start gap-3 py-3 transition-colors first:pt-0 last:pb-0 hover:bg-surface-secondary/60 focus-visible:shadow-focus focus-visible:outline-none"
+              className="flex items-start gap-3 py-3 transition-colors hover:bg-surface-secondary/60 focus-visible:shadow-focus focus-visible:outline-none"
             >
               <div className="relative shrink-0">
                 <Avatar name={conversation.contact.name} size="sm" />
@@ -78,16 +83,16 @@ export function RecentConversations({
                 </p>
 
                 <div className="mt-1.5 flex items-center gap-1.5">
-                  <Badge tone={STATUS_TONES[conversation.status]}>
+                  <Badge tone={STATUS_TONES[conversation.status]} className="shrink-0">
                     {conversation.status}
                   </Badge>
                   {conversation.unread > 0 ? (
-                    <span className="grid size-4.5 place-items-center rounded-full bg-primary text-xs font-bold text-white">
+                    <span className="grid size-4.5 shrink-0 place-items-center rounded-full bg-primary text-xs leading-none font-bold text-white tabular-nums">
                       {conversation.unread}
                     </span>
                   ) : null}
                   {conversation.contact.assignedAgent ? (
-                    <span className="truncate text-xs text-text-muted">
+                    <span className="min-w-0 truncate text-xs text-text-muted">
                       {conversation.contact.assignedAgent}
                     </span>
                   ) : null}

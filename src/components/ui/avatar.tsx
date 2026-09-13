@@ -50,12 +50,15 @@ export function Avatar({
 export function AvatarLabel({
   name,
   secondary,
+  secondarySize = "xs",
   size = "md",
   tone,
   className,
 }: {
   name: string;
   secondary?: string;
+  /** `sm` lifts the secondary line to 14px for table rows. */
+  secondarySize?: "xs" | "sm";
   size?: AvatarSize;
   tone?: string;
   className?: string;
@@ -66,7 +69,14 @@ export function AvatarLabel({
       <div className="min-w-0">
         <p className="truncate text-sm font-medium text-text-primary">{name}</p>
         {secondary ? (
-          <p className="truncate text-xs text-text-muted">{secondary}</p>
+          <p
+            className={cn(
+              "truncate text-text-muted",
+              secondarySize === "sm" ? "text-sm" : "text-xs",
+            )}
+          >
+            {secondary}
+          </p>
         ) : null}
       </div>
     </div>

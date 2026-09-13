@@ -385,7 +385,7 @@ export function SmsCampaignsWorkspace() {
                             <p className="truncate font-medium text-text-primary">
                               {campaign.name}
                             </p>
-                            <p className="truncate font-mono text-xs text-text-muted">
+                            <p className="truncate font-mono text-sm text-text-muted">
                               {campaign.message}
                             </p>
                           </button>
@@ -393,7 +393,7 @@ export function SmsCampaignsWorkspace() {
 
                         <TD>
                           <p className="text-text-secondary">{campaign.audienceLabel}</p>
-                          <p className="text-xs text-text-muted">
+                          <p className="text-sm text-text-muted">
                             {campaign.audienceSize === 0
                               ? "Transactional"
                               : `${formatNumber(campaign.audienceSize)} contacts`}
@@ -409,7 +409,7 @@ export function SmsCampaignsWorkspace() {
                             {formatNumber(campaign.delivered)}
                           </span>
                           {campaign.sent > 0 ? (
-                            <span className="block text-xs text-text-muted">
+                            <span className="block text-sm text-text-muted">
                               {formatPercent(rate(campaign.delivered, campaign.sent))}
                             </span>
                           ) : null}
@@ -420,7 +420,7 @@ export function SmsCampaignsWorkspace() {
                             {formatNumber(campaign.replies)}
                           </span>
                           {campaign.optOuts > 0 ? (
-                            <span className="block text-xs text-warning-text">
+                            <span className="block text-sm text-warning-text">
                               {formatNumber(campaign.optOuts)} opted out
                             </span>
                           ) : null}
@@ -444,7 +444,7 @@ export function SmsCampaignsWorkspace() {
                           <SmsCampaignStatusBadge status={campaign.status} />
                         </TD>
 
-                        <TD className="text-xs whitespace-nowrap text-text-muted">
+                        <TD className="text-sm whitespace-nowrap text-text-muted">
                           {formatDate(campaign.createdAt)}
                         </TD>
 

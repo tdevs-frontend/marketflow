@@ -432,14 +432,14 @@ export function EmailCampaignsWorkspace() {
                           <p className="max-w-56 truncate font-medium text-text-primary">
                             {campaign.name}
                           </p>
-                          <p className="max-w-56 truncate text-xs text-text-muted">
+                          <p className="max-w-56 truncate text-sm text-text-muted">
                             {campaign.subject}
                           </p>
                         </TD>
 
                         <TD>
                           <p className="text-text-secondary">{campaign.audienceLabel}</p>
-                          <p className="text-xs text-text-muted">
+                          <p className="text-sm text-text-muted">
                             {formatNumber(campaign.audienceSize)} contacts
                           </p>
                         </TD>
@@ -451,7 +451,7 @@ export function EmailCampaignsWorkspace() {
                         <TD align="right" className="text-text-secondary tabular-nums">
                           {formatNumber(campaign.delivered)}
                           {campaign.bounced > 0 ? (
-                            <span className="block text-xs text-error">
+                            <span className="block text-sm text-error">
                               {formatNumber(campaign.bounced)} bounced
                             </span>
                           ) : null}
@@ -462,7 +462,7 @@ export function EmailCampaignsWorkspace() {
                             <span className="text-text-muted">—</span>
                           ) : (
                             <>
-                              <p className="text-xs font-medium text-text-primary tabular-nums">
+                              <p className="text-sm font-medium text-text-primary tabular-nums">
                                 {formatPercent(openRate)}
                               </p>
                               <ProgressBar
@@ -481,7 +481,7 @@ export function EmailCampaignsWorkspace() {
                             <span className="text-text-muted">—</span>
                           ) : (
                             <>
-                              <p className="text-xs font-medium text-text-primary tabular-nums">
+                              <p className="text-sm font-medium text-text-primary tabular-nums">
                                 {formatPercent(clickRate)}
                               </p>
                               <ProgressBar
@@ -499,7 +499,7 @@ export function EmailCampaignsWorkspace() {
                           <EmailCampaignStatusBadge status={campaign.status} />
                         </TD>
 
-                        <TD className="text-xs whitespace-nowrap text-text-muted">
+                        <TD className="text-sm whitespace-nowrap text-text-muted">
                           {formatDate(campaign.scheduledAt ?? campaign.createdAt)}
                         </TD>
 

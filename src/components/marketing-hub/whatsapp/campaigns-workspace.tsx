@@ -360,7 +360,7 @@ export function WhatsAppCampaignsWorkspace() {
                             {campaign.name}
                           </p>
                           {campaign.description ? (
-                            <p className="max-w-56 truncate text-xs text-text-muted">
+                            <p className="max-w-56 truncate text-sm text-text-muted">
                               {campaign.description}
                             </p>
                           ) : null}
@@ -368,7 +368,7 @@ export function WhatsAppCampaignsWorkspace() {
 
                         <TD>
                           <p className="text-text-secondary">{campaign.audienceLabel}</p>
-                          <p className="text-xs text-text-muted">
+                          <p className="text-sm text-text-muted">
                             {formatNumber(campaign.audienceSize)} contacts
                           </p>
                         </TD>
@@ -386,7 +386,7 @@ export function WhatsAppCampaignsWorkspace() {
                             {formatNumber(campaign.opened)}
                           </span>
                           {campaign.delivered > 0 ? (
-                            <span className="block text-xs text-text-muted">
+                            <span className="block text-sm text-text-muted">
                               {formatPercent(rateOf(campaign.opened, campaign.delivered))}
                             </span>
                           ) : null}
@@ -400,7 +400,7 @@ export function WhatsAppCampaignsWorkspace() {
                           <CampaignStatusBadge status={campaign.status} />
                         </TD>
 
-                        <TD className="text-xs whitespace-nowrap text-text-muted">
+                        <TD className="text-sm whitespace-nowrap text-text-muted">
                           {formatDate(campaign.createdAt)}
                         </TD>
 

@@ -413,7 +413,7 @@ export function ProductsWorkspace() {
                         </TD>
 
                         <TD className="text-text-secondary">{item.categoryName}</TD>
-                        <TD className="font-mono text-xs text-text-muted">{item.sku}</TD>
+                        <TD className="font-mono text-sm text-text-muted">{item.sku}</TD>
 
                         <TD align="right">
                           {item.salePrice ? (
@@ -421,7 +421,7 @@ export function ProductsWorkspace() {
                               <span className="font-medium text-text-primary">
                                 {formatCurrency(item.salePrice)}
                               </span>{" "}
-                              <s className="text-xs text-text-muted">
+                              <s className="text-sm text-text-muted">
                                 {formatCurrency(item.price)}
                               </s>
                             </span>
@@ -447,7 +447,7 @@ export function ProductsWorkspace() {
                               {item.stock}
                             </span>
                           ) : (
-                            <span className="text-xs text-text-muted">Untracked</span>
+                            <span className="text-sm text-text-muted">Untracked</span>
                           )}
                         </TD>
 
@@ -460,7 +460,7 @@ export function ProductsWorkspace() {
                           </div>
                         </TD>
 
-                        <TD className="text-xs whitespace-nowrap text-text-muted">
+                        <TD className="text-sm whitespace-nowrap text-text-muted">
                           {formatDate(item.updatedAt)}
                         </TD>
 

@@ -430,6 +430,7 @@ export function EmailContactsWorkspace() {
                             <AvatarLabel
                               name={name}
                               secondary={contact.email}
+                              secondarySize="sm"
                               size="sm"
                             />
                           </button>
@@ -451,7 +452,7 @@ export function EmailContactsWorkspace() {
                           </Badge>
                         </TD>
 
-                        <TD className="text-xs text-text-secondary">
+                        <TD className="text-sm text-text-secondary">
                           {contact.source}
                         </TD>
 
@@ -460,7 +461,7 @@ export function EmailContactsWorkspace() {
                             {formatNumber(contact.opens)}
                           </span>
                           {contact.campaigns > 0 ? (
-                            <span className="block text-xs text-text-muted">
+                            <span className="block text-sm text-text-muted">
                               of {contact.campaigns} sends
                             </span>
                           ) : null}
@@ -470,7 +471,7 @@ export function EmailContactsWorkspace() {
                           {formatNumber(contact.clicks)}
                         </TD>
 
-                        <TD className="text-xs whitespace-nowrap text-text-muted">
+                        <TD className="text-sm whitespace-nowrap text-text-muted">
                           {formatRelativeTime(contact.lastActivityAt)}
                         </TD>
 

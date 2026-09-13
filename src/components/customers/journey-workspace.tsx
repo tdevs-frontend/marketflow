@@ -600,6 +600,7 @@ export function JourneyWorkspace() {
                           <AvatarLabel
                             name={contactName(contact)}
                             secondary={contact.company ?? undefined}
+                            secondarySize="sm"
                             size="sm"
                           />
                         </TD>
@@ -611,17 +612,17 @@ export function JourneyWorkspace() {
                         </TD>
                         <TD
                           align="right"
-                          className="text-xs text-text-secondary tabular-nums"
+                          className="text-sm text-text-secondary tabular-nums"
                         >
                           {journey.touchpoints}
                         </TD>
                         <TD
                           align="right"
-                          className="text-xs whitespace-nowrap text-text-secondary tabular-nums"
+                          className="text-sm whitespace-nowrap text-text-secondary tabular-nums"
                         >
                           {journey.durationDays}d
                         </TD>
-                        <TD className="text-xs whitespace-nowrap text-text-muted">
+                        <TD className="text-sm whitespace-nowrap text-text-muted">
                           {formatRelativeTime(journey.lastActivityAt)}
                         </TD>
                       </TR>

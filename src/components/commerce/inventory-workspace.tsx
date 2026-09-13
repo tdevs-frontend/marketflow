@@ -142,7 +142,7 @@ export function InventoryWorkspace() {
                           </p>
                         </div>
                       </TD>
-                      <TD className="font-mono text-xs text-text-muted">{item.sku}</TD>
+                      <TD className="font-mono text-sm text-text-muted">{item.sku}</TD>
                       <TD align="right" className="font-medium text-text-primary tabular-nums">
                         {item.stock}
                       </TD>
@@ -164,7 +164,7 @@ export function InventoryWorkspace() {
                       <TD>
                         <StockBadge status={state} variant="health" />
                       </TD>
-                      <TD className="text-xs whitespace-nowrap text-text-muted">
+                      <TD className="text-sm whitespace-nowrap text-text-muted">
                         {formatRelativeTime(item.updatedAt)}
                       </TD>
                     </TR>

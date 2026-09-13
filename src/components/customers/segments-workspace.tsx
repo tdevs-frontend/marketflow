@@ -789,7 +789,7 @@ export function CustomerSegmentsWorkspace() {
                           onClick={() => setActive(segment)}
                           className="block max-w-72 rounded-btn text-left focus-visible:shadow-focus focus-visible:outline-none"
                         >
-                          <span className="flex items-center gap-1.5 text-[13px] font-medium text-text-primary">
+                          <span className="flex items-center gap-1.5 text-sm font-medium text-text-primary">
                             <span className="truncate">{segment.name}</span>
                             {segment.system ? (
                               <Lock
@@ -798,7 +798,7 @@ export function CustomerSegmentsWorkspace() {
                               />
                             ) : null}
                           </span>
-                          <span className="mt-0.5 block truncate text-xs text-text-muted">
+                          <span className="mt-0.5 block truncate text-sm text-text-muted">
                             {segment.description}
                           </span>
                         </button>
@@ -808,22 +808,22 @@ export function CustomerSegmentsWorkspace() {
                       </TD>
                       <TD
                         align="right"
-                        className="text-xs font-medium text-text-primary tabular-nums"
+                        className="text-sm font-medium text-text-primary tabular-nums"
                       >
                         {formatNumber(members)}
                       </TD>
                       <TD
                         align="right"
-                        className="text-xs text-text-secondary tabular-nums"
+                        className="text-sm text-text-secondary tabular-nums"
                       >
                         {conditions || "—"}
                       </TD>
-                      <TD className="text-xs whitespace-nowrap text-text-muted">
+                      <TD className="text-sm whitespace-nowrap text-text-muted">
                         {formatRelativeTime(segment.updatedAt)}
                       </TD>
                       <TD>
                         {used ? (
-                          <span className="text-xs whitespace-nowrap text-text-secondary">
+                          <span className="text-sm whitespace-nowrap text-text-secondary">
                             {[
                               segment.usage.campaigns.length
                                 ? `${segment.usage.campaigns.length} campaign${segment.usage.campaigns.length === 1 ? "" : "s"}`
@@ -836,7 +836,7 @@ export function CustomerSegmentsWorkspace() {
                               .join(" · ")}
                           </span>
                         ) : (
-                          <span className="text-xs text-text-muted">
+                          <span className="text-sm text-text-muted">
                             Not used
                           </span>
                         )}

@@ -505,7 +505,7 @@ export function SocialPostsWorkspace() {
                               <span className="block max-w-40 truncate font-medium text-text-primary">
                                 {post.title}
                               </span>
-                              <span className="block text-xs text-text-muted">
+                              <span className="block text-sm text-text-muted">
                                 {post.author}
                               </span>
                             </span>
@@ -517,7 +517,7 @@ export function SocialPostsWorkspace() {
                         </TD>
 
                         <TD>
-                          <p className="max-w-56 text-xs text-text-secondary">
+                          <p className="max-w-56 text-sm text-text-secondary">
                             {truncate(post.caption, 72)}
                           </p>
                           {post.hashtags.length > 0 ? (
@@ -530,9 +530,9 @@ export function SocialPostsWorkspace() {
                           ) : null}
                         </TD>
 
-                        <TD className="text-xs whitespace-nowrap text-text-secondary">
+                        <TD className="text-sm whitespace-nowrap text-text-secondary">
                           {post.scheduledAt.slice(0, 10)}
-                          <span className="block text-xs text-text-muted tabular-nums">
+                          <span className="block text-sm text-text-muted tabular-nums">
                             {post.scheduledAt.slice(11, 16)}
                           </span>
                         </TD>
@@ -557,7 +557,7 @@ export function SocialPostsWorkspace() {
                               <span className="font-medium text-text-primary">
                                 {formatNumber(interactions(post))}
                               </span>
-                              <span className="block text-xs text-text-muted">
+                              <span className="block text-sm text-text-muted">
                                 {formatNumber(post.engagement.clicks)} clicks
                               </span>
                             </>

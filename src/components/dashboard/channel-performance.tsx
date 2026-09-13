@@ -99,12 +99,12 @@ export function ChannelPerformance({ className }: { className?: string }) {
        * tabular data, not something a second chart would read better.
        */}
       <div className="mt-5 -mx-1 overflow-x-auto border-t border-border pt-4">
-        <table className="w-full min-w-76 text-left text-[13px]">
+        <table className="w-full min-w-76 text-left text-sm">
           <caption className="sr-only">
             Channel metrics for WhatsApp, Email and SMS
           </caption>
           <thead>
-            <tr className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+            <tr className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
               <th scope="col" className="pb-2 font-medium">
                 Metric
               </th>

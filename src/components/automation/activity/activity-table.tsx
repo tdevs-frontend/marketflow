@@ -75,7 +75,7 @@ export function ActivityTable({
                     <span className="block text-sm font-medium text-text-primary tabular-nums">
                       {timeOf(row.at)}
                     </span>
-                    <span className="block text-xs text-text-muted">
+                    <span className="block text-sm text-text-muted">
                       {formatRelativeTime(row.at)}
                     </span>
                   </button>
@@ -96,7 +96,7 @@ export function ActivityTable({
                     <Link
                       href={AUTOMATION_ROUTES.workflow(row.workflowId)}
                       onClick={(event) => event.stopPropagation()}
-                      className="block max-w-44 truncate rounded-btn text-xs font-medium text-text-secondary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
+                      className="block max-w-44 truncate rounded-btn text-sm font-medium text-text-secondary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
                     >
                       {row.workflowName}
                     </Link>
@@ -106,18 +106,18 @@ export function ActivityTable({
                 <TD>
                   <span className="flex items-center gap-2">
                     <NodeIcon kind={row.kind} size="sm" />
-                    <span className="max-w-40 truncate text-xs text-text-secondary">
+                    <span className="max-w-40 truncate text-sm text-text-secondary">
                       {row.title}
                     </span>
                   </span>
                 </TD>
 
                 <TD>
-                  <span className="block max-w-44 truncate text-xs text-text-primary">
+                  <span className="block max-w-44 truncate text-sm text-text-primary">
                     {row.event}
                   </span>
                   {channel ? (
-                    <span className={cn("text-xs font-medium", channel.text)}>
+                    <span className={cn("text-sm font-medium", channel.text)}>
                       {channel.label}
                     </span>
                   ) : null}
@@ -129,7 +129,7 @@ export function ActivityTable({
 
                 <TD
                   align="right"
-                  className="text-xs whitespace-nowrap text-text-muted tabular-nums"
+                  className="text-sm whitespace-nowrap text-text-muted tabular-nums"
                 >
                   {formatDuration(row.durationMs)}
                 </TD>

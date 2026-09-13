@@ -538,7 +538,7 @@ export function WorkflowsWorkspace() {
                         <span className="block truncate text-sm font-medium text-text-primary transition-colors hover:text-primary">
                           {workflow.name}
                         </span>
-                        <span className="block truncate text-xs text-text-muted">
+                        <span className="block truncate text-sm text-text-muted">
                           {workflow.nodes.length} steps
                         </span>
                       </Link>
@@ -546,7 +546,7 @@ export function WorkflowsWorkspace() {
                     <TD>
                       <WorkflowStatusBadge status={workflow.status} />
                     </TD>
-                    <TD className="text-xs whitespace-nowrap text-text-secondary">
+                    <TD className="text-sm whitespace-nowrap text-text-secondary">
                       {workflow.triggerLabel}
                     </TD>
                     <TD>
@@ -554,7 +554,7 @@ export function WorkflowsWorkspace() {
                     </TD>
                     <TD
                       align="right"
-                      className="text-xs font-medium whitespace-nowrap text-text-primary tabular-nums"
+                      className="text-sm font-medium whitespace-nowrap text-text-primary tabular-nums"
                     >
                       {workflow.stats.running > 0 ? (
                         formatCount(workflow.stats.running)
@@ -562,16 +562,16 @@ export function WorkflowsWorkspace() {
                         <span className="text-text-muted">—</span>
                       )}
                     </TD>
-                    <TD align="right" className="text-xs font-medium text-text-primary tabular-nums">
+                    <TD align="right" className="text-sm font-medium text-text-primary tabular-nums">
                       {formatCount(workflow.stats.entered)}
                     </TD>
-                    <TD align="right" className="text-xs text-text-secondary tabular-nums">
+                    <TD align="right" className="text-sm text-text-secondary tabular-nums">
                       {formatCount(workflow.stats.completed)}
                       <span className="ml-1 text-text-muted">
                         ({formatPercent(completionRate(workflow), 0)})
                       </span>
                     </TD>
-                    <TD align="right" className="text-xs font-medium text-primary tabular-nums">
+                    <TD align="right" className="text-sm font-medium text-primary tabular-nums">
                       {formatPercent(conversionRate(workflow))}
                     </TD>
                     <TD>
@@ -584,7 +584,7 @@ export function WorkflowsWorkspace() {
                         </span>
                       </Tooltip>
                     </TD>
-                    <TD className="text-xs whitespace-nowrap text-text-muted">
+                    <TD className="text-sm whitespace-nowrap text-text-muted">
                       {formatRelativeTime(workflow.updatedAt)}
                     </TD>
                     <TD align="right">
