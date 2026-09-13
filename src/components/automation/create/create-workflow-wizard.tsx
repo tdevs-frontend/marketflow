@@ -482,7 +482,7 @@ export function CreateWorkflowWizard() {
                   </Field>
 
                   <div>
-                    <p className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+                    <p className="text-sm font-medium text-text-muted">
                       Endpoint
                     </p>
                     <pre className="custom-scrollbar mt-1.5 overflow-x-auto rounded-panel bg-surface-secondary px-3.5 py-3 font-mono text-sm text-text-secondary">

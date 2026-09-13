@@ -129,7 +129,7 @@ function CustomerPicker({
         />
       </div>
 
-      <p className="mt-3 text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+      <p className="mt-3 text-sm font-medium text-text-muted">
         {debounced.trim() ? `${matches.length} matching` : "Most active"}
       </p>
 

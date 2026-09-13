@@ -111,7 +111,7 @@ export function FunnelStrip({
 
         return (
           <li key={stage.label} className="min-w-0">
-            <p className="truncate text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+            <p className="truncate text-sm font-medium text-text-muted">
               {stage.label}
             </p>
             <p className="mt-1 text-base leading-none font-bold text-text-primary tabular-nums">

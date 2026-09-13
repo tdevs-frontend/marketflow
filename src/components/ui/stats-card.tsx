@@ -134,7 +134,7 @@ export function MiniStat({
         className,
       )}
     >
-      <p className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+      <p className="text-sm font-medium text-text-muted">
         {label}
       </p>
       <p className="mt-1 text-lg leading-none font-bold text-text-primary tabular-nums">

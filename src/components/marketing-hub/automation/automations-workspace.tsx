@@ -339,7 +339,7 @@ export function AutomationsWorkspace({ channel }: { channel: MarketingChannel })
                         { label: "Success", value: formatPercent(flow.successRate) },
                       ].map((cell) => (
                         <div key={cell.label}>
-                          <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+                          <dt className="text-sm font-medium text-text-muted">
                             {cell.label}
                           </dt>
                           <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">

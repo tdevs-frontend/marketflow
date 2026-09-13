@@ -31,7 +31,7 @@ export function Table({
 export function THead({ children }: { children: ReactNode }) {
   return (
     <thead className="border-b border-border">
-      <tr className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+      <tr className="text-sm font-medium text-text-muted">
         {children}
       </tr>
     </thead>

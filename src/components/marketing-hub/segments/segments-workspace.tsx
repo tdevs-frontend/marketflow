@@ -326,7 +326,7 @@ export function SegmentsWorkspace() {
                     </ul>
 
                     <div className="mt-auto pt-4">
-                      <p className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+                      <p className="text-sm font-medium text-text-muted">
                         Usable on
                       </p>
                       <div className="mt-2 flex items-center gap-2">

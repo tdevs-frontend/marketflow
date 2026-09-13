@@ -128,7 +128,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
               <fact.icon className="size-4" aria-hidden />
             </span>
             <div className="min-w-0">
-              <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+              <dt className="text-sm font-medium text-text-muted">
                 {fact.label}
               </dt>
               <dd
@@ -173,7 +173,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
                       <p className="text-sm font-semibold text-text-primary">
                         {step.title}
                       </p>
-                      <span className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+                      <span className="text-sm font-medium text-text-muted">
                         {NODE_META[step.kind]?.label}
                       </span>
                     </div>
@@ -224,7 +224,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
             />
             <CardBody className="space-y-4">
               <div>
-                <h3 className="flex items-center gap-1.5 text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+                <h3 className="flex items-center gap-1.5 text-sm font-medium text-text-muted">
                   <Plug className="size-3.5" aria-hidden />
                   Integrations
                 </h3>
@@ -247,7 +247,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
               </div>
 
               <div>
-                <h3 className="flex items-center gap-1.5 text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+                <h3 className="flex items-center gap-1.5 text-sm font-medium text-text-muted">
                   <FileText className="size-3.5" aria-hidden />
                   Message templates
                 </h3>

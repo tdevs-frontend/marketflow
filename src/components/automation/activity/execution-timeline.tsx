@@ -55,7 +55,7 @@ function StepPayload({ step }: { step: WorkflowRunStep }) {
         ).map(([label, payload]) =>
           payload ? (
             <div key={label}>
-              <p className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+              <p className="text-sm font-medium text-text-muted">
                 {label}
               </p>
               <pre className="custom-scrollbar mt-1 overflow-x-auto rounded-btn bg-surface-secondary px-2.5 py-2 font-mono text-sm text-text-secondary">
@@ -233,7 +233,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
   return (
     <dl className="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3">
       <div className="min-w-0">
-        <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+        <dt className="text-sm font-medium text-text-muted">
           Contact
         </dt>
         <dd className="mt-1 truncate text-sm font-medium">
@@ -248,7 +248,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
       </div>
 
       <div className="min-w-0">
-        <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+        <dt className="text-sm font-medium text-text-muted">
           Workflow
         </dt>
         <dd className="mt-1 truncate text-sm font-medium">
@@ -263,7 +263,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
       </div>
 
       <div className="min-w-0">
-        <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+        <dt className="text-sm font-medium text-text-muted">
           Run ID
         </dt>
         <dd className="mt-1 truncate">
@@ -272,7 +272,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
       </div>
 
       <div className="min-w-0">
-        <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+        <dt className="text-sm font-medium text-text-muted">
           Started
         </dt>
         <dd className="mt-1 text-sm text-text-secondary">
@@ -281,7 +281,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
       </div>
 
       <div className="min-w-0">
-        <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+        <dt className="text-sm font-medium text-text-muted">
           State
         </dt>
         <dd className="mt-1">
@@ -290,7 +290,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
       </div>
 
       <div className="min-w-0">
-        <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+        <dt className="text-sm font-medium text-text-muted">
           Total duration
         </dt>
         <dd className="mt-1 text-sm text-text-secondary tabular-nums">

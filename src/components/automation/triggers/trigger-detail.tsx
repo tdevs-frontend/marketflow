@@ -141,7 +141,7 @@ export function TriggerDetail({ trigger }: { trigger: AutomationTrigger }) {
               <fact.icon className="size-4" aria-hidden />
             </span>
             <div className="min-w-0">
-              <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+              <dt className="text-sm font-medium text-text-muted">
                 {fact.label}
               </dt>
               <dd className="truncate text-lg leading-tight font-bold text-text-primary">
@@ -206,7 +206,7 @@ export function TriggerDetail({ trigger }: { trigger: AutomationTrigger }) {
           />
           <CardBody className="space-y-3">
             <div>
-              <p className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+              <p className="text-sm font-medium text-text-muted">
                 Event key
               </p>
               <p className="mt-1.5">
@@ -233,7 +233,7 @@ export function TriggerDetail({ trigger }: { trigger: AutomationTrigger }) {
           <CardBody className="grid gap-4 xl:grid-cols-2">
             <div className="space-y-4">
               <div>
-                <p className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+                <p className="text-sm font-medium text-text-muted">
                   Event endpoint
                 </p>
                 <pre className="custom-scrollbar mt-1.5 overflow-x-auto rounded-panel bg-surface-secondary px-3.5 py-3 font-mono text-sm text-text-secondary">
@@ -246,7 +246,7 @@ X-MarketFlow-Signature: <hmac-sha256>
               </div>
 
               <div>
-                <p className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+                <p className="text-sm font-medium text-text-muted">
                   Authentication
                 </p>
                 <p className="mt-1.5 text-sm text-text-secondary">
@@ -269,7 +269,7 @@ X-MarketFlow-Signature: <hmac-sha256>
 
             <div className="space-y-4">
               <div>
-                <p className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+                <p className="text-sm font-medium text-text-muted">
                   Testing
                 </p>
                 <p className="mt-1.5 text-sm text-text-secondary">
@@ -291,7 +291,7 @@ X-MarketFlow-Signature: <hmac-sha256>
               </div>
 
               <div>
-                <p className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+                <p className="text-sm font-medium text-text-muted">
                   Last error
                 </p>
                 {lastError ? (

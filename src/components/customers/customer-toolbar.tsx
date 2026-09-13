@@ -50,7 +50,7 @@ export function ActiveFilterChips({
 
   return (
     <div className={cn("flex flex-wrap items-center gap-2", className)}>
-      <span className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+      <span className="text-sm font-medium text-text-muted">
         Filtered by
       </span>
 

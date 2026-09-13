@@ -137,7 +137,7 @@ export function AutomationNode({
           <span className="text-sm font-medium text-text-primary">
             {step.title}
           </span>
-          <span className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+          <span className="text-sm font-medium text-text-muted">
             {style.label}
           </span>
         </span>

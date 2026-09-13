@@ -388,7 +388,7 @@ export function SocialCalendar() {
             {WEEKDAYS.map((day) => (
               <div
                 key={day}
-                className="px-2 py-2 text-center text-sm font-medium tracking-[0.06em] text-text-muted uppercase"
+                className="px-2 py-2 text-center text-sm font-medium text-text-muted"
               >
                 <span className="hidden sm:inline">{day}</span>
                 <span className="sm:hidden">{day.charAt(0)}</span>
@@ -485,7 +485,7 @@ export function SocialCalendar() {
                   )}
                 >
                   <div className="flex items-baseline gap-1.5 pb-2">
-                    <span className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+                    <span className="text-sm font-medium text-text-muted">
                       {WEEKDAYS[index]}
                     </span>
                     <span
@@ -639,7 +639,7 @@ export function SocialCalendar() {
                     key={cell.label}
                     className="rounded-panel border border-border px-3 py-2.5 text-center"
                   >
-                    <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+                    <dt className="text-sm font-medium text-text-muted">
                       {cell.label}
                     </dt>
                     <dd className="mt-0.5 text-base font-bold text-text-primary tabular-nums">

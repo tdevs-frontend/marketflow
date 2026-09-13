@@ -143,7 +143,7 @@ export function WorkflowMiniMapRow({
         >
           <div className="flex items-center gap-2">
             <NodeIcon kind={step.kind} size="sm" />
-            <span className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+            <span className="text-sm font-medium text-text-muted">
               {NODE_META[step.kind]?.label ?? "Step"}
             </span>
           </div>

@@ -894,7 +894,7 @@ export function CampaignWizard() {
 
             <dl className="grid gap-3 sm:grid-cols-3">
               <div className="rounded-panel border border-border px-3.5 py-3">
-                <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+                <dt className="text-sm font-medium text-text-muted">
                   Recipients
                 </dt>
                 <dd className="mt-1 text-lg leading-none font-bold text-text-primary tabular-nums">
@@ -902,7 +902,7 @@ export function CampaignWizard() {
                 </dd>
               </div>
               <div className="rounded-panel border border-border px-3.5 py-3">
-                <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+                <dt className="text-sm font-medium text-text-muted">
                   Merge tags
                 </dt>
                 <dd className="mt-1 text-lg leading-none font-bold text-text-primary tabular-nums">
@@ -910,7 +910,7 @@ export function CampaignWizard() {
                 </dd>
               </div>
               <div className="rounded-panel border border-border px-3.5 py-3">
-                <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+                <dt className="text-sm font-medium text-text-muted">
                   {draft.channel === "sms" ? "Billed segments" : "Message length"}
                 </dt>
                 <dd className="mt-1 text-lg leading-none font-bold text-text-primary tabular-nums">

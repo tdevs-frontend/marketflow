@@ -143,7 +143,7 @@ export function WorkflowCard({
           three questions, and nothing on the card that answers none of them. */}
       <dl className="mt-3 grid grid-cols-3 gap-2 border-t border-border pt-3">
         <div>
-          <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+          <dt className="text-sm font-medium text-text-muted">
             Active
           </dt>
           <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">
@@ -151,7 +151,7 @@ export function WorkflowCard({
           </dd>
         </div>
         <div>
-          <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+          <dt className="text-sm font-medium text-text-muted">
             Entered
           </dt>
           <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">
@@ -159,7 +159,7 @@ export function WorkflowCard({
           </dd>
         </div>
         <div>
-          <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+          <dt className="text-sm font-medium text-text-muted">
             Conversion
           </dt>
           <dd className="mt-0.5 text-sm font-bold text-primary tabular-nums">

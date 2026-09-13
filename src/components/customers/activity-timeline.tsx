@@ -99,7 +99,7 @@ export function DrawerSection({
   return (
     <section className={cn("border-t border-border pt-4", className)}>
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+        <h3 className="text-sm font-medium text-text-muted">
           {title}
         </h3>
         {action}

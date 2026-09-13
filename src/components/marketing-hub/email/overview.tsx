@@ -344,7 +344,7 @@ export function EmailOverview() {
 
                 <dl className="flex shrink-0 items-center gap-4 text-right">
                   <div>
-                    <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+                    <dt className="text-sm font-medium text-text-muted">
                       Sent
                     </dt>
                     <dd className="text-sm font-bold text-text-primary tabular-nums">
@@ -352,7 +352,7 @@ export function EmailOverview() {
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+                    <dt className="text-sm font-medium text-text-muted">
                       Open
                     </dt>
                     <dd className="text-sm font-bold text-text-primary tabular-nums">
@@ -362,7 +362,7 @@ export function EmailOverview() {
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+                    <dt className="text-sm font-medium text-text-muted">
                       Click
                     </dt>
                     <dd className="text-sm font-bold text-text-primary tabular-nums">

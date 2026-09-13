@@ -441,7 +441,7 @@ export function EmailTemplatesWorkspace() {
                     {index + 1}
                   </span>
                   <span className="min-w-0">
-                    <span className="block text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
+                    <span className="block text-sm font-medium text-text-muted">
                       {block.type.replace("-", " ")}
                     </span>
                     <span className="mt-0.5 block text-sm text-text-secondary">
