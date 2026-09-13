@@ -799,7 +799,7 @@ function Section({
           type="button"
           aria-expanded={open}
           onClick={() => setOpen((value) => !value)}
-          className="flex w-full items-center gap-2 rounded-btn py-1 text-left text-[13px] font-semibold text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
+          className="flex w-full items-center gap-2 rounded-btn py-1 text-left text-sm font-semibold text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
         >
           <ChevronDown
             className={cn("size-4 shrink-0 transition-transform", open ? "" : "-rotate-90")}
@@ -865,7 +865,7 @@ export function NodeInspector({
           <Plus className="size-5" aria-hidden />
         </span>
         <p className="text-sm font-semibold text-text-primary">No step selected</p>
-        <p className="max-w-56 text-xs text-text-muted">
+        <p className="max-w-56 text-sm text-text-muted">
           Pick a node on the canvas to configure it, or drag a new one in from
           the library.
         </p>
@@ -1000,7 +1000,7 @@ export function NodeInspector({
         <div className="min-w-0 flex-1">
           <p
             className={cn(
-              "text-xs font-medium tracking-[0.08em] uppercase",
+              "text-sm font-medium tracking-[0.08em] uppercase",
               theme.text,
             )}
           >
@@ -1042,7 +1042,7 @@ export function NodeInspector({
             defaultOpen={draft.kind === "multi_branch"}
             badge={<Badge tone="neutral">{draft.branches.length}</Badge>}
           >
-            <p className="text-xs text-text-muted">
+            <p className="text-sm text-text-muted">
               Paths are taken in order, top to bottom — the first one a contact
               matches wins, so the catch-all belongs last.
             </p>
@@ -1135,13 +1135,13 @@ export function NodeInspector({
             }
           >
             {tokens.length === 0 ? (
-              <p className="text-xs text-text-muted">
+              <p className="text-sm text-text-muted">
                 This message has no variables. Choose a template that uses them
                 to personalise it.
               </p>
             ) : (
               <>
-                <p className="text-xs text-text-muted">
+                <p className="text-sm text-text-muted">
                   Each token is filled per contact when the message is sent.
                   Anything left unmapped blocks publishing — a message that goes
                   out reading “Hi {"{{first_name}}"}” is the worst bug this
@@ -1163,7 +1163,7 @@ export function NodeInspector({
                           binding.path ? "border-border" : "border-error/40 bg-error-soft/30",
                         )}
                       >
-                        <code className="block font-mono text-xs text-text-secondary">
+                        <code className="block font-mono text-sm text-text-secondary">
                           {`{{${token}}}`}
                         </code>
 
@@ -1198,7 +1198,7 @@ export function NodeInspector({
                         </div>
 
                         {binding.sample && binding.path ? (
-                          <p className="text-xs text-text-muted">
+                          <p className="text-sm text-text-muted">
                             Preview: <span className="text-text-secondary">{binding.sample}</span>
                           </p>
                         ) : null}
@@ -1215,7 +1215,7 @@ export function NodeInspector({
           title="Conditions"
           badge={conditions.length > 0 ? <Badge tone="brand">{conditions.length}</Badge> : null}
         >
-          <p className="text-xs text-text-muted">
+          <p className="text-sm text-text-muted">
             Contacts who do not match skip this step and carry on to the next
             one. Use it for exceptions, not for branching.
           </p>
@@ -1289,18 +1289,18 @@ export function NodeInspector({
 
         {meta?.outputs?.length ? (
           <Section title="Outputs">
-            <p className="text-xs text-text-muted">
+            <p className="text-sm text-text-muted">
               Values this step hands to the ones after it. Any later condition
               can read them.
             </p>
             <ul className="space-y-1.5">
               {meta.outputs.map((output) => (
                 <li key={output.key} className="rounded-btn bg-surface-secondary px-2.5 py-2">
-                  <code className="font-mono text-xs text-text-primary">
+                  <code className="font-mono text-sm text-text-primary">
                     {output.key}
                   </code>
-                  <span className="ml-1.5 text-xs text-text-muted">{output.type}</span>
-                  <p className="mt-0.5 text-xs text-text-muted">{output.description}</p>
+                  <span className="ml-1.5 text-sm text-text-muted">{output.type}</span>
+                  <p className="mt-0.5 text-sm text-text-muted">{output.description}</p>
                 </li>
               ))}
             </ul>
@@ -1326,20 +1326,20 @@ export function NodeInspector({
           {link ? (
             <Link
               href={link.href}
-              className="inline-flex items-center gap-1.5 rounded-btn text-xs font-medium text-primary transition-colors hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
+              className="inline-flex items-center gap-1.5 rounded-btn text-sm font-medium text-primary transition-colors hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
             >
               <ExternalLink className="size-3.5" aria-hidden />
               {link.label}
             </Link>
           ) : null}
 
-          <p className="text-xs text-text-muted">
+          <p className="text-sm text-text-muted">
             Node ID <code className="font-mono text-text-secondary">{draft.id}</code>
           </p>
         </Section>
 
         {draft.entered !== undefined && draft.entered > 0 ? (
-          <p className="flex items-center gap-2 border-t border-border pt-3 text-xs text-text-muted">
+          <p className="flex items-center gap-2 border-t border-border pt-3 text-sm text-text-muted">
             <Badge tone="neutral">{draft.entered.toLocaleString("en-US")}</Badge>
             contacts have reached this step
           </p>

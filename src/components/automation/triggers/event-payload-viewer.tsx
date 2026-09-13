@@ -52,7 +52,7 @@ export function EventPayloadViewer({
         </Tooltip>
       </div>
 
-      <pre className="custom-scrollbar overflow-x-auto px-3.5 py-3 font-mono text-xs leading-relaxed text-text-secondary">
+      <pre className="custom-scrollbar overflow-x-auto px-3.5 py-3 font-mono text-sm leading-relaxed text-text-secondary">
         {json.split("\n").map((line, index) => {
           const match = line.match(/^(\s*)"([^"]+)":\s?(.*)$/);
 

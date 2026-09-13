@@ -61,12 +61,12 @@ export function RecentConversations({
 
               <div className="min-w-0 flex-1">
                 <div className="flex items-baseline justify-between gap-2">
-                  <p className="truncate text-[13px] font-medium text-text-primary">
+                  <p className="truncate text-sm font-medium text-text-primary">
                     {conversation.contact.name}
                   </p>
                   <time
                     dateTime={conversation.contact.lastActivityAt}
-                    className="shrink-0 text-xs text-text-muted"
+                    className="shrink-0 text-sm text-text-muted"
                   >
                     {formatRelativeTime(conversation.contact.lastActivityAt)}
                   </time>
@@ -74,7 +74,7 @@ export function RecentConversations({
 
                 <p
                   className={cn(
-                    "mt-0.5 truncate text-xs",
+                    "mt-0.5 truncate text-sm",
                     waiting ? "font-medium text-text-secondary" : "text-text-muted",
                   )}
                 >
@@ -92,7 +92,7 @@ export function RecentConversations({
                     </span>
                   ) : null}
                   {conversation.contact.assignedAgent ? (
-                    <span className="min-w-0 truncate text-xs text-text-muted">
+                    <span className="min-w-0 truncate text-sm text-text-muted">
                       {conversation.contact.assignedAgent}
                     </span>
                   ) : null}

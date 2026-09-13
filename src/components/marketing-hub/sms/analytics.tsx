@@ -311,7 +311,7 @@ export function SmsAnalytics() {
           </div>
 
           {multipart.length > 0 ? (
-            <p className="mt-4 rounded-panel bg-warning-soft px-3 py-2.5 text-xs text-warning-text">
+            <p className="mt-4 rounded-panel bg-warning-soft px-3 py-2.5 text-sm text-warning-text">
               {multipart.length} campaign{multipart.length === 1 ? "" : "s"} send as
               multiple segments and are billed per part. Trimming{" "}
               {multipart[0].name} to 160 characters would halve its cost.

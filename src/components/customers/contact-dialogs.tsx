@@ -37,7 +37,7 @@ import { TagDot } from "./customer-badges";
 function Scope({ contacts }: { contacts: CustomerContact[] }) {
   if (contacts.length === 1) {
     return (
-      <p className="text-[13px] text-text-secondary">
+      <p className="text-sm text-text-secondary">
         For{" "}
         <span className="font-medium text-text-primary">
           {contactName(contacts[0])}
@@ -48,7 +48,7 @@ function Scope({ contacts }: { contacts: CustomerContact[] }) {
   }
 
   return (
-    <p className="text-[13px] text-text-secondary">
+    <p className="text-sm text-text-secondary">
       For{" "}
       <span className="font-medium text-text-primary">
         {contacts.length} selected contacts
@@ -315,7 +315,7 @@ export function ContactFormDialog({
           <legend className="px-1 text-sm font-medium text-text-primary">
             Consent
           </legend>
-          <p className="text-xs text-text-muted">
+          <p className="text-sm text-text-muted">
             Only channels with consent can be used for marketing messages.
           </p>
 
@@ -344,7 +344,7 @@ export function ContactFormDialog({
                     className="size-4 shrink-0 text-text-muted"
                     aria-hidden
                   />
-                  <span className="flex-1 text-[13px] text-text-secondary">
+                  <span className="flex-1 text-sm text-text-secondary">
                     {channel.label} consent
                   </span>
                 </label>
@@ -371,7 +371,7 @@ export function ContactFormDialog({
                     )
                   }
                   className={cn(
-                    "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                    "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
                     picked
                       ? "border-primary bg-primary-soft text-primary-dark"
                       : "border-border text-text-secondary hover:border-border-strong",
@@ -409,15 +409,15 @@ export function ContactFormDialog({
                     }
                     label={`Add to ${segment.name}`}
                   />
-                  <span className="flex-1 truncate text-[13px] text-text-secondary">
+                  <span className="flex-1 truncate text-sm text-text-secondary">
                     {segment.name}
                   </span>
-                  <span className="text-xs text-text-muted tabular-nums">
+                  <span className="text-sm text-text-muted tabular-nums">
                     {formatNumber(segmentMembers(segment).length)}
                   </span>
                 </label>
               ))}
-            <p className="px-2 text-xs text-text-muted">
+            <p className="px-2 text-sm text-text-muted">
               Only manual segments are listed — rule-based membership is
               computed.
             </p>
@@ -511,11 +511,11 @@ export function TagPickerDialog({
                     label={`Add ${tag.name}`}
                   />
                   <TagDot color={tag.color} />
-                  <span className="flex-1 text-[13px] font-medium text-text-primary">
+                  <span className="flex-1 text-sm font-medium text-text-primary">
                     {tag.name}
                   </span>
                   {tag.description ? (
-                    <span className="hidden max-w-56 truncate text-xs text-text-muted sm:block">
+                    <span className="hidden max-w-56 truncate text-sm text-text-muted sm:block">
                       {tag.description}
                     </span>
                   ) : null}
@@ -606,10 +606,10 @@ export function SegmentPickerDialog({
                       )}
                     >
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-[13px] font-medium text-text-primary">
+                        <span className="block truncate text-sm font-medium text-text-primary">
                           {segment.name}
                         </span>
-                        <span className="block truncate text-xs text-text-muted">
+                        <span className="block truncate text-sm text-text-muted">
                           {formatNumber(segmentMembers(segment).length)}{" "}
                           contacts
                           {dynamic
@@ -624,7 +624,7 @@ export function SegmentPickerDialog({
             )}
           </ul>
 
-          <p className="text-xs text-text-muted">
+          <p className="text-sm text-text-muted">
             Rule-based segments cannot take contacts by hand — edit their rules
             on the Segments page instead.
           </p>

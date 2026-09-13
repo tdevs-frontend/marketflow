@@ -491,7 +491,7 @@ export function ContactsWorkspace() {
                       <span className="block truncate text-sm font-medium text-text-primary">
                         {contactName(contact)}
                       </span>
-                      <span className="block truncate text-xs text-text-muted">
+                      <span className="block truncate text-sm text-text-muted">
                         {contact.phone}
                       </span>
                     </button>
@@ -511,7 +511,7 @@ export function ContactsWorkspace() {
                         </Badge>
                       ))}
                     </div>
-                    <span className="text-xs text-text-muted">
+                    <span className="text-sm text-text-muted">
                       {formatRelativeTime(contact.lastActivityAt)}
                     </span>
                   </div>

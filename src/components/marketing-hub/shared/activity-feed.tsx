@@ -64,12 +64,12 @@ export function ActivityFeed({
             </div>
 
             <div className={cn("min-w-0 flex-1", last ? "pb-0" : "pb-5")}>
-              <p className="text-[13px] leading-snug font-medium text-text-primary">
+              <p className="text-sm leading-snug font-medium text-text-primary">
                 {entry.title}
               </p>
-              <p className="mt-0.5 text-xs text-text-secondary">{entry.detail}</p>
+              <p className="mt-0.5 text-sm text-text-secondary">{entry.detail}</p>
 
-              <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-text-muted">
+              <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-text-muted">
                 {channel ? (
                   <span className="inline-flex items-center gap-1">
                     <span

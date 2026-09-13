@@ -50,7 +50,7 @@ export function KpiStrip({
         return (
           <Card key={item.label} className="p-4">
             <div className="flex items-start justify-between gap-3">
-              <p className="text-[13px] font-medium text-text-secondary">
+              <p className="text-sm font-medium text-text-secondary">
                 {item.label}
               </p>
               <span
@@ -67,7 +67,7 @@ export function KpiStrip({
               {item.value}
             </p>
             {item.hint ? (
-              <p className="mt-2 text-xs text-text-muted">{item.hint}</p>
+              <p className="mt-2 text-sm text-text-muted">{item.hint}</p>
             ) : null}
           </Card>
         );

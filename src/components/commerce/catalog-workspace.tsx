@@ -72,7 +72,7 @@ function ShareRow({
         >
           {label}
         </span>
-        <span className="block text-xs text-text-muted">{hint}</span>
+        <span className="block text-sm text-text-muted">{hint}</span>
       </span>
     </button>
   );
@@ -109,7 +109,7 @@ function ShareDialog({
         <div className="space-y-4">
           <div className="flex items-center gap-2 rounded-panel border border-border bg-surface-secondary px-3 py-2.5">
             <Link2 className="size-4 shrink-0 text-text-muted" aria-hidden />
-            <span className="min-w-0 flex-1 truncate font-mono text-xs text-text-secondary">
+            <span className="min-w-0 flex-1 truncate font-mono text-sm text-text-secondary">
               {catalog.shareUrl}
             </span>
             <Button variant="outline" size="sm" onClick={copy}>
@@ -212,7 +212,7 @@ function CatalogPreview({
                         <span className="text-base font-bold text-text-primary">
                           {formatCurrency(product.salePrice)}
                         </span>{" "}
-                        <s className="text-xs text-text-muted">
+                        <s className="text-sm text-text-muted">
                           {formatCurrency(product.price)}
                         </s>
                       </>
@@ -225,7 +225,7 @@ function CatalogPreview({
 
                   <p
                     className={cn(
-                      "mt-1 text-xs",
+                      "mt-1 text-sm",
                       available ? "text-primary" : "text-text-muted",
                     )}
                   >
@@ -363,7 +363,7 @@ function CreateCatalogDialog({
                     <span className="block truncate text-sm font-medium text-text-primary">
                       {product.name}
                     </span>
-                    <span className="block text-xs text-text-muted">
+                    <span className="block text-sm text-text-muted">
                       {product.categoryName}
                     </span>
                   </span>
@@ -438,13 +438,13 @@ export function CatalogWorkspace() {
                 <ProductThumb key={id} size="sm" />
               ))}
               {catalog.productIds.length > 4 ? (
-                <span className="grid size-8 place-items-center rounded-panel border border-border bg-surface-secondary text-xs font-medium text-text-muted">
+                <span className="grid size-8 place-items-center rounded-panel border border-border bg-surface-secondary text-sm font-medium text-text-muted">
                   +{catalog.productIds.length - 4}
                 </span>
               ) : null}
             </div>
 
-            <dl className="mt-4 flex items-center gap-5 text-xs text-text-muted">
+            <dl className="mt-4 flex items-center gap-5 text-sm text-text-muted">
               <div>
                 <dt className="sr-only">Products</dt>
                 <dd>
@@ -465,7 +465,7 @@ export function CatalogWorkspace() {
               </div>
             </dl>
 
-            <p className="mt-1 text-xs text-text-muted">
+            <p className="mt-1 text-sm text-text-muted">
               Updated {formatDate(catalog.updatedAt)}
             </p>
 
@@ -502,7 +502,7 @@ export function CatalogWorkspace() {
             <Plus className="size-5" aria-hidden />
           </span>
           <span className="text-sm font-medium text-text-primary">Create catalog</span>
-          <span className="max-w-48 text-xs text-text-muted">
+          <span className="max-w-48 text-sm text-text-muted">
             Group products for a campaign, a season or a customer segment.
           </span>
         </button>

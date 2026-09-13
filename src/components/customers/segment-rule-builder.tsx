@@ -65,7 +65,7 @@ function ConditionValue({
   if (condition.operator === "is_set" || condition.operator === "is_not_set") {
     if (meta.input !== "select") {
       return (
-        <p className="flex h-10 items-center text-xs text-text-muted">
+        <p className="flex h-10 items-center text-sm text-text-muted">
           No value needed
         </p>
       );
@@ -101,7 +101,7 @@ function ConditionValue({
         disabled={disabled}
       />
       {meta.unit ? (
-        <span className="shrink-0 text-xs text-text-muted">{meta.unit}</span>
+        <span className="shrink-0 text-sm text-text-muted">{meta.unit}</span>
       ) : null}
     </div>
   );
@@ -146,7 +146,7 @@ export function RuleGroupEditor({
       )}
     >
       <div className="flex flex-wrap items-center gap-2">
-        <p className="text-xs text-text-secondary">
+        <p className="text-sm text-text-secondary">
           {depth === 0 ? "Contacts matching" : "and matching"}
         </p>
         <Select
@@ -163,7 +163,7 @@ export function RuleGroupEditor({
           disabled={disabled}
           className="w-24"
         />
-        <p className="text-xs text-text-secondary">of the conditions below</p>
+        <p className="text-sm text-text-secondary">of the conditions below</p>
 
         {onRemove && !disabled ? (
           <Tooltip content="Remove this group">
@@ -185,7 +185,7 @@ export function RuleGroupEditor({
             {/* The connective is a label, not a control: it belongs to the
                 group, and a per-row "and/or" is how mixed precedence becomes
                 unreadable. */}
-            <p className="text-xs font-bold tracking-[0.06em] text-text-muted uppercase">
+            <p className="text-sm font-bold tracking-[0.06em] text-text-muted uppercase">
               {index === 0 ? "Where" : rule.match === "all" ? "And" : "Or"}
             </p>
 
@@ -350,7 +350,7 @@ export function AudiencePreview({
         className,
       )}
     >
-      <p className="flex items-center gap-1.5 text-xs font-medium text-primary-dark">
+      <p className="flex items-center gap-1.5 text-sm font-medium text-primary-dark">
         <Users className="size-3.5" aria-hidden />
         Estimated audience
       </p>
@@ -359,11 +359,11 @@ export function AudiencePreview({
         aria-live="polite"
       >
         {formatNumber(count)}
-        <span className="ml-1.5 text-xs font-medium text-text-muted">
+        <span className="ml-1.5 text-sm font-medium text-text-muted">
           of {formatNumber(total)} contacts
         </span>
       </p>
-      <p className="mt-1.5 text-xs text-text-secondary">
+      <p className="mt-1.5 text-sm text-text-secondary">
         {type === "static"
           ? "A static segment keeps the members it was built with. Nobody is added or removed as they change."
           : conditions === 0

@@ -130,7 +130,7 @@ export function TagFormDialog({
                   onClick={() => setColor(key)}
                   aria-pressed={selected}
                   className={cn(
-                    "flex items-center gap-2 rounded-btn border px-2.5 py-1.5 text-xs font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                    "flex items-center gap-2 rounded-btn border px-2.5 py-1.5 text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
                     selected
                       ? "border-primary bg-primary-soft text-primary-dark"
                       : "border-border text-text-secondary hover:border-border-strong",
@@ -150,10 +150,10 @@ export function TagFormDialog({
 
         {/* Preview, so the swatch choice is judged as the pill it becomes. */}
         <div className="rounded-panel bg-surface-secondary p-3.5">
-          <p className="text-xs text-text-muted">Preview</p>
+          <p className="text-sm text-text-muted">Preview</p>
           <span
             className={cn(
-              "mt-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-xs leading-tight font-medium",
+              "mt-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-sm leading-tight font-medium",
               TAG_COLORS[color].pill,
             )}
           >

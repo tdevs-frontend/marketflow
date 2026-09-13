@@ -375,7 +375,7 @@ export function CampaignWizard() {
                       <span className="mt-2.5 block text-sm font-medium text-text-primary">
                         {card.label}
                       </span>
-                      <span className="mt-0.5 block text-xs text-text-muted">
+                      <span className="mt-0.5 block text-sm text-text-muted">
                         {card.hint}
                       </span>
                     </button>
@@ -420,7 +420,7 @@ export function CampaignWizard() {
                         <span className="block text-sm font-medium text-text-primary">
                           {item.label}
                         </span>
-                        <span className="block text-xs text-text-muted">
+                        <span className="block text-sm text-text-muted">
                           {item.hint}
                         </span>
                       </span>
@@ -432,7 +432,7 @@ export function CampaignWizard() {
                 })}
               </div>
               {errors.segment ? (
-                <p className="mt-2 text-xs text-error">{errors.segment}</p>
+                <p className="mt-2 text-sm text-error">{errors.segment}</p>
               ) : null}
             </fieldset>
 
@@ -440,13 +440,13 @@ export function CampaignWizard() {
               <legend className="text-sm font-medium text-text-primary">
                 Saved segments
               </legend>
-              <p className="mt-1 text-xs text-text-muted">
+              <p className="mt-1 text-sm text-text-muted">
                 Built in Audience Segments and reusable across channels. Only
                 segments that can reach {channelName} are listed.
               </p>
 
               {savedSegments.length === 0 ? (
-                <p className="mt-2.5 rounded-panel border border-dashed border-border px-3.5 py-4 text-center text-xs text-text-muted">
+                <p className="mt-2.5 rounded-panel border border-dashed border-border px-3.5 py-4 text-center text-sm text-text-muted">
                   None of your segments carry enough {channelName} data to send
                   to. Build one in Audience Segments, or pick a built-in
                   audience above.
@@ -477,7 +477,7 @@ export function CampaignWizard() {
                           <span className="block text-sm font-medium text-text-primary">
                             {item.name}
                           </span>
-                          <span className="block text-xs text-text-muted">
+                          <span className="block text-sm text-text-muted">
                             {item.description}
                           </span>
                         </span>
@@ -596,7 +596,7 @@ export function CampaignWizard() {
             ) : null}
 
             {draft.channel === "whatsapp" ? (
-              <p className="text-xs text-text-muted">
+              <p className="text-sm text-text-muted">
                 {messageLength} / 1024 characters. Media and buttons are set on the
                 template.
               </p>
@@ -614,7 +614,7 @@ export function CampaignWizard() {
                 <p className="mt-2 text-sm font-medium text-text-primary">
                   No merge tags in this message
                 </p>
-                <p className="mx-auto mt-1 max-w-sm text-xs text-text-muted">
+                <p className="mx-auto mt-1 max-w-sm text-sm text-text-muted">
                   Add one on the Content step — a message that opens with the
                   recipient&apos;s first name reads noticeably better than one that
                   does not. Or continue as is.
@@ -631,7 +631,7 @@ export function CampaignWizard() {
             ) : (
               <>
                 <div>
-                  <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+                  <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                     Fallback values
                   </p>
                   <p className="mt-1 text-sm text-text-secondary">
@@ -650,11 +650,11 @@ export function CampaignWizard() {
                           className="grid gap-2 rounded-panel border border-border px-3.5 py-3 sm:grid-cols-[10rem_minmax(0,1fr)] sm:items-center"
                         >
                           <div className="flex items-center gap-2">
-                            <code className="rounded-btn bg-primary-soft px-1.5 py-0.5 font-mono text-xs text-primary-dark">
+                            <code className="rounded-btn bg-primary-soft px-1.5 py-0.5 font-mono text-sm text-primary-dark">
                               {`{{${tag}}}`}
                             </code>
                             {covered ? null : (
-                              <span className="text-xs font-medium tracking-[0.06em] text-warning-text uppercase">
+                              <span className="text-sm font-medium tracking-[0.06em] text-warning-text uppercase">
                                 No fallback
                               </span>
                             )}
@@ -679,7 +679,7 @@ export function CampaignWizard() {
                 </div>
 
                 {missingFallbacks.length > 0 ? (
-                  <p className="rounded-panel border border-warning/30 bg-warning-soft px-3.5 py-2.5 text-xs text-warning-text">
+                  <p className="rounded-panel border border-warning/30 bg-warning-soft px-3.5 py-2.5 text-sm text-warning-text">
                     {missingFallbacks.length} tag
                     {missingFallbacks.length === 1 ? " has" : "s have"} no fallback.
                     Any contact missing that field receives the tag literally —
@@ -688,7 +688,7 @@ export function CampaignWizard() {
                 ) : null}
 
                 <div>
-                  <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+                  <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                     Preview for a sample contact
                   </p>
                   <div className="mt-2.5 rounded-panel border border-border bg-surface-secondary p-4">
@@ -702,7 +702,7 @@ export function CampaignWizard() {
                         "Nothing written yet."}
                     </p>
                   </div>
-                  <p className="mt-2 text-xs text-text-muted">
+                  <p className="mt-2 text-sm text-text-muted">
                     Rendered for Sarah Ahmed at Bright Retail. Fields she has no
                     value for fall back to what you set above.
                   </p>
@@ -763,7 +763,7 @@ export function CampaignWizard() {
                         <span className="block text-sm font-medium text-text-primary">
                           {option.label}
                         </span>
-                        <span className="block text-xs text-text-muted">
+                        <span className="block text-sm text-text-muted">
                           {option.hint}
                         </span>
                       </span>
@@ -849,7 +849,7 @@ export function CampaignWizard() {
             </div>
 
             <div>
-              <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+              <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                 Message preview
               </p>
               <div className="mt-2.5 rounded-panel border border-border bg-surface-secondary p-4">
@@ -894,7 +894,7 @@ export function CampaignWizard() {
 
             <dl className="grid gap-3 sm:grid-cols-3">
               <div className="rounded-panel border border-border px-3.5 py-3">
-                <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                   Recipients
                 </dt>
                 <dd className="mt-1 text-lg leading-none font-bold text-text-primary tabular-nums">
@@ -902,7 +902,7 @@ export function CampaignWizard() {
                 </dd>
               </div>
               <div className="rounded-panel border border-border px-3.5 py-3">
-                <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                   Merge tags
                 </dt>
                 <dd className="mt-1 text-lg leading-none font-bold text-text-primary tabular-nums">
@@ -910,7 +910,7 @@ export function CampaignWizard() {
                 </dd>
               </div>
               <div className="rounded-panel border border-border px-3.5 py-3">
-                <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                   {draft.channel === "sms" ? "Billed segments" : "Message length"}
                 </dt>
                 <dd className="mt-1 text-lg leading-none font-bold text-text-primary tabular-nums">
@@ -922,7 +922,7 @@ export function CampaignWizard() {
             </dl>
 
             {missingFallbacks.length > 0 ? (
-              <p className="rounded-panel border border-warning/30 bg-warning-soft px-3.5 py-2.5 text-xs text-warning-text">
+              <p className="rounded-panel border border-warning/30 bg-warning-soft px-3.5 py-2.5 text-sm text-warning-text">
                 {missingFallbacks.length} merge tag
                 {missingFallbacks.length === 1 ? "" : "s"} still{" "}
                 {missingFallbacks.length === 1 ? "has" : "have"} no fallback:{" "}

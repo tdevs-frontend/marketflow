@@ -358,18 +358,18 @@ export function SocialPostsWorkspace() {
                           <PostStatusBadge status={post.status} />
                         </div>
 
-                        <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-text-secondary">
+                        <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-text-secondary">
                           {post.caption}
                         </p>
 
                         {post.hashtags.length > 0 ? (
-                          <p className="mt-2 truncate text-xs text-primary">
+                          <p className="mt-2 truncate text-sm text-primary">
                             {post.hashtags.join(" ")}
                           </p>
                         ) : null}
 
                         {post.failureReason ? (
-                          <p className="mt-2.5 rounded-panel border border-error/25 bg-error-soft px-2.5 py-2 text-xs text-error-text">
+                          <p className="mt-2.5 rounded-panel border border-error/25 bg-error-soft px-2.5 py-2 text-sm text-error-text">
                             {post.failureReason}
                           </p>
                         ) : null}
@@ -379,7 +379,7 @@ export function SocialPostsWorkspace() {
                             /* Each figure needs its own `dt`: the icons are
                                aria-hidden, so without one a screen reader hears
                                four unlabelled numbers. */
-                            <dl className="flex items-center gap-4 border-t border-border pt-3 text-xs">
+                            <dl className="flex items-center gap-4 border-t border-border pt-3 text-sm">
                               {[
                                 {
                                   label: "Likes",
@@ -424,7 +424,7 @@ export function SocialPostsWorkspace() {
                               </div>
                             </dl>
                           ) : (
-                            <p className="border-t border-border pt-3 text-xs text-text-muted">
+                            <p className="border-t border-border pt-3 text-sm text-text-muted">
                               {post.status === "scheduled"
                                 ? `Goes out ${post.scheduledAt.slice(0, 10)} at ${post.scheduledAt.slice(11, 16)}`
                                 : post.status === "failed"
@@ -626,21 +626,21 @@ export function SocialPostsWorkspace() {
             <div className="flex flex-wrap items-center gap-2">
               <PlatformStack platforms={detail.platforms} />
               <PostStatusBadge status={detail.status} />
-              <p className="ml-auto text-xs text-text-muted">
+              <p className="ml-auto text-sm text-text-muted">
                 by {detail.author} · {formatRelativeTime(detail.scheduledAt)}
               </p>
             </div>
 
-            <p className="rounded-panel bg-surface-secondary px-3.5 py-3 text-[13px] leading-relaxed text-text-secondary">
+            <p className="rounded-panel bg-surface-secondary px-3.5 py-3 text-sm leading-relaxed text-text-secondary">
               {detail.caption}
             </p>
 
             {detail.hashtags.length > 0 ? (
-              <p className="text-[13px] text-primary">{detail.hashtags.join(" ")}</p>
+              <p className="text-sm text-primary">{detail.hashtags.join(" ")}</p>
             ) : null}
 
             {detail.failureReason ? (
-              <p className="rounded-panel border border-error/25 bg-error-soft px-3 py-2.5 text-xs text-error-text">
+              <p className="rounded-panel border border-error/25 bg-error-soft px-3 py-2.5 text-sm text-error-text">
                 {detail.failureReason}
               </p>
             ) : null}
@@ -659,7 +659,7 @@ export function SocialPostsWorkspace() {
                     key={cell.label}
                     className="rounded-panel border border-border px-2.5 py-2.5 text-center"
                   >
-                    <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                    <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                       {cell.label}
                     </dt>
                     <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">
@@ -669,7 +669,7 @@ export function SocialPostsWorkspace() {
                 ))}
               </dl>
             ) : (
-              <p className="rounded-panel border border-dashed border-border px-3 py-3 text-center text-xs text-text-muted">
+              <p className="rounded-panel border border-dashed border-border px-3 py-3 text-center text-sm text-text-muted">
                 Engagement appears here once the post is published.
               </p>
             )}

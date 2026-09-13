@@ -136,7 +136,7 @@ export function CustomTriggerDialog({
               setEventKey(event.target.value);
             }}
             placeholder="demo_requested"
-            className="font-mono text-xs"
+            className="font-mono text-sm"
             error={keyInvalid}
           />
         </Field>
@@ -175,12 +175,12 @@ export function CustomTriggerDialog({
             id={`${id}-schema`}
             value={schema}
             onChange={(event) => setSchema(event.target.value)}
-            className="font-mono text-xs"
+            className="font-mono text-sm"
             rows={6}
           />
         </Field>
 
-        <p className="flex items-start gap-2 rounded-panel bg-surface-secondary px-3.5 py-2.5 text-xs text-text-muted">
+        <p className="flex items-start gap-2 rounded-panel bg-surface-secondary px-3.5 py-2.5 text-sm text-text-muted">
           <Code className="mt-0.5 size-3.5 shrink-0" aria-hidden />
           Custom triggers start disabled until the first valid event arrives, so
           a typo in the key cannot silently start a journey.

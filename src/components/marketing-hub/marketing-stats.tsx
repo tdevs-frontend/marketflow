@@ -40,7 +40,7 @@ export function MarketingStats({
         return (
           <Card key={item.label} className="p-5">
             <div className="flex items-start justify-between gap-3">
-              <p className="text-[13px] font-medium text-text-secondary">
+              <p className="text-sm font-medium text-text-secondary">
                 {item.label}
               </p>
               <span className="grid size-8 shrink-0 place-items-center rounded-btn bg-surface-secondary text-text-muted">
@@ -52,7 +52,7 @@ export function MarketingStats({
               {item.value}
             </p>
 
-            <p className="mt-3 flex flex-wrap items-center gap-x-1.5 text-xs">
+            <p className="mt-3 flex flex-wrap items-center gap-x-1.5 text-sm">
               <span
                 className={cn(
                   "inline-flex items-center gap-0.5 font-medium",

@@ -221,7 +221,7 @@ export function WorkflowDetail({ workflow }: { workflow: Workflow }) {
 
             <span
               className={cn(
-                "text-xs",
+                "text-sm",
                 draft.dirty ? "font-medium text-warning-text" : "text-text-muted",
               )}
             >
@@ -334,7 +334,7 @@ export function WorkflowDetail({ workflow }: { workflow: Workflow }) {
           A badge alone does not explain why Publish exists. */}
       {savedDraft && !neverPublished ? (
         <div className="flex flex-wrap items-center gap-3 rounded-panel border border-warning/40 bg-warning-soft/40 px-4 py-2.5">
-          <p className="min-w-0 flex-1 text-[13px] text-warning-text">
+          <p className="min-w-0 flex-1 text-sm text-warning-text">
             <span className="font-medium">Draft changes are not live.</span>{" "}
             {formatCount(workflow.stats.running)} contacts are still running on
             published v{publishedVersion}. Publishing applies your changes to
@@ -351,7 +351,7 @@ export function WorkflowDetail({ workflow }: { workflow: Workflow }) {
           role="alert"
           className="flex flex-wrap items-center gap-3 rounded-panel border border-error/40 bg-error-soft/50 px-4 py-3"
         >
-          <p className="min-w-0 flex-1 text-[13px] text-error-text">{publishError}</p>
+          <p className="min-w-0 flex-1 text-sm text-error-text">{publishError}</p>
           <Button size="sm" variant="outline" onClick={() => setPublishError(null)}>
             Dismiss
           </Button>

@@ -86,7 +86,7 @@ function KpiCard({ kpi }: { kpi: Kpi }) {
       </p>
 
       <div className="mt-3 flex items-end justify-between gap-3">
-        <p className="flex items-center gap-1 text-xs">
+        <p className="flex items-center gap-1 text-sm">
           {/* Brand green marks growth and nothing else on this card. */}
           <span
             className={cn(

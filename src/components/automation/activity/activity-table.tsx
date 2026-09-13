@@ -160,10 +160,10 @@ export function ActivityTable({
 
               <div className="mt-2.5 flex flex-wrap items-center gap-2">
                 <NodeIcon kind={row.kind} size="sm" />
-                <span className="min-w-0 flex-1 truncate text-xs text-text-secondary">
+                <span className="min-w-0 flex-1 truncate text-sm text-text-secondary">
                   {row.event}
                 </span>
-                <span className="text-xs text-text-muted tabular-nums">
+                <span className="text-sm text-text-muted tabular-nums">
                   {timeOf(row.at)} · {formatDuration(row.durationMs)}
                 </span>
               </div>

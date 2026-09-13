@@ -102,13 +102,13 @@ export function CheckboxField({
           id={labelId}
           onClick={() => !disabled && onCheckedChange(!checked)}
           className={cn(
-            "block cursor-pointer text-sm text-text-secondary select-none",
+            "block cursor-pointer text-sm font-medium text-text-secondary select-none",
             disabled && "cursor-not-allowed opacity-60",
           )}
         >
           {label}
         </span>
-        {hint ? <span className="block text-xs text-text-muted">{hint}</span> : null}
+        {hint ? <span className="block text-sm text-text-muted">{hint}</span> : null}
       </span>
     </div>
   );

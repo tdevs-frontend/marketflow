@@ -51,14 +51,14 @@ export function FlowBuilder({ flow }: { flow: AutomationFlow }) {
     <div className="grid gap-4 xl:grid-cols-[15rem_minmax(0,1fr)_18rem]">
       {/* ------------------------------------------------------------ Palette */}
       <Card className="h-max p-4 xl:sticky xl:top-22">
-        <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+        <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
           Add a step
         </p>
 
         <div className="mt-3 space-y-4">
           {STEP_PALETTE.map((group) => (
             <div key={group.group}>
-              <p className="text-xs font-medium text-text-secondary">{group.group}</p>
+              <p className="text-sm font-medium text-text-secondary">{group.group}</p>
               <ul className="mt-1.5 space-y-1">
                 {group.items.map((item) => (
                   <li key={item.title}>
@@ -71,10 +71,10 @@ export function FlowBuilder({ flow }: { flow: AutomationFlow }) {
                         <Icon name={item.icon} className="size-3.5" />
                       </span>
                       <span className="min-w-0">
-                        <span className="block truncate text-[13px] font-medium text-text-primary">
+                        <span className="block truncate text-sm font-medium text-text-primary">
                           {item.title}
                         </span>
-                        <span className="block truncate text-xs text-text-muted">
+                        <span className="block truncate text-sm text-text-muted">
                           {item.detail}
                         </span>
                       </span>
@@ -102,7 +102,7 @@ export function FlowBuilder({ flow }: { flow: AutomationFlow }) {
             </span>
             <div className="min-w-0">
               <h2 className="truncate text-base">{name}</h2>
-              <p className="mt-0.5 text-xs text-text-muted">
+              <p className="mt-0.5 text-sm text-text-muted">
                 {total} steps · {theme.label} ·{" "}
                 {formatNumber(flow.contactsProcessed)} contacts processed
               </p>
@@ -147,7 +147,7 @@ export function FlowBuilder({ flow }: { flow: AutomationFlow }) {
           <AddStepSlot onAdd={() => toast("Pick a step from the palette")} />
 
           <div className="rounded-panel border border-dashed border-border-strong px-4 py-5 text-center">
-            <p className="text-xs text-text-muted">
+            <p className="text-sm text-text-muted">
               Contacts that reach the end without hitting a goal leave the flow here.
             </p>
           </div>
@@ -159,7 +159,7 @@ export function FlowBuilder({ flow }: { flow: AutomationFlow }) {
         {selected ? (
           <Card className="p-4">
             <div className="flex items-start justify-between gap-3">
-              <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+              <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                 Step settings
               </p>
               <Badge tone="neutral">{selected.type}</Badge>
@@ -217,7 +217,7 @@ export function FlowBuilder({ flow }: { flow: AutomationFlow }) {
           <Card className="p-4">
             <div className="flex items-start gap-2.5">
               <Settings2 className="mt-0.5 size-4 shrink-0 text-text-muted" aria-hidden />
-              <p className="text-xs text-text-secondary">
+              <p className="text-sm text-text-secondary">
                 Select a step on the canvas to configure it, or pick one from the
                 palette to add it to the flow.
               </p>
@@ -226,7 +226,7 @@ export function FlowBuilder({ flow }: { flow: AutomationFlow }) {
         )}
 
         <Card className="p-4">
-          <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+          <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
             Automation
           </p>
 

@@ -122,7 +122,7 @@ export function TagBadge({
   return (
     <span
       className={cn(
-        "inline-flex max-w-full items-center rounded-full px-2 py-0.5 text-xs leading-tight font-medium",
+        "inline-flex max-w-full items-center rounded-full px-2 py-0.5 text-sm leading-tight font-medium",
         TAG_COLORS[color].pill,
         className,
       )}
@@ -143,7 +143,7 @@ export function TagBadges({
   className?: string;
 }) {
   if (tags.length === 0) {
-    return <span className="text-xs text-text-muted">—</span>;
+    return <span className="text-sm text-text-muted">—</span>;
   }
 
   const shown = tags.slice(0, max);
@@ -155,7 +155,7 @@ export function TagBadges({
         <TagBadge key={tag} name={tag} />
       ))}
       {rest > 0 ? (
-        <span className="text-xs font-medium text-text-muted">+{rest}</span>
+        <span className="text-sm font-medium text-text-muted">+{rest}</span>
       ) : null}
     </span>
   );
@@ -298,7 +298,7 @@ export function SourceBadge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 text-xs whitespace-nowrap text-text-secondary",
+        "inline-flex items-center gap-1.5 text-sm whitespace-nowrap text-text-secondary",
         className,
       )}
     >

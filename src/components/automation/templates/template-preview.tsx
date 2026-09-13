@@ -106,7 +106,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
             {template.description}
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-3">
-            <span className="text-xs text-text-muted">
+            <span className="text-sm text-text-muted">
               {templateCategoryLabel(template.category)}
             </span>
             <ChannelChips channels={template.channels} />
@@ -128,13 +128,13 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
               <fact.icon className="size-4" aria-hidden />
             </span>
             <div className="min-w-0">
-              <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+              <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                 {fact.label}
               </dt>
               <dd
                 className={cn(
                   "font-bold text-text-primary",
-                  fact.wrap ? "text-[13px] leading-snug" : "text-lg leading-tight",
+                  fact.wrap ? "text-sm leading-snug" : "text-lg leading-tight",
                 )}
               >
                 {fact.value}
@@ -170,14 +170,14 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <NodeIcon kind={step.kind} size="sm" />
-                      <p className="text-[13px] font-semibold text-text-primary">
+                      <p className="text-sm font-semibold text-text-primary">
                         {step.title}
                       </p>
-                      <span className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                      <span className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                         {NODE_META[step.kind]?.label}
                       </span>
                     </div>
-                    <p className="mt-1 text-xs text-text-secondary">
+                    <p className="mt-1 text-sm text-text-secondary">
                       {NODE_META[step.kind]?.description}
                       {step.summary ? (
                         <span className="text-text-muted"> · {step.summary}</span>
@@ -188,7 +188,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
                         {step.branches.map((branch) => (
                           <span
                             key={branch}
-                            className="rounded-full border border-dashed border-border-strong px-2 py-0.5 text-xs text-text-secondary"
+                            className="rounded-full border border-dashed border-border-strong px-2 py-0.5 text-sm text-text-secondary"
                           >
                             {branch}
                           </span>
@@ -224,7 +224,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
             />
             <CardBody className="space-y-4">
               <div>
-                <h3 className="flex items-center gap-1.5 text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                <h3 className="flex items-center gap-1.5 text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                   <Plug className="size-3.5" aria-hidden />
                   Integrations
                 </h3>
@@ -232,12 +232,12 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
                   {template.requiredIntegrations.map((item) => (
                     <li
                       key={item}
-                      className="flex items-center justify-between gap-2 rounded-btn border border-border px-2.5 py-1.5 text-xs text-text-secondary"
+                      className="flex items-center justify-between gap-2 rounded-btn border border-border px-2.5 py-1.5 text-sm text-text-secondary"
                     >
                       {item}
                       <Link
                         href={APP_ROUTES.integrations}
-                        className="shrink-0 rounded text-xs font-medium text-primary transition-colors hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
+                        className="shrink-0 rounded text-sm font-medium text-primary transition-colors hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
                       >
                         Check
                       </Link>
@@ -247,12 +247,12 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
               </div>
 
               <div>
-                <h3 className="flex items-center gap-1.5 text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                <h3 className="flex items-center gap-1.5 text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                   <FileText className="size-3.5" aria-hidden />
                   Message templates
                 </h3>
                 {template.requiredMessageTemplates.length === 0 ? (
-                  <p className="mt-2 text-xs text-text-muted">
+                  <p className="mt-2 text-sm text-text-muted">
                     None — every message in this journey is written by you.
                   </p>
                 ) : (
@@ -262,12 +262,12 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
                         key={item}
                         className="flex items-center justify-between gap-2 rounded-btn border border-border px-2.5 py-1.5"
                       >
-                        <code className="truncate font-mono text-xs text-text-secondary">
+                        <code className="truncate font-mono text-sm text-text-secondary">
                           {item}
                         </code>
                         <Link
                           href={APP_ROUTES.whatsappTemplates}
-                          className="shrink-0 rounded text-xs font-medium text-primary transition-colors hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
+                          className="shrink-0 rounded text-sm font-medium text-primary transition-colors hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
                         >
                           Open
                         </Link>
@@ -280,7 +280,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
           </Card>
 
           <Card className="p-4">
-            <p className="text-xs text-text-secondary">
+            <p className="text-sm text-text-secondary">
               Using this template creates a <strong>draft</strong> workflow. Nothing
               sends until you review every step and publish it.
             </p>

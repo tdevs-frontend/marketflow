@@ -59,7 +59,7 @@ function Pill({ step }: { step: TemplateStep }) {
   return (
     <span className="flex w-full min-w-0 items-center gap-2 rounded-btn border border-border bg-surface px-2 py-1.5">
       <NodeIcon kind={step.kind} size="sm" />
-      <span className="min-w-0 flex-1 truncate text-xs font-medium text-text-primary">
+      <span className="min-w-0 flex-1 truncate text-sm font-medium text-text-primary">
         {step.title}
       </span>
     </span>
@@ -84,7 +84,7 @@ export function WorkflowMiniMap({
 }) {
   if (steps.length === 0) {
     return (
-      <p className={cn("text-xs text-text-muted", className)}>
+      <p className={cn("text-sm text-text-muted", className)}>
         No steps yet — open the builder to add the first one.
       </p>
     );
@@ -109,7 +109,7 @@ export function WorkflowMiniMap({
                 {step.branches.map((label) => (
                   <span
                     key={label}
-                    className="truncate rounded-btn border border-dashed border-border-strong bg-surface px-2 py-1 text-center text-xs font-medium text-text-secondary"
+                    className="truncate rounded-btn border border-dashed border-border-strong bg-surface px-2 py-1 text-center text-sm font-medium text-text-secondary"
                   >
                     {label}
                   </span>
@@ -143,20 +143,20 @@ export function WorkflowMiniMapRow({
         >
           <div className="flex items-center gap-2">
             <NodeIcon kind={step.kind} size="sm" />
-            <span className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+            <span className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
               {NODE_META[step.kind]?.label ?? "Step"}
             </span>
           </div>
-          <p className="text-[13px] font-semibold text-text-primary">{step.title}</p>
+          <p className="text-sm font-semibold text-text-primary">{step.title}</p>
           {step.summary ? (
-            <p className="text-xs text-text-muted">{step.summary}</p>
+            <p className="text-sm text-text-muted">{step.summary}</p>
           ) : null}
           {step.branches ? (
             <div className="mt-auto flex flex-wrap gap-1 pt-1">
               {step.branches.map((label) => (
                 <span
                   key={label}
-                  className="rounded-full border border-dashed border-border-strong px-2 py-0.5 text-xs font-medium text-text-secondary"
+                  className="rounded-full border border-dashed border-border-strong px-2 py-0.5 text-sm font-medium text-text-secondary"
                 >
                   {label}
                 </span>

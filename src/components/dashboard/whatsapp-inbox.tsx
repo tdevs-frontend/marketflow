@@ -56,7 +56,7 @@ function Avatar({ name, online }: { name: string; online: boolean }) {
 
   return (
     <span className="relative shrink-0">
-      <span className="grid size-10 place-items-center rounded-full bg-primary-soft text-xs font-bold text-primary-dark">
+      <span className="grid size-10 place-items-center rounded-full bg-primary-soft text-sm font-bold text-primary-dark">
         {initials(first, last)}
       </span>
       {online ? (
@@ -97,7 +97,7 @@ export function WhatsAppInbox({ className }: { className?: string }) {
             key={stat.label}
             className="rounded-panel bg-surface-secondary px-3 py-2.5"
           >
-            <dt className="flex items-center gap-1.5 text-xs font-medium text-text-muted">
+            <dt className="flex items-center gap-1.5 text-sm font-medium text-text-muted">
               <span aria-hidden className={cn("size-1.5 rounded-full", stat.tone)} />
               {stat.label}
             </dt>
@@ -126,11 +126,11 @@ export function WhatsAppInbox({ className }: { className?: string }) {
                 >
                   {conversation.name}
                 </p>
-                <span className="shrink-0 text-xs text-text-muted">
+                <span className="shrink-0 text-sm text-text-muted">
                   {conversation.time}
                 </span>
               </div>
-              <p className="mt-0.5 truncate text-[13px] text-text-secondary">
+              <p className="mt-0.5 truncate text-sm text-text-secondary">
                 {conversation.preview}
               </p>
             </div>

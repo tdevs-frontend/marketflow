@@ -118,7 +118,7 @@ export function Menu({
                     item.onSelect();
                   }}
                   className={cn(
-                    "flex w-full items-center gap-2.5 rounded-btn px-2.5 py-2 text-left text-[13px] font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+                    "flex w-full items-center gap-2.5 rounded-btn px-2.5 py-2 text-left text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
                     item.destructive
                       ? "text-error hover:bg-error-soft"
                       : "text-text-secondary hover:bg-surface-secondary hover:text-text-primary",

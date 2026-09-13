@@ -182,14 +182,14 @@ function DetailCard({ post, onSelect }: { post: SocialPost; onSelect: () => void
 
       <span className="min-w-0 flex-1">
         <span className="flex items-baseline justify-between gap-2">
-          <span className="truncate text-[12px] font-medium text-text-primary">
+          <span className="truncate text-sm font-medium text-text-primary">
             {post.title}
           </span>
-          <span className="shrink-0 text-xs text-text-muted tabular-nums">
+          <span className="shrink-0 text-sm text-text-muted tabular-nums">
             {postTime(post)}
           </span>
         </span>
-        <span className="mt-0.5 line-clamp-2 block text-xs leading-snug text-text-muted">
+        <span className="mt-0.5 line-clamp-2 block text-sm leading-snug text-text-muted">
           {post.caption}
         </span>
         <span className="mt-1.5 flex items-center gap-1.5">
@@ -335,7 +335,7 @@ export function SocialCalendar() {
           />
 
           <div className="flex items-center gap-2.5 max-lg:w-full lg:ml-auto">
-            <p className="text-xs whitespace-nowrap text-text-muted">
+            <p className="text-sm whitespace-nowrap text-text-muted">
               {formatNumber(monthCount)} posts this month
             </p>
             <Button
@@ -354,7 +354,7 @@ export function SocialCalendar() {
           {POST_STATUSES.map((item) => (
             <li
               key={item.value}
-              className="inline-flex items-center gap-1.5 text-xs text-text-muted"
+              className="inline-flex items-center gap-1.5 text-sm text-text-muted"
             >
               <span
                 aria-hidden
@@ -371,7 +371,7 @@ export function SocialCalendar() {
             {PLATFORM_ORDER.map((key) => (
               <span
                 key={key}
-                className="inline-flex items-center gap-1.5 text-xs text-text-muted"
+                className="inline-flex items-center gap-1.5 text-sm text-text-muted"
               >
                 <PlatformDot platform={key} />
                 {PLATFORM_THEME[key].label}
@@ -388,7 +388,7 @@ export function SocialCalendar() {
             {WEEKDAYS.map((day) => (
               <div
                 key={day}
-                className="px-2 py-2 text-center text-xs font-medium tracking-[0.06em] text-text-muted uppercase"
+                className="px-2 py-2 text-center text-sm font-medium tracking-[0.06em] text-text-muted uppercase"
               >
                 <span className="hidden sm:inline">{day}</span>
                 <span className="sm:hidden">{day.charAt(0)}</span>
@@ -485,7 +485,7 @@ export function SocialCalendar() {
                   )}
                 >
                   <div className="flex items-baseline gap-1.5 pb-2">
-                    <span className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                    <span className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                       {WEEKDAYS[index]}
                     </span>
                     <span
@@ -497,7 +497,7 @@ export function SocialCalendar() {
                       {date.getDate()}
                     </span>
                     {dayPosts.length > 0 ? (
-                      <span className="ml-auto text-xs text-text-muted">
+                      <span className="ml-auto text-sm text-text-muted">
                         {dayPosts.length}
                       </span>
                     ) : null}
@@ -507,7 +507,7 @@ export function SocialCalendar() {
                     <button
                       type="button"
                       onClick={() => setComposeOpen(true)}
-                      className="w-full rounded-panel border border-dashed border-border px-2 py-3 text-xs text-text-muted transition-colors hover:border-primary hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
+                      className="w-full rounded-panel border border-dashed border-border px-2 py-3 text-sm text-text-muted transition-colors hover:border-primary hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
                     >
                       + Add
                     </button>
@@ -535,7 +535,7 @@ export function SocialCalendar() {
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
             <div>
               <h2 className="text-base">{dayLabel(anchor)}</h2>
-              <p className="mt-0.5 text-xs text-text-muted">
+              <p className="mt-0.5 text-sm text-text-muted">
                 {(byDay.get(dayKey(anchor)) ?? []).length} posts scheduled
               </p>
             </div>
@@ -562,7 +562,7 @@ export function SocialCalendar() {
               {(byDay.get(dayKey(anchor)) ?? []).map((post) => (
                 <li key={post.id} className="flex gap-3">
                   <div className="w-12 shrink-0 pt-2.5 text-right">
-                    <p className="text-xs font-medium text-text-secondary tabular-nums">
+                    <p className="text-sm font-medium text-text-secondary tabular-nums">
                       {postTime(post)}
                     </p>
                   </div>
@@ -609,18 +609,18 @@ export function SocialCalendar() {
               </div>
             </div>
 
-            <p className="rounded-panel bg-surface-secondary px-3.5 py-3 text-[13px] leading-relaxed text-text-secondary">
+            <p className="rounded-panel bg-surface-secondary px-3.5 py-3 text-sm leading-relaxed text-text-secondary">
               {selected.caption}
             </p>
 
             {selected.hashtags.length > 0 ? (
-              <p className="text-[13px] text-primary">
+              <p className="text-sm text-primary">
                 {selected.hashtags.join(" ")}
               </p>
             ) : null}
 
             {selected.failureReason ? (
-              <p className="rounded-panel border border-error/25 bg-error-soft px-3 py-2.5 text-xs text-error-text">
+              <p className="rounded-panel border border-error/25 bg-error-soft px-3 py-2.5 text-sm text-error-text">
                 {selected.failureReason}
               </p>
             ) : null}
@@ -639,7 +639,7 @@ export function SocialCalendar() {
                     key={cell.label}
                     className="rounded-panel border border-border px-3 py-2.5 text-center"
                   >
-                    <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                    <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                       {cell.label}
                     </dt>
                     <dd className="mt-0.5 text-base font-bold text-text-primary tabular-nums">
@@ -649,13 +649,13 @@ export function SocialCalendar() {
                 ))}
               </dl>
             ) : (
-              <p className="flex items-center gap-1.5 text-xs text-text-muted">
+              <p className="flex items-center gap-1.5 text-sm text-text-muted">
                 <CalendarDays className="size-3.5" aria-hidden />
                 Engagement appears here once the post is published.
               </p>
             )}
 
-            <p className="text-xs text-text-muted">Created by {selected.author}</p>
+            <p className="text-sm text-text-muted">Created by {selected.author}</p>
           </div>
         ) : null}
       </Dialog>

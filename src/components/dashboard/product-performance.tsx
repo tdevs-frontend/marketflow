@@ -59,10 +59,10 @@ function ProductRow({ product, rank }: { product: Product; rank: number }) {
         </div>
 
         <div className="mt-1 flex items-center justify-between gap-2">
-          <span className="text-xs text-text-muted">{product.unitsSold} sold</span>
+          <span className="text-sm text-text-muted">{product.unitsSold} sold</span>
           <span
             className={cn(
-              "inline-flex shrink-0 items-center gap-0.5 text-xs font-medium",
+              "inline-flex shrink-0 items-center gap-0.5 text-sm font-medium",
               positive ? "text-primary" : "text-error",
             )}
           >

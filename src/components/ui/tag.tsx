@@ -27,7 +27,7 @@ export function Tag({
   return (
     <span
       className={cn(
-        "inline-flex max-w-full items-center gap-1 rounded-btn px-2 py-0.5 text-xs font-medium",
+        "inline-flex max-w-full items-center gap-1 rounded-btn px-2 py-0.5 text-sm font-medium",
         tone ?? "bg-surface-secondary text-text-secondary",
         className,
       )}
@@ -65,7 +65,7 @@ export function TagList({
   className?: string;
 }) {
   if (tags.length === 0) {
-    return <span className="text-xs text-text-muted">—</span>;
+    return <span className="text-sm text-text-muted">—</span>;
   }
 
   const shown = tags.slice(0, max);
@@ -79,7 +79,7 @@ export function TagList({
       {extra.length > 0 ? (
         <span
           title={extra.join(", ")}
-          className="text-xs font-medium text-text-muted"
+          className="text-sm font-medium text-text-muted"
         >
           +{extra.length}
         </span>

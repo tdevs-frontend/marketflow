@@ -36,7 +36,7 @@ export interface SelectProps<T extends string> {
 const SIZES = { sm: "h-10", md: "h-11" } as const;
 
 const TRIGGER =
-  "inline-flex w-full items-center justify-between gap-2 rounded-field border border-border-strong bg-surface px-3.5 text-sm text-text-primary transition-all outline-none hover:border-border-strong focus-visible:border-primary focus-visible:shadow-focus-field disabled:cursor-not-allowed disabled:bg-surface-secondary disabled:opacity-60";
+  "inline-flex w-full items-center justify-between gap-2 rounded-field border border-border-strong bg-surface px-3.5 text-sm font-medium text-text-primary transition-all outline-none hover:border-border-strong focus-visible:border-primary focus-visible:shadow-focus-field disabled:cursor-not-allowed disabled:bg-surface-secondary disabled:opacity-60";
 
 /**
  * A listbox built from buttons rather than a native `<select>`, so the menu can
@@ -249,7 +249,7 @@ export function Select<T extends string>({
                   onClick={() => commit(index)}
                   onMouseEnter={() => !option.disabled && setActiveIndex(index)}
                   className={cn(
-                    "flex cursor-pointer items-start gap-2 rounded-btn px-2.5 py-2 text-sm transition-colors",
+                    "flex cursor-pointer items-start gap-2 rounded-btn px-2.5 py-2 text-sm font-medium transition-colors",
                     option.disabled && "pointer-events-none opacity-50",
                     index === activeIndex
                       ? "bg-primary-soft text-primary-dark"
@@ -266,7 +266,7 @@ export function Select<T extends string>({
                   <span className="min-w-0">
                     <span className="block truncate">{option.label}</span>
                     {option.hint ? (
-                      <span className="block text-xs text-text-muted">
+                      <span className="block text-sm text-text-muted">
                         {option.hint}
                       </span>
                     ) : null}

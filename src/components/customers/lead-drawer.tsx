@@ -238,7 +238,7 @@ export function LeadDrawer({
                 <p className="text-xl leading-none font-bold text-text-primary tabular-nums">
                   {formatCurrency(lead.value)}
                 </p>
-                <p className="mt-1 text-xs text-text-muted">Deal value</p>
+                <p className="mt-1 text-sm text-text-muted">Deal value</p>
               </div>
             </div>
 
@@ -302,7 +302,7 @@ export function LeadDrawer({
                     ]}
                   />
                   {lead.lostReason ? (
-                    <p className="mt-2 text-xs text-text-secondary">
+                    <p className="mt-2 text-sm text-text-secondary">
                       Lost reason: {lead.lostReason}
                     </p>
                   ) : null}
@@ -324,7 +324,7 @@ export function LeadDrawer({
                       {openTasks.slice(0, 3).map((task) => (
                         <li
                           key={task.id}
-                          className="flex items-center justify-between gap-3 text-xs"
+                          className="flex items-center justify-between gap-3 text-sm"
                         >
                           <span className="truncate text-text-secondary">
                             {task.title}
@@ -336,14 +336,14 @@ export function LeadDrawer({
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-xs text-text-muted">
+                    <p className="text-sm text-text-muted">
                       No open tasks. Add one on the Tasks tab.
                     </p>
                   )}
                 </DrawerSection>
 
                 <DrawerSection title="Timeline">
-                  <p className="text-xs text-text-muted">
+                  <p className="text-sm text-text-muted">
                     Created {formatDate(lead.createdAt)} · last activity{" "}
                     {formatRelativeTime(lead.lastActivityAt)}
                   </p>
@@ -401,14 +401,14 @@ export function LeadDrawer({
                       >
                         <div className="flex items-center gap-2">
                           <Avatar name={ownerName(note.authorId)} size="xs" />
-                          <p className="text-xs font-medium text-text-primary">
+                          <p className="text-sm font-medium text-text-primary">
                             {ownerName(note.authorId)}
                           </p>
-                          <p className="ml-auto text-xs text-text-muted">
+                          <p className="ml-auto text-sm text-text-muted">
                             {formatRelativeTime(note.at)}
                           </p>
                         </div>
-                        <p className="mt-2 text-xs leading-relaxed text-text-secondary">
+                        <p className="mt-2 text-sm leading-relaxed text-text-secondary">
                           {note.body}
                         </p>
                       </li>
@@ -482,7 +482,7 @@ export function LeadDrawer({
                           <div className="min-w-0 flex-1">
                             <p
                               className={cn(
-                                "text-xs font-medium",
+                                "text-sm font-medium",
                                 done
                                   ? "text-text-muted line-through"
                                   : "text-text-primary",
@@ -490,7 +490,7 @@ export function LeadDrawer({
                             >
                               {task.title}
                             </p>
-                            <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs">
+                            <p className="mt-0.5 flex flex-wrap items-center gap-1.5 text-sm">
                               <CalendarClock
                                 className={cn(
                                   "size-3.5",

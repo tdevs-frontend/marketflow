@@ -98,7 +98,7 @@ export function OrderDrawer({
             <OrderStatusBadge status={order.status} />
             <PaymentStatusBadge status={order.paymentStatus} />
             {order.sourceCampaign ? (
-              <span className="text-xs text-text-muted">
+              <span className="text-sm text-text-muted">
                 from{" "}
                 <span className="font-medium text-text-secondary">
                   {order.sourceCampaign}
@@ -109,11 +109,11 @@ export function OrderDrawer({
 
           {/* Customer */}
           <section>
-            <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+            <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
               Customer
             </h3>
             <div className="mt-2.5 flex items-start gap-3 rounded-panel border border-border p-3.5">
-              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary-soft text-xs font-bold text-primary-dark">
+              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary-soft text-sm font-bold text-primary-dark">
                 {order.customer.name.charAt(0)}
               </span>
               <div className="min-w-0 flex-1">
@@ -121,12 +121,12 @@ export function OrderDrawer({
                   {order.customer.name}
                 </p>
                 {order.customer.email ? (
-                  <p className="truncate text-xs text-text-muted">
+                  <p className="truncate text-sm text-text-muted">
                     {order.customer.email}
                   </p>
                 ) : null}
                 {order.customer.whatsappNumber ? (
-                  <p className="mt-1 inline-flex items-center gap-1.5 text-xs text-primary">
+                  <p className="mt-1 inline-flex items-center gap-1.5 text-sm text-primary">
                     <MessageCircle className="size-3" aria-hidden />
                     {order.customer.whatsappNumber}
                   </p>
@@ -141,7 +141,7 @@ export function OrderDrawer({
 
           {/* Items */}
           <section>
-            <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+            <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
               Items
             </h3>
             <ul className="mt-2.5 divide-y divide-border rounded-panel border border-border">
@@ -152,7 +152,7 @@ export function OrderDrawer({
                     <p className="truncate text-sm font-medium text-text-primary">
                       {line.productName}
                     </p>
-                    <p className="text-xs text-text-muted">
+                    <p className="text-sm text-text-muted">
                       {line.quantity} × {formatCurrency(line.unitPrice)}
                     </p>
                   </div>
@@ -181,7 +181,7 @@ export function OrderDrawer({
 
           {/* Payment */}
           <section>
-            <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+            <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
               Payment
             </h3>
             <div className="mt-2.5 rounded-panel border border-border p-3.5">
@@ -195,7 +195,7 @@ export function OrderDrawer({
 
           {/* Timeline */}
           <section>
-            <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+            <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
               Timeline
             </h3>
             <ol className="mt-3">
@@ -231,13 +231,13 @@ export function OrderDrawer({
                     <div className="min-w-0 flex-1 pt-0.5">
                       <p
                         className={cn(
-                          "text-[13px] font-medium",
+                          "text-sm font-medium",
                           done ? "text-text-primary" : "text-text-muted",
                         )}
                       >
                         {event.label}
                       </p>
-                      <p className="text-xs text-text-muted">
+                      <p className="text-sm text-text-muted">
                         {event.at ? formatDateTime(event.at) : "Pending"}
                       </p>
                     </div>
@@ -251,7 +251,7 @@ export function OrderDrawer({
           <section>
             <label
               htmlFor="order-status"
-              className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase"
+              className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase"
             >
               Update Status
             </label>

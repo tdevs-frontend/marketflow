@@ -123,7 +123,7 @@ export function Tabs<T extends string>({
  */
 export function TabCount({ value }: { value: number }) {
   return (
-    <span className="rounded-full bg-surface-secondary px-1.5 py-0.5 text-xs font-semibold text-text-secondary tabular-nums">
+    <span className="rounded-full bg-surface-secondary px-1.5 py-0.5 text-sm font-semibold text-text-secondary tabular-nums">
       {value}
     </span>
   );

@@ -80,7 +80,7 @@ export function StartTypeCards({
                 <span className="mt-3 block text-sm font-semibold text-text-primary">
                   {type.label}
                 </span>
-                <span className="mt-1 block text-xs text-text-secondary">
+                <span className="mt-1 block text-sm text-text-secondary">
                   {type.description}
                 </span>
 
@@ -88,7 +88,7 @@ export function StartTypeCards({
                   {type.examples.map((example) => (
                     <span
                       key={example}
-                      className="rounded-full bg-surface-secondary px-2 py-0.5 text-xs text-text-muted"
+                      className="rounded-full bg-surface-secondary px-2 py-0.5 text-sm text-text-muted"
                     >
                       {example}
                     </span>

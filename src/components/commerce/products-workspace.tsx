@@ -503,7 +503,7 @@ export function ProductsWorkspace() {
                         >
                           {item.name}
                         </Link>
-                        <p className="mt-0.5 font-mono text-xs text-text-muted">
+                        <p className="mt-0.5 font-mono text-sm text-text-muted">
                           {item.sku} · {item.categoryName}
                         </p>
                       </div>
@@ -521,7 +521,7 @@ export function ProductsWorkspace() {
                       <p className="text-sm font-bold text-text-primary">
                         {formatCurrency(item.salePrice ?? item.price)}
                         {item.trackInventory ? (
-                          <span className="ml-2 text-xs font-medium text-text-muted">
+                          <span className="ml-2 text-sm font-medium text-text-muted">
                             {item.stock} in stock
                           </span>
                         ) : null}

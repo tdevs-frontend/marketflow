@@ -70,7 +70,7 @@ export function VersionHistoryDialog({
             <p className="mt-2 text-sm font-semibold text-text-primary">
               No versions yet
             </p>
-            <p className="mx-auto mt-1 max-w-sm text-xs text-text-secondary">
+            <p className="mx-auto mt-1 max-w-sm text-sm text-text-secondary">
               A version is saved every time this workflow is published. Publish
               it once and the history starts here.
             </p>
@@ -93,7 +93,7 @@ export function VersionHistoryDialog({
                   )}
                 >
                   <div className="flex flex-wrap items-center gap-2">
-                    <p className="text-[13px] font-semibold text-text-primary">
+                    <p className="text-sm font-semibold text-text-primary">
                       Version {version.version}
                     </p>
                     <Badge tone={state.tone}>{state.label}</Badge>
@@ -102,24 +102,24 @@ export function VersionHistoryDialog({
                         {formatCount(version.activeContacts)} still running
                       </Badge>
                     ) : null}
-                    <span className="ml-auto text-xs text-text-muted">
+                    <span className="ml-auto text-sm text-text-muted">
                       {formatRelativeTime(version.createdAt)}
                     </span>
                   </div>
 
                   {version.note ? (
-                    <p className="mt-1.5 text-xs text-text-secondary">{version.note}</p>
+                    <p className="mt-1.5 text-sm text-text-secondary">{version.note}</p>
                   ) : null}
 
                   <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-2">
-                    <span className="flex items-center gap-1.5 text-xs text-text-muted">
+                    <span className="flex items-center gap-1.5 text-sm text-text-muted">
                       <Avatar name={ownerName(version.authorId)} size="xs" />
                       {ownerName(version.authorId)}
                     </span>
-                    <span className="text-xs text-text-muted">
+                    <span className="text-sm text-text-muted">
                       {formatDateTime(version.createdAt)}
                     </span>
-                    <span className="text-xs text-text-muted">
+                    <span className="text-sm text-text-muted">
                       {version.nodeCount} steps
                     </span>
 
@@ -184,7 +184,7 @@ export function VersionHistoryDialog({
             >
               <span
                 className={cn(
-                  "mt-0.5 rounded-full px-1.5 py-0.5 text-xs font-bold uppercase",
+                  "mt-0.5 rounded-full px-1.5 py-0.5 text-sm font-bold uppercase",
                   item.change === "added"
                     ? "bg-success-soft text-success-text"
                     : item.change === "removed"
@@ -199,7 +199,7 @@ export function VersionHistoryDialog({
           ))}
         </ul>
 
-        <p className="mt-4 text-xs text-text-muted">
+        <p className="mt-4 text-sm text-text-muted">
           A full side-by-side diff of the canvas arrives with the versioning
           API. The change list above is what the comparison is built from.
         </p>

@@ -50,14 +50,14 @@ export function ActiveFilterChips({
 
   return (
     <div className={cn("flex flex-wrap items-center gap-2", className)}>
-      <span className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+      <span className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
         Filtered by
       </span>
 
       <ul className="flex flex-wrap items-center gap-1.5">
         {chips.map((chip) => (
           <li key={chip.key}>
-            <span className="inline-flex items-center gap-1 rounded-full border border-primary-border bg-primary-soft py-0.5 pr-1 pl-2.5 text-xs font-medium text-primary-dark">
+            <span className="inline-flex items-center gap-1 rounded-full border border-primary-border bg-primary-soft py-0.5 pr-1 pl-2.5 text-sm font-medium text-primary-dark">
               <span className="text-primary/70">{chip.label}:</span>
               {chip.value}
               <button
@@ -180,7 +180,7 @@ export function RowsPerPage({
 }) {
   return (
     <div className={cn("flex items-center gap-2 max-sm:hidden", className)}>
-      <span className="text-xs whitespace-nowrap text-text-muted">Rows</span>
+      <span className="text-sm whitespace-nowrap text-text-muted">Rows</span>
       <Select
         label="Rows per page"
         hideLabel
@@ -233,7 +233,7 @@ export function BulkActionBar({
         className,
       )}
     >
-      <p className="text-[13px] font-medium text-primary-dark">
+      <p className="text-sm font-medium text-primary-dark">
         {count} {noun}
         {count === 1 ? "" : "s"} selected
       </p>

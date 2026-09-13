@@ -26,20 +26,20 @@ export function ConversationListItem({
           : "before:opacity-0 hover:bg-primary-subtle",
       )}
     >
-      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-surface-secondary text-xs font-semibold text-text-secondary">
+      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-surface-secondary text-sm font-semibold text-text-secondary">
         {initials(first, last)}
       </span>
       <span className="min-w-0 flex-1">
         <span className="flex items-center justify-between gap-2">
           <span className="truncate text-sm font-semibold text-text-primary">{conversation.displayName}</span>
           {conversation.lastMessageAt ? (
-            <span className="shrink-0 text-xs text-text-muted">
+            <span className="shrink-0 text-sm text-text-muted">
               {formatRelativeTime(conversation.lastMessageAt)}
             </span>
           ) : null}
         </span>
         <span className="mt-0.5 flex items-center justify-between gap-2">
-          <span className="truncate text-xs text-text-muted">
+          <span className="truncate text-sm text-text-muted">
             {truncate(conversation.lastMessagePreview ?? "No messages yet", 40)}
           </span>
           {conversation.unreadCount > 0 ? (

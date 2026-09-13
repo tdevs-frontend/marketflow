@@ -129,7 +129,7 @@ function CustomerPicker({
         />
       </div>
 
-      <p className="mt-3 text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+      <p className="mt-3 text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
         {debounced.trim() ? `${matches.length} matching` : "Most active"}
       </p>
 
@@ -191,11 +191,11 @@ function LifecycleTracker({ contact }: { contact: CustomerContact }) {
   return (
     <div>
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+        <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
           Lifecycle
         </h3>
         {churned ? (
-          <span className="rounded-full bg-error-soft px-2 py-0.5 text-xs font-medium text-error-text">
+          <span className="rounded-full bg-error-soft px-2 py-0.5 text-sm font-medium text-error-text">
             Churned
           </span>
         ) : null}
@@ -257,7 +257,7 @@ function LifecycleTracker({ contact }: { contact: CustomerContact }) {
               </div>
               <span
                 className={cn(
-                  "mt-1.5 text-center text-xs leading-tight",
+                  "mt-1.5 text-center text-sm leading-tight",
                   current
                     ? "font-semibold text-primary"
                     : done
@@ -432,7 +432,7 @@ export function JourneyWorkspace() {
                     <LifecycleBadge lifecycle={selected.lifecycle} />
                     <SourceBadge source={selected.source} />
                   </div>
-                  <p className="mt-1 text-xs text-text-muted">
+                  <p className="mt-1 text-sm text-text-muted">
                     {[selected.company, selected.email, selected.phone]
                       .filter(Boolean)
                       .join(" · ")}
@@ -440,7 +440,7 @@ export function JourneyWorkspace() {
                   <div className="mt-2 flex flex-wrap items-center gap-2">
                     <TagBadges tags={selected.tags} max={3} />
                     <ChannelConsentBadges channels={selected.optedInChannels} />
-                    <span className="text-xs text-text-muted">
+                    <span className="text-sm text-text-muted">
                       Owner {ownerName(selected.ownerId)}
                     </span>
                   </div>
@@ -481,7 +481,7 @@ export function JourneyWorkspace() {
                 aria-pressed={groups.length === 0}
                 onClick={() => table.clearFilter("events")}
                 className={cn(
-                  "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                  "rounded-full border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
                   groups.length === 0
                     ? "border-primary bg-primary-soft text-primary-dark"
                     : "border-border text-text-secondary hover:border-border-strong",
@@ -499,7 +499,7 @@ export function JourneyWorkspace() {
                     aria-pressed={on}
                     onClick={() => toggleGroup(group.value)}
                     className={cn(
-                      "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                      "rounded-full border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
                       on
                         ? "border-primary bg-primary-soft text-primary-dark"
                         : "border-border text-text-secondary hover:border-border-strong",
@@ -542,7 +542,7 @@ export function JourneyWorkspace() {
               className="mt-3"
             />
 
-            <p className="mt-3 text-xs text-text-muted">
+            <p className="mt-3 text-sm text-text-muted">
               Showing {formatNumber(timeline.length)} of {formatNumber(total)}{" "}
               event{total === 1 ? "" : "s"}
             </p>
@@ -600,7 +600,6 @@ export function JourneyWorkspace() {
                           <AvatarLabel
                             name={contactName(contact)}
                             secondary={contact.company ?? undefined}
-                            secondarySize="sm"
                             size="sm"
                           />
                         </TD>
@@ -655,11 +654,11 @@ export function JourneyWorkspace() {
 
                       <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1">
                         <SourceBadge source={journey.entrySource} />
-                        <span className="text-xs text-text-muted tabular-nums">
+                        <span className="text-sm text-text-muted tabular-nums">
                           {journey.touchpoints} touchpoints ·{" "}
                           {journey.durationDays}d
                         </span>
-                        <span className="ml-auto text-xs text-text-muted">
+                        <span className="ml-auto text-sm text-text-muted">
                           {formatRelativeTime(journey.lastActivityAt)}
                         </span>
                       </div>

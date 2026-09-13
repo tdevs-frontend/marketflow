@@ -67,7 +67,7 @@ export function FlowConnector({
     >
       <span className="absolute inset-y-0 w-px bg-border" />
       {label ? (
-        <span className="relative rounded-full border border-border bg-surface px-2 py-0.5 text-xs font-medium text-text-muted">
+        <span className="relative rounded-full border border-border bg-surface px-2 py-0.5 text-sm font-medium text-text-muted">
           {label}
         </span>
       ) : (
@@ -134,29 +134,24 @@ export function AutomationNode({
 
       <span className="min-w-0 flex-1">
         <span className="flex flex-wrap items-baseline gap-x-2">
-          <span
-            className={cn(
-              "font-medium text-text-primary",
-              step.type === "delay" ? "text-[13px]" : "text-sm",
-            )}
-          >
+          <span className="text-sm font-medium text-text-primary">
             {step.title}
           </span>
-          <span className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+          <span className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
             {style.label}
           </span>
         </span>
-        <span className="mt-0.5 block truncate text-xs text-text-secondary">
+        <span className="mt-0.5 block truncate text-sm text-text-secondary">
           {step.detail}
         </span>
       </span>
 
       {typeof step.entered === "number" && step.entered > 0 ? (
         <span className="shrink-0 text-right">
-          <span className="block text-[13px] font-bold text-text-primary tabular-nums">
+          <span className="block text-sm font-bold text-text-primary tabular-nums">
             {formatNumber(step.entered)}
           </span>
-          <span className="block text-xs text-text-muted">reached</span>
+          <span className="block text-sm text-text-muted">reached</span>
         </span>
       ) : null}
     </Element>

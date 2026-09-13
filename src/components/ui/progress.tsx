@@ -64,13 +64,13 @@ export function MeterRow({
   return (
     <div>
       <div className="flex items-baseline justify-between gap-3">
-        <p className="truncate text-[13px] font-medium text-text-secondary">{label}</p>
-        <p className="shrink-0 text-[13px] font-bold text-text-primary tabular-nums">
+        <p className="truncate text-sm font-medium text-text-secondary">{label}</p>
+        <p className="shrink-0 text-sm font-bold text-text-primary tabular-nums">
           {display}
         </p>
       </div>
       <ProgressBar value={value} label={label} tone={tone} className="mt-2" />
-      {hint ? <p className="mt-1.5 text-xs text-text-muted">{hint}</p> : null}
+      {hint ? <p className="mt-1.5 text-sm text-text-muted">{hint}</p> : null}
     </div>
   );
 }

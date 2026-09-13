@@ -41,7 +41,7 @@ function StepPayload({ step }: { step: WorkflowRunStep }) {
 
   return (
     <details className="group mt-2">
-      <summary className="inline-flex cursor-pointer list-none items-center gap-1 rounded-btn text-xs font-medium text-text-muted transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none">
+      <summary className="inline-flex cursor-pointer list-none items-center gap-1 rounded-btn text-sm font-medium text-text-muted transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none">
         <span className="transition-transform group-open:rotate-90">›</span>
         Input and output
       </summary>
@@ -55,10 +55,10 @@ function StepPayload({ step }: { step: WorkflowRunStep }) {
         ).map(([label, payload]) =>
           payload ? (
             <div key={label}>
-              <p className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+              <p className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                 {label}
               </p>
-              <pre className="custom-scrollbar mt-1 overflow-x-auto rounded-btn bg-surface-secondary px-2.5 py-2 font-mono text-xs text-text-secondary">
+              <pre className="custom-scrollbar mt-1 overflow-x-auto rounded-btn bg-surface-secondary px-2.5 py-2 font-mono text-sm text-text-secondary">
                 {JSON.stringify(payload, null, 2)}
               </pre>
             </div>
@@ -91,16 +91,16 @@ function StepError({
 
   return (
     <div className="mt-2 rounded-panel border border-error/40 bg-error-soft/40 p-3">
-      <p className="flex items-start gap-2 text-[13px] font-medium text-error-text">
+      <p className="flex items-start gap-2 text-sm font-medium text-error-text">
         <AlertTriangle className="mt-0.5 size-3.5 shrink-0" aria-hidden />
         {step.error.message}
       </p>
 
-      <pre className="custom-scrollbar mt-2 overflow-x-auto rounded-btn bg-surface px-2.5 py-2 font-mono text-xs text-text-secondary">
+      <pre className="custom-scrollbar mt-2 overflow-x-auto rounded-btn bg-surface px-2.5 py-2 font-mono text-sm text-text-secondary">
         {step.error.providerResponse}
       </pre>
 
-      <p className="mt-2 text-xs text-text-muted">
+      <p className="mt-2 text-sm text-text-muted">
         {step.error.retries} {step.error.retries === 1 ? "retry" : "retries"} ·
         last attempt {formatDateTime(step.error.lastAttemptAt)}
       </p>
@@ -158,25 +158,25 @@ export function ExecutionTimeline({
               <div className="flex flex-wrap items-center gap-2">
                 <time
                   dateTime={step.at}
-                  className="text-xs font-medium text-text-muted tabular-nums"
+                  className="text-sm font-medium text-text-muted tabular-nums"
                 >
                   {timeOf(step.at)}
                 </time>
                 <NodeIcon kind={step.kind} size="sm" />
-                <p className="text-[13px] font-semibold text-text-primary">
+                <p className="text-sm font-semibold text-text-primary">
                   {step.title}
                 </p>
                 <ExecutionStatusBadge status={step.status} />
               </div>
 
-              <p className="mt-1 text-xs text-text-secondary">
+              <p className="mt-1 text-sm text-text-secondary">
                 {step.event}
                 {step.detail ? (
                   <span className="text-text-muted"> · {step.detail}</span>
                 ) : null}
               </p>
 
-              <p className="mt-1 flex flex-wrap items-center gap-2 text-xs text-text-muted">
+              <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-text-muted">
                 <span>{NODE_META[step.kind]?.label}</span>
                 {channel ? (
                   <span className={cn("font-medium", channel.text)}>{channel.label}</span>
@@ -217,8 +217,8 @@ export function ExecutionTimeline({
             />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-[13px] font-medium text-text-secondary">Next action</p>
-            <p className="mt-0.5 text-xs text-text-muted">
+            <p className="text-sm font-medium text-text-secondary">Next action</p>
+            <p className="mt-0.5 text-sm text-text-muted">
               Scheduled for {formatDateTime(run.nextActionAt)}
             </p>
           </div>
@@ -233,7 +233,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
   return (
     <dl className="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3">
       <div className="min-w-0">
-        <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+        <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
           Contact
         </dt>
         <dd className="mt-1 truncate text-sm font-medium">
@@ -248,7 +248,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
       </div>
 
       <div className="min-w-0">
-        <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+        <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
           Workflow
         </dt>
         <dd className="mt-1 truncate text-sm font-medium">
@@ -263,16 +263,16 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
       </div>
 
       <div className="min-w-0">
-        <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+        <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
           Run ID
         </dt>
         <dd className="mt-1 truncate">
-          <code className="font-mono text-xs text-text-secondary">{run.id}</code>
+          <code className="font-mono text-sm text-text-secondary">{run.id}</code>
         </dd>
       </div>
 
       <div className="min-w-0">
-        <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+        <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
           Started
         </dt>
         <dd className="mt-1 text-sm text-text-secondary">
@@ -281,7 +281,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
       </div>
 
       <div className="min-w-0">
-        <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+        <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
           State
         </dt>
         <dd className="mt-1">
@@ -290,7 +290,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
       </div>
 
       <div className="min-w-0">
-        <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+        <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
           Total duration
         </dt>
         <dd className="mt-1 text-sm text-text-secondary tabular-nums">

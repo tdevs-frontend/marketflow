@@ -74,7 +74,7 @@ export function StatsGrid({ items, accent, columns, className }: StatsGridProps)
         return (
           <Card key={item.label} className="p-5">
             <div className="flex items-start justify-between gap-3">
-              <p className="text-[13px] font-medium text-text-secondary">
+              <p className="text-sm font-medium text-text-secondary">
                 {item.label}
               </p>
               <span
@@ -93,7 +93,7 @@ export function StatsGrid({ items, accent, columns, className }: StatsGridProps)
               {item.value}
             </p>
 
-            <p className="mt-3 flex flex-wrap items-center gap-x-1.5 text-xs">
+            <p className="mt-3 flex flex-wrap items-center gap-x-1.5 text-sm">
               <span
                 className={cn(
                   "inline-flex items-center gap-0.5 font-medium",
@@ -134,13 +134,13 @@ export function MiniStat({
         className,
       )}
     >
-      <p className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+      <p className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
         {label}
       </p>
       <p className="mt-1 text-lg leading-none font-bold text-text-primary tabular-nums">
         {value}
       </p>
-      {hint ? <p className="mt-1 text-xs text-text-muted">{hint}</p> : null}
+      {hint ? <p className="mt-1 text-sm text-text-muted">{hint}</p> : null}
     </div>
   );
 }

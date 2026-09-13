@@ -106,7 +106,7 @@ export function TriggerDetail({ trigger }: { trigger: AutomationTrigger }) {
           <p className="mt-1.5 max-w-2xl text-sm text-text-secondary">
             {trigger.description}
           </p>
-          <p className="mt-2 flex flex-wrap items-center gap-2 text-xs text-text-muted">
+          <p className="mt-2 flex flex-wrap items-center gap-2 text-sm text-text-muted">
             <span>{triggerCategoryLabel(trigger.category)}</span>
             <span aria-hidden>·</span>
             <span>Source: {trigger.source}</span>
@@ -141,7 +141,7 @@ export function TriggerDetail({ trigger }: { trigger: AutomationTrigger }) {
               <fact.icon className="size-4" aria-hidden />
             </span>
             <div className="min-w-0">
-              <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+              <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                 {fact.label}
               </dt>
               <dd className="truncate text-lg leading-tight font-bold text-text-primary">
@@ -164,7 +164,7 @@ export function TriggerDetail({ trigger }: { trigger: AutomationTrigger }) {
                 <p className="text-sm font-semibold text-text-primary">
                   Nothing listens to this yet
                 </p>
-                <p className="mx-auto mt-1.5 max-w-sm text-xs text-text-secondary">
+                <p className="mx-auto mt-1.5 max-w-sm text-sm text-text-secondary">
                   The event is being recorded, but no workflow starts from it.
                   Create one and every future event will enter it.
                 </p>
@@ -182,10 +182,10 @@ export function TriggerDetail({ trigger }: { trigger: AutomationTrigger }) {
                       className="flex items-center gap-3 rounded-panel border border-border px-3.5 py-2.5 transition-colors hover:border-border-strong hover:bg-surface-secondary focus-visible:shadow-focus focus-visible:outline-none"
                     >
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-[13px] font-medium text-text-primary">
+                        <span className="block truncate text-sm font-medium text-text-primary">
                           {workflow.name}
                         </span>
-                        <span className="block truncate text-xs text-text-muted">
+                        <span className="block truncate text-sm text-text-muted">
                           {workflow.nodes.length} steps ·{" "}
                           {formatCount(workflow.stats.entered)} entered
                         </span>
@@ -206,11 +206,11 @@ export function TriggerDetail({ trigger }: { trigger: AutomationTrigger }) {
           />
           <CardBody className="space-y-3">
             <div>
-              <p className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+              <p className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                 Event key
               </p>
               <p className="mt-1.5">
-                <EventKey value={trigger.eventKey} className="text-xs" />
+                <EventKey value={trigger.eventKey} className="text-sm" />
               </p>
             </div>
             <EventPayloadViewer payload={trigger.payload} />
@@ -233,10 +233,10 @@ export function TriggerDetail({ trigger }: { trigger: AutomationTrigger }) {
           <CardBody className="grid gap-4 xl:grid-cols-2">
             <div className="space-y-4">
               <div>
-                <p className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                <p className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                   Event endpoint
                 </p>
-                <pre className="custom-scrollbar mt-1.5 overflow-x-auto rounded-panel bg-surface-secondary px-3.5 py-3 font-mono text-xs text-text-secondary">
+                <pre className="custom-scrollbar mt-1.5 overflow-x-auto rounded-panel bg-surface-secondary px-3.5 py-3 font-mono text-sm text-text-secondary">
                   {`POST https://api.marketflow.app/v1/events
 Content-Type: application/json
 X-MarketFlow-Signature: <hmac-sha256>
@@ -246,13 +246,13 @@ X-MarketFlow-Signature: <hmac-sha256>
               </div>
 
               <div>
-                <p className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                <p className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                   Authentication
                 </p>
                 <p className="mt-1.5 text-sm text-text-secondary">
                   Requests are signed with your workspace secret and verified
                   before the payload is read. An unsigned request is rejected
-                  with <code className="font-mono text-xs">401</code> and never
+                  with <code className="font-mono text-sm">401</code> and never
                   starts a workflow.
                 </p>
                 <ButtonLink
@@ -269,7 +269,7 @@ X-MarketFlow-Signature: <hmac-sha256>
 
             <div className="space-y-4">
               <div>
-                <p className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                <p className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                   Testing
                 </p>
                 <p className="mt-1.5 text-sm text-text-secondary">
@@ -291,15 +291,15 @@ X-MarketFlow-Signature: <hmac-sha256>
               </div>
 
               <div>
-                <p className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                <p className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                   Last error
                 </p>
                 {lastError ? (
                   <div className="mt-1.5 rounded-panel border border-error/40 bg-error-soft/40 px-3.5 py-3">
-                    <p className="text-[13px] font-medium text-error-text">
+                    <p className="text-sm font-medium text-error-text">
                       Payload rejected — `contact_id` did not match a contact
                     </p>
-                    <p className="mt-1 text-xs text-text-muted">
+                    <p className="mt-1 text-sm text-text-muted">
                       {formatDateTime(lastError.at)} ·{" "}
                       {formatCount(trigger.failed24h)} failed in the last 24 hours
                     </p>
@@ -326,7 +326,7 @@ X-MarketFlow-Signature: <hmac-sha256>
               <p className="text-sm font-semibold text-text-primary">
                 No trigger events yet
               </p>
-              <p className="mx-auto mt-1.5 max-w-sm text-xs text-text-secondary">
+              <p className="mx-auto mt-1.5 max-w-sm text-sm text-text-secondary">
                 Nothing has raised {trigger.eventKey} in the last 24 hours. Events
                 appear here within a few seconds of arriving.
               </p>
@@ -349,7 +349,7 @@ X-MarketFlow-Signature: <hmac-sha256>
                           : "bg-success",
                     )}
                   />
-                  <span className="min-w-0 flex-1 truncate text-[13px] text-text-primary">
+                  <span className="min-w-0 flex-1 truncate text-sm text-text-primary">
                     {event.summary}
                     {event.contactName ? (
                       <span className="text-text-muted"> · {event.contactName}</span>
@@ -368,7 +368,7 @@ X-MarketFlow-Signature: <hmac-sha256>
                   </Badge>
                   <time
                     dateTime={event.at}
-                    className="shrink-0 text-xs text-text-muted"
+                    className="shrink-0 text-sm text-text-muted"
                   >
                     {formatDateTime(event.at)}
                   </time>

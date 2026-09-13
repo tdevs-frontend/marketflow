@@ -37,7 +37,7 @@ export function ContactAvatar({
   contact: WhatsAppContact;
   size?: "sm" | "md" | "lg";
 }) {
-  const box = { sm: "size-8 text-xs", md: "size-9 text-xs", lg: "size-14 text-sm" }[
+  const box = { sm: "size-8 text-sm", md: "size-9 text-sm", lg: "size-14 text-sm" }[
     size
   ];
 
@@ -129,7 +129,7 @@ export function ContactDetailsSheet({
               {contactName(contact)}
             </p>
             {contact.email ? (
-              <p className="truncate text-xs text-text-muted">{contact.email}</p>
+              <p className="truncate text-sm text-text-muted">{contact.email}</p>
             ) : null}
             <span className="mt-2 inline-block">
               <ContactStatusBadge status={contact.status} />
@@ -154,7 +154,7 @@ export function ContactDetailsSheet({
           </dl>
 
           <section>
-            <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+            <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
               Tags
             </h3>
             <ul className="mt-2 flex flex-wrap gap-1.5">
@@ -164,7 +164,7 @@ export function ContactDetailsSheet({
                 </li>
               ))}
               {tags.length === 0 ? (
-                <li className="text-xs text-text-muted">No tags yet.</li>
+                <li className="text-sm text-text-muted">No tags yet.</li>
               ) : null}
             </ul>
 
@@ -196,7 +196,7 @@ export function ContactDetailsSheet({
           </section>
 
           <section>
-            <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+            <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
               Assigned agent
             </h3>
             <Select
@@ -216,10 +216,10 @@ export function ContactDetailsSheet({
 
           {contact.notes ? (
             <section>
-              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                 Notes
               </h3>
-              <p className="mt-2 rounded-panel bg-surface-secondary px-3 py-2.5 text-[13px] text-text-secondary">
+              <p className="mt-2 rounded-panel bg-surface-secondary px-3 py-2.5 text-sm text-text-secondary">
                 {contact.notes}
               </p>
             </section>
@@ -415,7 +415,7 @@ export function ContactFormDialog({
           <ul className="mt-2 flex flex-wrap gap-1.5">
             {draft.tags.map((item) => (
               <li key={item}>
-                <span className="inline-flex items-center gap-1 rounded-full bg-surface-secondary py-0.5 pr-1 pl-2.5 text-xs text-text-secondary">
+                <span className="inline-flex items-center gap-1 rounded-full bg-surface-secondary py-0.5 pr-1 pl-2.5 text-sm text-text-secondary">
                   {item}
                   <button
                     type="button"
@@ -434,7 +434,7 @@ export function ContactFormDialog({
               </li>
             ))}
             {draft.tags.length === 0 ? (
-              <li className="text-xs text-text-muted">No tags yet.</li>
+              <li className="text-sm text-text-muted">No tags yet.</li>
             ) : null}
           </ul>
 

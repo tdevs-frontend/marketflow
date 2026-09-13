@@ -83,7 +83,7 @@ function Steps({ step }: { step: 1 | 2 }) {
           <li key={label} className="flex items-center gap-2">
             <span
               className={cn(
-                "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[13px] font-medium",
+                "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm font-medium",
                 active
                   ? "border-primary bg-primary-soft text-primary-dark"
                   : done
@@ -278,7 +278,7 @@ export function CreateWorkflowWizard() {
         <>
           <StartTypeCards value={startType ?? undefined} onSelect={choose} />
 
-          <p className="text-xs text-text-muted">
+          <p className="text-sm text-text-muted">
             Not sure? <strong>Event-based</strong> covers most journeys — a lead
             arrives, an order is paid, somebody messages you on WhatsApp.
           </p>
@@ -316,7 +316,7 @@ export function CreateWorkflowWizard() {
                             if (first) setEventKey(first.eventKey);
                           }}
                           className={cn(
-                            "shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                            "shrink-0 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
                             selected
                               ? "border-primary bg-primary-soft text-primary-dark"
                               : "border-border bg-surface text-text-secondary hover:border-border-strong hover:text-text-primary",
@@ -345,13 +345,13 @@ export function CreateWorkflowWizard() {
                                 : "border-border hover:border-border-strong hover:bg-surface-secondary",
                             )}
                           >
-                            <span className="block text-[13px] font-semibold text-text-primary">
+                            <span className="block text-sm font-semibold text-text-primary">
                               {item.name}
                             </span>
                             <span className="mt-1 block">
                               <EventKey value={item.eventKey} />
                             </span>
-                            <span className="mt-1.5 block text-xs text-text-muted">
+                            <span className="mt-1.5 block text-sm text-text-muted">
                               {item.description}
                             </span>
                           </button>
@@ -371,7 +371,7 @@ export function CreateWorkflowWizard() {
                 />
                 <CardBody className="space-y-3">
                   <RuleGroupEditor rule={entryFilter} onChange={setEntryFilter} />
-                  <p className="text-xs text-text-muted">
+                  <p className="text-sm text-text-muted">
                     Leave this empty and every contact the event fires for is
                     enrolled.
                   </p>
@@ -388,7 +388,7 @@ export function CreateWorkflowWizard() {
                 <CardBody className="space-y-4">
                   <RuleGroupEditor rule={criteria} onChange={setCriteria} />
                   <AudiencePreview rule={criteria} type="dynamic" />
-                  <p className="text-xs text-text-muted">
+                  <p className="text-sm text-text-muted">
                     The count above is who matches right now. New contacts are
                     enrolled as they start matching, so the workflow keeps
                     running after today.
@@ -466,7 +466,7 @@ export function CreateWorkflowWizard() {
                       id="webhook-key"
                       value={customKey}
                       onChange={(event) => setCustomKey(event.target.value)}
-                      className="font-mono text-xs"
+                      className="font-mono text-sm"
                     />
                   </Field>
 
@@ -482,10 +482,10 @@ export function CreateWorkflowWizard() {
                   </Field>
 
                   <div>
-                    <p className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                    <p className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                       Endpoint
                     </p>
-                    <pre className="custom-scrollbar mt-1.5 overflow-x-auto rounded-panel bg-surface-secondary px-3.5 py-3 font-mono text-xs text-text-secondary">
+                    <pre className="custom-scrollbar mt-1.5 overflow-x-auto rounded-panel bg-surface-secondary px-3.5 py-3 font-mono text-sm text-text-secondary">
 {`POST https://api.marketflow.app/v1/events
 {
   "event": "${customKey}",
@@ -555,8 +555,8 @@ export function CreateWorkflowWizard() {
               <CardHeader title="Summary" description="What you are about to create." />
               <CardBody className="space-y-3">
                 <div className="flex items-start justify-between gap-3">
-                  <span className="text-xs text-text-muted">Start type</span>
-                  <span className="text-right text-[13px] font-medium text-text-primary">
+                  <span className="text-sm text-text-muted">Start type</span>
+                  <span className="text-right text-sm font-medium text-text-primary">
                     {meta?.label}
                   </span>
                 </div>
@@ -564,14 +564,14 @@ export function CreateWorkflowWizard() {
                 {startType === "event" ? (
                   <>
                     <div className="flex items-start justify-between gap-3">
-                      <span className="text-xs text-text-muted">Event</span>
-                      <span className="text-right text-[13px] font-medium text-text-primary">
+                      <span className="text-sm text-text-muted">Event</span>
+                      <span className="text-right text-sm font-medium text-text-primary">
                         {trigger?.name ?? "—"}
                       </span>
                     </div>
                     <div className="flex items-start justify-between gap-3">
-                      <span className="text-xs text-text-muted">Traffic</span>
-                      <span className="text-right text-[13px] text-text-secondary tabular-nums">
+                      <span className="text-sm text-text-muted">Traffic</span>
+                      <span className="text-right text-sm text-text-secondary tabular-nums">
                         {formatCount(trigger?.events24h ?? 0)} events / 24h
                       </span>
                     </div>
@@ -580,8 +580,8 @@ export function CreateWorkflowWizard() {
 
                 {startType === "schedule" ? (
                   <div className="flex items-start justify-between gap-3">
-                    <span className="text-xs text-text-muted">Schedule</span>
-                    <span className="text-right text-[13px] font-medium text-text-primary">
+                    <span className="text-sm text-text-muted">Schedule</span>
+                    <span className="text-right text-sm font-medium text-text-primary">
                       {SCHEDULES.find((item) => item.value === schedule)?.label} at {time}
                     </span>
                   </div>
@@ -589,17 +589,17 @@ export function CreateWorkflowWizard() {
 
                 {startType === "webhook" ? (
                   <div className="flex items-start justify-between gap-3">
-                    <span className="text-xs text-text-muted">Event key</span>
+                    <span className="text-sm text-text-muted">Event key</span>
                     <EventKey value={customKey} />
                   </div>
                 ) : null}
 
                 <div className="flex items-start justify-between gap-3">
-                  <span className="text-xs text-text-muted">Status on create</span>
+                  <span className="text-sm text-text-muted">Status on create</span>
                   <Badge tone="neutral">Draft</Badge>
                 </div>
 
-                <p className="border-t border-border pt-3 text-xs text-text-muted">
+                <p className="border-t border-border pt-3 text-sm text-text-muted">
                   Nothing sends until you build the journey and publish it.
                 </p>
 

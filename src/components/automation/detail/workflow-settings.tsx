@@ -567,7 +567,7 @@ export function WorkflowSettings({
                       })
                     }
                     className={cn(
-                      "rounded-btn border px-3 py-1.5 text-xs font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                      "rounded-btn border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
                       on
                         ? "border-primary bg-primary-soft text-primary-dark"
                         : "border-border bg-surface text-text-muted hover:border-border-strong hover:text-text-primary",
@@ -683,7 +683,7 @@ export function WorkflowSettings({
       </div>
 
       <div className="sticky bottom-4 z-10 flex flex-wrap items-center justify-end gap-2.5 rounded-card border border-border bg-surface/95 px-4 py-3 shadow-float backdrop-blur">
-        <p className="mr-auto text-xs text-text-muted">
+        <p className="mr-auto text-sm text-text-muted">
           Settings apply to contacts entering from now on — people already
           inside keep the rules they entered under.
         </p>

@@ -248,7 +248,7 @@ export function SocialAnalytics() {
               {SOCIAL_ACCOUNTS.map((account) => (
                 <li
                   key={account.id}
-                  className="flex items-center gap-2 text-xs"
+                  className="flex items-center gap-2 text-sm"
                 >
                   <PlatformMark platform={account.platform} size="sm" />
                   <span className="min-w-0 flex-1 truncate text-text-secondary">
@@ -290,7 +290,7 @@ export function SocialAnalytics() {
               <p className="text-sm font-bold text-text-primary">
                 {PLATFORM_THEME[bestPlatform.platform].label}
               </p>
-              <p className="text-xs text-text-secondary">
+              <p className="text-sm text-text-secondary">
                 {formatPercent(bestPlatform.engagementRate)} engagement on{" "}
                 {formatNumber(bestPlatform.followers)} followers — the smallest
                 audience doing the most work.
@@ -333,7 +333,7 @@ export function SocialAnalytics() {
           className="xl:col-span-2"
         >
           {scoped.length === 0 ? (
-            <p className="rounded-panel border border-dashed border-border px-3 py-6 text-center text-xs text-text-muted">
+            <p className="rounded-panel border border-dashed border-border px-3 py-6 text-center text-sm text-text-muted">
               No published posts on this platform in the selected period.
             </p>
           ) : (
@@ -363,10 +363,10 @@ export function SocialAnalytics() {
                       <PostThumb post={post} />
 
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-[13px] font-medium text-text-primary">
+                        <p className="truncate text-sm font-medium text-text-primary">
                           {post.title}
                         </p>
-                        <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-xs text-text-muted">
+                        <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-sm text-text-muted">
                           <span className="flex items-center gap-1">
                             {post.platforms.map((key) => (
                               <PlatformMark key={key} platform={key} size="sm" />
@@ -386,7 +386,7 @@ export function SocialAnalytics() {
                         <p className="text-sm font-bold text-text-primary tabular-nums">
                           {formatPercent(engagementRate)}
                         </p>
-                        <p className="text-xs text-text-muted">engagement</p>
+                        <p className="text-sm text-text-muted">engagement</p>
                       </div>
                     </li>
                   );
@@ -408,7 +408,7 @@ export function SocialAnalytics() {
                   <div className="flex items-baseline justify-between gap-3">
                     <p
                       className={cn(
-                        "text-[13px]",
+                        "text-sm",
                         best
                           ? "font-bold text-primary"
                           : "font-medium text-text-secondary",
@@ -416,7 +416,7 @@ export function SocialAnalytics() {
                     >
                       {slot.label}
                     </p>
-                    <p className="text-[13px] font-bold text-text-primary tabular-nums">
+                    <p className="text-sm font-bold text-text-primary tabular-nums">
                       {formatPercent(slot.rate)}
                     </p>
                   </div>

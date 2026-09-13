@@ -281,7 +281,7 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
                   <p className="truncate text-sm font-medium text-text-primary">
                     {campaign.name}
                   </p>
-                  <p className="mt-0.5 text-xs text-text-muted">
+                  <p className="mt-0.5 text-sm text-text-muted">
                     {campaign.audienceLabel} · {formatDate(campaign.createdAt)}
                   </p>
                 </div>
@@ -291,7 +291,7 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
 
               <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
                 <CampaignStatusBadge status={campaign.status} />
-                <dl className="flex items-center gap-4 text-xs">
+                <dl className="flex items-center gap-4 text-sm">
                   <div className="flex items-center gap-1.5">
                     <dt className="text-text-muted">Sent</dt>
                     <dd className="font-medium text-text-primary tabular-nums">

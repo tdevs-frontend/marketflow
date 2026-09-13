@@ -39,7 +39,7 @@ export function TopCampaigns({
             <ChannelMark channel={row.channel} size="sm" />
 
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-[13px] font-medium text-text-primary">
+              <span className="block truncate text-sm font-medium text-text-primary">
                 {row.name}
               </span>
               <span className="mt-1 flex items-center gap-2">
@@ -50,7 +50,7 @@ export function TopCampaigns({
                   size="sm"
                   className="max-w-28"
                 />
-                <span className="text-xs text-text-muted tabular-nums">
+                <span className="text-sm text-text-muted tabular-nums">
                   {formatNumber(row.sent)} sent
                 </span>
               </span>
@@ -60,7 +60,7 @@ export function TopCampaigns({
               <span className="block text-sm font-bold text-text-primary tabular-nums">
                 {formatPercent(row.conversionRate)}
               </span>
-              <span className="block text-xs text-text-muted tabular-nums">
+              <span className="block text-sm text-text-muted tabular-nums">
                 {formatCurrency(row.revenue)}
               </span>
             </span>

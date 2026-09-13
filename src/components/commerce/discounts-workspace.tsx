@@ -316,7 +316,7 @@ export function DiscountsWorkspace() {
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <span className="inline-block rounded-btn bg-surface-secondary px-2 py-1 font-mono text-xs font-medium text-text-primary">
+                    <span className="inline-block rounded-btn bg-surface-secondary px-2 py-1 font-mono text-sm font-medium text-text-primary">
                       {discount.code}
                     </span>
                     <p className="mt-1.5 truncate text-sm font-medium text-text-primary">
@@ -330,7 +330,7 @@ export function DiscountsWorkspace() {
                   <span className="font-bold text-text-primary">
                     {valueLabel(discount)}
                   </span>
-                  <span className="text-xs text-text-muted">
+                  <span className="text-sm text-text-muted">
                     {formatNumber(discount.usageCount)}
                     {discount.usageLimit
                       ? ` / ${formatNumber(discount.usageLimit)}`

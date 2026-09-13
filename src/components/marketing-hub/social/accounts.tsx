@@ -107,13 +107,13 @@ export function SocialAccounts() {
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Card className="p-5">
-          <p className="text-[13px] font-medium text-text-secondary">
+          <p className="text-sm font-medium text-text-secondary">
             Total Followers
           </p>
           <p className="mt-3 text-[1.75rem] leading-none font-bold text-text-primary">
             {formatCount(totalFollowers)}
           </p>
-          <p className="mt-3 text-xs text-text-muted">
+          <p className="mt-3 text-sm text-text-muted">
             across {SOCIAL_ACCOUNTS.length} connected accounts
           </p>
         </Card>
@@ -125,7 +125,7 @@ export function SocialAccounts() {
           return (
             <Card key={`stat-${account.id}`} className="p-5">
               <div className="flex items-start justify-between gap-3">
-                <p className="text-[13px] font-medium text-text-secondary">
+                <p className="text-sm font-medium text-text-secondary">
                   {PLATFORM_THEME[account.platform].label}
                 </p>
                 <PlatformMark platform={account.platform} size="sm" />
@@ -133,7 +133,7 @@ export function SocialAccounts() {
               <p className="mt-3 text-[1.75rem] leading-none font-bold text-text-primary">
                 {formatCount(account.followers)}
               </p>
-              <p className="mt-3 flex items-center gap-1.5 text-xs">
+              <p className="mt-3 flex items-center gap-1.5 text-sm">
                 <span
                   className={cn(
                     "inline-flex items-center gap-0.5 font-medium",
@@ -171,10 +171,10 @@ export function SocialAccounts() {
                     <h3 className="truncate text-sm font-semibold text-text-primary">
                       {account.name}
                     </h3>
-                    <p className="truncate text-xs text-text-muted">
+                    <p className="truncate text-sm text-text-muted">
                       {account.username}
                     </p>
-                    <p className="mt-0.5 text-xs text-text-muted">
+                    <p className="mt-0.5 text-sm text-text-muted">
                       {theme.label}
                       {account.platform === "instagram" ? " Business" : ""}
                       {account.platform === "facebook" ? " Page" : ""}
@@ -202,14 +202,14 @@ export function SocialAccounts() {
               </div>
 
               <div className="mt-4">
-                <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+                <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                   Permissions
                 </p>
                 <ul className="mt-1.5 flex flex-wrap gap-1.5">
                   {account.permissions.map((permission) => (
                     <li
                       key={permission}
-                      className="rounded-btn bg-surface-secondary px-2 py-0.5 text-xs font-medium text-text-secondary"
+                      className="rounded-btn bg-surface-secondary px-2 py-0.5 text-sm font-medium text-text-secondary"
                     >
                       {permission}
                     </li>
@@ -218,7 +218,7 @@ export function SocialAccounts() {
               </div>
 
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-3.5">
-                <p className="flex items-center gap-1.5 text-xs text-text-muted">
+                <p className="flex items-center gap-1.5 text-sm text-text-muted">
                   <RefreshCw className="size-3" aria-hidden />
                   Synced {formatRelativeTime(account.lastSyncedAt)}
                 </p>
@@ -264,7 +264,7 @@ export function SocialAccounts() {
           <h3 className="mt-3 text-sm font-semibold text-text-primary">
             Connect another account
           </h3>
-          <p className="mt-1 max-w-xs text-xs text-text-muted">
+          <p className="mt-1 max-w-xs text-sm text-text-muted">
             {available.length > 0
               ? `${available.map((p) => PLATFORM_THEME[p].label).join(", ")} ${available.length === 1 ? "is" : "are"} still available, plus a second profile on any platform.`
               : "Every platform is connected. You can add a second profile on any of them."}
@@ -307,7 +307,7 @@ export function SocialAccounts() {
                 <p className="text-sm font-semibold text-text-primary">
                   {managing.name}
                 </p>
-                <p className="text-xs text-text-muted">{managing.username}</p>
+                <p className="text-sm text-text-muted">{managing.username}</p>
               </div>
               <Badge tone={STATUS_TONES[managing.status]} className="ml-auto">
                 {STATUS_LABELS[managing.status]}
@@ -316,10 +316,10 @@ export function SocialAccounts() {
 
             {managing.status === "expired" ? (
               <div className="rounded-panel border border-warning/30 bg-warning-soft px-3.5 py-3">
-                <p className="text-xs font-medium text-warning-text">
+                <p className="text-sm font-medium text-warning-text">
                   This token has expired
                 </p>
-                <p className="mt-1 text-xs text-text-secondary">
+                <p className="mt-1 text-sm text-text-secondary">
                   Reconnecting takes you to {PLATFORM_THEME[managing.platform].label}{" "}
                   to re-authorise. Your scheduled posts and history are kept.
                 </p>
@@ -353,28 +353,28 @@ export function SocialAccounts() {
                 },
               ].map((row) => (
                 <div key={row.label}>
-                  <dt className="text-xs text-text-muted">{row.label}</dt>
+                  <dt className="text-sm text-text-muted">{row.label}</dt>
                   <dd className="font-medium text-text-primary">{row.value}</dd>
                 </div>
               ))}
             </dl>
 
             <section>
-              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                 Granted permissions
               </h3>
               <ul className="mt-2 space-y-1.5">
                 {managing.permissions.map((permission) => (
                   <li
                     key={permission}
-                    className="flex items-center gap-2 rounded-panel border border-border px-3 py-2 text-[13px] text-text-secondary"
+                    className="flex items-center gap-2 rounded-panel border border-border px-3 py-2 text-sm text-text-secondary"
                   >
                     <Link2 className="size-3.5 shrink-0 text-primary" aria-hidden />
                     {permission}
                   </li>
                 ))}
               </ul>
-              <p className="mt-2 text-xs text-text-muted">
+              <p className="mt-2 text-sm text-text-muted">
                 Permissions are granted on {PLATFORM_THEME[managing.platform].label}{" "}
                 and can only be changed there.
               </p>
@@ -426,10 +426,10 @@ export function SocialAccounts() {
                 >
                   <PlatformMark platform={platform} />
                   <span className="min-w-0 flex-1">
-                    <span className="block text-[13px] font-medium text-text-primary">
+                    <span className="block text-sm font-medium text-text-primary">
                       {theme.label}
                     </span>
-                    <span className="block text-xs text-text-muted">
+                    <span className="block text-sm text-text-muted">
                       {existing
                         ? `${existing.username} already connected — this adds a second profile`
                         : "Not connected yet"}

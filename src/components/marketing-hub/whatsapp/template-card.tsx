@@ -102,26 +102,26 @@ export function TemplateCard({
         />
       </div>
 
-      <p className="mt-4 line-clamp-3 min-h-15 rounded-panel bg-surface-secondary px-3.5 py-3 text-[13px] leading-relaxed text-text-secondary">
+      <p className="mt-4 line-clamp-3 min-h-15 rounded-panel bg-surface-secondary px-3.5 py-3 text-sm leading-relaxed text-text-secondary">
         {template.body}
       </p>
 
       {template.status === "rejected" && template.rejectionReason ? (
-        <p className="mt-2.5 rounded-panel border border-error/25 bg-error-soft px-3 py-2 text-xs text-error-text">
+        <p className="mt-2.5 rounded-panel border border-error/25 bg-error-soft px-3 py-2 text-sm text-error-text">
           {template.rejectionReason}
         </p>
       ) : null}
 
       {template.variables.length > 0 ? (
         <div className="mt-3">
-          <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+          <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
             Variables
           </p>
           <ul className="mt-1.5 flex flex-wrap gap-1.5">
             {template.variables.map((variable) => (
               <li
                 key={variable}
-                className="rounded-btn bg-primary-soft px-1.5 py-0.5 font-mono text-xs text-primary-dark"
+                className="rounded-btn bg-primary-soft px-1.5 py-0.5 font-mono text-sm text-primary-dark"
               >
                 {`{{${variable}}}`}
               </li>
@@ -130,7 +130,7 @@ export function TemplateCard({
         </div>
       ) : null}
 
-      <div className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-3.5 text-xs text-text-muted">
+      <div className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-3.5 text-sm text-text-muted">
         <span>{languageLabel(template.language)}</span>
         <span>Updated {formatRelativeTime(template.updatedAt)}</span>
       </div>

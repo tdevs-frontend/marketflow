@@ -185,7 +185,7 @@ export function AutomationsWorkspace({ channel }: { channel: MarketingChannel })
       <>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="min-w-0">
-            <p className="text-xs text-text-muted">Editing automation</p>
+            <p className="text-sm text-text-muted">Editing automation</p>
             <h2 className="truncate text-lg">{editing.name}</h2>
           </div>
           <Button variant="outline" size="compact" onClick={() => setEditing(null)}>
@@ -304,7 +304,7 @@ export function AutomationsWorkspace({ channel }: { channel: MarketingChannel })
                           <h3 className="truncate text-sm font-semibold text-text-primary">
                             {flow.name}
                           </h3>
-                          <p className="mt-0.5 line-clamp-2 text-xs text-text-muted">
+                          <p className="mt-0.5 line-clamp-2 text-sm text-text-muted">
                             {flow.description}
                           </p>
                         </div>
@@ -323,7 +323,7 @@ export function AutomationsWorkspace({ channel }: { channel: MarketingChannel })
                         name={flow.triggerIcon}
                         className="size-3.5 shrink-0 text-text-muted"
                       />
-                      <p className="min-w-0 truncate text-xs text-text-secondary">
+                      <p className="min-w-0 truncate text-sm text-text-secondary">
                         <span className="font-medium text-text-primary">Trigger:</span>{" "}
                         {flow.triggerLabel}
                       </p>
@@ -339,7 +339,7 @@ export function AutomationsWorkspace({ channel }: { channel: MarketingChannel })
                         { label: "Success", value: formatPercent(flow.successRate) },
                       ].map((cell) => (
                         <div key={cell.label}>
-                          <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                          <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                             {cell.label}
                           </dt>
                           <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">
@@ -363,7 +363,7 @@ export function AutomationsWorkspace({ channel }: { channel: MarketingChannel })
                     ) : null}
 
                     <div className="mt-auto flex items-center justify-between gap-3 border-t border-border pt-3.5">
-                      <p className="text-xs text-text-muted">
+                      <p className="text-sm text-text-muted">
                         Active {formatRelativeTime(flow.lastActivityAt)}
                       </p>
                       <div className="flex gap-2">

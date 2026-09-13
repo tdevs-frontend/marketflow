@@ -358,7 +358,7 @@ export function ProductEditor({ product }: { product?: Product }) {
               <p className="mt-3 text-sm font-medium text-text-primary">
                 Drop images here, or browse
               </p>
-              <p className="mt-1 text-xs text-text-muted">
+              <p className="mt-1 text-sm text-text-muted">
                 PNG or JPG, up to 5 MB each. The first image becomes the thumbnail.
               </p>
               <Button variant="outline" size="compact" className="mt-4">
@@ -380,7 +380,7 @@ export function ProductEditor({ product }: { product?: Product }) {
                 >
                   <ImagePlus className="size-4" aria-hidden />
                   {slot === 0 ? (
-                    <span className="absolute top-1.5 left-1.5 inline-flex items-center gap-1 rounded-full bg-surface px-1.5 py-0.5 text-xs font-bold text-primary uppercase">
+                    <span className="absolute top-1.5 left-1.5 inline-flex items-center gap-1 rounded-full bg-surface px-1.5 py-0.5 text-sm font-bold text-primary uppercase">
                       <Star className="size-2.5" aria-hidden />
                       Thumb
                     </span>

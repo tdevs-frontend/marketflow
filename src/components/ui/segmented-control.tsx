@@ -18,8 +18,8 @@ export interface SegmentedControlProps<T extends string> {
 }
 
 const SIZES = {
-  sm: "h-7 px-2.5 text-xs",
-  md: "h-8 px-3 text-xs",
+  sm: "h-7 px-2.5 text-sm",
+  md: "h-8 px-3 text-sm",
 } as const;
 
 /**

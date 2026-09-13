@@ -26,7 +26,7 @@ export function AutomationCard({ automation }: { automation: Automation }) {
             {automation.name}
           </Link>
           {automation.description ? (
-            <p className="text-xs text-text-muted">
+            <p className="text-sm text-text-muted">
               {automation.description}
             </p>
           ) : null}
@@ -36,15 +36,15 @@ export function AutomationCard({ automation }: { automation: Automation }) {
 
       <dl className="mt-4 grid grid-cols-3 gap-3 text-sm">
         <div>
-          <dt className="text-xs text-text-muted">Entered</dt>
+          <dt className="text-sm text-text-muted">Entered</dt>
           <dd className="font-semibold text-text-primary">{formatNumber(entered)}</dd>
         </div>
         <div>
-          <dt className="text-xs text-text-muted">In flow</dt>
+          <dt className="text-sm text-text-muted">In flow</dt>
           <dd className="font-semibold text-text-primary">{formatNumber(active)}</dd>
         </div>
         <div>
-          <dt className="text-xs text-text-muted">Completion</dt>
+          <dt className="text-sm text-text-muted">Completion</dt>
           <dd className="font-semibold text-text-primary">{formatPercent(rate(completed, entered))}</dd>
         </div>
       </dl>

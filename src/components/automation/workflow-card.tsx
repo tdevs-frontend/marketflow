@@ -112,7 +112,7 @@ export function WorkflowCard({
           </Link>
           <span className="flex flex-wrap items-center gap-1.5">
             <WorkflowStatusBadge status={workflow.status} />
-            <span className="inline-flex items-center gap-1 text-xs text-text-muted">
+            <span className="inline-flex items-center gap-1 text-sm text-text-muted">
               <Zap className="size-3" aria-hidden />
               {workflow.triggerLabel}
             </span>
@@ -125,7 +125,7 @@ export function WorkflowCard({
         />
       </div>
 
-      <p className="mt-2.5 line-clamp-2 text-xs text-text-secondary">
+      <p className="mt-2.5 line-clamp-2 text-sm text-text-secondary">
         {workflow.description}
       </p>
 
@@ -133,7 +133,7 @@ export function WorkflowCard({
 
       <div className="mt-3 flex items-center justify-between gap-2">
         <ChannelChips channels={workflow.channels} size="sm" />
-        <span className="text-xs text-text-muted">
+        <span className="text-sm text-text-muted">
           {workflow.nodes.length} steps
         </span>
       </div>
@@ -143,7 +143,7 @@ export function WorkflowCard({
           three questions, and nothing on the card that answers none of them. */}
       <dl className="mt-3 grid grid-cols-3 gap-2 border-t border-border pt-3">
         <div>
-          <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+          <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
             Active
           </dt>
           <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">
@@ -151,7 +151,7 @@ export function WorkflowCard({
           </dd>
         </div>
         <div>
-          <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+          <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
             Entered
           </dt>
           <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">
@@ -159,7 +159,7 @@ export function WorkflowCard({
           </dd>
         </div>
         <div>
-          <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+          <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
             Conversion
           </dt>
           <dd className="mt-0.5 text-sm font-bold text-primary tabular-nums">
@@ -169,7 +169,7 @@ export function WorkflowCard({
       </dl>
 
       <div className="mt-3 flex items-center justify-between gap-2 border-t border-border pt-3">
-        <p className="truncate text-xs text-text-muted">
+        <p className="truncate text-sm text-text-muted">
           Edited {formatRelativeTime(workflow.updatedAt)}
         </p>
         <Tooltip content={ownerName(workflow.ownerId)}>

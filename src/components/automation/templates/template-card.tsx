@@ -37,7 +37,7 @@ export function TemplateCard({
           <h3 className="truncate text-sm font-semibold text-text-primary">
             {template.name}
           </h3>
-          <p className="mt-1 text-xs text-text-muted">
+          <p className="mt-1 text-sm text-text-muted">
             {templateCategoryLabel(template.category)}
           </p>
         </div>
@@ -48,7 +48,7 @@ export function TemplateCard({
         )}
       </div>
 
-      <p className="mt-2.5 line-clamp-2 text-xs text-text-secondary">
+      <p className="mt-2.5 line-clamp-2 text-sm text-text-secondary">
         {template.description}
       </p>
 
@@ -58,7 +58,7 @@ export function TemplateCard({
         <ChannelChips channels={template.channels} size="sm" />
       </div>
 
-      <dl className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-border pt-3 text-xs text-text-muted">
+      <dl className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-border pt-3 text-sm text-text-muted">
         <div className="flex items-center gap-1.5">
           <Layers className="size-3.5" aria-hidden />
           <dt className="sr-only">Steps</dt>

@@ -52,10 +52,10 @@ export function RankedList({
 
           <div className="min-w-0 flex-1">
             <div className="flex items-baseline justify-between gap-3">
-              <p className="truncate text-[13px] font-medium text-text-primary">
+              <p className="truncate text-sm font-medium text-text-primary">
                 {item.label}
               </p>
-              <p className="shrink-0 text-[13px] font-bold text-text-primary tabular-nums">
+              <p className="shrink-0 text-sm font-bold text-text-primary tabular-nums">
                 {item.display}
               </p>
             </div>
@@ -69,7 +69,7 @@ export function RankedList({
             />
 
             {item.secondary ? (
-              <p className="mt-1 text-xs text-text-muted">{item.secondary}</p>
+              <p className="mt-1 text-sm text-text-muted">{item.secondary}</p>
             ) : null}
           </div>
         </li>

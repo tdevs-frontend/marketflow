@@ -167,24 +167,24 @@ export function TriggerTable({
               <Menu items={actions(trigger)} label={`Actions for ${trigger.name}`} />
             </div>
 
-            <p className="mt-2 line-clamp-2 text-xs text-text-secondary">
+            <p className="mt-2 line-clamp-2 text-sm text-text-secondary">
               {trigger.description}
             </p>
 
             <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5">
               <TriggerStatusBadge status={trigger.status} />
-              <span className="text-xs text-text-muted">
+              <span className="text-sm text-text-muted">
                 {trigger.workflowIds.length} workflows
               </span>
               <span
                 className={cn(
-                  "text-xs tabular-nums",
+                  "text-sm tabular-nums",
                   trigger.failed24h > 0 ? "text-error" : "text-text-muted",
                 )}
               >
                 {formatCount(trigger.events24h)} events / 24h
               </span>
-              <span className="ml-auto text-xs text-text-muted">
+              <span className="ml-auto text-sm text-text-muted">
                 {trigger.lastEventAt
                   ? formatRelativeTime(trigger.lastEventAt)
                   : "Never fired"}

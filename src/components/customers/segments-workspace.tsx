@@ -267,7 +267,7 @@ function SegmentBuilderDialog({
         {type === "dynamic" ? (
           <section>
             <div className="flex items-center justify-between gap-3">
-              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                 Conditions
               </h3>
             </div>
@@ -279,13 +279,13 @@ function SegmentBuilderDialog({
               />
             </div>
             {show("rule") ? (
-              <p role="alert" className="mt-2 text-xs font-medium text-error">
+              <p role="alert" className="mt-2 text-sm font-medium text-error">
                 {show("rule")}
               </p>
             ) : null}
           </section>
         ) : (
-          <p className="rounded-panel border border-border bg-surface-secondary px-3.5 py-3 text-xs text-text-secondary">
+          <p className="rounded-panel border border-border bg-surface-secondary px-3.5 py-3 text-sm text-text-secondary">
             A static segment holds the contacts you add to it. Add members from
             the Contacts table using <strong>Add to segment</strong>, or import
             a list.
@@ -393,7 +393,7 @@ function SegmentDrawer({
         <div className="space-y-4">
           <div className="flex flex-wrap items-center gap-2">
             <TypeBadge type={segment.type} />
-            <span className="text-xs text-text-muted">
+            <span className="text-sm text-text-muted">
               {formatNumber(members.length)} member
               {members.length === 1 ? "" : "s"} · updated{" "}
               {formatRelativeTime(segment.updatedAt)}
@@ -450,7 +450,7 @@ function SegmentDrawer({
             >
               {lines.length ? (
                 <>
-                  <p className="text-xs text-text-secondary">
+                  <p className="text-sm text-text-secondary">
                     A contact is a member when{" "}
                     <strong className="font-semibold text-text-primary">
                       {segment.rule.match === "all" ? "all" : "any"}
@@ -461,7 +461,7 @@ function SegmentDrawer({
                     {lines.map((line) => (
                       <li
                         key={line}
-                        className="rounded-panel border border-border px-3 py-2 text-xs text-text-primary"
+                        className="rounded-panel border border-border px-3 py-2 text-sm text-text-primary"
                       >
                         {line}
                       </li>
@@ -475,7 +475,7 @@ function SegmentDrawer({
                 />
               )}
 
-              <dl className="grid grid-cols-2 gap-x-4 gap-y-2 rounded-panel bg-surface-secondary p-3.5 text-xs">
+              <dl className="grid grid-cols-2 gap-x-4 gap-y-2 rounded-panel bg-surface-secondary p-3.5 text-sm">
                 <div>
                   <dt className="text-text-muted">Created by</dt>
                   <dd className="mt-0.5 font-medium text-text-primary">
@@ -506,7 +506,7 @@ function SegmentDrawer({
               ) : (
                 <>
                   <section>
-                    <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+                    <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                       Campaigns
                     </h3>
                     {segment.usage.campaigns.length ? (
@@ -514,7 +514,7 @@ function SegmentDrawer({
                         {segment.usage.campaigns.map((item) => (
                           <li
                             key={item}
-                            className="flex items-center gap-2 rounded-panel border border-border px-3 py-2 text-xs text-text-primary"
+                            className="flex items-center gap-2 rounded-panel border border-border px-3 py-2 text-sm text-text-primary"
                           >
                             <Send
                               className="size-3.5 text-text-muted"
@@ -525,14 +525,14 @@ function SegmentDrawer({
                         ))}
                       </ul>
                     ) : (
-                      <p className="mt-2 text-xs text-text-muted">
+                      <p className="mt-2 text-sm text-text-muted">
                         No campaigns.
                       </p>
                     )}
                   </section>
 
                   <section>
-                    <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+                    <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                       Automations
                     </h3>
                     {segment.usage.automations.length ? (
@@ -540,7 +540,7 @@ function SegmentDrawer({
                         {segment.usage.automations.map((item) => (
                           <li
                             key={item}
-                            className="flex items-center gap-2 rounded-panel border border-border px-3 py-2 text-xs text-text-primary"
+                            className="flex items-center gap-2 rounded-panel border border-border px-3 py-2 text-sm text-text-primary"
                           >
                             <Zap
                               className="size-3.5 text-text-muted"
@@ -551,7 +551,7 @@ function SegmentDrawer({
                         ))}
                       </ul>
                     ) : (
-                      <p className="mt-2 text-xs text-text-muted">
+                      <p className="mt-2 text-sm text-text-muted">
                         No automations.
                       </p>
                     )}
@@ -914,10 +914,10 @@ export function CustomerSegmentsWorkspace() {
                         onClick={() => setActive(segment)}
                         className="min-w-0 flex-1 rounded-btn text-left focus-visible:shadow-focus focus-visible:outline-none"
                       >
-                        <span className="block truncate text-[13px] font-medium text-text-primary">
+                        <span className="block truncate text-sm font-medium text-text-primary">
                           {segment.name}
                         </span>
-                        <span className="mt-0.5 block text-xs text-text-muted">
+                        <span className="mt-0.5 block text-sm text-text-muted">
                           {segment.description}
                         </span>
                       </button>
@@ -947,10 +947,10 @@ export function CustomerSegmentsWorkspace() {
 
                     <div className="mt-2.5 flex flex-wrap items-center gap-2">
                       <TypeBadge type={segment.type} />
-                      <span className="text-xs text-text-secondary tabular-nums">
+                      <span className="text-sm text-text-secondary tabular-nums">
                         {`${formatNumber(members)} member${members === 1 ? "" : "s"}`}
                       </span>
-                      <span className="text-xs text-text-muted">
+                      <span className="text-sm text-text-muted">
                         · {formatRelativeTime(segment.updatedAt)}
                       </span>
                     </div>
@@ -964,7 +964,7 @@ export function CustomerSegmentsWorkspace() {
                 value={table.pageSize}
                 onChange={table.setPageSize}
               />
-              <p className="text-xs text-text-muted">
+              <p className="text-sm text-text-muted">
                 {formatNumber(filtered.length)} segment
                 {filtered.length === 1 ? "" : "s"}
               </p>
@@ -1011,10 +1011,10 @@ export function CustomerSegmentsWorkspace() {
             rather than summarised as a count. */}
         {pendingDelete && segmentUsageCount(pendingDelete) > 0 ? (
           <div className="mt-3 rounded-panel border border-warning-border bg-warning-soft px-3.5 py-3">
-            <p className="text-xs font-semibold text-warning-text">
+            <p className="text-sm font-semibold text-warning-text">
               This segment is still in use
             </p>
-            <ul className="mt-1.5 space-y-1 text-xs text-warning-text">
+            <ul className="mt-1.5 space-y-1 text-sm text-warning-text">
               {pendingDelete.usage.campaigns.map((item) => (
                 <li key={item}>· {item} (campaign)</li>
               ))}
@@ -1022,7 +1022,7 @@ export function CustomerSegmentsWorkspace() {
                 <li key={item}>· {item} (automation)</li>
               ))}
             </ul>
-            <p className="mt-1.5 text-xs text-warning-text">
+            <p className="mt-1.5 text-sm text-warning-text">
               Each will need a new audience before it can send again.
             </p>
           </div>

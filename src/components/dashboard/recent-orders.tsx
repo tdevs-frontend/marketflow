@@ -106,13 +106,13 @@ export function RecentOrders({ className }: { className?: string }) {
             </div>
 
             <div className="mt-1 flex items-center justify-between gap-2">
-              <p className="truncate text-xs text-text-secondary">{order.product}</p>
+              <p className="truncate text-sm text-text-secondary">{order.product}</p>
               <Badge tone={STATUS_TONE[order.status]} className="shrink-0 normal-case">
                 {order.status}
               </Badge>
             </div>
 
-            <p className="mt-1 flex items-center gap-1.5 text-xs text-text-muted">
+            <p className="mt-1 flex items-center gap-1.5 text-sm text-text-muted">
               <span className="font-medium tabular-nums">{order.id}</span>
               <span aria-hidden>·</span>
               {order.time}

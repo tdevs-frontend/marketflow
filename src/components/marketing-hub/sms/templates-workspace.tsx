@@ -238,18 +238,18 @@ export function SmsTemplatesWorkspace() {
                     </div>
 
                     {/* Body in full — an SMS template is its body. */}
-                    <p className="mt-4 min-h-20 rounded-panel bg-surface-secondary px-3.5 py-3 font-mono text-[12px] leading-relaxed text-text-secondary">
+                    <p className="mt-4 min-h-20 rounded-panel bg-surface-secondary px-3.5 py-3 font-mono text-sm leading-relaxed text-text-secondary">
                       {template.body}
                     </p>
 
                     <div className="mt-3">
                       <div className="flex items-baseline justify-between gap-3">
-                        <p className="text-xs text-text-muted">
+                        <p className="text-sm text-text-muted">
                           {characters} characters when personalised
                         </p>
                         <p
                           className={cn(
-                            "text-xs font-medium tabular-nums",
+                            "text-sm font-medium tabular-nums",
                             multipart ? "text-warning-text" : "text-sms",
                           )}
                         >
@@ -270,7 +270,7 @@ export function SmsTemplatesWorkspace() {
                         {template.variables.map((variable) => (
                           <li
                             key={variable}
-                            className="rounded-btn bg-sms-soft px-1.5 py-0.5 font-mono text-xs text-sms-dark"
+                            className="rounded-btn bg-sms-soft px-1.5 py-0.5 font-mono text-sm text-sms-dark"
                           >
                             {`{{${variable}}}`}
                           </li>
@@ -278,7 +278,7 @@ export function SmsTemplatesWorkspace() {
                       </ul>
                     ) : null}
 
-                    <dl className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-3.5 text-xs">
+                    <dl className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-3.5 text-sm">
                       <div>
                         <dt className="text-text-muted">Used</dt>
                         <dd className="font-bold text-text-primary tabular-nums">
@@ -293,7 +293,7 @@ export function SmsTemplatesWorkspace() {
                       </div>
                     </dl>
 
-                    <p className="mt-2.5 text-xs text-text-muted">
+                    <p className="mt-2.5 text-sm text-text-muted">
                       Updated {formatRelativeTime(template.updatedAt)}
                     </p>
 
@@ -373,7 +373,7 @@ export function SmsTemplatesWorkspace() {
           <SmsComposer value={draftBody} onChange={setDraftBody} id="tpl-body" />
 
           <div>
-            <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+            <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
               Preview
             </p>
             <SmsPreview message={draftBody} className="mt-2" />
@@ -416,10 +416,10 @@ export function SmsTemplatesWorkspace() {
             <SmsPreview message={previewing.body} />
 
             <div className="rounded-panel border border-border px-3.5 py-3">
-              <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+              <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                 Raw template
               </p>
-              <p className="mt-1.5 font-mono text-[12px] leading-relaxed text-text-secondary">
+              <p className="mt-1.5 font-mono text-sm leading-relaxed text-text-secondary">
                 {previewing.body}
               </p>
             </div>
@@ -445,7 +445,7 @@ export function SmsTemplatesWorkspace() {
                 },
               ].map((row) => (
                 <div key={row.label}>
-                  <dt className="text-xs text-text-muted">{row.label}</dt>
+                  <dt className="text-sm text-text-muted">{row.label}</dt>
                   <dd className="font-medium text-text-primary tabular-nums">
                     {row.value}
                   </dd>

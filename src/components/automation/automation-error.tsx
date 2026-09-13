@@ -66,7 +66,7 @@ export function AutomationErrorState({
       </div>
 
       {digest ? (
-        <p className="mt-5 border-t border-border pt-4 text-xs text-text-muted">
+        <p className="mt-5 border-t border-border pt-4 text-sm text-text-muted">
           Reference{" "}
           <code className="font-mono text-text-secondary">{digest}</code> — quote
           this if you contact support.

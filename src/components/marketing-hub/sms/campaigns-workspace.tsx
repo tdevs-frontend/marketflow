@@ -519,7 +519,7 @@ export function SmsCampaignsWorkspace() {
                         <p className="truncate text-sm font-medium text-text-primary">
                           {campaign.name}
                         </p>
-                        <p className="line-clamp-2 font-mono text-xs text-text-muted">
+                        <p className="line-clamp-2 font-mono text-sm text-text-muted">
                           {campaign.message}
                         </p>
                       </div>
@@ -541,7 +541,7 @@ export function SmsCampaignsWorkspace() {
                           key={cell.label}
                           className="rounded-panel bg-surface-secondary py-2"
                         >
-                          <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                          <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                             {cell.label}
                           </dt>
                           <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">
@@ -662,7 +662,7 @@ export function SmsCampaignsWorkspace() {
           />
 
           <div>
-            <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+            <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
               Preview
             </p>
             <SmsPreview
@@ -724,7 +724,7 @@ export function SmsCampaignsWorkspace() {
                 },
               ].map((row) => (
                 <div key={row.label}>
-                  <dt className="text-xs text-text-muted">{row.label}</dt>
+                  <dt className="text-sm text-text-muted">{row.label}</dt>
                   <dd className="font-medium text-text-primary">{row.value}</dd>
                 </div>
               ))}

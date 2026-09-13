@@ -89,7 +89,7 @@ export function SmsComposer({
           value={value}
           onChange={(event) => onChange(event.target.value)}
           placeholder="Hi {{first_name}}, your appointment is scheduled for {{appointment_date}}."
-          className="min-h-28 font-mono text-[13px]"
+          className="min-h-28 font-mono text-sm"
         />
       </Field>
 
@@ -110,7 +110,7 @@ export function SmsComposer({
             </span>
           </p>
 
-          <p className="flex items-center gap-1.5 text-xs">
+          <p className="flex items-center gap-1.5 text-sm">
             <Signal className="size-3.5 text-text-muted" aria-hidden />
             <span className="font-medium text-text-primary tabular-nums">
               {segments === 0 ? "0" : segments} segment{segments === 1 ? "" : "s"}
@@ -161,7 +161,7 @@ export function SmsComposer({
           })}
         </div>
 
-        <div className="mt-2.5 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-xs">
+        <div className="mt-2.5 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-sm">
           <p className="text-text-muted">
             {typed !== characters ? (
               <>
@@ -184,7 +184,7 @@ export function SmsComposer({
         </div>
 
         {over ? (
-          <p className="mt-2.5 flex items-start gap-1.5 rounded-btn bg-warning-soft px-2.5 py-2 text-xs text-warning-text">
+          <p className="mt-2.5 flex items-start gap-1.5 rounded-btn bg-warning-soft px-2.5 py-2 text-sm text-warning-text">
             <AlertTriangle className="mt-px size-3.5 shrink-0" aria-hidden />
             <span>
               This message sends as {segments} parts and is billed {segments} times.
@@ -197,7 +197,7 @@ export function SmsComposer({
 
       {/* ------------------------------------------------- Personalisation */}
       <div>
-        <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+        <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
           Personalisation
         </p>
         <ul className="mt-2 flex flex-wrap gap-1.5">
@@ -210,7 +210,7 @@ export function SmsComposer({
                 onPointerLeave={() => setFocusedVariable(null)}
                 onFocus={() => setFocusedVariable(variable.name)}
                 onBlur={() => setFocusedVariable(null)}
-                className="inline-flex items-center gap-1 rounded-btn border border-border bg-surface px-2 py-1 font-mono text-xs text-text-secondary transition-colors hover:border-sms hover:bg-sms-soft hover:text-sms-dark focus-visible:shadow-focus focus-visible:outline-none"
+                className="inline-flex items-center gap-1 rounded-btn border border-border bg-surface px-2 py-1 font-mono text-sm text-text-secondary transition-colors hover:border-sms hover:bg-sms-soft hover:text-sms-dark focus-visible:shadow-focus focus-visible:outline-none"
               >
                 <Plus className="size-3 shrink-0" aria-hidden />
                 {`{{${variable.name}}}`}
@@ -218,7 +218,7 @@ export function SmsComposer({
             </li>
           ))}
         </ul>
-        <p className="mt-2 min-h-4 text-xs text-text-muted">
+        <p className="mt-2 min-h-4 text-sm text-text-muted">
           {focusedVariable
             ? `Counted as "${SMS_SUBSTITUTIONS[focusedVariable]}" — the longest value on your list.`
             : null}
@@ -253,18 +253,18 @@ export function SmsPreview({
 
   return (
     <div className={cn("rounded-panel bg-background p-4", className)}>
-      <p className="text-center text-xs font-medium text-text-muted">{senderId}</p>
+      <p className="text-center text-sm font-medium text-text-muted">{senderId}</p>
 
       <div className="mx-auto mt-3 max-w-[17rem]">
         <div className="rounded-2xl rounded-tl-sm bg-surface px-3.5 py-2.5 shadow-btn">
-          <p className="text-[13px] leading-relaxed break-words text-text-primary">
+          <p className="text-sm leading-relaxed break-words text-text-primary">
             {resolved || (
               <span className="text-text-muted italic">Your message appears here</span>
             )}
           </p>
         </div>
 
-        <p className="mt-1.5 text-xs text-text-muted">
+        <p className="mt-1.5 text-sm text-text-muted">
           now · {segments === 0 ? "no" : segments} segment{segments === 1 ? "" : "s"}
         </p>
       </div>

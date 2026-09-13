@@ -63,14 +63,14 @@ export function TemplatePreviewDialog({
       {template ? (
         <div className="rounded-card bg-chat-wallpaper p-4">
           <div className="flex items-center gap-2.5 pb-3">
-            <span className="grid size-8 place-items-center rounded-full bg-primary text-xs font-bold text-white">
+            <span className="grid size-8 place-items-center rounded-full bg-primary text-sm font-bold text-white">
               MF
             </span>
             <span>
-              <span className="block text-[13px] font-medium text-text-primary">
+              <span className="block text-sm font-medium text-text-primary">
                 MarketFlow
               </span>
-              <span className="block text-xs text-text-muted">Business account</span>
+              <span className="block text-sm text-text-muted">Business account</span>
             </span>
           </div>
 
@@ -80,10 +80,10 @@ export function TemplatePreviewDialog({
             </p>
 
             {template.footer ? (
-              <p className="mt-2 text-xs text-text-muted">{template.footer}</p>
+              <p className="mt-2 text-sm text-text-muted">{template.footer}</p>
             ) : null}
 
-            <p className="mt-1.5 text-right text-xs text-text-muted">09:41</p>
+            <p className="mt-1.5 text-right text-sm text-text-muted">09:41</p>
 
             {template.buttons.length > 0 ? (
               <ul className="mt-2 space-y-1 border-t border-border pt-2">
@@ -92,7 +92,7 @@ export function TemplatePreviewDialog({
 
                   return (
                     <li key={button.label}>
-                      <span className="flex items-center justify-center gap-1.5 rounded-btn py-1.5 text-[13px] font-medium text-accent">
+                      <span className="flex items-center justify-center gap-1.5 rounded-btn py-1.5 text-sm font-medium text-accent">
                         <Icon className="size-3.5" aria-hidden />
                         {button.label}
                       </span>
@@ -103,7 +103,7 @@ export function TemplatePreviewDialog({
             ) : null}
           </div>
 
-          <p className="mt-3 text-center text-xs text-text-muted">
+          <p className="mt-3 text-center text-sm text-text-muted">
             {languageLabel(template.language)} · variables shown with sample data
           </p>
         </div>
@@ -294,7 +294,7 @@ export function TemplateFormDialog({
         {/* Variables */}
         <div>
           <p className="text-sm font-medium text-text-primary">Variables</p>
-          <p className="mt-0.5 text-xs text-text-muted">
+          <p className="mt-0.5 text-sm text-text-muted">
             Click to insert. Whatever appears in the body becomes a variable.
           </p>
 
@@ -308,7 +308,7 @@ export function TemplateFormDialog({
                     type="button"
                     onClick={() => insertVariable(variable.name)}
                     className={cn(
-                      "rounded-btn border px-2 py-1 font-mono text-xs transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                      "rounded-btn border px-2 py-1 font-mono text-sm transition-colors focus-visible:shadow-focus focus-visible:outline-none",
                       used
                         ? "border-primary bg-primary-soft text-primary-dark"
                         : "border-border text-text-secondary hover:border-primary hover:bg-primary-subtle",
@@ -335,7 +335,7 @@ export function TemplateFormDialog({
         {/* Buttons */}
         <div>
           <p className="text-sm font-medium text-text-primary">Buttons</p>
-          <p className="mt-0.5 text-xs text-text-muted">
+          <p className="mt-0.5 text-sm text-text-muted">
             Up to three call-to-action or quick-reply buttons.
           </p>
 
@@ -347,10 +347,10 @@ export function TemplateFormDialog({
                   className="flex items-center gap-2.5 rounded-panel border border-border px-3 py-2"
                 >
                   <MessageCircle className="size-3.5 shrink-0 text-text-muted" aria-hidden />
-                  <span className="min-w-0 flex-1 truncate text-[13px] text-text-primary">
+                  <span className="min-w-0 flex-1 truncate text-sm text-text-primary">
                     {button.label}
                   </span>
-                  <span className="shrink-0 text-xs text-text-muted">
+                  <span className="shrink-0 text-sm text-text-muted">
                     {button.type}
                   </span>
                   <button

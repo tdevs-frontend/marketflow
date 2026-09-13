@@ -329,7 +329,7 @@ export function OrdersWorkspace() {
                     className="w-full rounded-panel border border-border p-3.5 text-left transition-colors hover:border-border-strong focus-visible:shadow-focus focus-visible:outline-none"
                   >
                     <div className="flex items-baseline justify-between gap-2">
-                      <span className="font-mono text-xs font-medium text-primary">
+                      <span className="font-mono text-sm font-medium text-primary">
                         {order.reference}
                       </span>
                       <span className="text-sm font-bold text-text-primary tabular-nums">
@@ -340,7 +340,7 @@ export function OrdersWorkspace() {
                     <p className="mt-1 text-sm font-medium text-text-primary">
                       {order.customer.name}
                     </p>
-                    <p className="truncate text-xs text-text-secondary">
+                    <p className="truncate text-sm text-text-secondary">
                       {order.lines[0].productName}
                       {order.lines.length > 1
                         ? ` +${order.lines.length - 1} more`
@@ -350,7 +350,7 @@ export function OrdersWorkspace() {
                     <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
                       <OrderStatusBadge status={order.status} />
                       <PaymentStatusBadge status={order.paymentStatus} />
-                      <span className="ml-auto text-xs text-text-muted">
+                      <span className="ml-auto text-sm text-text-muted">
                         {formatDate(order.placedAt)}
                       </span>
                     </div>

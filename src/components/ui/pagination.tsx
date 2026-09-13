@@ -52,7 +52,7 @@ export function Pagination({
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
-      <p className="text-xs text-text-muted">
+      <p className="text-sm text-text-muted">
         Showing <span className="font-medium text-text-secondary">{first}–{last}</span>{" "}
         of <span className="font-medium text-text-secondary">{total}</span> {noun}
       </p>
@@ -73,7 +73,7 @@ export function Pagination({
             <span
               key={`gap-${index}`}
               aria-hidden
-              className="px-1 text-xs text-text-muted"
+              className="px-1 text-sm text-text-muted"
             >
               …
             </span>
@@ -85,7 +85,7 @@ export function Pagination({
               aria-label={`Page ${value}`}
               aria-current={value === page ? "page" : undefined}
               className={cn(
-                "grid size-8 place-items-center rounded-btn text-xs font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                "grid size-8 place-items-center rounded-btn text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
                 value === page
                   ? "bg-primary text-white"
                   : "border border-border text-text-secondary hover:border-border-strong hover:text-text-primary",

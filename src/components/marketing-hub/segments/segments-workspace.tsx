@@ -254,7 +254,7 @@ export function SegmentsWorkspace() {
                             />
                           ) : null}
                         </h3>
-                        <p className="mt-1 line-clamp-2 text-xs text-text-muted">
+                        <p className="mt-1 line-clamp-2 text-sm text-text-muted">
                           {segment.description}
                         </p>
                       </div>
@@ -295,7 +295,7 @@ export function SegmentsWorkspace() {
                       </p>
                       <p
                         className={cn(
-                          "inline-flex items-center gap-0.5 text-xs font-medium",
+                          "inline-flex items-center gap-0.5 text-sm font-medium",
                           rising ? "text-primary" : "text-error",
                         )}
                       >
@@ -303,7 +303,7 @@ export function SegmentsWorkspace() {
                         {Math.abs(segment.growth).toFixed(1)}%
                       </p>
                     </div>
-                    <p className="mt-1 text-xs text-text-muted">
+                    <p className="mt-1 text-sm text-text-muted">
                       {formatPercent(share)} of all contacts
                     </p>
 
@@ -315,10 +315,10 @@ export function SegmentsWorkspace() {
                           key={rule.id}
                           className="flex items-start gap-2 rounded-panel bg-surface-secondary px-2.5 py-1.5"
                         >
-                          <span className="mt-px shrink-0 text-xs font-bold tracking-[0.06em] text-text-muted uppercase">
+                          <span className="mt-px shrink-0 text-sm font-bold tracking-[0.06em] text-text-muted uppercase">
                             {index === 0 ? "If" : "And"}
                           </span>
-                          <span className="min-w-0 text-xs leading-snug text-text-secondary">
+                          <span className="min-w-0 text-sm leading-snug text-text-secondary">
                             {ruleText(rule)}
                           </span>
                         </li>
@@ -326,7 +326,7 @@ export function SegmentsWorkspace() {
                     </ul>
 
                     <div className="mt-auto pt-4">
-                      <p className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                      <p className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                         Usable on
                       </p>
                       <div className="mt-2 flex items-center gap-2">
@@ -353,7 +353,7 @@ export function SegmentsWorkspace() {
                           );
                         })}
 
-                        <span className="ml-auto text-xs text-text-muted">
+                        <span className="ml-auto text-sm text-text-muted">
                           {formatRelativeTime(segment.updatedAt)}
                         </span>
                       </div>
@@ -427,7 +427,7 @@ export function SegmentsWorkspace() {
 
           <section>
             <div className="flex items-center justify-between gap-3">
-              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                 Rules
               </h3>
               {editing?.system ? null : (
@@ -459,7 +459,7 @@ export function SegmentsWorkspace() {
                   className="rounded-panel border border-border px-3 py-3"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-xs font-bold tracking-[0.06em] text-text-muted uppercase">
+                    <p className="text-sm font-bold tracking-[0.06em] text-text-muted uppercase">
                       {index === 0 ? "If" : "And"}
                     </p>
                     {draftRules.length > 1 && !editing?.system ? (
@@ -519,14 +519,14 @@ export function SegmentsWorkspace() {
 
           {/* An estimate, not a promise — the real count comes from the API. */}
           <div className="rounded-panel border border-primary-border bg-primary-subtle px-3.5 py-3">
-            <p className="flex items-center gap-1.5 text-xs font-medium text-primary-dark">
+            <p className="flex items-center gap-1.5 text-sm font-medium text-primary-dark">
               <Users className="size-3.5" aria-hidden />
               Estimated audience
             </p>
             <p className="mt-1.5 text-lg leading-none font-bold text-text-primary tabular-nums">
               {formatNumber(editing?.contacts ?? 0)}
             </p>
-            <p className="mt-1.5 text-xs text-text-secondary">
+            <p className="mt-1.5 text-sm text-text-secondary">
               Recalculated when you save. A segment&apos;s size moves on its own as
               contacts start and stop matching the rules.
             </p>

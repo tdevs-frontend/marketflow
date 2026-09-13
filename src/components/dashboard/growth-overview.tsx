@@ -138,7 +138,7 @@ const METRICS: { value: MetricKey; label: string; format: "number" | "currency" 
 
 function LegendSwatch({ className, children }: { className: string; children: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5 text-xs text-text-muted">
+    <span className="inline-flex items-center gap-1.5 text-sm text-text-muted">
       <span aria-hidden className={cn("h-0.5 w-4 rounded-full", className)} />
       {children}
     </span>
@@ -184,7 +184,7 @@ export function GrowthOverview({ className }: { className?: string }) {
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
           <LegendSwatch className="bg-primary">{active.label}</LegendSwatch>
           <LegendSwatch className="bg-border-strong">Previous period</LegendSwatch>
-          <span className="text-xs text-text-muted">{RANGES[range].unit}</span>
+          <span className="text-sm text-text-muted">{RANGES[range].unit}</span>
         </div>
       </div>
 

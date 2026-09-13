@@ -225,7 +225,7 @@ export function WhatsAppOverview() {
           </div>
 
           <div className="mt-5 border-t border-border pt-4">
-            <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+            <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
               Campaign funnel
             </p>
             <FunnelStrip stages={WA_FUNNEL.slice(1)} className="mt-3" />
@@ -322,20 +322,20 @@ export function WhatsAppOverview() {
                 </span>
 
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[13px] font-medium text-text-primary">
+                  <p className="truncate text-sm font-medium text-text-primary">
                     {flow.name}
                   </p>
-                  <p className="text-xs text-text-muted">
+                  <p className="text-sm text-text-muted">
                     {flow.triggerLabel} · active{" "}
                     {formatRelativeTime(flow.lastActivityAt)}
                   </p>
                 </div>
 
                 <div className="shrink-0 text-right">
-                  <p className="text-[13px] font-bold text-text-primary tabular-nums">
+                  <p className="text-sm font-bold text-text-primary tabular-nums">
                     {formatNumber(flow.contactsProcessed)}
                   </p>
-                  <p className="text-xs text-text-muted tabular-nums">
+                  <p className="text-sm text-text-muted tabular-nums">
                     {formatPercent(flow.successRate)} success
                   </p>
                 </div>

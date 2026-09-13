@@ -51,7 +51,7 @@ export function SalesFunnel({ className }: { className?: string }) {
           return (
             <li key={stage.label}>
               {stepRate !== null ? (
-                <p className="flex items-center gap-1 py-0.5 pl-1 text-xs font-medium text-text-muted">
+                <p className="flex items-center gap-1 py-0.5 pl-1 text-sm font-medium text-text-muted">
                   <ChevronDown className="size-3" aria-hidden />
                   {stepRate.toFixed(1)}%
                 </p>
@@ -64,8 +64,8 @@ export function SalesFunnel({ className }: { className?: string }) {
                   backgroundColor: `color-mix(in oklab, var(--color-primary) ${tint * 100}%, var(--color-primary-dark))`,
                 }}
               >
-                <span className="truncate text-[13px] font-medium">{stage.label}</span>
-                <span className="shrink-0 text-[13px] font-bold tabular-nums">
+                <span className="truncate text-sm font-medium">{stage.label}</span>
+                <span className="shrink-0 text-sm font-bold tabular-nums">
                   {formatNumber(stage.count)}
                 </span>
               </div>

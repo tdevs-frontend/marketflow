@@ -138,7 +138,7 @@ export function TemplatesWorkspace() {
               aria-pressed={selected}
               onClick={() => setCategory(item.value as TemplateCategory | typeof ALL)}
               className={cn(
-                "inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                "inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
                 selected
                   ? "border-primary bg-primary-soft text-primary-dark"
                   : "border-border bg-surface text-text-secondary hover:border-border-strong hover:text-text-primary",
@@ -147,7 +147,7 @@ export function TemplatesWorkspace() {
               {item.label}
               <span
                 className={cn(
-                  "text-xs tabular-nums",
+                  "text-sm tabular-nums",
                   selected ? "text-primary/70" : "text-text-muted",
                 )}
               >

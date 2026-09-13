@@ -481,7 +481,7 @@ export function WhatsAppCampaignsWorkspace() {
                         <p className="truncate text-sm font-medium text-text-primary">
                           {campaign.name}
                         </p>
-                        <p className="text-xs text-text-muted">
+                        <p className="text-sm text-text-muted">
                           {campaign.audienceLabel} · {formatDate(campaign.createdAt)}
                         </p>
                       </div>
@@ -499,7 +499,7 @@ export function WhatsAppCampaignsWorkspace() {
                           key={cell.label}
                           className="rounded-panel bg-surface-secondary py-2"
                         >
-                          <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                          <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                             {cell.label}
                           </dt>
                           <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">

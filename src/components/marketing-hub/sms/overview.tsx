@@ -269,36 +269,36 @@ export function SmsOverview() {
                   className="flex flex-wrap items-center gap-3 py-3 first:pt-0 last:pb-0"
                 >
                   <div className="min-w-40 flex-1">
-                    <p className="truncate text-[13px] font-medium text-text-primary">
+                    <p className="truncate text-sm font-medium text-text-primary">
                       {campaign.name}
                     </p>
-                    <p className="truncate font-mono text-xs text-text-muted">
+                    <p className="truncate font-mono text-sm text-text-muted">
                       {campaign.message}
                     </p>
                   </div>
 
                   <dl className="flex shrink-0 items-center gap-4 text-right">
                     <div>
-                      <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                      <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                         Sent
                       </dt>
-                      <dd className="text-[13px] font-bold text-text-primary tabular-nums">
+                      <dd className="text-sm font-bold text-text-primary tabular-nums">
                         {formatNumber(campaign.sent)}
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                      <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                         Parts
                       </dt>
-                      <dd className="text-[13px] font-bold text-text-primary tabular-nums">
+                      <dd className="text-sm font-bold text-text-primary tabular-nums">
                         {segments}
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                      <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                         Cost
                       </dt>
-                      <dd className="text-[13px] font-bold text-text-primary tabular-nums">
+                      <dd className="text-sm font-bold text-text-primary tabular-nums">
                         {campaign.cost === 0 ? "—" : formatCurrency(campaign.cost)}
                       </dd>
                     </div>

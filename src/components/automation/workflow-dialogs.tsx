@@ -130,7 +130,7 @@ export function ImportWorkflowDialog({
           <span className="text-sm font-medium text-text-primary">
             {fileName ?? "Choose a .json export"}
           </span>
-          <span className="text-xs text-text-muted">
+          <span className="text-sm text-text-muted">
             Up to 2 MB. Nodes, edges and settings are read; run history is not.
           </span>
           <input
@@ -152,12 +152,12 @@ export function ImportWorkflowDialog({
             value={json}
             onChange={(event) => setJson(event.target.value)}
             placeholder={'{ "name": "Abandoned Checkout Recovery", "nodes": [ … ] }'}
-            className="font-mono text-xs"
+            className="font-mono text-sm"
             rows={5}
           />
         </Field>
 
-        <p className="flex items-start gap-2 text-xs text-text-muted">
+        <p className="flex items-start gap-2 text-sm text-text-muted">
           <FileJson className="mt-0.5 size-3.5 shrink-0" aria-hidden />
           Imported workflows always arrive as drafts, so nothing sends until you
           have checked the message templates and connections they refer to.

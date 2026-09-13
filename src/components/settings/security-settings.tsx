@@ -222,14 +222,14 @@ export function SecuritySettings() {
 
                     <span className="min-w-0 flex-1">
                       <span className="flex flex-wrap items-center gap-2">
-                        <span className="text-[13px] font-medium text-text-primary">
+                        <span className="text-sm font-medium text-text-primary">
                           {session.device}
                         </span>
                         {session.current ? (
                           <Badge tone="brand">This device</Badge>
                         ) : null}
                       </span>
-                      <span className="block truncate text-xs text-text-muted">
+                      <span className="block truncate text-sm text-text-muted">
                         {session.where} · active{" "}
                         {formatRelativeTime(session.lastActive)}
                       </span>

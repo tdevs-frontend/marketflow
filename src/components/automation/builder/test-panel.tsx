@@ -178,7 +178,7 @@ export function TestWorkflowDialog({
       }
     >
       <div className="space-y-4">
-        <p className="flex items-start gap-2 rounded-panel border border-warning/40 bg-warning-soft/50 px-3.5 py-2.5 text-[13px] text-warning-text">
+        <p className="flex items-start gap-2 rounded-panel border border-warning/40 bg-warning-soft/50 px-3.5 py-2.5 text-sm text-warning-text">
           <FlaskConical className="mt-0.5 size-4 shrink-0" aria-hidden />
           <span>
             <span className="font-medium">Test mode.</span> No WhatsApp, email or
@@ -222,16 +222,16 @@ export function TestWorkflowDialog({
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <NodeIcon kind={step.kind} size="sm" />
-                    <p className="text-[13px] font-semibold text-text-primary">
+                    <p className="text-sm font-semibold text-text-primary">
                       {step.title}
                     </p>
                     {step.status === "skipped" ? (
                       <Badge tone="neutral">Skipped</Badge>
                     ) : null}
                   </div>
-                  <p className="mt-1 text-xs text-text-secondary">{step.outcome}</p>
+                  <p className="mt-1 text-sm text-text-secondary">{step.outcome}</p>
                   {step.detail ? (
-                    <p className="mt-0.5 text-xs text-text-muted">{step.detail}</p>
+                    <p className="mt-0.5 text-sm text-text-muted">{step.detail}</p>
                   ) : null}
                 </div>
               </li>
@@ -240,7 +240,7 @@ export function TestWorkflowDialog({
         )}
 
         {revealed === steps.length && steps.length > 0 && !running ? (
-          <p className="text-center text-[13px] font-medium text-success-text">
+          <p className="text-center text-sm font-medium text-success-text">
             Test complete — {steps.length} steps ran without an error.
           </p>
         ) : null}

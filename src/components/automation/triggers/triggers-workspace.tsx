@@ -195,7 +195,7 @@ export function TriggersWorkspace() {
               aria-pressed={selected}
               onClick={() => setCategory(item.value as TriggerCategory | typeof ALL)}
               className={cn(
-                "inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                "inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
                 selected
                   ? "border-primary bg-primary-soft text-primary-dark"
                   : "border-border bg-surface text-text-secondary hover:border-border-strong hover:text-text-primary",
@@ -204,7 +204,7 @@ export function TriggersWorkspace() {
               {item.label}
               <span
                 className={cn(
-                  "text-xs tabular-nums",
+                  "text-sm tabular-nums",
                   selected ? "text-primary/70" : "text-text-muted",
                 )}
               >
@@ -272,10 +272,10 @@ export function TriggersWorkspace() {
               {groups.map((group) => (
                 <section key={group.value}>
                   <div className="mb-3">
-                    <h2 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+                    <h2 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                       {group.label}
                     </h2>
-                    <p className="mt-0.5 text-xs text-text-muted">
+                    <p className="mt-0.5 text-sm text-text-muted">
                       {group.description}
                     </p>
                   </div>
@@ -289,7 +289,7 @@ export function TriggersWorkspace() {
             </div>
           ) : (
             <>
-              <h2 className="mb-3 text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h2 className="mb-3 text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                 {triggerCategoryLabel(category as TriggerCategory)}
               </h2>
               <TriggerTable

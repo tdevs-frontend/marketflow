@@ -576,7 +576,7 @@ export function EmailCampaignsWorkspace() {
                       <p className="truncate text-sm font-medium text-text-primary">
                         {campaign.name}
                       </p>
-                      <p className="truncate text-xs text-text-muted">
+                      <p className="truncate text-sm text-text-muted">
                         {campaign.subject}
                       </p>
                     </div>
@@ -612,7 +612,7 @@ export function EmailCampaignsWorkspace() {
                         key={cell.label}
                         className="rounded-panel bg-surface-secondary py-2"
                       >
-                        <dt className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                        <dt className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                           {cell.label}
                         </dt>
                         <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">

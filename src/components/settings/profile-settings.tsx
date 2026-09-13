@@ -73,7 +73,7 @@ export function ProfileSettings() {
               Remove
             </Button>
           </div>
-          <p className="w-full text-xs text-text-muted">
+          <p className="w-full text-sm text-text-muted">
             JPG or PNG, up to 2 MB. Square images look best.
           </p>
         </CardBody>

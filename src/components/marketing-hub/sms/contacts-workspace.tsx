@@ -417,7 +417,6 @@ export function SmsContactsWorkspace() {
                             <AvatarLabel
                               name={name}
                               secondary={contact.phone}
-                              secondarySize="sm"
                               size="sm"
                             />
                           </button>
@@ -538,7 +537,7 @@ export function SmsContactsWorkspace() {
 
                     <div className="mt-3 flex items-center justify-between gap-3">
                       <TagList tags={contact.tags} />
-                      <p className="shrink-0 text-xs text-text-muted tabular-nums">
+                      <p className="shrink-0 text-sm text-text-muted tabular-nums">
                         {formatNumber(contact.messages)} sent ·{" "}
                         {formatNumber(contact.replies)} replies
                       </p>
@@ -610,7 +609,7 @@ export function SmsContactsWorkspace() {
             </div>
 
             {detail.status === "invalid" ? (
-              <p className="rounded-panel border border-error/25 bg-error-soft px-3 py-2.5 text-xs text-error-text">
+              <p className="rounded-panel border border-error/25 bg-error-soft px-3 py-2.5 text-sm text-error-text">
                 This number is not routable. Messages to it are billed and never
                 delivered — correct the number or delete the contact.
               </p>
@@ -630,7 +629,7 @@ export function SmsContactsWorkspace() {
             </div>
 
             <section>
-              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                 Profile
               </h3>
               <dl className="mt-2 space-y-2 text-sm">
@@ -648,7 +647,7 @@ export function SmsContactsWorkspace() {
                     key={row.label}
                     className="flex items-baseline justify-between gap-3 border-b border-border pb-2 last:border-0"
                   >
-                    <dt className="text-xs text-text-muted">{row.label}</dt>
+                    <dt className="text-sm text-text-muted">{row.label}</dt>
                     <dd className="min-w-0 truncate text-right text-text-secondary">
                       {row.value}
                     </dd>
@@ -658,7 +657,7 @@ export function SmsContactsWorkspace() {
             </section>
 
             <section>
-              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                 Tags
               </h3>
               <div className="mt-2">
@@ -667,7 +666,7 @@ export function SmsContactsWorkspace() {
             </section>
 
             <section>
-              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                 Campaign history
               </h3>
               {detail.messages === 0 ? (
@@ -681,13 +680,13 @@ export function SmsContactsWorkspace() {
                       key={campaign.id}
                       className="rounded-panel border border-border px-3 py-2.5"
                     >
-                      <p className="truncate text-[13px] font-medium text-text-primary">
+                      <p className="truncate text-sm font-medium text-text-primary">
                         {campaign.name}
                       </p>
-                      <p className="mt-0.5 line-clamp-2 font-mono text-xs text-text-muted">
+                      <p className="mt-0.5 line-clamp-2 font-mono text-sm text-text-muted">
                         {campaign.message}
                       </p>
-                      <p className="mt-1 text-xs text-text-muted">
+                      <p className="mt-1 text-sm text-text-muted">
                         {formatDate(campaign.createdAt)}
                       </p>
                     </li>
@@ -790,7 +789,7 @@ export function SmsContactsWorkspace() {
             <p className="mt-2 text-sm font-medium text-text-primary">
               Drop a CSV here
             </p>
-            <p className="mt-1 text-xs text-text-muted">
+            <p className="mt-1 text-sm text-text-muted">
               Phone is the only required column. First row is treated as headers.
             </p>
             <Button variant="outline" size="sm" className="mt-3">
@@ -799,10 +798,10 @@ export function SmsContactsWorkspace() {
           </div>
 
           <div className="rounded-panel bg-sms-soft px-3.5 py-3">
-            <p className="text-xs font-medium text-sms-dark">
+            <p className="text-sm font-medium text-sms-dark">
               Numbers are validated on import
             </p>
-            <p className="mt-1 text-xs text-text-secondary">
+            <p className="mt-1 text-sm text-text-secondary">
               Anything without a resolvable country code is flagged Invalid rather
               than imported as subscribed — a number you cannot route still costs
               you a segment every time you try.

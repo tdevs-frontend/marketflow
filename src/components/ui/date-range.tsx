@@ -65,7 +65,7 @@ export function DateRangePicker({
             onChange={(event) => onChange({ ...value, from: event.target.value })}
             className="h-10 w-full lg:w-36"
           />
-          <span aria-hidden className="text-xs text-text-muted max-lg:hidden">
+          <span aria-hidden className="text-sm text-text-muted max-lg:hidden">
             to
           </span>
           <Input

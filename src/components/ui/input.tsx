@@ -58,11 +58,11 @@ export function Field({
       {children}
       {/* Ids derive from the control's, so `aria-describedby` can point here. */}
       {error ? (
-        <p id={`${htmlFor}-error`} className="text-xs text-error">
+        <p id={`${htmlFor}-error`} className="text-sm text-error">
           {error}
         </p>
       ) : hint ? (
-        <p id={`${htmlFor}-hint`} className="text-xs text-text-muted">
+        <p id={`${htmlFor}-hint`} className="text-sm text-text-muted">
           {hint}
         </p>
       ) : null}

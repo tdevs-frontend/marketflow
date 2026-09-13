@@ -183,11 +183,11 @@ function TagDrawer({
 
           <DrawerSection title="Used by">
             {dependants(tag) === 0 ? (
-              <p className="text-xs text-text-muted">
+              <p className="text-sm text-text-muted">
                 Nothing depends on this tag — it is safe to delete.
               </p>
             ) : (
-              <p className="text-[13px] text-text-secondary">
+              <p className="text-sm text-text-secondary">
                 {dependantSummary(tag)}
               </p>
             )}
@@ -195,7 +195,7 @@ function TagDrawer({
 
           <DrawerSection title="Contacts with this tag">
             {holders.length === 0 ? (
-              <p className="text-xs text-text-muted">
+              <p className="text-sm text-text-muted">
                 No contacts carry this tag yet.
               </p>
             ) : (
@@ -203,7 +203,7 @@ function TagDrawer({
                 {holders.map((item) => (
                   <li
                     key={item.id}
-                    className="truncate text-[13px] text-text-secondary"
+                    className="truncate text-sm text-text-secondary"
                   >
                     {contactName(item)}
                     {item.company ? (
@@ -212,7 +212,7 @@ function TagDrawer({
                   </li>
                 ))}
                 {counts.contacts > holders.length ? (
-                  <li className="text-xs text-text-muted">
+                  <li className="text-sm text-text-muted">
                     +{counts.contacts - holders.length} more
                   </li>
                 ) : null}
@@ -420,10 +420,10 @@ export function TagsWorkspace() {
                     >
                       <div className="flex items-center gap-2.5">
                         <TagDot color={tag.color} />
-                        <span className="text-[13px] font-medium text-text-primary">
+                        <span className="text-sm font-medium text-text-primary">
                           {tag.name}
                         </span>
-                        <span className="ml-auto text-xs text-text-muted">
+                        <span className="ml-auto text-sm text-text-muted">
                           {tag.lastUsedAt
                             ? formatRelativeTime(tag.lastUsedAt)
                             : "Never used"}
@@ -431,12 +431,12 @@ export function TagsWorkspace() {
                       </div>
 
                       {tag.description ? (
-                        <p className="mt-1.5 text-xs text-text-secondary">
+                        <p className="mt-1.5 text-sm text-text-secondary">
                           {tag.description}
                         </p>
                       ) : null}
 
-                      <p className="mt-2 text-xs text-text-muted">
+                      <p className="mt-2 text-sm text-text-muted">
                         {formatNumber(counts.contacts)} contacts ·{" "}
                         {formatNumber(counts.leads)} leads
                         {dependants(tag)
@@ -498,7 +498,7 @@ export function TagsWorkspace() {
         tone="danger"
       >
         {confirmDelete ? (
-          <div className="space-y-2 text-[13px] text-text-secondary">
+          <div className="space-y-2 text-sm text-text-secondary">
             <p>
               Removing it from{" "}
               <span className="font-medium text-text-primary">

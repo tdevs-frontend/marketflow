@@ -199,7 +199,7 @@ export function CategoriesWorkspace() {
                   <p className="truncate text-sm font-medium text-text-primary">
                     {item.name}
                   </p>
-                  <p className="mt-0.5 truncate text-xs text-text-secondary">
+                  <p className="mt-0.5 truncate text-sm text-text-secondary">
                     {item.description ?? "—"}
                   </p>
                 </div>
@@ -224,7 +224,7 @@ export function CategoriesWorkspace() {
 
               <div className="mt-3 flex items-center justify-between gap-2">
                 <CategoryStatusBadge status={item.status} />
-                <span className="text-xs text-text-muted">
+                <span className="text-sm text-text-muted">
                   {item.productCount} products
                 </span>
               </div>

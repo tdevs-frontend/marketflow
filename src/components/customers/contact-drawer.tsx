@@ -89,12 +89,12 @@ function ConsentRow({ contact }: { contact: CustomerContact }) {
               )}
               aria-hidden
             />
-            <span className="flex-1 text-[13px] text-text-secondary">
+            <span className="flex-1 text-sm text-text-secondary">
               {item.label}
             </span>
             <span
               className={cn(
-                "text-xs font-medium",
+                "text-sm font-medium",
                 granted ? "text-success-text" : "text-text-muted",
               )}
             >
@@ -367,7 +367,7 @@ export function ContactDrawer({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-text-muted">
+                  <p className="text-sm text-text-muted">
                     No tags on this contact.
                   </p>
                 )}
@@ -390,7 +390,7 @@ export function ContactDrawer({
                     {segments.map((segment) => (
                       <li
                         key={segment.id}
-                        className="flex items-center gap-2 text-[13px] text-text-secondary"
+                        className="flex items-center gap-2 text-sm text-text-secondary"
                       >
                         <Layers
                           className="size-3.5 shrink-0 text-primary"
@@ -401,7 +401,7 @@ export function ContactDrawer({
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-xs text-text-muted">Not in any segment.</p>
+                  <p className="text-sm text-text-muted">Not in any segment.</p>
                 )}
               </DrawerSection>
 
@@ -418,10 +418,10 @@ export function ContactDrawer({
                         className="flex items-center justify-between gap-3 rounded-panel border border-border px-3 py-2.5"
                       >
                         <span className="min-w-0">
-                          <span className="block truncate text-[13px] font-medium text-text-primary">
+                          <span className="block truncate text-sm font-medium text-text-primary">
                             {item.title}
                           </span>
-                          <span className="text-xs text-text-muted">
+                          <span className="text-sm text-text-muted">
                             {formatCurrency(item.value)} ·{" "}
                             {ownerName(item.ownerId)}
                           </span>
@@ -459,7 +459,7 @@ export function ContactDrawer({
               )}
               {contact.orders > 0 ? (
                 <div className="mt-4 flex items-center justify-between rounded-panel bg-surface-secondary px-3.5 py-3">
-                  <span className="flex items-center gap-2 text-[13px] text-text-secondary">
+                  <span className="flex items-center gap-2 text-sm text-text-secondary">
                     <ShoppingBag className="size-4 text-success" aria-hidden />
                     {contact.orders} order{contact.orders === 1 ? "" : "s"}{" "}
                     lifetime
@@ -526,13 +526,13 @@ export function ContactDrawer({
                 {notes.length ? (
                   <ActivityTimeline entries={notes} />
                 ) : (
-                  <p className="text-xs text-text-muted">No notes yet.</p>
+                  <p className="text-sm text-text-muted">No notes yet.</p>
                 )}
               </div>
             </TabPanel>
           ) : null}
 
-          <p className="border-t border-border pt-3 text-xs text-text-muted">
+          <p className="border-t border-border pt-3 text-sm text-text-muted">
             Last contacted{" "}
             {contact.lastContactedAt
               ? formatRelativeTime(contact.lastContactedAt)

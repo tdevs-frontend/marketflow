@@ -115,7 +115,7 @@ const TYPE_LABELS: Record<ProductType, string> = {
 };
 
 export function ProductTypeLabel({ type }: { type: ProductType }) {
-  return <span className="text-xs text-text-muted">{TYPE_LABELS[type]}</span>;
+  return <span className="text-sm text-text-muted">{TYPE_LABELS[type]}</span>;
 }
 
 /**

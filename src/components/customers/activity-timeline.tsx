@@ -48,17 +48,17 @@ export function ActivityTimeline({
             <ActivityIcon kind={entry.kind} className="relative z-10" />
 
             <div className="min-w-0 flex-1 pt-0.5">
-              <p className="text-[13px] leading-snug font-medium text-text-primary">
+              <p className="text-sm leading-snug font-medium text-text-primary">
                 {entry.title}
               </p>
 
               {entry.detail ? (
-                <p className="mt-0.5 text-xs leading-relaxed text-text-secondary">
+                <p className="mt-0.5 text-sm leading-relaxed text-text-secondary">
                   {entry.detail}
                 </p>
               ) : null}
 
-              <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-text-muted">
+              <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm text-text-muted">
                 <time dateTime={entry.at} title={formatDateTime(entry.at)}>
                   {formatRelativeTime(entry.at)}
                 </time>
@@ -99,7 +99,7 @@ export function DrawerSection({
   return (
     <section className={cn("border-t border-border pt-4", className)}>
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+        <h3 className="text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
           {title}
         </h3>
         {action}
@@ -121,10 +121,10 @@ export function DrawerFact({
 }) {
   return (
     <div className="min-w-0">
-      <p className="text-xs text-text-muted">{label}</p>
+      <p className="text-sm text-text-muted">{label}</p>
       <p
         className={cn(
-          "mt-0.5 truncate text-[13px]",
+          "mt-0.5 truncate text-sm",
           strong
             ? "font-bold text-text-primary tabular-nums"
             : "text-text-secondary",

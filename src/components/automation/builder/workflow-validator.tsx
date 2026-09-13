@@ -342,7 +342,7 @@ export function WorkflowValidator({
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         disabled={issues.length === 0}
-        className="flex w-full items-center gap-2 px-3 py-2 text-left text-[13px] font-medium focus-visible:shadow-focus focus-visible:outline-none disabled:cursor-default"
+        className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium focus-visible:shadow-focus focus-visible:outline-none disabled:cursor-default"
       >
         <Icon className="size-4 shrink-0" aria-hidden />
         <span className="min-w-0 flex-1 truncate">{summary}</span>
@@ -350,7 +350,7 @@ export function WorkflowValidator({
         {issues.length > 0 ? (
           <>
             {errors > 0 && (warnings > 0 || tips > 0) ? (
-              <span className="text-xs opacity-80 tabular-nums">
+              <span className="text-sm opacity-80 tabular-nums">
                 +{warnings + tips} more
               </span>
             ) : null}
@@ -380,10 +380,10 @@ export function WorkflowValidator({
                   )}
                 />
                 <span className="min-w-0">
-                  <span className="block text-[13px] font-medium text-text-primary">
+                  <span className="block text-sm font-medium text-text-primary">
                     {issue.message}
                   </span>
-                  <span className="block text-xs text-text-muted">
+                  <span className="block text-sm text-text-muted">
                     <span className="sr-only">{SEVERITY_LABEL[issue.severity]}. </span>
                     {issue.fix}
                   </span>

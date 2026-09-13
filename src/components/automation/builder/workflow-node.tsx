@@ -110,7 +110,7 @@ export function WorkflowNodeCard({
           <NodeIcon kind={node.kind} size="sm" />
           <span
             className={cn(
-              "text-xs font-medium tracking-[0.06em] uppercase",
+              "text-sm font-medium tracking-[0.06em] uppercase",
               theme.text,
             )}
           >
@@ -121,10 +121,10 @@ export function WorkflowNodeCard({
           ) : null}
         </div>
 
-        <p className="truncate pr-6 text-[13px] font-semibold text-text-primary">
+        <p className="truncate pr-6 text-sm font-semibold text-text-primary">
           {node.title}
         </p>
-        <p className="truncate text-xs text-text-muted">
+        <p className="truncate text-sm text-text-muted">
           {node.summary || "Not configured"}
         </p>
       </div>
@@ -158,7 +158,7 @@ export function WorkflowNodeCard({
       ) : null}
 
       {analytics ? (
-        <span className="absolute -right-1 -bottom-3 inline-flex items-center gap-1 rounded-full border border-border bg-surface px-2 py-0.5 text-xs font-medium text-text-secondary shadow-btn tabular-nums">
+        <span className="absolute -right-1 -bottom-3 inline-flex items-center gap-1 rounded-full border border-border bg-surface px-2 py-0.5 text-sm font-medium text-text-secondary shadow-btn tabular-nums">
           {formatCount(analytics.entered)}
           <span className="text-text-muted">{analytics.share.toFixed(1)}%</span>
         </span>

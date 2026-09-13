@@ -127,7 +127,7 @@ function ConversationList({
                   )}
                 >
                   <span className="relative shrink-0">
-                    <span className="grid size-10 place-items-center rounded-full bg-primary-soft text-xs font-bold text-primary-dark">
+                    <span className="grid size-10 place-items-center rounded-full bg-primary-soft text-sm font-bold text-primary-dark">
                       {contactInitials(conversation.contact.name)}
                     </span>
                     {conversation.online ? (
@@ -149,13 +149,13 @@ function ConversationList({
                       >
                         {conversation.contact.name}
                       </span>
-                      <span className="shrink-0 text-xs text-text-muted">
+                      <span className="shrink-0 text-sm text-text-muted">
                         {time(last.at)}
                       </span>
                     </span>
 
                     <span className="mt-0.5 flex items-center gap-2">
-                      <span className="min-w-0 flex-1 truncate text-[13px] text-text-secondary">
+                      <span className="min-w-0 flex-1 truncate text-sm text-text-secondary">
                         {last.direction === "outbound" ? "You: " : ""}
                         {last.body}
                       </span>
@@ -230,7 +230,7 @@ function ChatWindow({
           <span className="sr-only">Back to conversations</span>
         </Button>
 
-        <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary-soft text-xs font-bold text-primary-dark">
+        <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary-soft text-sm font-bold text-primary-dark">
           {contactInitials(conversation.contact.name)}
         </span>
 
@@ -238,7 +238,7 @@ function ChatWindow({
           <p className="truncate text-sm font-medium text-text-primary">
             {conversation.contact.name}
           </p>
-          <p className="truncate text-xs text-text-muted">
+          <p className="truncate text-sm text-text-muted">
             {conversation.online ? "Online" : conversation.contact.phone}
           </p>
         </div>
@@ -277,7 +277,7 @@ function ChatWindow({
                 </p>
                 <p
                   className={cn(
-                    "mt-1 flex items-center justify-end gap-1 text-xs",
+                    "mt-1 flex items-center justify-end gap-1 text-sm",
                     outbound ? "text-white/70" : "text-text-muted",
                   )}
                 >
@@ -303,7 +303,7 @@ function ChatWindow({
                     setShowReplies(false);
                     inputRef.current?.focus();
                   }}
-                  className="w-full rounded-panel border border-border px-3 py-2 text-left text-[13px] text-text-secondary transition-colors hover:border-primary hover:bg-primary-subtle focus-visible:shadow-focus focus-visible:outline-none"
+                  className="w-full rounded-panel border border-border px-3 py-2 text-left text-sm text-text-secondary transition-colors hover:border-primary hover:bg-primary-subtle focus-visible:shadow-focus focus-visible:outline-none"
                 >
                   {reply}
                 </button>
@@ -402,9 +402,9 @@ function ContactDetails({
             {contactInitials(contact.name)}
           </span>
           <p className="mt-2.5 text-sm font-medium text-text-primary">{contact.name}</p>
-          <p className="text-xs text-text-muted">{contact.phone}</p>
+          <p className="text-sm text-text-muted">{contact.phone}</p>
           {contact.email ? (
-            <p className="truncate text-xs text-text-muted">{contact.email}</p>
+            <p className="truncate text-sm text-text-muted">{contact.email}</p>
           ) : null}
         </div>
 
@@ -425,20 +425,20 @@ function ContactDetails({
 
         {/* Tags */}
         <section>
-          <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+          <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
             Tags
           </h3>
           <ul className="mt-2 flex flex-wrap gap-1.5">
             {tags.map((item) => (
               <li
                 key={item}
-                className="rounded-full bg-surface-secondary px-2.5 py-1 text-xs text-text-secondary"
+                className="rounded-full bg-surface-secondary px-2.5 py-1 text-sm text-text-secondary"
               >
                 {item}
               </li>
             ))}
             {tags.length === 0 ? (
-              <li className="text-xs text-text-muted">No tags yet.</li>
+              <li className="text-sm text-text-muted">No tags yet.</li>
             ) : null}
           </ul>
 
@@ -474,7 +474,7 @@ function ContactDetails({
 
         {/* Agent */}
         <section>
-          <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+          <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
             Assigned agent
           </h3>
           <Select
@@ -494,20 +494,20 @@ function ContactDetails({
 
         {/* Notes */}
         <section>
-          <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+          <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
             Notes
           </h3>
           <ul className="mt-2 space-y-1.5">
             {notes.map((item, index) => (
               <li
                 key={index}
-                className="rounded-panel bg-surface-secondary px-3 py-2 text-[13px] text-text-secondary"
+                className="rounded-panel bg-surface-secondary px-3 py-2 text-sm text-text-secondary"
               >
                 {item}
               </li>
             ))}
             {notes.length === 0 ? (
-              <li className="text-xs text-text-muted">No notes yet.</li>
+              <li className="text-sm text-text-muted">No notes yet.</li>
             ) : null}
           </ul>
 

@@ -637,7 +637,7 @@ export function ContactsWorkspace() {
                       Import CSV
                     </Button>
                   </div>
-                  <p className="text-xs text-text-muted">
+                  <p className="text-sm text-text-muted">
                     CSV needs a name column plus an email or phone column.
                   </p>
                 </div>
@@ -723,7 +723,6 @@ export function ContactsWorkspace() {
                         <AvatarLabel
                           name={contactName(item)}
                           secondary={item.email ?? item.phone ?? undefined}
-                          secondarySize="sm"
                           size="sm"
                         />
                       </button>
@@ -838,7 +837,7 @@ export function ContactsWorkspace() {
 
                     <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1">
                       <ChannelConsentBadges channels={item.optedInChannels} />
-                      <span className="ml-auto text-xs text-text-muted">
+                      <span className="ml-auto text-sm text-text-muted">
                         {item.lastContactedAt
                           ? formatRelativeTime(item.lastContactedAt)
                           : "Never contacted"}

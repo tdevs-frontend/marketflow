@@ -430,7 +430,6 @@ export function EmailContactsWorkspace() {
                             <AvatarLabel
                               name={name}
                               secondary={contact.email}
-                              secondarySize="sm"
                               size="sm"
                             />
                           </button>
@@ -545,7 +544,7 @@ export function EmailContactsWorkspace() {
 
                     <div className="mt-3 flex items-center justify-between gap-3">
                       <TagList tags={contact.tags} />
-                      <p className="shrink-0 text-xs text-text-muted tabular-nums">
+                      <p className="shrink-0 text-sm text-text-muted tabular-nums">
                         {formatNumber(contact.opens)} opens ·{" "}
                         {formatNumber(contact.clicks)} clicks
                       </p>
@@ -631,7 +630,7 @@ export function EmailContactsWorkspace() {
             </div>
 
             <section>
-              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                 Profile
               </h3>
               <dl className="mt-2 space-y-2 text-sm">
@@ -649,7 +648,7 @@ export function EmailContactsWorkspace() {
                     key={row.label}
                     className="flex items-baseline justify-between gap-3 border-b border-border pb-2 last:border-0"
                   >
-                    <dt className="text-xs text-text-muted">{row.label}</dt>
+                    <dt className="text-sm text-text-muted">{row.label}</dt>
                     <dd className="min-w-0 truncate text-right text-text-secondary">
                       {row.value}
                     </dd>
@@ -659,7 +658,7 @@ export function EmailContactsWorkspace() {
             </section>
 
             <section>
-              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                 Tags
               </h3>
               <div className="mt-2">
@@ -668,7 +667,7 @@ export function EmailContactsWorkspace() {
             </section>
 
             <section>
-              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                 Campaign history
               </h3>
               {detail.campaigns === 0 ? (
@@ -683,13 +682,13 @@ export function EmailContactsWorkspace() {
                       key={campaign.id}
                       className="rounded-panel border border-border px-3 py-2.5"
                     >
-                      <p className="truncate text-[13px] font-medium text-text-primary">
+                      <p className="truncate text-sm font-medium text-text-primary">
                         {campaign.name}
                       </p>
-                      <p className="truncate text-xs text-text-muted">
+                      <p className="truncate text-sm text-text-muted">
                         {campaign.subject}
                       </p>
-                      <p className="mt-1 text-xs text-text-muted">
+                      <p className="mt-1 text-sm text-text-muted">
                         {formatDate(campaign.scheduledAt ?? campaign.createdAt)} ·{" "}
                         {formatPercent(rate(campaign.opened, campaign.delivered))} open
                         rate overall
@@ -701,7 +700,7 @@ export function EmailContactsWorkspace() {
             </section>
 
             <section>
-              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                 Activity timeline
               </h3>
               <ol className="mt-2 space-y-3">
@@ -722,10 +721,10 @@ export function EmailContactsWorkspace() {
                         <Icon className="size-3.5" aria-hidden />
                       </span>
                       <div className="min-w-0">
-                        <p className="text-[13px] font-medium text-text-primary">
+                        <p className="text-sm font-medium text-text-primary">
                           {entry.label}
                         </p>
-                        <p className="text-xs text-text-muted">
+                        <p className="text-sm text-text-muted">
                           {formatRelativeTime(entry.at)}
                         </p>
                       </div>
@@ -830,7 +829,7 @@ export function EmailContactsWorkspace() {
             <p className="mt-2 text-sm font-medium text-text-primary">
               Drop a CSV here
             </p>
-            <p className="mt-1 text-xs text-text-muted">
+            <p className="mt-1 text-sm text-text-muted">
               First row is treated as headers. Email is the only required column.
             </p>
             <Button variant="outline" size="sm" className="mt-3">
@@ -839,10 +838,10 @@ export function EmailContactsWorkspace() {
           </div>
 
           <div className="rounded-panel bg-surface-secondary px-3.5 py-3">
-            <p className="text-xs font-medium text-text-primary">
+            <p className="text-sm font-medium text-text-primary">
               Duplicates are merged, not added
             </p>
-            <p className="mt-1 text-xs text-text-secondary">
+            <p className="mt-1 text-sm text-text-secondary">
               A row whose email already exists updates that contact&apos;s fields and
               tags. Existing engagement history is kept.
             </p>

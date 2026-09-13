@@ -128,7 +128,7 @@ export function MediaLibrary() {
         {/* ------------------------------------------------------- Folders */}
         <Card className="h-max p-4 lg:sticky lg:top-22">
           <div className="flex items-center justify-between gap-2">
-            <p className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+            <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
               Folders
             </p>
             <button
@@ -152,7 +152,7 @@ export function MediaLibrary() {
                     onClick={() => setFolder(item.id)}
                     aria-current={active ? "true" : undefined}
                     className={cn(
-                      "flex w-full items-center gap-2 rounded-btn px-2 py-1.5 text-left text-[13px] font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                      "flex w-full items-center gap-2 rounded-btn px-2 py-1.5 text-left text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
                       active
                         ? "bg-primary-soft text-primary-dark"
                         : "text-text-secondary hover:bg-surface-secondary",
@@ -160,7 +160,7 @@ export function MediaLibrary() {
                   >
                     <FolderOpen className="size-3.5 shrink-0" aria-hidden />
                     <span className="min-w-0 flex-1 truncate">{item.name}</span>
-                    <span className="shrink-0 text-xs text-text-muted tabular-nums">
+                    <span className="shrink-0 text-sm text-text-muted tabular-nums">
                       {folderCount(item.id)}
                     </span>
                   </button>
@@ -172,11 +172,11 @@ export function MediaLibrary() {
           {/* Storage. Worth showing: a library is the first thing to fill a
               plan's quota, and the warning arrives too late otherwise. */}
           <div className="mt-4 border-t border-border pt-4">
-            <p className="flex items-center gap-1.5 text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+            <p className="flex items-center gap-1.5 text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
               <HardDrive className="size-3" aria-hidden />
               Storage
             </p>
-            <p className="mt-2 text-[13px] font-bold text-text-primary">
+            <p className="mt-2 text-sm font-bold text-text-primary">
               {formatBytes(used)}{" "}
               <span className="font-normal text-text-muted">
                 of {formatBytes(QUOTA_BYTES)}
@@ -258,7 +258,7 @@ export function MediaLibrary() {
             )}
           >
             <Upload className="size-4 text-text-muted" aria-hidden />
-            <p className="text-xs text-text-secondary">
+            <p className="text-sm text-text-secondary">
               Drop files here, or{" "}
               <button
                 type="button"
@@ -381,22 +381,22 @@ export function MediaLibrary() {
                         ) : null}
 
                         {asset.type === "video" && asset.duration ? (
-                          <span className="absolute bottom-1.5 left-1.5 rounded bg-text-primary/70 px-1 py-0.5 text-xs font-medium text-white tabular-nums">
+                          <span className="absolute bottom-1.5 left-1.5 rounded bg-text-primary/70 px-1 py-0.5 text-sm font-medium text-white tabular-nums">
                             {asset.duration}s
                           </span>
                         ) : null}
 
                         {MEDIA_USAGE[asset.id] > 0 ? (
-                          <span className="absolute bottom-1.5 right-1.5 rounded bg-surface/90 px-1 py-0.5 text-xs font-medium text-text-secondary tabular-nums">
+                          <span className="absolute bottom-1.5 right-1.5 rounded bg-surface/90 px-1 py-0.5 text-sm font-medium text-text-secondary tabular-nums">
                             {MEDIA_USAGE[asset.id]} uses
                           </span>
                         ) : null}
                       </span>
 
-                      <span className="mt-1.5 block truncate text-[12px] font-medium text-text-primary">
+                      <span className="mt-1.5 block truncate text-sm font-medium text-text-primary">
                         {asset.name}
                       </span>
-                      <span className="block text-xs text-text-muted">
+                      <span className="block text-sm text-text-muted">
                         {asset.width} × {asset.height} · {formatBytes(asset.size)}
                       </span>
                     </button>
@@ -522,14 +522,14 @@ export function MediaLibrary() {
                 { label: "Uploaded", value: formatRelativeTime(detail.uploadedAt) },
               ].map((row) => (
                 <div key={row.label}>
-                  <dt className="text-xs text-text-muted">{row.label}</dt>
+                  <dt className="text-sm text-text-muted">{row.label}</dt>
                   <dd className="font-medium text-text-primary">{row.value}</dd>
                 </div>
               ))}
             </dl>
 
             <section>
-              <h3 className="text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                 Tags
               </h3>
               <div className="mt-2">
@@ -609,7 +609,7 @@ export function MediaLibrary() {
             <p className="mt-2 text-sm font-medium text-text-primary">
               Drop files here
             </p>
-            <p className="mt-1 text-xs text-text-muted">
+            <p className="mt-1 text-sm text-text-muted">
               JPG, PNG, WebP, GIF and MP4. Multiple files are fine.
             </p>
             <Button variant="outline" size="sm" className="mt-3">

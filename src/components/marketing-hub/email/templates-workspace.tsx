@@ -188,7 +188,7 @@ export function EmailTemplatesWorkspace() {
       <>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-xs text-text-muted">
+            <p className="text-sm text-text-muted">
               {editing.id === BLANK_TEMPLATE.id ? "New template" : "Editing template"}
             </p>
             <h2 className="text-lg">{editing.name}</h2>
@@ -291,7 +291,7 @@ export function EmailTemplatesWorkspace() {
                       <h3 className="truncate text-sm font-semibold text-text-primary">
                         {template.name}
                       </h3>
-                      <p className="mt-0.5 line-clamp-2 text-xs text-text-muted">
+                      <p className="mt-0.5 line-clamp-2 text-sm text-text-muted">
                         {template.description}
                       </p>
                     </div>
@@ -333,11 +333,11 @@ export function EmailTemplatesWorkspace() {
                     ) : null}
                   </div>
 
-                  <p className="mt-3 truncate rounded-panel bg-surface-secondary px-3 py-2 text-xs text-text-secondary">
+                  <p className="mt-3 truncate rounded-panel bg-surface-secondary px-3 py-2 text-sm text-text-secondary">
                     {template.subject}
                   </p>
 
-                  <dl className="mt-3 flex items-center justify-between gap-3 border-t border-border pt-3 text-xs">
+                  <dl className="mt-3 flex items-center justify-between gap-3 border-t border-border pt-3 text-sm">
                     <div>
                       <dt className="text-text-muted">Used in</dt>
                       <dd className="font-bold text-text-primary tabular-nums">
@@ -359,7 +359,7 @@ export function EmailTemplatesWorkspace() {
                     </div>
                   </dl>
 
-                  <p className="mt-2.5 text-xs text-text-muted">
+                  <p className="mt-2.5 text-sm text-text-muted">
                     Updated {formatRelativeTime(template.updatedAt)}
                   </p>
 
@@ -421,14 +421,14 @@ export function EmailTemplatesWorkspace() {
         {previewing ? (
           <div className="space-y-4">
             <div className="rounded-panel border border-border bg-surface-secondary px-3.5 py-3">
-              <p className="flex items-center gap-1.5 text-xs font-medium tracking-[0.08em] text-text-muted uppercase">
+              <p className="flex items-center gap-1.5 text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                 <MailOpen className="size-3" aria-hidden />
                 Inbox preview
               </p>
               <p className="mt-1.5 text-sm font-bold text-text-primary">
                 {previewing.subject}
               </p>
-              <p className="text-xs text-text-muted">{previewing.previewText}</p>
+              <p className="text-sm text-text-muted">{previewing.previewText}</p>
             </div>
 
             <ol className="space-y-2">
@@ -441,14 +441,14 @@ export function EmailTemplatesWorkspace() {
                     {index + 1}
                   </span>
                   <span className="min-w-0">
-                    <span className="block text-xs font-medium tracking-[0.06em] text-text-muted uppercase">
+                    <span className="block text-sm font-medium tracking-[0.06em] text-text-muted uppercase">
                       {block.type.replace("-", " ")}
                     </span>
-                    <span className="mt-0.5 block text-[13px] text-text-secondary">
+                    <span className="mt-0.5 block text-sm text-text-secondary">
                       {block.content || <em className="text-text-muted">Empty</em>}
                     </span>
                     {block.meta ? (
-                      <span className="mt-0.5 block font-mono text-xs text-email-dark">
+                      <span className="mt-0.5 block font-mono text-sm text-email-dark">
                         {block.meta}
                       </span>
                     ) : null}

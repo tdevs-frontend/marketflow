@@ -56,7 +56,7 @@ export function ChartCard({
           {legend.map((item) => (
             <li
               key={item.label}
-              className="inline-flex items-center gap-1.5 text-xs text-text-muted"
+              className="inline-flex items-center gap-1.5 text-sm text-text-muted"
             >
               <span
                 aria-hidden

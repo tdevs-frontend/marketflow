@@ -138,7 +138,7 @@ export function NewLeadDialog({
                 aria-pressed={mode === key}
                 onClick={() => setMode(key)}
                 className={cn(
-                  "rounded-btn px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                  "rounded-btn px-3 py-1.5 text-sm font-semibold transition-colors focus-visible:shadow-focus focus-visible:outline-none",
                   mode === key
                     ? "bg-surface text-primary shadow-btn"
                     : "text-text-muted hover:text-text-primary",
@@ -299,7 +299,7 @@ export function NewLeadDialog({
                     )
                   }
                   className={cn(
-                    "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                    "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
                     picked
                       ? "border-primary bg-primary-soft text-primary-dark"
                       : "border-border text-text-secondary hover:border-border-strong",

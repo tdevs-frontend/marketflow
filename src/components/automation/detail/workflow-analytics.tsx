@@ -173,10 +173,10 @@ function NodeAnalyticsRow({
         <NodeIcon kind={node.kind} size="sm" />
 
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[13px] font-medium text-text-primary">
+          <p className="truncate text-sm font-medium text-text-primary">
             {node.title}
           </p>
-          <p className="truncate text-xs text-text-muted">{node.summary}</p>
+          <p className="truncate text-sm text-text-muted">{node.summary}</p>
         </div>
 
         <div className="w-28 shrink-0 max-sm:hidden">
@@ -189,22 +189,22 @@ function NodeAnalyticsRow({
         </div>
 
         <div className="w-20 shrink-0 text-right">
-          <p className="text-[13px] font-bold text-text-primary tabular-nums">
+          <p className="text-sm font-bold text-text-primary tabular-nums">
             {formatCount(entered)}
           </p>
-          <p className="text-xs text-text-muted tabular-nums">
+          <p className="text-sm text-text-muted tabular-nums">
             {formatPercent(share, 1)}
           </p>
         </div>
 
         <div className="w-16 shrink-0 text-right max-sm:hidden">
           {drop > 0 ? (
-            <span className="inline-flex items-center gap-0.5 text-xs font-medium text-error tabular-nums">
+            <span className="inline-flex items-center gap-0.5 text-sm font-medium text-error tabular-nums">
               <ArrowDownRight className="size-3" aria-hidden />
               {formatCount(drop)}
             </span>
           ) : (
-            <span className="text-xs text-text-muted">—</span>
+            <span className="text-sm text-text-muted">—</span>
           )}
         </div>
       </div>
@@ -214,7 +214,7 @@ function NodeAnalyticsRow({
           {node.branches.map((branch) => (
             <li
               key={branch.id}
-              className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-border-strong px-2.5 py-0.5 text-xs text-text-secondary"
+              className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-border-strong px-2.5 py-0.5 text-sm text-text-secondary"
             >
               {branch.label}
               <span className="font-medium text-text-primary tabular-nums">
@@ -369,7 +369,7 @@ export function WorkflowAnalytics({ workflow }: { workflow: Workflow }) {
               key={item.label}
               className="rounded-panel border border-border px-3.5 py-3"
             >
-              <p className="text-[13px] font-medium text-text-secondary">{item.label}</p>
+              <p className="text-sm font-medium text-text-secondary">{item.label}</p>
               <p className="mt-1.5 text-xl leading-none font-bold text-text-primary tabular-nums">
                 {formatCount(item.value)}
               </p>

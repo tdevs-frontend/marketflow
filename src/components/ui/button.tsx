@@ -114,7 +114,7 @@ const VARIANTS: Record<ButtonVariant, string> = {
  * (`md` matches the 44px input). `icon` is the square of `md`.
  */
 const SIZES: Record<ButtonSize, string> = {
-  sm: "h-9 gap-1.5 px-3.5 text-xs [&_svg]:size-4",
+  sm: "h-9 gap-1.5 px-3.5 text-sm [&_svg]:size-4",
   /* 40px — matches `IconButton` md and the header search field. */
   compact: "h-10 gap-2 px-4 text-sm [&_svg]:size-4",
   md: "h-11 gap-2 px-5 text-sm [&_svg]:size-4",

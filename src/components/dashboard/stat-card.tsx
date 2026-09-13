@@ -30,7 +30,7 @@ export function StatCard({ metric }: { metric: MetricSummary }) {
       </p>
       <p
         className={cn(
-          "mt-2 inline-flex items-center gap-1 text-xs font-medium",
+          "mt-2 inline-flex items-center gap-1 text-sm font-medium",
           positive ? "text-primary":"text-error",
         )}
       >

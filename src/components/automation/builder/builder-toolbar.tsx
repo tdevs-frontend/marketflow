@@ -81,7 +81,7 @@ export function BuilderToolbar({
         <button
           type="button"
           onClick={onZoomReset}
-          className="min-w-12 rounded-btn px-1.5 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:bg-gray-soft hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none tabular-nums"
+          className="min-w-12 rounded-btn px-1.5 py-1.5 text-sm font-medium text-text-secondary transition-colors hover:bg-gray-soft hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none tabular-nums"
         >
           {Math.round(zoom * 100)}%
         </button>
