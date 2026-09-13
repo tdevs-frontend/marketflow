@@ -31,6 +31,7 @@ export function Tabs<T extends string>({
   onChange,
   label,
   idBase,
+  bleed = true,
   className,
 }: {
   tabs: TabItem<T>[];
@@ -38,6 +39,19 @@ export function Tabs<T extends string>({
   onChange: (value: T) => void;
   label: string;
   idBase: string;
+  /**
+   * Whether the strip pulls out to the edges of its container.
+   *
+   * On by default, because the strip was written for the inside of a `Card` or
+   * a `Drawer`: both pad their content by 20px, and a tab rule that stops short
+   * of the panel edge reads as a stray underline rather than as a divider.
+   *
+   * Turn it off at page level. There the parent is `<main>`, whose padding runs
+   * 16px on a phone and 28px on a desktop — so a fixed −20px does not cancel
+   * anything, it just pushes the strip out of alignment with every other block
+   * on the page, and at 16px it pushes it off the screen entirely.
+   */
+  bleed?: boolean;
   className?: string;
 }) {
   const move = (offset: number) => {
@@ -60,8 +74,13 @@ export function Tabs<T extends string>({
           move(-1);
         }
       }}
+      /* Composed rather than overridden: `cn()` is a plain join, so a
+         `mx-0` passed in `className` would race `-mx-5` on stylesheet order
+         instead of beating it. Omitting the classes is the only reliable way
+         to not have them. */
       className={cn(
-        "-mx-5 flex gap-1 overflow-x-auto border-b border-border px-5",
+        "flex gap-1 overflow-x-auto border-b border-border",
+        bleed && "-mx-5 px-5",
         className,
       )}
     >

@@ -358,12 +358,14 @@ export function WorkflowDetail({ workflow }: { workflow: Workflow }) {
         </div>
       ) : null}
 
+      {/* Page level, so no bleed — same reason as the Settings strip. */}
       <Tabs
         tabs={TABS}
         value={tab}
         onChange={setTab}
         label="Workflow sections"
         idBase={idBase}
+        bleed={false}
       />
 
       {tab === "builder" ? (

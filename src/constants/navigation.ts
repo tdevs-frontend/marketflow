@@ -201,29 +201,20 @@ export const dashboardNav: NavSection[] = [
   {
     title: "Settings",
     items: [
+      /*
+       * One row, four tabs.
+       *
+       * Profile, Notifications and Security are all *the person* rather than
+       * the workspace, and they are panels on the General Settings page now —
+       * see `components/settings/settings-workspace`. Three sidebar rows for
+       * three readings of one screen is what made this the longest section in
+       * the product.
+       *
+       * Billing and API & Developer stay out of it deliberately: one is the
+       * company's money and the other is workspace configuration, and neither
+       * is a preference belonging to whoever happens to be signed in.
+       */
       { title: "General", href: "/dashboard/settings", icon: "settings" },
-      {
-        /*
-         * Profile, Notifications and Security are all *the person*, not the
-         * workspace — so they collapse behind one row rather than spending
-         * three on the sidebar's longest section.
-         *
-         * Billing and API & Developer deliberately stay out of it. Billing is
-         * the business's money and Developer is workspace configuration;
-         * filing either under "Account" would put them one click further away
-         * and imply they belong to whoever happens to be signed in.
-         *
-         * No `href`: the existing `CollapsibleItem` treats an item with
-         * children as a disclosure, and Account has no page of its own.
-         */
-        title: "Account",
-        icon: "user",
-        items: [
-          { title: "Profile", href: "/dashboard/settings/profile" },
-          { title: "Notifications", href: "/dashboard/settings/notifications" },
-          { title: "Security", href: "/dashboard/settings/security" },
-        ],
-      },
       { title: "Billing & Subscription", href: "/dashboard/settings/billing", icon: "credit-card" },
       { title: "API & Developer", href: "/dashboard/settings/api", icon: "terminal" },
     ],
