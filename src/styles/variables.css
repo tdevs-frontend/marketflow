@@ -39,6 +39,22 @@
   --font-extrabold: var(--font-active-black);
   --font-black: var(--font-active-black);
 
+  /*
+   * The metadata step — 13px.
+   *
+   * The dashboard's type scale is 13 / 14 / 16 / 20 / 28, and Tailwind's own
+   * ramp has no rung between `text-xs` (12px) and `text-sm` (14px). 12px is too
+   * small for a timestamp a merchant actually reads and 14px puts a timestamp
+   * at the same size as the sentence beside it, so the two flatten into one
+   * another. This is the rung that lets metadata sit *below* body text without
+   * dropping out of it.
+   *
+   * Reserved for metadata: timestamps, status badges, trend chips, the growth
+   * chart's axis ticks. Never for a sentence, a label or a value.
+   */
+  --text-meta: 0.8125rem;
+  --text-meta--line-height: 1.25rem;
+
   /* --------------------------------------------------------- Breakpoints */
 
   /* Tiny Devices (very small phones, e.g., iPhone SE / 320px) */
@@ -305,6 +321,16 @@
   --color-chart-3: #f59e0b;
   --color-chart-4: #10b981;
   --color-chart-neutral: #cbd5e1;
+  /*
+   * The comparison series, one step up the same slate ramp.
+   *
+   * `chart-neutral` is right for a bar that is merely *not* the subject; it is
+   * too faint for a line the reader is meant to measure the current period
+   * against, which at 1.5px and 5-dash was reading as part of the gridwork.
+   * Not a new hue — it is the value already carried as `--color-dark-muted`,
+   * named here for the job it does in a plot.
+   */
+  --color-chart-neutral-strong: #94a3b8;
   --color-chart-grid: #e2e8f0;
   /* One per channel, for the four-way comparison charts. */
   --color-chart-whatsapp: #059669;

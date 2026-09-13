@@ -55,7 +55,7 @@ function Delta({ points }: { points: number }) {
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center gap-0.5 text-sm font-medium tabular-nums",
+        "inline-flex shrink-0 items-center gap-0.5 text-meta font-medium tabular-nums",
         positive ? "text-primary" : "text-error",
       )}
     >
@@ -100,7 +100,7 @@ export function BusinessPulse({ className }: { className?: string }) {
         </ButtonLink>
       </div>
 
-      <dl className="mt-4 divide-y divide-border border-t border-border">
+      <dl className="mt-5 divide-y divide-border border-t border-border">
         {SIGNALS.map((signal) => (
           <div
             key={signal.label}
@@ -110,7 +110,7 @@ export function BusinessPulse({ className }: { className?: string }) {
               {signal.label}
             </dt>
             <dd className="flex shrink-0 items-baseline gap-2.5">
-              <span className="text-lg leading-none font-bold text-text-primary tabular-nums">
+              <span className="text-xl leading-none font-bold text-text-primary tabular-nums">
                 {signal.value}
               </span>
               {signal.changePoints === undefined ? null : (
@@ -128,7 +128,7 @@ export function BusinessPulse({ className }: { className?: string }) {
             href={queue.href}
             className="group rounded-panel bg-surface-secondary px-3.5 py-3 transition-colors hover:bg-primary-soft focus-visible:shadow-focus focus-visible:outline-none"
           >
-            <p className="flex items-center justify-between gap-2 text-sm font-medium text-text-muted">
+            <p className="flex items-center justify-between gap-2 text-sm font-medium text-text-secondary">
               <span className="truncate">{queue.label}</span>
               <ArrowRight
                 aria-hidden

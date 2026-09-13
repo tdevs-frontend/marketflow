@@ -196,10 +196,10 @@ export function AutomationActivity({ className }: { className?: string }) {
                       ended, the timestamp says when — read apart, neither is
                       much use. */}
                   <div className="flex shrink-0 items-center gap-2.5">
-                    <Badge tone={STATUS_TONE[item.status]} className="normal-case">
+                    <Badge tone={STATUS_TONE[item.status]} size="sm" className="normal-case">
                       {item.status}
                     </Badge>
-                    <span className="text-sm text-text-muted">{item.time}</span>
+                    <span className="text-meta text-text-secondary">{item.time}</span>
                   </div>
                 </div>
               </li>

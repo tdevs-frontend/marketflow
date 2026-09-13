@@ -127,17 +127,17 @@ export function CampaignPerformance({ className }: { className?: string }) {
                 key={total.label}
                 className="rounded-panel bg-surface-secondary px-3.5 py-2.5"
               >
-                <dt className="truncate text-sm font-medium text-text-muted">
+                <dt className="truncate text-sm font-medium text-text-secondary">
                   {total.label}
                 </dt>
-                <dd className="mt-1 text-lg leading-none font-bold text-text-primary tabular-nums">
+                <dd className="mt-1.5 text-xl leading-none font-bold text-text-primary tabular-nums">
                   {total.value}
                 </dd>
               </div>
             ))}
           </dl>
 
-          <ul className="mt-5 flex flex-1 flex-col gap-4">
+          <ul className="mt-4 flex flex-1 flex-col gap-4">
             {ordered.map((campaign) => {
               const share = leader === 0 ? 0 : (campaign[tab] / leader) * 100;
               const conversion =
@@ -160,7 +160,7 @@ export function CampaignPerformance({ className }: { className?: string }) {
                     className="mt-2"
                   />
 
-                  <p className="mt-1.5 flex items-center gap-1.5 text-sm text-text-muted">
+                  <p className="mt-1.5 flex items-center gap-1.5 text-sm text-text-secondary">
                     <span className="tabular-nums">
                       Reach {formatCount(campaign.reach)}
                     </span>

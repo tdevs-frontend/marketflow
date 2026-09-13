@@ -131,7 +131,7 @@ export function RecentOrders({ className }: { className?: string }) {
           />
         </div>
       ) : (
-        <div className="mt-3 flex-1">
+        <div className="mt-2.5 flex-1">
           <Table minWidth="34rem">
             <THead>
               <TH>Order</TH>
@@ -153,13 +153,13 @@ export function RecentOrders({ className }: { className?: string }) {
                     {formatCurrency(order.amount)}
                   </TD>
                   <TD>
-                    <Badge tone={STATUS_TONE[order.status]} className="normal-case">
+                    <Badge tone={STATUS_TONE[order.status]} size="sm" className="normal-case">
                       {order.status}
                     </Badge>
                   </TD>
                   <TD
                     align="right"
-                    className="font-normal whitespace-nowrap text-text-muted"
+                    className="font-normal whitespace-nowrap text-text-secondary"
                   >
                     {order.time}
                   </TD>

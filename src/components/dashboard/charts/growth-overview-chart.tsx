@@ -27,15 +27,15 @@ import {
  * 400 is the same trick `globals.css` plays on `b, strong`.
  *
  * The colour moves from `textMuted` to `textSecondary` — the page's own body
- * ink — and the size from 11px to 12px, which is the floor the rest of the
- * dashboard keeps to. Scoped to this file rather than pushed into the shared
+ * ink — and the size from 11px to the 13px metadata step, the floor the rest
+ * of the dashboard keeps to. Scoped to this file rather than pushed into the shared
  * constant because that one also dresses the charts in every marketing module.
  */
 const AXIS_LABELS = {
   ...AXIS_LABEL_STYLE,
   fontFamily: "var(--font-medium)",
   fontWeight: 400,
-  fontSize: "12px",
+  fontSize: "13px",
   colors: CHART_COLORS.textSecondary,
 };
 
@@ -94,7 +94,7 @@ function tooltipMarkup({
       <p class="text-sm font-medium text-text-muted">${label}</p>
       <div class="mt-2 flex flex-col gap-1.5">
         ${row(CHART_COLORS.primary, seriesName, currentValue)}
-        ${row(CHART_COLORS.neutral, "Previous period", previousValue)}
+        ${row(CHART_COLORS.neutralStrong, "Previous period", previousValue)}
       </div>
       <div class="mt-2 flex items-center justify-between gap-6 border-t border-border pt-2">
         <span class="text-sm text-text-muted">Change</span>
@@ -120,7 +120,7 @@ export function GrowthOverviewChart({
       chart: { ...BASE_CHART, type: "area" },
       /* Brand indigo leads; the comparison line stays neutral so the eye is
          never asked to weigh two colours of equal strength against each other. */
-      colors: [CHART_COLORS.primary, CHART_COLORS.neutral],
+      colors: [CHART_COLORS.primary, CHART_COLORS.neutralStrong],
       dataLabels: { enabled: false },
       stroke: { curve: "smooth", width: [2.5, 1.5], dashArray: [0, 5] },
       /* Only the current period is filled. Two stacked gradients would muddy

@@ -67,11 +67,11 @@ export function SalesFunnel({ className }: { className?: string }) {
                   <span className="font-medium text-text-secondary tabular-nums">
                     {stepRate.toFixed(1)}%
                   </span>
-                  <span className="text-text-muted">continue</span>
+                  <span className="text-text-secondary">continue</span>
                   <span aria-hidden className="text-text-muted">
                     ·
                   </span>
-                  <span className="text-text-muted tabular-nums">
+                  <span className="text-text-secondary tabular-nums">
                     {formatCount(dropped)} dropped off
                   </span>
                 </p>
@@ -96,7 +96,7 @@ export function SalesFunnel({ className }: { className?: string }) {
 
       <div className="mt-5 flex items-center justify-between gap-3 border-t border-border pt-4">
         <span className="text-sm text-text-secondary">Visitor → Customer</span>
-        <span className="text-lg leading-none font-bold text-primary tabular-nums">
+        <span className="text-xl leading-none font-bold text-primary tabular-nums">
           {((LAST.count / TOP) * 100).toFixed(1)}%
         </span>
       </div>

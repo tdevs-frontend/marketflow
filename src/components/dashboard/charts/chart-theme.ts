@@ -17,6 +17,8 @@ export const CHART_COLORS = {
   primaryLight: "#818cf8",
   accent: "#06b6d4",
   neutral: "#cbd5e1",
+  /* The comparison series. See `--color-chart-neutral-strong`. */
+  neutralStrong: "#94a3b8",
   grid: "#e2e8f0",
   surface: "#ffffff",
   textMuted: "#64748b",

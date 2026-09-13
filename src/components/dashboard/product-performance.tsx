@@ -47,7 +47,7 @@ function ProductRow({ product, rank }: { product: Product; rank: number }) {
           "grid size-8 shrink-0 place-items-center rounded-panel text-sm font-bold tabular-nums",
           rank === 1
             ? "bg-primary-soft text-primary-dark"
-            : "bg-surface-secondary text-text-muted",
+            : "bg-surface-secondary text-text-secondary",
         )}
       >
         {rank}
@@ -64,12 +64,12 @@ function ProductRow({ product, rank }: { product: Product; rank: number }) {
         </div>
 
         <div className="mt-1 flex items-center justify-between gap-3">
-          <span className="text-sm text-text-muted tabular-nums">
+          <span className="text-sm text-text-secondary tabular-nums">
             {formatCount(product.unitsSold)} sold
           </span>
           <span
             className={cn(
-              "inline-flex shrink-0 items-center gap-0.5 text-sm font-medium tabular-nums",
+              "inline-flex shrink-0 items-center gap-0.5 text-meta font-medium tabular-nums",
               positive ? "text-primary" : "text-error",
             )}
           >
@@ -126,7 +126,7 @@ export function ProductPerformance({ className }: { className?: string }) {
           />
         </div>
       ) : (
-        <ul className="mt-3 flex-1 divide-y divide-border">
+        <ul className="mt-2 flex-1 divide-y divide-border">
           {PRODUCTS.map((product, index) => (
             <ProductRow key={product.name} product={product} rank={index + 1} />
           ))}

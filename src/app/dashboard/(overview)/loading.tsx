@@ -57,7 +57,7 @@ function TileRowSkeleton() {
       {Array.from({ length: 3 }, (_, index) => (
         <div key={index} className="rounded-panel bg-surface-secondary px-3.5 py-2.5">
           <Skeleton className="h-2.5 w-14 rounded-full" />
-          <Skeleton className="mt-2 h-4 w-10 rounded-full" />
+          <Skeleton className="mt-2 h-5 w-12 rounded-full" />
         </div>
       ))}
     </div>
@@ -96,11 +96,11 @@ export default function DashboardLoading() {
         <CardSkeleton className="order-1 flex flex-col lg:col-span-4 lg:col-start-9 lg:row-start-1">
           <CardHeadSkeleton action="w-28" />
 
-          <div className="mt-4 divide-y divide-border border-t border-border">
+          <div className="mt-5 divide-y divide-border border-t border-border">
             {Array.from({ length: 3 }, (_, index) => (
               <div key={index} className="flex items-center justify-between gap-3 py-3.5">
                 <Skeleton className="h-3 w-32 rounded-full" />
-                <Skeleton className="h-4 w-20 rounded-full" />
+                <Skeleton className="h-5 w-24 rounded-full" />
               </div>
             ))}
           </div>
@@ -120,7 +120,7 @@ export default function DashboardLoading() {
           <CardHeadSkeleton />
           <Skeleton className="mt-5 h-8 w-64 rounded-btn" />
           <TileRowSkeleton />
-          <div className="mt-5 space-y-4">
+          <div className="mt-4 space-y-4">
             {Array.from({ length: 4 }, (_, index) => (
               <div key={index}>
                 <div className="flex items-center justify-between gap-3">
@@ -136,10 +136,7 @@ export default function DashboardLoading() {
 
         {/* WhatsApp Inbox — queue counts, then four conversations. */}
         <CardSkeleton className="order-3 lg:col-span-5 lg:col-start-8 lg:row-start-2">
-          <div className="flex items-start justify-between gap-3">
-            <Skeleton className="h-4 w-40 rounded-full" />
-            <Skeleton className="h-8 w-24 shrink-0 rounded-btn" />
-          </div>
+          <CardHeadSkeleton action="w-24" />
           <TileRowSkeleton />
           <div className="mt-4 divide-y divide-border border-t border-border">
             {Array.from({ length: 4 }, (_, index) => (
@@ -157,7 +154,7 @@ export default function DashboardLoading() {
         {/* Product Performance — four ranked rows. */}
         <CardSkeleton className="order-7 lg:col-span-6 lg:col-start-1 lg:row-start-3">
           <CardHeadSkeleton action="w-28" />
-          <div className="mt-3 divide-y divide-border">
+          <div className="mt-2 divide-y divide-border">
             {Array.from({ length: 4 }, (_, index) => (
               <div key={index} className="flex items-start gap-3 py-3">
                 <Skeleton className="size-8 shrink-0 rounded-panel" />
@@ -180,7 +177,7 @@ export default function DashboardLoading() {
         {/* Recent Orders — a six-column table under its header action. */}
         <CardSkeleton className="order-5 lg:col-span-6 lg:col-start-7 lg:row-start-3">
           <CardHeadSkeleton action="w-32" />
-          <div className="mt-3">
+          <div className="mt-2.5">
             <SkeletonTable rows={6} columns={6} />
           </div>
         </CardSkeleton>
@@ -222,7 +219,7 @@ export default function DashboardLoading() {
           </div>
           <div className="mt-5 flex items-center justify-between gap-3 border-t border-border pt-4">
             <Skeleton className="h-3 w-36 rounded-full" />
-            <Skeleton className="h-4 w-12 rounded-full" />
+            <Skeleton className="h-5 w-14 rounded-full" />
           </div>
         </CardSkeleton>
       </div>

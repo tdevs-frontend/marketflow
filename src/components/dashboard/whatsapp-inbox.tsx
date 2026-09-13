@@ -14,7 +14,9 @@ import { cn } from "@/lib/utils";
 
 const STATS = [
   { label: "Unread", value: 12, tone: "bg-primary" },
-  { label: "Awaiting Reply", value: 8, tone: "bg-warning" },
+  /* "Awaiting Reply" truncated in the middle tile below ~1500px — three tiles
+     across a five-column card leaves roughly 90px of text width. */
+  { label: "Awaiting", value: 8, tone: "bg-warning" },
   { label: "Assigned", value: 4, tone: "bg-border-strong" },
 ] as const;
 
@@ -95,12 +97,17 @@ export function WhatsAppInbox({ className }: { className?: string }) {
   return (
     <Card className={cn("flex flex-col p-5", className)}>
       <div className="flex items-start justify-between gap-3">
-        <h2 className="flex items-center gap-2 text-base">
-          <span className="grid size-7 shrink-0 place-items-center rounded-btn bg-whatsapp-soft text-whatsapp">
-            <MessageCircle className="size-4" aria-hidden />
-          </span>
-          WhatsApp Inbox
-        </h2>
+        <div className="min-w-0">
+          <h2 className="flex items-center gap-2 text-base">
+            <span className="grid size-7 shrink-0 place-items-center rounded-btn bg-whatsapp-soft text-whatsapp">
+              <MessageCircle className="size-4" aria-hidden />
+            </span>
+            WhatsApp Inbox
+          </h2>
+          <p className="mt-1 text-sm text-text-secondary">
+            Conversations waiting on a reply.
+          </p>
+        </div>
 
         <ButtonLink
           href={APP_ROUTES.whatsappInbox}
@@ -112,17 +119,17 @@ export function WhatsAppInbox({ className }: { className?: string }) {
         </ButtonLink>
       </div>
 
-      <dl className="mt-4 grid grid-cols-3 gap-2">
+      <dl className="mt-5 grid grid-cols-3 gap-2">
         {STATS.map((stat) => (
           <div
             key={stat.label}
             className="rounded-panel bg-surface-secondary px-3.5 py-2.5"
           >
-            <dt className="flex items-center gap-1.5 text-sm font-medium text-text-muted">
+            <dt className="flex items-center gap-1.5 text-sm font-medium text-text-secondary">
               <span aria-hidden className={cn("size-1.5 shrink-0 rounded-full", stat.tone)} />
               <span className="truncate">{stat.label}</span>
             </dt>
-            <dd className="mt-1 text-lg leading-none font-bold text-text-primary tabular-nums">
+            <dd className="mt-1.5 text-xl leading-none font-bold text-text-primary tabular-nums">
               {stat.value}
             </dd>
           </div>
@@ -165,7 +172,7 @@ export function WhatsAppInbox({ className }: { className?: string }) {
                     >
                       {conversation.name}
                     </p>
-                    <span className="shrink-0 text-sm text-text-muted">
+                    <span className="shrink-0 text-meta text-text-secondary">
                       {conversation.time}
                     </span>
                   </div>

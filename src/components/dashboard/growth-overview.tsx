@@ -129,7 +129,7 @@ const METRICS: { value: MetricKey; label: string; format: "number" | "currency" 
 
 function LegendSwatch({ className, children }: { className: string; children: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5 text-sm text-text-muted">
+    <span className="inline-flex items-center gap-1.5 text-sm text-text-secondary">
       <span aria-hidden className={cn("h-0.5 w-4 rounded-full", className)} />
       {children}
     </span>
@@ -188,7 +188,7 @@ export function GrowthOverview({ className }: { className?: string }) {
         {/* Own legend, so Apex's does not steal a strip of the plot area. */}
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
           <LegendSwatch className="bg-primary">{active.label}</LegendSwatch>
-          <LegendSwatch className="bg-border-strong">Previous period</LegendSwatch>
+          <LegendSwatch className="bg-chart-neutral-strong">Previous period</LegendSwatch>
         </div>
       </div>
 
@@ -196,10 +196,10 @@ export function GrowthOverview({ className }: { className?: string }) {
         <p className="text-[1.75rem] leading-none font-bold text-text-primary tabular-nums">
           {active.format === "currency" ? formatCurrency(latest) : formatNumber(latest)}
         </p>
-        <span className="text-sm text-text-muted">{meta.unit}</span>
+        <span className="text-sm text-text-secondary">{meta.unit}</span>
         <span
           className={cn(
-            "inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-sm font-bold",
+            "inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-meta font-medium",
             positive
               ? "bg-primary-soft text-primary-dark"
               : "bg-error-soft text-error-text",
