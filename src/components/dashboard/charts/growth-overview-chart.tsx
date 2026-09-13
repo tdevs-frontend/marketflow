@@ -15,6 +15,30 @@ import {
   compactAxisNumber,
 } from "./chart-theme";
 
+/**
+ * The overview chart's axis type, set from the product's own scale.
+ *
+ * Three departures from the shared `AXIS_LABEL_STYLE`, and the first is the
+ * one that matters: in this project a weight *is* a family — `--font-medium`
+ * points at a real medium cut, and neither typeface declares a `font-weight`
+ * on its faces. Asking Apex for `fontWeight: 500` therefore does not reach that
+ * cut at all; it hands the browser the Book face and a number, and the browser
+ * synthesises a fake medium. Naming the family and pinning the weight back to
+ * 400 is the same trick `globals.css` plays on `b, strong`.
+ *
+ * The colour moves from `textMuted` to `textSecondary` — the page's own body
+ * ink — and the size from 11px to 12px, which is the floor the rest of the
+ * dashboard keeps to. Scoped to this file rather than pushed into the shared
+ * constant because that one also dresses the charts in every marketing module.
+ */
+const AXIS_LABELS = {
+  ...AXIS_LABEL_STYLE,
+  fontFamily: "var(--font-medium)",
+  fontWeight: 400,
+  fontSize: "12px",
+  colors: CHART_COLORS.textSecondary,
+};
+
 export interface GrowthOverviewChartProps {
   categories: string[];
   current: number[];
@@ -123,7 +147,7 @@ export function GrowthOverviewChart({
         categories,
         axisBorder: { show: false },
         axisTicks: { show: false },
-        labels: { style: AXIS_LABEL_STYLE, rotate: 0, hideOverlappingLabels: true },
+        labels: { style: AXIS_LABELS, rotate: 0, hideOverlappingLabels: true },
         tooltip: { enabled: false },
         crosshairs: {
           stroke: { color: CHART_COLORS.grid, width: 1, dashArray: 4 },
@@ -131,7 +155,7 @@ export function GrowthOverviewChart({
       },
       yaxis: {
         labels: {
-          style: AXIS_LABEL_STYLE,
+          style: AXIS_LABELS,
           formatter: isCurrency ? compactAxisCurrency : compactAxisNumber,
         },
         /* Four ticks is enough to read a trend and leaves the card uncluttered. */

@@ -181,7 +181,7 @@ export default function DashboardLoading() {
         <CardSkeleton className="order-5 lg:col-span-6 lg:col-start-7 lg:row-start-3">
           <CardHeadSkeleton action="w-32" />
           <div className="mt-3">
-            <SkeletonTable rows={5} columns={6} />
+            <SkeletonTable rows={6} columns={6} />
           </div>
         </CardSkeleton>
 

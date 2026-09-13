@@ -22,7 +22,10 @@ interface Order {
   time: string;
 }
 
-/* The top two are the WhatsApp inbox customers, buying the leading product. */
+/* The top two are the WhatsApp inbox customers, buying the leading product.
+
+   `id` is the row key, so it has to stay unique — a copied row with a
+   duplicate reference is React reconciling two different orders as one. */
 const ORDERS: Order[] = [
   {
     id: "#MF-10248",
@@ -65,12 +68,12 @@ const ORDERS: Order[] = [
     time: "38 min ago",
   },
   {
-    id: "#MF-10245",
-    customer: "Amina Rahman",
-    product: "Starter Package",
-    amount: 79,
-    status: "Cancelled",
-    time: "38 min ago",
+    id: "#MF-10243",
+    customer: "Tomas Silva",
+    product: "Premium Package",
+    amount: 149,
+    status: "Paid",
+    time: "52 min ago",
   },
 ];
 
@@ -86,7 +89,7 @@ const STATUS_TONE: Record<OrderStatus, BadgeTone> = {
 /* -------------------------------------------------------------------------- */
 
 /**
- * The latest five orders, as a real table.
+ * The latest orders, as a real table.
  *
  * The stacked three-line rows this used to use could not put two orders'
  * amounts or statuses under one another, which is the whole reason to look at a
@@ -100,7 +103,7 @@ export function RecentOrders({ className }: { className?: string }) {
         <div className="min-w-0">
           <h2 className="text-base">Recent Orders</h2>
           <p className="mt-1 text-sm text-text-secondary">
-            The five most recent orders across every channel.
+            Your most recent orders across every channel.
           </p>
         </div>
 
