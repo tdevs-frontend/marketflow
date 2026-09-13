@@ -3,7 +3,6 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
 
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import { Select } from "@/components/ui/select";
 
 /* -------------------------------------------------------------------------- */
 /* Data                                                                       */
@@ -14,8 +13,6 @@ export type RangeKey = "7d" | "30d" | "90d" | "12m";
 export interface RangeMeta {
   /** Short form, for a segmented button inside a card header. */
   label: string;
-  /** Long form, for the page-level picker. */
-  longLabel: string;
   /** What a trend figure on this page is measured against. */
   comparison: string;
   /** What one point on the growth chart means. */
@@ -25,25 +22,21 @@ export interface RangeMeta {
 export const RANGES: Record<RangeKey, RangeMeta> = {
   "7d": {
     label: "7 Days",
-    longLabel: "Last 7 days",
     comparison: "vs last 7 days",
     unit: "per day",
   },
   "30d": {
     label: "30 Days",
-    longLabel: "Last 30 days",
     comparison: "vs last 30 days",
     unit: "per day",
   },
   "90d": {
     label: "90 Days",
-    longLabel: "Last 90 days",
     comparison: "vs last 90 days",
     unit: "per day",
   },
   "12m": {
     label: "12 Months",
-    longLabel: "Last 12 months",
     comparison: "vs last 12 months",
     unit: "per month",
   },
@@ -68,9 +61,9 @@ const DashboardRangeContext = createContext<DashboardRangeValue | null>(null);
  *
  * It exists because the page used to carry the range in two unconnected
  * places: the growth chart owned a 7/30/90/12m switcher, and every KPI said
- * "vs last period" without saying which. One state means the header picker and
- * the chart's own switcher are two affordances onto the same number — move
- * either and the KPI row relabels with it.
+ * "vs last period" without saying which. One state means the chart's chips
+ * relabel and refigure the KPI row above them, so the two halves of the
+ * analytics band can never disagree about the window they describe.
  *
  * Scope is deliberately the analytics band. Business Pulse is a live "today"
  * reading and the inbox, orders and activity feeds are latest-first lists, so
@@ -104,39 +97,18 @@ export function useDashboardRange(): DashboardRangeValue {
 /* Controls                                                                   */
 /* -------------------------------------------------------------------------- */
 
-const SELECT_OPTIONS = RANGE_KEYS.map((value) => ({
-  value,
-  label: RANGES[value].longLabel,
-}));
-
 const SEGMENT_OPTIONS = RANGE_KEYS.map((value) => ({
   value,
   label: RANGES[value].label,
 }));
 
 /**
- * The page-level picker, for the header.
+ * The page's period control, in the Growth Overview header.
  *
- * A `Select` rather than a second segmented control: the chart already shows
- * the range as four chips, and two identical strips on one screen reads as two
+ * The only one on the page: a second picker in the page header sat beside the
+ * primary CTA saying the same thing these chips already say, which reads as two
  * settings rather than one.
  */
-export function DashboardRangeSelect({ className }: { className?: string }) {
-  const { range, setRange } = useDashboardRange();
-
-  return (
-    <Select
-      label="Reporting period"
-      size="sm"
-      value={range}
-      onChange={setRange}
-      options={SELECT_OPTIONS}
-      className={className}
-    />
-  );
-}
-
-/** The same range as chips, for a card header. */
 export function DashboardRangeChips({ className }: { className?: string }) {
   const { range, setRange } = useDashboardRange();
 

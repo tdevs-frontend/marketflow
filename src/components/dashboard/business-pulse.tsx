@@ -77,16 +77,27 @@ function Delta({ points }: { points: number }) {
 export function BusinessPulse({ className }: { className?: string }) {
   return (
     <Card className={cn("flex flex-col p-5", className)}>
-      <div className="min-w-0">
-        <h2 className="flex items-center gap-2 text-base">
-          <span className="grid size-7 shrink-0 place-items-center rounded-btn bg-primary-soft text-primary">
-            <Activity className="size-4" aria-hidden />
-          </span>
-          Business Pulse
-        </h2>
-        <p className="mt-1 text-sm text-text-secondary">
-          A quick view of today&apos;s most important signals.
-        </p>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h2 className="flex items-center gap-2 text-base">
+            <span className="grid size-7 shrink-0 place-items-center rounded-btn bg-primary-soft text-primary">
+              <Activity className="size-4" aria-hidden />
+            </span>
+            Business Pulse
+          </h2>
+          <p className="mt-1 text-sm text-text-secondary">
+            A quick view of today&apos;s most important signals.
+          </p>
+        </div>
+
+        <ButtonLink
+          href={APP_ROUTES.analytics}
+          variant="ghost"
+          size="sm"
+          className="shrink-0"
+        >
+          View Analytics
+        </ButtonLink>
       </div>
 
       <dl className="mt-4 divide-y divide-border border-t border-border">
@@ -129,24 +140,6 @@ export function BusinessPulse({ className }: { className?: string }) {
             </p>
           </Link>
         ))}
-      </div>
-
-      {/* A growing spacer rather than `mt-auto` on the footer: it absorbs the
-          height the taller chart beside it adds, so both cards end on the same
-          line, and its floor keeps the gap honest when nothing is left to
-          absorb. */}
-      <div aria-hidden className="min-h-4 flex-1" />
-
-      <div className="border-t border-border pt-4">
-        <ButtonLink
-          href={APP_ROUTES.analytics}
-          variant="ghost"
-          size="sm"
-          className="-ml-3.5"
-        >
-          View Analytics
-          <ArrowRight aria-hidden />
-        </ButtonLink>
       </div>
     </Card>
   );

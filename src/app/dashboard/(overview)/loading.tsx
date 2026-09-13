@@ -67,21 +67,18 @@ function TileRowSkeleton() {
 export default function DashboardLoading() {
   return (
     <>
-      {/* Header: greeting, period picker and CTA. */}
+      {/* Header: greeting and the page CTA. */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-2">
           <Skeleton className="h-7 w-64 max-w-full rounded-full" />
           <Skeleton className="h-3.5 w-80 max-w-full rounded-full" />
         </div>
-        <div className="flex shrink-0 gap-2.5">
-          <Skeleton className="h-10 w-40 rounded-field" />
-          <Skeleton className="h-10 w-36 rounded-btn" />
-        </div>
+        <Skeleton className="h-10 w-36 shrink-0 rounded-btn" />
       </div>
 
       <SkeletonStats count={4} />
 
-      <div className="grid gap-4 lg:grid-cols-12">
+      <div className="grid gap-6 lg:grid-cols-12">
         {/* Growth Overview — header, metric chips, headline, plot. */}
         <CardSkeleton className="order-2 lg:col-span-8 lg:col-start-1 lg:row-start-1">
           <CardHeadSkeleton action="w-64" />
@@ -95,12 +92,9 @@ export default function DashboardLoading() {
           </div>
         </CardSkeleton>
 
-        {/* Business Pulse — three signal rows, two queue tiles, one footer link. */}
+        {/* Business Pulse — three signal rows over two queue tiles. */}
         <CardSkeleton className="order-1 flex flex-col lg:col-span-4 lg:col-start-9 lg:row-start-1">
-          <div className="space-y-2">
-            <Skeleton className="h-3.5 w-36 rounded-full" />
-            <Skeleton className="h-3 w-56 max-w-full rounded-full" />
-          </div>
+          <CardHeadSkeleton action="w-28" />
 
           <div className="mt-4 divide-y divide-border border-t border-border">
             {Array.from({ length: 3 }, (_, index) => (
@@ -118,11 +112,6 @@ export default function DashboardLoading() {
                 <Skeleton className="mt-2.5 h-5 w-8 rounded-full" />
               </div>
             ))}
-          </div>
-
-          <div className="min-h-4 flex-1" />
-          <div className="border-t border-border pt-4">
-            <Skeleton className="h-4 w-28 rounded-full" />
           </div>
         </CardSkeleton>
 

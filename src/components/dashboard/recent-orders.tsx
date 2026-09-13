@@ -64,6 +64,14 @@ const ORDERS: Order[] = [
     status: "Cancelled",
     time: "38 min ago",
   },
+  {
+    id: "#MF-10245",
+    customer: "Amina Rahman",
+    product: "Starter Package",
+    amount: 79,
+    status: "Cancelled",
+    time: "38 min ago",
+  },
 ];
 
 const STATUS_TONE: Record<OrderStatus, BadgeTone> = {

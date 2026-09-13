@@ -36,7 +36,7 @@ export default function DashboardPage() {
 
       <KpiCards />
 
-      <div className="grid gap-4 lg:grid-cols-12">
+      <div className="grid gap-6 lg:grid-cols-12">
         <GrowthOverview className="order-2 lg:col-span-8 lg:col-start-1 lg:row-start-1" />
         <BusinessPulse className="order-1 lg:col-span-4 lg:col-start-9 lg:row-start-1" />
 
