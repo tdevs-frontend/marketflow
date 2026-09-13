@@ -11,23 +11,33 @@
 
   /* ---------------------------------------------------------------- Type */
   /*
-   * Circular Std. Weight is a family name, not a `font-weight`.
+   * Weight is a family name, not a `font-weight`.
    *
    * Tailwind resolves `font-<name>` against `--font-*` before
    * `--font-weight-*`, so a token named after a weight utility turns it into a
    * family swap. Keep one per utility in use — dropping one hands it back to
-   * Tailwind as a real `font-weight`, i.e. a faux bold over Book.
+   * Tailwind as a real `font-weight`, i.e. a faux bold over the book cut.
+   *
+   * The values are indirections rather than family names, so the *typeface*
+   * is chosen in one place — `font-themes.css` — while this block keeps
+   * owning the *mapping* from utility to cut. Satoshi is on; Circular Std is
+   * one line away and still fully installed.
+   *
+   * The mapping is deliberately unchanged from the Circular Std original,
+   * including `semibold` landing on the bold cut: neither typeface has a 600,
+   * and inventing one would relight every card title and heading in the
+   * product. Same ramp, different face.
    */
-  --font-sans: "CircularStdBook";
-  --font-heading: "CircularStdBold";
+  --font-sans: var(--font-active-book);
+  --font-heading: var(--font-active-bold);
 
-  --font-book: "CircularStdBook";
-  --font-normal: "CircularStdBook";
-  --font-medium: "CircularStdMedium";
-  --font-semibold: "CircularStdBold";
-  --font-bold: "CircularStdBold";
-  --font-extrabold: "CircularStdBlack";
-  --font-black: "CircularStdBlack";
+  --font-book: var(--font-active-book);
+  --font-normal: var(--font-active-book);
+  --font-medium: var(--font-active-medium);
+  --font-semibold: var(--font-active-bold);
+  --font-bold: var(--font-active-bold);
+  --font-extrabold: var(--font-active-black);
+  --font-black: var(--font-active-black);
 
   /* --------------------------------------------------------- Breakpoints */
 

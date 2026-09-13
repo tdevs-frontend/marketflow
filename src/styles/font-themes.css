@@ -1,0 +1,106 @@
+/**
+ * The font theme: which typeface the product is currently set in.
+ *
+ * ─────────────────────────────────────────────────────────────────────────
+ *  TO PUT THE WHOLE APP BACK ON CIRCULAR STD
+ *
+ *  Either — one attribute, no rebuild:
+ *      <html data-font="legacy">        (in `app/layout.tsx`)
+ *
+ *  Or — permanently, in the THE SWITCH block below: change the four
+ *  `--font-active-*` lines from `--font-satoshi-*` to `--font-legacy-*`.
+ *
+ *  Nothing else, either way. No component, no Tailwind class, no utility.
+ * ─────────────────────────────────────────────────────────────────────────
+ *
+ * Why four variables and not the single `--font-primary` a normal project
+ * would have:
+ *
+ * This codebase spends weight as a **family name**. `font-medium` resolves to
+ * the Medium *cut*, not to `font-weight: 500`, because Tailwind matches
+ * `font-<name>` against `--font-*` before `--font-weight-*`. Both typefaces
+ * here ship as discrete static cuts, so a theme is not one family — it is four
+ * of them that have to move together. A single variable could only ever change
+ * body text, and would leave every heading, button and label on the old face.
+ *
+ * `--font-primary` does exist below, as the body-face alias for hand-written
+ * CSS. It is an output of the switch, not the switch itself.
+ *
+ * The `@theme` block in `variables.css` points at these and generates the
+ * utilities from them, so nothing downstream knows which typeface is on.
+ */
+
+:root {
+  /* ---------------------------------------------------------- Satoshi */
+  /* Faces declared in `satoshi-fonts.css`. */
+  --font-satoshi-book: "SatoshiRegular";
+  --font-satoshi-medium: "SatoshiMedium";
+  --font-satoshi-bold: "SatoshiBold";
+  --font-satoshi-black: "SatoshiBlack";
+  /* No token points here — Satoshi has a Light cut, Circular Std does not. */
+  --font-satoshi-light: "SatoshiLight";
+
+  /* ----------------------------------------------------- Circular Std */
+  /*
+   * The previous system, preserved exactly. `circular-std-fonts.css` and every
+   * file under `public/fonts/circular-std-fonts/` are untouched — this theme
+   * is one attribute away, not one restore-from-git away.
+   */
+  --font-legacy-book: "CircularStdBook";
+  --font-legacy-medium: "CircularStdMedium";
+  --font-legacy-bold: "CircularStdBold";
+  --font-legacy-black: "CircularStdBlack";
+
+  /* ------------------------------------------------------- THE SWITCH */
+
+  /*
+   * Which theme is on, in words. Nothing reads it — it is the label, so this
+   * file answers "what font is the app in" without tracing four indirections.
+   *
+   * Deliberately *not* named `--font-satoshi`: that would read like a usable
+   * family, and it is not one. The registered families are `SatoshiRegular`,
+   * `SatoshiMedium` and so on; a bare "Satoshi" matches no face and would drop
+   * the page to the browser default without an error anywhere.
+   */
+  --font-active-name: "Satoshi";
+
+  /* The four cuts the rest of the app resolves through. */
+  --font-active-book: var(--font-satoshi-book);
+  --font-active-medium: var(--font-satoshi-medium);
+  --font-active-bold: var(--font-satoshi-bold);
+  --font-active-black: var(--font-satoshi-black);
+
+  /*
+   * The body face, for hand-written CSS that wants a font-family and has no
+   * business knowing which typeface is on. Components should use the Tailwind
+   * utilities instead; this is the escape hatch.
+   */
+  --font-primary: var(--font-active-book);
+}
+
+/*
+ * Runtime switching.
+ *
+ * Put `data-font="legacy"` on `<html>` and the whole app renders in Circular
+ * Std without a rebuild — useful for comparing the two side by side, and the
+ * shape a user-facing appearance setting would plug into later. The attribute
+ * selector outranks the bare `:root` above, so the CSS default stands until
+ * something explicitly asks otherwise.
+ */
+:root[data-font="legacy"] {
+  --font-active-name: "Circular Std";
+
+  --font-active-book: var(--font-legacy-book);
+  --font-active-medium: var(--font-legacy-medium);
+  --font-active-bold: var(--font-legacy-bold);
+  --font-active-black: var(--font-legacy-black);
+}
+
+:root[data-font="satoshi"] {
+  --font-active-name: "Satoshi";
+
+  --font-active-book: var(--font-satoshi-book);
+  --font-active-medium: var(--font-satoshi-medium);
+  --font-active-bold: var(--font-satoshi-bold);
+  --font-active-black: var(--font-satoshi-black);
+}

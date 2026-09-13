@@ -1,5 +1,6 @@
 @import "tailwindcss";
-@import "./circular-std-fonts.css";
+@import "./satoshi-fonts.css";
+@import "./font-themes.css";
 @import "./variables.css";
 
 @layer base {
@@ -47,8 +48,9 @@
   h6 {
     @apply font-heading;
     color: var(--color-text-primary);
-    /* CircularStdBold is already bold; asking for 600 here would stack a
-       synthesized faux bold on top of it. */
+    /* `font-heading` resolves to a bold *cut*, which is already bold; asking
+       for 600 here would stack a synthesized faux bold on top of it. True of
+       both typefaces — neither declares a `font-weight` on its faces. */
     font-weight: 400;
     letter-spacing: -0.02em;
   }
@@ -111,8 +113,8 @@
 
   /*
    * Section eyebrow — the small label above a section heading. Set from the
-   * hero badge, "WhatsApp Business API · built for merchants": 14px
-   * CircularStdMedium, normal tracking, sentence case.
+   * hero badge, "WhatsApp Business API · built for merchants": 14px in the
+   * medium cut, normal tracking, sentence case.
    *
    * `font-medium` is a family swap, not a weight — see the `--font-*` tokens in
    * `variables.css`. Tracking and transform are stated rather than left to

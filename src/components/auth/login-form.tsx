@@ -142,7 +142,6 @@ export function LoginForm() {
             type="email"
             inputMode="email"
             autoComplete="email"
-            placeholder="Enter your email address"
             className="h-12"
             error={Boolean(errors.email)}
             aria-describedby={errors.email ? "email-error" : undefined}
@@ -162,7 +161,6 @@ export function LoginForm() {
               name="password"
               type={showPassword ? "text" : "password"}
               autoComplete="current-password"
-              placeholder="Enter your password"
               className="h-12 pr-12"
               error={Boolean(errors.password)}
               aria-describedby={errors.password ? "password-error" : undefined}
