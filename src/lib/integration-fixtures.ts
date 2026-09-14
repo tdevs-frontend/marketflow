@@ -1,5 +1,17 @@
 import { APP_ROUTES } from "@/constants/app";
 import { INTEGRATION_ROUTES, providerById } from "@/constants/integrations";
+import {
+  SOCIAL_ACCOUNTS,
+  analyticsAccounts,
+  socialConnectionTotals,
+} from "@/lib/social-fixtures";
+import {
+  WORKSPACE_NOW,
+  WORKSPACE_NOW_MS,
+  daysAgo,
+  hoursAgo,
+  minutesAgo,
+} from "@/lib/workspace-clock";
 import type {
   ApiKey,
   ApiLogEntry,
@@ -30,18 +42,12 @@ import type {
 /**
  * The clock every relative timestamp in this module is measured against.
  *
- * A fixed instant rather than `Date.now()`: rendering is meant to be pure, and
- * a "2 min ago" computed on the server and again on the client is a hydration
- * mismatch waiting for a slow response. Components pass `INTEGRATIONS_NOW_MS`
- * into `formatRelativeTime` so both halves agree.
+ * Re-exported under the module's own name from `lib/workspace-clock`, which is
+ * where the workspace's frozen instant now lives so that these fixtures and the
+ * Social Planner's can share it without importing each other.
  */
-export const INTEGRATIONS_NOW = "2026-09-14T10:42:00.000Z";
-export const INTEGRATIONS_NOW_MS = new Date(INTEGRATIONS_NOW).getTime();
-
-const minutesAgo = (minutes: number) =>
-  new Date(INTEGRATIONS_NOW_MS - minutes * 60_000).toISOString();
-const hoursAgo = (hours: number) => minutesAgo(hours * 60);
-const daysAgo = (days: number) => minutesAgo(days * 60 * 24);
+export const INTEGRATIONS_NOW = WORKSPACE_NOW;
+export const INTEGRATIONS_NOW_MS = WORKSPACE_NOW_MS;
 
 /**
  * A secret as the API hands it back.
@@ -62,6 +68,129 @@ const masked = (tail: string, dots = 10) => `${"•".repeat(dots)}${tail}`;
  * Five of these have a page; three are connected and monitored from the hub
  * alone. They share one record type so the grid does not care which is which.
  */
+
+
+/* -------------------------------------------------------------------------- */
+/* Social                                                                     */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The Social integration's hub record, derived from the connected accounts.
+ *
+ * Nothing here is typed out. The account list in `social-fixtures` is the single
+ * source of truth for who is connected — the Planner's composer reads the same
+ * array — so this card's status, its account line and its health checks are all
+ * computed from it. Hand-writing "3 accounts" here is how a hub card ends up
+ * claiming a connection the Planner cannot actually publish through.
+ */
+function socialIntegration(): Integration {
+  const totals = socialConnectionTotals();
+  const platforms = new Set(SOCIAL_ACCOUNTS.map((account) => account.platform));
+  const broken = SOCIAL_ACCOUNTS.filter((account) => account.status !== "connected");
+  const expiring = SOCIAL_ACCOUNTS.filter(
+    (account) => account.auth.status === "expiring_soon",
+  );
+  const withAnalytics = analyticsAccounts().length;
+
+  /* The freshest sync across every account — the hub card shows one figure. */
+  const lastSync = SOCIAL_ACCOUNTS.reduce<string | null>(
+    (latest, account) =>
+      !latest || account.lastSyncedAt > latest ? account.lastSyncedAt : latest,
+    null,
+  );
+
+  return {
+    id: "social",
+    slug: "social",
+    href: INTEGRATION_ROUTES.social,
+    name: "Social Media",
+    description: "Connect social accounts for publishing, scheduling and analytics.",
+    category: "social",
+    icon: "share-2",
+    /* One expired token is an issue, not a healthy connection — even while the
+       other three accounts publish perfectly well. */
+    status:
+      totals.accounts === 0
+        ? "needs_setup"
+        : broken.length > 0
+          ? "issue"
+          : "connected",
+    provider: null,
+    account:
+      totals.accounts === 0
+        ? null
+        : totals.accounts + " account" + (totals.accounts === 1 ? "" : "s"),
+    eventsToday: totals.postsToday,
+    credentials: [],
+    health: [
+      {
+        id: "api",
+        label: "API Connection",
+        status: "healthy",
+        detail:
+          "Reachable on " + totals.activePlatforms + " of " + platforms.size + " connected platforms.",
+        checkedAt: minutesAgo(2),
+      },
+      {
+        id: "auth",
+        label: "Authentication",
+        status:
+          broken.length > 0 ? "error" : expiring.length > 0 ? "warning" : "healthy",
+        detail:
+          broken.length > 0
+            ? broken.map((account) => account.name).join(", ") + " needs re-authorising."
+            : expiring.length > 0
+              ? expiring.length + " token expires within the next 30 days."
+              : "Every token is valid.",
+        checkedAt: minutesAgo(2),
+        fixLabel: broken.length > 0 ? "Reconnect" : undefined,
+      },
+      {
+        id: "publishing",
+        label: "Publishing Permission",
+        status: totals.activePlatforms > 0 ? "healthy" : "error",
+        detail:
+          totals.activePlatforms +
+          " platform" +
+          (totals.activePlatforms === 1 ? "" : "s") +
+          " can publish right now.",
+        checkedAt: minutesAgo(4),
+      },
+      {
+        id: "analytics",
+        label: "Analytics Permission",
+        status: withAnalytics === SOCIAL_ACCOUNTS.length ? "healthy" : "warning",
+        detail: "Insights granted on " + withAnalytics + " of " + SOCIAL_ACCOUNTS.length + " accounts.",
+        checkedAt: minutesAgo(4),
+      },
+    ],
+    usage: [
+      {
+        label: "Social Planner",
+        count: 12,
+        href: APP_ROUTES.socialCalendar,
+        icon: "calendar-days",
+      },
+      {
+        label: "Campaigns",
+        count: 3,
+        href: APP_ROUTES.marketingCampaigns,
+        icon: "megaphone",
+      },
+      { label: "Automation", count: 2, href: APP_ROUTES.automation, icon: "workflow" },
+    ],
+    activity: {
+      connectedAt: daysAgo(142),
+      lastSuccessAt: minutesAgo(2),
+      lastSyncAt: lastSync,
+      lastErrorAt: hoursAgo(9),
+      lastError:
+        "X / Twitter returned 401 Unauthorized — the access token expired on 12 Sep.",
+    },
+    metrics: [],
+  };
+}
+
 export const INTEGRATIONS: Integration[] = [
   {
     id: "whatsapp",
@@ -324,6 +453,8 @@ export const INTEGRATIONS: Integration[] = [
       { label: "Queued", value: "214", hint: "Waiting on the connection", tone: "warning" },
     ],
   },
+
+  socialIntegration(),
 
   {
     id: "webhooks",

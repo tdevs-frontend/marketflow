@@ -1,26 +1,25 @@
-"use client";
-
-import { useState } from "react";
 import {
-  AlertTriangle,
   ArrowDownRight,
   ArrowUpRight,
-  Link2,
+  AlertTriangle,
+  ExternalLink,
   Plus,
   RefreshCw,
   Settings2,
-  Unlink,
 } from "lucide-react";
 
 import { Badge, type BadgeTone } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { Dialog } from "@/components/ui/dialog";
 import { MiniStat } from "@/components/ui/stats-card";
-import { useToast } from "@/components/ui/toast";
-import { PLATFORM_ORDER, PLATFORM_THEME } from "@/constants/channels";
+import { NoConnectedAccounts } from "@/components/integrations/social/social-account-selector";
+import {
+  INTEGRATION_ROUTES,
+  SOCIAL_CAPABILITY_LABEL,
+} from "@/constants/integrations";
+import { PLATFORM_THEME } from "@/constants/channels";
 import { SOCIAL_ACCOUNTS } from "@/lib/social-fixtures";
+import { WORKSPACE_NOW_MS } from "@/lib/workspace-clock";
 import {
   formatCount,
   formatNumber,
@@ -28,17 +27,25 @@ import {
   formatRelativeTime,
 } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import type { AccountStatus, SocialAccount, SocialPlatform } from "@/types/social";
+import type { AccountStatus } from "@/types/social";
 import { PlatformMark } from "../shared/channel-badge";
 
 /**
- * Connected social accounts.
+ * Connected social accounts, as Social Planner sees them.
  *
- * Cards rather than a table, because each account is a thing you act on rather
- * than a row you compare — and because the state that matters here is binary
- * and urgent: a page whose token has expired is silently failing to publish,
- * which is the one thing this page exists to surface. So an expired account
- * gets a tinted card and a Reconnect button, not just an amber word.
+ * This page reads the connection; it does not own it. Connecting, reconnecting
+ * and disconnecting all live in Integrations → Social, and every action here
+ * links there rather than opening a dialog of its own — one connection flow,
+ * one place a token is managed, one answer to "is this account live".
+ *
+ * What the Planner keeps is the half it is actually for: audience size, posting
+ * volume and engagement per account, which is context a content team needs
+ * while planning and which has no place on an integrations page. The split is
+ * the same one that runs through the rest of the product — Integrations answers
+ * *does it work*, the channel module answers *how is it doing*.
+ *
+ * Accounts come from `SOCIAL_ACCOUNTS`, the single shared source the composer
+ * and the Integrations page also read.
  */
 
 const STATUS_TONES: Record<AccountStatus, BadgeTone> = {
@@ -53,21 +60,7 @@ const STATUS_LABELS: Record<AccountStatus, string> = {
   disconnected: "Disconnected",
 };
 
-/** Platforms with no account yet — what "Connect Account" can still add. */
-const connectable = (accounts: SocialAccount[]): SocialPlatform[] =>
-  PLATFORM_ORDER.filter(
-    (platform) => !accounts.some((account) => account.platform === platform),
-  );
-
 export function SocialAccounts() {
-  const toast = useToast();
-
-  const [managing, setManaging] = useState<SocialAccount | null>(null);
-  const [connectOpen, setConnectOpen] = useState(false);
-  const [pendingDisconnect, setPendingDisconnect] = useState<SocialAccount | null>(
-    null,
-  );
-
   const needsAttention = SOCIAL_ACCOUNTS.filter(
     (account) => account.status !== "connected",
   );
@@ -75,7 +68,10 @@ export function SocialAccounts() {
     (sum, account) => sum + account.followers,
     0,
   );
-  const available = connectable(SOCIAL_ACCOUNTS);
+
+  if (SOCIAL_ACCOUNTS.length === 0) {
+    return <NoConnectedAccounts compact={false} />;
+  }
 
   return (
     <>
@@ -94,14 +90,10 @@ export function SocialAccounts() {
             {needsAttention.map((a) => PLATFORM_THEME[a.platform].label).join(" and ")}{" "}
             will fail until the token is renewed.
           </p>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setManaging(needsAttention[0])}
-          >
+          <ButtonLink href={INTEGRATION_ROUTES.social} variant="outline" size="sm">
             <RefreshCw aria-hidden />
             Fix now
-          </Button>
+          </ButtonLink>
         </div>
       ) : null}
 
@@ -152,9 +144,14 @@ export function SocialAccounts() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         {SOCIAL_ACCOUNTS.map((account) => {
-          const theme = PLATFORM_THEME[account.platform];
           const rising = account.followerChange >= 0;
           const broken = account.status !== "connected";
+
+          /* Granted only. A capability that was never available on this account
+             is a connection detail, and the page that owns it says why. */
+          const granted = account.capabilities.filter(
+            (capability) => capability.state === "granted",
+          );
 
           return (
             <Card
@@ -175,10 +172,7 @@ export function SocialAccounts() {
                       {account.username}
                     </p>
                     <p className="mt-0.5 text-sm text-text-muted">
-                      {theme.label}
-                      {account.platform === "instagram" ? " Business" : ""}
-                      {account.platform === "facebook" ? " Page" : ""}
-                      {account.platform === "linkedin" ? " Page" : ""}
+                      {account.accountType}
                     </p>
                   </div>
                 </div>
@@ -203,15 +197,15 @@ export function SocialAccounts() {
 
               <div className="mt-4">
                 <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
-                  Permissions
+                  Capabilities
                 </p>
                 <ul className="mt-1.5 flex flex-wrap gap-1.5">
-                  {account.permissions.map((permission) => (
+                  {granted.map((capability) => (
                     <li
-                      key={permission}
+                      key={capability.key}
                       className="rounded-btn bg-surface-secondary px-2 py-0.5 text-sm font-medium text-text-secondary"
                     >
-                      {permission}
+                      {SOCIAL_CAPABILITY_LABEL[capability.key]}
                     </li>
                   ))}
                 </ul>
@@ -220,37 +214,24 @@ export function SocialAccounts() {
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-3.5">
                 <p className="flex items-center gap-1.5 text-sm text-text-muted">
                   <RefreshCw className="size-3" aria-hidden />
-                  Synced {formatRelativeTime(account.lastSyncedAt)}
+                  Synced {formatRelativeTime(account.lastSyncedAt, WORKSPACE_NOW_MS)}
                 </p>
 
-                <div className="flex gap-2">
-                  {broken ? (
-                    <Button
-                      size="sm"
-                      onClick={() => toast(`Reconnecting ${theme.label}…`)}
-                    >
-                      <RefreshCw aria-hidden />
-                      Reconnect
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setManaging(account)}
-                    >
-                      <Settings2 aria-hidden />
-                      Manage
-                    </Button>
-                  )}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setPendingDisconnect(account)}
-                  >
-                    <Unlink aria-hidden />
-                    Disconnect
-                  </Button>
-                </div>
+                {/*
+                 * One link, to the page that owns the connection.
+                 *
+                 * This used to be Manage / Reconnect / Disconnect wired to local
+                 * dialogs, which meant two places could disconnect an account
+                 * and only one of them knew what depended on it.
+                 */}
+                <ButtonLink
+                  href={INTEGRATION_ROUTES.social}
+                  variant={broken ? "primary" : "outline"}
+                  size="sm"
+                >
+                  {broken ? <RefreshCw aria-hidden /> : <Settings2 aria-hidden />}
+                  {broken ? "Reconnect" : "Manage connection"}
+                </ButtonLink>
               </div>
             </Card>
           );
@@ -265,206 +246,19 @@ export function SocialAccounts() {
             Connect another account
           </h3>
           <p className="mt-1 max-w-xs text-sm text-text-muted">
-            {available.length > 0
-              ? `${available.map((p) => PLATFORM_THEME[p].label).join(", ")} ${available.length === 1 ? "is" : "are"} still available, plus a second profile on any platform.`
-              : "Every platform is connected. You can add a second profile on any of them."}
+            Accounts are connected once in Integrations and become available to
+            every part of Social Planner.
           </p>
-          <Button size="sm" className="mt-3" onClick={() => setConnectOpen(true)}>
-            <Plus aria-hidden />
-            Connect Account
-          </Button>
+          <ButtonLink
+            href={INTEGRATION_ROUTES.social}
+            size="sm"
+            className="mt-3"
+          >
+            <ExternalLink aria-hidden />
+            Go to Social Integrations
+          </ButtonLink>
         </Card>
       </div>
-
-      {/* -------------------------------------------------------- Manage */}
-      <Dialog
-        open={Boolean(managing)}
-        onClose={() => setManaging(null)}
-        title={managing ? `Manage ${managing.name}` : "Manage account"}
-        description={managing?.username}
-        footer={
-          <>
-            <Button variant="outline" size="compact" onClick={() => setManaging(null)}>
-              Close
-            </Button>
-            <Button
-              size="compact"
-              onClick={() => {
-                setManaging(null);
-                toast("Account settings saved");
-              }}
-            >
-              Save changes
-            </Button>
-          </>
-        }
-      >
-        {managing ? (
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <PlatformMark platform={managing.platform} size="lg" />
-              <div className="min-w-0">
-                <p className="text-sm font-semibold text-text-primary">
-                  {managing.name}
-                </p>
-                <p className="text-sm text-text-muted">{managing.username}</p>
-              </div>
-              <Badge tone={STATUS_TONES[managing.status]} className="ml-auto">
-                {STATUS_LABELS[managing.status]}
-              </Badge>
-            </div>
-
-            {managing.status === "expired" ? (
-              <div className="rounded-panel border border-warning/30 bg-warning-soft px-3.5 py-3">
-                <p className="text-sm font-medium text-warning-text">
-                  This token has expired
-                </p>
-                <p className="mt-1 text-sm text-text-secondary">
-                  Reconnecting takes you to {PLATFORM_THEME[managing.platform].label}{" "}
-                  to re-authorise. Your scheduled posts and history are kept.
-                </p>
-                <Button
-                  size="sm"
-                  className="mt-2.5"
-                  onClick={() => {
-                    setManaging(null);
-                    toast(
-                      `Reconnecting ${PLATFORM_THEME[managing.platform].label}…`,
-                    );
-                  }}
-                >
-                  <RefreshCw aria-hidden />
-                  Reconnect now
-                </Button>
-              </div>
-            ) : null}
-
-            <dl className="grid grid-cols-2 gap-3 text-sm">
-              {[
-                { label: "Followers", value: formatNumber(managing.followers) },
-                { label: "Posts published", value: formatNumber(managing.posts) },
-                {
-                  label: "Engagement rate",
-                  value: formatPercent(managing.engagementRate),
-                },
-                {
-                  label: "Last synced",
-                  value: formatRelativeTime(managing.lastSyncedAt),
-                },
-              ].map((row) => (
-                <div key={row.label}>
-                  <dt className="text-sm text-text-muted">{row.label}</dt>
-                  <dd className="font-medium text-text-primary">{row.value}</dd>
-                </div>
-              ))}
-            </dl>
-
-            <section>
-              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
-                Granted permissions
-              </h3>
-              <ul className="mt-2 space-y-1.5">
-                {managing.permissions.map((permission) => (
-                  <li
-                    key={permission}
-                    className="flex items-center gap-2 rounded-panel border border-border px-3 py-2 text-sm text-text-secondary"
-                  >
-                    <Link2 className="size-3.5 shrink-0 text-primary" aria-hidden />
-                    {permission}
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-2 text-sm text-text-muted">
-                Permissions are granted on {PLATFORM_THEME[managing.platform].label}{" "}
-                and can only be changed there.
-              </p>
-            </section>
-
-            <Button
-              variant="outline"
-              size="compact"
-              className="w-full"
-              onClick={() => {
-                toast("Sync started");
-              }}
-            >
-              <RefreshCw aria-hidden />
-              Sync now
-            </Button>
-          </div>
-        ) : null}
-      </Dialog>
-
-      {/* ------------------------------------------------------- Connect */}
-      <Dialog
-        open={connectOpen}
-        onClose={() => setConnectOpen(false)}
-        title="Connect an account"
-        description="You are taken to the platform to authorise, then back here."
-        footer={
-          <Button variant="outline" size="compact" onClick={() => setConnectOpen(false)}>
-            Cancel
-          </Button>
-        }
-      >
-        <ul className="space-y-2">
-          {PLATFORM_ORDER.map((platform) => {
-            const theme = PLATFORM_THEME[platform];
-            const existing = SOCIAL_ACCOUNTS.find(
-              (account) => account.platform === platform,
-            );
-
-            return (
-              <li key={platform}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setConnectOpen(false);
-                    toast(`Opening ${theme.label} to authorise…`);
-                  }}
-                  className="flex w-full items-center gap-3 rounded-panel border border-border px-3.5 py-3 text-left transition-all hover:border-border-strong hover:shadow-card focus-visible:shadow-focus focus-visible:outline-none"
-                >
-                  <PlatformMark platform={platform} />
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-sm font-medium text-text-primary">
-                      {theme.label}
-                    </span>
-                    <span className="block text-sm text-text-muted">
-                      {existing
-                        ? `${existing.username} already connected — this adds a second profile`
-                        : "Not connected yet"}
-                    </span>
-                  </span>
-                  <Link2 className="size-4 shrink-0 text-text-muted" aria-hidden />
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      </Dialog>
-
-      <ConfirmDialog
-        open={Boolean(pendingDisconnect)}
-        onClose={() => setPendingDisconnect(null)}
-        onConfirm={() =>
-          toast(
-            `${pendingDisconnect ? PLATFORM_THEME[pendingDisconnect.platform].label : "Account"} disconnected`,
-          )
-        }
-        title={`Disconnect ${pendingDisconnect?.name}?`}
-        description="Scheduled posts to this account are cancelled."
-        confirmLabel="Disconnect account"
-      >
-        <p className="text-sm text-text-secondary">
-          Posts already published stay on the platform, and your analytics history
-          is kept. Anything scheduled to{" "}
-          {pendingDisconnect
-            ? PLATFORM_THEME[pendingDisconnect.platform].label
-            : "this account"}{" "}
-          will be cancelled rather than fail silently. You can reconnect at any
-          time.
-        </p>
-      </ConfirmDialog>
     </>
   );
 }

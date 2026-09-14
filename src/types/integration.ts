@@ -18,7 +18,13 @@
 /* -------------------------------------------------------------------------- */
 
 /** The five integrations that have a page of their own. */
-export type IntegrationSlug = "whatsapp" | "email" | "sms" | "webhooks" | "api";
+export type IntegrationSlug =
+  | "whatsapp"
+  | "email"
+  | "sms"
+  | "social"
+  | "webhooks"
+  | "api";
 
 /**
  * The filter axis on the hub.
@@ -31,6 +37,7 @@ export type IntegrationCategory =
   | "messaging"
   | "email"
   | "sms"
+  | "social"
   | "developer"
   | "analytics"
   | "commerce";

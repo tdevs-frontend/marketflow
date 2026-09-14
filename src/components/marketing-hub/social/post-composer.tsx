@@ -9,8 +9,9 @@ import { Field, Input, Textarea } from "@/components/ui/input";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Tag } from "@/components/ui/tag";
 import { useToast } from "@/components/ui/toast";
-import { PLATFORM_ORDER, PLATFORM_THEME } from "@/constants/channels";
-import { MEDIA_ASSETS, SOCIAL_ACCOUNTS } from "@/lib/social-fixtures";
+import { PLATFORM_THEME } from "@/constants/channels";
+import { MEDIA_ASSETS, publishableAccounts } from "@/lib/social-fixtures";
+import { SocialAccountSelector } from "@/components/integrations/social/social-account-selector";
 import { cn } from "@/lib/utils";
 import type { SocialPlatform } from "@/types/social";
 import { PlatformMark } from "../shared/channel-badge";
@@ -64,7 +65,19 @@ export function PostComposer({
 }) {
   const toast = useToast();
 
-  const [platforms, setPlatforms] = useState<SocialPlatform[]>(["instagram"]);
+  /*
+   * The composer selects *accounts*, not platforms.
+   *
+   * A merchant with two Facebook Pages has to be able to say which one, and a
+   * platform-level toggle cannot express that. The list comes from
+   * `publishableAccounts()` — the same predicate Integrations → Social uses —
+   * so an account whose token expired this morning is simply not offered, and
+   * this component never has to know what a token is.
+   */
+  const publishable = publishableAccounts();
+  const [accountIds, setAccountIds] = useState<string[]>(() =>
+    publishable[0] ? [publishable[0].id] : [],
+  );
   const [mediaIds, setMediaIds] = useState<string[]>([]);
   const [title, setTitle] = useState("");
   const [caption, setCaption] = useState("");
@@ -72,6 +85,18 @@ export function PostComposer({
   const [hashtagDraft, setHashtagDraft] = useState("");
   const [previewPlatform, setPreviewPlatform] = useState<SocialPlatform>("instagram");
   const [mediaOpen, setMediaOpen] = useState(false);
+
+  const selectedAccounts = publishable.filter((account) =>
+    accountIds.includes(account.id),
+  );
+
+  /* Character limits and the preview are genuinely per-platform, not per
+     account — two Facebook Pages render a caption identically — so the
+     platform list is derived rather than stored. */
+  const platforms = useMemo(
+    () => [...new Set(selectedAccounts.map((account) => account.platform))],
+    [selectedAccounts],
+  );
 
   /* Composed text is what the platforms actually receive, so it is what the
      counters measure — hashtags count against the limit too. */
@@ -88,24 +113,9 @@ export function PostComposer({
 
   const selectedMedia = MEDIA_ASSETS.filter((asset) => mediaIds.includes(asset.id));
 
-  /* Only platforms with a live connection can be posted to. */
-  const connected = new Set(
-    SOCIAL_ACCOUNTS.filter((account) => account.status === "connected").map(
-      (account) => account.platform,
-    ),
-  );
-
   const overLimit = platforms.filter(
     (platform) => composed.length > PLATFORM_LIMITS[platform],
   );
-
-  function togglePlatform(platform: SocialPlatform) {
-    setPlatforms((current) =>
-      current.includes(platform)
-        ? current.filter((value) => value !== platform)
-        : [...current, platform],
-    );
-  }
 
   function addHashtag(value: string) {
     const tag = value.trim().replace(/^#*/, "");
@@ -118,7 +128,7 @@ export function PostComposer({
   }
 
   function reset() {
-    setPlatforms(["instagram"]);
+    setAccountIds(publishable[0] ? [publishable[0].id] : []);
     setMediaIds([]);
     setTitle("");
     setCaption("");
@@ -131,7 +141,7 @@ export function PostComposer({
     toast(
       action === "draft"
         ? `${title || "Untitled post"} saved as a draft`
-        : `${title || "Post"} scheduled to ${platforms.length} platform${platforms.length === 1 ? "" : "s"}`,
+        : `${title || "Post"} scheduled to ${accountIds.length} account${accountIds.length === 1 ? "" : "s"}`,
     );
     reset();
   }
@@ -159,7 +169,7 @@ export function PostComposer({
             <Button
               size="compact"
               onClick={() => submit("schedule")}
-              disabled={platforms.length === 0 || composed.length === 0}
+              disabled={accountIds.length === 0 || composed.length === 0}
             >
               <Send aria-hidden />
               Schedule
@@ -171,61 +181,14 @@ export function PostComposer({
           {/* --------------------------------------------------- 1. Platform */}
           <section>
             <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
-              1 · Select platforms
+              1 · Publish to
             </h3>
 
-            <ul className="mt-2.5 grid gap-2 sm:grid-cols-2">
-              {PLATFORM_ORDER.map((platform) => {
-                const theme = PLATFORM_THEME[platform];
-                const active = platforms.includes(platform);
-                const live = connected.has(platform);
-
-                return (
-                  <li key={platform}>
-                    <button
-                      type="button"
-                      onClick={() => togglePlatform(platform)}
-                      aria-pressed={active}
-                      className={cn(
-                        "flex w-full items-center gap-2.5 rounded-panel border px-3 py-2.5 text-left transition-all focus-visible:shadow-focus focus-visible:outline-none",
-                        active
-                          ? "border-primary bg-primary-subtle"
-                          : "border-border hover:border-border-strong",
-                      )}
-                    >
-                      <PlatformMark platform={platform} />
-
-                      <span className="min-w-0 flex-1">
-                        <span className="block text-sm font-medium text-text-primary">
-                          {theme.label}
-                        </span>
-                        <span
-                          className={cn(
-                            "block text-sm",
-                            live ? "text-text-muted" : "text-warning-text",
-                          )}
-                        >
-                          {live
-                            ? `${PLATFORM_LIMITS[platform].toLocaleString()} char limit`
-                            : "Needs reconnecting"}
-                        </span>
-                      </span>
-
-                      {active ? (
-                        <Check className="size-4 shrink-0 text-primary" aria-hidden />
-                      ) : null}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-
-            {platforms.some((platform) => !connected.has(platform)) ? (
-              <p className="mt-2 rounded-panel bg-warning-soft px-3 py-2 text-sm text-warning-text">
-                One of the selected accounts needs reconnecting. The post saves
-                fine, but publishing to it will fail until the token is renewed.
-              </p>
-            ) : null}
+            <SocialAccountSelector
+              selected={accountIds}
+              onChange={setAccountIds}
+              className="mt-2.5"
+            />
           </section>
 
           {/* ------------------------------------------------------ 2. Media */}
@@ -469,7 +432,7 @@ export function PostComposer({
 
             {platforms.length === 0 ? (
               <p className="mt-2.5 rounded-panel border border-dashed border-border px-3 py-4 text-center text-sm text-text-muted">
-                Pick a platform to see how this post will look.
+                Pick an account to see how this post will look.
               </p>
             ) : (
               <div className="mt-2.5 rounded-panel bg-background p-4">
@@ -481,7 +444,7 @@ export function PostComposer({
                         MarketFlow
                       </p>
                       <p className="text-sm text-text-muted">
-                        {SOCIAL_ACCOUNTS.find(
+                        {selectedAccounts.find(
                           (account) => account.platform === activePreview,
                         )?.username ?? "@marketflow"}
                       </p>

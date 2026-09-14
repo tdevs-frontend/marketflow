@@ -6,11 +6,12 @@ import {
   Eye,
   Heart,
   Send,
+  Info,
   TrendingUp,
   Users,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ChartCard, PanelCard } from "@/components/ui/chart-card";
 import {
@@ -32,10 +33,12 @@ import {
   PLATFORM_ORDER,
   PLATFORM_THEME,
 } from "@/constants/channels";
+import { INTEGRATION_ROUTES } from "@/constants/integrations";
 import {
   BEST_POSTING_TIMES,
   PLATFORM_REACH,
   SOCIAL_ACCOUNTS,
+  analyticsAccounts,
   SOCIAL_POSTS,
   SOCIAL_SERIES,
   SOCIAL_TOTALS,
@@ -131,9 +134,22 @@ export function SocialAnalytics() {
   const [platform, setPlatform] = useState<SocialPlatform | "all">("all");
   const [metric, setMetric] = useState<Metric>("reach");
 
+  /*
+   * Only accounts that actually granted analytics.
+   *
+   * A figure computed over an account MarketFlow cannot read insights for is a
+   * figure that is quietly wrong — the follower share would sum to 100% across
+   * a set that is missing a platform. Excluding them keeps every number on this
+   * page true, and the notice below says which account is missing and why.
+   */
+  const reportable = analyticsAccounts();
+  const unreportable = SOCIAL_ACCOUNTS.filter(
+    (account) => !reportable.includes(account),
+  );
+
   const meta = METRIC_META[metric];
   const bestTime = [...BEST_POSTING_TIMES].sort((a, b) => b.rate - a.rate)[0];
-  const bestPlatform = [...SOCIAL_ACCOUNTS].sort(
+  const bestPlatform = [...reportable].sort(
     (a, b) => b.engagementRate - a.engagementRate,
   )[0];
 
@@ -144,7 +160,7 @@ export function SocialAnalytics() {
       ? PUBLISHED
       : PUBLISHED.filter((post) => post.platforms.includes(platform));
 
-  const followerTotal = SOCIAL_ACCOUNTS.reduce(
+  const followerTotal = reportable.reduce(
     (sum, account) => sum + account.followers,
     0,
   );
@@ -238,6 +254,31 @@ export function SocialAnalytics() {
         />
       </ChartCard>
 
+      {unreportable.length > 0 ? (
+        /*
+         * Named, not generic.
+         *
+         * "Analytics unavailable" on its own sends a merchant looking for a
+         * broken chart; naming the account and linking to the connection that
+         * needs re-authorising is the difference between a dead end and a fix.
+         */
+        <div className="flex flex-wrap items-center gap-3 rounded-card border border-border bg-surface-secondary px-4 py-3.5">
+          <Info className="size-4 shrink-0 text-text-muted" aria-hidden />
+          <p className="min-w-0 flex-1 text-sm text-text-secondary">
+            <span className="font-semibold text-text-primary">
+              Analytics unavailable for{" "}
+              {unreportable.map((a) => PLATFORM_THEME[a.platform].label).join(", ")}.
+            </span>{" "}
+            Reconnect {unreportable.length === 1 ? "this account" : "these accounts"}{" "}
+            and grant analytics access to include{" "}
+            {unreportable.length === 1 ? "it" : "them"} in these figures.
+          </p>
+          <ButtonLink href={INTEGRATION_ROUTES.social} variant="outline" size="sm">
+            Review Connection
+          </ButtonLink>
+        </div>
+      ) : null}
+
       <div className="grid gap-4 xl:grid-cols-3">
         <ChartCard
           title="Follower Share"
@@ -245,7 +286,7 @@ export function SocialAnalytics() {
           bodyClassName="mt-0 ml-0"
           footer={
             <ul className="space-y-1.5">
-              {SOCIAL_ACCOUNTS.map((account) => (
+              {reportable.map((account) => (
                 <li
                   key={account.id}
                   className="flex items-center gap-2 text-sm"
@@ -263,11 +304,11 @@ export function SocialAnalytics() {
           }
         >
           <DonutChart
-            labels={SOCIAL_ACCOUNTS.map(
+            labels={reportable.map(
               (account) => PLATFORM_THEME[account.platform].label,
             )}
-            values={SOCIAL_ACCOUNTS.map((account) => account.followers)}
-            colors={SOCIAL_ACCOUNTS.map(
+            values={reportable.map((account) => account.followers)}
+            colors={reportable.map(
               (account) => PLATFORM_THEME[account.platform].hex,
             )}
             centerLabel="Total followers"
@@ -308,7 +349,7 @@ export function SocialAnalytics() {
                   size="sm"
                 />
               )}
-              items={[...SOCIAL_ACCOUNTS]
+              items={[...reportable]
                 .sort((a, b) => b.engagementRate - a.engagementRate)
                 .map((account) => ({
                   id: account.platform,

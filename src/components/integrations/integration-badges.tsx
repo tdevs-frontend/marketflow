@@ -3,14 +3,19 @@ import {
   CheckCircle2,
   CircleDashed,
   CircleSlash,
+  Clock,
+  MinusCircle,
   Pause,
   PlugZap,
+  ShieldAlert,
+  ShieldCheck,
   XCircle,
   type LucideIcon,
 } from "lucide-react";
 
 import { Badge, type BadgeTone } from "@/components/ui/badge";
 import {
+  AUTH_STATUS_LABEL,
   HEALTH_LABEL,
   INTEGRATION_STATUS_LABEL,
   WEBHOOK_STATUS_LABEL,
@@ -21,6 +26,7 @@ import type {
   IntegrationStatus,
   WebhookStatus,
 } from "@/types/integration";
+import type { AuthStatus, CapabilityState } from "@/types/social";
 
 /**
  * Every state in the Integrations module, as a badge.
@@ -255,5 +261,85 @@ export function CodeText({
     >
       {children}
     </code>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Social authorisation                                                       */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Token and authorisation state.
+ *
+ * A fifth scale on top of `HealthStatus` rather than a reuse of it, because a
+ * social token fails on a clock: "Expiring Soon" has no equivalent in an SMTP
+ * connection, and it is the single most useful thing this badge says — it is
+ * the warning that arrives while there is still time to act on it.
+ *
+ * `expiring_soon` is amber rather than red on purpose. Nothing is broken yet,
+ * and colouring a working connection as an outage is how merchants learn to
+ * ignore the colour.
+ */
+const AUTH_STATE: Record<AuthStatus, StateStyle> = {
+  healthy: { tone: "success", icon: ShieldCheck, label: AUTH_STATUS_LABEL.healthy },
+  expiring_soon: { tone: "warning", icon: Clock, label: AUTH_STATUS_LABEL.expiring_soon },
+  expired: { tone: "danger", icon: ShieldAlert, label: AUTH_STATUS_LABEL.expired },
+  permission_missing: {
+    tone: "warning",
+    icon: ShieldAlert,
+    label: AUTH_STATUS_LABEL.permission_missing,
+  },
+  disconnected: { tone: "neutral", icon: PlugZap, label: AUTH_STATUS_LABEL.disconnected },
+};
+
+export function AuthStatusBadge({
+  status,
+  size = "sm",
+  className,
+}: {
+  status: AuthStatus;
+  size?: "sm" | "md";
+  className?: string;
+}) {
+  const { tone, icon: Icon, label } = AUTH_STATE[status];
+
+  return (
+    <Badge tone={tone} size={size} className={cn("normal-case", className)}>
+      <Icon className="size-3" aria-hidden />
+      {label}
+    </Badge>
+  );
+}
+
+/**
+ * Whether one capability is usable.
+ *
+ * Three states, not two: `needs_reauth` was granted and has lapsed — fixed by
+ * pressing Reconnect — while `missing` was never available on this account and
+ * reconnecting will not change it. Showing both as "off" sends a merchant
+ * round an OAuth loop that cannot help them.
+ */
+const CAPABILITY_STATE: Record<CapabilityState, StateStyle> = {
+  granted: { tone: "success", icon: CheckCircle2, label: "Granted" },
+  missing: { tone: "neutral", icon: MinusCircle, label: "Not available" },
+  needs_reauth: { tone: "warning", icon: AlertTriangle, label: "Needs reauthorization" },
+};
+
+export function CapabilityBadge({
+  state,
+  size = "sm",
+  className,
+}: {
+  state: CapabilityState;
+  size?: "sm" | "md";
+  className?: string;
+}) {
+  const { tone, icon: Icon, label } = CAPABILITY_STATE[state];
+
+  return (
+    <Badge tone={tone} size={size} className={cn("normal-case", className)}>
+      <Icon className="size-3" aria-hidden />
+      {label}
+    </Badge>
   );
 }

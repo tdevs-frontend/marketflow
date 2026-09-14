@@ -35,6 +35,7 @@ import {
   Package,
   Plug,
   ScrollText,
+  Share2,
   Settings,
   ShieldCheck,
   ShoppingCart,
@@ -107,6 +108,7 @@ const ICONS: Record<string, LucideIcon> = {
 
   /* Integrations */
   webhook: Webhook,
+  "share-2": Share2,
   code: Code,
 
   /* Workspace */

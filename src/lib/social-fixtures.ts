@@ -1,9 +1,18 @@
 import type { Option } from "@/constants/commerce";
+import {
+  daysAgo,
+  daysAhead,
+  hoursAgo,
+  minutesAgo,
+} from "@/lib/workspace-clock";
 import type {
   MediaAsset,
   MediaFolder,
   PostStatus,
+  CapabilityState,
   SocialAccount,
+  SocialActivityEvent,
+  SocialCapabilityKey,
   SocialPost,
 } from "@/types/social";
 
@@ -634,30 +643,60 @@ export const MEDIA_USAGE: Record<string, number> = Object.fromEntries(
 
 export const SOCIAL_ACCOUNTS: SocialAccount[] = [
   {
-    id: "sa-instagram",
-    platform: "instagram",
-    name: "MarketFlow",
-    username: "@marketflow",
-    status: "expired",
-    followers: 48_260,
-    followerChange: 6.4,
-    posts: 284,
-    engagementRate: 4.8,
-    lastSyncedAt: "2026-09-06T22:10:00Z",
-    permissions: ["Publish posts", "Read insights", "Manage comments"],
-  },
-  {
     id: "sa-facebook",
     platform: "facebook",
-    name: "MarketFlow",
-    username: "facebook.com/marketflow",
+    name: "MarketFlow Store",
+    username: "@marketflowstore",
     status: "connected",
     followers: 32_140,
     followerChange: 3.2,
     posts: 312,
     engagementRate: 2.6,
-    lastSyncedAt: "2026-09-08T09:40:00Z",
-    permissions: ["Publish posts", "Read insights", "Manage comments", "Run ads"],
+    lastSyncedAt: minutesAgo(2),
+    accountType: "Facebook Page",
+    externalId: "102938475610293",
+    auth: {
+      status: "healthy",
+      expiresAt: null,
+      connectedBy: "Nabila Rahman",
+      connectedAt: daysAgo(142),
+    },
+    capabilities: [
+      { key: "publish", state: "granted" },
+      { key: "analytics", state: "granted" },
+      { key: "comments", state: "granted" },
+      { key: "media", state: "granted" },
+    ],
+    publishing: { enabled: true, availableToPlanner: true, timezone: "Asia/Dhaka" },
+    postsToday: 7,
+  },
+  {
+    id: "sa-instagram",
+    platform: "instagram",
+    name: "MarketFlow Official",
+    username: "@marketflow",
+    status: "connected",
+    followers: 48_260,
+    followerChange: 6.4,
+    posts: 284,
+    engagementRate: 4.8,
+    lastSyncedAt: minutesAgo(4),
+    accountType: "Instagram Business account",
+    externalId: "17841400008460056",
+    auth: {
+      status: "expiring_soon",
+      expiresAt: daysAhead(18),
+      connectedBy: "Nabila Rahman",
+      connectedAt: daysAgo(142),
+    },
+    capabilities: [
+      { key: "publish", state: "granted" },
+      { key: "analytics", state: "granted" },
+      { key: "comments", state: "granted" },
+      { key: "media", state: "granted" },
+    ],
+    publishing: { enabled: true, availableToPlanner: true, timezone: "Asia/Dhaka" },
+    postsToday: 8,
   },
   {
     id: "sa-linkedin",
@@ -669,21 +708,65 @@ export const SOCIAL_ACCOUNTS: SocialAccount[] = [
     followerChange: 11.8,
     posts: 196,
     engagementRate: 6.2,
-    lastSyncedAt: "2026-09-08T09:38:00Z",
-    permissions: ["Publish posts", "Read insights"],
+    lastSyncedAt: minutesAgo(7),
+    accountType: "LinkedIn Company Page",
+    externalId: "84120397",
+    auth: {
+      status: "healthy",
+      expiresAt: daysAhead(54),
+      connectedBy: "Tanvir Ahmed",
+      connectedAt: daysAgo(96),
+    },
+    capabilities: [
+      { key: "publish", state: "granted" },
+      { key: "analytics", state: "granted" },
+      {
+        key: "media",
+        state: "granted",
+      },
+      {
+        key: "comments",
+        state: "missing",
+        detail:
+          "LinkedIn does not expose comment threads to third-party tools on Company Pages.",
+      },
+    ],
+    publishing: { enabled: true, availableToPlanner: true, timezone: "Asia/Dhaka" },
+    postsToday: 3,
   },
   {
     id: "sa-x",
     platform: "x",
     name: "MarketFlow",
     username: "@marketflow",
-    status: "connected",
+    status: "expired",
     followers: 12_480,
     followerChange: -1.4,
     posts: 421,
     engagementRate: 1.9,
-    lastSyncedAt: "2026-09-08T09:41:00Z",
-    permissions: ["Publish posts", "Read insights"],
+    lastSyncedAt: hoursAgo(31),
+    accountType: "X Profile",
+    externalId: "1489203847561029384",
+    auth: {
+      status: "expired",
+      expiresAt: daysAgo(2),
+      connectedBy: "Tanvir Ahmed",
+      connectedAt: daysAgo(61),
+    },
+    capabilities: [
+      {
+        key: "publish",
+        state: "needs_reauth",
+        detail: "The access token expired two days ago.",
+      },
+      {
+        key: "analytics",
+        state: "needs_reauth",
+        detail: "The access token expired two days ago.",
+      },
+    ],
+    publishing: { enabled: true, availableToPlanner: false, timezone: "Asia/Dhaka" },
+    postsToday: 0,
   },
 ];
 
@@ -758,3 +841,168 @@ export const BEST_POSTING_TIMES = [
   { label: "15:00–18:00", rate: 6.2 },
   { label: "18:00–21:00", rate: 4.6 },
 ];
+
+/* -------------------------------------------------------------------------- */
+/* Connection layer                                                           */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The connection-level event log.
+ *
+ * Deliberately not the post log — "LinkedIn post published" appears here only
+ * as evidence that the *connection* carried it. A merchant reading this is
+ * debugging an integration, so the rows that matter are the syncs, the token
+ * refreshes and the permission changes, and the publish lines are the
+ * heartbeat between them.
+ */
+export const SOCIAL_ACTIVITY: SocialActivityEvent[] = [
+  {
+    id: "sac-1",
+    accountId: "sa-facebook",
+    platform: "facebook",
+    message: "Page synced — 312 posts and follower counts up to date.",
+    status: "success",
+    at: minutesAgo(2),
+  },
+  {
+    id: "sac-2",
+    accountId: "sa-instagram",
+    platform: "instagram",
+    message: "Analytics updated — insights pulled for the last 24 hours.",
+    status: "success",
+    at: minutesAgo(4),
+  },
+  {
+    id: "sac-3",
+    accountId: "sa-linkedin",
+    platform: "linkedin",
+    message: "Post published — “Behind the build: our Q3 roadmap”.",
+    status: "success",
+    at: minutesAgo(7),
+  },
+  {
+    id: "sac-4",
+    accountId: "sa-instagram",
+    platform: "instagram",
+    message: "Token refresh scheduled — current token expires in 18 days.",
+    status: "warning",
+    at: hoursAgo(3),
+  },
+  {
+    id: "sac-5",
+    accountId: "sa-x",
+    platform: "x",
+    message: "Publishing failed — 401 Unauthorized. The access token has expired.",
+    status: "error",
+    at: hoursAgo(9),
+  },
+  {
+    id: "sac-6",
+    accountId: "sa-x",
+    platform: "x",
+    message: "Connection failed — re-authorisation required.",
+    status: "error",
+    at: hoursAgo(31),
+  },
+  {
+    id: "sac-7",
+    accountId: "sa-facebook",
+    platform: "facebook",
+    message: "Post published — “Autumn drop is live”.",
+    status: "success",
+    at: hoursAgo(5),
+  },
+  {
+    id: "sac-8",
+    accountId: "sa-linkedin",
+    platform: "linkedin",
+    message: "Comment permission not granted — comment sync stays off.",
+    status: "warning",
+    at: daysAgo(96),
+  },
+];
+
+export function accountById(id: string): SocialAccount | undefined {
+  return SOCIAL_ACCOUNTS.find((account) => account.id === id);
+}
+
+export function activityForAccount(id: string): SocialActivityEvent[] {
+  return SOCIAL_ACTIVITY.filter((event) => event.accountId === id);
+}
+
+/** True when the capability is granted and therefore actually usable. */
+export function hasCapability(
+  account: SocialAccount,
+  key: SocialCapabilityKey,
+): boolean {
+  return account.capabilities.some(
+    (capability) => capability.key === key && capability.state === "granted",
+  );
+}
+
+export function capabilityState(
+  account: SocialAccount,
+  key: SocialCapabilityKey,
+): CapabilityState | undefined {
+  return account.capabilities.find((capability) => capability.key === key)?.state;
+}
+
+/**
+ * The accounts Social Planner may publish through.
+ *
+ * One predicate, read by the composer, the calendar and the Planner's empty
+ * states, so "can we post to this" is answered identically everywhere. An
+ * account can be live but withheld from the Planner — `availableToPlanner` is
+ * an integration-level switch — and that is the case a boolean on `status`
+ * alone could not express.
+ */
+export function publishableAccounts(
+  accounts: SocialAccount[] = SOCIAL_ACCOUNTS,
+): SocialAccount[] {
+  return accounts.filter(
+    (account) =>
+      account.status === "connected" &&
+      account.publishing.enabled &&
+      account.publishing.availableToPlanner &&
+      hasCapability(account, "publish"),
+  );
+}
+
+/** Accounts whose figures the analytics pages are allowed to show. */
+export function analyticsAccounts(
+  accounts: SocialAccount[] = SOCIAL_ACCOUNTS,
+): SocialAccount[] {
+  return accounts.filter((account) => hasCapability(account, "analytics"));
+}
+
+export interface SocialConnectionTotals {
+  accounts: number;
+  activePlatforms: number;
+  postsToday: number;
+  issues: number;
+}
+
+/**
+ * The Social integration's KPI row, derived rather than typed out.
+ *
+ * "Active platforms" counts distinct platforms that can actually publish, not
+ * distinct platforms with a row — four accounts where one token has expired is
+ * three active platforms, and saying four would be the exact lie this page
+ * exists to prevent.
+ */
+export function socialConnectionTotals(
+  accounts: SocialAccount[] = SOCIAL_ACCOUNTS,
+): SocialConnectionTotals {
+  const publishable = publishableAccounts(accounts);
+
+  return {
+    accounts: accounts.length,
+    activePlatforms: new Set(publishable.map((account) => account.platform)).size,
+    postsToday: accounts.reduce((total, account) => total + account.postsToday, 0),
+    issues: accounts.filter(
+      (account) =>
+        account.status !== "connected" ||
+        account.capabilities.some((c) => c.state === "needs_reauth"),
+    ).length,
+  };
+}

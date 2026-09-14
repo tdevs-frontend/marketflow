@@ -159,3 +159,65 @@ export function ApiKeyTableSkeleton({ rows = 4 }: { rows?: number }) {
 export function ApiLogSkeleton({ rows = 8 }: { rows?: number }) {
   return <SkeletonTable rows={rows} columns={5} />;
 }
+
+/**
+ * The Social page: KPI row, then the account grid beside the health rail.
+ *
+ * An account card is an icon tile, three lines of identity, three detail rows
+ * and a button — the same anatomy as `IntegrationCardSkeleton` but two across
+ * rather than three, because the Social grid sits inside the narrower main
+ * column rather than the full page width.
+ */
+export function SocialAccountCardSkeleton() {
+  return (
+    <div className="flex flex-col rounded-card border border-border bg-surface p-5 shadow-card">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start gap-3">
+          <Skeleton className="size-10 rounded-panel" />
+          <div className="space-y-1.5">
+            <Skeleton className="h-3.5 w-32 rounded-full" />
+            <Skeleton className="h-3 w-24 rounded-full" />
+            <Skeleton className="h-2.5 w-28 rounded-full" />
+          </div>
+        </div>
+        <Skeleton className="h-5 w-20 rounded-full" />
+      </div>
+
+      <div className="mt-4 space-y-2 border-t border-border pt-3.5">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <div key={index} className="flex items-center justify-between gap-3">
+            <Skeleton className="h-3 w-20 rounded-full" />
+            <Skeleton className="h-3 w-28 rounded-full" />
+          </div>
+        ))}
+      </div>
+
+      <Skeleton className="mt-4 h-9 w-full rounded-btn" />
+    </div>
+  );
+}
+
+export function SocialIntegrationSkeleton() {
+  return (
+    <>
+      <IntegrationHeaderSkeleton actions={2} />
+      <IntegrationKpiSkeleton />
+
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]">
+        <div className="min-w-0 space-y-4">
+          <Skeleton className="h-4 w-44 rounded-full" />
+          <div className="grid gap-4 md:grid-cols-2">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <SocialAccountCardSkeleton key={index} />
+            ))}
+          </div>
+        </div>
+        <div className="space-y-6">
+          <Skeleton className="h-72 rounded-card" />
+          <Skeleton className="h-56 rounded-card" />
+          <Skeleton className="h-64 rounded-card" />
+        </div>
+      </div>
+    </>
+  );
+}

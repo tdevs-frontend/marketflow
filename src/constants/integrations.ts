@@ -7,6 +7,12 @@ import type {
   WebhookEventGroup,
   WebhookStatus,
 } from "@/types/integration";
+import type {
+  AuthStatus,
+  SocialCapabilityKey,
+  SocialPlatform,
+  SocialProvider,
+} from "@/types/social";
 
 /**
  * The Integrations module's registry.
@@ -26,6 +32,7 @@ export const INTEGRATION_ROUTES = {
   whatsapp: "/dashboard/integrations/whatsapp",
   email: "/dashboard/integrations/email",
   sms: "/dashboard/integrations/sms",
+  social: "/dashboard/integrations/social",
   webhooks: "/dashboard/integrations/webhooks",
   api: "/dashboard/integrations/api",
 } as const;
@@ -36,6 +43,7 @@ export const INTEGRATION_PAGES = [
   { title: "WhatsApp", href: INTEGRATION_ROUTES.whatsapp },
   { title: "Email", href: INTEGRATION_ROUTES.email },
   { title: "SMS", href: INTEGRATION_ROUTES.sms },
+  { title: "Social", href: INTEGRATION_ROUTES.social },
   { title: "Webhooks", href: INTEGRATION_ROUTES.webhooks },
   { title: "API", href: INTEGRATION_ROUTES.api },
 ] as const;
@@ -74,6 +82,7 @@ export const INTEGRATION_CATEGORIES: {
   { value: "messaging", label: "Messaging" },
   { value: "email", label: "Email" },
   { value: "sms", label: "SMS" },
+  { value: "social", label: "Social" },
   { value: "developer", label: "Developer" },
   { value: "analytics", label: "Analytics" },
   { value: "commerce", label: "Commerce" },
@@ -523,3 +532,136 @@ export function scopeSummary(scopes: string[]): string {
   const writes = scopes.some((key) => API_SCOPES.find((s) => s.key === key)?.write);
   return writes ? "Read / Write" : "Read only";
 }
+
+/* -------------------------------------------------------------------------- */
+/* Social providers                                                           */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The social platforms MarketFlow can connect, built or not.
+ *
+ * Deliberately not a Meta-shaped list with others bolted on. Every entry
+ * declares its own `resourceNoun` — a Facebook Page, an Instagram Business
+ * account, a LinkedIn Organization are three different things and the connect
+ * flow says which one it is asking you to pick — and its own capability set,
+ * so a platform that cannot report analytics is not shown promising them.
+ *
+ * `availability` is what keeps "Coming Soon" honest. TikTok has no publishing
+ * pipeline behind it yet, so it appears in the picker as unavailable rather
+ * than as a card that opens a flow which cannot finish.
+ */
+export const SOCIAL_PROVIDERS: SocialProvider[] = [
+  {
+    id: "facebook",
+    label: "Facebook",
+    resourceNoun: "Page",
+    platform: "facebook",
+    availability: "available",
+    icon: "facebook",
+    capabilities: ["publish", "analytics", "comments", "media"],
+    description: "Publish to a Page, read engagement and manage comments.",
+  },
+  {
+    id: "instagram",
+    label: "Instagram",
+    resourceNoun: "Business account",
+    platform: "instagram",
+    availability: "available",
+    icon: "instagram",
+    capabilities: ["publish", "analytics", "comments", "media"],
+    description: "Publish to a Business account and read insights.",
+  },
+  {
+    id: "linkedin",
+    label: "LinkedIn",
+    resourceNoun: "Organization",
+    platform: "linkedin",
+    availability: "available",
+    icon: "linkedin",
+    capabilities: ["publish", "analytics", "media"],
+    description: "Publish to a Company Page and read follower analytics.",
+  },
+  {
+    id: "x",
+    label: "X / Twitter",
+    resourceNoun: "Profile",
+    platform: "x",
+    availability: "available",
+    icon: "x",
+    capabilities: ["publish", "analytics"],
+    description: "Publish posts and read impression analytics.",
+  },
+  {
+    id: "tiktok",
+    label: "TikTok",
+    resourceNoun: "Business account",
+    /* No publishing pipeline behind it yet — `null` is what makes the picker
+       show it as unavailable instead of opening a flow that cannot finish. */
+    platform: null,
+    availability: "coming_soon",
+    icon: "tiktok",
+    capabilities: ["publish", "analytics"],
+    description: "Publish videos and read performance analytics.",
+  },
+];
+
+export function providerForPlatform(platform: SocialPlatform): SocialProvider {
+  const provider = SOCIAL_PROVIDERS.find((item) => item.platform === platform);
+  if (!provider) throw new Error(`No social provider for platform: ${platform}`);
+  return provider;
+}
+
+/**
+ * What each capability is called, in the merchant's words.
+ *
+ * "Publish Content", not `pages_manage_posts`. The raw provider scope belongs
+ * in an Advanced disclosure, not in the sentence a merchant reads while
+ * deciding whether to grant it.
+ */
+export const SOCIAL_CAPABILITY_LABEL: Record<SocialCapabilityKey, string> = {
+  publish: "Publish Content",
+  analytics: "Read Analytics",
+  comments: "Read Comments",
+  media: "Manage Media",
+};
+
+export const SOCIAL_CAPABILITY_DETAIL: Record<SocialCapabilityKey, string> = {
+  publish: "Create and schedule posts on this account.",
+  analytics: "Read reach, impressions and engagement figures.",
+  comments: "Read and reply to comments on published posts.",
+  media: "Upload images and video to the account's library.",
+};
+
+/** The provider scopes behind each capability — shown only under Advanced. */
+export const SOCIAL_CAPABILITY_SCOPES: Record<
+  string,
+  Partial<Record<SocialCapabilityKey, string>>
+> = {
+  facebook: {
+    publish: "pages_manage_posts",
+    analytics: "read_insights",
+    comments: "pages_read_engagement",
+    media: "pages_manage_metadata",
+  },
+  instagram: {
+    publish: "instagram_content_publish",
+    analytics: "instagram_manage_insights",
+    comments: "instagram_manage_comments",
+    media: "instagram_basic",
+  },
+  linkedin: {
+    publish: "w_organization_social",
+    analytics: "r_organization_social",
+    media: "w_member_social",
+  },
+  x: { publish: "tweet.write", analytics: "tweet.read" },
+  tiktok: { publish: "video.publish", analytics: "video.list" },
+};
+
+export const AUTH_STATUS_LABEL: Record<AuthStatus, string> = {
+  healthy: "Healthy",
+  expiring_soon: "Expiring Soon",
+  expired: "Expired",
+  permission_missing: "Permission Missing",
+  disconnected: "Disconnected",
+};

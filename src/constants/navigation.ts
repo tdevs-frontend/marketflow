@@ -178,6 +178,7 @@ export const dashboardNav: NavSection[] = [
       { title: "WhatsApp", href: "/dashboard/integrations/whatsapp", icon: "message-circle" },
       { title: "Email", href: "/dashboard/integrations/email", icon: "mail" },
       { title: "SMS", href: "/dashboard/integrations/sms", icon: "smartphone" },
+      { title: "Social", href: "/dashboard/integrations/social", icon: "share-2" },
       { title: "Webhooks", href: "/dashboard/integrations/webhooks", icon: "webhook" },
       { title: "API", href: "/dashboard/integrations/api", icon: "code" },
     ],
