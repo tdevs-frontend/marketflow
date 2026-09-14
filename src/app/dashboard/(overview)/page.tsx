@@ -23,18 +23,20 @@ export const metadata: Metadata = { title: "Dashboard" };
  * surface: grid items stretch, so the two cards in a row always start and end
  * on the same line, and the three rows share one set of gutters.
  *
- * Six cards in three rows, each row a pair: 8/4, 7/5, 6/6. The narrow column
- * tightens as the page descends, and the wide column never repeats the same
- * width twice running, so the rows stay distinguishable without a rule between
- * them. Pairing the inbox with the plot is what buys the third row back — it
- * is the one narrow card tall enough to sit beside a chart without leaving a
- * gap under it.
+ * Six cards in three rows, each row a pair: 8/4, 7/5, 7/5. The plot takes the
+ * widest column because it is the only widget whose reading degrades with
+ * width, and the inbox — the one narrow card tall enough to sit beside a chart
+ * — is what keeps that row from leaving a gap under it. The two rows below it
+ * share a measure: a 7-column card is wide enough for the orders table's six
+ * columns, and a 5-column card is where the activity feed and the funnel both
+ * still read, since neither has columns to lose.
  *
  * Tablet drops to even halves, since a 4- or 5-column card is too narrow to
- * read at that width, and the two cards that need the full measure — the
- * orders table, which has a minimum width, and the activity log, whose rows
- * are one line each — take it until `lg`. Mobile is a single column, and
- * document order is reading order, so no widget needs to be re-ordered.
+ * read at that width. The orders table is the exception and keeps the full
+ * measure until `lg` — it has a minimum width, and half a tablet is under it —
+ * so the funnel beside it takes the full measure too rather than sitting in a
+ * half-empty row. Mobile is a single column, and document order is reading
+ * order, so no widget needs to be re-ordered.
  */
 export default function DashboardPage() {
   return (
@@ -48,10 +50,10 @@ export default function DashboardPage() {
         <WhatsAppInbox className="md:col-span-6 lg:col-span-4" />
 
         <CampaignPerformance className="md:col-span-6 lg:col-span-7" />
-        <SalesFunnel className="md:col-span-6 lg:col-span-5" />
+        <AutomationActivity className="md:col-span-6 lg:col-span-5" />
 
-        <RecentOrders className="md:col-span-12 lg:col-span-6" />
-        <AutomationActivity className="md:col-span-12 lg:col-span-6" />
+        <RecentOrders className="md:col-span-12 lg:col-span-7" />
+        <SalesFunnel className="md:col-span-12 lg:col-span-5" />
       </div>
     </DashboardRangeProvider>
   );
