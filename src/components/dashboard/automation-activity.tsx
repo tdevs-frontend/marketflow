@@ -158,8 +158,8 @@ export function AutomationActivity({ className }: { className?: string }) {
           />
         </div>
       ) : (
-        /* One line per event from `sm` up — a stacked timeline would run well
-           past the height of the funnel beside it. */
+        /* One line per event from `sm` up — the card holds the full measure,
+           so the detail column has room to read rather than truncate. */
         <ol className="mt-5 flex-1">
           {ACTIVITY.map((item, index) => {
             const ItemIcon = item.icon;

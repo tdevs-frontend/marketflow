@@ -2,13 +2,11 @@ import type { Metadata } from "next";
 
 import {
   AutomationActivity,
-  BusinessPulse,
   CampaignPerformance,
   DashboardRangeProvider,
   GrowthOverview,
   KpiCards,
   OverviewHeader,
-  ProductPerformance,
   RecentOrders,
   SalesFunnel,
   WhatsAppInbox,
@@ -18,16 +16,24 @@ export const metadata: Metadata = { title: "Dashboard" };
 
 /**
  * The merchant overview, read as one lifecycle: campaigns bring leads, leads
- * become conversations, then product interest, then orders and revenue.
+ * become conversations, then orders and revenue.
  *
  * One twelve-column grid holds every widget, rather than a stack of
  * independently sized rows. That is what makes the page read as a single
  * surface: grid items stretch, so the two cards in a row always start and end
- * on the same line, and the four rows share one set of gutters.
+ * on the same line, and the rows share one set of gutters.
  *
- * Desktop runs wide-left, narrow-right at 8/4, 7/5, 6/6, 7/5. Mobile is a
- * single column in a different order — `order-*` puts what needs the merchant
- * (today's signals, then the inbox) above what merely informs them.
+ * The two cards that earn the full measure take it — the growth plot, because
+ * a wide plot resolves more of the curve, and the activity log, because its
+ * rows are one line each and a narrow column truncates the detail that makes
+ * them worth reading. Between them sit two wide-left, narrow-right pairs at
+ * 7/5, so the page alternates band, split, split, band instead of ending on a
+ * ragged column.
+ *
+ * Tablet pairs only what fits: the orders table has a minimum width and would
+ * scroll inside a half column, so it and the funnel hold the full measure
+ * until `lg`. Mobile is a single column, and document order is reading order,
+ * so no widget needs to be re-ordered.
  */
 export default function DashboardPage() {
   return (
@@ -36,18 +42,16 @@ export default function DashboardPage() {
 
       <KpiCards />
 
-      <div className="grid gap-6 lg:grid-cols-12">
-        <GrowthOverview className="order-2 lg:col-span-8 lg:col-start-1 lg:row-start-1" />
-        <BusinessPulse className="order-1 lg:col-span-4 lg:col-start-9 lg:row-start-1" />
+      <div className="grid gap-6 md:grid-cols-12">
+        <GrowthOverview className="md:col-span-12" />
 
-        <CampaignPerformance className="order-4 lg:col-span-7 lg:col-start-1 lg:row-start-2" />
-        <WhatsAppInbox className="order-3 lg:col-span-5 lg:col-start-8 lg:row-start-2" />
+        <CampaignPerformance className="md:col-span-6 lg:col-span-7" />
+        <WhatsAppInbox className="md:col-span-6 lg:col-span-5" />
 
-        <ProductPerformance className="order-7 lg:col-span-6 lg:col-start-1 lg:row-start-3" />
-        <RecentOrders className="order-5 lg:col-span-6 lg:col-start-7 lg:row-start-3" />
+        <RecentOrders className="md:col-span-12 lg:col-span-7" />
+        <SalesFunnel className="md:col-span-12 lg:col-span-5" />
 
-        <AutomationActivity className="order-6 lg:col-span-7 lg:col-start-1 lg:row-start-4" />
-        <SalesFunnel className="order-8 lg:col-span-5 lg:col-start-8 lg:row-start-4" />
+        <AutomationActivity className="md:col-span-12" />
       </div>
     </DashboardRangeProvider>
   );

@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 /**
  * The merchant overview's loading state.
  *
- * Nine shapes rather than one spinner, each sized to the widget it stands in
+ * Seven shapes rather than one spinner, each sized to the widget it stands in
  * for and carrying the same grid span, so the page that arrives lands exactly
  * where the placeholder was. A single centred spinner would give the merchant
  * nothing to read and then move every card on the page when it cleared.
@@ -78,9 +78,9 @@ export default function DashboardLoading() {
 
       <SkeletonStats count={4} />
 
-      <div className="grid gap-6 lg:grid-cols-12">
+      <div className="grid gap-6 md:grid-cols-12">
         {/* Growth Overview — header, metric chips, headline, plot. */}
-        <CardSkeleton className="order-2 lg:col-span-8 lg:col-start-1 lg:row-start-1">
+        <CardSkeleton className="md:col-span-12">
           <CardHeadSkeleton action="w-64" />
           <div className="mt-5 flex items-center justify-between gap-3">
             <Skeleton className="h-8 w-56 rounded-btn" />
@@ -92,31 +92,8 @@ export default function DashboardLoading() {
           </div>
         </CardSkeleton>
 
-        {/* Business Pulse — three signal rows over two queue tiles. */}
-        <CardSkeleton className="order-1 flex flex-col lg:col-span-4 lg:col-start-9 lg:row-start-1">
-          <CardHeadSkeleton action="w-28" />
-
-          <div className="mt-5 divide-y divide-border border-t border-border">
-            {Array.from({ length: 3 }, (_, index) => (
-              <div key={index} className="flex items-center justify-between gap-3 py-3.5">
-                <Skeleton className="h-3 w-32 rounded-full" />
-                <Skeleton className="h-5 w-24 rounded-full" />
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-4 grid grid-cols-2 gap-3">
-            {Array.from({ length: 2 }, (_, index) => (
-              <div key={index} className="rounded-panel bg-surface-secondary px-3.5 py-3">
-                <Skeleton className="h-2.5 w-20 rounded-full" />
-                <Skeleton className="mt-2.5 h-5 w-8 rounded-full" />
-              </div>
-            ))}
-          </div>
-        </CardSkeleton>
-
         {/* Campaign Performance — tabs, totals, four ranked bars. */}
-        <CardSkeleton className="order-4 lg:col-span-7 lg:col-start-1 lg:row-start-2">
+        <CardSkeleton className="md:col-span-6 lg:col-span-7">
           <CardHeadSkeleton />
           <Skeleton className="mt-5 h-8 w-64 rounded-btn" />
           <TileRowSkeleton />
@@ -135,7 +112,7 @@ export default function DashboardLoading() {
         </CardSkeleton>
 
         {/* WhatsApp Inbox — queue counts, then four conversations. */}
-        <CardSkeleton className="order-3 lg:col-span-5 lg:col-start-8 lg:row-start-2">
+        <CardSkeleton className="md:col-span-6 lg:col-span-5">
           <CardHeadSkeleton action="w-24" />
           <TileRowSkeleton />
           <div className="mt-4 divide-y divide-border border-t border-border">
@@ -151,55 +128,16 @@ export default function DashboardLoading() {
           </div>
         </CardSkeleton>
 
-        {/* Product Performance — four ranked rows. */}
-        <CardSkeleton className="order-7 lg:col-span-6 lg:col-start-1 lg:row-start-3">
-          <CardHeadSkeleton action="w-28" />
-          <div className="mt-2 divide-y divide-border">
-            {Array.from({ length: 4 }, (_, index) => (
-              <div key={index} className="flex items-start gap-3 py-3">
-                <Skeleton className="size-8 shrink-0 rounded-panel" />
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between gap-3">
-                    <Skeleton className="h-3 w-36 rounded-full" />
-                    <Skeleton className="h-3 w-16 rounded-full" />
-                  </div>
-                  <div className="mt-2 flex items-center justify-between gap-3">
-                    <Skeleton className="h-2.5 w-20 rounded-full" />
-                    <Skeleton className="h-2.5 w-12 rounded-full" />
-                  </div>
-                  <Skeleton className="mt-2 h-1 w-full rounded-full" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardSkeleton>
-
         {/* Recent Orders — a six-column table under its header action. */}
-        <CardSkeleton className="order-5 lg:col-span-6 lg:col-start-7 lg:row-start-3">
+        <CardSkeleton className="md:col-span-12 lg:col-span-7">
           <CardHeadSkeleton action="w-32" />
           <div className="mt-2.5">
             <SkeletonTable rows={6} columns={6} />
           </div>
         </CardSkeleton>
 
-        {/* Automation Activity — eight timeline events, each with a run status. */}
-        <CardSkeleton className="order-6 lg:col-span-7 lg:col-start-1 lg:row-start-4">
-          <CardHeadSkeleton action="w-32" />
-          <div className="mt-5 space-y-4">
-            {Array.from({ length: 8 }, (_, index) => (
-              <div key={index} className="flex items-center gap-3.5">
-                <Skeleton className="size-8.5 shrink-0 rounded-full" />
-                <Skeleton className="h-3 w-44 shrink-0 rounded-full max-sm:hidden" />
-                <Skeleton className="h-3 min-w-0 flex-1 rounded-full" />
-                <Skeleton className="h-5 w-20 shrink-0 rounded-full" />
-                <Skeleton className="h-2.5 w-16 shrink-0 rounded-full" />
-              </div>
-            ))}
-          </div>
-        </CardSkeleton>
-
         {/* Sales Funnel — five tapering stages and the end-to-end rate. */}
-        <CardSkeleton className="order-8 flex flex-col lg:col-span-5 lg:col-start-8 lg:row-start-4">
+        <CardSkeleton className="flex flex-col md:col-span-12 lg:col-span-5">
           <div className="space-y-2">
             <Skeleton className="h-3.5 w-32 rounded-full" />
             <Skeleton className="h-3 w-60 max-w-full rounded-full" />
@@ -220,6 +158,22 @@ export default function DashboardLoading() {
           <div className="mt-5 flex items-center justify-between gap-3 border-t border-border pt-4">
             <Skeleton className="h-3 w-36 rounded-full" />
             <Skeleton className="h-5 w-14 rounded-full" />
+          </div>
+        </CardSkeleton>
+
+        {/* Automation Activity — eight timeline events, each with a run status. */}
+        <CardSkeleton className="md:col-span-12">
+          <CardHeadSkeleton action="w-32" />
+          <div className="mt-5 space-y-4">
+            {Array.from({ length: 8 }, (_, index) => (
+              <div key={index} className="flex items-center gap-3.5">
+                <Skeleton className="size-8.5 shrink-0 rounded-full" />
+                <Skeleton className="h-3 w-44 shrink-0 rounded-full max-sm:hidden" />
+                <Skeleton className="h-3 min-w-0 flex-1 rounded-full" />
+                <Skeleton className="h-5 w-20 shrink-0 rounded-full" />
+                <Skeleton className="h-2.5 w-16 shrink-0 rounded-full" />
+              </div>
+            ))}
           </div>
         </CardSkeleton>
       </div>
