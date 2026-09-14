@@ -4,7 +4,7 @@ import { Plus } from "lucide-react";
 import { WhatsAppOverview } from "@/components/marketing-hub";
 import { PageHeader } from "@/components/layout/page-header";
 import { ButtonLink } from "@/components/ui/button";
-import { APP_ROUTES, channelCrumbs } from "@/constants";
+import { APP_ROUTES } from "@/constants";
 
 export const metadata: Metadata = { title: "WhatsApp Overview" };
 
@@ -14,7 +14,6 @@ export default function WhatsAppOverviewPage() {
       <PageHeader
         title="WhatsApp Overview"
         description="Delivery, conversations and automations for your WhatsApp Business account."
-        breadcrumb={channelCrumbs("whatsapp", "Overview")}
         secondaryActions={
           <ButtonLink
             href={APP_ROUTES.whatsappInbox}

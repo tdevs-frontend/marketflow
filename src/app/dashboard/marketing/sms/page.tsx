@@ -4,7 +4,7 @@ import { Plus } from "lucide-react";
 import { SmsOverview } from "@/components/marketing-hub";
 import { PageHeader } from "@/components/layout/page-header";
 import { ButtonLink } from "@/components/ui/button";
-import { APP_ROUTES, channelCrumbs } from "@/constants";
+import { APP_ROUTES } from "@/constants";
 
 export const metadata: Metadata = { title: "SMS Overview" };
 
@@ -14,7 +14,6 @@ export default function SmsOverviewPage() {
       <PageHeader
         title="SMS Overview"
         description="Delivery, replies and spend — every message on this channel costs money."
-        breadcrumb={channelCrumbs("sms", "Overview")}
         secondaryActions={
           <ButtonLink href={APP_ROUTES.smsTemplates} variant="outline" size="compact">
             Templates

@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 
 import { PageHeader } from "@/components/layout/page-header";
-import { channelCrumbs } from "@/constants";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog } from "@/components/ui/dialog";
@@ -89,7 +88,6 @@ export function TemplatesWorkspace() {
       <PageHeader
         title="WhatsApp Templates"
         description="Create and manage reusable WhatsApp message templates."
-        breadcrumb={channelCrumbs("whatsapp", "Templates")}
         action={
           <Button size="compact" onClick={openCreate}>
             <Plus aria-hidden />

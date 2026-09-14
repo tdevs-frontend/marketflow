@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 
 import { SocialAccounts } from "@/components/marketing-hub";
 import { PageHeader } from "@/components/layout/page-header";
-import { channelCrumbs } from "@/constants";
 
 export const metadata: Metadata = { title: "Social Accounts" };
 
@@ -13,7 +12,6 @@ export default function SocialAccountsPage() {
       <PageHeader
         title="Connected Accounts"
         description="Which profiles MarketFlow can publish to, and which need reconnecting."
-        breadcrumb={channelCrumbs("social", "Accounts")}
       />
 
       <SocialAccounts />

@@ -19,7 +19,6 @@ export * from "./pagination";
 export * from "./toast";
 
 /* Added with the marketing modules. */
-export * from "./breadcrumb";
 export * from "./avatar";
 export * from "./tag";
 export * from "./skeleton";
