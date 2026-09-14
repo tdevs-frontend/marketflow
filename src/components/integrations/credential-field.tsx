@@ -170,7 +170,7 @@ export function CredentialField({
       </div>
 
       {credential.hint ? (
-        <p className="mt-1.5 text-meta text-text-muted">{credential.hint}</p>
+        <p className="mt-1.5 text-meta font-medium text-text-muted">{credential.hint}</p>
       ) : null}
     </div>
   );

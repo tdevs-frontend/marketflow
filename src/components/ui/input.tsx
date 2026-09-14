@@ -121,7 +121,7 @@ export function Field({
           {error}
         </p>
       ) : hint ? (
-        <p id={`${htmlFor}-hint`} className="text-sm text-text-muted">
+        <p id={`${htmlFor}-hint`} className="text-sm font-medium text-text-muted">
           {hint}
         </p>
       ) : null}

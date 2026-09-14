@@ -156,7 +156,7 @@ export function ImportWorkflowDialog({
           />
         </Field>
 
-        <p className="flex items-start gap-2 text-sm text-text-muted">
+        <p className="flex items-start gap-2 text-sm font-medium text-text-muted">
           <FileJson className="mt-0.5 size-3.5 shrink-0" aria-hidden />
           Imported workflows always arrive as drafts, so nothing sends until you
           have checked the message templates and connections they refer to.

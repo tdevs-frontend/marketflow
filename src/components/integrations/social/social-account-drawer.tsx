@@ -355,7 +355,7 @@ function ToggleRow({
         >
           {label}
         </label>
-        <p className="mt-0.5 text-meta text-text-muted">{hint}</p>
+        <p className="mt-0.5 text-meta font-medium text-text-muted">{hint}</p>
       </div>
       <Checkbox id={id} checked={checked} onCheckedChange={onChange} label={label} />
     </div>

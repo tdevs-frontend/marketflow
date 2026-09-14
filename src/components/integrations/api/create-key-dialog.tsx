@@ -161,7 +161,7 @@ export function CreateApiKeyDialog({
 
           <div>
             <p className="text-sm font-medium text-text-primary">Environment</p>
-            <p className="mt-0.5 mb-2 text-sm text-text-muted">
+            <p className="mt-0.5 mb-2 text-sm font-medium text-text-muted">
               Development keys are rate limited lower and cannot touch live
               billing data.
             </p>

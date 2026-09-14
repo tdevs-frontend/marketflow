@@ -72,7 +72,7 @@ function ShareRow({
         >
           {label}
         </span>
-        <span className="block text-sm text-text-muted">{hint}</span>
+        <span className="block text-sm font-medium text-text-muted">{hint}</span>
       </span>
     </button>
   );

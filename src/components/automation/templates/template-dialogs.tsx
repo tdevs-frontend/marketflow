@@ -144,7 +144,7 @@ export function CreateTemplateDialog({
           </Field>
         </div>
 
-        <p className="rounded-panel bg-surface-secondary px-3.5 py-2.5 text-sm text-text-muted">
+        <p className="rounded-panel bg-surface-secondary px-3.5 py-2.5 text-sm font-medium text-text-muted">
           Message templates and connections are referenced by name, not copied.
           Whoever uses this template picks their own on first run.
         </p>

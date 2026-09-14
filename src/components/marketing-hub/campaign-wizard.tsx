@@ -372,7 +372,7 @@ export function CampaignWizard() {
                       <span className="mt-2.5 block text-sm font-medium text-text-primary">
                         {card.label}
                       </span>
-                      <span className="mt-0.5 block text-sm text-text-muted">
+                      <span className="mt-0.5 block text-sm font-medium text-text-muted">
                         {card.hint}
                       </span>
                     </button>
@@ -417,7 +417,7 @@ export function CampaignWizard() {
                         <span className="block text-sm font-medium text-text-primary">
                           {item.label}
                         </span>
-                        <span className="block text-sm text-text-muted">
+                        <span className="block text-sm font-medium text-text-muted">
                           {item.hint}
                         </span>
                       </span>
@@ -474,7 +474,7 @@ export function CampaignWizard() {
                           <span className="block text-sm font-medium text-text-primary">
                             {item.name}
                           </span>
-                          <span className="block text-sm text-text-muted">
+                          <span className="block text-sm font-medium text-text-muted">
                             {item.description}
                           </span>
                         </span>
@@ -749,7 +749,7 @@ export function CampaignWizard() {
                         <span className="block text-sm font-medium text-text-primary">
                           {option.label}
                         </span>
-                        <span className="block text-sm text-text-muted">
+                        <span className="block text-sm font-medium text-text-muted">
                           {option.hint}
                         </span>
                       </span>

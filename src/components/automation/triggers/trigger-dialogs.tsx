@@ -177,7 +177,7 @@ export function CustomTriggerDialog({
           />
         </Field>
 
-        <p className="flex items-start gap-2 rounded-panel bg-surface-secondary px-3.5 py-2.5 text-sm text-text-muted">
+        <p className="flex items-start gap-2 rounded-panel bg-surface-secondary px-3.5 py-2.5 text-sm font-medium text-text-muted">
           <Code className="mt-0.5 size-3.5 shrink-0" aria-hidden />
           Custom triggers start disabled until the first valid event arrives, so
           a typo in the key cannot silently start a journey.

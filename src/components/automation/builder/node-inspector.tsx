@@ -1196,7 +1196,7 @@ export function NodeInspector({
                         </div>
 
                         {binding.sample && binding.path ? (
-                          <p className="text-sm text-text-muted">
+                          <p className="text-sm font-medium text-text-muted">
                             Preview: <span className="text-text-secondary">{binding.sample}</span>
                           </p>
                         ) : null}

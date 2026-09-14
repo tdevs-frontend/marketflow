@@ -108,7 +108,9 @@ export function CheckboxField({
         >
           {label}
         </span>
-        {hint ? <span className="block text-sm text-text-muted">{hint}</span> : null}
+        {hint ? (
+          <span className="block text-sm font-medium text-text-muted">{hint}</span>
+        ) : null}
       </span>
     </div>
   );

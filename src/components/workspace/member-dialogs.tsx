@@ -173,7 +173,7 @@ export function InviteMemberDialog({
           />
         </Field>
 
-        <p className="text-meta text-text-muted">
+        <p className="text-meta font-medium text-text-muted">
           {seatsLeft > 0
             ? `${seatsLeft} of ${SEAT_LIMIT} seats remaining on your plan.`
             : `All ${SEAT_LIMIT} seats are in use.`}
