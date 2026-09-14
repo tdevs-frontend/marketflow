@@ -172,15 +172,28 @@ export const dashboardNav: NavSection[] = [
     ],
   },
   {
+    /*
+     * One row for the whole module.
+     *
+     * The seven integration pages are reached from the `ModuleNav` strip inside
+     * the module — see `constants/integrations.INTEGRATION_PAGES`, which the
+     * layout renders on every one of them. Listing the same seven here as well
+     * was the sidebar doing the tab strip's job: fourteen entries for seven
+     * destinations, and a group tall enough to push Workspace and Settings off
+     * the first screen.
+     *
+     * This is the split the sidebar was designed around and that WhatsApp,
+     * Email and the rest of Marketing already follow: the sidebar carries
+     * business areas, the module carries its own pages.
+     *
+     * Note this row deliberately has no `items` — as the only href under
+     * `/dashboard/integrations`, it drops out of the sidebar's `EXACT_HREFS`
+     * set and so stays lit on every page in the module rather than only on the
+     * hub. That is the behaviour a single module row should have.
+     */
     title: "Integrations",
     items: [
       { title: "All Integrations", href: "/dashboard/integrations", icon: "plug" },
-      { title: "WhatsApp", href: "/dashboard/integrations/whatsapp", icon: "message-circle" },
-      { title: "Email", href: "/dashboard/integrations/email", icon: "mail" },
-      { title: "SMS", href: "/dashboard/integrations/sms", icon: "smartphone" },
-      { title: "Social", href: "/dashboard/integrations/social", icon: "share-2" },
-      { title: "Webhooks", href: "/dashboard/integrations/webhooks", icon: "webhook" },
-      { title: "API", href: "/dashboard/integrations/api", icon: "code" },
     ],
   },
   {
