@@ -44,6 +44,7 @@ import {
   Tag,
   Target,
   Terminal,
+  TrendingUp,
   Ticket,
   User,
   UserCog,
@@ -78,6 +79,7 @@ const ICONS: Record<string, LucideIcon> = {
   "folder-tree": FolderTree,
   "shopping-cart": ShoppingCart,
   warehouse: Warehouse,
+  "trending-up": TrendingUp,
   "book-open": BookOpen,
   "badge-percent": BadgePercent,
 

@@ -5,18 +5,22 @@ import { useMemo, useState } from "react";
 import {
   Archive,
   CheckCircle2,
+  BookOpen,
+  Boxes,
+  CalendarDays,
   Copy,
   Eye,
+  Plus,
+  Upload,
   Megaphone,
   Package,
-  PackageX,
   Pencil,
   Trash2,
-  TriangleAlert,
 } from "lucide-react";
 
 import Link from "next/link";
 
+import { PageHeader } from "@/components/layout/page-header";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -35,11 +39,28 @@ import {
   type SortDirection,
 } from "@/components/ui/table";
 import { APP_ROUTES } from "@/constants";
-import { PRODUCTS_PER_PAGE, PRODUCT_STATUSES, STOCK_STATUSES } from "@/constants/commerce";
-import { CATEGORIES, PRODUCTS, stockStatusOf } from "@/lib/commerce-fixtures";
+import {
+  PRODUCTS_PER_PAGE,
+  PRODUCT_STATUSES,
+  STOCK_STATUSES,
+  UNIT_NOUN,
+} from "@/constants/commerce";
+import { SegmentedControl } from "@/components/ui/segmented-control";
+import { ProductTypeDialog } from "./product-type-dialog";
+import {
+  CATEGORIES,
+  COMMERCE_PRODUCTS,
+  productTotals,
+  stockStatusOf,
+} from "@/lib/commerce-fixtures";
 import { formatCurrency, formatDate, formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import type { Product, ProductStatus, StockStatus } from "@/types/commerce";
+import type {
+  Product,
+  ProductStatus,
+  ProductType,
+  StockStatus,
+} from "@/types/commerce";
 import { CommerceKpis, type CommerceKpi } from "./commerce-kpis";
 import {
   ProductStatusBadge,
@@ -49,7 +70,7 @@ import {
 } from "./commerce-badges";
 import { FilterBar } from "./filter-bar";
 
-type SortField = "name" | "price" | "stock" | "updatedAt";
+type SortField = "name" | "price" | "sales" | "stock" | "updatedAt";
 
 const ALL = "all";
 
@@ -57,46 +78,46 @@ const ALL = "all";
 /* KPIs                                                                       */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * The KPI row, counted by what a merchant sells rather than by stock level.
+ *
+ * Low Stock and Out of Stock used to lead this page. That is the right opening
+ * for a warehouse and the wrong one for most MarketFlow merchants: a business
+ * selling consultations and downloads has no stock, so two of its four headline
+ * figures were permanently zero and told it this page was not for it. Those
+ * figures now open Inventory, where they are the whole point.
+ *
+ * The mix is the useful reading here — "I have 12 things to sell and 7 of them
+ * are services" — and it works whichever kinds a merchant actually has.
+ */
 function kpis(): CommerceKpi[] {
-  const active = PRODUCTS.filter((item) => item.status === "active");
-  const low = PRODUCTS.filter(
-    (item) =>
-      item.trackInventory &&
-      stockStatusOf(item.stock, item.lowStockThreshold) === "low-stock",
-  );
-  const out = PRODUCTS.filter(
-    (item) =>
-      item.trackInventory &&
-      stockStatusOf(item.stock, item.lowStockThreshold) === "out-of-stock",
-  );
+  const totals = productTotals();
 
   return [
     {
       label: "Total Products",
-      value: formatNumber(PRODUCTS.length),
+      value: formatNumber(totals.total),
       icon: Package,
-      hint: `${CATEGORIES.length} categories`,
+      hint: `${totals.active} active · ${CATEGORIES.length} categories`,
     },
     {
-      label: "Active Products",
-      value: formatNumber(active.length),
-      icon: CheckCircle2,
+      label: "Physical Products",
+      value: formatNumber(totals.physical),
+      icon: Boxes,
       tone: "brand",
-      hint: "Visible to customers",
+      hint: "Shipped to customers",
     },
     {
-      label: "Low Stock",
-      value: formatNumber(low.length),
-      icon: TriangleAlert,
-      tone: low.length ? "warning" : "neutral",
-      hint: "At or below threshold",
+      label: "Digital Products",
+      value: formatNumber(totals.digital),
+      icon: BookOpen,
+      hint: "Downloads and access",
     },
     {
-      label: "Out of Stock",
-      value: formatNumber(out.length),
-      icon: PackageX,
-      tone: out.length ? "danger" : "neutral",
-      hint: "Needs restocking",
+      label: "Services",
+      value: formatNumber(totals.service),
+      icon: CalendarDays,
+      hint: "Booked and delivered",
     },
   ];
 }
@@ -105,8 +126,36 @@ function kpis(): CommerceKpi[] {
 /* Workspace                                                                  */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * The views the strip offers: three product types, then two lifecycle states.
+ *
+ * Draft and Archived sit alongside the types rather than only in the status
+ * dropdown because they are how a merchant *browses* — "show me what is not
+ * live yet" — while the dropdown narrows within a view.
+ */
+type ProductView = typeof ALL | ProductType | "draft" | "archived";
+
+const PRODUCT_VIEWS: { value: ProductView; label: string }[] = [
+  { value: ALL, label: "All" },
+  { value: "physical", label: "Physical" },
+  { value: "digital", label: "Digital" },
+  { value: "service", label: "Services" },
+  { value: "draft", label: "Draft" },
+  { value: "archived", label: "Archived" },
+];
+
 export function ProductsWorkspace() {
   const router = useRouter();
+  /*
+   * One list, filtered — not six pages.
+   *
+   * Type and lifecycle share a single control because they are the same
+   * question asked twice ("show me a subset of my catalogue"), and because a
+   * merchant who only sells services should be able to reach their whole
+   * catalogue without meeting a Physical tab that is always empty.
+   */
+  const [view, setView] = useState<ProductView>(ALL);
+  const [choosingType, setChoosingType] = useState(false);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<string>(ALL);
   const [status, setStatus] = useState<ProductStatus | typeof ALL>(ALL);
@@ -120,10 +169,37 @@ export function ProductsWorkspace() {
   const activeFilters =
     (category === ALL ? 0 : 1) + (status === ALL ? 0 : 1) + (stock === ALL ? 0 : 1);
 
+  /* Counts for the view strip, over the whole catalogue rather than the
+     filtered set — a tab reading "Digital 0" because of an unrelated search is
+     a tab that lies about what the merchant sells. */
+  const viewCounts = useMemo(() => {
+    const totals = productTotals();
+    return {
+      [ALL]: COMMERCE_PRODUCTS.filter((item) => item.status !== "archived").length,
+      physical: totals.physical,
+      digital: totals.digital,
+      service: totals.service,
+      draft: COMMERCE_PRODUCTS.filter((item) => item.status === "draft").length,
+      archived: COMMERCE_PRODUCTS.filter((item) => item.status === "archived").length,
+    } as Record<ProductView, number>;
+  }, []);
+
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
 
-    const rows = PRODUCTS.filter((item) => {
+    const rows = COMMERCE_PRODUCTS.filter((item) => {
+      /* The view is either a product type or a lifecycle state — one control,
+         because to a merchant they are the same act of narrowing. */
+      if (view === "physical" || view === "digital" || view === "service") {
+        if (item.type !== view) return false;
+      }
+      if (view === "draft" && item.status !== "draft") return false;
+      if (view === "archived" && item.status !== "archived") return false;
+      /* Archived products stay out of every other view: they are gone as far
+         as the catalogue is concerned, and leaving them in makes the counts
+         disagree with what a customer can buy. */
+      if (view !== "archived" && item.status === "archived") return false;
+
       if (
         term &&
         !item.name.toLowerCase().includes(term) &&
@@ -146,12 +222,15 @@ export function ProductsWorkspace() {
     return rows.sort((a, b) => {
       if (sortField === "name") return a.name.localeCompare(b.name) * factor;
       if (sortField === "price") return (a.price - b.price) * factor;
+      if (sortField === "sales") {
+        return ((a.sales?.unitsSold ?? 0) - (b.sales?.unitsSold ?? 0)) * factor;
+      }
       if (sortField === "stock") return (a.stock - b.stock) * factor;
       return (
         (new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()) * factor
       );
     });
-  }, [search, category, status, stock, sortField, direction]);
+  }, [view, search, category, status, stock, sortField, direction]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PRODUCTS_PER_PAGE));
   const current = Math.min(page, totalPages);
@@ -235,9 +314,52 @@ export function ProductsWorkspace() {
 
   return (
     <>
+      <PageHeader
+        title="Products"
+        description="Manage physical products, digital products and services from one place."
+        action={
+          <div className="flex flex-wrap gap-2.5">
+            <Button variant="outline" size="compact">
+              <Upload aria-hidden />
+              Import
+            </Button>
+            {/* Opens the type chooser rather than linking straight to the
+                form: which fields the form shows depends on the answer. */}
+            <Button size="compact" onClick={() => setChoosingType(true)}>
+              <Plus aria-hidden />
+              Add Product
+            </Button>
+          </div>
+        }
+      />
+
       <CommerceKpis items={kpis()} />
 
       <Card className="p-5">
+        {/*
+         * The view strip.
+         *
+         * `SegmentedControl`, not `Tabs` — these swap a filter on one list
+         * rather than switching panels, and claiming `role="tablist"` would
+         * promise arrow-key movement between panels that do not exist. It is
+         * the same component the analytics toolbars use.
+         */}
+        <div className="mb-4 -mx-1 overflow-x-auto px-1">
+          <SegmentedControl
+            label="Filter products by type"
+            value={view}
+            onChange={(next) => {
+              setView(next);
+              setPage(1);
+              setSelected([]);
+            }}
+            options={PRODUCT_VIEWS.map((item) => ({
+              value: item.value,
+              label: `${item.label} (${viewCounts[item.value] ?? 0})`,
+            }))}
+          />
+        </div>
+
         <FilterBar
           search={search}
           onSearchChange={(value) => {
@@ -278,20 +400,24 @@ export function ProductsWorkspace() {
             className="lg:w-36"
           />
 
-          <Select
-            label="Filter by stock"
-            size="sm"
-            value={stock}
-            onChange={(next) => {
-              setStock(next as StockStatus | typeof ALL);
-              setPage(1);
-            }}
-            options={[
-              { value: ALL, label: "All stock levels" },
-              ...STOCK_STATUSES,
-            ]}
-            className="lg:w-40"
-          />
+          {/* Stock is a physical-product question. Offering it while the list
+              is showing services is offering a filter that can only empty it. */}
+          {view === "physical" || view === ALL ? (
+            <Select
+              label="Filter by stock"
+              size="sm"
+              value={stock}
+              onChange={(next) => {
+                setStock(next as StockStatus | typeof ALL);
+                setPage(1);
+              }}
+              options={[
+                { value: ALL, label: "All stock levels" },
+                ...STOCK_STATUSES,
+              ]}
+              className="lg:w-40"
+            />
+          ) : null}
         </FilterBar>
 
         {selected.length > 0 ? (
@@ -432,23 +558,37 @@ export function ProductsWorkspace() {
                           )}
                         </TD>
 
+                        {/*
+                          * Sales, in the unit the product is actually sold in —
+                          * "142 sales" for a shirt, "38 bookings" for a
+                          * consultation. Stock rides underneath only where it
+                          * is tracked, which is how a physical row keeps its
+                          * reorder signal without a service row being told it
+                          * is "Untracked".
+                          */}
                         <TD align="right">
+                          <span className="font-medium tabular-nums text-text-primary">
+                            {formatNumber(item.sales?.unitsSold ?? 0)}
+                          </span>
+                          <span className="ml-1 text-sm font-normal text-text-muted">
+                            {UNIT_NOUN[item.type][
+                              (item.sales?.unitsSold ?? 0) === 1 ? "one" : "many"
+                            ]}
+                          </span>
                           {item.trackInventory ? (
                             <span
                               className={cn(
-                                "font-medium tabular-nums",
+                                "mt-0.5 block text-meta font-medium tabular-nums",
                                 stockState === "out-of-stock"
                                   ? "text-error"
                                   : stockState === "low-stock"
                                     ? "text-warning-text"
-                                    : "text-text-primary",
+                                    : "text-text-muted",
                               )}
                             >
-                              {item.stock}
+                              {item.stock} in stock
                             </span>
-                          ) : (
-                            <span className="text-sm text-text-muted">Untracked</span>
-                          )}
+                          ) : null}
                         </TD>
 
                         <TD>
@@ -520,9 +660,15 @@ export function ProductsWorkspace() {
                       </div>
                       <p className="text-sm font-bold text-text-primary">
                         {formatCurrency(item.salePrice ?? item.price)}
+                        <span className="ml-2 text-sm font-medium text-text-muted">
+                          {formatNumber(item.sales?.unitsSold ?? 0)}{" "}
+                          {UNIT_NOUN[item.type][
+                            (item.sales?.unitsSold ?? 0) === 1 ? "one" : "many"
+                          ]}
+                        </span>
                         {item.trackInventory ? (
                           <span className="ml-2 text-sm font-medium text-text-muted">
-                            {item.stock} in stock
+                            · {item.stock} in stock
                           </span>
                         ) : null}
                       </p>
@@ -565,6 +711,11 @@ export function ProductsWorkspace() {
           </ButtonLink>
         </div>
       </Card>
+      {/* Mounted only while open, so a cancelled choice leaves nothing. */}
+      {choosingType ? (
+        <ProductTypeDialog open onClose={() => setChoosingType(false)} />
+      ) : null}
+
     </>
   );
 }

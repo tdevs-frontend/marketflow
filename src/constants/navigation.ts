@@ -66,13 +66,27 @@ export const dashboardNav: NavSection[] = [
   {
     /* Ahead of Marketing: the catalogue is what everything downstream sells.
        Customers are not repeated — they have their own group. */
+    /*
+     * Six entries, matching the six questions a merchant asks:
+     * what do I sell, what needs processing, how much did I sell, who bought
+     * from me, what stock do I have, how do I promote.
+     *
+     * Categories and Product Catalog are gone from here — not removed, moved.
+     * Both are views of the same product dataset and are reached from the strip
+     * inside Products (see `commerce/product-views-nav`), which has existed for
+     * a while; the sidebar was still listing them as well, so three rows pointed
+     * at one database and a merchant had to guess which was "the real" one.
+     */
     title: "Commerce",
     items: [
       { title: "Products", href: "/dashboard/products", icon: "package" },
-      { title: "Categories", href: "/dashboard/categories", icon: "folder-tree" },
       { title: "Orders", href: "/dashboard/orders", icon: "shopping-cart" },
+      { title: "Sales", href: "/dashboard/sales", icon: "trending-up" },
+      /* Paying customers, derived from orders — the CRM contact database is
+         the Customers group below, and this links into it rather than copying
+         it. The route nests under Sales because that is where the data is. */
+      { title: "Customers", href: "/dashboard/sales/customers", icon: "user-check" },
       { title: "Inventory", href: "/dashboard/inventory", icon: "warehouse" },
-      { title: "Product Catalog", href: "/dashboard/catalog", icon: "book-open" },
       /* Moved out of Growth, where it was "Offers & Coupons" — same feature. */
       { title: "Discounts & Coupons", href: "/dashboard/discounts", icon: "badge-percent" },
     ],

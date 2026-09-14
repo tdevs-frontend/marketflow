@@ -1,6 +1,11 @@
 import { Package } from "lucide-react";
 
 import { Badge, type BadgeTone } from "@/components/ui/badge";
+import {
+  CUSTOMER_TYPES,
+  FULFILLMENT_LABEL,
+  SALE_STATUSES,
+} from "@/constants/commerce";
 import { cn } from "@/lib/utils";
 import type {
   CatalogStatus,
@@ -11,6 +16,9 @@ import type {
   ProductStatus,
   ProductType,
   StockStatus,
+  CustomerType,
+  FulfillmentStatus,
+  SaleStatus,
 } from "@/types/commerce";
 
 const PRODUCT_TONES: Record<ProductStatus, BadgeTone> = {
@@ -151,5 +159,76 @@ export function ProductThumb({
         <Package className={icon} aria-hidden />
       )}
     </span>
+  );
+}
+
+/**
+ * Payment outcome, which is not fulfilment.
+ *
+ * Sales reports in this vocabulary and Orders reports in the fulfilment one, so
+ * "Paid" and "Shipped" can be true of the same order at the same time without
+ * either badge having to compromise.
+ *
+ * `partially-refunded` is amber rather than red: money came back but the sale
+ * stands, and colouring it as a failure overstates what happened.
+ */
+const SALE_TONES: Record<SaleStatus, BadgeTone> = {
+  paid: "success",
+  pending: "warning",
+  refunded: "neutral",
+  "partially-refunded": "warning",
+  failed: "danger",
+};
+
+export function SaleStatusBadge({ status }: { status: SaleStatus }) {
+  return (
+    <Badge tone={SALE_TONES[status]} size="sm" className="normal-case">
+      {SALE_STATUSES.find((item) => item.value === status)?.label ?? status}
+    </Badge>
+  );
+}
+
+/**
+ * Fulfilment, in the vocabulary of the order's own product type.
+ *
+ * The label comes from `FULFILLMENT_LABEL`, so a booking reads *Scheduled* and
+ * a download reads *Access granted* — neither is ever told it has been packed.
+ */
+const FULFILLMENT_TONES: Partial<Record<FulfillmentStatus, BadgeTone>> = {
+  delivered: "success",
+  "access-granted": "success",
+  completed: "success",
+  cancelled: "danger",
+  "payment-pending": "warning",
+  pending: "warning",
+};
+
+export function FulfillmentBadge({ status }: { status: FulfillmentStatus }) {
+  return (
+    <Badge tone={FULFILLMENT_TONES[status] ?? "info"} size="sm" className="normal-case">
+      {FULFILLMENT_LABEL[status]}
+    </Badge>
+  );
+}
+
+/**
+ * How a buyer behaves, derived from their orders.
+ *
+ * VIP is the only one that gets the brand tint — it is the label a merchant
+ * scans for. Inactive stays neutral rather than red: a lapsed customer is an
+ * opportunity, not an error.
+ */
+const CUSTOMER_TONES: Record<CustomerType, BadgeTone> = {
+  new: "info",
+  repeat: "success",
+  vip: "brand",
+  inactive: "neutral",
+};
+
+export function CustomerTypeBadge({ type }: { type: CustomerType }) {
+  return (
+    <Badge tone={CUSTOMER_TONES[type]} size="sm" className="normal-case">
+      {CUSTOMER_TYPES.find((item) => item.value === type)?.label ?? type}
+    </Badge>
   );
 }

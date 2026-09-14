@@ -7,7 +7,26 @@ import type {
   Product,
   StockAdjustment,
   StockStatus,
+  CommerceCustomer,
+  CustomerType,
+  DigitalDetails,
+  FulfillmentStatus,
+  OrderLine,
+  OrderStatus,
+  OrderType,
+  PhysicalDetails,
+  ProductSales,
+  ProductType,
+  Sale,
+  SaleStatus,
+  SalesChannel,
+  ServiceDetails,
 } from "@/types/commerce";
+import {
+  CUSTOMER_RULES,
+  FULFILLMENT_FLOW,
+  ORDER_PROGRESS,
+} from "@/constants/commerce";
 
 /**
  * Placeholder commerce data.
@@ -24,6 +43,16 @@ import type {
 /* -------------------------------------------------------------------------- */
 /* Categories                                                                 */
 /* -------------------------------------------------------------------------- */
+
+/**
+ * The instant the commerce fixtures are read against.
+ *
+ * Same discipline as the other modules: relative figures measured from a fixed
+ * point, so "inactive for 120 days" cannot drift as the file ages, and a server
+ * render and a client render agree.
+ */
+export const COMMERCE_NOW = "2026-06-02T10:00:00.000Z";
+export const COMMERCE_NOW_MS = new Date(COMMERCE_NOW).getTime();
 
 export const CATEGORIES: Category[] = [
   {
@@ -363,18 +392,90 @@ function timelineTo(
   }));
 }
 
+/**
+ * What an order contains, from what is in it.
+ *
+ * Derived rather than stored on each fixture: the type of an order is a fact
+ * about its lines, and a hand-set field is a chance for them to disagree. An
+ * order spanning two product types is `mixed`, which is a real case — a course
+ * plus a printed workbook — and is why fulfilment is chosen per order.
+ */
+function orderTypeOf(lines: OrderLine[]): OrderType {
+  const types = new Set(
+    lines
+      .map((line) => PRODUCTS.find((item) => item.id === line.productId)?.type)
+      .filter((type): type is ProductType => Boolean(type)),
+  );
+
+  if (types.size === 0) return "physical";
+  if (types.size > 1) return "mixed";
+  return [...types][0];
+}
+
+/**
+ * The fulfilment step that matches an order's commercial status.
+ *
+ * Each product type has its own vocabulary — see `FULFILLMENT_FLOW` — so the
+ * same "paid but not delivered" order reads as *Processing* for a shipped
+ * item, *Access pending* for a download and *Scheduled* for a booking. One
+ * shared ladder would have to call all three "Processing".
+ */
+function fulfillmentFor(
+  type: OrderType,
+  status: OrderStatus,
+): FulfillmentStatus {
+  if (status === "cancelled" || status === "refunded") return "cancelled";
+
+  const flow = FULFILLMENT_FLOW[type === "mixed" ? "physical" : type];
+  const index = Math.min(
+    ORDER_PROGRESS.indexOf(status),
+    flow.length - 1,
+  );
+
+  return flow[Math.max(index, 0)].value;
+}
+
+/**
+ * Where an order came from, when the fixture does not say.
+ *
+ * A campaign-attributed order is a campaign sale; the rest are spread across
+ * the channels a MarketFlow merchant actually sells through, deterministically
+ * by id so the Sales breakdown is stable between renders.
+ */
+function channelFor(partial: { sourceCampaign?: string; id: string }): SalesChannel {
+  if (partial.sourceCampaign) return "campaign";
+
+  const spread: SalesChannel[] = ["whatsapp", "website", "whatsapp", "manual"];
+  const seed = partial.id.charCodeAt(partial.id.length - 1);
+  return spread[seed % spread.length];
+}
+
 function order(
-  partial: Omit<Order, "subtotal" | "tax" | "total" | "timeline"> &
-    Partial<Pick<Order, "tax">>,
+  partial: Omit<
+    Order,
+    | "subtotal"
+    | "tax"
+    | "total"
+    | "timeline"
+    | "orderType"
+    | "fulfillmentStatus"
+    | "channel"
+  > &
+    Partial<Pick<Order, "tax" | "orderType" | "fulfillmentStatus" | "channel">>,
 ): Order {
   const subtotal = partial.lines.reduce(
     (sum, line) => sum + line.unitPrice * line.quantity,
     0,
   );
   const tax = partial.tax ?? Math.round((subtotal - partial.discount) * 0.05);
+  const orderType = partial.orderType ?? orderTypeOf(partial.lines);
 
   return {
     ...partial,
+    orderType,
+    channel: partial.channel ?? channelFor(partial),
+    fulfillmentStatus:
+      partial.fulfillmentStatus ?? fulfillmentFor(orderType, partial.status),
     subtotal,
     tax,
     total: subtotal - partial.discount + tax,
@@ -566,8 +667,19 @@ export const ORDERS: Order[] = [
 /* -------------------------------------------------------------------------- */
 
 /** Derived from the products, so stock never disagrees between the two pages. */
+/**
+ * Warehouse stock: physical products that are tracked, and nothing else.
+ *
+ * The type check is the addition. `trackInventory` alone let a digital product
+ * or a service appear in the warehouse the moment someone ticked the box on the
+ * old shared form — which is how a consultation ends up with a reorder level.
+ *
+ * Finite digital licences and service capacity are real, and they are managed
+ * on the product itself (`digital.licensesAvailable`, `service.capacityPerSlot`)
+ * rather than here, because they are not stock that gets picked and shipped.
+ */
 export const INVENTORY: InventoryItem[] = PRODUCTS.filter(
-  (item) => item.trackInventory,
+  (item) => item.type === "physical" && item.trackInventory,
 ).map((item) => ({
   productId: item.id,
   productName: item.name,
@@ -783,3 +895,402 @@ export const DISCOUNTS: Discount[] = [
     startsAt: "2026-06-01T00:00:00Z",
   },
 ];
+
+/* -------------------------------------------------------------------------- */
+/* Type-specific product detail                                               */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The detail object each product carries for its own type.
+ *
+ * Attached here rather than typed into every product literal, so the twelve
+ * fixtures stay readable and a product cannot end up with, say, shipping
+ * settings on a service. Keyed by product id; anything unlisted gets a sensible
+ * default for its type.
+ */
+const PHYSICAL_DETAIL: Record<string, PhysicalDetails> = {
+  "prd-swag": {
+    weightGrams: 180,
+    dimensionsCm: { length: 30, width: 22, height: 3 },
+    shippingRequired: true,
+    variants: [
+      { id: "var-s", optionName: "Size", optionValue: "Small", sku: "MF-SWAG-S", stock: 18 },
+      { id: "var-m", optionName: "Size", optionValue: "Medium", sku: "MF-SWAG-M", stock: 24 },
+      { id: "var-l", optionName: "Size", optionValue: "Large", sku: "MF-SWAG-L", stock: 12 },
+    ],
+  },
+};
+
+const DIGITAL_DETAIL: Record<string, DigitalDetails> = {
+  "prd-templates": {
+    accessType: "download",
+    fileName: "marketflow-template-pack.zip",
+    fileSizeMb: 48,
+    downloadLimit: 5,
+    accessExpiryDays: null,
+  },
+  "prd-guide": {
+    accessType: "download",
+    fileName: "whatsapp-growth-guide.pdf",
+    fileSizeMb: 12,
+    downloadLimit: null,
+    accessExpiryDays: null,
+  },
+  "prd-course": {
+    accessType: "stream",
+    downloadLimit: null,
+    accessExpiryDays: 365,
+    externalUrl: "https://learn.marketflow.app/course/automation",
+  },
+  "prd-reports": {
+    accessType: "license-key",
+    downloadLimit: null,
+    accessExpiryDays: 365,
+    licensesAvailable: 40,
+  },
+};
+
+const SERVICE_DETAIL: Record<string, ServiceDetails> = {
+  "prd-onboarding": {
+    pricingType: "fixed",
+    durationMinutes: 90,
+    bookingRequired: true,
+    locationType: "online",
+    capacityPerSlot: 1,
+  },
+  "prd-audit": {
+    pricingType: "fixed",
+    durationMinutes: 60,
+    bookingRequired: true,
+    locationType: "online",
+    capacityPerSlot: 1,
+  },
+  "prd-consult": {
+    pricingType: "hourly",
+    durationMinutes: 60,
+    bookingRequired: true,
+    locationType: "online",
+    capacityPerSlot: 1,
+  },
+  "prd-training": {
+    pricingType: "starting-from",
+    durationMinutes: 180,
+    bookingRequired: true,
+    locationType: "business-location",
+    capacityPerSlot: 12,
+  },
+};
+
+/** Defaults for anything the tables above do not name. */
+function detailFor(item: Product): Partial<Product> {
+  switch (item.type) {
+    case "physical":
+      return {
+        physical: PHYSICAL_DETAIL[item.id] ?? { shippingRequired: true },
+      };
+    case "digital":
+      return {
+        digital:
+          DIGITAL_DETAIL[item.id] ?? {
+            accessType: "download",
+            downloadLimit: null,
+            accessExpiryDays: null,
+          },
+      };
+    case "service":
+      return {
+        service:
+          SERVICE_DETAIL[item.id] ?? {
+            pricingType: "fixed",
+            bookingRequired: false,
+            locationType: "online",
+            capacityPerSlot: null,
+          },
+      };
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Sales, derived from orders                                                 */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * What each product has sold, computed from the order book.
+ *
+ * Derived rather than stored, because the alternative is a number on the
+ * product that disagrees with the orders behind it. A backend computes this the
+ * same way; the shape is what the product list, the detail tabs and the Sales
+ * page all read.
+ */
+export function productSales(productId: string): ProductSales {
+  const lines = ORDERS.flatMap((order) =>
+    order.lines
+      .filter((line) => line.productId === productId)
+      .map((line) => ({ order, line })),
+  );
+
+  const buyers = new Set(lines.map(({ order }) => order.customer.id));
+  const sold = lines.reduce((sum, { line }) => sum + line.quantity, 0);
+
+  return {
+    unitsSold: sold,
+    revenue: lines.reduce(
+      (sum, { line }) => sum + line.unitPrice * line.quantity,
+      0,
+    ),
+    orders: new Set(lines.map(({ order }) => order.id)).size,
+    customers: buyers.size,
+    lastSoldAt: lines
+      .map(({ order }) => order.placedAt)
+      .sort()
+      .at(-1),
+  };
+}
+
+/**
+ * The product catalogue with its type detail and sales attached.
+ *
+ * This is what every Commerce surface should read — `PRODUCTS` remains the raw
+ * literal list so the derivation stays visible, and nothing has to remember to
+ * join sales at the call site.
+ */
+export const COMMERCE_PRODUCTS: Product[] = PRODUCTS.map((item) => ({
+  ...item,
+  ...detailFor(item),
+  sales: productSales(item.id),
+}));
+
+export const commerceProductById = (id: string) =>
+  COMMERCE_PRODUCTS.find((item) => item.id === id);
+
+/** Totals for the Products KPI row — counts by type, not stock levels. */
+export function productTotals(list: Product[] = COMMERCE_PRODUCTS) {
+  const byType = (type: ProductType) =>
+    list.filter((item) => item.type === type).length;
+
+  return {
+    total: list.length,
+    active: list.filter((item) => item.status === "active").length,
+    physical: byType("physical"),
+    digital: byType("digital"),
+    service: byType("service"),
+  };
+}
+
+/* -------------------------------------------------------------------------- */
+/* Sales ledger                                                               */
+/* -------------------------------------------------------------------------- */
+
+/** Payment status mapped onto the commercial vocabulary Sales reports in. */
+function saleStatusOf(order: Order): SaleStatus {
+  if (order.status === "refunded") return "refunded";
+  if (order.paymentStatus === "failed") return "failed";
+  if (order.paymentStatus === "refunded") return "refunded";
+  if (order.paymentStatus === "pending") return "pending";
+  return "paid";
+}
+
+/**
+ * Sales, as a reading of the order book.
+ *
+ * Not a second ledger — every row points back at the order it came from, and
+ * clicking one goes there. Orders answer "what needs processing"; this answers
+ * "how much did we sell", and the two must never disagree because only one of
+ * them holds data.
+ */
+export const SALES: Sale[] = ORDERS.map((order) => {
+  const headline = order.lines[0];
+  const refunded = order.status === "refunded" ? order.total : 0;
+
+  return {
+    id: `sale-${order.id}`,
+    orderId: order.id,
+    orderReference: order.reference,
+    customerId: order.customer.id,
+    customerName: order.customer.name,
+    productName:
+      order.lines.length > 1
+        ? `${headline?.productName} +${order.lines.length - 1} more`
+        : (headline?.productName ?? "—"),
+    productId: headline?.productId ?? "",
+    type: order.orderType,
+    channel: order.channel,
+    gross: order.subtotal,
+    discount: order.discount,
+    refunded,
+    net: order.subtotal - order.discount - refunded,
+    status: saleStatusOf(order),
+    at: order.placedAt,
+  };
+});
+
+export interface SalesTotals {
+  gross: number;
+  net: number;
+  orders: number;
+  averageOrderValue: number;
+  refunds: number;
+}
+
+export function salesTotals(list: Sale[] = SALES): SalesTotals {
+  const counted = list.filter((sale) => sale.status !== "failed");
+  const gross = counted.reduce((sum, sale) => sum + sale.gross, 0);
+  const net = counted.reduce((sum, sale) => sum + sale.net, 0);
+
+  return {
+    gross,
+    net,
+    orders: counted.length,
+    /* Against net, not gross: an average that ignores discounts and refunds
+       flatters itself by exactly the amount the business did not receive. */
+    averageOrderValue: counted.length === 0 ? 0 : Math.round(net / counted.length),
+    refunds: counted.reduce((sum, sale) => sum + sale.refunded, 0),
+  };
+}
+
+/** Revenue and order counts per day, for the Sales chart. */
+export function salesSeries(list: Sale[] = SALES) {
+  const byDay = new Map<string, { revenue: number; orders: number }>();
+
+  for (const sale of list) {
+    if (sale.status === "failed") continue;
+    const day = sale.at.slice(0, 10);
+    const current = byDay.get(day) ?? { revenue: 0, orders: 0 };
+    byDay.set(day, {
+      revenue: current.revenue + sale.net,
+      orders: current.orders + 1,
+    });
+  }
+
+  const days = [...byDay.keys()].sort();
+
+  return {
+    labels: days,
+    revenue: days.map((day) => byDay.get(day)?.revenue ?? 0),
+    orders: days.map((day) => byDay.get(day)?.orders ?? 0),
+  };
+}
+
+/** The best sellers of one type, for the Sales page's compact top lists. */
+export function topSellers(type: ProductType, limit = 3) {
+  return COMMERCE_PRODUCTS.filter((item) => item.type === type)
+    .filter((item) => (item.sales?.revenue ?? 0) > 0)
+    .sort((a, b) => (b.sales?.revenue ?? 0) - (a.sales?.revenue ?? 0))
+    .slice(0, limit);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Commerce customers                                                         */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Buyers, derived from the order book.
+ *
+ * The single most important rule in this module: there is one customer
+ * database, and it is `CONTACTS`. This projects order history onto the contacts
+ * who bought something — it does not create a customer record. `contactId` is
+ * the CRM id, and "View full profile" opens that record.
+ *
+ * A contact appears here the moment they have an order, and disappears from
+ * nowhere: not buying is not a state this list needs to represent.
+ */
+export const COMMERCE_CUSTOMERS: CommerceCustomer[] = (() => {
+  const byCustomer = new Map<string, Order[]>();
+
+  for (const order of ORDERS) {
+    if (order.paymentStatus === "failed") continue;
+    byCustomer.set(order.customer.id, [
+      ...(byCustomer.get(order.customer.id) ?? []),
+      order,
+    ]);
+  }
+
+  return [...byCustomer.entries()].map(([customerId, orders]) => {
+    const sorted = [...orders].sort((a, b) => a.placedAt.localeCompare(b.placedAt));
+    const totalSpent = orders.reduce((sum, order) => sum + order.total, 0);
+    const first = sorted[0];
+    const last = sorted.at(-1)!;
+
+    /* Revenue per product, so "top product" is what they spent most on rather
+       than whatever they happened to buy most recently. */
+    const spendByProduct = new Map<string, number>();
+    for (const order of orders) {
+      for (const line of order.lines) {
+        spendByProduct.set(
+          line.productName,
+          (spendByProduct.get(line.productName) ?? 0) + line.unitPrice * line.quantity,
+        );
+      }
+    }
+
+    const purchasedTypes = [
+      ...new Set(
+        orders
+          .flatMap((order) =>
+            order.lines.map(
+              (line) => PRODUCTS.find((item) => item.id === line.productId)?.type,
+            ),
+          )
+          .filter((type): type is ProductType => Boolean(type)),
+      ),
+    ];
+
+    return {
+      contactId: customerId,
+      name: last.customer.name,
+      email: last.customer.email,
+      whatsappNumber: last.customer.whatsappNumber,
+      orders: orders.length,
+      totalSpent,
+      averageOrderValue: Math.round(totalSpent / orders.length),
+      firstPurchaseAt: first.placedAt,
+      lastPurchaseAt: last.placedAt,
+      topProductName:
+        [...spendByProduct.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? "—",
+      purchasedTypes,
+      customerType: classifyCustomer(orders.length, totalSpent, last.placedAt),
+    };
+  });
+})();
+
+/**
+ * Which bucket a buyer falls into.
+ *
+ * Computed, never assigned — see `CUSTOMER_RULES` for the thresholds. VIP wins
+ * over Repeat because it is the more useful label, and Inactive wins over both
+ * because a lapsed VIP is the one a merchant most wants to see.
+ */
+function classifyCustomer(
+  orders: number,
+  totalSpent: number,
+  lastPurchaseAt: string,
+): CustomerType {
+  const daysSince =
+    (COMMERCE_NOW_MS - new Date(lastPurchaseAt).getTime()) / 86_400_000;
+
+  if (daysSince > CUSTOMER_RULES.inactiveDays) return "inactive";
+  if (totalSpent >= CUSTOMER_RULES.vipSpend || orders >= CUSTOMER_RULES.vipOrders) {
+    return "vip";
+  }
+  return orders > 1 ? "repeat" : "new";
+}
+
+export const commerceCustomerById = (contactId: string) =>
+  COMMERCE_CUSTOMERS.find((item) => item.contactId === contactId);
+
+/** Every order one buyer placed, newest first — the customer drawer's timeline. */
+export const ordersForCustomer = (contactId: string) =>
+  ORDERS.filter((order) => order.customer.id === contactId).sort((a, b) =>
+    b.placedAt.localeCompare(a.placedAt),
+  );
+
+export function customerTotals(list: CommerceCustomer[] = COMMERCE_CUSTOMERS) {
+  return {
+    total: list.length,
+    new: list.filter((item) => item.customerType === "new").length,
+    repeat: list.filter(
+      (item) => item.customerType === "repeat" || item.customerType === "vip",
+    ).length,
+    lifetimeRevenue: list.reduce((sum, item) => sum + item.totalSpent, 0),
+  };
+}

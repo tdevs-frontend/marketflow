@@ -19,12 +19,22 @@ import { Select } from "@/components/ui/select";
 import { Menu } from "@/components/ui/menu";
 import { Pagination } from "@/components/ui/pagination";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
-import { ORDERS_PER_PAGE, ORDER_STATUSES, PAYMENT_STATUSES } from "@/constants/commerce";
+import { Badge } from "@/components/ui/badge";
+import {
+  ORDERS_PER_PAGE,
+  ORDER_STATUSES,
+  ORDER_TYPES,
+  PAYMENT_STATUSES,
+} from "@/constants/commerce";
 import { ORDERS, PRODUCTS } from "@/lib/commerce-fixtures";
 import { formatCurrency, formatDate, formatNumber } from "@/lib/format";
 import type { Order, OrderStatus, PaymentStatus } from "@/types/commerce";
 import { CommerceKpis, type CommerceKpi } from "./commerce-kpis";
-import { OrderStatusBadge, PaymentStatusBadge } from "./commerce-badges";
+import {
+  FulfillmentBadge,
+  OrderStatusBadge,
+  PaymentStatusBadge,
+} from "./commerce-badges";
 import { FilterBar } from "./filter-bar";
 import { OrderDrawer } from "./order-drawer";
 
@@ -236,10 +246,11 @@ export function OrdersWorkspace() {
                   <TH>Order</TH>
                   <TH>Customer</TH>
                   <TH>Products</TH>
+                  <TH>Type</TH>
                   <TH align="right">Items</TH>
                   <TH align="right">Total</TH>
                   <TH>Payment</TH>
-                  <TH>Status</TH>
+                  <TH>Fulfilment</TH>
                   <TH>Date</TH>
                   <TH align="right">Actions</TH>
                 </THead>
@@ -287,6 +298,13 @@ export function OrdersWorkspace() {
                           </p>
                         </TD>
 
+                        <TD>
+                          <Badge size="sm" className="normal-case">
+                            {ORDER_TYPES.find((item) => item.value === order.orderType)
+                              ?.label ?? order.orderType}
+                          </Badge>
+                        </TD>
+
                         <TD align="right" className="tabular-nums">
                           {items}
                         </TD>
@@ -300,7 +318,15 @@ export function OrdersWorkspace() {
                         </TD>
 
                         <TD>
-                          <OrderStatusBadge status={order.status} />
+                          {/*
+                            * Fulfilment, in the vocabulary of what was bought.
+                            *
+                            * Payment sits in its own column beside it: a booking
+                            * can be paid and not yet scheduled, and a shipment
+                            * can go out before the payment clears. One combined
+                            * status has to drop whichever half is inconvenient.
+                            */}
+                          <FulfillmentBadge status={order.fulfillmentStatus} />
                         </TD>
 
                         <TD className="text-sm whitespace-nowrap text-text-muted">

@@ -53,12 +53,14 @@ interface Draft {
   tags: string;
 }
 
-function draftFrom(product?: Product): Draft {
+function draftFrom(product?: Product, initialType?: ProductType): Draft {
   return {
     name: product?.name ?? "",
     description: product?.description ?? "",
     categoryId: product?.categoryId ?? CATEGORIES[0].id,
-    type: product?.type ?? "physical",
+    /* An existing product's type wins; otherwise the chooser's answer; only
+     then the default, for anyone who reached the form directly. */
+    type: product?.type ?? initialType ?? "physical",
     price: product ? String(product.price) : "",
     salePrice: product?.salePrice ? String(product.salePrice) : "",
     costPrice: product?.costPrice ? String(product.costPrice) : "",
@@ -106,10 +108,23 @@ function Toggle({
 
 const GRID = "grid gap-5 sm:grid-cols-2";
 
-export function ProductEditor({ product }: { product?: Product }) {
+export function ProductEditor({
+  product,
+  initialType,
+}: {
+  product?: Product;
+  /**
+   * The answer to "what are you selling?", carried from the chooser.
+   *
+   * Only used when creating: an existing product's type comes from the record.
+   * Passing it through the URL rather than a store keeps `/products/new?type=service`
+   * a link a merchant can bookmark or share.
+   */
+  initialType?: ProductType;
+}) {
   const idBase = useId();
   const [tab, setTab] = useState<TabKey>("basic");
-  const [draft, setDraft] = useState<Draft>(() => draftFrom(product));
+  const [draft, setDraft] = useState<Draft>(() => draftFrom(product, initialType));
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const set = <K extends keyof Draft>(key: K, value: Draft[K]) =>
