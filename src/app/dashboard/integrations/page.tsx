@@ -1,25 +1,14 @@
 import type { Metadata } from "next";
 
-import { PageHeader } from "@/components/layout/page-header";
-import { Button } from "@/components/ui/button";
-import { EmptyState } from "@/components/ui/empty-state";
+import { IntegrationsHub } from "@/components/integrations";
 
-export const metadata: Metadata = { title: "Integrations" };
+export const metadata: Metadata = {
+  title: "Integrations",
+  description:
+    "Connect the tools and channels that power your MarketFlow workspace.",
+};
 
+/** The hub. Header, KPIs and filters all live in the workspace component. */
 export default function IntegrationsPage() {
-  return (
-    <>
-      <PageHeader
-        title="Integrations"
-        description="Connect your store, forms, and data warehouse to keep contacts in sync."
-        action={<Button>Browse catalog</Button>}
-      />
-
-      <EmptyState
-        title="No integrations connected"
-        description="Connect a source to sync contacts and events into your workspace automatically."
-        action={<Button size="sm">Browse catalog</Button>}
-      />
-    </>
-  );
+  return <IntegrationsHub />;
 }
