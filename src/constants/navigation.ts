@@ -201,7 +201,7 @@ export const dashboardNav: NavSection[] = [
     items: [
       { title: "Team Members", href: "/dashboard/workspace/team", icon: "user-cog" },
       { title: "Roles & Permissions", href: "/dashboard/workspace/roles", icon: "shield-check" },
-      { title: "Activity", href: "/dashboard/workspace/activity", icon: "activity" },
+      { title: "Workspace Activity", href: "/dashboard/workspace/activity", icon: "activity" },
       { title: "Workspace Settings", href: "/dashboard/workspace/settings", icon: "building" },
     ],
   },
