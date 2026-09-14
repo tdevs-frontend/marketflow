@@ -44,7 +44,7 @@ export function SalesFunnel({ className }: { className?: string }) {
   return (
     <Card className={cn("flex flex-col p-5", className)}>
       <div className="min-w-0">
-        <h2 className="text-base">Sales Funnel</h2>
+        <h2 className="text-base sm:text-lg">Sales Funnel</h2>
         <p className="mt-1 text-sm text-text-secondary">
           How prospects move from first interaction to purchase.
         </p>

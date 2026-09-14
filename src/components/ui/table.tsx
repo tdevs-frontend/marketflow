@@ -28,10 +28,20 @@ export function Table({
   );
 }
 
-export function THead({ children }: { children: ReactNode }) {
+export function THead({
+  className,
+  children,
+}: {
+  /**
+   * Applied to the header row, for the tables that want a tinted header band
+   * rather than the default rule-only header.
+   */
+  className?: string;
+  children: ReactNode;
+}) {
   return (
     <thead className="border-b border-border">
-      <tr className="text-sm font-medium text-text-muted">
+      <tr className={cn("text-sm font-medium text-text-muted", className)}>
         {children}
       </tr>
     </thead>

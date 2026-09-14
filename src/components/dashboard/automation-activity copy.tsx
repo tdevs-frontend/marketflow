@@ -29,7 +29,13 @@ import { cn } from "@/lib/utils";
  * card is looking for the row that needs them, and that is either a failure or
  * something that has not finished.
  */
-type RunStatus = "Completed" | "Sent" | "Running" | "Queued" | "Skipped" | "Failed";
+type RunStatus =
+  | "Completed"
+  | "Sent"
+  | "Running"
+  | "Queued"
+  | "Skipped"
+  | "Failed";
 
 const STATUS_TONE: Record<RunStatus, BadgeTone> = {
   Completed: "success",
@@ -40,13 +46,8 @@ const STATUS_TONE: Record<RunStatus, BadgeTone> = {
   Failed: "danger",
 };
 
-/** The states that are still moving get the live mark. */
-const IN_FLIGHT: ReadonlySet<RunStatus> = new Set<RunStatus>(["Running", "Queued"]);
-
 interface ActivityItem {
   title: string;
-  /** The workflow the run belongs to, where the event came from a named one. */
-  workflow?: string;
   detail: string;
   time: string;
   status: RunStatus;
@@ -60,8 +61,7 @@ interface ActivityItem {
 const ACTIVITY: ActivityItem[] = [
   {
     title: "New lead captured",
-    workflow: "Lead Nurture",
-    detail: "Sarah Ahmed entered the flow",
+    detail: "Sarah Ahmed entered “Lead Nurture”",
     time: "2 min ago",
     status: "Completed",
     icon: UserPlus,
@@ -69,8 +69,7 @@ const ACTIVITY: ActivityItem[] = [
   },
   {
     title: "WhatsApp message sent",
-    workflow: "Welcome Flow",
-    detail: "Delivered to 24 contacts",
+    detail: "Welcome Flow → 24 contacts",
     time: "8 min ago",
     status: "Sent",
     icon: MessageCircle,
@@ -86,7 +85,7 @@ const ACTIVITY: ActivityItem[] = [
   },
   {
     title: "Order completed",
-    detail: "Order #MF-10248 · Premium Package",
+    detail: "Order #MF-10248 → Premium Package",
     time: "15 min ago",
     status: "Completed",
     icon: CheckCircle2,
@@ -94,8 +93,7 @@ const ACTIVITY: ActivityItem[] = [
   },
   {
     title: "Follow-up sent",
-    workflow: "Post Purchase Flow",
-    detail: "Delivered to the customer",
+    detail: "Post Purchase Flow → Customer",
     time: "21 min ago",
     status: "Sent",
     icon: Send,
@@ -103,8 +101,7 @@ const ACTIVITY: ActivityItem[] = [
   },
   {
     title: "Cart recovery started",
-    workflow: "Abandoned Cart Flow",
-    detail: "Reaching 18 contacts",
+    detail: "Abandoned Cart Flow → 18 contacts",
     time: "34 min ago",
     status: "Running",
     icon: ShoppingCart,
@@ -112,8 +109,7 @@ const ACTIVITY: ActivityItem[] = [
   },
   {
     title: "Discount code issued",
-    workflow: "Welcome Flow",
-    detail: "“WELCOME10” to John Smith",
+    detail: "“WELCOME10” → John Smith",
     time: "47 min ago",
     status: "Completed",
     icon: Tag,
@@ -121,8 +117,7 @@ const ACTIVITY: ActivityItem[] = [
   },
   {
     title: "Email delivery failed",
-    workflow: "Re-engagement Flow",
-    detail: "3 contacts bounced",
+    detail: "Re-engagement Flow → 3 contacts bounced",
     time: "1 hr ago",
     status: "Failed",
     icon: AlertTriangle,
@@ -134,26 +129,12 @@ const ACTIVITY: ActivityItem[] = [
 /* Section                                                                    */
 /* -------------------------------------------------------------------------- */
 
-/**
- * What the workflows have been doing, as a run log.
- *
- * It sits beside the orders table, and the two used to read as one component
- * rendered twice: both were a row of single-line columns with a badge and a
- * timestamp on the right. This one is not tabular, because its rows are not
- * comparable the way two amounts are — each entry is an event, and an event
- * wants a headline and a sentence under it rather than a cell in a grid.
- *
- * So: a rail down the icons for chronology, two lines of copy per run, and
- * status stacked over time at the right edge. Nothing lines up into columns,
- * which is the point — a glance should place this as a feed before any of the
- * words are read.
- */
 export function AutomationActivity({ className }: { className?: string }) {
   return (
-    <Card className={cn("flex min-w-0 flex-col p-5", className)}>
+    <Card className={cn("flex flex-col p-5", className)}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="text-base sm:text-lg">Automation Activity</h2>
+          <h2 className="text-base">Automation Activity</h2>
           <p className="mt-1 text-sm text-text-secondary">
             What your workflows have done recently.
           </p>
@@ -183,79 +164,55 @@ export function AutomationActivity({ className }: { className?: string }) {
           />
         </div>
       ) : (
+        /* One line per event from `sm` up. The card is half the grid now, so
+           the title column gives width back to the detail until `2xl`. */
         <ol className="mt-5 flex-1">
           {ACTIVITY.map((item, index) => {
             const ItemIcon = item.icon;
             const last = index === ACTIVITY.length - 1;
 
             return (
-              <li key={item.title} className="relative flex gap-3.5 pb-5 last:pb-0">
-                {/* The rail stops at the last marker rather than trailing past
-                    it. `left-4.5` is the centre of a 36px marker. */}
+              <li
+                key={item.title}
+                className="relative flex gap-3.5 pb-4 last:pb-0"
+              >
+                {/* The rail stops at the last marker rather than trailing past it. */}
                 {last ? null : (
                   <span
                     aria-hidden
-                    className="absolute top-10 bottom-0 left-4.5 w-px bg-border"
+                    className="absolute top-9 bottom-0 left-4.25 w-px bg-border"
                   />
                 )}
 
                 <span
                   className={cn(
-                    "grid size-9 shrink-0 place-items-center rounded-full",
+                    "grid size-8.5 shrink-0 place-items-center rounded-full",
                     item.tone,
                   )}
                 >
-                  <ItemIcon className="size-4.5" aria-hidden />
+                  <ItemIcon className="size-4" aria-hidden />
                 </span>
 
-                {/* Two columns from `sm` up. On a phone there is no room for a
-                    second column, so status and time drop under the
-                    description rather than off the edge of the card. */}
-                <div className="flex min-w-0 flex-1 flex-col gap-1.5 pt-0.5 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-text-primary">
-                      {item.title}
-                    </p>
+                <div className="flex min-w-0 flex-1 flex-col gap-x-4 gap-y-1.5 pt-1.5 sm:flex-row sm:items-center">
+                  <p className="truncate text-sm font-medium text-text-primary sm:w-36 sm:shrink-0 2xl:w-44">
+                    {item.title}
+                  </p>
+                  <p className="min-w-0 flex-1 truncate text-sm text-text-secondary">
+                    {item.detail}
+                  </p>
 
-                    {/* The workflow leads the description where there is one:
-                        the run is only legible once you know which flow
-                        produced it, and that is the fact the rest of the
-                        sentence hangs off. */}
-                    <p className="mt-0.5 truncate text-sm font-normal text-text-muted">
-                      {item.workflow ? (
-                        <>
-                          <span className="text-text-secondary">{item.workflow}</span>
-                          <span aria-hidden> · </span>
-                        </>
-                      ) : null}
-                      {item.detail}
-                    </p>
-                  </div>
-
-                  {/* Status over time, right-aligned: the badge says how the run
+                  {/* Status and time travel together: the badge says how the run
                       ended, the timestamp says when — read apart, neither is
-                      much use. Stacking them keeps the pair off the
-                      description's line, so the copy gets the full measure. */}
-                  <div className="flex shrink-0 items-center gap-2.5 sm:flex-col sm:items-end sm:gap-1">
+                      much use. */}
+                  <div className="flex shrink-0 items-center gap-2.5">
                     <Badge
                       tone={STATUS_TONE[item.status]}
                       size="sm"
-                      className="gap-1.5 normal-case"
+                      className="normal-case"
                     >
-                      {/* `bg-current` takes the badge's own ink, so the mark
-                          never introduces a colour the tone does not already
-                          carry. It pulses only while the run is still moving. */}
-                      <span
-                        aria-hidden
-                        className={cn(
-                          "size-1.5 rounded-full bg-current",
-                          IN_FLIGHT.has(item.status) &&
-                            "animate-pulse motion-reduce:animate-none",
-                        )}
-                      />
                       {item.status}
                     </Badge>
-                    <span className="text-meta font-normal text-text-muted">
+                    <span className="text-meta text-text-secondary">
                       {item.time}
                     </span>
                   </div>
