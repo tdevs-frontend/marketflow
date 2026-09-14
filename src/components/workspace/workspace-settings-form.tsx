@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { AlertTriangle, ImageUp, Trash2 } from "lucide-react";
+import { AlertTriangle, Check, ImageUp, Trash2 } from "lucide-react";
 
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,8 @@ import {
   WORKSPACE_LANGUAGES,
   WORKSPACE_TIMEZONES,
 } from "@/constants/workspace";
+import { formatRelativeTime } from "@/lib/format";
+import { WORKSPACE_NOW, WORKSPACE_NOW_MS } from "@/lib/workspace-clock";
 import { isValidEmail, isValidPhone } from "@/lib/validation";
 import { WORKSPACE_MEMBERS, WORKSPACE_SETTINGS } from "@/lib/workspace-fixtures";
 import { slugify } from "@/lib/utils";
@@ -82,6 +84,16 @@ export function WorkspaceSettingsForm() {
   const [saved, setSaved] = useState<WorkspaceSettings>(WORKSPACE_SETTINGS);
   const [draft, setDraft] = useState<WorkspaceSettings>(WORKSPACE_SETTINGS);
   const [pendingTab, setPendingTab] = useState<TabValue | null>(null);
+  /*
+   * Per-section save receipts.
+   *
+   * "Saved" belongs to the section that was saved, not to the page: a merchant
+   * who saved Branding an hour ago and is now editing Defaults should not be
+   * told Defaults is saved. `savedAt` is the receipt, `saveError` the last
+   * failure — both keyed by section for the same reason.
+   */
+  const [savedAt, setSavedAt] = useState<Partial<Record<TabValue, string>>>({});
+  const [saveError, setSaveError] = useState<Partial<Record<TabValue, string>>>({});
 
   /** Section-level dirtiness, by comparing the draft against the saved copy. */
   const dirty = useMemo(
@@ -114,7 +126,28 @@ export function WorkspaceSettingsForm() {
       toast("Fix the highlighted fields before saving.", "error");
       return;
     }
+
+    /*
+     * The failure path is real, not decorative.
+     *
+     * A settings form that can only succeed teaches a merchant to assume the
+     * save worked. A slug collision is the most likely genuine rejection here —
+     * it is the one field another workspace could already be using — so it is
+     * the one modelled, and it reports against the field rather than as a
+     * detached banner.
+     */
+    if (tab === "general" && draft.general.slug === "marketflow") {
+      setSaveError((current) => ({
+        ...current,
+        general: "That slug is already taken by another workspace. Try another.",
+      }));
+      toast("Could not save General settings.", "error");
+      return;
+    }
+
     setSaved((current) => ({ ...current, [tab]: draft[tab] }));
+    setSavedAt((current) => ({ ...current, [tab]: WORKSPACE_NOW }));
+    setSaveError((current) => ({ ...current, [tab]: undefined }));
     toast(`${SECTION_LABEL[tab]} settings saved`, "success");
   }
 
@@ -157,6 +190,27 @@ export function WorkspaceSettingsForm() {
         idBase={idBase}
         bleed={false}
       />
+
+      {saveError[tab] ? (
+        <p
+          role="alert"
+          className="flex items-start gap-2.5 rounded-card border border-error-soft bg-error-soft px-4 py-3.5 text-sm text-error-text"
+        >
+          <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />
+          <span>
+            <span className="font-semibold">
+              Could not save {SECTION_LABEL[tab]}.
+            </span>{" "}
+            {saveError[tab]}
+          </span>
+        </p>
+      ) : savedAt[tab] && !dirty ? (
+        <p className="flex items-center gap-2 text-sm text-text-muted">
+          <Check className="size-4 shrink-0 text-success" aria-hidden />
+          {SECTION_LABEL[tab]} saved{" "}
+          {formatRelativeTime(savedAt[tab] as string, WORKSPACE_NOW_MS)}
+        </p>
+      ) : null}
 
       <TabPanel idBase={idBase} value={tab}>
         {tab === "general" ? (

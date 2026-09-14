@@ -12,6 +12,11 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { FilterBar } from "@/components/ui/filter-bar";
 import { KpiStrip, type Kpi } from "@/components/ui/kpi-strip";
 import { Pagination } from "@/components/ui/pagination";
+import {
+  DateRangePicker,
+  DEFAULT_RANGE,
+  type DateRangeValue,
+} from "@/components/ui/date-range";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Select } from "@/components/ui/select";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
@@ -24,17 +29,14 @@ import {
 import { useTableState } from "@/hooks/useTableState";
 import { formatCount, formatRelativeTime } from "@/lib/format";
 import { WORKSPACE_NOW_MS } from "@/lib/workspace-clock";
-import {
-  WORKSPACE_AUDIT,
-  WORKSPACE_MEMBERS,
-  auditTotals,
-} from "@/lib/workspace-fixtures";
+import { WORKSPACE_MEMBERS, auditTotals } from "@/lib/workspace-fixtures";
 import type {
   AuditModule,
   AuditStatus,
   WorkspaceAuditEvent,
 } from "@/types/workspace";
 import { AuditDetailDrawer } from "./audit-detail-drawer";
+import { useWorkspaceAudit } from "./workspace-audit-store";
 import {
   permissionHint,
   useWorkspacePermissions,
@@ -104,8 +106,13 @@ export function ActivityWorkspace() {
   const table = useTableState<FilterKey>(FILTERS, { defaultPageSize: 20 });
 
   const [selected, setSelected] = useState<WorkspaceAuditEvent | null>(null);
+  const [range, setRange] = useState<DateRangeValue>(DEFAULT_RANGE);
 
-  const totals = useMemo(() => auditTotals(WORKSPACE_AUDIT), []);
+  /* The fixture plus anything recorded in this session — a role edit made on
+     the Roles page is in the trail before you navigate here. */
+  const events = useWorkspaceAudit();
+
+  const totals = useMemo(() => auditTotals(events), [events]);
 
   const kpis: Kpi[] = [
     {
@@ -139,8 +146,14 @@ export function ActivityWorkspace() {
   const filtered = useMemo(() => {
     const term = table.search.trim().toLowerCase();
 
-    return WORKSPACE_AUDIT.filter((event) => {
+    const cutoff = rangeCutoff(range);
+
+    return events.filter((event) => {
       const { member, module, status, scope } = table.filters;
+
+      if (cutoff !== null && new Date(event.createdAt).getTime() < cutoff) {
+        return false;
+      }
 
       if (member !== ALL) {
         if (member === "system" ? event.actorId !== null : event.actorId !== member) {
@@ -166,7 +179,7 @@ export function ActivityWorkspace() {
       }
       return true;
     });
-  }, [table.filters, table.search]);
+  }, [events, range, table.filters, table.search]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / table.pageSize));
   const page = Math.min(table.page, totalPages);
@@ -251,10 +264,11 @@ export function ActivityWorkspace() {
             size="sm"
             className="w-36"
           />
+          <DateRangePicker value={range} onChange={setRange} />
         </FilterBar>
 
         <div className="mt-5">
-          {WORKSPACE_AUDIT.length === 0 ? (
+          {events.length === 0 ? (
             <EmptyState
               title="No activity yet"
               description="Workspace actions will appear here as your team works."
@@ -357,4 +371,33 @@ export function ActivityWorkspace() {
       />
     </>
   );
+}
+
+/**
+ * The earliest timestamp a range admits, or `null` for "everything".
+ *
+ * Measured against the workspace's frozen clock rather than `Date.now()`, for
+ * the same reason every relative timestamp in this module is: the fixtures are
+ * pinned to one instant, and filtering them against the real clock would empty
+ * the table the day after it was written.
+ */
+function rangeCutoff(range: DateRangeValue): number | null {
+  const DAY = 86_400_000;
+
+  switch (range.preset) {
+    case "today":
+      return WORKSPACE_NOW_MS - DAY;
+    case "7d":
+      return WORKSPACE_NOW_MS - 7 * DAY;
+    case "30d":
+      return WORKSPACE_NOW_MS - 30 * DAY;
+    case "90d":
+      return WORKSPACE_NOW_MS - 90 * DAY;
+    case "ytd":
+      return new Date(new Date(WORKSPACE_NOW_MS).getUTCFullYear(), 0, 1).getTime();
+    case "custom":
+      return range.from ? new Date(range.from).getTime() : null;
+    default:
+      return null;
+  }
 }

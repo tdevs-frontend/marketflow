@@ -1,14 +1,24 @@
 import { APP_ROUTES } from "@/constants/app";
 import { INTEGRATION_ROUTES } from "@/constants/integrations";
 import {
+  PERMISSION_ACTION_LABEL,
   PERMISSION_GROUPS,
   PERMISSION_RESOURCES,
   WORKSPACE_ROUTES,
+  isSensitive,
 } from "@/constants/workspace";
-import { daysAgo, hoursAgo, minutesAgo } from "@/lib/workspace-clock";
+import {
+  WORKSPACE_NOW,
+  daysAgo,
+  hoursAgo,
+  minutesAgo,
+} from "@/lib/workspace-clock";
 import type {
   MemberStatus,
   PermissionAction,
+  PermissionDelta,
+  RiskLevel,
+  RoleActivityEvent,
   RoleGrants,
   WorkspaceAuditEvent,
   WorkspaceMember,
@@ -38,7 +48,10 @@ export const WORKSPACE_ID = "ws_marketflow";
 /** Every action on every resource. The Owner's grant, and nobody else's. */
 function allGrants(): RoleGrants {
   return Object.fromEntries(
-    PERMISSION_RESOURCES.map((resource) => [resource.key, [...resource.actions]]),
+    PERMISSION_RESOURCES.map((resource) => [
+      resource.key,
+      resource.actions.map((item) => item.action),
+    ]),
   );
 }
 
@@ -56,10 +69,9 @@ function grants(rules: Record<string, PermissionAction[] | "*">): RoleGrants {
   for (const [key, value] of Object.entries(rules)) {
     const resource = PERMISSION_RESOURCES.find((item) => item.key === key);
     if (!resource) continue;
-    out[key] =
-      value === "*"
-        ? [...resource.actions]
-        : value.filter((action) => resource.actions.includes(action));
+
+    const available = resource.actions.map((item) => item.action);
+    out[key] = value === "*" ? available : value.filter((a) => available.includes(a));
   }
 
   return out;
@@ -78,9 +90,11 @@ export const WORKSPACE_ROLES: WorkspaceRole[] = [
     type: "system",
     merchantRole: "owner",
     grants: allGrants(),
+    status: "active",
     createdAt: daysAgo(420),
     updatedAt: daysAgo(420),
     createdBy: null,
+    updatedBy: null,
   },
   {
     id: "role_admin",
@@ -124,9 +138,11 @@ export const WORKSPACE_ROLES: WorkspaceRole[] = [
       billing: ["view"],
       developer: "*",
     }),
+    status: "active",
     createdAt: daysAgo(420),
     updatedAt: daysAgo(96),
     createdBy: null,
+    updatedBy: null,
   },
   {
     id: "role_manager",
@@ -159,9 +175,11 @@ export const WORKSPACE_ROLES: WorkspaceRole[] = [
       integrations: ["view"],
       workspace_activity: ["view"],
     }),
+    status: "active",
     createdAt: daysAgo(420),
     updatedAt: daysAgo(41),
     createdBy: null,
+    updatedBy: null,
   },
   {
     id: "role_sales",
@@ -181,9 +199,11 @@ export const WORKSPACE_ROLES: WorkspaceRole[] = [
       analytics: ["view"],
       funnel: ["view"],
     }),
+    status: "active",
     createdAt: daysAgo(420),
     updatedAt: daysAgo(120),
     createdBy: null,
+    updatedBy: null,
   },
   {
     id: "role_support",
@@ -199,9 +219,11 @@ export const WORKSPACE_ROLES: WorkspaceRole[] = [
       orders: ["view"],
       products: ["view"],
     }),
+    status: "active",
     createdAt: daysAgo(420),
     updatedAt: daysAgo(210),
     createdBy: null,
+    updatedBy: null,
   },
   {
     id: "role_analyst",
@@ -223,9 +245,11 @@ export const WORKSPACE_ROLES: WorkspaceRole[] = [
       funnel: ["view", "export"],
       workspace_activity: ["view", "export"],
     }),
+    status: "active",
     createdAt: daysAgo(420),
     updatedAt: daysAgo(64),
     createdBy: null,
+    updatedBy: null,
   },
   {
     id: "role_viewer",
@@ -242,9 +266,11 @@ export const WORKSPACE_ROLES: WorkspaceRole[] = [
       "analytics",
       "reports",
     ]),
+    status: "active",
     createdAt: daysAgo(420),
     updatedAt: daysAgo(420),
     createdBy: null,
+    updatedBy: null,
   },
   {
     id: "role_custom_junior",
@@ -269,9 +295,11 @@ export const WORKSPACE_ROLES: WorkspaceRole[] = [
       analytics: ["view"],
       reports: ["view"],
     }),
+    status: "active",
     createdAt: daysAgo(58),
     updatedAt: daysAgo(12),
     createdBy: "Nabila Rahman",
+    updatedBy: "Nabila Rahman",
   },
 ];
 
@@ -1012,3 +1040,392 @@ export const WORKSPACE_SETTINGS: WorkspaceSettings = {
     retentionMonths: 24,
   },
 };
+
+/* -------------------------------------------------------------------------- */
+/* Derived role facts                                                         */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * How much damage a role could do, from the sensitive permissions it holds.
+ *
+ * Counted rather than judged: any role that can grant permissions or move money
+ * is `high` regardless of how few other grants it carries, because those are the
+ * ones that cannot be undone from inside the product. Everything else scales
+ * with how many sensitive grants it holds.
+ */
+export function riskLevel(grants: RoleGrants): RiskLevel {
+  const sensitive = sensitiveGrants(grants);
+
+  const critical = sensitive.some(
+    (item) =>
+      (item.resource === "roles" && item.action === "manage") ||
+      (item.resource === "billing" && item.action === "manage") ||
+      (item.resource === "orders" && item.action === "refund"),
+  );
+
+  if (critical) return "high";
+  if (sensitive.length >= 6) return "elevated";
+  return "standard";
+}
+
+export function sensitiveGrants(
+  grants: RoleGrants,
+): { resource: string; action: PermissionAction }[] {
+  const out: { resource: string; action: PermissionAction }[] = [];
+
+  for (const [resource, actions] of Object.entries(grants)) {
+    for (const action of actions) {
+      if (isSensitive(resource, action)) out.push({ resource, action });
+    }
+  }
+
+  return out;
+}
+
+/** Modules the role can reach at all — the "Modules 7 / 8" summary figure. */
+export function moduleCoverage(grants: RoleGrants): {
+  covered: number;
+  total: number;
+} {
+  const covered = PERMISSION_GROUPS.filter((group) =>
+    group.resources.some((resource) => (grants[resource.key]?.length ?? 0) > 0),
+  ).length;
+
+  return { covered, total: PERMISSION_GROUPS.length };
+}
+
+/** Per-group counts, for the permission summary on the role header. */
+export function groupCoverage(
+  grants: RoleGrants,
+): { key: string; label: string; granted: number; total: number }[] {
+  return PERMISSION_GROUPS.map((group) => ({
+    key: group.key,
+    label: group.label,
+    granted: group.resources.reduce(
+      (sum, resource) => sum + (grants[resource.key]?.length ?? 0),
+      0,
+    ),
+    total: group.resources.reduce(
+      (sum, resource) => sum + resource.actions.length,
+      0,
+    ),
+  }));
+}
+
+/**
+ * What a role can reach, in three buckets, for the access preview.
+ *
+ * Deliberately coarse. The point is a mental model for a merchant who will
+ * never read a matrix — "Sales Agent works with contacts and leads, reads
+ * analytics, and cannot touch automation or billing" — so a module the role can
+ * only look at lands in `limited` rather than being called access.
+ */
+export function accessPreview(grants: RoleGrants): {
+  full: string[];
+  limited: string[];
+  none: string[];
+} {
+  const full: string[] = [];
+  const limited: string[] = [];
+  const none: string[] = [];
+
+  for (const group of PERMISSION_GROUPS) {
+    const granted = group.resources.reduce(
+      (sum, resource) => sum + (grants[resource.key]?.length ?? 0),
+      0,
+    );
+
+    if (granted === 0) {
+      none.push(group.label);
+      continue;
+    }
+
+    /* "Can it change anything here?" is the line between full and limited. */
+    const canWrite = group.resources.some((resource) =>
+      (grants[resource.key] ?? []).some(
+        (action) => action !== "view" && action !== "view_activity",
+      ),
+    );
+
+    if (canWrite) full.push(group.label);
+    else limited.push(group.label);
+  }
+
+  return { full, limited, none };
+}
+
+/**
+ * The difference between two grant maps, as a reviewable list.
+ *
+ * Drives the change summary shown before saving. Removals sort first — taking
+ * access away is the half that breaks somebody's day, and it is what a reviewer
+ * should read before the additions.
+ */
+export function permissionDeltas(
+  before: RoleGrants,
+  after: RoleGrants,
+): PermissionDelta[] {
+  const deltas: PermissionDelta[] = [];
+
+  for (const group of PERMISSION_GROUPS) {
+    for (const resource of group.resources) {
+      const had = new Set(before[resource.key] ?? []);
+      const has = new Set(after[resource.key] ?? []);
+
+      for (const spec of resource.actions) {
+        const wasGranted = had.has(spec.action);
+        const isGranted = has.has(spec.action);
+        if (wasGranted === isGranted) continue;
+
+        deltas.push({
+          resourceKey: resource.key,
+          resourceLabel: resource.label,
+          action: spec.action,
+          actionLabel: PERMISSION_ACTION_LABEL[spec.action],
+          granted: isGranted,
+          sensitive: Boolean(spec.sensitive),
+        });
+      }
+    }
+  }
+
+  return deltas.sort((a, b) => Number(a.granted) - Number(b.granted));
+}
+
+/* -------------------------------------------------------------------------- */
+/* Role activity                                                              */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Per-role change history.
+ *
+ * The same events reach the workspace audit trail, where they can be correlated
+ * with everything else that happened. This is the narrow view — "what has been
+ * done to this role" — which is the question asked while looking at it.
+ */
+export const ROLE_ACTIVITY: RoleActivityEvent[] = [
+  {
+    id: "ra_1",
+    roleId: "role_manager",
+    actorName: "Tanvir Ahmed",
+    action: "member.assigned",
+    summary: "Sarah Ahmed assigned to this role",
+    added: [],
+    removed: [],
+    affectedMembers: 2,
+    createdAt: minutesAgo(18),
+  },
+  {
+    id: "ra_2",
+    roleId: "role_custom_junior",
+    actorName: "Nabila Rahman",
+    action: "role.permissions_changed",
+    summary: "Narrowed campaign and contact access",
+    added: [],
+    removed: ["campaigns.publish", "contacts.export"],
+    affectedMembers: 2,
+    createdAt: hoursAgo(2),
+  },
+  {
+    id: "ra_3",
+    roleId: "role_manager",
+    actorName: "Nabila Rahman",
+    action: "role.permissions_changed",
+    summary: "Granted automation publishing",
+    added: ["workflows.publish", "reports.export"],
+    removed: ["contacts.export"],
+    affectedMembers: 2,
+    createdAt: daysAgo(41),
+  },
+  {
+    id: "ra_4",
+    roleId: "role_custom_junior",
+    actorName: "Nabila Rahman",
+    action: "role.created",
+    summary: "Created from Marketing Manager",
+    added: [],
+    removed: [],
+    affectedMembers: 0,
+    createdAt: daysAgo(58),
+  },
+  {
+    id: "ra_5",
+    roleId: "role_analyst",
+    actorName: "Nabila Rahman",
+    action: "role.permissions_changed",
+    summary: "Granted audit trail export",
+    added: ["workspace_activity.export"],
+    removed: [],
+    affectedMembers: 1,
+    createdAt: daysAgo(64),
+  },
+  {
+    id: "ra_6",
+    roleId: "role_admin",
+    actorName: "Nabila Rahman",
+    action: "role.permissions_changed",
+    summary: "Removed billing management from Workspace Admin",
+    added: [],
+    removed: ["billing.manage"],
+    affectedMembers: 1,
+    createdAt: daysAgo(96),
+  },
+];
+
+export function roleActivity(roleId: string): RoleActivityEvent[] {
+  return ROLE_ACTIVITY.filter((event) => event.roleId === roleId);
+}
+
+/** A duplicated role, as the API would hand it back. */
+export function duplicateRole(role: WorkspaceRole, actor: string): WorkspaceRole {
+  return {
+    ...role,
+    id: `role_custom_${Date.now().toString(36)}`,
+    name: `${role.name} Copy`,
+    description: `Duplicated from ${role.name}.`,
+    type: "custom",
+    status: "active",
+    merchantRole: undefined,
+    /* A deep copy — editing the duplicate must not edit its source. */
+    grants: Object.fromEntries(
+      Object.entries(role.grants).map(([key, actions]) => [key, [...actions]]),
+    ),
+    createdAt: WORKSPACE_NOW,
+    updatedAt: WORKSPACE_NOW,
+    createdBy: actor,
+    updatedBy: actor,
+  };
+}
+
+/* -------------------------------------------------------------------------- */
+/* Role changes → audit trail                                                 */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * A permission edit, as a workspace audit event.
+ *
+ * The bridge between the role editor and the audit trail. Editing a role is one
+ * of the most consequential things a merchant can do in this workspace and it
+ * was the one change the trail could not see — every other module writes its
+ * events, and roles has to as well or "who granted them that?" has no answer.
+ *
+ * Each changed permission becomes one `AuditChange` reading `Allowed → Denied`,
+ * rather than one event per permission. A single edit is a single decision, and
+ * twelve rows in the trail for one click buries everything around it.
+ *
+ * Severity is always `security`: a permission change is the definition of one,
+ * regardless of which permission moved.
+ */
+export function auditEventForRoleChange(input: {
+  role: WorkspaceRole;
+  deltas: PermissionDelta[];
+  affectedMembers: number;
+  actor: WorkspaceMember;
+}): WorkspaceAuditEvent {
+  const { role, deltas, affectedMembers, actor } = input;
+  const added = deltas.filter((delta) => delta.granted).length;
+  const removed = deltas.length - added;
+
+  return {
+    id: `aud_role_${Date.now().toString(36)}`,
+    workspaceId: WORKSPACE_ID,
+    actorId: actor.id,
+    actorName: actor.name,
+    action: "role.permissions_changed",
+    actionLabel: "Updated role permissions",
+    module: "roles",
+    resourceType: "Role",
+    resourceId: role.id,
+    resourceName: role.name,
+    resourceHref: WORKSPACE_ROUTES.roles,
+    /* Widening access is the direction worth a second look in a trail: taking
+       permissions away cannot let anyone do something new. */
+    status: added > 0 ? "warning" : "success",
+    severity: "security",
+    createdAt: WORKSPACE_NOW,
+    ipAddress: null,
+    userAgent: null,
+    changes: deltas.map((delta) => ({
+      field: `${delta.resourceLabel} · ${delta.actionLabel}`,
+      before: delta.granted ? "Denied" : "Allowed",
+      after: delta.granted ? "Allowed" : "Denied",
+    })),
+    metadata: {
+      added: String(added),
+      removed: String(removed),
+      affectedMembers: String(affectedMembers),
+      sensitive: String(deltas.filter((delta) => delta.sensitive).length),
+    },
+  };
+}
+
+/** The matching per-role history row, so both views stay in step. */
+export function roleActivityForChange(input: {
+  role: WorkspaceRole;
+  deltas: PermissionDelta[];
+  affectedMembers: number;
+  actor: WorkspaceMember;
+}): RoleActivityEvent {
+  const { role, deltas, affectedMembers, actor } = input;
+  const added = deltas.filter((delta) => delta.granted);
+  const removed = deltas.filter((delta) => !delta.granted);
+
+  return {
+    id: `ra_${Date.now().toString(36)}`,
+    roleId: role.id,
+    actorName: actor.name,
+    action: "role.permissions_changed",
+    summary:
+      added.length > 0 && removed.length > 0
+        ? `Granted ${added.length} and removed ${removed.length} permissions`
+        : added.length > 0
+          ? `Granted ${added.length} ${added.length === 1 ? "permission" : "permissions"}`
+          : `Removed ${removed.length} ${removed.length === 1 ? "permission" : "permissions"}`,
+    added: added.map((delta) => `${delta.resourceKey}.${delta.action}`),
+    removed: removed.map((delta) => `${delta.resourceKey}.${delta.action}`),
+    affectedMembers,
+    createdAt: WORKSPACE_NOW,
+  };
+}
+
+/** A role being created, duplicated, archived, restored or deleted. */
+export function auditEventForRoleLifecycle(input: {
+  role: WorkspaceRole;
+  action: "created" | "duplicated" | "archived" | "restored" | "deleted";
+  actor: WorkspaceMember;
+  detail?: string;
+}): WorkspaceAuditEvent {
+  const { role, action, actor, detail } = input;
+
+  const LABEL: Record<typeof action, string> = {
+    created: "Created custom role",
+    duplicated: "Duplicated role",
+    archived: "Archived role",
+    restored: "Restored role",
+    deleted: "Deleted role",
+  };
+
+  return {
+    id: `aud_role_${action}_${Date.now().toString(36)}`,
+    workspaceId: WORKSPACE_ID,
+    actorId: actor.id,
+    actorName: actor.name,
+    action: `role.${action}`,
+    actionLabel: LABEL[action],
+    module: "roles",
+    resourceType: "Role",
+    resourceId: role.id,
+    resourceName: role.name,
+    resourceHref: WORKSPACE_ROUTES.roles,
+    status: action === "deleted" ? "warning" : "success",
+    severity: "security",
+    createdAt: WORKSPACE_NOW,
+    ipAddress: null,
+    userAgent: null,
+    changes: [],
+    metadata: {
+      permissions: String(grantCount(role.grants)),
+      ...(detail ? { detail } : {}),
+    },
+  };
+}

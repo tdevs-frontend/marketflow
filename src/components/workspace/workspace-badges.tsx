@@ -4,6 +4,7 @@ import {
   CircleSlash,
   Info,
   MailCheck,
+  ShieldAlert,
   ShieldCheck,
   XCircle,
   type LucideIcon,
@@ -19,6 +20,7 @@ import type {
   AuditSeverity,
   AuditStatus,
   MemberStatus,
+  RiskLevel,
   RoleType,
 } from "@/types/workspace";
 
@@ -140,6 +142,43 @@ export function SeverityBadge({
     <Badge tone="warning" size="sm" className={cn("normal-case", className)}>
       <ShieldCheck className="size-3" aria-hidden />
       Security
+    </Badge>
+  );
+}
+
+/**
+ * How much damage a role could do.
+ *
+ * Three levels, derived from the sensitive permissions the role holds rather
+ * than from a number a merchant has to interpret. `high` is reserved for the
+ * grants that cannot be undone from inside the product — managing roles,
+ * managing billing, issuing refunds — so the badge means "read this role
+ * carefully" rather than "this role is large".
+ *
+ * Standard is deliberately neutral rather than green: most roles are standard,
+ * and a column of green badges is a column nobody reads.
+ */
+const RISK_STATE: Record<RiskLevel, { tone: BadgeTone; label: string }> = {
+  standard: { tone: "neutral", label: "Standard" },
+  elevated: { tone: "warning", label: "Elevated" },
+  high: { tone: "danger", label: "High access" },
+};
+
+export function RiskBadge({
+  level,
+  size = "sm",
+  className,
+}: {
+  level: RiskLevel;
+  size?: "sm" | "md";
+  className?: string;
+}) {
+  const { tone, label } = RISK_STATE[level];
+
+  return (
+    <Badge tone={tone} size={size} className={cn("normal-case", className)}>
+      {level === "standard" ? null : <ShieldAlert className="size-3" aria-hidden />}
+      {label}
     </Badge>
   );
 }

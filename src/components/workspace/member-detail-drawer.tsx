@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, MailCheck, XCircle } from "lucide-react";
 
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -10,10 +10,12 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { Icon } from "@/components/ui/icon";
 import { APP_ROUTES } from "@/constants/app";
 import { WORKSPACE_ROUTES } from "@/constants/workspace";
-import { formatDate, formatRelativeTime } from "@/lib/format";
+import { formatDate, formatDateTime, formatRelativeTime } from "@/lib/format";
 import { WORKSPACE_NOW_MS } from "@/lib/workspace-clock";
+import { cn } from "@/lib/utils";
 import {
   WORKSPACE_AUDIT,
+  accessPreview,
   grantCount,
   memberById,
   roleById,
@@ -39,17 +41,22 @@ export function MemberDetailDrawer({
   open,
   onClose,
   onChangeRole,
+  onResend,
+  onCancelInvite,
   canManage,
 }: {
   member: WorkspaceMember | null;
   open: boolean;
   onClose: () => void;
   onChangeRole: (member: WorkspaceMember) => void;
+  onResend: (member: WorkspaceMember) => void;
+  onCancelInvite: (member: WorkspaceMember) => void;
   canManage: boolean;
 }) {
   if (!member) return null;
 
   const role = roleById(member.roleId);
+  const access = accessPreview(role?.grants ?? {});
   const invitedBy = member.invitedById ? memberById(member.invitedById) : null;
 
   /* This member's own rows from the workspace audit trail — the same source the
@@ -116,7 +123,7 @@ export function MemberDetailDrawer({
       title={member.name}
       description={member.email}
       footer={
-        canManage && !member.isCurrentUser ? (
+        canManage && !member.isCurrentUser && member.status !== "invited" ? (
           <Button
             variant="outline"
             size="compact"
@@ -163,6 +170,31 @@ export function MemberDetailDrawer({
         <section className="mt-6">
           <h3 className="text-sm font-semibold text-text-primary">Access</h3>
           <p className="mt-1 text-sm text-text-secondary">{role.description}</p>
+
+          {/*
+           * Effective access, not the permission list.
+           *
+           * A member drawer is the wrong place for 105 checkboxes — the reader
+           * is asking "roughly what can this person do", and the answer is
+           * module names. The link below goes to the role for the detail.
+           */}
+          <dl className="mt-3 space-y-2">
+            {[
+              { label: "Can access", items: access.full, tone: "text-success-text" },
+              { label: "Limited", items: access.limited, tone: "text-warning-text" },
+            ]
+              .filter((row) => row.items.length > 0)
+              .map((row) => (
+                <div key={row.label} className="flex flex-wrap gap-x-3 gap-y-1">
+                  <dt className={cn("w-24 shrink-0 text-meta font-semibold", row.tone)}>
+                    {row.label}
+                  </dt>
+                  <dd className="min-w-0 flex-1 text-sm text-text-secondary">
+                    {row.items.join(" · ")}
+                  </dd>
+                </div>
+              ))}
+          </dl>
           <Link
             href={WORKSPACE_ROUTES.roles}
             className="mt-2 inline-flex items-center gap-1 rounded-btn text-sm font-medium text-primary underline-offset-2 hover:underline focus-visible:shadow-focus focus-visible:outline-none"
@@ -170,6 +202,58 @@ export function MemberDetailDrawer({
             View {role.name} permissions
             <ChevronRight className="size-3.5" aria-hidden />
           </Link>
+        </section>
+      ) : null}
+
+      {/*
+       * Invitation state, for someone who has not accepted yet.
+       *
+       * An invited member has no join date, no activity and nothing owned, so
+       * the panels below render empty for them. This is what they have instead:
+       * when it was sent, when it lapses, and the two actions that apply.
+       */}
+      {member.status === "invited" ? (
+        <section className="mt-6 rounded-panel border border-info-soft bg-info-soft/40 px-3.5 py-3">
+          <h3 className="text-sm font-semibold text-text-primary">
+            Invitation pending
+          </h3>
+
+          <dl className="mt-2.5 space-y-2">
+            <div className="flex items-baseline justify-between gap-3">
+              <dt className="text-sm text-text-muted">Sent</dt>
+              <dd className="text-sm font-medium text-text-primary">
+                {formatDateTime(member.invitedAt)}
+              </dd>
+            </div>
+            <div className="flex items-baseline justify-between gap-3">
+              <dt className="text-sm text-text-muted">Expires</dt>
+              <dd className="text-sm font-medium text-text-primary">
+                {formatDateTime(invitationExpiry(member.invitedAt))}
+                <span className="ml-2 text-meta font-normal text-text-muted">
+                  {formatRelativeTime(invitationExpiry(member.invitedAt), WORKSPACE_NOW_MS)}
+                </span>
+              </dd>
+            </div>
+            <div className="flex items-baseline justify-between gap-3">
+              <dt className="text-sm text-text-muted">Invited by</dt>
+              <dd className="text-sm font-medium text-text-primary">
+                {invitedBy?.name ?? "Workspace owner"}
+              </dd>
+            </div>
+          </dl>
+
+          {canManage ? (
+            <div className="mt-3 flex flex-wrap gap-2.5">
+              <Button variant="outline" size="sm" onClick={() => onResend(member)}>
+                <MailCheck aria-hidden />
+                Resend Invite
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => onCancelInvite(member)}>
+                <XCircle aria-hidden />
+                Cancel Invite
+              </Button>
+            </div>
+          ) : null}
         </section>
       ) : null}
 
@@ -248,4 +332,15 @@ export function MemberDetailDrawer({
       </section>
     </Drawer>
   );
+}
+
+/**
+ * When an invitation lapses.
+ *
+ * Seven days from sending, which is the window the invitation email states.
+ * Derived rather than stored so the fixture cannot drift from the copy; a real
+ * backend supplies `expiresAt` on the invitation record and this goes away.
+ */
+function invitationExpiry(invitedAt: string): string {
+  return new Date(new Date(invitedAt).getTime() + 7 * 86_400_000).toISOString();
 }

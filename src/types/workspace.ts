@@ -101,14 +101,51 @@ export type PermissionAction =
   | "edit"
   | "delete"
   | "publish"
+  | "pause"
   | "export"
-  | "manage";
+  | "manage"
+  | "assign"
+  | "refund"
+  | "retry"
+  | "approve"
+  | "bulk_edit"
+  | "view_activity";
+
+/**
+ * One action on one resource, with everything the editor needs to govern it.
+ *
+ * Three things ride along with the action name, and each exists to answer a
+ * question a merchant asks while editing a 100-permission role:
+ *
+ *   `advanced`  — "do I need to care about this one right now?" Rare and
+ *                 destructive actions sit behind a disclosure so the default
+ *                 view is the handful most roles actually differ on.
+ *   `sensitive` — "what happens if I grant this?" The string is the impact,
+ *                 shown in a tooltip. Presence is what flags the badge.
+ *   `requires`  — "is this combination even coherent?" Publish without Edit is
+ *                 a permission that cannot be exercised, and the editor
+ *                 resolves it rather than letting it be saved.
+ */
+export interface ResourceAction {
+  action: PermissionAction;
+  /** Hidden behind "Show advanced" in the matrix. */
+  advanced?: boolean;
+  /** The impact, in one sentence. Its presence marks the action sensitive. */
+  sensitive?: string;
+  /**
+   * Other actions on the same resource this one depends on.
+   *
+   * `view` is an implicit prerequisite for everything and is not repeated
+   * here — see `requiredFor` in `constants/workspace`.
+   */
+  requires?: PermissionAction[];
+}
 
 export interface PermissionResource {
   key: string;
   label: string;
-  /** Only the actions that make sense here. */
-  actions: PermissionAction[];
+  /** Only the actions that make sense here, each with its own governance. */
+  actions: ResourceAction[];
   /** One line in the matrix row, for actions whose meaning is not obvious. */
   hint?: string;
   /**
@@ -140,11 +177,25 @@ export type RoleGrants = Record<string, PermissionAction[]>;
 
 export type RoleType = "system" | "custom";
 
+/**
+ * Archived roles keep their configuration but cannot be assigned.
+ *
+ * The safer half of deletion: a custom role that fell out of use is usually
+ * something a merchant wants back in three months, and forcing the choice
+ * between "keep clutter" and "lose the permission set" is how roles get
+ * deleted and rebuilt from memory.
+ */
+export type RoleStatus = "active" | "archived";
+
+/** How much damage this role could do, derived from its sensitive grants. */
+export type RiskLevel = "standard" | "elevated" | "high";
+
 export interface WorkspaceRole {
   id: string;
   name: string;
   description: string;
   type: RoleType;
+  status: RoleStatus;
   /**
    * The `MerchantRole` this maps onto, for system roles.
    *
@@ -158,6 +209,63 @@ export interface WorkspaceRole {
   updatedAt: string;
   /** `null` on system roles — nobody created them. */
   createdBy: string | null;
+  /** Who last changed the permissions. `null` if never edited. */
+  updatedBy: string | null;
+}
+
+/**
+ * A starting point for a new custom role.
+ *
+ * Building a permission set from a hundred empty checkboxes is a job nobody
+ * finishes correctly. Presets are the shapes merchants actually ask for —
+ * "someone who runs marketing", "someone who only reads" — expressed as grants
+ * so the create flow can hand over a working role in one click.
+ */
+export interface PermissionPreset {
+  id: string;
+  label: string;
+  description: string;
+  icon: string;
+  grants: RoleGrants;
+}
+
+/**
+ * One change to a role, for its own history tab.
+ *
+ * Kept alongside the workspace audit trail rather than instead of it: this is
+ * the narrow view scoped to one role, and the same events also appear in
+ * Workspace Activity where they can be correlated with everything else.
+ */
+export interface RoleActivityEvent {
+  id: string;
+  roleId: string;
+  actorName: string;
+  action:
+    | "role.created"
+    | "role.renamed"
+    | "role.duplicated"
+    | "role.archived"
+    | "role.restored"
+    | "role.permissions_changed"
+    | "member.assigned"
+    | "member.unassigned";
+  summary: string;
+  /** Permission keys added and removed, as `resource.action`. */
+  added: string[];
+  removed: string[];
+  /** How many members held the role when it changed. */
+  affectedMembers: number;
+  createdAt: string;
+}
+
+/** One pending permission edit, for the change summary shown before saving. */
+export interface PermissionDelta {
+  resourceKey: string;
+  resourceLabel: string;
+  action: PermissionAction;
+  actionLabel: string;
+  granted: boolean;
+  sensitive: boolean;
 }
 
 /* -------------------------------------------------------------------------- */

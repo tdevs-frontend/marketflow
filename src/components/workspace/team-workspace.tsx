@@ -344,6 +344,13 @@ export function TeamWorkspace() {
           setSelected(null);
           setChangingRole(member);
         }}
+        onResend={(member) =>
+          toast(`Invitation resent to ${member.email}`, "success")
+        }
+        onCancelInvite={(member) => {
+          setSelected(null);
+          setCancelling(member);
+        }}
         canManage={permissions.canManageTeam}
       />
 

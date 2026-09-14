@@ -84,6 +84,98 @@ export function TeamPageSkeleton() {
   );
 }
 
+/** The role list column on its own — used inside `RolesSkeleton`. */
+export function RoleListSkeleton({ rows = 8 }: { rows?: number }) {
+  return (
+    <div className="rounded-card border border-border bg-surface p-5 shadow-card">
+      <Skeleton className="h-4 w-20 rounded-full" />
+      <div className="mt-4 space-y-3.5">
+        {Array.from({ length: rows }).map((_, index) => (
+          <div key={index} className="space-y-1.5">
+            <Skeleton className="h-3.5 w-36 rounded-full" />
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-4 w-20 rounded-full" />
+              <Skeleton className="h-2.5 w-24 rounded-full" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * The permission editor: search row, tier toggle, then the module accordions.
+ *
+ * Only the first group is drawn open, matching the real component — a skeleton
+ * showing eight expanded groups would collapse to one and jump the page.
+ */
+export function PermissionMatrixSkeleton() {
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center">
+        <Skeleton className="h-10 min-w-0 flex-1 rounded-field" />
+        <Skeleton className="h-8 w-72 max-w-full rounded-btn" />
+      </div>
+
+      <Skeleton className="h-4 w-56 rounded-full" />
+
+      <div className="space-y-2.5">
+        <div className="rounded-panel border border-border">
+          <div className="flex items-center gap-3 px-3.5 py-3">
+            <Skeleton className="size-4 rounded-full" />
+            <div className="flex-1 space-y-1.5">
+              <Skeleton className="h-3.5 w-28 rounded-full" />
+              <Skeleton className="h-2.5 w-56 max-w-full rounded-full" />
+            </div>
+            <Skeleton className="h-3 w-12 rounded-full" />
+          </div>
+          <div className="space-y-2.5 border-t border-border px-3.5 py-3">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <div key={index} className="flex items-center gap-3">
+                <Skeleton className="h-3.5 w-32 rounded-full" />
+                <div className="ml-auto flex gap-3">
+                  {Array.from({ length: 5 }).map((_, cell) => (
+                    <Skeleton key={cell} className="size-4.5 rounded-sm" />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {Array.from({ length: 4 }).map((_, index) => (
+          <Skeleton key={index} className="h-16 rounded-panel" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** The members tab inside a role, and the team drawer's member list. */
+export function MemberListSkeleton({ rows = 4 }: { rows?: number }) {
+  return (
+    <div className="rounded-card border border-border bg-surface p-5 shadow-card">
+      <div className="space-y-2">
+        <Skeleton className="h-3.5 w-28 rounded-full" />
+        <Skeleton className="h-2.5 w-72 max-w-full rounded-full" />
+      </div>
+      <ul className="mt-4 space-y-2.5">
+        {Array.from({ length: rows }).map((_, index) => (
+          <li key={index} className="flex items-center gap-3">
+            <Skeleton className="size-8 rounded-full" />
+            <div className="flex-1 space-y-1.5">
+              <Skeleton className="h-3.5 w-36 rounded-full" />
+              <Skeleton className="h-2.5 w-48 rounded-full" />
+            </div>
+            <Skeleton className="h-2.5 w-20 rounded-full" />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 /**
  * The roles page: the list column and the detail beside it.
  *
@@ -96,28 +188,19 @@ export function RolesSkeleton() {
       <WorkspaceHeaderSkeleton />
 
       <div className="grid gap-6 xl:grid-cols-[19rem_minmax(0,1fr)]">
-        <div className="rounded-card border border-border bg-surface p-5 shadow-card">
-          <Skeleton className="h-4 w-20 rounded-full" />
-          <div className="mt-4 space-y-3">
-            {Array.from({ length: 8 }).map((_, index) => (
-              <div key={index} className="space-y-1.5">
-                <Skeleton className="h-3.5 w-36 rounded-full" />
-                <Skeleton className="h-2.5 w-48 rounded-full" />
-              </div>
-            ))}
-          </div>
-        </div>
+        <RoleListSkeleton />
 
         <div className="space-y-6">
-          <Skeleton className="h-56 rounded-card" />
-          <div className="rounded-card border border-border bg-surface p-5 shadow-card">
-            <Skeleton className="h-4 w-28 rounded-full" />
-            <div className="mt-4 space-y-2.5">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <Skeleton key={index} className="h-14 rounded-panel" />
-              ))}
-            </div>
+          {/* Header card: identity, four summary tiles, then access preview. */}
+          <Skeleton className="h-72 rounded-card" />
+
+          <div className="flex gap-1 border-b border-border">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <Skeleton key={index} className="mb-2 h-6 w-24 rounded-full" />
+            ))}
           </div>
+
+          <PermissionMatrixSkeleton />
         </div>
       </div>
     </>
@@ -174,3 +257,11 @@ export function WorkspaceSettingsSkeleton() {
     </>
   );
 }
+
+/**
+ * The audit table, under the name the rest of the module calls it.
+ *
+ * Same six columns as `ActivityTableSkeleton` — this is an alias rather than a
+ * second definition, because two skeletons for one table is how they drift.
+ */
+export const AuditTableSkeleton = ActivityTableSkeleton;
