@@ -97,7 +97,7 @@ export function ProductPerformance({ className }: { className?: string }) {
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h2 className="text-base">Product Performance</h2>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="mt-1 text-sm text-text-secondary font-medium">
             Your best sellers by revenue over the last 30 days.
           </p>
         </div>

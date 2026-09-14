@@ -107,7 +107,7 @@ export function CampaignPerformance({ className }: { className?: string }) {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h2 className="text-base">Campaign Performance</h2>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="mt-1 text-sm text-text-secondary font-medium">
             See which campaigns are driving engagement and sales.
           </p>
         </div>

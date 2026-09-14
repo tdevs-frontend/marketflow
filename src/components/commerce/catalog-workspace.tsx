@@ -182,7 +182,7 @@ function CatalogPreview({
             MF
           </span>
           <h3 className="mt-3 text-lg">MarketFlow Store</h3>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="mt-1 text-sm text-text-secondary font-medium">
             {catalog?.description ?? "Our current line-up"}
           </p>
         </header>
@@ -514,7 +514,7 @@ export function CatalogWorkspace() {
             {formatNumber(PRODUCTS.filter((item) => item.featured).length)} featured
             products lead your catalogs
           </h2>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="mt-1 text-sm text-text-secondary font-medium">
             Featured products appear first wherever a catalog is shared.
           </p>
         </div>

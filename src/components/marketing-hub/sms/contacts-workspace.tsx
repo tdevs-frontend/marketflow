@@ -801,7 +801,7 @@ export function SmsContactsWorkspace() {
             <p className="text-sm font-medium text-sms-dark">
               Numbers are validated on import
             </p>
-            <p className="mt-1 text-sm text-text-secondary">
+            <p className="mt-1 text-sm text-text-secondary font-medium">
               Anything without a resolvable country code is flagged Invalid rather
               than imported as subscribed — a number you cannot route still costs
               you a segment every time you try.

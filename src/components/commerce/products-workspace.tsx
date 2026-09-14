@@ -696,7 +696,7 @@ export function ProductsWorkspace() {
       <Card className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-base">Turn products into orders</h2>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="mt-1 text-sm text-text-secondary font-medium">
             Share a catalog on WhatsApp, or build a campaign around your best
             sellers.
           </p>

@@ -104,7 +104,7 @@ export function WhatsAppInbox({ className }: { className?: string }) {
             </span>
             WhatsApp Inbox
           </h2>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="mt-1 text-sm text-text-secondary font-medium">
             Conversations waiting on a reply.
           </p>
         </div>

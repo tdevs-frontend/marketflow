@@ -59,7 +59,7 @@ const ROW_IDLE =
 const ROW_WITHIN = "bg-primary-soft text-primary-dark";
 
 const SUB_ROW =
-  "flex items-center rounded-lg px-3 py-1.5 text-[14px] font-medium transition-colors focus-visible:outline-none focus-visible:shadow-focus";
+  "flex items-center rounded-lg px-3 py-1.5 text-[15px] font-medium transition-colors focus-visible:outline-none focus-visible:shadow-focus";
 const SUB_ACTIVE = "bg-primary-soft text-primary-dark";
 /* Sub-rows hover on the same tint the current page carries, so hovering a row
    previews exactly what picking it will look like. */

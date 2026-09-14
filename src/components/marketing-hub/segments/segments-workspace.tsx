@@ -526,7 +526,7 @@ export function SegmentsWorkspace() {
             <p className="mt-1.5 text-lg leading-none font-bold text-text-primary tabular-nums">
               {formatNumber(editing?.contacts ?? 0)}
             </p>
-            <p className="mt-1.5 text-sm text-text-secondary">
+            <p className="mt-1.5 text-base text-text-secondary font-medium">
               Recalculated when you save. A segment&apos;s size moves on its own as
               contacts start and stop matching the rules.
             </p>

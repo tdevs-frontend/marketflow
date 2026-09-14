@@ -841,7 +841,7 @@ export function EmailContactsWorkspace() {
             <p className="text-sm font-medium text-text-primary">
               Duplicates are merged, not added
             </p>
-            <p className="mt-1 text-sm text-text-secondary">
+            <p className="mt-1 text-sm text-text-secondary font-medium">
               A row whose email already exists updates that contact&apos;s fields and
               tags. Existing engagement history is kept.
             </p>

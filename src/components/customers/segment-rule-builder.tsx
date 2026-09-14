@@ -363,7 +363,7 @@ export function AudiencePreview({
           of {formatNumber(total)} contacts
         </span>
       </p>
-      <p className="mt-1.5 text-sm text-text-secondary">
+      <p className="mt-1.5 text-base text-text-secondary font-medium">
         {type === "static"
           ? "A static segment keeps the members it was built with. Nobody is added or removed as they change."
           : conditions === 0

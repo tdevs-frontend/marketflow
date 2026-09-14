@@ -165,7 +165,7 @@ export function WhatsAppCampaignsWorkspace() {
       <Card className="p-5">
         <div>
           <h2 className="text-base">Campaign Performance</h2>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="mt-1 text-sm text-text-secondary font-medium">
             Delivered, read and replies for your five largest sends.
           </p>
         </div>

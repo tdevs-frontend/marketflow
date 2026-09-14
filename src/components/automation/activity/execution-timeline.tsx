@@ -169,7 +169,7 @@ export function ExecutionTimeline({
                 <ExecutionStatusBadge status={step.status} />
               </div>
 
-              <p className="mt-1 text-sm text-text-secondary">
+              <p className="mt-1 text-sm text-text-secondary font-medium">
                 {step.event}
                 {step.detail ? (
                   <span className="text-text-muted"> · {step.detail}</span>
@@ -275,7 +275,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
         <dt className="text-sm font-medium text-text-muted">
           Started
         </dt>
-        <dd className="mt-1 text-sm text-text-secondary">
+        <dd className="mt-1 text-sm text-text-secondary font-medium">
           {formatDateTime(run.startedAt)}
         </dd>
       </div>
@@ -293,7 +293,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
         <dt className="text-sm font-medium text-text-muted">
           Total duration
         </dt>
-        <dd className="mt-1 text-sm text-text-secondary tabular-nums">
+        <dd className="mt-1 text-sm text-text-secondary font-medium tabular-nums">
           {run.durationMs === undefined ? (
             <Badge tone="warning">In progress</Badge>
           ) : (

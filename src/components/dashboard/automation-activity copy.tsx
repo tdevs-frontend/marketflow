@@ -135,7 +135,7 @@ export function AutomationActivity({ className }: { className?: string }) {
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h2 className="text-base">Automation Activity</h2>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="mt-1 text-sm text-text-secondary font-medium">
             What your workflows have done recently.
           </p>
         </div>

@@ -223,7 +223,7 @@ export function SocialWorkspace() {
           ) : (
             <section>
               <h2 className="text-base">Connected accounts</h2>
-              <p className="mt-1 text-sm text-text-secondary">
+              <p className="mt-1 text-sm text-text-secondary font-medium">
                 Each account is authorised separately and can be managed on its own.
               </p>
 
@@ -247,7 +247,7 @@ export function SocialWorkspace() {
           {unconnected.length > 0 ? (
             <section>
               <h2 className="text-base">Available platforms</h2>
-              <p className="mt-1 text-sm text-text-secondary">
+              <p className="mt-1 text-sm text-text-secondary font-medium">
                 What else MarketFlow can publish to.
               </p>
 

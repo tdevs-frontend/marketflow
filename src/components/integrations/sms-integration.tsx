@@ -159,7 +159,7 @@ export function SmsIntegration() {
                   <p className="text-sm font-semibold text-text-primary">
                     Action required
                   </p>
-                  <p className="mt-1 text-sm text-text-secondary">
+                  <p className="mt-1 text-sm text-text-secondary font-medium">
                     {integration.activity.lastError}
                   </p>
                   <p className="mt-1.5 text-meta text-text-muted">

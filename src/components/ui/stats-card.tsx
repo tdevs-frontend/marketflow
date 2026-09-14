@@ -74,7 +74,7 @@ export function StatsGrid({ items, accent, columns, className }: StatsGridProps)
         return (
           <Card key={item.label} className="p-5">
             <div className="flex items-start justify-between gap-3">
-              <p className="text-sm font-medium text-text-secondary">
+              <p className="text-base font-medium text-text-secondary">
                 {item.label}
               </p>
               <span

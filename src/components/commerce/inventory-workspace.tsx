@@ -104,7 +104,7 @@ export function InventoryWorkspace() {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="text-base">Stock levels</h2>
-              <p className="mt-1 text-sm text-text-secondary">
+              <p className="mt-1 text-sm text-text-secondary font-medium">
                 Sorted by how close each product is to running out.
               </p>
             </div>
@@ -225,7 +225,7 @@ export function InventoryWorkspace() {
         {/* Activity */}
         <Card className="p-5">
           <h2 className="text-base">Inventory Activity</h2>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="mt-1 text-sm text-text-secondary font-medium">
             Every movement, newest first.
           </p>
 

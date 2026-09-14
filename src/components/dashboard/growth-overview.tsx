@@ -168,7 +168,7 @@ export function GrowthOverview({ className }: { className?: string }) {
       <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <div className="min-w-0">
           <h2 className="text-base">Growth Overview</h2>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="mt-1 text-sm text-text-secondary font-medium">
             Track leads, orders and revenue over time.
           </p>
         </div>

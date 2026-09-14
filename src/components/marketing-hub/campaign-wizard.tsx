@@ -634,7 +634,7 @@ export function CampaignWizard() {
                   <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
                     Fallback values
                   </p>
-                  <p className="mt-1 text-sm text-text-secondary">
+                  <p className="mt-1 text-sm text-text-secondary font-medium">
                     Used for contacts with no value for a tag. Without one, the
                     raw <code className="font-mono text-text-primary">{"{{tag}}"}</code>{" "}
                     is sent as written.
@@ -878,7 +878,7 @@ export function CampaignWizard() {
                   ? "Ready to send now"
                   : `Ready to schedule for ${draft.date || "—"}`}
               </p>
-              <p className="mt-1.5 text-sm text-text-secondary">
+              <p className="mt-1.5 text-base text-text-secondary font-medium">
                 {formatNumber(audienceSize)} contacts in{" "}
                 <span className="font-medium text-text-primary">
                   {audienceLabel}

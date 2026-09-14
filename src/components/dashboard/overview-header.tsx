@@ -44,7 +44,7 @@ export function OverviewHeader() {
         <h1 className="text-2xl sm:text-[1.75rem]">
           {greeting}, {user?.name ?? "Guest User"} 👋
         </h1>
-        <p className="mt-1.5 text-sm text-text-secondary">
+        <p className="mt-1.5 text-base text-text-secondary font-medium">
           Here&apos;s what&apos;s happening with your business today.
         </p>
       </div>

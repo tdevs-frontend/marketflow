@@ -154,7 +154,7 @@ export function AutomationActivity({ className }: { className?: string }) {
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h2 className="text-base sm:text-lg">Automation Activity</h2>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="mt-1 text-sm text-text-secondary font-medium">
             What your workflows have done recently.
           </p>
         </div>
@@ -189,7 +189,10 @@ export function AutomationActivity({ className }: { className?: string }) {
             const last = index === ACTIVITY.length - 1;
 
             return (
-              <li key={item.title} className="relative flex gap-3.5 pb-5 last:pb-0">
+              <li
+                key={item.title}
+                className="relative flex gap-3.5 pb-5 last:pb-0"
+              >
                 {/* The rail stops at the last marker rather than trailing past
                     it. `left-4.5` is the centre of a 36px marker. */}
                 {last ? null : (
@@ -213,7 +216,7 @@ export function AutomationActivity({ className }: { className?: string }) {
                     description rather than off the edge of the card. */}
                 <div className="flex min-w-0 flex-1 flex-col gap-1.5 pt-0.5 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-text-primary">
+                    <p className="truncate text-[15px] font-bold text-text-primary">
                       {item.title}
                     </p>
 
@@ -221,10 +224,12 @@ export function AutomationActivity({ className }: { className?: string }) {
                         the run is only legible once you know which flow
                         produced it, and that is the fact the rest of the
                         sentence hangs off. */}
-                    <p className="mt-0.5 truncate text-sm font-normal text-text-muted">
+                    <p className="mt-0.5 truncate text-sm font-medium text-text-muted">
                       {item.workflow ? (
                         <>
-                          <span className="text-text-secondary">{item.workflow}</span>
+                          <span className="text-text-secondary">
+                            {item.workflow}
+                          </span>
                           <span aria-hidden> · </span>
                         </>
                       ) : null}
@@ -255,7 +260,7 @@ export function AutomationActivity({ className }: { className?: string }) {
                       />
                       {item.status}
                     </Badge>
-                    <span className="text-meta font-normal text-text-muted">
+                    <span className="text-sm font-medium text-text-muted">
                       {item.time}
                     </span>
                   </div>

@@ -45,7 +45,7 @@ export function SalesFunnel({ className }: { className?: string }) {
     <Card className={cn("flex flex-col p-5", className)}>
       <div className="min-w-0">
         <h2 className="text-base sm:text-lg">Sales Funnel</h2>
-        <p className="mt-1 text-sm text-text-secondary">
+        <p className="mt-1 text-sm text-text-secondary font-medium">
           How prospects move from first interaction to purchase.
         </p>
       </div>
@@ -53,7 +53,9 @@ export function SalesFunnel({ className }: { className?: string }) {
       <ol className="mt-5 flex-1">
         {STAGES.map((stage, index) => {
           const previous = index > 0 ? STAGES[index - 1] : null;
-          const stepRate = previous ? (stage.count / previous.count) * 100 : null;
+          const stepRate = previous
+            ? (stage.count / previous.count) * 100
+            : null;
           const dropped = previous ? previous.count - stage.count : 0;
           /* One hue deepening toward `primary-dark`, not five colours: the
              stages are one funnel, and the taper already carries the reading. */
@@ -63,7 +65,10 @@ export function SalesFunnel({ className }: { className?: string }) {
             <li key={stage.label}>
               {stepRate !== null ? (
                 <p className="flex flex-wrap items-center gap-x-1.5 py-1 pl-1 text-sm">
-                  <ChevronDown className="size-3 shrink-0 text-text-muted" aria-hidden />
+                  <ChevronDown
+                    className="size-3 shrink-0 text-text-muted"
+                    aria-hidden
+                  />
                   <span className="font-medium text-text-secondary tabular-nums">
                     {stepRate.toFixed(1)}%
                   </span>
@@ -84,7 +89,9 @@ export function SalesFunnel({ className }: { className?: string }) {
                   backgroundColor: `color-mix(in oklab, var(--color-primary) ${tint * 100}%, var(--color-primary-dark))`,
                 }}
               >
-                <span className="truncate text-sm font-medium">{stage.label}</span>
+                <span className="truncate text-sm font-medium">
+                  {stage.label}
+                </span>
                 <span className="shrink-0 text-sm font-bold tabular-nums">
                   {formatNumber(stage.count)}
                 </span>
@@ -95,8 +102,10 @@ export function SalesFunnel({ className }: { className?: string }) {
       </ol>
 
       <div className="mt-5 flex items-center justify-between gap-3 border-t border-border pt-4">
-        <span className="text-sm text-text-secondary">Visitor → Customer</span>
-        <span className="text-xl leading-none font-bold text-primary tabular-nums">
+        <span className="text-sm text-text-secondary font-medium">
+          Visitor → Customer
+        </span>
+        <span className="text-lg leading-none font-bold text-primary tabular-nums">
           {((LAST.count / TOP) * 100).toFixed(1)}%
         </span>
       </div>

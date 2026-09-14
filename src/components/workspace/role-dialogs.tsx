@@ -477,7 +477,7 @@ export function ChangeSummaryDialog({
                 These changes affect {members.length}{" "}
                 {members.length === 1 ? "member" : "members"} immediately
               </p>
-              <p className="mt-1 text-sm text-text-secondary">
+              <p className="mt-1 text-sm text-text-secondary font-medium">
                 {members.map((member) => member.name).join(", ")}
               </p>
             </div>

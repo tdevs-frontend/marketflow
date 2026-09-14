@@ -174,7 +174,7 @@ export function DiscountsWorkspace() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-base">All discounts</h2>
-            <p className="mt-1 text-sm text-text-secondary">
+            <p className="mt-1 text-sm text-text-secondary font-medium">
               Codes customers can redeem at checkout.
             </p>
           </div>
@@ -359,7 +359,7 @@ export function DiscountsWorkspace() {
       <Card className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-base">Put a code to work</h2>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="mt-1 text-sm text-text-secondary font-medium">
             Attach a discount to a campaign or send it to a WhatsApp segment.
           </p>
         </div>

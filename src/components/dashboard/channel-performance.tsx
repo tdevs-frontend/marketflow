@@ -63,7 +63,7 @@ export function ChannelPerformance({ className }: { className?: string }) {
   return (
     <Card className={cn("flex flex-col p-5", className)}>
       <h2 className="text-base">Channel Performance</h2>
-      <p className="mt-1 text-sm text-text-secondary">
+      <p className="mt-1 text-sm text-text-secondary font-medium">
         Where your marketing results are coming from.
       </p>
 

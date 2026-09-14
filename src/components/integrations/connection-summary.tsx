@@ -49,7 +49,7 @@ export function ConnectionSummary({
               <h2 className="text-base font-semibold">{integration.name}</h2>
               <IntegrationStatusBadge status={integration.status} size="sm" />
             </div>
-            <p className="mt-1 text-sm text-text-secondary">
+            <p className="mt-1 text-sm text-text-secondary font-medium">
               {integration.provider
                 ? `Connected through ${integration.provider.name}`
                 : integration.description}

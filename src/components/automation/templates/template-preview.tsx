@@ -177,7 +177,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
                         {NODE_META[step.kind]?.label}
                       </span>
                     </div>
-                    <p className="mt-1 text-sm text-text-secondary">
+                    <p className="mt-1 text-sm text-text-secondary font-medium">
                       {NODE_META[step.kind]?.description}
                       {step.summary ? (
                         <span className="text-text-muted"> · {step.summary}</span>

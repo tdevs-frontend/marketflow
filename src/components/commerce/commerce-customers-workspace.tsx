@@ -367,7 +367,7 @@ function CustomerDrawer({
                 </span>
               </div>
 
-              <p className="mt-1 text-sm text-text-secondary">
+              <p className="mt-1 text-sm text-text-secondary font-medium">
                 {order.lines.map((line) => line.productName).join(", ")}
               </p>
 

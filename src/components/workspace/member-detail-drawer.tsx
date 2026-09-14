@@ -169,7 +169,7 @@ export function MemberDetailDrawer({
       {role ? (
         <section className="mt-6">
           <h3 className="text-sm font-semibold text-text-primary">Access</h3>
-          <p className="mt-1 text-sm text-text-secondary">{role.description}</p>
+          <p className="mt-1 text-sm text-text-secondary font-medium">{role.description}</p>
 
           {/*
            * Effective access, not the permission list.
@@ -262,7 +262,7 @@ export function MemberDetailDrawer({
           <h3 className="text-sm font-semibold text-text-primary">
             Owned in this workspace
           </h3>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="mt-1 text-sm text-text-secondary font-medium">
             What would need reassigning if they left.
           </p>
 

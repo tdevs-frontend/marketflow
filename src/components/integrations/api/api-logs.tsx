@@ -47,7 +47,7 @@ export function ApiLogs({
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <h2 className="text-base">Recent Requests</h2>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="mt-1 text-sm text-text-secondary font-medium">
             The last {logs.length} calls across every key in this workspace.
           </p>
         </div>

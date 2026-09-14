@@ -249,7 +249,7 @@ X-MarketFlow-Signature: <hmac-sha256>
                 <p className="text-sm font-medium text-text-muted">
                   Authentication
                 </p>
-                <p className="mt-1.5 text-sm text-text-secondary">
+                <p className="mt-1.5 text-base text-text-secondary font-medium">
                   Requests are signed with your workspace secret and verified
                   before the payload is read. An unsigned request is rejected
                   with <code className="font-mono text-sm">401</code> and never
@@ -272,7 +272,7 @@ X-MarketFlow-Signature: <hmac-sha256>
                 <p className="text-sm font-medium text-text-muted">
                   Testing
                 </p>
-                <p className="mt-1.5 text-sm text-text-secondary">
+                <p className="mt-1.5 text-base text-text-secondary font-medium">
                   Send a sample event to check the payload maps the way you
                   expect. Test events are logged here but never enrol a real
                   contact.
@@ -305,7 +305,7 @@ X-MarketFlow-Signature: <hmac-sha256>
                     </p>
                   </div>
                 ) : (
-                  <p className="mt-1.5 text-sm text-text-secondary">
+                  <p className="mt-1.5 text-base text-text-secondary font-medium">
                     No delivery errors in the last 24 hours.
                   </p>
                 )}

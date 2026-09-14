@@ -138,7 +138,7 @@ export function ApiWorkspace() {
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
               <h2 className="text-base">API Keys</h2>
-              <p className="mt-1 text-sm text-text-secondary">
+              <p className="mt-1 text-sm text-text-secondary font-medium">
                 Each key carries its own scopes. Revoking one takes effect
                 immediately.
               </p>
@@ -234,7 +234,7 @@ function BaseUrlCard() {
   return (
     <Card className="p-5">
       <h2 className="text-base">Base URL</h2>
-      <p className="mt-1 text-sm text-text-secondary">
+      <p className="mt-1 text-sm text-text-secondary font-medium">
         Every endpoint is relative to this address.
       </p>
 

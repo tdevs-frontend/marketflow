@@ -85,7 +85,7 @@ export function BusinessPulse({ className }: { className?: string }) {
             </span>
             Business Pulse
           </h2>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="mt-1 text-sm text-text-secondary font-medium">
             A quick view of today&apos;s most important signals.
           </p>
         </div>

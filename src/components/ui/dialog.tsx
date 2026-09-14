@@ -65,7 +65,7 @@ function Header({
       <div>
         <h2 className="text-base">{title}</h2>
         {description ? (
-          <p className="mt-1 text-sm text-text-secondary">{description}</p>
+          <p className="mt-1 text-sm text-text-secondary font-medium">{description}</p>
         ) : null}
       </div>
       <button

@@ -108,7 +108,7 @@ export function VersionHistoryDialog({
                   </div>
 
                   {version.note ? (
-                    <p className="mt-1.5 text-sm text-text-secondary">{version.note}</p>
+                    <p className="mt-1.5 text-base text-text-secondary font-medium">{version.note}</p>
                   ) : null}
 
                   <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-2">

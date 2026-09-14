@@ -431,7 +431,7 @@ export function TagsWorkspace() {
                       </div>
 
                       {tag.description ? (
-                        <p className="mt-1.5 text-sm text-text-secondary">
+                        <p className="mt-1.5 text-base text-text-secondary font-medium">
                           {tag.description}
                         </p>
                       ) : null}

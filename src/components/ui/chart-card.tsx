@@ -45,7 +45,7 @@ export function ChartCard({
         <div className="min-w-0">
           <h2 className="text-base">{title}</h2>
           {description ? (
-            <p className="mt-1 text-sm text-text-secondary">{description}</p>
+            <p className="mt-1 text-sm text-text-secondary font-medium">{description}</p>
           ) : null}
         </div>
         {action ? <div className="shrink-0">{action}</div> : null}
@@ -111,7 +111,7 @@ export function PanelCard({
         <div className="min-w-0">
           <h2 className="text-base">{title}</h2>
           {description ? (
-            <p className="mt-1 text-sm text-text-secondary">{description}</p>
+            <p className="mt-1 text-sm text-text-secondary font-medium">{description}</p>
           ) : null}
         </div>
         {action ? <div className="shrink-0">{action}</div> : null}

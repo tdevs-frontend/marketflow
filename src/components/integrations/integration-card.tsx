@@ -75,7 +75,7 @@ export function IntegrationCard({
           integration.name
         )}
       </h3>
-      <p className="mt-1 text-sm text-text-secondary">{integration.description}</p>
+      <p className="mt-1 text-sm text-text-secondary font-medium">{integration.description}</p>
 
       <dl className="mt-3.5 space-y-1.5 border-t border-border pt-3.5 text-sm">
         <div className="flex items-baseline justify-between gap-3">

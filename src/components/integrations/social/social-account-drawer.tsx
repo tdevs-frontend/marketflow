@@ -187,7 +187,7 @@ export function SocialAccountDrawer({
                   </p>
                   <CapabilityBadge state={state} />
                 </div>
-                <p className="mt-1 text-sm text-text-secondary">
+                <p className="mt-1 text-sm text-text-secondary font-medium">
                   {capability?.detail ?? SOCIAL_CAPABILITY_DETAIL[key]}
                 </p>
                 {scopes[key] ? (

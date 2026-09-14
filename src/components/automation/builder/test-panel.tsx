@@ -229,7 +229,7 @@ export function TestWorkflowDialog({
                       <Badge tone="neutral">Skipped</Badge>
                     ) : null}
                   </div>
-                  <p className="mt-1 text-sm text-text-secondary">{step.outcome}</p>
+                  <p className="mt-1 text-sm text-text-secondary font-medium">{step.outcome}</p>
                   {step.detail ? (
                     <p className="mt-0.5 text-sm text-text-muted">{step.detail}</p>
                   ) : null}

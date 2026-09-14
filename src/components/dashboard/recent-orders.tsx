@@ -107,22 +107,22 @@ const ORDERS: Order[] = [
     time: "2 hr ago",
   },
   {
-    id: "#MF-10248",
-    customer: "Sarah Ahmed",
-    channel: "whatsapp",
-    product: "Premium Package",
-    amount: 149,
-    status: "Paid",
-    time: "2 min ago",
-  },
-  {
-    id: "#MF-10247",
-    customer: "John Smith",
+    id: "#MF-10240",
+    customer: "Maria",
     channel: "whatsapp",
     product: "Starter Package",
     amount: 79,
     status: "Paid",
-    time: "8 min ago",
+    time: "3 hr ago",
+  },
+  {
+    id: "#MF-10239",
+    customer: "David Chen",
+    channel: "campaign",
+    product: "Premium Package",
+    amount: 149,
+    status: "Cancelled",
+    time: "4 hr ago",
   },
 ];
 
@@ -171,7 +171,7 @@ export function RecentOrders({ className }: { className?: string }) {
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h2 className="text-base sm:text-lg">Recent Orders</h2>
-          <p className="mt-1 text-sm text-text-secondary">
+          <p className="mt-1 text-sm text-text-secondary font-medium">
             Your most recent orders across every channel.
           </p>
         </div>
@@ -264,7 +264,10 @@ export function RecentOrders({ className }: { className?: string }) {
                     </TD>
 
                     <TD className="w-1/2 max-w-0 text-text-primary">
-                      <span className="block truncate" title={order.customer}>
+                      <span
+                        className="block text-sm font-bold truncate"
+                        title={order.customer}
+                      >
                         {order.customer}
                       </span>
                     </TD>
@@ -275,7 +278,7 @@ export function RecentOrders({ className }: { className?: string }) {
                         thing a table is for avoiding. */}
                     <TD className="w-1/2 max-w-0">
                       <span
-                        className="block truncate font-normal text-text-secondary"
+                        className="block truncate text-sm font-medium text-text-muted"
                         title={order.product}
                       >
                         {order.product}
@@ -299,7 +302,7 @@ export function RecentOrders({ className }: { className?: string }) {
                     </TD>
 
                     <TD align="right" className="whitespace-nowrap">
-                      <span className="text-meta font-normal text-text-muted">
+                      <span className="text-sm font-medium text-text-muted">
                         {order.time}
                       </span>
                     </TD>
