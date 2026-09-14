@@ -21,7 +21,7 @@ import {
 import Link from "next/link";
 
 import { PageHeader } from "@/components/layout/page-header";
-import { Button, ButtonLink } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -692,25 +692,6 @@ export function ProductsWorkspace() {
         )}
       </Card>
 
-      {/* Cross-link out of Commerce and back into marketing. */}
-      <Card className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-base">Turn products into orders</h2>
-          <p className="mt-1 text-sm text-text-secondary font-medium">
-            Share a catalog on WhatsApp, or build a campaign around your best
-            sellers.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2.5">
-          <ButtonLink href={APP_ROUTES.catalog} variant="outline" size="compact">
-            Open catalog
-          </ButtonLink>
-          <ButtonLink href={APP_ROUTES.campaigns} variant="secondary" size="compact">
-            <Megaphone aria-hidden />
-            Create campaign
-          </ButtonLink>
-        </div>
-      </Card>
       {/* Mounted only while open, so a cancelled choice leaves nothing. */}
       {choosingType ? (
         <ProductTypeDialog open onClose={() => setChoosingType(false)} />
