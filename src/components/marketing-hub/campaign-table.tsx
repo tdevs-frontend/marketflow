@@ -189,7 +189,7 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
                   <TD>
                     <Link
                       href={APP_ROUTES.marketingCampaigns}
-                      className="block max-w-64 truncate font-medium text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
+                      className="block max-w-64 truncate font-bold text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
                     >
                       {campaign.name}
                     </Link>
@@ -220,7 +220,7 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
                     {open === null ? (
                       <span className="text-text-muted">—</span>
                     ) : (
-                      <span className="font-medium text-text-primary">
+                      <span className="font-bold text-text-primary">
                         {formatPercent(open)}
                       </span>
                     )}

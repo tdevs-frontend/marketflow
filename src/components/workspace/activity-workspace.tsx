@@ -315,7 +315,7 @@ export function ActivityWorkspace() {
                       </TD>
 
                       <TD className="max-w-56">
-                        <span className="block truncate text-text-primary">
+                        <span className="block truncate font-bold text-text-primary">
                           {event.actionLabel}
                         </span>
                       </TD>

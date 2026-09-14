@@ -788,7 +788,7 @@ export function CustomerSegmentsWorkspace() {
                           onClick={() => setActive(segment)}
                           className="block max-w-72 rounded-btn text-left focus-visible:shadow-focus focus-visible:outline-none"
                         >
-                          <span className="flex items-center gap-1.5 text-sm font-medium text-text-primary">
+                          <span className="flex items-center gap-1.5 text-sm font-bold text-text-primary">
                             <span className="truncate">{segment.name}</span>
                             {segment.system ? (
                               <Lock
@@ -807,7 +807,7 @@ export function CustomerSegmentsWorkspace() {
                       </TD>
                       <TD
                         align="right"
-                        className="text-sm font-medium text-text-primary tabular-nums"
+                        className="text-sm font-bold text-text-primary tabular-nums"
                       >
                         {formatNumber(members)}
                       </TD>

@@ -276,7 +276,7 @@ export function OrdersWorkspace() {
                         </TD>
 
                         <TD>
-                          <p className="font-medium text-text-primary">
+                          <p className="font-bold text-text-primary">
                             {order.customer.name}
                           </p>
                           {order.sourceCampaign ? (
@@ -309,7 +309,7 @@ export function OrdersWorkspace() {
                           {items}
                         </TD>
 
-                        <TD align="right" className="font-medium text-text-primary tabular-nums">
+                        <TD align="right" className="font-bold text-text-primary tabular-nums">
                           {formatCurrency(order.total)}
                         </TD>
 

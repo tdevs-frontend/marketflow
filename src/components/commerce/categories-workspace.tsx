@@ -126,7 +126,7 @@ export function CategoriesWorkspace() {
                         <FolderTree className="size-4" aria-hidden />
                       </span>
                       <div className="min-w-0">
-                        <p className="truncate font-medium text-text-primary">
+                        <p className="truncate font-bold text-text-primary">
                           {item.name}
                         </p>
                         <p className="font-mono text-sm text-text-muted">
@@ -143,7 +143,7 @@ export function CategoriesWorkspace() {
                   </TD>
 
                   <TD align="right">
-                    <span className="inline-flex items-center gap-1.5 font-medium text-text-primary tabular-nums">
+                    <span className="inline-flex items-center gap-1.5 font-bold text-text-primary tabular-nums">
                       <Package className="size-3.5 text-text-muted" aria-hidden />
                       {item.productCount}
                     </span>

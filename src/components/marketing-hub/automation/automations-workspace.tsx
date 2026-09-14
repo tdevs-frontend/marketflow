@@ -408,7 +408,7 @@ export function AutomationsWorkspace({ channel }: { channel: MarketingChannel })
                 {rows.map((flow) => (
                   <TR key={flow.id}>
                     <TD>
-                      <p className="max-w-56 truncate font-medium text-text-primary">
+                      <p className="max-w-56 truncate font-bold text-text-primary">
                         {flow.name}
                       </p>
                       <p className="max-w-56 truncate text-sm text-text-muted">
@@ -427,12 +427,12 @@ export function AutomationsWorkspace({ channel }: { channel: MarketingChannel })
                       {countSteps(flow.steps)}
                     </TD>
 
-                    <TD align="right" className="font-medium text-text-primary tabular-nums">
+                    <TD align="right" className="font-bold text-text-primary tabular-nums">
                       {formatNumber(flow.contactsProcessed)}
                     </TD>
 
                     <TD className="w-40">
-                      <p className="text-sm font-medium text-text-primary tabular-nums">
+                      <p className="text-sm font-bold text-text-primary tabular-nums">
                         {formatPercent(flow.successRate)}
                       </p>
                       <ProgressBar

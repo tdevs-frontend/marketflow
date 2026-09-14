@@ -535,7 +535,7 @@ export function WorkflowsWorkspace() {
                         href={AUTOMATION_ROUTES.workflow(workflow.id)}
                         className="block max-w-64 rounded-btn focus-visible:shadow-focus focus-visible:outline-none"
                       >
-                        <span className="block truncate text-sm font-medium text-text-primary transition-colors hover:text-primary">
+                        <span className="block truncate text-sm font-bold text-text-primary transition-colors hover:text-primary">
                           {workflow.name}
                         </span>
                         <span className="block truncate text-sm text-text-muted">
@@ -554,7 +554,7 @@ export function WorkflowsWorkspace() {
                     </TD>
                     <TD
                       align="right"
-                      className="text-sm font-medium whitespace-nowrap text-text-primary tabular-nums"
+                      className="text-sm font-bold whitespace-nowrap text-text-primary tabular-nums"
                     >
                       {workflow.stats.running > 0 ? (
                         formatCount(workflow.stats.running)
@@ -562,7 +562,7 @@ export function WorkflowsWorkspace() {
                         <span className="text-text-muted">—</span>
                       )}
                     </TD>
-                    <TD align="right" className="text-sm font-medium text-text-primary tabular-nums">
+                    <TD align="right" className="text-sm font-bold text-text-primary tabular-nums">
                       {formatCount(workflow.stats.entered)}
                     </TD>
                     <TD align="right" className="text-sm text-text-secondary tabular-nums">

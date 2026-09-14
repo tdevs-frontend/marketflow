@@ -82,7 +82,7 @@ export function TriggerTable({
                   href={AUTOMATION_ROUTES.trigger(trigger.id)}
                   className="block max-w-64 rounded-btn focus-visible:shadow-focus focus-visible:outline-none"
                 >
-                  <span className="block truncate text-sm font-medium text-text-primary transition-colors hover:text-primary">
+                  <span className="block truncate text-sm font-bold text-text-primary transition-colors hover:text-primary">
                     {trigger.name}
                   </span>
                   <span className="block truncate text-sm text-text-muted">
@@ -110,7 +110,7 @@ export function TriggerTable({
                   >
                     <span
                       tabIndex={0}
-                      className="inline-flex items-center gap-1 rounded-btn text-sm font-medium text-text-primary tabular-nums focus-visible:shadow-focus focus-visible:outline-none"
+                      className="inline-flex items-center gap-1 rounded-btn text-sm font-bold text-text-primary tabular-nums focus-visible:shadow-focus focus-visible:outline-none"
                     >
                       <WorkflowIcon className="size-3.5 text-text-muted" aria-hidden />
                       {trigger.workflowIds.length}
@@ -120,7 +120,7 @@ export function TriggerTable({
               </TD>
 
               <TD align="right" className="whitespace-nowrap">
-                <span className="text-sm font-medium text-text-primary tabular-nums">
+                <span className="text-sm font-bold text-text-primary tabular-nums">
                   {formatCount(trigger.events24h)}
                 </span>
                 {trigger.failed24h > 0 ? (

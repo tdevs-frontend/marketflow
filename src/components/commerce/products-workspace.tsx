@@ -529,7 +529,7 @@ export function ProductsWorkspace() {
                             <div className="min-w-0">
                               <Link
                                 href={editHref(item.id)}
-                                className="block truncate font-medium text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
+                                className="block truncate font-bold text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
                               >
                                 {item.name}
                               </Link>
@@ -544,7 +544,7 @@ export function ProductsWorkspace() {
                         <TD align="right">
                           {item.salePrice ? (
                             <span className="whitespace-nowrap">
-                              <span className="font-medium text-text-primary">
+                              <span className="font-bold text-text-primary">
                                 {formatCurrency(item.salePrice)}
                               </span>{" "}
                               <s className="text-sm text-text-muted">
@@ -552,7 +552,7 @@ export function ProductsWorkspace() {
                               </s>
                             </span>
                           ) : (
-                            <span className="font-medium text-text-primary">
+                            <span className="font-bold text-text-primary">
                               {formatCurrency(item.price)}
                             </span>
                           )}
@@ -567,7 +567,7 @@ export function ProductsWorkspace() {
                           * is "Untracked".
                           */}
                         <TD align="right">
-                          <span className="font-medium tabular-nums text-text-primary">
+                          <span className="font-bold tabular-nums text-text-primary">
                             {formatNumber(item.sales?.unitsSold ?? 0)}
                           </span>
                           <span className="ml-1 text-sm font-normal text-text-muted">

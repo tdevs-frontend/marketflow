@@ -356,7 +356,7 @@ export function WhatsAppCampaignsWorkspace() {
                         </TD>
 
                         <TD>
-                          <p className="max-w-56 truncate font-medium text-text-primary">
+                          <p className="max-w-56 truncate font-bold text-text-primary">
                             {campaign.name}
                           </p>
                           {campaign.description ? (
@@ -382,7 +382,7 @@ export function WhatsAppCampaignsWorkspace() {
                         </TD>
 
                         <TD align="right" className="tabular-nums">
-                          <span className="font-medium text-text-primary">
+                          <span className="font-bold text-text-primary">
                             {formatNumber(campaign.opened)}
                           </span>
                           {campaign.delivered > 0 ? (

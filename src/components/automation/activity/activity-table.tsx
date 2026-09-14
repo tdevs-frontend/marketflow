@@ -72,7 +72,7 @@ export function ActivityTable({
                     }}
                     className="rounded-btn text-left focus-visible:shadow-focus focus-visible:outline-none"
                   >
-                    <span className="block text-sm font-medium text-text-primary tabular-nums">
+                    <span className="block text-sm font-bold text-text-primary tabular-nums">
                       {timeOf(row.at)}
                     </span>
                     <span className="block text-sm text-text-muted">
@@ -113,7 +113,7 @@ export function ActivityTable({
                 </TD>
 
                 <TD>
-                  <span className="block max-w-44 truncate text-sm text-text-primary">
+                  <span className="block max-w-44 truncate text-sm font-bold text-text-primary">
                     {row.event}
                   </span>
                   {channel ? (

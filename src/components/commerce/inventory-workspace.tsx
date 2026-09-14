@@ -137,13 +137,13 @@ export function InventoryWorkspace() {
                       <TD>
                         <div className="flex items-center gap-3">
                           <ProductThumb size="sm" />
-                          <p className="truncate font-medium text-text-primary">
+                          <p className="truncate font-bold text-text-primary">
                             {item.productName}
                           </p>
                         </div>
                       </TD>
                       <TD className="font-mono text-sm text-text-muted">{item.sku}</TD>
-                      <TD align="right" className="font-medium text-text-primary tabular-nums">
+                      <TD align="right" className="font-bold text-text-primary tabular-nums">
                         {item.stock}
                       </TD>
                       <TD align="right" className="text-text-secondary tabular-nums">

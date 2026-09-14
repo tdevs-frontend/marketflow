@@ -399,7 +399,7 @@ export function ContactsWorkspace() {
                           >
                             <ContactAvatar contact={contact} />
                             <span className="min-w-0">
-                              <span className="block truncate font-medium text-text-primary">
+                              <span className="block truncate font-bold text-text-primary">
                                 {contactName(contact)}
                               </span>
                               <span className="block truncate text-sm text-text-muted">

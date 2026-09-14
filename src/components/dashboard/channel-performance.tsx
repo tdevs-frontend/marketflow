@@ -124,7 +124,7 @@ export function ChannelPerformance({ className }: { className?: string }) {
                 {CHANNELS.map((channel) => (
                   <td
                     key={channel.name}
-                    className="py-2 text-right font-medium text-text-primary tabular-nums"
+                    className="py-2 text-right font-bold text-text-primary tabular-nums"
                   >
                     {channel[row.key]}
                   </td>

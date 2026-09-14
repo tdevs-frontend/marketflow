@@ -429,7 +429,7 @@ export function EmailCampaignsWorkspace() {
                         </TD>
 
                         <TD>
-                          <p className="max-w-56 truncate font-medium text-text-primary">
+                          <p className="max-w-56 truncate font-bold text-text-primary">
                             {campaign.name}
                           </p>
                           <p className="max-w-56 truncate text-sm text-text-muted">
@@ -462,7 +462,7 @@ export function EmailCampaignsWorkspace() {
                             <span className="text-text-muted">—</span>
                           ) : (
                             <>
-                              <p className="text-sm font-medium text-text-primary tabular-nums">
+                              <p className="text-sm font-bold text-text-primary tabular-nums">
                                 {formatPercent(openRate)}
                               </p>
                               <ProgressBar
@@ -481,7 +481,7 @@ export function EmailCampaignsWorkspace() {
                             <span className="text-text-muted">—</span>
                           ) : (
                             <>
-                              <p className="text-sm font-medium text-text-primary tabular-nums">
+                              <p className="text-sm font-bold text-text-primary tabular-nums">
                                 {formatPercent(clickRate)}
                               </p>
                               <ProgressBar

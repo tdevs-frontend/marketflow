@@ -382,7 +382,7 @@ export function SmsCampaignsWorkspace() {
                             onClick={() => setPreview(campaign)}
                             className="max-w-56 text-left focus-visible:shadow-focus focus-visible:outline-none"
                           >
-                            <p className="truncate font-medium text-text-primary">
+                            <p className="truncate font-bold text-text-primary">
                               {campaign.name}
                             </p>
                             <p className="truncate font-mono text-sm text-text-muted">
@@ -416,7 +416,7 @@ export function SmsCampaignsWorkspace() {
                         </TD>
 
                         <TD align="right" className="tabular-nums">
-                          <span className="font-medium text-text-primary">
+                          <span className="font-bold text-text-primary">
                             {formatNumber(campaign.replies)}
                           </span>
                           {campaign.optOuts > 0 ? (
@@ -432,7 +432,7 @@ export function SmsCampaignsWorkspace() {
                           </Badge>
                         </TD>
 
-                        <TD align="right" className="font-medium text-text-primary tabular-nums">
+                        <TD align="right" className="font-bold text-text-primary tabular-nums">
                           {campaign.cost === 0 ? (
                             <span className="font-normal text-text-muted">—</span>
                           ) : (

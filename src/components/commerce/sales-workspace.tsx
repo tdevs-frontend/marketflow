@@ -252,7 +252,7 @@ export function SalesWorkspace() {
                         </TD>
 
                         <TD className="max-w-44">
-                          <span className="block truncate text-text-primary">
+                          <span className="block truncate font-bold text-text-primary">
                             {sale.customerName}
                           </span>
                         </TD>

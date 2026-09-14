@@ -671,7 +671,7 @@ export function LeadsBoard() {
                       onClick={() => setActive(lead)}
                       className="cursor-pointer"
                     >
-                      <TD className="text-sm font-medium text-text-primary">
+                      <TD className="text-sm font-bold text-text-primary">
                         {lead.title}
                       </TD>
                       <TD className="text-sm text-text-secondary">
@@ -685,7 +685,7 @@ export function LeadsBoard() {
                       </TD>
                       <TD
                         align="right"
-                        className="text-sm font-medium whitespace-nowrap text-text-primary tabular-nums"
+                        className="text-sm font-bold whitespace-nowrap text-text-primary tabular-nums"
                       >
                         {formatCurrency(lead.value)}
                       </TD>

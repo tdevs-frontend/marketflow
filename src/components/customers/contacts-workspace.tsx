@@ -764,7 +764,7 @@ export function ContactsWorkspace() {
                     {table.isVisible("value") ? (
                       <TD
                         align="right"
-                        className="text-sm font-medium whitespace-nowrap text-text-primary tabular-nums"
+                        className="text-sm font-bold whitespace-nowrap text-text-primary tabular-nums"
                       >
                         {item.lifetimeValue
                           ? formatCurrency(item.lifetimeValue)

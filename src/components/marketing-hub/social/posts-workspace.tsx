@@ -502,7 +502,7 @@ export function SocialPostsWorkspace() {
                           >
                             <PostThumb post={post} />
                             <span className="min-w-0">
-                              <span className="block max-w-40 truncate font-medium text-text-primary">
+                              <span className="block max-w-40 truncate font-bold text-text-primary">
                                 {post.title}
                               </span>
                               <span className="block text-sm text-text-muted">
@@ -543,7 +543,7 @@ export function SocialPostsWorkspace() {
 
                         <TD align="right" className="tabular-nums">
                           {post.status === "published" ? (
-                            <span className="font-medium text-text-primary">
+                            <span className="font-bold text-text-primary">
                               {formatNumber(post.engagement.reach)}
                             </span>
                           ) : (
@@ -554,7 +554,7 @@ export function SocialPostsWorkspace() {
                         <TD align="right" className="tabular-nums">
                           {post.status === "published" ? (
                             <>
-                              <span className="font-medium text-text-primary">
+                              <span className="font-bold text-text-primary">
                                 {formatNumber(interactions(post))}
                               </span>
                               <span className="block text-sm text-text-muted">

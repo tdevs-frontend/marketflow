@@ -214,7 +214,7 @@ export function DiscountsWorkspace() {
                     <button
                       type="button"
                       onClick={() => copyCode(discount.code)}
-                      className="inline-flex items-center gap-1.5 rounded-btn bg-surface-secondary px-2 py-1 font-mono text-sm font-medium text-text-primary transition-colors hover:bg-border focus-visible:shadow-focus focus-visible:outline-none"
+                      className="inline-flex items-center gap-1.5 rounded-btn bg-surface-secondary px-2 py-1 font-mono text-sm font-bold text-text-primary transition-colors hover:bg-border focus-visible:shadow-focus focus-visible:outline-none"
                     >
                       {discount.code}
                       {copiedCode === discount.code ? (
@@ -225,13 +225,13 @@ export function DiscountsWorkspace() {
                     </button>
                   </TD>
 
-                  <TD className="font-medium text-text-primary">{discount.name}</TD>
+                  <TD className="font-bold text-text-primary">{discount.name}</TD>
 
                   <TD className="text-text-secondary">
                     {DISCOUNT_TYPES.find((item) => item.value === discount.type)?.label}
                   </TD>
 
-                  <TD align="right" className="font-medium text-text-primary">
+                  <TD align="right" className="font-bold text-text-primary">
                     {valueLabel(discount)}
                   </TD>
 

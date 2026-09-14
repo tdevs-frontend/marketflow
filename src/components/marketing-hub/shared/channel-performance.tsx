@@ -43,7 +43,7 @@ export function ChannelPerformanceTable({ rows }: { rows: ChannelRow[] }) {
               </TD>
 
               <TD align="right" className="tabular-nums">
-                <span className="font-medium text-text-primary">
+                <span className="font-bold text-text-primary">
                   {formatNumber(row.sent)}
                 </span>
                 <span className="block text-sm text-text-muted">
@@ -71,7 +71,7 @@ export function ChannelPerformanceTable({ rows }: { rows: ChannelRow[] }) {
               </TD>
 
               <TD align="right" className="tabular-nums">
-                <span className="font-medium text-text-primary">
+                <span className="font-bold text-text-primary">
                   {formatNumber(row.conversions)}
                 </span>
                 <span
@@ -85,7 +85,7 @@ export function ChannelPerformanceTable({ rows }: { rows: ChannelRow[] }) {
                 </span>
               </TD>
 
-              <TD align="right" className="font-medium text-text-primary tabular-nums">
+              <TD align="right" className="font-bold text-text-primary tabular-nums">
                 {formatCurrency(row.revenue)}
               </TD>
 
