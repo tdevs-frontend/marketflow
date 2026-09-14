@@ -339,7 +339,6 @@ export function ContactFormDialog({
               id="ct-first"
               value={draft.firstName}
               error={Boolean(errors.firstName)}
-              placeholder="Sarah"
               className="h-11"
               onChange={(event) => set("firstName", event.target.value)}
             />
@@ -349,7 +348,6 @@ export function ContactFormDialog({
             <Input
               id="ct-last"
               value={draft.lastName}
-              placeholder="Ahmed"
               className="h-11"
               onChange={(event) => set("lastName", event.target.value)}
             />
@@ -366,7 +364,6 @@ export function ContactFormDialog({
               type="tel"
               value={draft.phone}
               error={Boolean(errors.phone)}
-              placeholder="+880 1711 223344"
               className="h-11"
               onChange={(event) => set("phone", event.target.value)}
             />
@@ -378,7 +375,6 @@ export function ContactFormDialog({
               type="email"
               value={draft.email}
               error={Boolean(errors.email)}
-              placeholder="sarah@brightretail.co"
               className="h-11"
               onChange={(event) => set("email", event.target.value)}
             />
@@ -469,7 +465,6 @@ export function ContactFormDialog({
             id="ct-notes"
             value={draft.notes}
             rows={3}
-            placeholder="Anything the team should know before replying."
             onChange={(event) => set("notes", event.target.value)}
           />
         </Field>

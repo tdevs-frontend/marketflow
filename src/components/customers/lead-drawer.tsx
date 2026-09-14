@@ -384,7 +384,6 @@ export function LeadDrawer({
                     rows={3}
                     value={draft}
                     onChange={(event) => setDraft(event.target.value)}
-                    placeholder="What was discussed, and what happens next."
                   />
                 </Field>
                 <Button size="sm" onClick={addNote} disabled={!draft.trim()}>
@@ -432,7 +431,6 @@ export function LeadDrawer({
                         id="lead-task"
                         value={newTask}
                         onChange={(event) => setNewTask(event.target.value)}
-                        placeholder="Send the revised quote"
                       />
                     </Field>
                   </div>

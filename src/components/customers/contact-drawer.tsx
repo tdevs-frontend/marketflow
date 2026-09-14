@@ -506,7 +506,6 @@ export function ContactDrawer({
                   rows={3}
                   value={note}
                   onChange={(event) => setNote(event.target.value)}
-                  placeholder="What should the next person know?"
                 />
               </Field>
               <Button

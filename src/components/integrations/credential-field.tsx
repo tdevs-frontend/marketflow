@@ -267,7 +267,6 @@ export function CredentialInput({
           }
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          placeholder={spec.placeholder}
           error={Boolean(error)}
           autoComplete={spec.kind === "secret" ? "new-password" : "off"}
           spellCheck={false}

@@ -255,7 +255,6 @@ export function CategoriesWorkspace() {
               id="cat-name"
               value={draft.name}
               error={Boolean(error)}
-              placeholder="Service Packages"
               className="h-11"
               onChange={(event) => {
                 set("name", event.target.value);
@@ -268,7 +267,6 @@ export function CategoriesWorkspace() {
             <Input
               id="cat-slug"
               value={draft.slug}
-              placeholder="service-packages"
               className="h-11 font-mono"
               onChange={(event) => set("slug", slugify(event.target.value))}
             />
@@ -278,7 +276,6 @@ export function CategoriesWorkspace() {
             <Textarea
               id="cat-description"
               value={draft.description}
-              placeholder="What belongs in this category."
               onChange={(event) => set("description", event.target.value)}
             />
           </Field>
@@ -305,7 +302,6 @@ export function CategoriesWorkspace() {
               <Input
                 id="cat-image"
                 value={draft.imageUrl}
-                placeholder="https://…/category.jpg"
                 className="h-11"
                 onChange={(event) => set("imageUrl", event.target.value)}
               />

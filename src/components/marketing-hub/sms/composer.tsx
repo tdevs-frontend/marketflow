@@ -88,7 +88,6 @@ export function SmsComposer({
           id={id}
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          placeholder="Hi {{first_name}}, your appointment is scheduled for {{appointment_date}}."
           className="min-h-28 font-mono text-sm"
         />
       </Field>

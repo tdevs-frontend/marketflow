@@ -174,7 +174,6 @@ export function NotificationSettings() {
               type="email"
               value={address}
               onChange={(event) => setAddress(event.target.value)}
-              placeholder="alerts@yourcompany.com"
             />
           </Field>
 

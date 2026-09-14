@@ -307,7 +307,6 @@ export function SmsIntegration() {
             <Input
               id="sms-test-number"
               type="tel"
-              placeholder="+8801712345678"
               value={testNumber}
               onChange={(event) => setTestNumber(event.target.value)}
               className="min-w-56 flex-1"

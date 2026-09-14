@@ -125,7 +125,6 @@ export function ProfileSettings() {
               type="tel"
               value={phone}
               onChange={(event) => setPhone(event.target.value)}
-              placeholder="+971 50 000 0000"
             />
           </Field>
 
@@ -134,7 +133,6 @@ export function ProfileSettings() {
               id={`${id}-title`}
               value={jobTitle}
               onChange={(event) => setJobTitle(event.target.value)}
-              placeholder="Head of Growth"
             />
           </Field>
 

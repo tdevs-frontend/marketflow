@@ -96,7 +96,6 @@ function ConditionValue({
         value={condition.value}
         onChange={(event) => onChange(event.target.value)}
         aria-label={`${meta.label} value`}
-        placeholder={meta.input === "number" ? "0" : "Value"}
         className="h-10"
         disabled={disabled}
       />

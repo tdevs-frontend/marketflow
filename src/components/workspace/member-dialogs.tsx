@@ -132,7 +132,6 @@ export function InviteMemberDialog({
             type="email"
             value={email}
             error={touched && Boolean(error)}
-            placeholder="teammate@company.com"
             autoComplete="off"
             onChange={(event) => setEmail(event.target.value)}
           />
@@ -170,7 +169,6 @@ export function InviteMemberDialog({
             id="invite-message"
             value={message}
             maxLength={280}
-            placeholder="Joining us to run the autumn campaigns."
             onChange={(event) => setMessage(event.target.value)}
           />
         </Field>

@@ -945,7 +945,6 @@ export function NodeInspector({
             id={controlId}
             value={String(value ?? "")}
             onChange={(event) => set(field.key, event.target.value)}
-            placeholder={field.placeholder}
             rows={3}
           />
         </Field>
@@ -987,7 +986,6 @@ export function NodeInspector({
               field.type === "number" ? Number(event.target.value) : event.target.value,
             )
           }
-          placeholder={field.type === "text" ? field.placeholder : undefined}
         />
       </Field>
     );

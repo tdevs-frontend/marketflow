@@ -112,7 +112,6 @@ export function CustomTriggerDialog({
             id={`${id}-name`}
             value={name}
             onChange={(event) => setNameAndKey(event.target.value)}
-            placeholder="Demo Requested"
             error={touched && name.trim().length === 0}
             autoFocus
           />
@@ -135,7 +134,6 @@ export function CustomTriggerDialog({
               setKeyTouched(true);
               setEventKey(event.target.value);
             }}
-            placeholder="demo_requested"
             className="font-mono text-sm"
             error={keyInvalid}
           />
@@ -150,7 +148,6 @@ export function CustomTriggerDialog({
             id={`${id}-description`}
             value={description}
             onChange={(event) => setDescription(event.target.value)}
-            placeholder="Raised when someone books a demo from inside the app."
             rows={2}
           />
         </Field>

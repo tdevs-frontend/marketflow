@@ -151,7 +151,6 @@ export function ImportWorkflowDialog({
             id={`${id}-json`}
             value={json}
             onChange={(event) => setJson(event.target.value)}
-            placeholder={'{ "name": "Abandoned Checkout Recovery", "nodes": [ … ] }'}
             className="font-mono text-sm"
             rows={5}
           />

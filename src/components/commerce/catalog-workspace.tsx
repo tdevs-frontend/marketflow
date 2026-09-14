@@ -314,7 +314,6 @@ function CreateCatalogDialog({
               id="cat-name"
               value={name}
               error={Boolean(error)}
-              placeholder="Summer Collection"
               className="h-11"
               onChange={(event) => setName(event.target.value)}
             />
@@ -336,7 +335,6 @@ function CreateCatalogDialog({
           <Textarea
             id="cat-desc"
             value={description}
-            placeholder="What this collection is for."
             onChange={(event) => setDescription(event.target.value)}
           />
         </Field>

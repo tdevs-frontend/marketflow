@@ -227,7 +227,6 @@ function SegmentBuilderDialog({
             value={name}
             error={Boolean(show("name"))}
             onChange={(event) => setName(event.target.value)}
-            placeholder="High-value wholesale"
             disabled={readOnly}
           />
         </Field>

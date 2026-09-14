@@ -155,7 +155,6 @@ export function CreateApiKeyDialog({
               id="api-key-name"
               value={name}
               error={Boolean(nameError)}
-              placeholder="Reporting Sync"
               onChange={(event) => setName(event.target.value)}
             />
           </Field>

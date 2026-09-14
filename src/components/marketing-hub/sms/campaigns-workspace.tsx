@@ -616,7 +616,6 @@ export function SmsCampaignsWorkspace() {
                 id="sms-name"
                 value={draftName}
                 onChange={(event) => setDraftName(event.target.value)}
-                placeholder="September Appointment Reminders"
               />
             </Field>
 

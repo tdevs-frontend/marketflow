@@ -335,7 +335,6 @@ function ChatWindow({
             ref={inputRef}
             value={draft}
             rows={1}
-            placeholder="Write a message…"
             aria-label="Message"
             className="min-h-11 flex-1 resize-none py-3"
             onChange={(event) => setDraft(event.target.value)}
@@ -445,7 +444,6 @@ function ContactDetails({
           <div className="mt-2.5 flex gap-2">
             <Input
               value={tag}
-              placeholder="Add tag"
               aria-label="Add tag"
               className="h-10"
               onChange={(event) => setTag(event.target.value)}
@@ -514,7 +512,6 @@ function ContactDetails({
           <Textarea
             value={note}
             rows={2}
-            placeholder="Add a note…"
             aria-label="Add a note"
             className="mt-2.5"
             onChange={(event) => setNote(event.target.value)}

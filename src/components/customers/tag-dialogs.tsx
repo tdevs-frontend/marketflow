@@ -97,7 +97,6 @@ export function TagFormDialog({
             value={name}
             error={submitted && invalid}
             onChange={(event) => setName(event.target.value)}
-            placeholder="VIP"
           />
         </Field>
 
@@ -110,7 +109,6 @@ export function TagFormDialog({
             id="tag-description"
             value={description}
             onChange={(event) => setDescription(event.target.value)}
-            placeholder="Top 5% by lifetime spend"
           />
         </Field>
 

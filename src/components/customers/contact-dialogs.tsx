@@ -205,7 +205,6 @@ export function ContactFormDialog({
               value={first}
               error={Boolean(show("first"))}
               onChange={(event) => setFirst(event.target.value)}
-              placeholder="Sarah"
             />
           </Field>
 
@@ -214,7 +213,6 @@ export function ContactFormDialog({
               id="contact-last"
               value={last}
               onChange={(event) => setLast(event.target.value)}
-              placeholder="Ahmed"
             />
           </Field>
         </div>
@@ -231,7 +229,6 @@ export function ContactFormDialog({
               value={email}
               error={Boolean(show("email") ?? show("reach"))}
               onChange={(event) => setEmail(event.target.value)}
-              placeholder="sarah@brightretail.co"
             />
           </Field>
 
@@ -241,7 +238,6 @@ export function ContactFormDialog({
               value={phone}
               error={Boolean(show("phone") ?? show("reach"))}
               onChange={(event) => setPhone(event.target.value)}
-              placeholder="+971 50 118 4420"
             />
           </Field>
         </div>
@@ -252,7 +248,6 @@ export function ContactFormDialog({
               id="contact-company"
               value={company}
               onChange={(event) => setCompany(event.target.value)}
-              placeholder="Bright Retail"
             />
           </Field>
 
@@ -430,7 +425,6 @@ export function ContactFormDialog({
             value={notes}
             onChange={(event) => setNotes(event.target.value)}
             rows={3}
-            placeholder="Anything the next person should know before contacting them."
           />
         </Field>
       </div>

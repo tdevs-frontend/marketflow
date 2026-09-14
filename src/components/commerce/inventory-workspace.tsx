@@ -378,7 +378,6 @@ export function InventoryWorkspace() {
             <Textarea
               id="adj-note"
               value={note}
-              placeholder="Supplier delivery #4821"
               onChange={(event) => setNote(event.target.value)}
             />
           </Field>

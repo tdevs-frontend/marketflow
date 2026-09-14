@@ -229,7 +229,6 @@ export function TemplateFormDialog({
               id="tpl-name"
               value={draft.name}
               error={Boolean(errors.name)}
-              placeholder="order_confirmation"
               className="h-11 font-mono"
               onChange={(event) =>
                 set("name", slugify(event.target.value).replace(/-/g, "_"))
@@ -286,7 +285,6 @@ export function TemplateFormDialog({
             value={draft.body}
             error={Boolean(errors.body)}
             rows={5}
-            placeholder="Hi {{name}}, your order {{order_id}} has been confirmed."
             onChange={(event) => set("body", event.target.value)}
           />
         </Field>
@@ -326,7 +324,6 @@ export function TemplateFormDialog({
           <Input
             id="tpl-footer"
             value={draft.footer}
-            placeholder="Reply STOP to opt out"
             className="h-11"
             onChange={(event) => set("footer", event.target.value)}
           />
@@ -374,7 +371,6 @@ export function TemplateFormDialog({
           <div className="mt-2.5 flex flex-wrap gap-2">
             <Input
               value={buttonLabel}
-              placeholder="Shop Now"
               aria-label="Button label"
               className="h-11 min-w-0 flex-1"
               onChange={(event) => setButtonLabel(event.target.value)}

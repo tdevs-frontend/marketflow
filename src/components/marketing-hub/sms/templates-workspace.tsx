@@ -355,7 +355,6 @@ export function SmsTemplatesWorkspace() {
                 id="tpl-name"
                 value={draftName}
                 onChange={(event) => setDraftName(event.target.value)}
-                placeholder="Appointment Reminder"
               />
             </Field>
             <Field label="Category" htmlFor="tpl-category">

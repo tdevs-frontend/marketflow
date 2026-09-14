@@ -186,7 +186,6 @@ export function NewLeadDialog({
                   value={newName}
                   error={Boolean(show("contact"))}
                   onChange={(event) => setNewName(event.target.value)}
-                  placeholder="Amina Rahman"
                 />
               </Field>
             )}
@@ -199,7 +198,6 @@ export function NewLeadDialog({
             value={title}
             error={Boolean(show("title"))}
             onChange={(event) => setTitle(event.target.value)}
-            placeholder="Bright Retail — 3 locations"
           />
         </Field>
 
@@ -242,7 +240,6 @@ export function NewLeadDialog({
               value={value}
               error={Boolean(show("value"))}
               onChange={(event) => setValue(event.target.value)}
-              placeholder="2400"
             />
           </Field>
 
@@ -319,7 +316,6 @@ export function NewLeadDialog({
             rows={3}
             value={notes}
             onChange={(event) => setNotes(event.target.value)}
-            placeholder="What was discussed, and what happens next."
           />
         </Field>
       </div>

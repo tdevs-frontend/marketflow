@@ -280,7 +280,6 @@ export function PostComposer({
                 id="post-title"
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
-                placeholder="Autumn collection teaser"
               />
             </Field>
 
@@ -289,7 +288,6 @@ export function PostComposer({
                 id="post-caption"
                 value={caption}
                 onChange={(event) => setCaption(event.target.value)}
-                placeholder="What are you announcing?"
                 className="min-h-28"
               />
             </Field>
@@ -359,7 +357,6 @@ export function PostComposer({
                       addHashtag(hashtagDraft);
                     }
                   }}
-                  placeholder="Type a tag and press Enter"
                   aria-label="Add a hashtag"
                   className="h-10 pl-9"
                 />

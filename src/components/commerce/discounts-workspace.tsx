@@ -398,7 +398,6 @@ export function DiscountsWorkspace() {
                 id="dsc-name"
                 value={draft.name}
                 error={Boolean(errors.name)}
-                placeholder="Summer Sale 20%"
                 className="h-11"
                 onChange={(event) => set("name", event.target.value)}
               />
@@ -414,7 +413,6 @@ export function DiscountsWorkspace() {
                 id="dsc-code"
                 value={draft.code}
                 error={Boolean(errors.code)}
-                placeholder="SUMMER20"
                 className="h-11 font-mono"
                 onChange={(event) => set("code", event.target.value.toUpperCase())}
               />
@@ -444,7 +442,6 @@ export function DiscountsWorkspace() {
                 value={draft.value}
                 error={Boolean(errors.value)}
                 disabled={draft.type === "free-shipping"}
-                placeholder={draft.type === "percentage" ? "20" : "25"}
                 className="h-11"
                 onChange={(event) => set("value", event.target.value)}
               />
@@ -495,7 +492,6 @@ export function DiscountsWorkspace() {
                 inputMode="decimal"
                 min={0}
                 value={draft.minimumPurchase}
-                placeholder="100"
                 className="h-11"
                 onChange={(event) => set("minimumPurchase", event.target.value)}
               />
@@ -508,7 +504,6 @@ export function DiscountsWorkspace() {
                 inputMode="decimal"
                 min={0}
                 value={draft.maximumDiscount}
-                placeholder="60"
                 className="h-11"
                 onChange={(event) => set("maximumDiscount", event.target.value)}
               />
@@ -521,7 +516,6 @@ export function DiscountsWorkspace() {
                 inputMode="numeric"
                 min={0}
                 value={draft.usageLimit}
-                placeholder="500"
                 className="h-11"
                 onChange={(event) => set("usageLimit", event.target.value)}
               />

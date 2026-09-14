@@ -18,8 +18,8 @@ export interface SegmentedControlProps<T extends string> {
 }
 
 const SIZES = {
-  sm: "h-7 px-2.5 text-sm",
-  md: "h-8 px-3 text-sm",
+  sm: "h-7 px-2.5 text-sm font-bold",
+  md: "h-8 px-3 text-sm font-bold",
 } as const;
 
 /**
@@ -53,7 +53,7 @@ export function SegmentedControl<T extends string>({
             onClick={() => onChange(option.value)}
             aria-pressed={selected}
             className={cn(
-              "rounded-[7px] font-medium whitespace-nowrap transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+              "rounded-[7px] whitespace-nowrap transition-colors focus-visible:shadow-focus focus-visible:outline-none",
               SIZES[size],
               selected
                 ? "bg-surface text-primary shadow-btn"

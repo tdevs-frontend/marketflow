@@ -243,7 +243,6 @@ export function CreateRoleDrawer({
                 id="new-role-name"
                 value={name}
                 error={touched && Boolean(nameError)}
-                placeholder="Campaign Specialist"
                 onChange={(event) => setName(event.target.value)}
               />
             </Field>
@@ -257,7 +256,6 @@ export function CreateRoleDrawer({
                 id="new-role-description"
                 value={description}
                 maxLength={160}
-                placeholder="Builds and schedules campaigns without publishing them."
                 onChange={(event) => setDescription(event.target.value)}
               />
             </Field>

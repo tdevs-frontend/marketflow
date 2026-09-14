@@ -171,7 +171,6 @@ export function ProductEditor({
                 id="name"
                 value={draft.name}
                 error={Boolean(errors.name)}
-                placeholder="Premium Package"
                 className="h-11"
                 onChange={(event) => {
                   set("name", event.target.value);
@@ -185,7 +184,6 @@ export function ProductEditor({
               <Textarea
                 id="description"
                 value={draft.description}
-                placeholder="What the customer gets, in a sentence or two."
                 onChange={(event) => set("description", event.target.value)}
               />
             </Field>
@@ -231,7 +229,6 @@ export function ProductEditor({
                   step="0.01"
                   value={draft.price}
                   error={Boolean(errors.price)}
-                  placeholder="149.00"
                   className="h-11"
                   onChange={(event) => set("price", event.target.value)}
                 />
@@ -251,7 +248,6 @@ export function ProductEditor({
                   step="0.01"
                   value={draft.salePrice}
                   error={Boolean(errors.salePrice)}
-                  placeholder="129.00"
                   className="h-11"
                   onChange={(event) => set("salePrice", event.target.value)}
                 />
@@ -269,7 +265,6 @@ export function ProductEditor({
                   min={0}
                   step="0.01"
                   value={draft.costPrice}
-                  placeholder="48.00"
                   className="h-11"
                   onChange={(event) => set("costPrice", event.target.value)}
                 />
@@ -283,7 +278,6 @@ export function ProductEditor({
                   min={0}
                   step="0.1"
                   value={draft.taxRate}
-                  placeholder="5"
                   className="h-11"
                   onChange={(event) => set("taxRate", event.target.value)}
                 />
@@ -317,7 +311,6 @@ export function ProductEditor({
                   id="sku"
                   value={draft.sku}
                   error={Boolean(errors.sku)}
-                  placeholder="MF-PREM-01"
                   className="h-11 font-mono"
                   onChange={(event) => set("sku", event.target.value.toUpperCase())}
                 />
@@ -416,7 +409,6 @@ export function ProductEditor({
               <Input
                 id="seoTitle"
                 value={draft.seoTitle}
-                placeholder="Premium Package — MarketFlow"
                 className="h-11"
                 onChange={(event) => set("seoTitle", event.target.value)}
               />
@@ -426,7 +418,6 @@ export function ProductEditor({
               <Textarea
                 id="metaDescription"
                 value={draft.metaDescription}
-                placeholder="One or two sentences a customer would click."
                 onChange={(event) => set("metaDescription", event.target.value)}
               />
             </Field>
@@ -437,7 +428,6 @@ export function ProductEditor({
                 <Input
                   id="slug"
                   value={draft.slug}
-                  placeholder="premium-package"
                   className="h-11 font-mono"
                   onChange={(event) => set("slug", slugify(event.target.value))}
                 />
@@ -483,7 +473,6 @@ export function ProductEditor({
               <Input
                 id="tags"
                 value={draft.tags}
-                placeholder="bestseller, whatsapp"
                 className="h-11"
                 onChange={(event) => set("tags", event.target.value)}
               />

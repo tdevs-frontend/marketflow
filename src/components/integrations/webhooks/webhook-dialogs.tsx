@@ -147,7 +147,6 @@ export function CreateWebhookDialog({
               id="webhook-name"
               value={name}
               error={Boolean(nameError)}
-              placeholder="CRM Sync"
               onChange={(event) => setName(event.target.value)}
             />
           </Field>
@@ -163,7 +162,6 @@ export function CreateWebhookDialog({
               type="url"
               value={url}
               error={Boolean(urlError)}
-              placeholder="https://example.com/webhooks/marketflow"
               onChange={(event) => setUrl(event.target.value)}
               className="font-mono"
             />

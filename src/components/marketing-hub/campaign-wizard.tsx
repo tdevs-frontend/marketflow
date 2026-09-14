@@ -321,7 +321,6 @@ export function CampaignWizard() {
                 id="cmp-name"
                 value={draft.name}
                 error={Boolean(errors.name)}
-                placeholder="Summer Sale 2026"
                 className="h-11"
                 onChange={(event) => set("name", event.target.value)}
               />
@@ -335,7 +334,6 @@ export function CampaignWizard() {
               <Textarea
                 id="cmp-description"
                 value={draft.description}
-                placeholder="20% off every service package through June."
                 onChange={(event) => set("description", event.target.value)}
               />
             </Field>
@@ -522,7 +520,6 @@ export function CampaignWizard() {
                     id="cmp-subject"
                     value={draft.subject}
                     error={Boolean(errors.subject)}
-                    placeholder="Your summer offer ends Sunday"
                     className="h-11"
                     onChange={(event) => set("subject", event.target.value)}
                   />
@@ -536,7 +533,6 @@ export function CampaignWizard() {
                   <Input
                     id="cmp-preview"
                     value={draft.previewText}
-                    placeholder="20% off every package until 30 June."
                     className="h-11"
                     onChange={(event) => set("previewText", event.target.value)}
                   />
@@ -572,11 +568,6 @@ export function CampaignWizard() {
                 value={draft.message}
                 error={Boolean(errors.message)}
                 rows={6}
-                placeholder={
-                  draft.channel === "sms"
-                    ? "Flash sale: 20% off this weekend only. Reply STOP to opt out."
-                    : "Hi {{first_name}} — our Summer Sale is live with 20% off every package."
-                }
                 onChange={(event) => set("message", event.target.value)}
               />
             </Field>
@@ -668,7 +659,6 @@ export function CampaignWizard() {
                                 [tag]: event.target.value,
                               })
                             }
-                            placeholder={`e.g. ${PREVIEW_CONTACT[tag] ?? "there"}`}
                             aria-label={`Fallback for ${tag}`}
                             className="h-10"
                           />

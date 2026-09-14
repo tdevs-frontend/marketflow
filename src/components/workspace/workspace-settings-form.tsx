@@ -546,7 +546,6 @@ function BusinessSection({
             value={value.website}
             disabled={!editable}
             error={Boolean(errors.website)}
-            placeholder="https://company.com"
             onChange={(event) => onChange({ website: event.target.value })}
           />
         </Field>
@@ -563,7 +562,6 @@ function BusinessSection({
             value={value.phone}
             disabled={!editable}
             error={Boolean(errors.phone)}
-            placeholder="+8801712345678"
             onChange={(event) => onChange({ phone: event.target.value })}
           />
         </Field>

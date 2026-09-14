@@ -406,7 +406,6 @@ export function SegmentsWorkspace() {
               id="segment-name"
               value={draftName}
               onChange={(event) => setDraftName(event.target.value)}
-              placeholder="High-value wholesale"
               disabled={editing?.system}
             />
           </Field>
@@ -506,7 +505,6 @@ export function SegmentsWorkspace() {
                       onChange={(event) =>
                         updateRule(rule.id, { value: event.target.value })
                       }
-                      placeholder="Value"
                       aria-label={`Rule ${index + 1} value`}
                       className="h-10"
                       disabled={editing?.system}

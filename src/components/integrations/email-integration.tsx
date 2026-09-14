@@ -286,7 +286,6 @@ export function EmailIntegration() {
               <Input
                 id="email-test-address"
                 type="email"
-                placeholder="you@company.com"
                 value={testAddress}
                 onChange={(event) => setTestAddress(event.target.value)}
                 className="min-w-56 flex-1"
