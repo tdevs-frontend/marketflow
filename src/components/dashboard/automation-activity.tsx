@@ -158,8 +158,8 @@ export function AutomationActivity({ className }: { className?: string }) {
           />
         </div>
       ) : (
-        /* One line per event from `sm` up — the card holds the full measure,
-           so the detail column has room to read rather than truncate. */
+        /* One line per event from `sm` up. The card is half the grid now, so
+           the title column gives width back to the detail until `2xl`. */
         <ol className="mt-5 flex-1">
           {ACTIVITY.map((item, index) => {
             const ItemIcon = item.icon;
@@ -185,7 +185,7 @@ export function AutomationActivity({ className }: { className?: string }) {
                 </span>
 
                 <div className="flex min-w-0 flex-1 flex-col gap-x-4 gap-y-1.5 pt-1.5 sm:flex-row sm:items-center">
-                  <p className="truncate text-sm font-medium text-text-primary sm:w-44 sm:shrink-0">
+                  <p className="truncate text-sm font-medium text-text-primary sm:w-36 sm:shrink-0 2xl:w-44">
                     {item.title}
                   </p>
                   <p className="min-w-0 flex-1 truncate text-sm text-text-secondary">

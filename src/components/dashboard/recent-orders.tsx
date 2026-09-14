@@ -75,6 +75,22 @@ const ORDERS: Order[] = [
     status: "Paid",
     time: "52 min ago",
   },
+  {
+    id: "#MF-10242",
+    customer: "Priya Nair",
+    product: "Onboarding Session",
+    amount: 189,
+    status: "Paid",
+    time: "1 hr ago",
+  },
+  {
+    id: "#MF-10241",
+    customer: "Omar Haddad",
+    product: "Extra WhatsApp Seat",
+    amount: 19,
+    status: "Processing",
+    time: "2 hr ago",
+  },
 ];
 
 const STATUS_TONE: Record<OrderStatus, BadgeTone> = {
