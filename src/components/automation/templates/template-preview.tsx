@@ -102,7 +102,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
             <h1 className="text-2xl font-bold tracking-tight">{template.name}</h1>
             <ComplexityBadge level={template.complexity} />
           </div>
-          <p className="mt-1.5 max-w-2xl text-sm text-text-secondary">
+          <p className="mt-1.5 max-w-2xl text-sm text-text-secondary font-medium ">
             {template.description}
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-3">

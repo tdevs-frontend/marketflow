@@ -117,7 +117,7 @@ export function ProductTypeDialog({
               >
                 {choice.label}
               </span>
-              <span className="text-sm text-text-secondary">
+              <span className="text-sm text-text-secondary font-medium">
                 {choice.description}
               </span>
             </label>
@@ -125,7 +125,7 @@ export function ProductTypeDialog({
         })}
       </div>
 
-      <p className="mt-4 text-meta text-text-muted">
+      <p className="mt-4 text-meta font-medium text-text-muted">
         You can change the type later, but the fields it collects differ — a
         service has no stock, and a download has no weight.
       </p>

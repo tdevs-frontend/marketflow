@@ -35,7 +35,7 @@ export function PageHeader({
         <div className="min-w-0 space-y-1">
           <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
           {description ? (
-            <p className="max-w-2xl text-sm text-text-secondary">{description}</p>
+            <p className="max-w-2xl text-sm text-text-secondary font-medium ">{description}</p>
           ) : null}
         </div>
 

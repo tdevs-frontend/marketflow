@@ -103,7 +103,7 @@ export function TriggerDetail({ trigger }: { trigger: AutomationTrigger }) {
             <TriggerStatusBadge status={status} />
             {trigger.custom ? <Badge tone="brand">Custom</Badge> : null}
           </div>
-          <p className="mt-1.5 max-w-2xl text-sm text-text-secondary">
+          <p className="mt-1.5 max-w-2xl text-sm text-text-secondary font-medium ">
             {trigger.description}
           </p>
           <p className="mt-2 flex flex-wrap items-center gap-2 text-sm text-text-muted">

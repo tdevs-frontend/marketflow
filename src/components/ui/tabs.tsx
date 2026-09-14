@@ -98,10 +98,14 @@ export function Tabs<T extends string>({
             tabIndex={selected ? 0 : -1}
             onClick={() => onChange(tab.value)}
             className={cn(
-              "-mb-px inline-flex shrink-0 items-center gap-2 border-b-2 px-3 py-2.5 text-sm font-medium whitespace-nowrap transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+              "-mb-px inline-flex shrink-0 items-center gap-2 border-b-2 px-3 py-2.5 text-base font-bold whitespace-nowrap transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+              /* The resting colour lives here rather than in the base string:
+                 `cn()` is a plain join, and `.text-text-secondary` is emitted
+                 after `.text-primary`, so a base-level colour would win the
+                 cascade against the selected tab and flatten the strip. */
               selected
                 ? "border-primary text-primary"
-                : "border-transparent text-text-muted hover:text-text-primary",
+                : "border-transparent text-text-secondary hover:text-text-primary",
             )}
           >
             {tab.label}
