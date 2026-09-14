@@ -152,7 +152,7 @@ export function CampaignsWorkspace() {
             className="lg:w-44"
           />
 
-          <Input
+          <Input size="sm"
             type="date"
             aria-label="Created from"
             value={from}
@@ -160,9 +160,9 @@ export function CampaignsWorkspace() {
               setFrom(event.target.value);
               setPage(1);
             }}
-            className="h-10 w-full lg:w-36"
+            className="w-full lg:w-36"
           />
-          <Input
+          <Input size="sm"
             type="date"
             aria-label="Created to"
             value={to}
@@ -170,7 +170,7 @@ export function CampaignsWorkspace() {
               setTo(event.target.value);
               setPage(1);
             }}
-            className="h-10 w-full lg:w-36"
+            className="w-full lg:w-36"
           />
         </FilterBar>
 

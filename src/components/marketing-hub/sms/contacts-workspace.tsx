@@ -724,10 +724,10 @@ export function SmsContactsWorkspace() {
         <div className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="First name" htmlFor="sms-new-first">
-              <Input id="sms-new-first" placeholder="Sarah" />
+              <Input id="sms-new-first" />
             </Field>
             <Field label="Last name" htmlFor="sms-new-last">
-              <Input id="sms-new-last" placeholder="Ahmed" />
+              <Input id="sms-new-last" />
             </Field>
           </div>
 
@@ -736,7 +736,7 @@ export function SmsContactsWorkspace() {
             htmlFor="sms-new-phone"
             hint="Include the country code — +880 1711 223344, not 01711 223344."
           >
-            <Input id="sms-new-phone" type="tel" placeholder="+880 1711 223344" />
+            <Input id="sms-new-phone" type="tel" />
           </Field>
 
           <Field label="Lead status" htmlFor="sms-new-stage">

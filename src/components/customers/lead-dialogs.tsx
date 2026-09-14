@@ -121,7 +121,7 @@ export function NewLeadDialog({
     >
       <div className="space-y-4">
         <fieldset>
-          <legend className="block text-sm font-medium text-text-primary">
+          <legend className="block text-sm font-bold text-text-secondary">
             Contact
           </legend>
 

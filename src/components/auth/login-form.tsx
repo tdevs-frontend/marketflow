@@ -135,14 +135,13 @@ export function LoginForm() {
         ) : null}
 
         <Field label="Email address" htmlFor="email" error={errors.email}>
-          <Input
+          <Input size="lg"
             ref={emailRef}
             id="email"
             name="email"
             type="email"
             inputMode="email"
             autoComplete="email"
-            className="h-12"
             error={Boolean(errors.email)}
             aria-describedby={errors.email ? "email-error" : undefined}
             value={email}
@@ -155,13 +154,13 @@ export function LoginForm() {
 
         <Field label="Password" htmlFor="password" error={errors.password}>
           <div className="relative">
-            <Input
+            <Input size="lg"
               ref={passwordRef}
               id="password"
               name="password"
               type={showPassword ? "text" : "password"}
               autoComplete="current-password"
-              className="h-12 pr-12"
+              className="pr-12"
               error={Boolean(errors.password)}
               aria-describedby={errors.password ? "password-error" : undefined}
               value={password}

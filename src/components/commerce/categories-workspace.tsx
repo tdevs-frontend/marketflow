@@ -255,7 +255,6 @@ export function CategoriesWorkspace() {
               id="cat-name"
               value={draft.name}
               error={Boolean(error)}
-              className="h-11"
               onChange={(event) => {
                 set("name", event.target.value);
                 if (!editing) set("slug", slugify(event.target.value));
@@ -267,7 +266,7 @@ export function CategoriesWorkspace() {
             <Input
               id="cat-slug"
               value={draft.slug}
-              className="h-11 font-mono"
+              className="font-mono"
               onChange={(event) => set("slug", slugify(event.target.value))}
             />
           </Field>
@@ -302,7 +301,6 @@ export function CategoriesWorkspace() {
               <Input
                 id="cat-image"
                 value={draft.imageUrl}
-                className="h-11"
                 onChange={(event) => set("imageUrl", event.target.value)}
               />
             </div>

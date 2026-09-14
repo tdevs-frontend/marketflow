@@ -500,13 +500,12 @@ export function SegmentsWorkspace() {
                       options={SEGMENT_OPERATORS}
                       disabled={editing?.system}
                     />
-                    <Input
+                    <Input size="sm"
                       value={rule.value}
                       onChange={(event) =>
                         updateRule(rule.id, { value: event.target.value })
                       }
                       aria-label={`Rule ${index + 1} value`}
-                      className="h-10"
                       disabled={editing?.system}
                     />
                   </div>

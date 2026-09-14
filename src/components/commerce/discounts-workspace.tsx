@@ -398,7 +398,6 @@ export function DiscountsWorkspace() {
                 id="dsc-name"
                 value={draft.name}
                 error={Boolean(errors.name)}
-                className="h-11"
                 onChange={(event) => set("name", event.target.value)}
               />
             </Field>
@@ -413,7 +412,7 @@ export function DiscountsWorkspace() {
                 id="dsc-code"
                 value={draft.code}
                 error={Boolean(errors.code)}
-                className="h-11 font-mono"
+                className="font-mono"
                 onChange={(event) => set("code", event.target.value.toUpperCase())}
               />
             </Field>
@@ -442,7 +441,6 @@ export function DiscountsWorkspace() {
                 value={draft.value}
                 error={Boolean(errors.value)}
                 disabled={draft.type === "free-shipping"}
-                className="h-11"
                 onChange={(event) => set("value", event.target.value)}
               />
             </Field>
@@ -492,7 +490,6 @@ export function DiscountsWorkspace() {
                 inputMode="decimal"
                 min={0}
                 value={draft.minimumPurchase}
-                className="h-11"
                 onChange={(event) => set("minimumPurchase", event.target.value)}
               />
             </Field>
@@ -504,7 +501,6 @@ export function DiscountsWorkspace() {
                 inputMode="decimal"
                 min={0}
                 value={draft.maximumDiscount}
-                className="h-11"
                 onChange={(event) => set("maximumDiscount", event.target.value)}
               />
             </Field>
@@ -516,7 +512,6 @@ export function DiscountsWorkspace() {
                 inputMode="numeric"
                 min={0}
                 value={draft.usageLimit}
-                className="h-11"
                 onChange={(event) => set("usageLimit", event.target.value)}
               />
             </Field>
@@ -528,7 +523,6 @@ export function DiscountsWorkspace() {
                 id="dsc-start"
                 type="date"
                 value={draft.startsAt}
-                className="h-11"
                 onChange={(event) => set("startsAt", event.target.value)}
               />
             </Field>
@@ -539,7 +533,6 @@ export function DiscountsWorkspace() {
                 type="date"
                 value={draft.endsAt}
                 error={Boolean(errors.endsAt)}
-                className="h-11"
                 onChange={(event) => set("endsAt", event.target.value)}
               />
             </Field>

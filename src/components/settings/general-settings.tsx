@@ -49,7 +49,7 @@ export function GeneralSettings() {
           </Field>
 
           <Field label="Reply-to address" htmlFor="reply-to">
-            <Input id="reply-to" name="replyTo" type="email" placeholder="hello@example.com" />
+            <Input id="reply-to" name="replyTo" type="email" />
           </Field>
 
           <Button>Save changes</Button>

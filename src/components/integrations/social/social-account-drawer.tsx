@@ -351,7 +351,7 @@ function ToggleRow({
       <div className="min-w-0">
         <label
           htmlFor={id}
-          className="cursor-pointer text-sm font-medium text-text-primary"
+          className="block cursor-pointer text-sm font-bold text-text-secondary"
         >
           {label}
         </label>

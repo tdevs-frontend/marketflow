@@ -113,7 +113,7 @@ export function TagFormDialog({
         </Field>
 
         <fieldset>
-          <legend className="block text-sm font-medium text-text-primary">
+          <legend className="block text-sm font-bold text-text-secondary">
             Colour
           </legend>
 

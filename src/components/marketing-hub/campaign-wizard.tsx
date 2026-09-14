@@ -321,7 +321,6 @@ export function CampaignWizard() {
                 id="cmp-name"
                 value={draft.name}
                 error={Boolean(errors.name)}
-                className="h-11"
                 onChange={(event) => set("name", event.target.value)}
               />
             </Field>
@@ -339,7 +338,7 @@ export function CampaignWizard() {
             </Field>
 
             <fieldset>
-              <legend className="text-sm font-medium text-text-primary">
+              <legend className="block text-sm font-bold text-text-secondary">
                 Channel
               </legend>
               <div className="mt-2.5 grid gap-3 sm:grid-cols-3">
@@ -388,7 +387,7 @@ export function CampaignWizard() {
         {step === "audience" ? (
           <div className="space-y-5">
             <fieldset>
-              <legend className="text-sm font-medium text-text-primary">
+              <legend className="block text-sm font-bold text-text-secondary">
                 Who receives this campaign
               </legend>
               <div className="mt-2.5 grid gap-2.5 sm:grid-cols-2">
@@ -435,7 +434,7 @@ export function CampaignWizard() {
             </fieldset>
 
             <fieldset>
-              <legend className="text-sm font-medium text-text-primary">
+              <legend className="block text-sm font-bold text-text-secondary">
                 Saved segments
               </legend>
               <p className="mt-1 text-sm text-text-muted">
@@ -520,7 +519,6 @@ export function CampaignWizard() {
                     id="cmp-subject"
                     value={draft.subject}
                     error={Boolean(errors.subject)}
-                    className="h-11"
                     onChange={(event) => set("subject", event.target.value)}
                   />
                 </Field>
@@ -533,7 +531,6 @@ export function CampaignWizard() {
                   <Input
                     id="cmp-preview"
                     value={draft.previewText}
-                    className="h-11"
                     onChange={(event) => set("previewText", event.target.value)}
                   />
                 </Field>
@@ -651,7 +648,7 @@ export function CampaignWizard() {
                             )}
                           </div>
 
-                          <Input
+                          <Input size="sm"
                             value={draft.fallbacks[tag] ?? ""}
                             onChange={(event) =>
                               set("fallbacks", {
@@ -660,7 +657,6 @@ export function CampaignWizard() {
                               })
                             }
                             aria-label={`Fallback for ${tag}`}
-                            className="h-10"
                           />
                         </li>
                       );
@@ -705,7 +701,7 @@ export function CampaignWizard() {
         {step === "schedule" ? (
           <div className="space-y-5">
             <fieldset>
-              <legend className="text-sm font-medium text-text-primary">
+              <legend className="block text-sm font-bold text-text-secondary">
                 When to send
               </legend>
               <div className="mt-2.5 grid gap-3 sm:grid-cols-2">
@@ -771,7 +767,6 @@ export function CampaignWizard() {
                     type="date"
                     value={draft.date}
                     error={Boolean(errors.date)}
-                    className="h-11"
                     onChange={(event) => set("date", event.target.value)}
                   />
                 </Field>
@@ -781,7 +776,6 @@ export function CampaignWizard() {
                     id="cmp-time"
                     type="time"
                     value={draft.time}
-                    className="h-11"
                     onChange={(event) => set("time", event.target.value)}
                   />
                 </Field>

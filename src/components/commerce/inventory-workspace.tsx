@@ -328,7 +328,7 @@ export function InventoryWorkspace() {
                 id="adj-current"
                 value={selected?.stock ?? 0}
                 readOnly
-                className="h-11 bg-surface-secondary"
+                className="bg-surface-secondary"
               />
             </Field>
 
@@ -344,7 +344,6 @@ export function InventoryWorkspace() {
                 inputMode="numeric"
                 value={delta}
                 error={resulting < 0}
-                className="h-11"
                 onChange={(event) => setDelta(event.target.value)}
               />
             </Field>

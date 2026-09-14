@@ -547,7 +547,7 @@ export function WorkflowSettings({
           </div>
 
           <fieldset>
-            <legend className="mb-2 text-sm font-medium text-text-primary">
+            <legend className="block mb-2 text-sm font-bold text-text-secondary">
               Allowed sending days
             </legend>
             <div className="flex flex-wrap gap-1.5">

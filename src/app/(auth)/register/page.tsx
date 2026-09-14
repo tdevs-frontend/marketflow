@@ -19,19 +19,19 @@ export default function RegisterPage() {
 
       <form className="space-y-5">
         <Field label="Full name" htmlFor="name">
-          <Input className="h-12" id="name" name="name" autoComplete="name" required />
+          <Input size="lg" id="name" name="name" autoComplete="name" required />
         </Field>
 
         <Field label="Work email" htmlFor="email">
-          <Input className="h-12" id="email" name="email" type="email" autoComplete="email" required />
+          <Input size="lg" id="email" name="email" type="email" autoComplete="email" required />
         </Field>
 
         <Field label="Workspace name" htmlFor="workspace" hint="You can rename this later.">
-          <Input className="h-12" id="workspace" name="workspace" required />
+          <Input size="lg" id="workspace" name="workspace" required />
         </Field>
 
         <Field label="Password" htmlFor="password" hint="At least 8 characters, with a number and an uppercase letter.">
-          <Input className="h-12"
+          <Input size="lg"
             id="password"
             name="password"
             type="password"

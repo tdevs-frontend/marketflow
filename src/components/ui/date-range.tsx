@@ -57,24 +57,24 @@ export function DateRangePicker({
 
       {custom ? (
         <>
-          <Input
+          <Input size="sm"
             type="date"
             aria-label="From date"
             value={value.from}
             max={value.to || undefined}
             onChange={(event) => onChange({ ...value, from: event.target.value })}
-            className="h-10 w-full lg:w-36"
+            className="w-full lg:w-36"
           />
           <span aria-hidden className="text-sm text-text-muted max-lg:hidden">
             to
           </span>
-          <Input
+          <Input size="sm"
             type="date"
             aria-label="To date"
             value={value.to}
             min={value.from || undefined}
             onChange={(event) => onChange({ ...value, to: event.target.value })}
-            className="h-10 w-full lg:w-36"
+            className="w-full lg:w-36"
           />
         </>
       ) : null}

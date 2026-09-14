@@ -288,7 +288,7 @@ export function EmailCampaignsWorkspace() {
             className="lg:w-48"
           />
 
-          <Input
+          <Input size="sm"
             type="date"
             aria-label="Created from"
             value={from}
@@ -296,7 +296,7 @@ export function EmailCampaignsWorkspace() {
               setFrom(event.target.value);
               setPage(1);
             }}
-            className="h-10 w-full lg:w-36"
+            className="w-full lg:w-36"
           />
 
           <Select

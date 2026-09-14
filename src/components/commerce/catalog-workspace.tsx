@@ -314,7 +314,6 @@ function CreateCatalogDialog({
               id="cat-name"
               value={name}
               error={Boolean(error)}
-              className="h-11"
               onChange={(event) => setName(event.target.value)}
             />
           </Field>
@@ -340,7 +339,7 @@ function CreateCatalogDialog({
         </Field>
 
         <fieldset>
-          <legend className="text-sm font-medium text-text-primary">
+          <legend className="block text-sm font-bold text-text-secondary">
             Products
             <span className="ml-2 font-normal text-text-muted">
               {picked.length} selected

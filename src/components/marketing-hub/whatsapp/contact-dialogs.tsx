@@ -339,7 +339,6 @@ export function ContactFormDialog({
               id="ct-first"
               value={draft.firstName}
               error={Boolean(errors.firstName)}
-              className="h-11"
               onChange={(event) => set("firstName", event.target.value)}
             />
           </Field>
@@ -348,7 +347,6 @@ export function ContactFormDialog({
             <Input
               id="ct-last"
               value={draft.lastName}
-              className="h-11"
               onChange={(event) => set("lastName", event.target.value)}
             />
           </Field>
@@ -364,7 +362,6 @@ export function ContactFormDialog({
               type="tel"
               value={draft.phone}
               error={Boolean(errors.phone)}
-              className="h-11"
               onChange={(event) => set("phone", event.target.value)}
             />
           </Field>
@@ -375,7 +372,6 @@ export function ContactFormDialog({
               type="email"
               value={draft.email}
               error={Boolean(errors.email)}
-              className="h-11"
               onChange={(event) => set("email", event.target.value)}
             />
           </Field>

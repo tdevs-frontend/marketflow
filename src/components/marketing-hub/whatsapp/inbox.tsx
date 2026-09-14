@@ -78,13 +78,13 @@ function ConversationList({
             className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-text-muted"
             aria-hidden
           />
-          <Input
+          <Input size="sm"
             type="search"
             value={search}
             onChange={(event) => onSearchChange(event.target.value)}
             placeholder="Search conversations…"
             aria-label="Search conversations"
-            className="h-10 pl-9"
+            className="pl-9"
           />
         </div>
 
@@ -442,10 +442,9 @@ function ContactDetails({
           </ul>
 
           <div className="mt-2.5 flex gap-2">
-            <Input
+            <Input size="sm"
               value={tag}
               aria-label="Add tag"
-              className="h-10"
               onChange={(event) => setTag(event.target.value)}
               onKeyDown={(event) => {
                 if (event.key !== "Enter" || !tag.trim()) return;

@@ -220,7 +220,7 @@ export function SocialPostsWorkspace() {
             options={[{ value: ALL, label: "All statuses" }, ...POST_STATUSES]}
             className="lg:w-36"
           />
-          <Input
+          <Input size="sm"
             type="date"
             aria-label="Scheduled from"
             value={from}
@@ -228,7 +228,7 @@ export function SocialPostsWorkspace() {
               setFrom(event.target.value);
               setPage(1);
             }}
-            className="h-10 w-full lg:w-36"
+            className="w-full lg:w-36"
           />
           <Select
             label="Sort posts"

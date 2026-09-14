@@ -125,7 +125,7 @@ function CustomerPicker({
           onChange={(event) => setTerm(event.target.value)}
           placeholder="Search customers by name, email or company…"
           aria-label="Search customers"
-          className="h-11 pl-9"
+          className="pl-9"
         />
       </div>
 

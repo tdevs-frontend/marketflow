@@ -19,7 +19,7 @@ export default function ForgotPasswordPage() {
 
       <form className="space-y-5">
         <Field label="Work email" htmlFor="email">
-          <Input className="h-12" id="email" name="email" type="email" autoComplete="email" required />
+          <Input size="lg" id="email" name="email" type="email" autoComplete="email" required />
         </Field>
 
         <Button type="submit" size="lg" className="w-full">

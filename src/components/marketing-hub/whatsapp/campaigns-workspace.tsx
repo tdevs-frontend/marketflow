@@ -217,7 +217,7 @@ export function WhatsAppCampaignsWorkspace() {
             className="lg:w-44"
           />
 
-          <Input
+          <Input size="sm"
             type="date"
             aria-label="Created from"
             value={from}
@@ -225,7 +225,7 @@ export function WhatsAppCampaignsWorkspace() {
               setFrom(event.target.value);
               setPage(1);
             }}
-            className="h-10 w-full lg:w-38"
+            className="w-full lg:w-38"
           />
 
           <Select

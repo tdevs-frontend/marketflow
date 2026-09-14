@@ -229,7 +229,7 @@ export function TemplateFormDialog({
               id="tpl-name"
               value={draft.name}
               error={Boolean(errors.name)}
-              className="h-11 font-mono"
+              className="font-mono"
               onChange={(event) =>
                 set("name", slugify(event.target.value).replace(/-/g, "_"))
               }
@@ -324,7 +324,6 @@ export function TemplateFormDialog({
           <Input
             id="tpl-footer"
             value={draft.footer}
-            className="h-11"
             onChange={(event) => set("footer", event.target.value)}
           />
         </Field>
@@ -372,7 +371,7 @@ export function TemplateFormDialog({
             <Input
               value={buttonLabel}
               aria-label="Button label"
-              className="h-11 min-w-0 flex-1"
+              className="min-w-0 flex-1"
               onChange={(event) => setButtonLabel(event.target.value)}
             />
             <Select

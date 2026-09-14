@@ -206,7 +206,7 @@ export function OrdersWorkspace() {
             className="lg:w-44"
           />
 
-          <Input
+          <Input size="sm"
             type="date"
             aria-label="From date"
             value={from}
@@ -214,9 +214,9 @@ export function OrdersWorkspace() {
               setFrom(event.target.value);
               setPage(1);
             }}
-            className="h-10 w-full lg:w-36"
+            className="w-full lg:w-36"
           />
-          <Input
+          <Input size="sm"
             type="date"
             aria-label="To date"
             value={to}
@@ -224,7 +224,7 @@ export function OrdersWorkspace() {
               setTo(event.target.value);
               setPage(1);
             }}
-            className="h-10 w-full lg:w-36"
+            className="w-full lg:w-36"
           />
         </FilterBar>
 

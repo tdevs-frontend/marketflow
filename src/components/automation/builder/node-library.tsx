@@ -55,13 +55,13 @@ export function NodeLibrary({
           className="pointer-events-none absolute top-1/2 left-6 size-4 -translate-y-1/2 text-text-muted"
           aria-hidden
         />
-        <Input
+        <Input size="sm"
           type="search"
           value={term}
           onChange={(event) => setTerm(event.target.value)}
           placeholder="Search nodes…"
           aria-label="Search nodes"
-          className="h-10 pl-9"
+          className="pl-9"
         />
       </div>
 

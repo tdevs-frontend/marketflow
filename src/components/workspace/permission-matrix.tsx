@@ -148,13 +148,13 @@ export function PermissionMatrix({
             className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-text-muted"
             aria-hidden
           />
-          <Input
+          <Input size="sm"
             type="search"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Search permissions…"
             aria-label="Search permissions"
-            className="h-10 pl-9"
+            className="pl-9"
           />
         </div>
 

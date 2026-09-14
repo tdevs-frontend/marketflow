@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Check, ChevronDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import type { InputSize } from "./input";
 
 export interface SelectOption<T extends string = string> {
   value: T;
@@ -26,17 +27,29 @@ export interface SelectProps<T extends string> {
   disabled?: boolean;
   error?: boolean;
   /**
-   * `sm` is 40px, for filter and toolbar rows. `md` is 44px and matches the
-   * `h-11` form inputs, so a Select sits level with the fields beside it.
+   * The shared control scale — see `InputSize`. `sm` is 40px, for filter and
+   * toolbar rows. `md` is 44px and matches an `md` form input, so a Select
+   * sits level with the fields beside it. `lg` is 48px, for the auth and
+   * onboarding forms where the fields carry the page.
    */
-  size?: "sm" | "md";
+  size?: InputSize;
   className?: string;
 }
 
-const SIZES = { sm: "h-10", md: "h-11" } as const;
+/* Padding and type size moved out of `TRIGGER` and into the scale so `lg` can
+   step both up. Leaving them in `TRIGGER` would make `lg` depend on stylesheet
+   order to beat them, and `cn()` is a plain join. `sm` and `md` keep exactly
+   the px-3.5 and text-sm they already had. */
+const SIZES: Record<InputSize, string> = {
+  /* Secondary ink at `sm` so a filter row reads as one object — the search box
+     beside it takes the same step back. `TRIGGER` is already `font-medium`. */
+  sm: "h-10 px-3.5 text-sm text-text-secondary",
+  md: "h-11 px-3.5 text-sm",
+  lg: "h-12 px-4 text-base",
+};
 
 const TRIGGER =
-  "inline-flex w-full items-center justify-between gap-2 rounded-field border border-border-strong bg-surface px-3.5 text-sm font-medium text-text-primary transition-all outline-none hover:border-border-strong focus-visible:border-primary focus-visible:shadow-focus-field disabled:cursor-not-allowed disabled:bg-surface-secondary disabled:opacity-60";
+  "inline-flex w-full items-center justify-between gap-2 rounded-field border border-border-strong bg-surface font-medium text-text-primary transition-all outline-none hover:border-border-strong focus-visible:border-primary focus-visible:shadow-focus-field disabled:cursor-not-allowed disabled:bg-surface-secondary disabled:opacity-60";
 
 /**
  * A listbox built from buttons rather than a native `<select>`, so the menu can

@@ -90,13 +90,12 @@ function ConditionValue({
 
   return (
     <div className="flex items-center gap-1.5">
-      <Input
+      <Input size="sm"
         type={meta.input === "number" ? "number" : "text"}
         min={meta.input === "number" ? 0 : undefined}
         value={condition.value}
         onChange={(event) => onChange(event.target.value)}
         aria-label={`${meta.label} value`}
-        className="h-10"
         disabled={disabled}
       />
       {meta.unit ? (

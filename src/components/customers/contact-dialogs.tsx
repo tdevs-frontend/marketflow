@@ -307,7 +307,7 @@ export function ContactFormDialog({
          * as another preference; on its own it reads as a permission.
          */}
         <fieldset className="rounded-panel border border-border p-3.5">
-          <legend className="px-1 text-sm font-medium text-text-primary">
+          <legend className="block px-1 text-sm font-bold text-text-secondary">
             Consent
           </legend>
           <p className="text-sm text-text-muted">

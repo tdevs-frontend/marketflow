@@ -763,10 +763,10 @@ export function EmailContactsWorkspace() {
         <div className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="First name" htmlFor="new-first">
-              <Input id="new-first" placeholder="Sarah" />
+              <Input id="new-first" />
             </Field>
             <Field label="Last name" htmlFor="new-last">
-              <Input id="new-last" placeholder="Ahmed" />
+              <Input id="new-last" />
             </Field>
           </div>
 
@@ -775,11 +775,11 @@ export function EmailContactsWorkspace() {
             htmlFor="new-email"
             hint="The contact receives a confirmation before anything else is sent."
           >
-            <Input id="new-email" type="email" placeholder="sarah@example.com" />
+            <Input id="new-email" type="email" />
           </Field>
 
           <Field label="Company" htmlFor="new-company">
-            <Input id="new-company" placeholder="Bright Retail" />
+            <Input id="new-company" />
           </Field>
 
           <Field label="Source" htmlFor="new-source">
