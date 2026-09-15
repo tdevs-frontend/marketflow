@@ -34,10 +34,14 @@ export function PersonaliseStep(props: StepProps) {
 
   const available = variablesForChannel(draft.channel);
   const sources = [...new Set(available.map((item) => item.source))];
+  /* Switching to social drops the contact-shaped sources. A filter left on one
+     of them would otherwise survive the switch and show an empty catalogue
+     under a control with nothing selected, so it falls back to All. */
+  const active = source !== "all" && !sources.includes(source) ? "all" : source;
   const visible =
-    source === "all"
+    active === "all"
       ? available
-      : available.filter((item) => item.source === source);
+      : available.filter((item) => item.source === active);
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
@@ -55,7 +59,7 @@ export function PersonaliseStep(props: StepProps) {
             <SegmentedControl
               label="Variable source"
               size="sm"
-              value={source}
+              value={active}
               onChange={setSource}
               options={[
                 { value: "all" as const, label: "All" },

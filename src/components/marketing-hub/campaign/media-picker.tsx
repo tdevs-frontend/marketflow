@@ -131,6 +131,17 @@ function MediaDialog({
   /* Edited in the dialog and committed on Done, so a cancelled browse leaves
      the campaign exactly as it was. */
   const [draft, setDraft] = useState<string[]>(selected);
+  const [hydrated, setHydrated] = useState(false);
+
+  /* Re-seed from the campaign once per open, adjusted during render so the
+     first paint already shows the right ticks. Without this the dialog keeps
+     whatever was last picked in it: Cancel would not discard, and an asset
+     removed from the row above would still show as selected on reopen. */
+  if (open && !hydrated) {
+    setHydrated(true);
+    setDraft(selected);
+  }
+  if (!open && hydrated) setHydrated(false);
 
   const visible = MEDIA_ASSETS.filter((asset) => {
     if (folder !== "all" && asset.folderId !== folder) return false;

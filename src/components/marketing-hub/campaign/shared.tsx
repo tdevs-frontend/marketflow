@@ -78,7 +78,7 @@ export function OptionCard({
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        "flex w-full items-start gap-3 rounded-panel border p-3.5 text-left transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+        "flex w-full items-start gap-3 rounded-panel border px-4 py-4 text-left transition-colors focus-visible:shadow-focus focus-visible:outline-none",
         disabled
           ? "cursor-not-allowed border-border bg-surface-secondary opacity-60"
           : selected
@@ -91,7 +91,9 @@ export function OptionCard({
         <span
           className={cn(
             "grid size-9 shrink-0 place-items-center rounded-btn [&_svg]:size-4",
-            selected ? "bg-primary text-white" : "bg-surface-secondary text-text-muted",
+            selected
+              ? "bg-primary text-white"
+              : "bg-surface-secondary text-text-muted",
           )}
         >
           {icon}
@@ -99,7 +101,9 @@ export function OptionCard({
       ) : null}
 
       <span className="min-w-0 flex-1">
-        <span className="block text-sm font-medium text-text-primary">{title}</span>
+        <span className="block text-base font-bold text-text-primary">
+          {title}
+        </span>
         {hint ? (
           <span className="mt-0.5 block text-sm font-medium text-text-muted">
             {hint}

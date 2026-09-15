@@ -278,7 +278,10 @@ function Stepper({
   onJump: (index: number) => void;
 }) {
   return (
-    <ol className="flex items-center gap-1 overflow-x-auto">
+    /* `py-1` keeps the focus ring off the scroll container's clip edge — with
+       `overflow-x-auto` the browser clips vertically too, and a ring drawn at
+       the button's exact bounds loses its top and bottom. */
+    <ol className="flex items-center gap-1 overflow-x-auto py-1">
       {STEPS.map((step, index) => {
         const done = index < furthest;
         const current = index === active;
@@ -294,32 +297,59 @@ function Stepper({
               disabled={!reachable}
               aria-current={current ? "step" : undefined}
               className={cn(
-                "inline-flex items-center gap-2 rounded-btn px-2.5 py-1.5 text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                /* Every state carries a border, transparent where it is not
+                   wanted, so the active pill cannot nudge its neighbours by a
+                   pixel when the selection moves. */
+                "inline-flex items-center gap-2.5 rounded-lg border px-3 py-1.5 transition-colors focus-visible:shadow-focus focus-visible:outline-none",
                 current
-                  ? "bg-primary-soft text-primary-dark"
+                  ? "border-primary-border bg-primary-soft"
                   : reachable
-                    ? "text-text-secondary hover:bg-surface-secondary"
-                    : "cursor-not-allowed text-text-muted",
+                    ? "border-transparent hover:bg-surface-secondary"
+                    : "cursor-not-allowed border-transparent",
               )}
             >
               <span
                 className={cn(
-                  "grid size-6 shrink-0 place-items-center rounded-full text-xs font-bold",
+                  "grid size-5.5 shrink-0 place-items-center rounded-full border text-xs font-bold tabular-nums landing-none",
                   current
-                    ? "bg-primary text-white"
+                    ? "border-primary bg-primary text-white"
                     : done
-                      ? "bg-primary-soft text-primary"
-                      : "bg-surface-secondary text-text-muted",
+                      ? "border-primary-border bg-primary-soft text-primary"
+                      : reachable
+                        ? "border-border bg-surface-secondary text-text-secondary"
+                        : "border-border bg-surface-secondary text-text-muted",
                 )}
               >
-                {done ? <Check className="size-3" strokeWidth={3} aria-hidden /> : index + 1}
+                {done ? (
+                  <Check className="size-4" strokeWidth={3} aria-hidden />
+                ) : (
+                  index + 1
+                )}
               </span>
-              <span className="whitespace-nowrap">{step.label}</span>
+
+              {/* Three weights, three inks: the step you are on, the ones you
+                  have finished, and the ones ahead. A label that reads at the
+                  same strength in all three states is a stepper that tells you
+                  nothing about where you are. */}
+              <span
+                className={cn(
+                  "text-[15px] font-medium whitespace-nowrap",
+                  current
+                    ? "font-semibold text-text-primary"
+                    : done
+                      ? "font-medium text-text-primary"
+                      : reachable
+                        ? "font-medium text-text-secondary"
+                        : "font-medium text-text-muted",
+                )}
+              >
+                {step.label}
+              </span>
             </button>
 
             {index < STEPS.length - 1 ? (
               <ChevronRight
-                className="size-4 shrink-0 text-border-strong"
+                className="ml-2 size-5 shrink-0 text-text-muted"
                 aria-hidden
               />
             ) : null}
