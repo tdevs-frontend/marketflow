@@ -48,9 +48,9 @@ import {
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { ProductTypeDialog } from "./product-type-dialog";
 import {
-  CATEGORIES,
   COMMERCE_PRODUCTS,
-  productTotals,
+  CATEGORIES,
+  productCounts,
   stockStatusOf,
 } from "@/lib/commerce-fixtures";
 import { formatCurrency, formatDate, formatNumber } from "@/lib/format";
@@ -61,6 +61,7 @@ import type {
   ProductType,
   StockStatus,
 } from "@/types/commerce";
+import type { ProductCounts } from "@/lib/commerce-fixtures";
 import { CommerceKpis, type CommerceKpi } from "./commerce-kpis";
 import {
   formatPriceRange,
@@ -97,32 +98,40 @@ const ALL = "all";
  * The mix is the useful reading here — "I have 12 things to sell and 7 of them
  * are services" — and it works whichever kinds a merchant actually has.
  */
-function kpis(): CommerceKpi[] {
-  const totals = productTotals();
-
+function kpis(counts: ProductCounts): CommerceKpi[] {
   return [
     {
       label: "Total Products",
-      value: formatNumber(totals.total),
+      /*
+       * The same figure the All tab shows, from the same function.
+       *
+       * These two used to be computed separately and disagreed — the KPI
+       * counted archived products and the tab did not. Passing one
+       * `ProductCounts` through both is what makes the page's arithmetic
+       * check out: Physical + Digital + Services == Total == All.
+       */
+      value: formatNumber(counts.all),
       icon: Package,
-      hint: `${totals.active} active · ${CATEGORIES.length} categories`,
+      hint: `${counts.active} active · ${counts.draft} draft${
+        counts.archived ? ` · ${counts.archived} archived` : ""
+      }`,
     },
     {
       label: "Physical Products",
-      value: formatNumber(totals.physical),
+      value: formatNumber(counts.physical),
       icon: Boxes,
       tone: "brand",
       hint: "Shipped to customers",
     },
     {
       label: "Digital Products",
-      value: formatNumber(totals.digital),
+      value: formatNumber(counts.digital),
       icon: BookOpen,
       hint: "Downloads and access",
     },
     {
       label: "Services",
-      value: formatNumber(totals.service),
+      value: formatNumber(counts.service),
       icon: CalendarDays,
       hint: "Booked and delivered",
     },
@@ -176,20 +185,32 @@ export function ProductsWorkspace() {
   const activeFilters =
     (category === ALL ? 0 : 1) + (status === ALL ? 0 : 1) + (stock === ALL ? 0 : 1);
 
-  /* Counts for the view strip, over the whole catalogue rather than the
-     filtered set — a tab reading "Digital 0" because of an unrelated search is
-     a tab that lies about what the merchant sells. */
-  const viewCounts = useMemo(() => {
-    const totals = productTotals();
-    return {
-      [ALL]: COMMERCE_PRODUCTS.filter((item) => item.status !== "archived").length,
-      physical: totals.physical,
-      digital: totals.digital,
-      service: totals.service,
-      draft: COMMERCE_PRODUCTS.filter((item) => item.status === "draft").length,
-      archived: COMMERCE_PRODUCTS.filter((item) => item.status === "archived").length,
-    } as Record<ProductView, number>;
-  }, []);
+  /*
+   * Counts for the view strip and the KPI row, from one function.
+   *
+   * Over the whole catalogue rather than the filtered set — a tab reading
+   * "Digital 0" because of an unrelated search is a tab that lies about what
+   * the merchant sells.
+   *
+   * `productCounts` is deliberately the only place these are worked out. This
+   * block used to mix two sources: All was counted here over the non-archived
+   * catalogue while the type counts came from a helper that included archived
+   * products, so the strip added up to one more than it displayed.
+   */
+  const counts = useMemo(() => productCounts(), []);
+
+  const viewCounts = useMemo(
+    () =>
+      ({
+        [ALL]: counts.all,
+        physical: counts.physical,
+        digital: counts.digital,
+        service: counts.service,
+        draft: counts.draft,
+        archived: counts.archived,
+      }) as Record<ProductView, number>,
+    [counts],
+  );
 
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
@@ -344,7 +365,7 @@ export function ProductsWorkspace() {
         }
       />
 
-      <CommerceKpis items={kpis()} />
+      <CommerceKpis items={kpis(counts)} />
 
       <Card className="p-5">
         {/*

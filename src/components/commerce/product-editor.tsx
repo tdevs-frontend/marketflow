@@ -166,6 +166,8 @@ export function ProductEditor({
   const variantsManageStock =
     draft.hasVariants && draft.type === "physical" && draft.variants.length > 0;
   const rolledUp = rollUpStock(draft.variants);
+  /* One media library per product — the Variants tab picks from exactly this. */
+  const images = product?.images ?? [];
 
   /**
    * Validates across every tab, not just the visible one — a required field
@@ -180,7 +182,18 @@ export function ProductEditor({
     if (draft.salePrice && Number(draft.salePrice) > Number(draft.price)) {
       next.salePrice = "Sale price should be below the regular price.";
     }
-    if (!draft.sku.trim()) next.sku = "Enter a SKU.";
+    /*
+     * The product SKU is a *reference*, and only required when it is the code a
+     * customer actually buys.
+     *
+     * Once variants are on, every purchasable thing carries its own unique SKU
+     * and the product-level one is just the stem those are generated from —
+     * demanding it there would block publishing over a field that identifies
+     * nothing sellable.
+     */
+    if (!draft.sku.trim() && !draft.hasVariants) {
+      next.sku = "Enter a SKU.";
+    }
 
     /*
      * Variant codes have to be unique across the whole catalogue, not just
@@ -371,10 +384,7 @@ export function ProductEditor({
                 setDraft((prev) => ({ ...prev, options, variants }))
               }
               productId={product?.id}
-              fallbackImage={
-                product?.images.find((image) => image.isThumbnail)?.url ??
-                product?.images[0]?.url
-              }
+              images={product?.images}
             />
           </TabPanel>
         ) : null}
@@ -383,12 +393,12 @@ export function ProductEditor({
           <TabPanel idBase={idBase} value="inventory" className="space-y-5">
             <div className={GRID}>
               <Field
-                label="SKU"
+                label={draft.hasVariants ? "Product SKU" : "SKU"}
                 htmlFor="sku"
                 error={errors.sku}
                 hint={
-                  variantsManageStock
-                    ? "The stem every variant code is generated from."
+                  draft.hasVariants
+                    ? "Optional reference. Each variant carries the SKU that is actually sold."
                     : undefined
                 }
               >
@@ -498,19 +508,31 @@ export function ProductEditor({
               </Button>
             </div>
 
+            {/*
+              * The product's real media, not four empty slots.
+              *
+              * This grid used to render a fixed set of placeholders regardless
+              * of what the product had. That was tolerable while nothing read
+              * the images; it is not now that variants assign one of *these*
+              * files to a combination — a merchant would be picking from a
+              * library the Media tab never showed them.
+              */}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {[0, 1, 2, 3].map((slot) => (
+              {images.map((image) => (
                 <div
-                  key={slot}
+                  key={image.id}
                   className={cn(
-                    "relative grid aspect-square place-items-center rounded-panel border text-text-muted",
-                    slot === 0
-                      ? "border-primary bg-primary-soft text-primary"
-                      : "border-dashed border-border bg-surface-secondary",
+                    "relative grid aspect-square place-items-center overflow-hidden rounded-panel border",
+                    image.isThumbnail ? "border-primary" : "border-border",
                   )}
                 >
-                  <ImagePlus className="size-4" aria-hidden />
-                  {slot === 0 ? (
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={image.url}
+                    alt={image.alt ?? ""}
+                    className="size-full object-cover"
+                  />
+                  {image.isThumbnail ? (
                     <span className="absolute top-1.5 left-1.5 inline-flex items-center gap-1 rounded-full bg-surface px-1.5 py-0.5 text-sm font-bold text-primary uppercase">
                       <Star className="size-2.5" aria-hidden />
                       Thumb
@@ -518,7 +540,18 @@ export function ProductEditor({
                   ) : null}
                 </div>
               ))}
+
+              {/* One empty slot to add to, rather than a fixed four. */}
+              <div className="grid aspect-square place-items-center rounded-panel border border-dashed border-border bg-surface-secondary text-text-muted">
+                <ImagePlus className="size-4" aria-hidden />
+              </div>
             </div>
+
+            {draft.hasVariants && images.length > 0 ? (
+              <p className="text-sm font-medium text-text-muted">
+                Variants can be assigned any of these on the Variants tab.
+              </p>
+            ) : null}
           </TabPanel>
         ) : null}
 

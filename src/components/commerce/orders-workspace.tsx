@@ -26,7 +26,7 @@ import {
   ORDER_TYPES,
   PAYMENT_STATUSES,
 } from "@/constants/commerce";
-import { ORDERS, PRODUCTS } from "@/lib/commerce-fixtures";
+import { COMMERCE_PRODUCTS, ORDERS } from "@/lib/commerce-fixtures";
 import { formatCurrency, formatDate, formatNumber } from "@/lib/format";
 import type { Order, OrderStatus, PaymentStatus } from "@/types/commerce";
 import { CommerceKpis, type CommerceKpi } from "./commerce-kpis";
@@ -201,7 +201,7 @@ export function OrdersWorkspace() {
             }}
             options={[
               { value: ALL, label: "All products" },
-              ...PRODUCTS.map((item) => ({ value: item.id, label: item.name })),
+              ...COMMERCE_PRODUCTS.map((item) => ({ value: item.id, label: item.name })),
             ]}
             className="lg:w-44"
           />

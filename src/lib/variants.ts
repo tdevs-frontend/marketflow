@@ -335,7 +335,12 @@ export function rollUpStock(variants: ProductVariant[]): {
   reserved: number;
   lowStockThreshold: number;
 } {
-  const live = variants.filter((variant) => variant.status === "active");
+  /* Only tracked, sellable rows count. An untracked made-to-order size has no
+     shelf to add, and a disabled one is not on sale — including either inflates
+     the parent figure with units nobody can buy. */
+  const live = variants.filter(
+    (variant) => variant.status === "active" && isTracked(variant),
+  );
 
   return {
     stock: live.reduce((sum, variant) => sum + (variant.stock ?? 0), 0),
@@ -349,7 +354,23 @@ export function rollUpStock(variants: ProductVariant[]): {
   };
 }
 
-/** Sellable units — what is on the shelf minus what orders have claimed. */
+/**
+ * Whether this row is counted.
+ *
+ * Defaults to on: a variant created before the flag existed, or generated
+ * without one, is a normal stocked row. Opting out is the deliberate act.
+ */
+export function isTracked(variant: ProductVariant): boolean {
+  return variant.trackInventory ?? true;
+}
+
+/**
+ * Sellable units — what is on the shelf minus what orders have claimed.
+ *
+ * This is the one definition of available in the system: `current - reserved`,
+ * computed here and nowhere else, so the table, the drawer, the roll-up and the
+ * Inventory page cannot disagree about it.
+ */
 export function availableOf(variant: ProductVariant): number {
   return (variant.stock ?? 0) - (variant.reserved ?? 0);
 }
@@ -365,6 +386,50 @@ export function variantStockStatus(variant: ProductVariant): StockStatus {
   if (available <= 0) return "out-of-stock";
   if (available <= (variant.lowStockThreshold ?? 0)) return "low-stock";
   return "in-stock";
+}
+
+/**
+ * What a merchant actually sees in the Status column.
+ *
+ * Three states, not two, because `VariantStatus` answers a different question
+ * from the shelf. *Disabled* is a decision — the merchant switched this
+ * combination off. *Out of stock* is a fact — it is on sale and there is none
+ * left. Collapsing them loses the distinction that matters: one is fixed by
+ * changing your mind, the other by receiving stock.
+ *
+ * A variant that is allowed to oversell never reads out of stock, which is the
+ * whole point of `continueSellingWhenOutOfStock` — a print-on-demand size has
+ * no shelf and is always available.
+ *
+ * Crucially this is per variant. One disabled size does not take the product
+ * down with it; the product's own status is a separate field on the parent.
+ */
+export type VariantAvailability = "active" | "out-of-stock" | "disabled";
+
+export function variantAvailability(
+  variant: ProductVariant,
+  type: ProductType,
+): VariantAvailability {
+  if (variant.status === "inactive") return "disabled";
+
+  /* Only a physical variant can run out in the shelf sense. A service is
+     limited by capacity and a download by licences, neither of which is a
+     quantity that gets picked — see `quantityLabelFor`. */
+  if (type === "physical" && isTracked(variant)) {
+    if (variant.continueSellingWhenOutOfStock) return "active";
+    if (availableOf(variant) <= 0) return "out-of-stock";
+  }
+
+  if (type === "digital" && variant.licensesAvailable !== undefined) {
+    return variant.licensesAvailable <= 0 ? "out-of-stock" : "active";
+  }
+
+  return "active";
+}
+
+/** True when a customer could buy this combination right now. */
+export function isSellable(variant: ProductVariant, type: ProductType): boolean {
+  return variantAvailability(variant, type) === "active";
 }
 
 /* -------------------------------------------------------------------------- */

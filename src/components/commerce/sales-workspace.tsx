@@ -13,7 +13,6 @@ import {
 import { PageHeader } from "@/components/layout/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
-import { ChartCard } from "@/components/ui/chart-card";
 import {
   DateRangePicker,
   DEFAULT_RANGE,
@@ -35,7 +34,6 @@ import { formatCurrency, formatDate, formatNumber } from "@/lib/format";
 import {
   COMMERCE_NOW_MS,
   SALES,
-  salesSeries,
   salesTotals,
   topSellers,
 } from "@/lib/commerce-fixtures";
@@ -107,7 +105,6 @@ export function SalesWorkspace() {
   }, [view, search, channel, status, range]);
 
   const totals = useMemo(() => salesTotals(filtered), [filtered]);
-  const series = useMemo(() => salesSeries(filtered), [filtered]);
 
   const kpis: CommerceKpi[] = [
     {
@@ -306,81 +303,10 @@ export function SalesWorkspace() {
             </div>
           </Card>
 
-          {/* Revenue over time. One chart, not four — the type and channel
-              filters above already answer "revenue of what". */}
-          <ChartCard
-            title="Revenue over time"
-            description="Net sales and order count for the selected period."
-            legend={[
-              { label: "Net revenue", swatch: "bg-primary" },
-              { label: "Orders", swatch: "bg-chart-neutral-strong" },
-            ]}
-          >
-            <RevenueBars series={series} />
-          </ChartCard>
-
           <TopSellers />
         </>
       )}
     </>
-  );
-}
-
-/**
- * Revenue per day, as bars.
- *
- * Plain elements rather than an Apex chart: this is a shape with no axes, no
- * tooltipped series and no period switcher — the filters above own that — and
- * loading a charting runtime to draw a dozen rectangles costs more than the
- * information is worth. Anything with an axis still goes to `ChartCard`'s
- * regular Apex children.
- */
-function RevenueBars({
-  series,
-}: {
-  series: { labels: string[]; revenue: number[]; orders: number[] };
-}) {
-  if (series.labels.length === 0) {
-    return (
-      <p className="py-8 text-center text-sm text-text-muted">
-        No sales in the selected period.
-      </p>
-    );
-  }
-
-  const peak = Math.max(...series.revenue, 1);
-
-  return (
-    <div className="pt-2">
-      <div className="flex h-44 items-end gap-1.5">
-        {series.labels.map((label, index) => {
-          const revenue = series.revenue[index];
-          const orders = series.orders[index];
-
-          return (
-            <div
-              key={label}
-              className="group relative flex min-w-0 flex-1 flex-col items-center justify-end"
-            >
-              <span
-                aria-hidden
-                style={{ height: `${Math.max((revenue / peak) * 100, 3)}%` }}
-                className="w-full rounded-t-[3px] bg-primary/85 transition-colors group-hover:bg-primary"
-              />
-              <span className="sr-only">
-                {formatDate(label)} — {formatCurrency(revenue)} across {orders}{" "}
-                {orders === 1 ? "order" : "orders"}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="mt-2 flex justify-between text-meta text-text-muted">
-        <span>{formatDate(series.labels[0])}</span>
-        <span>{formatDate(series.labels.at(-1) as string)}</span>
-      </div>
-    </div>
   );
 }
 

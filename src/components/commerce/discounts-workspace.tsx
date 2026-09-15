@@ -27,7 +27,7 @@ import {
   DISCOUNT_STATUSES,
   DISCOUNT_TYPES,
 } from "@/constants/commerce";
-import { CATEGORIES, DISCOUNTS, PRODUCTS } from "@/lib/commerce-fixtures";
+import { CATEGORIES, COMMERCE_PRODUCTS, DISCOUNTS } from "@/lib/commerce-fixtures";
 import { formatCurrency, formatDate, formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type {
@@ -474,7 +474,7 @@ export function DiscountsWorkspace() {
                 onChange={(next) => set("targetId", next)}
                 options={[
                   { value: "", label: "Select…" },
-                  ...(draft.scope === "products" ? PRODUCTS : CATEGORIES).map(
+                  ...(draft.scope === "products" ? COMMERCE_PRODUCTS : CATEGORIES).map(
                     (item) => ({ value: item.id, label: item.name }),
                   ),
                 ]}

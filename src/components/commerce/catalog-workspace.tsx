@@ -21,7 +21,12 @@ import { Dialog } from "@/components/ui/dialog";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { CATALOG_STATUSES } from "@/constants/commerce";
-import { CATALOGS, PRODUCTS, productById, stockStatusOf } from "@/lib/commerce-fixtures";
+import {
+  CATALOGS,
+  COMMERCE_PRODUCTS,
+  commerceProductById,
+  stockStatusOf,
+} from "@/lib/commerce-fixtures";
 import { formatCurrency, formatDate, formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Catalog, CatalogStatus } from "@/types/commerce";
@@ -165,7 +170,7 @@ function CatalogPreview({
   onClose: () => void;
 }) {
   const products = (catalog?.productIds ?? [])
-    .map(productById)
+    .map(commerceProductById)
     .filter((item): item is NonNullable<typeof item> => Boolean(item));
 
   return (
@@ -268,7 +273,10 @@ function CreateCatalogDialog({
   const [error, setError] = useState<string | null>(null);
 
   /* Only sellable products belong in something a customer will open. */
-  const selectable = PRODUCTS.filter((item) => item.status === "active");
+  /* The joined catalogue, not the raw literal: a product with variants has
+     its stock rolled up and its price expressed as a range, and reading the
+     literal here showed a figure no other page agreed with. */
+  const selectable = COMMERCE_PRODUCTS.filter((item) => item.status === "active");
 
   function toggle(id: string) {
     setPicked((prev) =>
@@ -508,7 +516,7 @@ export function CatalogWorkspace() {
       <Card className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-base">
-            {formatNumber(PRODUCTS.filter((item) => item.featured).length)} featured
+            {formatNumber(COMMERCE_PRODUCTS.filter((item) => item.featured).length)} featured
             products lead your catalogs
           </h2>
           <p className="mt-1 text-sm text-text-secondary font-medium">

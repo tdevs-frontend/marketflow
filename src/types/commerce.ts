@@ -665,12 +665,37 @@ export interface ProductVariant {
   /** Falls back to the product's thumbnail when unset. */
   imageUrl?: string;
 
+  /*
+   * Whether this combination is counted at all.
+   *
+   * Per variant rather than per product, because it genuinely varies: a shirt
+   * sold in four sizes plus a made-to-order size has three tracked rows and one
+   * that is never counted. Defaults to the parent's setting when unset.
+   */
+  trackInventory?: boolean;
+  /**
+   * Sell past zero.
+   *
+   * The difference between "out of stock" and "unavailable". A print-on-demand
+   * size has no shelf and should stay buyable at zero; a last-one-in-the-box
+   * should not. Without it, `stock: 0` is forced to mean both.
+   */
+  continueSellingWhenOutOfStock?: boolean;
+
   /* Physical */
   stock?: number;
-  /** Held by unfulfilled orders, so not sellable. */
+  /**
+   * Units held by unfulfilled orders, so not sellable.
+   *
+   * Derived from the order book — see `reservedFor` in the fixtures — never
+   * authored and never editable. A hand-typed reserved figure is a second
+   * answer to a question the orders already answer, and the two drift apart the
+   * first time an order is fulfilled.
+   */
   reserved?: number;
   lowStockThreshold?: number;
   weightGrams?: number;
+  dimensionsCm?: { length: number; width: number; height: number };
   barcode?: string;
 
   /* Digital */
@@ -681,6 +706,15 @@ export interface ProductVariant {
   /** Days after purchase before access lapses. `null` never expires. */
   accessExpiryDays?: number | null;
   licenseType?: string;
+  /**
+   * Seats left in a finite licence pool.
+   *
+   * The only quantity a digital variant genuinely has, and it is not stock: it
+   * is never picked, packed or reserved, and calling it stock is how a merchant
+   * selling forty team licences ends up with a reorder level. `undefined` is
+   * the normal case — an unlimited download.
+   */
+  licensesAvailable?: number;
 
   /* Service */
   durationMinutes?: number;

@@ -353,7 +353,11 @@ export const VARIANT_QUANTITY_LABEL: Record<
   ProductType,
   { column: string; noun: string }
 > = {
-  physical: { column: "Stock", noun: "in stock" },
+  /* "Available", not "Stock": the column shows sellable units, which is on
+     hand minus what open orders have already claimed. Labelling a figure that
+     nets off reservations as "Stock" is how a merchant promises the last three
+     of something twice. */
+  physical: { column: "Available", noun: "in stock" },
   digital: { column: "Delivery", noun: "licenses" },
   service: { column: "Capacity", noun: "bookings/day" },
 };

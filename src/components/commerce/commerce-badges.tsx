@@ -6,6 +6,7 @@ import {
   FULFILLMENT_LABEL,
   SALE_STATUSES,
 } from "@/constants/commerce";
+import type { VariantAvailability } from "@/lib/variants";
 import { cn } from "@/lib/utils";
 import type {
   CatalogStatus,
@@ -245,6 +246,36 @@ export function VariantStatusBadge({ status }: { status: VariantStatus }) {
   return (
     <Badge tone={status === "active" ? "success" : "neutral"} size="sm">
       {status}
+    </Badge>
+  );
+}
+
+/**
+ * The three states a merchant actually distinguishes between.
+ *
+ * *Disabled* is a decision and *Out of stock* is a fact, and the fix for each
+ * is different — one is changing your mind, the other is a delivery. A two-tone
+ * Active/Inactive badge collapses them and leaves a merchant staring at a greyed
+ * row with no idea which.
+ *
+ * Amber for out of stock rather than red: a shirt that sold out is a good
+ * problem, and a table of red rows trains a merchant to stop reading the colour.
+ */
+const AVAILABILITY: Record<VariantAvailability, { tone: BadgeTone; label: string }> = {
+  active: { tone: "success", label: "Active" },
+  "out-of-stock": { tone: "warning", label: "Out of stock" },
+  disabled: { tone: "neutral", label: "Disabled" },
+};
+
+export function VariantAvailabilityBadge({
+  availability,
+}: {
+  availability: VariantAvailability;
+}) {
+  const { tone, label } = AVAILABILITY[availability];
+  return (
+    <Badge tone={tone} size="sm" className="normal-case">
+      {label}
     </Badge>
   );
 }

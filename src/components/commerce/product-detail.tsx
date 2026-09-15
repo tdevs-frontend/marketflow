@@ -34,6 +34,7 @@ import {
 import {
   availableOf,
   formatPriceRange,
+  variantAvailability,
   priceRangeFrom,
   rollUpStock,
   variantName,
@@ -49,7 +50,7 @@ import {
   ProductStatusBadge,
   ProductThumb,
   StockBadge,
-  VariantStatusBadge,
+  VariantAvailabilityBadge,
 } from "./commerce-badges";
 import { VariantManager } from "./variants";
 
@@ -402,10 +403,7 @@ export function ProductDetail({
                 setVariants(nextVariants);
               }}
               productId={product.id}
-              fallbackImage={
-                product.images.find((image) => image.isThumbnail)?.url ??
-                product.images[0]?.url
-              }
+              images={product.images}
               showToggle={false}
             />
           </TabPanel>
@@ -773,7 +771,9 @@ export function ProductDetail({
                             : "Permanent"}
                         </TD>
                         <TD>
-                          <VariantStatusBadge status={variant.status} />
+                          <VariantAvailabilityBadge
+                            availability={variantAvailability(variant, product.type)}
+                          />
                         </TD>
                       </TR>
                     ))}
@@ -839,7 +839,9 @@ export function ProductDetail({
                           </span>
                         </TD>
                         <TD>
-                          <VariantStatusBadge status={variant.status} />
+                          <VariantAvailabilityBadge
+                            availability={variantAvailability(variant, product.type)}
+                          />
                         </TD>
                       </TR>
                     ))}

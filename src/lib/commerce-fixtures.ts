@@ -368,8 +368,10 @@ export const PRODUCTS: Product[] = [
    * only a T-shirt in it would let a service regression ship unnoticed.
    *
    * `price` on each is the *base* — the figure a variant falls back to when it
-   * sets no price of its own — and `stock` is left at the roll-up of the
-   * variants below rather than authored twice. See `rollUpStock`.
+   * sets no price of its own. `stock` is required by the shared shape but is
+   * *overwritten* for these three by `variantsFor`, which rolls it up from the
+   * active tracked variants; it is set to zero here so the literal never looks
+   * like a second, authoritative figure. See `rollUpStock`.
    */
   product({
     id: "prd-tshirt",
@@ -377,6 +379,28 @@ export const PRODUCTS: Product[] = [
     description:
       "Heavyweight combed cotton, printed in-house. Sizes S to XL in three colours.",
     sku: "TS",
+    /* The product's media library. Variants pick from *these* — there is no
+       second uploader, which is why a variant stores a url rather than a file. */
+    images: [
+      {
+        id: "img-ts-black",
+        url: "/products/tshirt-black.svg",
+        alt: "Premium T-Shirt in black",
+        isThumbnail: true,
+      },
+      {
+        id: "img-ts-white",
+        url: "/products/tshirt-white.svg",
+        alt: "Premium T-Shirt in white",
+        isThumbnail: false,
+      },
+      {
+        id: "img-ts-blue",
+        url: "/products/tshirt-blue.svg",
+        alt: "Premium T-Shirt in blue",
+        isThumbnail: false,
+      },
+    ],
     type: "physical",
     categoryId: "cat-hardware",
     categoryName: "Hardware",
@@ -384,7 +408,8 @@ export const PRODUCTS: Product[] = [
     price: 29,
     costPrice: 11,
     taxRate: 5,
-    stock: 96,
+    /* Derived — see the note above. */
+    stock: 0,
     lowStockThreshold: 5,
     hasVariants: true,
     featured: true,
@@ -571,6 +596,83 @@ function order(
 }
 
 export const ORDERS: Order[] = [
+  /*
+   * The two open orders.
+   *
+   * They exist so `reservedFor` has something to report: these hold stock that
+   * is claimed but not yet dispatched, which is what separates *available* from
+   * *on hand* on the variants table and the Inventory page.
+   */
+  order({
+    id: "ord-10255",
+    reference: "#MF-10255",
+    customer: {
+      id: "cus-maria",
+      name: "Maria Gomez",
+      email: "maria@casaverde.mx",
+      whatsappNumber: "+5215512345678",
+    },
+    lines: [
+      {
+        productId: "prd-tshirt",
+        productName: "Premium T-Shirt",
+        variantId: "var-s-black",
+        variantName: "S / Black",
+        sku: "TS-S-BLK",
+        quantity: 2,
+        unitPrice: 29,
+      },
+      {
+        productId: "prd-tshirt",
+        productName: "Premium T-Shirt",
+        variantId: "var-l-blue",
+        variantName: "L / Blue",
+        sku: "TS-L-BLU",
+        quantity: 1,
+        unitPrice: 29,
+      },
+    ],
+    discount: 0,
+    status: "pending",
+    paymentStatus: "pending",
+    paymentMethod: "Cash on delivery",
+    placedAt: "2026-06-01T09:20:00Z",
+  }),
+  order({
+    id: "ord-10254",
+    reference: "#MF-10254",
+    customer: {
+      id: "cus-tomas",
+      name: "Tomás Silva",
+      email: "tomas@silvamoveis.br",
+      whatsappNumber: "+5511987654321",
+    },
+    lines: [
+      {
+        productId: "prd-tshirt",
+        productName: "Premium T-Shirt",
+        variantId: "var-xl-black",
+        variantName: "XL / Black",
+        sku: "TS-XL-BLK",
+        quantity: 1,
+        unitPrice: 34,
+      },
+      {
+        productId: "prd-tshirt",
+        productName: "Premium T-Shirt",
+        variantId: "var-m-white",
+        variantName: "M / White",
+        sku: "TS-M-WHT",
+        quantity: 1,
+        unitPrice: 29,
+      },
+    ],
+    discount: 0,
+    status: "paid",
+    paymentStatus: "paid",
+    paymentMethod: "Card · Visa 9001",
+    placedAt: "2026-05-31T18:05:00Z",
+  }),
   /*
    * The variant orders.
    *
@@ -908,6 +1010,39 @@ export const ORDERS: Order[] = [
     placedAt: "2026-05-27T09:00:00Z",
   }),
 ];
+
+/**
+ * Units held by orders that have been placed but not yet dispatched.
+ *
+ * Derived, never authored. Reserved is a *reading of the order book*: it is
+ * exactly the quantity that customers have already claimed and the warehouse
+ * has not yet handed to a courier. Storing it beside the stock figure creates a
+ * second answer to that question, and the two diverge the first time an order
+ * is fulfilled — which is why §8 forbids editing it and why `available` is
+ * computed from it rather than typed.
+ *
+ * Shipped and delivered orders are excluded on purpose: those units have left
+ * the shelf, so they are gone from `stock`, not held in reserve. Cancelled and
+ * refunded release their hold.
+ */
+const HOLDS_STOCK: OrderStatus[] = ["pending", "paid", "processing"];
+
+export function reservedFor(productId: string, variantId?: string): number {
+  return ORDERS.filter((entry) => HOLDS_STOCK.includes(entry.status)).reduce(
+    (sum, entry) =>
+      sum +
+      entry.lines
+        .filter(
+          (line) =>
+            line.productId === productId &&
+            /* A product without variants holds its stock on lines that name no
+               variant — matching on `undefined` keeps that case working. */
+            (variantId ? line.variantId === variantId : !line.variantId),
+        )
+        .reduce((lines, line) => lines + line.quantity, 0),
+    0,
+  );
+}
 
 /* -------------------------------------------------------------------------- */
 /* Inventory                                                                  */
@@ -1289,6 +1424,18 @@ function variant(
 }
 
 /**
+ * The colour-shared fields, so twelve rows do not repeat them.
+ *
+ * Every Black variant carries the black photograph and the same reorder level —
+ * which is exactly the "assign the same image to every variant sharing an
+ * option value" convenience the media dialog offers in the UI, expressed here
+ * as the spread it compiles to.
+ */
+const BLACK = { imageUrl: "/products/tshirt-black.svg", lowStockThreshold: 5 };
+const WHITE = { imageUrl: "/products/tshirt-white.svg", lowStockThreshold: 5 };
+const BLUE = { imageUrl: "/products/tshirt-blue.svg", lowStockThreshold: 5 };
+
+/**
  * The grids themselves.
  *
  * Note what is *absent*: most rows set no `price`, because they sell at the
@@ -1297,42 +1444,43 @@ function variant(
  * times over.
  */
 const PRODUCT_VARIANTS: Record<string, ProductVariant[]> = {
-  /* Four sizes across three colours. XL costs more to make, so it is the only
-     axis that overrides the base price. */
+  /*
+   * Four sizes across three colours.
+   *
+   * What is *not* here is the point. No `reserved` — that is read off the open
+   * orders by `reservedFor`, because it is a fact about the order book and not
+   * a number anyone types. No `price` except on XL, which genuinely costs more
+   * to make; the other nine follow the product and re-follow it automatically
+   * the next time the shirt is repriced.
+   *
+   * `imageUrl` points at one of the product's own three photographs rather than
+   * at a separate upload — a variant picks from the product's media, it does
+   * not keep a media library of its own.
+   */
   "prd-tshirt": [
-    variant(["S", "Black"], { sku: "TS-S-BLK", stock: 22, reserved: 2, lowStockThreshold: 5 }),
-    variant(["S", "White"], { sku: "TS-S-WHT", stock: 14, reserved: 1, lowStockThreshold: 5 }),
-    variant(["S", "Blue"], { sku: "TS-S-BLU", stock: 9, reserved: 0, lowStockThreshold: 5 }),
-    variant(["M", "Black"], { sku: "TS-M-BLK", stock: 15, reserved: 3, lowStockThreshold: 5 }),
-    variant(["M", "White"], { sku: "TS-M-WHT", stock: 11, reserved: 1, lowStockThreshold: 5 }),
-    variant(["M", "Blue"], { sku: "TS-M-BLU", stock: 6, reserved: 1, lowStockThreshold: 5 }),
-    variant(["L", "Black"], { sku: "TS-L-BLK", stock: 19, reserved: 2, lowStockThreshold: 5 }),
-    variant(["L", "White"], { sku: "TS-L-WHT", stock: 8, reserved: 0, lowStockThreshold: 5 }),
-    /* Low: four on the shelf against a threshold of five. */
-    variant(["L", "Blue"], { sku: "TS-L-BLU", stock: 4, reserved: 1, lowStockThreshold: 5 }),
-    variant(["XL", "Black"], {
-      sku: "TS-XL-BLK",
-      price: 34,
-      stock: 12,
-      reserved: 1,
-      lowStockThreshold: 5,
-    }),
+    variant(["S", "Black"], { sku: "TS-S-BLK", stock: 22, ...BLACK }),
+    variant(["S", "White"], { sku: "TS-S-WHT", stock: 14, ...WHITE }),
+    variant(["S", "Blue"], { sku: "TS-S-BLU", stock: 9, ...BLUE }),
+    variant(["M", "Black"], { sku: "TS-M-BLK", stock: 15, ...BLACK }),
+    variant(["M", "White"], { sku: "TS-M-WHT", stock: 11, ...WHITE }),
+    variant(["M", "Blue"], { sku: "TS-M-BLU", stock: 6, ...BLUE }),
+    variant(["L", "Black"], { sku: "TS-L-BLK", stock: 19, ...BLACK }),
+    variant(["L", "White"], { sku: "TS-L-WHT", stock: 8, ...WHITE }),
+    /* Low: four on the shelf, one of them claimed, against a threshold of five. */
+    variant(["L", "Blue"], { sku: "TS-L-BLU", stock: 4, ...BLUE }),
+    variant(["XL", "Black"], { sku: "TS-XL-BLK", price: 34, stock: 12, ...BLACK }),
+    /* Disabled — a decision the merchant made, not a shelf that ran dry. */
     variant(["XL", "White"], {
       sku: "TS-XL-WHT",
       price: 34,
       stock: 5,
-      reserved: 0,
-      lowStockThreshold: 5,
-    }),
-    /* Out of stock, and switched off rather than left sellable. */
-    variant(["XL", "Blue"], {
-      sku: "TS-XL-BLU",
-      price: 34,
-      stock: 0,
-      reserved: 0,
-      lowStockThreshold: 5,
       status: "inactive",
+      ...WHITE,
     }),
+    /* Out of stock — still on sale, nothing left. The distinction between this
+       row and the one above it is exactly what `variantAvailability` exists to
+       keep: one is fixed by changing your mind, the other by a delivery. */
+    variant(["XL", "Blue"], { sku: "TS-XL-BLU", price: 34, stock: 0, ...BLUE }),
   ],
 
   /* Licence tiers. No stock, no weight, no shipping — the fields a digital
@@ -1442,8 +1590,12 @@ export function variantSales(productId: string, variantId: string): VariantSales
 function variantsFor(item: Product): Partial<Product> {
   if (!item.hasVariants) return {};
 
+  /* Sales and reserved are both joined here rather than authored, so the grid
+     literal above stays a statement of what the merchant set up and nothing
+     else. Reserved in particular has to be derived — see `reservedFor`. */
   const variants = (PRODUCT_VARIANTS[item.id] ?? []).map((entry) => ({
     ...entry,
+    reserved: reservedFor(item.id, entry.id),
     sales: variantSales(item.id, entry.id),
   }));
 
@@ -1572,8 +1724,9 @@ export const INVENTORY: InventoryItem[] = COMMERCE_PRODUCTS.filter(
         productName: item.name,
         sku: item.sku,
         stock: item.stock,
-        reserved:
-          item.stock > 40 ? Math.round(item.stock * 0.08) : Math.min(item.stock, 2),
+        /* Derived from open orders, exactly as the variant rows are — the
+           old 8%-of-stock guess made Available a number with no meaning. */
+        reserved: reservedFor(item.id),
         lowStockThreshold: item.lowStockThreshold,
         unitCost: item.costPrice ?? 0,
         updatedAt: item.updatedAt,
@@ -1595,17 +1748,51 @@ export const INVENTORY: InventoryItem[] = COMMERCE_PRODUCTS.filter(
   }));
 });
 
-/** Totals for the Products KPI row — counts by type, not stock levels. */
-export function productTotals(list: Product[] = COMMERCE_PRODUCTS) {
+/**
+ * Every product count the Products page shows, computed once.
+ *
+ * This exists because the page used to compute them in two places that
+ * disagreed: the view strip counted "All" over the non-archived catalogue while
+ * the type counts came from a helper that included archived products. The
+ * result was a strip where All read 14 and Physical + Digital + Services added
+ * to 15, and no way for a merchant to tell which number was lying.
+ *
+ * The rule, stated once here and followed everywhere:
+ *
+ *   An archived product is out of the catalogue. It is not in All, not in its
+ *   type's count, and not in the KPI row — it is only in Archived, which exists
+ *   to find it again.
+ *
+ * So `physical + digital + service === all`, always, and the pagination total
+ * under the table is the length of the same filtered set the strip counted.
+ * `archived` is reported alongside rather than folded in, because "12 products,
+ * 1 archived" is the honest summary and "13 products" is not.
+ */
+export interface ProductCounts {
+  /** Everything in the catalogue: active plus draft. Excludes archived. */
+  all: number;
+  physical: number;
+  digital: number;
+  service: number;
+  draft: number;
+  archived: number;
+  /** Live and buyable. A subset of `all`. */
+  active: number;
+}
+
+export function productCounts(list: Product[] = COMMERCE_PRODUCTS): ProductCounts {
+  const inCatalogue = list.filter((item) => item.status !== "archived");
   const byType = (type: ProductType) =>
-    list.filter((item) => item.type === type).length;
+    inCatalogue.filter((item) => item.type === type).length;
 
   return {
-    total: list.length,
-    active: list.filter((item) => item.status === "active").length,
+    all: inCatalogue.length,
     physical: byType("physical"),
     digital: byType("digital"),
     service: byType("service"),
+    draft: inCatalogue.filter((item) => item.status === "draft").length,
+    archived: list.filter((item) => item.status === "archived").length,
+    active: inCatalogue.filter((item) => item.status === "active").length,
   };
 }
 

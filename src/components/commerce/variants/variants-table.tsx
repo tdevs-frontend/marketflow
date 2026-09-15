@@ -1,56 +1,72 @@
 "use client";
 
-import { Ban, Check, Copy, FileDown, Pencil, Trash2 } from "lucide-react";
+import { Ban, Check, Copy, FileDown, ImagePlus, Pencil, Trash2 } from "lucide-react";
 
+import { Checkbox } from "@/components/ui/checkbox";
 import { Menu } from "@/components/ui/menu";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
-import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
+import { SortableTH, TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
+import type { SortDirection } from "@/components/ui/table";
 import {
   VARIANT_CODE_LABEL,
-  VARIANT_MEDIA_LABEL,
   VARIANT_QUANTITY_LABEL,
-  VARIANT_STATUSES,
   formatDuration,
 } from "@/constants/commerce";
 import { formatCurrency } from "@/lib/format";
 import {
   availableOf,
+  isTracked,
+  variantAvailability,
   variantName,
   variantStockStatus,
 } from "@/lib/variants";
 import { cn } from "@/lib/utils";
-import type { ProductType, ProductVariant, VariantStatus } from "@/types/commerce";
-import { ProductThumb, StockBadge } from "../commerce-badges";
+import type { ProductType, ProductVariant } from "@/types/commerce";
+import { ProductThumb, VariantAvailabilityBadge } from "../commerce-badges";
 
 /**
  * The variant grid, as a working surface rather than a report.
  *
  * Which columns exist is decided by the product type, not by a union of all
- * three. A digital variant has no stock and a service has no shelf, so the
- * quantity column is *Stock*, *Delivery* or *Capacity* and carries a different
- * control in each case. Showing all three and blanking two is exactly the habit
- * `FULFILLMENT_FLOW` exists to break.
+ * three. A digital variant has no shelf and a service has no stock, so the
+ * quantity column is *Available*, *Delivery* or *Capacity* and says something
+ * different in each case. Showing all three and blanking two is exactly the
+ * habit `FULFILLMENT_FLOW` exists to break.
  *
- * Four fields edit in place — code, price, quantity and status — because those
- * are the four a merchant changes in a sweep down the table after a delivery or
- * a price rise. Everything with more to it (the image, the file, compare-at,
- * cost, barcode, expiry) opens the drawer instead. That split is the whole
- * reason the table stays readable at twelve rows.
+ * Only two things edit in place: the code and the price. They are the two a
+ * merchant sweeps down the column changing, and neither is derived from
+ * anything else.
+ *
+ * Quantities deliberately do *not* edit inline. Available is `current -
+ * reserved`, and reserved is read off the open orders — so an editable cell
+ * there would either be lying about which number it writes, or letting a
+ * merchant type over a figure the order book owns. Stock changes go through the
+ * bulk Adjust dialog or the drawer, which is also where the existing
+ * stock-adjustment flow lives.
  */
+
+export type VariantSortField = "variant" | "sku" | "price" | "quantity";
 
 export interface VariantsTableProps {
   type: ProductType;
   variants: ProductVariant[];
-  /** Falls back under an unpriced variant, so the cell can show what it inherits. */
+  /** Falls back under an unpriced variant, so the cell shows what it inherits. */
   basePrice: number;
   /** The product image a variant with none of its own inherits. */
   fallbackImage?: string;
   /** Variant ids whose SKU collides — flagged inline rather than in a summary. */
   duplicateSkus: Set<string>;
+  /** Ids currently ticked, for the bulk bar above the table. */
+  selected: string[];
+  onToggle: (id: string) => void;
+  onToggleAll: () => void;
+  sortField: VariantSortField;
+  direction: SortDirection;
+  onSort: (field: VariantSortField) => void;
   onPatch: (id: string, patch: Partial<ProductVariant>) => void;
   onOpen: (variant: ProductVariant) => void;
   onDuplicate: (id: string) => void;
+  onAssignImage: (variant: ProductVariant) => void;
   onRequestDelete: (id: string) => void;
 }
 
@@ -76,109 +92,97 @@ function PriceCell({
   onPatch: VariantsTableProps["onPatch"];
 }) {
   return (
-    <Input
-      size="sm"
-      type="number"
-      inputMode="decimal"
-      min={0}
-      step="0.01"
-      value={variant.price ?? ""}
-      placeholder={String(basePrice)}
-      aria-label={`Price for ${variantName(variant.optionValues)}`}
-      onChange={(event) => {
-        const raw = event.target.value;
-        onPatch(variant.id, { price: raw === "" ? undefined : Number(raw) });
-      }}
-      className="w-24 text-right tabular-nums"
-    />
+    <span className="inline-flex flex-col items-end gap-1">
+      <Input
+        size="sm"
+        type="number"
+        inputMode="decimal"
+        min={0}
+        step="0.01"
+        value={variant.price ?? ""}
+        placeholder={String(basePrice)}
+        aria-label={`Price for ${variantName(variant.optionValues)}`}
+        onChange={(event) => {
+          const raw = event.target.value;
+          onPatch(variant.id, { price: raw === "" ? undefined : Number(raw) });
+        }}
+        className="w-24 text-right tabular-nums"
+      />
+      {variant.compareAtPrice ? (
+        <s className="text-meta text-text-muted tabular-nums">
+          {formatCurrency(variant.compareAtPrice)}
+        </s>
+      ) : null}
+    </span>
   );
 }
 
-/** Stock, with the available/reserved reading underneath it. */
-function StockCell({
-  variant,
-  onPatch,
-}: {
-  variant: ProductVariant;
-  onPatch: VariantsTableProps["onPatch"];
-}) {
+/** Sellable units, with on-hand and reserved underneath as the working. */
+function AvailableCell({ variant }: { variant: ProductVariant }) {
+  if (!isTracked(variant)) {
+    return (
+      <div className="flex flex-col items-end">
+        <span className="text-sm font-medium text-text-muted">Not tracked</span>
+        <span className="text-meta font-medium text-text-muted">Always available</span>
+      </div>
+    );
+  }
+
   const available = availableOf(variant);
   const state = variantStockStatus(variant);
 
   return (
-    <div className="flex flex-col items-end gap-1">
-      <Input
-        size="sm"
-        type="number"
-        inputMode="numeric"
-        min={0}
-        value={variant.stock ?? 0}
-        aria-label={`Stock for ${variantName(variant.optionValues)}`}
-        onChange={(event) =>
-          onPatch(variant.id, { stock: Math.max(0, Number(event.target.value) || 0) })
-        }
-        className="w-20 text-right tabular-nums"
-      />
-      {/* Reserved units are spoken for — the sellable figure is the one that
-          decides whether this row can take another order. */}
+    <div className="flex flex-col items-end">
       <span
         className={cn(
-          "text-meta font-medium tabular-nums",
+          "text-sm font-bold tabular-nums",
           state === "out-of-stock"
             ? "text-error"
             : state === "low-stock"
               ? "text-warning-text"
-              : "text-text-muted",
+              : "text-text-primary",
         )}
       >
-        {available} available
+        {available}
+      </span>
+      {/* The arithmetic, shown rather than asserted — a merchant looking at
+          "12" needs to know whether the three claimed units are in it. */}
+      <span className="text-meta font-medium text-text-muted tabular-nums">
+        {variant.stock ?? 0} on hand
         {variant.reserved ? ` · ${variant.reserved} reserved` : ""}
       </span>
     </div>
   );
 }
 
-/** Capacity, in bookings. `null` is unlimited, which an empty field means. */
-function CapacityCell({
-  variant,
-  onPatch,
-}: {
-  variant: ProductVariant;
-  onPatch: VariantsTableProps["onPatch"];
-}) {
+/** Capacity, in bookings per day. */
+function CapacityCell({ variant }: { variant: ProductVariant }) {
+  const unlimited =
+    variant.capacityPerSlot === null || variant.capacityPerSlot === undefined;
+
   return (
-    <div className="flex flex-col items-end gap-1">
-      <Input
-        size="sm"
-        type="number"
-        inputMode="numeric"
-        min={0}
-        value={variant.capacityPerSlot ?? ""}
-        placeholder="∞"
-        aria-label={`Capacity for ${variantName(variant.optionValues)}`}
-        onChange={(event) => {
-          const raw = event.target.value;
-          onPatch(variant.id, {
-            capacityPerSlot: raw === "" ? null : Math.max(0, Number(raw) || 0),
-          });
-        }}
-        className="w-20 text-right tabular-nums"
-      />
+    <div className="flex flex-col items-end">
+      <span className="text-sm font-bold text-text-primary tabular-nums">
+        {unlimited ? "∞" : variant.capacityPerSlot}
+      </span>
       <span className="text-meta font-medium text-text-muted">
-        {variant.capacityPerSlot === null || variant.capacityPerSlot === undefined
+        {unlimited
           ? "unlimited"
-          : "bookings/day"}
+          : `${VARIANT_QUANTITY_LABEL.service.noun}`}
+        {variant.durationMinutes
+          ? ` · ${formatDuration(variant.durationMinutes)}`
+          : ""}
       </span>
     </div>
   );
 }
 
 /**
- * Delivery, for a digital variant — read-only on purpose.
+ * Delivery, for a digital variant.
  *
- * What is delivered is a file and a set of access rules, not a number, and
- * there is nothing here a merchant can usefully sweep down the column changing.
- * Editing it opens the drawer, which is where the file lives.
+ * What is delivered is a file and a set of access rules, not a quantity — the
+ * only number a download genuinely has is seats left in a finite licence pool,
+ * and that is shown only when there is one.
  */
 function DeliveryCell({ variant }: { variant: ProductVariant }) {
   return (
@@ -191,49 +195,15 @@ function DeliveryCell({ variant }: { variant: ProductVariant }) {
         <p className="text-sm font-medium text-text-muted">No file attached</p>
       )}
       <p className="text-meta font-medium text-text-muted">
+        {variant.licensesAvailable !== undefined
+          ? `${variant.licensesAvailable} licenses left · `
+          : ""}
         {variant.downloadLimit === null || variant.downloadLimit === undefined
           ? "Unlimited downloads"
           : `${variant.downloadLimit} downloads`}
         {variant.accessExpiryDays ? ` · ${variant.accessExpiryDays} days` : ""}
       </p>
     </div>
-  );
-}
-
-/** The media cell: a thumbnail for things you can see, a file chip for a download. */
-function MediaCell({
-  variant,
-  type,
-  fallbackImage,
-}: {
-  variant: ProductVariant;
-  type: ProductType;
-  fallbackImage?: string;
-}) {
-  if (type === "digital") {
-    return variant.fileName ? (
-      <span className="inline-flex items-center gap-1.5 text-sm text-text-secondary">
-        <FileDown className="size-3.5 shrink-0 text-text-muted" aria-hidden />
-        {variant.fileSizeMb ? `${variant.fileSizeMb} MB` : "Attached"}
-      </span>
-    ) : (
-      <span className="text-sm text-text-muted">—</span>
-    );
-  }
-
-  return (
-    <span className="inline-flex items-center gap-2">
-      <ProductThumb
-        size="sm"
-        url={variant.imageUrl ?? fallbackImage}
-        alt={variantName(variant.optionValues)}
-      />
-      {/* An inherited image is not a missing one, and saying so stops a
-          merchant re-uploading the same shirt photo six times. */}
-      {!variant.imageUrl && fallbackImage ? (
-        <span className="text-meta text-text-muted">inherited</span>
-      ) : null}
-    </span>
   );
 }
 
@@ -247,12 +217,21 @@ export function VariantsTable({
   basePrice,
   fallbackImage,
   duplicateSkus,
+  selected,
+  onToggle,
+  onToggleAll,
+  sortField,
+  direction,
+  onSort,
   onPatch,
   onOpen,
   onDuplicate,
+  onAssignImage,
   onRequestDelete,
 }: VariantsTableProps) {
   const quantity = VARIANT_QUANTITY_LABEL[type];
+  const allOn = variants.length > 0 && variants.every((v) => selected.includes(v.id));
+  const someOn = variants.some((v) => selected.includes(v.id));
 
   const actions = (variant: ProductVariant) => [
     {
@@ -265,6 +244,17 @@ export function VariantsTable({
       icon: <Copy className="size-4" />,
       onSelect: () => onDuplicate(variant.id),
     },
+    /* Digital variants deliver a file, not a picture — offering an image
+       assignment there would be a control with nothing to point at. */
+    ...(type === "digital"
+      ? []
+      : [
+          {
+            label: "Assign image",
+            icon: <ImagePlus className="size-4" />,
+            onSelect: () => onAssignImage(variant),
+          },
+        ]),
     {
       label: variant.status === "active" ? "Disable" : "Enable",
       icon:
@@ -286,10 +276,10 @@ export function VariantsTable({
     },
   ];
 
-  /** The quantity control, in whichever vocabulary this type uses. */
+  /** The quantity cell, in whichever vocabulary this type uses. */
   const quantityCell = (variant: ProductVariant) => {
-    if (type === "physical") return <StockCell variant={variant} onPatch={onPatch} />;
-    if (type === "service") return <CapacityCell variant={variant} onPatch={onPatch} />;
+    if (type === "physical") return <AvailableCell variant={variant} />;
+    if (type === "service") return <CapacityCell variant={variant} />;
     return <DeliveryCell variant={variant} />;
   };
 
@@ -303,13 +293,16 @@ export function VariantsTable({
           value={variant.sku}
           error={clash}
           aria-label={`${VARIANT_CODE_LABEL[type]} for ${variantName(variant.optionValues)}`}
+          aria-describedby={clash ? `${variant.id}-sku-error` : undefined}
           onChange={(event) =>
             onPatch(variant.id, { sku: event.target.value.toUpperCase() })
           }
           className="w-36 font-mono"
         />
+        {/* The project's form-error pattern: message under the field, in the
+            error ink, announced. A summary alone leaves a merchant hunting. */}
         {clash ? (
-          <p role="alert" className="text-meta text-error">
+          <p id={`${variant.id}-sku-error`} role="alert" className="text-meta text-error">
             Already in use
           </p>
         ) : null}
@@ -317,167 +310,206 @@ export function VariantsTable({
     );
   };
 
-  const statusSelect = (variant: ProductVariant) => (
-    <Select
-      size="sm"
-      label={`Status for ${variantName(variant.optionValues)}`}
-      value={variant.status}
-      onChange={(next) => onPatch(variant.id, { status: next as VariantStatus })}
-      options={VARIANT_STATUSES}
-      className="w-28"
-    />
-  );
-
   /** The supporting line under a variant's name — what it is, in one phrase. */
   const subtitle = (variant: ProductVariant) => {
-    if (type === "service" && variant.durationMinutes) {
-      return formatDuration(variant.durationMinutes);
-    }
     if (type === "digital" && variant.licenseType) return variant.licenseType;
     if (type === "physical" && variant.barcode) return variant.barcode;
     return variant.price === undefined
-      ? `At product price · ${formatCurrency(basePrice)}`
+      ? `Product price · ${formatCurrency(basePrice)}`
       : undefined;
+  };
+
+  /** Thumbnail plus name — §3's variant cell. */
+  const variantCell = (variant: ProductVariant) => {
+    const hint = subtitle(variant);
+
+    return (
+      <div className="flex items-center gap-3">
+        {type === "digital" ? (
+          <span className="grid size-8 shrink-0 place-items-center rounded-panel border border-border bg-primary-soft text-primary">
+            <FileDown className="size-3.5" aria-hidden />
+          </span>
+        ) : (
+          <ProductThumb
+            size="sm"
+            url={variant.imageUrl ?? fallbackImage}
+            alt={variantName(variant.optionValues)}
+          />
+        )}
+
+        <div className="min-w-0">
+          <button
+            type="button"
+            onClick={() => onOpen(variant)}
+            className="block max-w-48 truncate text-left font-bold text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
+          >
+            {variantName(variant.optionValues)}
+          </button>
+          {hint ? (
+            <span className="block truncate text-meta font-medium text-text-muted">
+              {hint}
+            </span>
+          ) : null}
+        </div>
+      </div>
+    );
   };
 
   return (
     <>
       {/* Desktop: the grid. */}
       <div className="max-lg:hidden">
-        <Table minWidth="66rem">
+        <Table minWidth="58rem">
           <THead>
-            <TH>Variant</TH>
-            <TH>{VARIANT_CODE_LABEL[type]}</TH>
-            <TH align="right">Price</TH>
-            <TH align={type === "digital" ? "left" : "right"}>{quantity.column}</TH>
+            <TH className="w-10 pr-0">
+              <Checkbox
+                checked={allOn}
+                indeterminate={!allOn && someOn}
+                onCheckedChange={onToggleAll}
+                label="Select all variants"
+              />
+            </TH>
+            <SortableTH
+              field="variant"
+              activeField={sortField}
+              direction={direction}
+              onSort={onSort}
+            >
+              Variant
+            </SortableTH>
+            <SortableTH
+              field="sku"
+              activeField={sortField}
+              direction={direction}
+              onSort={onSort}
+            >
+              {VARIANT_CODE_LABEL[type]}
+            </SortableTH>
+            <SortableTH
+              field="price"
+              activeField={sortField}
+              direction={direction}
+              onSort={onSort}
+              align="right"
+            >
+              Price
+            </SortableTH>
+            {type === "digital" ? (
+              <TH>{quantity.column}</TH>
+            ) : (
+              <SortableTH
+                field="quantity"
+                activeField={sortField}
+                direction={direction}
+                onSort={onSort}
+                align="right"
+              >
+                {quantity.column}
+              </SortableTH>
+            )}
             <TH>Status</TH>
-            <TH>{VARIANT_MEDIA_LABEL[type]}</TH>
             <TH align="right">Actions</TH>
           </THead>
 
           <TBody>
-            {variants.map((variant) => {
-              const hint = subtitle(variant);
+            {variants.map((variant) => (
+              <TR key={variant.id} selected={selected.includes(variant.id)}>
+                <TD className="pr-0">
+                  <Checkbox
+                    checked={selected.includes(variant.id)}
+                    onCheckedChange={() => onToggle(variant.id)}
+                    label={`Select ${variantName(variant.optionValues)}`}
+                  />
+                </TD>
 
-              return (
-                <TR key={variant.id} className={cn(variant.status === "inactive" && "opacity-65")}>
-                  <TD>
-                    <button
-                      type="button"
-                      onClick={() => onOpen(variant)}
-                      className="block max-w-56 truncate text-left font-bold text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
-                    >
-                      {variantName(variant.optionValues)}
-                    </button>
-                    {hint ? (
-                      <span className="mt-0.5 block text-meta font-medium text-text-muted">
-                        {hint}
-                      </span>
-                    ) : null}
-                  </TD>
+                <TD>{variantCell(variant)}</TD>
+                <TD>{skuInput(variant)}</TD>
+                <TD align="right">
+                  <PriceCell
+                    variant={variant}
+                    basePrice={basePrice}
+                    onPatch={onPatch}
+                  />
+                </TD>
 
-                  <TD>{skuInput(variant)}</TD>
-                  <TD align="right">
-                    <span className="inline-flex flex-col items-end gap-1">
-                      <PriceCell
-                        variant={variant}
-                        basePrice={basePrice}
-                        onPatch={onPatch}
-                      />
-                      {variant.compareAtPrice ? (
-                        <s className="text-meta text-text-muted tabular-nums">
-                          {formatCurrency(variant.compareAtPrice)}
-                        </s>
-                      ) : null}
-                    </span>
-                  </TD>
+                <TD
+                  align={type === "digital" ? "left" : "right"}
+                  className="max-w-56"
+                >
+                  {quantityCell(variant)}
+                </TD>
 
-                  <TD align={type === "digital" ? "left" : "right"} className="max-w-56">
-                    {quantityCell(variant)}
-                  </TD>
+                <TD>
+                  <VariantAvailabilityBadge
+                    availability={variantAvailability(variant, type)}
+                  />
+                </TD>
 
-                  <TD>
-                    <div className="flex flex-col items-start gap-1">
-                      {statusSelect(variant)}
-                      {type === "physical" ? (
-                        <StockBadge status={variantStockStatus(variant)} />
-                      ) : null}
-                    </div>
-                  </TD>
-
-                  <TD>
-                    <MediaCell
-                      variant={variant}
-                      type={type}
-                      fallbackImage={fallbackImage}
-                    />
-                  </TD>
-
-                  <TD align="right">
-                    <Menu
-                      items={actions(variant)}
-                      label={`Actions for ${variantName(variant.optionValues)}`}
-                    />
-                  </TD>
-                </TR>
-              );
-            })}
+                <TD align="right">
+                  <Menu
+                    items={actions(variant)}
+                    label={`Actions for ${variantName(variant.optionValues)}`}
+                  />
+                </TD>
+              </TR>
+            ))}
           </TBody>
         </Table>
       </div>
 
-      {/* Mobile: the same rows as cards. A seven-column grid on a phone is a
-          horizontal scroll nobody completes. */}
+      {/* Mobile: the same rows as cards — the module's existing responsive
+          pattern, not a second mobile design. A seven-column grid on a phone is
+          a horizontal scroll nobody completes. */}
       <ul className="space-y-2.5 lg:hidden">
         {variants.map((variant) => (
           <li
             key={variant.id}
             className={cn(
-              "rounded-panel border border-border p-3.5",
-              variant.status === "inactive" && "opacity-65",
+              "rounded-panel border p-3.5",
+              selected.includes(variant.id)
+                ? "border-primary-border bg-primary-subtle"
+                : "border-border",
             )}
           >
             <div className="flex items-start gap-3">
-              <MediaCell variant={variant} type={type} fallbackImage={fallbackImage} />
-
-              <div className="min-w-0 flex-1">
-                <button
-                  type="button"
-                  onClick={() => onOpen(variant)}
-                  className="block truncate text-left text-sm font-bold text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
-                >
-                  {variantName(variant.optionValues)}
-                </button>
-                <p className="font-mono text-sm text-text-muted">{variant.sku}</p>
-              </div>
-
+              <Checkbox
+                checked={selected.includes(variant.id)}
+                onCheckedChange={() => onToggle(variant.id)}
+                label={`Select ${variantName(variant.optionValues)}`}
+                className="mt-1"
+              />
+              <div className="min-w-0 flex-1">{variantCell(variant)}</div>
               <Menu
                 items={actions(variant)}
                 label={`Actions for ${variantName(variant.optionValues)}`}
               />
             </div>
 
-            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <div className="mt-3 flex flex-wrap items-end justify-between gap-3">
+              <label className="min-w-0 space-y-1">
+                <span className="block text-sm font-bold text-text-secondary">
+                  {VARIANT_CODE_LABEL[type]}
+                </span>
+                {skuInput(variant)}
+              </label>
+
               <label className="space-y-1">
                 <span className="block text-sm font-bold text-text-secondary">
                   Price
                 </span>
-                <PriceCell variant={variant} basePrice={basePrice} onPatch={onPatch} />
-              </label>
-
-              <label className="space-y-1">
-                <span className="block text-sm font-bold text-text-secondary">
-                  {quantity.column}
-                </span>
-                {quantityCell(variant)}
+                <PriceCell
+                  variant={variant}
+                  basePrice={basePrice}
+                  onPatch={onPatch}
+                />
               </label>
             </div>
 
-            <div className="mt-3 flex flex-wrap items-center gap-2">
-              {statusSelect(variant)}
-              {type === "physical" ? (
-                <StockBadge status={variantStockStatus(variant)} />
-              ) : null}
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-2.5">
+              <VariantAvailabilityBadge
+                availability={variantAvailability(variant, type)}
+              />
+              <div className="text-right">{quantityCell(variant)}</div>
             </div>
           </li>
         ))}
