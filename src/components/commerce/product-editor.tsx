@@ -1,7 +1,14 @@
 "use client";
 
-import { useId, useState } from "react";
-import { ImagePlus, Layers, Star, Upload } from "lucide-react";
+import { useId, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ImagePlus,
+  Layers,
+  Star,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -20,6 +27,8 @@ import type {
   ProductVariant,
   VariantOption,
 } from "@/types/commerce";
+import { useToast } from "@/components/ui/toast";
+import { APP_ROUTES } from "@/constants";
 import { VariantManager } from "./variants";
 
 type TabKey =
@@ -48,6 +57,67 @@ const TABS: TabItem<TabKey>[] = [
   { value: "seo", label: "SEO" },
   { value: "advanced", label: "Advanced" },
 ];
+
+/**
+ * The tabs, read as an ordered path.
+ *
+ * Creating a product is a sequence — you cannot price a thing you have not
+ * named — so on the create form the same seven tabs drive Back/Next and the
+ * final step is the only one that offers Publish. Editing keeps them as plain
+ * tabs: someone fixing a typo in the description should not have to walk six
+ * steps to save it.
+ */
+const STEP_ORDER = TABS.map((item) => item.value);
+
+/** Which step owns each error, so a failed publish lands on the right tab. */
+const ERROR_STEP: Record<string, TabKey> = {
+  name: "basic",
+  categoryId: "basic",
+  type: "basic",
+  price: "pricing",
+  salePrice: "pricing",
+  costPrice: "pricing",
+  taxRate: "pricing",
+  variants: "variants",
+  sku: "inventory",
+  stock: "inventory",
+  lowStockThreshold: "inventory",
+};
+
+/**
+ * Which control each error points at.
+ *
+ * Keyed separately from `ERROR_STEP` because the two do not always agree: the
+ * category error is called `categoryId` in the draft and the field it belongs
+ * to is `#category`. `variants` is absent on purpose — it is a table, not a
+ * field, so there is nothing to focus and the tab itself is the answer.
+ */
+const ERROR_FIELD: Record<string, string> = {
+  name: "name",
+  categoryId: "category",
+  type: "type",
+  price: "price",
+  salePrice: "salePrice",
+  costPrice: "costPrice",
+  taxRate: "taxRate",
+  sku: "sku",
+  stock: "stock",
+  lowStockThreshold: "lowStockThreshold",
+};
+
+/**
+ * Where the write goes once there is a backend.
+ *
+ * `commerceApi` already exposes `useCreateProductMutation` and
+ * `useUpdateProductMutation`, but nothing in the product calls a mutation yet —
+ * every page reads fixtures — so wiring one here would make Publish fail
+ * against an API that is not running. This stands in for it and is the only
+ * line that changes when it is: the surrounding code already awaits, guards
+ * against a double submit and shows a pending label.
+ */
+function persist(): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, 450));
+}
 
 interface Draft {
   name: string;
@@ -157,6 +227,12 @@ export function ProductEditor({
   const [tab, setTab] = useState<TabKey>("basic");
   const [draft, setDraft] = useState<Draft>(() => draftFrom(product, initialType));
   const [errors, setErrors] = useState<Record<string, string>>({});
+  /* One flag for both writes, so neither can run twice or run at once. */
+  const [busy, setBusy] = useState<null | "draft" | "publish">(null);
+
+  const router = useRouter();
+  const toast = useToast();
+  const formRef = useRef<HTMLDivElement>(null);
 
   const set = <K extends keyof Draft>(key: K, value: Draft[K]) =>
     setDraft((prev) => ({ ...prev, [key]: value }));
@@ -169,68 +245,233 @@ export function ProductEditor({
   /* One media library per product — the Variants tab picks from exactly this. */
   const images = product?.images ?? [];
 
-  /**
-   * Validates across every tab, not just the visible one — a required field
-   * hidden behind an unopened tab must still block publishing, and the message
-   * has to say which tab to go to.
+  /*
+   * The wizard only applies to creating.
+   *
+   * An existing product opens on whichever tab the merchant wants and saves
+   * from any of them; walking someone through seven steps to correct a price
+   * is the behaviour this flag exists to avoid.
    */
-  function validateForPublish() {
+  const wizard = !product;
+  const stepIndex = STEP_ORDER.indexOf(tab);
+  const prevStep = stepIndex > 0 ? STEP_ORDER[stepIndex - 1] : undefined;
+  const nextStep =
+    stepIndex < STEP_ORDER.length - 1 ? STEP_ORDER[stepIndex + 1] : undefined;
+
+  /* ---------------------------------------------------------------------- */
+  /* Validation                                                             */
+  /* ---------------------------------------------------------------------- */
+
+  /**
+   * What one step requires, and nothing else.
+   *
+   * Per step rather than one form-wide check, because Next must not refuse to
+   * advance over a field three tabs away that the merchant has not reached
+   * yet. Publish runs every step's rules together — see `validateAll` — so
+   * nothing is lost by checking them one at a time on the way through.
+   */
+  function validateStep(step: TabKey): Record<string, string> {
     const next: Record<string, string> = {};
-    if (!draft.name.trim()) next.name = "Enter a product name.";
-    if (!draft.price.trim()) next.price = "Enter a regular price.";
-    if (Number(draft.price) < 0) next.price = "Price cannot be negative.";
-    if (draft.salePrice && Number(draft.salePrice) > Number(draft.price)) {
-      next.salePrice = "Sale price should be below the regular price.";
+
+    switch (step) {
+      case "basic":
+        if (!draft.name.trim()) next.name = "Enter a product name.";
+        if (!draft.categoryId) next.categoryId = "Choose a category.";
+        if (!draft.type) next.type = "Choose a product type.";
+        return next;
+
+      case "pricing":
+        if (!draft.price.trim()) {
+          next.price = "Enter a regular price.";
+        } else if (Number.isNaN(Number(draft.price))) {
+          next.price = "Price must be a number.";
+        } else if (Number(draft.price) < 0) {
+          next.price = "Price cannot be negative.";
+        }
+        if (draft.salePrice && Number(draft.salePrice) > Number(draft.price)) {
+          next.salePrice = "Sale price should be below the regular price.";
+        }
+        if (draft.costPrice && Number(draft.costPrice) < 0) {
+          next.costPrice = "Cost cannot be negative.";
+        }
+        if (draft.taxRate && Number(draft.taxRate) < 0) {
+          next.taxRate = "Tax rate cannot be negative.";
+        }
+        return next;
+
+      case "variants":
+        /*
+         * Variant codes have to be unique across the whole catalogue, not
+         * just within this product — a SKU is what a warehouse, a courier and
+         * an invoice all key on, so two of them meaning different things is a
+         * picking error rather than a validation nicety.
+         */
+        if (draft.hasVariants) {
+          if (draft.variants.length === 0) {
+            next.variants =
+              "Add at least one option value, or turn variants off.";
+          } else if (draft.variants.some((variant) => !variant.sku.trim())) {
+            next.variants = "Every variant needs a code.";
+          } else {
+            const clashes = duplicateSkuIds(
+              draft.variants,
+              collectSkus(COMMERCE_PRODUCTS, { productId: product?.id }),
+            );
+            if (clashes.size > 0) {
+              next.variants = `${clashes.size} variant ${clashes.size === 1 ? "code is" : "codes are"} already in use.`;
+            }
+          }
+        }
+        return next;
+
+      case "inventory":
+        /*
+         * The product SKU is a *reference*, and only required when it is the
+         * code a customer actually buys. Once variants are on, every
+         * purchasable thing carries its own and this one is just the stem
+         * they are generated from.
+         */
+        if (!draft.sku.trim() && !draft.hasVariants) {
+          next.sku = "Enter a SKU.";
+        }
+        /* Skipped while variants own the figures — those fields are disabled
+           and show the roll-up, so there is nothing here to be wrong. */
+        if (draft.trackInventory && !variantsManageStock) {
+          if (Number(draft.stock) < 0) {
+            next.stock = "Stock cannot be negative.";
+          }
+          if (Number(draft.lowStockThreshold) < 0) {
+            next.lowStockThreshold = "Threshold cannot be negative.";
+          }
+        }
+        return next;
+
+      case "media":
+      case "seo":
+      case "advanced":
+        /*
+         * Nothing required.
+         *
+         * Media has no upload control wired yet, SEO is optional by design —
+         * an empty slug falls back to the name — and Advanced holds only
+         * status, visibility and tags, all of which have defaults. They are
+         * listed rather than omitted so the switch stays exhaustive and a new
+         * tab cannot be added without someone deciding what it requires.
+         */
+        return next;
     }
-    /*
-     * The product SKU is a *reference*, and only required when it is the code a
-     * customer actually buys.
-     *
-     * Once variants are on, every purchasable thing carries its own unique SKU
-     * and the product-level one is just the stem those are generated from —
-     * demanding it there would block publishing over a field that identifies
-     * nothing sellable.
-     */
-    if (!draft.sku.trim() && !draft.hasVariants) {
-      next.sku = "Enter a SKU.";
-    }
-
-    /*
-     * Variant codes have to be unique across the whole catalogue, not just
-     * within this product — a SKU is what a warehouse, a courier and an invoice
-     * all key on, so two of them meaning different things is a picking error.
-     * Blocking here as well as flagging in the table is the difference between
-     * a warning a merchant can publish past and a rule.
-     */
-    if (draft.hasVariants) {
-      const clashes = duplicateSkuIds(
-        draft.variants,
-        collectSkus(COMMERCE_PRODUCTS, { productId: product?.id }),
-      );
-      if (clashes.size > 0) {
-        next.variants = `${clashes.size} variant ${clashes.size === 1 ? "code is" : "codes are"} already in use.`;
-      }
-      if (draft.variants.some((variant) => !variant.sku.trim())) {
-        next.variants = "Every variant needs a code.";
-      }
-    }
-
-    setErrors(next);
-
-    if (next.name) setTab("basic");
-    else if (next.price || next.salePrice) setTab("pricing");
-    else if (next.variants) setTab("variants");
-    else if (next.sku) setTab("inventory");
-
-    return Object.keys(next).length === 0;
   }
 
+  /** Every step's rules at once. What Publish has to pass. */
+  function validateAll(): Record<string, string> {
+    return STEP_ORDER.reduce<Record<string, string>>(
+      (all, step) => ({ ...all, ...validateStep(step) }),
+      {},
+    );
+  }
+
+  /* ---------------------------------------------------------------------- */
+  /* Navigation                                                             */
+  /* ---------------------------------------------------------------------- */
+
+  /** Puts the cursor in the first failed field, once the tab has swapped. */
+  function focusFirstError(found: Record<string, string>) {
+    const id = ERROR_FIELD[Object.keys(found)[0]];
+    if (!id) return;
+    requestAnimationFrame(() => {
+      const element = document.getElementById(id);
+      element?.focus();
+      element?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  }
+
+  function goToStep(step: TabKey) {
+    setTab(step);
+    /* The form runs past a laptop viewport by the Inventory step, so a tab
+       change without this drops the merchant halfway down the next one. */
+    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function goNext() {
+    if (busy) return;
+    const found = validateStep(tab);
+    setErrors(found);
+    if (Object.keys(found).length > 0) {
+      focusFirstError(found);
+      return;
+    }
+    if (nextStep) goToStep(nextStep);
+  }
+
+  function goBack() {
+    if (busy || !prevStep) return;
+    /* Never validated and never cleared: stepping back is not a claim that
+       what you typed was finished, and it must not lose any of it. */
+    setErrors({});
+    goToStep(prevStep);
+  }
+
+  /* ---------------------------------------------------------------------- */
+  /* Writes                                                                 */
+  /* ---------------------------------------------------------------------- */
+
+  /**
+   * Saves whatever has been filled in so far.
+   *
+   * Deliberately runs no validation: a draft is the answer to "I have not
+   * finished", and refusing to save one because the price is still blank is
+   * refusing to do the one thing it is for.
+   */
+  async function saveDraft() {
+    if (busy) return;
+    setBusy("draft");
+    try {
+      await persist();
+      setDraft((prev) => ({ ...prev, status: "draft" }));
+      toast("Saved as draft", "success");
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function publish() {
+    if (busy) return;
+
+    const found = validateAll();
+    setErrors(found);
+    if (Object.keys(found).length > 0) {
+      /* Land on the tab that owns the first problem rather than leaving the
+         merchant on Advanced wondering which of seven steps is wrong. */
+      goToStep(ERROR_STEP[Object.keys(found)[0]] ?? "basic");
+      focusFirstError(found);
+      return;
+    }
+
+    setBusy("publish");
+    try {
+      await persist();
+      toast(product ? "Product saved" : "Product published", "success");
+      router.push(APP_ROUTES.products);
+    } finally {
+      setBusy(null);
+    }
+  }
   return (
-    <Card className="p-5">
+    <Card className="p-5" ref={formRef}>
+      {/*
+        * The tabs stay directly clickable, wizard or not.
+        *
+        * Nothing is gated behind Next: the draft is one piece of state, so
+        * jumping from Basic to SEO and back loses nothing. Only the errors are
+        * dropped, because they describe a step the merchant has just left.
+        */}
       <Tabs
         tabs={TABS}
         value={tab}
-        onChange={setTab}
+        onChange={(next) => {
+          setErrors({});
+          goToStep(next);
+        }}
         label="Product sections"
         idBase={idBase}
       />
@@ -502,10 +743,6 @@ export function ProductEditor({
               <p className="mt-1 text-sm text-text-muted">
                 PNG or JPG, up to 5 MB each. The first image becomes the thumbnail.
               </p>
-              <Button variant="outline" size="compact" className="mt-4">
-                <Upload aria-hidden />
-                Choose files
-              </Button>
             </div>
 
             {/*
@@ -643,19 +880,79 @@ export function ProductEditor({
         ) : null}
       </div>
 
+      {/*
+        * The step footer.
+        *
+        * Publish appears on the last step and nowhere else. Offering it on
+        * Basic Information was an invitation to publish a product that had a
+        * name and nothing else, and it made the six tabs after it look
+        * optional — which is the actual bug, not the button's position.
+        *
+        * Save Draft sits on every step because "I am not finished" is true on
+        * every step. The container keeps its existing classes; Back is pushed
+        * left by the group that holds it, so the row still wraps cleanly on a
+        * phone rather than needing a second layout.
+        */}
       <div className="mt-6 flex flex-wrap items-center justify-end gap-2.5 border-t border-border pt-5">
-        {Object.keys(errors).length > 0 ? (
-          <p role="alert" className="mr-auto text-sm text-error">
-            Check the highlighted fields before publishing.
-          </p>
-        ) : null}
+        <div className="mr-auto flex flex-wrap items-center gap-2.5">
+          {wizard && prevStep ? (
+            <Button
+              type="button"
+              variant="outline"
+              size="compact"
+              disabled={busy !== null}
+              onClick={goBack}
+            >
+              <ChevronLeft aria-hidden />
+              Back
+            </Button>
+          ) : null}
 
-        <Button variant="outline" size="compact">
-          Save Draft
+          {Object.keys(errors).length > 0 ? (
+            <p role="alert" className="text-sm text-error">
+              {nextStep
+                ? "Check the highlighted fields before continuing."
+                : "Check the highlighted fields before publishing."}
+            </p>
+          ) : null}
+        </div>
+
+        <Button
+          type="button"
+          variant="outline"
+          size="compact"
+          disabled={busy !== null}
+          onClick={saveDraft}
+        >
+          {busy === "draft" ? "Saving…" : "Save Draft"}
         </Button>
-        <Button size="compact" onClick={validateForPublish}>
-          {product ? "Save Product" : "Publish Product"}
-        </Button>
+
+        {wizard && nextStep ? (
+          <Button
+            type="button"
+            size="compact"
+            disabled={busy !== null}
+            onClick={goNext}
+          >
+            Next: {TABS[stepIndex + 1].label}
+            <ChevronRight aria-hidden />
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            size="compact"
+            disabled={busy !== null}
+            onClick={publish}
+          >
+            {busy === "publish"
+              ? product
+                ? "Saving…"
+                : "Publishing…"
+              : product
+                ? "Save Product"
+                : "Publish Product"}
+          </Button>
+        )}
       </div>
     </Card>
   );
