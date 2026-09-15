@@ -1,4 +1,5 @@
 import type { Option } from "@/constants/commerce";
+import type { MessagingChannel } from "@/types/marketing";
 import type { Segment, SegmentField, SegmentOperator } from "@/types/segment";
 
 /**
@@ -178,5 +179,5 @@ export const SEGMENTS: Segment[] = [
 ];
 
 /** Segment options for a channel's audience picker. */
-export const segmentsForChannel = (channel: "whatsapp" | "email" | "sms") =>
+export const segmentsForChannel = (channel: MessagingChannel) =>
   SEGMENTS.filter((segment) => segment.channels.includes(channel));

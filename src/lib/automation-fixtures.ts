@@ -1,6 +1,6 @@
 import type { Option } from "@/constants/commerce";
 import type { AutomationFlow, AutomationStatus, FlowStep } from "@/types/automation";
-import type { MarketingChannel } from "@/types/marketing";
+import type { MessagingChannel } from "@/types/marketing";
 
 /**
  * Automation flows, per channel.
@@ -30,7 +30,8 @@ export const AUTOMATION_STATUSES: Option<AutomationStatus>[] = [
 
 const send = (
   id: string,
-  channel: MarketingChannel,
+  /* A journey step delivers to one contact, so social is not one of these. */
+  channel: MessagingChannel,
   detail: string,
   entered: number,
 ): FlowStep => ({
@@ -368,7 +369,7 @@ export const AUTOMATION_FLOWS: AutomationFlow[] = [
 ];
 
 /** The flows for one channel, newest activity first. */
-export const flowsForChannel = (channel: MarketingChannel) =>
+export const flowsForChannel = (channel: MessagingChannel) =>
   AUTOMATION_FLOWS.filter((flow) => flow.channel === channel);
 
 /** Total steps in a flow, following every branch. */

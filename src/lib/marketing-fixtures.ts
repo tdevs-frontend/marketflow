@@ -17,6 +17,7 @@ export const CHANNELS: Option<MarketingChannel>[] = [
   { value: "whatsapp", label: "WhatsApp" },
   { value: "email", label: "Email" },
   { value: "sms", label: "SMS" },
+  { value: "social", label: "Social" },
 ];
 
 export const CAMPAIGN_STATUS_OPTIONS: Option<CampaignStatus>[] = [
@@ -389,6 +390,94 @@ export const CAMPAIGNS: Campaign[] = [
     revenue: 0,
     createdAt: "2026-05-30T07:10:00Z",
   },
+
+  /*
+   * Social campaigns.
+   *
+   * The per-recipient counters below are deliberately zero, not invented: a
+   * published post has no `delivered` and no `opened`, and filling those in
+   * with plausible numbers is how a channel ends up being reported in a
+   * vocabulary that does not apply to it. What social actually knows lives in
+   * `social`, and the list reads that instead.
+   */
+  {
+    id: "cmp-social-summer",
+    name: "Summer Sale — Social Push",
+    description: "Sale creative across Instagram, Facebook and LinkedIn.",
+    channel: "social",
+    status: "completed",
+    segment: "all",
+    audienceLabel: "3 accounts",
+    audienceSize: 0,
+    sent: 0,
+    delivered: 0,
+    opened: 0,
+    clicked: 4820,
+    replies: 0,
+    failed: 0,
+    revenue: 9640,
+    createdAt: "2026-05-26T08:30:00Z",
+    scheduledAt: "2026-05-27T10:00:00Z",
+    social: {
+      platforms: ["instagram", "facebook", "linkedin"],
+      publishedPosts: 6,
+      reach: 128_400,
+      impressions: 184_260,
+      engagements: 9_280,
+    },
+  },
+  {
+    id: "cmp-social-launch",
+    name: "Business Package Launch Post",
+    description: "Launch announcement on the brand accounts.",
+    channel: "social",
+    status: "running",
+    segment: "all",
+    audienceLabel: "2 accounts",
+    audienceSize: 0,
+    sent: 0,
+    delivered: 0,
+    opened: 0,
+    clicked: 1640,
+    replies: 0,
+    failed: 0,
+    revenue: 3120,
+    createdAt: "2026-05-29T11:45:00Z",
+    scheduledAt: "2026-05-30T09:00:00Z",
+    social: {
+      platforms: ["instagram", "facebook"],
+      publishedPosts: 2,
+      reach: 46_820,
+      impressions: 61_340,
+      engagements: 3_410,
+    },
+  },
+  {
+    id: "cmp-social-teaser",
+    name: "Autumn Collection Teaser",
+    description: "Scheduled teaser ahead of the autumn drop.",
+    channel: "social",
+    status: "scheduled",
+    segment: "all",
+    audienceLabel: "4 accounts",
+    audienceSize: 0,
+    sent: 0,
+    delivered: 0,
+    opened: 0,
+    clicked: 0,
+    replies: 0,
+    failed: 0,
+    revenue: 0,
+    createdAt: "2026-05-31T15:20:00Z",
+    scheduledAt: "2026-06-04T09:30:00Z",
+    social: {
+      platforms: ["instagram", "facebook", "linkedin", "x"],
+      publishedPosts: 0,
+      reach: 0,
+      impressions: 0,
+      engagements: 0,
+    },
+  },
 ];
 
 /** Open rate is of delivered, not sent — a bounce was never an opportunity. */
@@ -407,6 +496,10 @@ export const CHANNEL_SERIES: Record<MarketingChannel, number[]> = {
   whatsapp: [2840, 3120, 3480, 3960, 4320, 4680, 5120],
   email: [1920, 2040, 2180, 2260, 2420, 2540, 2680],
   sms: [640, 690, 720, 760, 810, 860, 920],
+  /* Impressions, not messages. Social is on this chart because merchants
+     compare channels here, but the unit is not the same one — the axis is
+     labelled "reached" rather than "sent" for exactly that reason. */
+  social: [8420, 9180, 10240, 11020, 12480, 13260, 14180],
 };
 
 /* -------------------------------------------------------------------------- */

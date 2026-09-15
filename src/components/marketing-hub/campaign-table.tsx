@@ -52,12 +52,38 @@ interface Props {
 }
 
 /**
+ * What each metric column is called, for the channels in the list.
+ *
+ * Social does not send, deliver or get opened — it publishes, reaches and is
+ * engaged with. Forcing it through the messaging vocabulary would mean showing
+ * a post's reach under a column headed "Delivered", which is worse than showing
+ * nothing. When the list is entirely social the headers change to match; in a
+ * mixed list they stay generic and the social rows carry their own unit, so
+ * `4 posts` never reads as four messages.
+ */
+const MESSAGING_HEADERS = {
+  primary: "Sent",
+  secondary: "Delivered",
+  rate: "Open rate",
+} as const;
+
+const SOCIAL_HEADERS = {
+  primary: "Posts",
+  secondary: "Reach",
+  rate: "Engagement",
+} as const;
+
+/**
  * The campaign list, shared by the Marketing overview and the Campaigns page.
  *
- * "Open rate" means reads on WhatsApp and opens on email; SMS has neither, so
- * those cells show a dash rather than a misleading 0%.
+ * "Open rate" means reads on WhatsApp and opens on email; SMS has neither, and
+ * a social post has no such thing at all, so those cells show a dash rather
+ * than a misleading 0%.
  */
 export function CampaignTable({ campaigns, selection, sort, compact = false }: Props) {
+  const allSocial =
+    campaigns.length > 0 && campaigns.every((item) => item.channel === "social");
+  const headers = allSocial ? SOCIAL_HEADERS : MESSAGING_HEADERS;
   const actions = (campaign: Campaign) => {
     const running = campaign.status === "running";
 
@@ -81,10 +107,56 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
     ];
   };
 
-  const openRate = (campaign: Campaign) =>
-    campaign.channel === "sms"
+  /**
+   * The rate column's value, in whatever the row's channel actually measures.
+   *
+   * SMS has no opens and never did. Social has no opens either, but it does
+   * have engagement against impressions — a real rate, from a real
+   * denominator, so it gets one rather than a dash.
+   */
+  const rateValue = (campaign: Campaign) => {
+    if (campaign.channel === "sms") return null;
+    if (campaign.channel === "social") {
+      const social = campaign.social;
+      if (!social || social.impressions === 0) return null;
+      return rateOf(social.engagements, social.impressions);
+    }
+    return rateOf(campaign.opened, campaign.delivered);
+  };
+
+  /** Posts published, or messages sent. */
+  const primaryValue = (campaign: Campaign) =>
+    campaign.channel === "social"
+      ? (campaign.social?.publishedPosts ?? 0)
+      : campaign.sent;
+
+  /** People reached, or messages delivered. */
+  const secondaryValue = (campaign: Campaign) =>
+    campaign.channel === "social"
+      ? (campaign.social?.reach ?? 0)
+      : campaign.delivered;
+
+  /**
+   * Clicks over the right denominator.
+   *
+   * Impressions for social, delivered messages for everything else — dividing a
+   * post's clicks by `delivered` would be dividing by zero.
+   */
+  const clickRate = (campaign: Campaign) => {
+    if (campaign.channel === "social") {
+      const impressions = campaign.social?.impressions ?? 0;
+      return impressions === 0 ? null : rateOf(campaign.clicked, impressions);
+    }
+    return campaign.delivered === 0
       ? null
-      : rateOf(campaign.opened, campaign.delivered);
+      : rateOf(campaign.clicked, campaign.delivered);
+  };
+
+  /** The unit suffix a social row needs when the headers stay generic. */
+  const unit = (campaign: Campaign, word: string) =>
+    !allSocial && campaign.channel === "social" ? (
+      <span className="ml-1 text-sm font-medium text-text-muted">{word}</span>
+    ) : null;
 
   return (
     <>
@@ -127,13 +199,13 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
                 onSort={sort.onSort}
                 align="right"
               >
-                Sent
+                {headers.primary}
               </SortableTH>
             ) : (
-              <TH align="right">Sent</TH>
+              <TH align="right">{headers.primary}</TH>
             )}
 
-            {compact ? null : <TH align="right">Delivered</TH>}
+            {compact ? null : <TH align="right">{headers.secondary}</TH>}
 
             {sort ? (
               <SortableTH
@@ -143,10 +215,10 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
                 onSort={sort.onSort}
                 align="right"
               >
-                Open rate
+                {headers.rate}
               </SortableTH>
             ) : (
-              <TH align="right">Open rate</TH>
+              <TH align="right">{headers.rate}</TH>
             )}
 
             <TH align="right">CTR</TH>
@@ -170,8 +242,8 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
 
           <TBody>
             {campaigns.map((campaign) => {
-              const open = openRate(campaign);
-              const ctr = rateOf(campaign.clicked, campaign.delivered);
+              const open = rateValue(campaign);
+              const ctr = clickRate(campaign);
               const isSelected = selection?.selected.includes(campaign.id) ?? false;
 
               return (
@@ -202,17 +274,23 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
                   <TD>
                     <p className="text-text-secondary">{campaign.audienceLabel}</p>
                     <p className="text-sm text-text-muted">
-                      {formatNumber(campaign.audienceSize)} contacts
+                      {campaign.channel === "social"
+                        ? `${campaign.social?.platforms.length ?? 0} platform${
+                            campaign.social?.platforms.length === 1 ? "" : "s"
+                          }`
+                        : `${formatNumber(campaign.audienceSize)} contacts`}
                     </p>
                   </TD>
 
                   <TD align="right" className="tabular-nums">
-                    {formatNumber(campaign.sent)}
+                    {formatNumber(primaryValue(campaign))}
+                    {unit(campaign, "posts")}
                   </TD>
 
                   {compact ? null : (
                     <TD align="right" className="text-text-secondary tabular-nums">
-                      {formatNumber(campaign.delivered)}
+                      {formatNumber(secondaryValue(campaign))}
+                      {unit(campaign, "reached")}
                     </TD>
                   )}
 
@@ -227,7 +305,7 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
                   </TD>
 
                   <TD align="right" className="text-text-secondary tabular-nums">
-                    {campaign.delivered === 0 ? "—" : formatPercent(ctr)}
+                    {ctr === null ? "—" : formatPercent(ctr)}
                   </TD>
 
                   <TD>
@@ -254,7 +332,7 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
       {/* Mobile */}
       <ul className="space-y-2.5 lg:hidden">
         {campaigns.map((campaign) => {
-          const open = openRate(campaign);
+          const open = rateValue(campaign);
           const isSelected = selection?.selected.includes(campaign.id) ?? false;
 
           return (
@@ -293,13 +371,17 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
                 <CampaignStatusBadge status={campaign.status} />
                 <dl className="flex items-center gap-4 text-sm">
                   <div className="flex items-center gap-1.5">
-                    <dt className="text-text-muted">Sent</dt>
+                    <dt className="text-text-muted">
+                      {campaign.channel === "social" ? "Posts" : "Sent"}
+                    </dt>
                     <dd className="font-medium text-text-primary tabular-nums">
-                      {formatNumber(campaign.sent)}
+                      {formatNumber(primaryValue(campaign))}
                     </dd>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <dt className="text-text-muted">Open</dt>
+                    <dt className="text-text-muted">
+                      {campaign.channel === "social" ? "Engaged" : "Open"}
+                    </dt>
                     <dd className="font-medium text-text-primary tabular-nums">
                       {open === null ? "—" : formatPercent(open)}
                     </dd>

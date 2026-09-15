@@ -11,7 +11,7 @@ export * from "./channel-performance-chart";
 export * from "./campaign-table";
 export * from "./marketing-overview";
 export * from "./campaigns-workspace";
-export * from "./campaign-wizard";
+export * from "./campaign/campaign-wizard";
 
 /* Cross-channel pieces. Every channel module composes from these. */
 export * from "./shared/channel-badge";

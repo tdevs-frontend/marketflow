@@ -14,8 +14,15 @@ import type { SocialPlatform } from "@/types/social";
  * the rest have their own tokens in `styles/variables.css`.
  */
 
-/** Social is a channel for reporting, but has no campaigns of its own. */
-export type Channel = MarketingChannel | "social";
+/**
+ * Every channel the product themes.
+ *
+ * This used to be `MarketingChannel | "social"`, back when social was a channel
+ * the dashboards reported on but nothing could send to. Social is now a
+ * campaign channel like the rest, so the alias is kept only because a hundred
+ * call sites import `Channel` from here — the two types are the same set.
+ */
+export type Channel = MarketingChannel;
 
 export interface ChannelTheme {
   key: Channel;

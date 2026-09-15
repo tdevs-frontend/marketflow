@@ -32,12 +32,12 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { StatsGrid, type StatItem } from "@/components/ui/stats-card";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
 import { useToast } from "@/components/ui/toast";
-import { CHANNEL_THEME, type Channel } from "@/constants/channels";
+import { CHANNEL_THEME } from "@/constants/channels";
 import { AUTOMATION_STATUSES, countSteps, flowsForChannel } from "@/lib/automation-fixtures";
 import { formatCount, formatNumber, formatPercent, formatRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { AutomationFlow, AutomationStatus } from "@/types/automation";
-import type { MarketingChannel } from "@/types/marketing";
+import type { MessagingChannel } from "@/types/marketing";
 import { FlowBranch } from "./automation-node";
 import { FlowBuilder } from "./flow-builder";
 
@@ -103,9 +103,11 @@ function statsFor(flows: AutomationFlow[], accentLabel: string): StatItem[] {
   ];
 }
 
-export function AutomationsWorkspace({ channel }: { channel: MarketingChannel }) {
+/* Messaging-only: the three channel modules that have an automations page.
+   Social publishes posts, and a post has no per-contact journey to enter. */
+export function AutomationsWorkspace({ channel }: { channel: MessagingChannel }) {
   const toast = useToast();
-  const theme = CHANNEL_THEME[channel as Channel];
+  const theme = CHANNEL_THEME[channel];
   const flows = useMemo(() => flowsForChannel(channel), [channel]);
 
   const [search, setSearch] = useState("");
