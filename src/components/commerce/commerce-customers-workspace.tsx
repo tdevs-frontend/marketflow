@@ -1,8 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import Link from "next/link";
-import { ChevronRight, Repeat, Sparkles, UserPlus, Users, Wallet } from "lucide-react";
+import {
+  ChevronRight,
+  Crown,
+  Repeat,
+  Sparkles,
+  UserMinus,
+  UserPlus,
+  Users,
+  Wallet,
+} from "lucide-react";
 
 import { PageHeader } from "@/components/layout/page-header";
 import { AvatarLabel } from "@/components/ui/avatar";
@@ -10,9 +19,9 @@ import { ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Drawer } from "@/components/ui/dialog";
 import { EmptyState } from "@/components/ui/empty-state";
-import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Select } from "@/components/ui/select";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
+import { panelId, tabId } from "@/components/ui/tabs";
 import { APP_ROUTES } from "@/constants/app";
 import { CUSTOMER_TYPES, PRODUCT_TYPE_LABEL } from "@/constants/commerce";
 import { formatCurrency, formatDate, formatNumber, formatRelativeTime } from "@/lib/format";
@@ -26,6 +35,7 @@ import type { CommerceCustomer, CustomerType, ProductType } from "@/types/commer
 import { CommerceKpis, type CommerceKpi } from "./commerce-kpis";
 import { CustomerTypeBadge, OrderStatusBadge } from "./commerce-badges";
 import { FilterBar } from "./filter-bar";
+import { FilterTabs, type FilterTab } from "./filter-tabs";
 
 /**
  * Commerce Customers — who bought from me?
@@ -46,6 +56,17 @@ const ALL = "all";
 
 type TypeView = typeof ALL | CustomerType;
 
+/* One mark per behaviour: a crown for the biggest spenders, a departing
+   figure for the ones who stopped. The labels come from `CUSTOMER_TYPES` so
+   the tab and the badge in the table always read the same word. */
+const VIEW_ICON: Record<string, FilterTab["icon"]> = {
+  [ALL]: Users,
+  new: UserPlus,
+  repeat: Repeat,
+  vip: Crown,
+  inactive: UserMinus,
+};
+
 const VIEWS: { value: TypeView; label: string }[] = [
   { value: ALL, label: "All" },
   ...CUSTOMER_TYPES.map((item) => ({ value: item.value as TypeView, label: item.label })),
@@ -57,7 +78,28 @@ export function CommerceCustomersWorkspace() {
   const [productType, setProductType] = useState<string>(ALL);
   const [selected, setSelected] = useState<CommerceCustomer | null>(null);
 
+  const idBase = useId();
   const totals = useMemo(() => customerTotals(), []);
+
+  /*
+   * Counted over every buyer, not the filtered set — the tabs describe the
+   * customer base, and a search for one name should not make them read zero.
+   *
+   * Not `customerTotals`: that folds VIP into repeat for the KPI row, which
+   * is right there and wrong here, where VIP is a tab of its own.
+   */
+  const viewCounts = useMemo(() => {
+    const byType = (type: string) =>
+      COMMERCE_CUSTOMERS.filter((item) => item.customerType === type).length;
+
+    return {
+      [ALL]: COMMERCE_CUSTOMERS.length,
+      new: byType("new"),
+      repeat: byType("repeat"),
+      vip: byType("vip"),
+      inactive: byType("inactive"),
+    } as Record<string, number>;
+  }, []);
 
   const kpis: CommerceKpi[] = [
     {
@@ -144,14 +186,18 @@ export function CommerceCustomersWorkspace() {
         />
       ) : (
         <Card className="p-5">
-          <div className="mb-4 -mx-1 overflow-x-auto px-1">
-            <SegmentedControl
-              label="Filter customers by type"
-              value={view}
-              onChange={setView}
-              options={VIEWS}
-            />
-          </div>
+          <FilterTabs
+            className="-mx-5 mb-5 px-5"
+            idBase={idBase}
+            activeTab={view}
+            tabs={VIEWS.map((item) => ({
+              id: item.value,
+              label: item.label,
+              count: viewCounts[item.value] ?? 0,
+              icon: VIEW_ICON[item.value],
+            }))}
+            onTabChange={(next) => setView(next as TypeView)}
+          />
 
           <FilterBar
             search={search}
@@ -178,7 +224,12 @@ export function CommerceCustomersWorkspace() {
             />
           </FilterBar>
 
-          <div className="mt-5">
+          <div
+            className="mt-5"
+            id={panelId(idBase, "list")}
+            role="tabpanel"
+            aria-labelledby={tabId(idBase, view)}
+          >
             {filtered.length === 0 ? (
               <EmptyState
                 compact

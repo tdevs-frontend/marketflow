@@ -6,15 +6,15 @@ import type { LucideIcon } from "lucide-react";
 import { panelId, tabId } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
-export interface ProductTab {
+export interface FilterTab {
   id: string;
   label: string;
   count: number;
   icon: LucideIcon;
 }
 
-export interface ProductTabsProps {
-  tabs: ProductTab[];
+export interface FilterTabsProps {
+  tabs: FilterTab[];
   activeTab: string;
   onTabChange: (id: string) => void;
   /** Shared with the panel below, via `tabId` / `panelId`. */
@@ -63,7 +63,12 @@ function CountChip({ count, active }: { count: number; active: boolean }) {
 /* -------------------------------------------------------------------------- */
 
 /**
- * The product list's filter row.
+ * The filter row a Commerce list opens with.
+ *
+ * One component for Products, Sales and Customers. They filter different
+ * things — a catalogue by type, a ledger by what sold, buyers by how they
+ * behave — but they are the same control doing the same job, and three
+ * hand-matched copies is how three pages slowly stop looking alike.
  *
  * Filled tabs rather than an underline. An underline is the right marker when
  * tabs swap whole panels and the reader is already looking at them; these are
@@ -77,14 +82,14 @@ function CountChip({ count, active }: { count: number; active: boolean }) {
  * the marker, and a bar underneath a filled box would be the same thing said
  * twice.
  */
-export function ProductTabs({
+export function FilterTabs({
   tabs,
   activeTab,
   onTabChange,
   idBase,
   loading = false,
   className,
-}: ProductTabsProps) {
+}: FilterTabsProps) {
   const buttons = useRef(new Map<string, HTMLButtonElement>());
 
   /* On a phone the active tab can start off-screen — a filter you cannot see
@@ -122,7 +127,7 @@ export function ProductTabs({
     if (event.key === "End") go(tabs.length - 1);
   }
 
-  const renderTab = (tab: ProductTab) => {
+  const renderTab = (tab: FilterTab) => {
     const active = tab.id === activeTab;
     const Icon = tab.icon;
 

@@ -1,6 +1,7 @@
 export * from "./commerce-badges";
 export * from "./commerce-kpis";
 export * from "./filter-bar";
+export * from "./filter-tabs";
 export * from "./products-workspace";
 export * from "./product-editor";
 export * from "./product-detail";

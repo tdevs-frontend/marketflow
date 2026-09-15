@@ -1,10 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Banknote,
   BookOpen,
+  Briefcase,
+  Download,
+  Layers,
   CalendarDays,
   Package,
   Receipt,
@@ -24,9 +27,9 @@ import {
 } from "@/components/ui/date-range";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ButtonLink } from "@/components/ui/button";
-import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Select } from "@/components/ui/select";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
+import { panelId, tabId } from "@/components/ui/tabs";
 import { APP_ROUTES } from "@/constants/app";
 import {
   CHANNEL_LABEL,
@@ -45,6 +48,7 @@ import { cn } from "@/lib/utils";
 import type { OrderType, ProductType, SalesChannel } from "@/types/commerce";
 import { CommerceKpis, type CommerceKpi } from "./commerce-kpis";
 import { FilterBar } from "./filter-bar";
+import { FilterTabs, type FilterTab } from "./filter-tabs";
 import { SaleStatusBadge } from "./commerce-badges";
 
 /**
@@ -65,15 +69,23 @@ const ALL = "all";
 
 type TypeView = typeof ALL | OrderType;
 
-const TYPE_VIEWS: { value: TypeView; label: string }[] = [
-  { value: ALL, label: "All" },
-  { value: "physical", label: "Physical" },
-  { value: "digital", label: "Digital" },
-  { value: "service", label: "Services" },
+/* The same four icons the Products row uses for the same four words, so a
+   merchant reading "Digital" on one page is reading the same mark on the
+   other. */
+const TYPE_VIEWS: {
+  value: TypeView;
+  label: string;
+  icon: FilterTab["icon"];
+}[] = [
+  { value: ALL, label: "All", icon: Layers },
+  { value: "physical", label: "Physical", icon: Package },
+  { value: "digital", label: "Digital", icon: Download },
+  { value: "service", label: "Services", icon: Briefcase },
 ];
 
 export function SalesWorkspace() {
   const [view, setView] = useState<TypeView>(ALL);
+  const idBase = useId();
   const [search, setSearch] = useState("");
   const [channel, setChannel] = useState<string>(ALL);
   const [status, setStatus] = useState<string>(ALL);
@@ -109,6 +121,26 @@ export function SalesWorkspace() {
   }, [view, search, channel, status, range]);
 
   const totals = useMemo(() => salesTotals(filtered), [filtered]);
+
+  /*
+   * Counts for the tabs, over the whole ledger rather than the filtered set.
+   *
+   * A tab reading "Digital 0" because of an unrelated search is a tab that
+   * lies about what the business sold. The mixed case matches the filter
+   * above it: a part-digital order counts under Digital, because filtering
+   * to Digital is what shows it.
+   */
+  const typeCounts = useMemo(() => {
+    const byType = (type: string) =>
+      SALES.filter((sale) => sale.type === type || sale.type === "mixed").length;
+
+    return {
+      [ALL]: SALES.length,
+      physical: byType("physical"),
+      digital: byType("digital"),
+      service: byType("service"),
+    } as Record<string, number>;
+  }, []);
 
   const kpis: CommerceKpi[] = [
     {
@@ -178,14 +210,18 @@ export function SalesWorkspace() {
       ) : (
         <>
           <Card className="p-5">
-            <div className="mb-4 -mx-1 overflow-x-auto px-1">
-              <SegmentedControl
-                label="Filter sales by product type"
-                value={view}
-                onChange={setView}
-                options={TYPE_VIEWS}
-              />
-            </div>
+            <FilterTabs
+              className="-mx-5 mb-5 px-5"
+              idBase={idBase}
+              activeTab={view}
+              tabs={TYPE_VIEWS.map((item) => ({
+                id: item.value,
+                label: item.label,
+                count: typeCounts[item.value] ?? 0,
+                icon: item.icon,
+              }))}
+              onTabChange={(next) => setView(next as TypeView)}
+            />
 
             <FilterBar
               search={search}
@@ -217,7 +253,12 @@ export function SalesWorkspace() {
               <DateRangePicker value={range} onChange={setRange} />
             </FilterBar>
 
-            <div className="mt-5">
+            <div
+              className="mt-5"
+              id={panelId(idBase, "list")}
+              role="tabpanel"
+              aria-labelledby={tabId(idBase, view)}
+            >
               {filtered.length === 0 ? (
                 <EmptyState
                   compact

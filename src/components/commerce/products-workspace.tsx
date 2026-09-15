@@ -50,7 +50,7 @@ import {
   UNIT_NOUN,
 } from "@/constants/commerce";
 import { panelId, tabId } from "@/components/ui/tabs";
-import { ProductTabs, type ProductTab } from "./product-tabs";
+import { FilterTabs, type FilterTab } from "./filter-tabs";
 import {
   COMMERCE_PRODUCTS,
   CATEGORIES,
@@ -177,7 +177,7 @@ type ProductView = typeof ALL | ProductType | "draft" | "archived";
 const PRODUCT_VIEWS: {
   value: ProductView;
   label: string;
-  icon: ProductTab["icon"];
+  icon: FilterTab["icon"];
 }[] = [
   { value: ALL, label: "All", icon: Layers },
   { value: "physical", label: "Physical", icon: Package },
@@ -459,7 +459,7 @@ export function ProductsWorkspace({
          * column. The two read as one grid rather than a control sitting above
          * a table.
          */}
-        <ProductTabs
+        <FilterTabs
           className="-mx-5 mb-5 px-5"
           idBase={idBase}
           activeTab={view}
