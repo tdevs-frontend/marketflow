@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import { Check, ChevronLeft, ChevronRight, Clock, Send } from "lucide-react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { Check, ChevronLeft, ChevronRight, Clock, Loader2, Send } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -24,6 +24,8 @@ import { PersonaliseStep } from "./step-personalise";
 import { ScheduleStep } from "./step-schedule";
 import { ReviewStep } from "./step-review";
 import { SendStep } from "./step-send";
+import { clearWizard, loadWizard, saveWizard } from "./draft-storage";
+import { saveCampaign, successMessage, type SubmitMode } from "./submit";
 import type { StepProps } from "./types";
 import { blockersIn, preflight } from "./validation";
 
@@ -55,8 +57,29 @@ const STEPS: { value: WizardStep; label: string }[] = [
   { value: "send", label: "Send" },
 ];
 
+/* A store that never changes — `useSyncExternalStore` is being used purely
+   for its server/client split, not to subscribe to anything. */
+const subscribeToNothing = () => () => {};
+
 const stepIndex = (step: WizardStep) =>
   STEPS.findIndex((item) => item.value === step);
+
+/**
+ * Blockers already rendered beside the field they are about.
+ *
+ * The list above the nav is for problems with nowhere else to appear — an
+ * unverified WhatsApp connection, a sender ID the provider will not accept.
+ * Anything already marked on its own input is left to that input.
+ */
+const INLINE_ISSUE_IDS = new Set([
+  "name",
+  "message",
+  "email-subject",
+  "date",
+  "past-date",
+  "days",
+  "social-account",
+]);
 
 export function CampaignWizard() {
   const router = useRouter();
@@ -70,6 +93,18 @@ export function CampaignWizard() {
      changes, so a tick made before an edit never carries over. */
   const [confirmed, setConfirmed] = useState(false);
 
+  /* Continue's reasons for refusing, revealed only after someone has tried it.
+     Listing what is missing before anyone has typed would be nagging. */
+  const [showStepIssues, setShowStepIssues] = useState(false);
+
+  /* One submission at a time, and the button says which one is in flight. */
+  const [submitting, setSubmitting] = useState<SubmitMode | null>(null);
+  const [submitError, setSubmitError] = useState("");
+
+  /* Nothing is written back to storage until the restore has run, or the first
+     render would overwrite a saved draft with the empty one. */
+  const [restored, setRestored] = useState(false);
+
   /* Preview controls live here rather than in a step: choosing "mobile" on the
      Content step and finding it reset on Review is the kind of small betrayal
      that makes a wizard feel disposable. */
@@ -77,6 +112,43 @@ export function CampaignWizard() {
   const [platform, setPlatform] = useState<SocialPlatform>("instagram");
 
   const step = STEPS[index].value;
+
+  /*
+   * Restore a draft left behind by a refresh.
+   *
+   * Reading storage in a lazy initialiser would hand the server one draft and
+   * the browser another, which is a hydration mismatch. `useSyncExternalStore`
+   * is the sanctioned way to ask "are we past hydration yet": it reports false
+   * on the server and through the hydrating render, then true — so the restore
+   * below runs on a render React already expects to differ.
+   *
+   * Adjusted during render rather than in an effect, the way the template
+   * dialogs already do it: the values are there on the first painted frame,
+   * and the wizard never flashes an empty form over a saved one.
+   */
+  const hydrated = useSyncExternalStore(
+    subscribeToNothing,
+    () => true,
+    () => false,
+  );
+
+  if (hydrated && !restored) {
+    setRestored(true);
+    const saved = loadWizard(STEPS.length);
+    if (saved) {
+      setDraft(saved.draft);
+      setIndex(saved.index);
+      setFurthest(saved.furthest);
+    }
+  }
+
+  /* Writing to storage *is* the "update an external system" case effects are
+     for, so this one stays an effect. Gated on `restored`, or the first render
+     would flush the empty draft over the saved one before it was read. */
+  useEffect(() => {
+    if (!restored) return;
+    saveWizard({ draft, index, furthest });
+  }, [restored, draft, index, furthest]);
 
   const set = <K extends keyof CampaignDraft>(key: K, value: CampaignDraft[K]) => {
     setDraft((prev) =>
@@ -87,23 +159,36 @@ export function CampaignWizard() {
         : { ...prev, [key]: value },
     );
     setConfirmed(false);
+    /* An edit is an answer to whatever Continue complained about, so the
+       complaint goes away until it is asked again. */
+    setShowStepIssues(false);
+    setSubmitError("");
   };
 
   const setChannel = (channel: MarketingChannel) => {
     setDraft((prev) => applyChannel(prev, channel));
     setConfirmed(false);
     setErrors({});
+    setShowStepIssues(false);
+    setSubmitError("");
   };
 
   const derived = useMemo(() => deriveDraft(draft), [draft]);
   const issues = useMemo(() => preflight(draft, derived), [draft, derived]);
   const blockers = blockersIn(issues);
 
+  /* Blockers this step is responsible for. They gate Continue, so a campaign
+     cannot reach Review with a sender that was never configured — and because
+     they come from `preflight`, the rule is written once and enforced twice. */
+  const stepBlockers = blockers.filter((issue) => issue.step === step);
+
   function goTo(target: WizardStep) {
     const next = stepIndex(target);
     if (next < 0) return;
     setIndex(next);
     setFurthest((value) => Math.max(value, next));
+    setShowStepIssues(false);
+    setErrors({});
   }
 
   /**
@@ -149,6 +234,8 @@ export function CampaignWizard() {
     if (step === "schedule") {
       if (draft.sendMode === "later" && !draft.date) {
         next.date = "Pick a send date.";
+      } else if (blockers.some((issue) => issue.id === "past-date")) {
+        next.date = "That time has already passed.";
       }
       if (draft.allowedDays.length === 0) {
         next.allowedDays = "Leave at least one day switched on.";
@@ -160,16 +247,60 @@ export function CampaignWizard() {
   }
 
   function goNext() {
-    if (!validateStep()) return;
+    const fieldsOk = validateStep();
+    if (!fieldsOk || stepBlockers.length > 0) {
+      setShowStepIssues(true);
+      return;
+    }
+
+    setShowStepIssues(false);
     const target = Math.min(index + 1, STEPS.length - 1);
     setIndex(target);
     setFurthest((value) => Math.max(value, target));
   }
 
-  function finish(message: string) {
-    toast(message);
-    router.push(APP_ROUTES.marketingCampaigns);
+  /**
+   * Save or launch.
+   *
+   * Draft mode skips every check by design — someone pulled away mid-sentence
+   * should keep what they have written, and a save that demands a valid sender
+   * is a save that loses work. Launch has already been gated by the Send step's
+   * confirmation and the pre-flight blockers.
+   */
+  async function submit(mode: SubmitMode) {
+    /* The guard, not just the disabled attribute: a double-click can land two
+       events before React re-renders the button. */
+    if (submitting) return;
+
+    setSubmitting(mode);
+    setSubmitError("");
+
+    try {
+      await saveCampaign(draft, mode);
+      /* Cleared before navigating, or coming back to /new would restore a
+         campaign that has already been sent. */
+      clearWizard();
+      toast(successMessage(draft, mode), "success");
+      router.push(APP_ROUTES.marketingCampaigns);
+      /* `submitting` is deliberately left set: the component is on its way out,
+         and releasing the buttons during the route transition would re-open the
+         window for a second submission. */
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. The campaign was not saved.",
+      );
+      toast("Could not save the campaign", "error");
+      setSubmitting(null);
+    }
   }
+
+  /* Blockers that already have a message against the field they belong to.
+     Repeating those in the list above the nav would say the same thing twice. */
+  const visibleStepIssues = stepBlockers.filter(
+    (issue) => !INLINE_ISSUE_IDS.has(issue.id),
+  );
 
   const stepProps: StepProps = {
     draft,
@@ -202,13 +333,45 @@ export function CampaignWizard() {
         ) : null}
       </div>
 
+      {/* --------------------------------------------- Why Continue refused */}
+      {showStepIssues && visibleStepIssues.length > 0 ? (
+        <div
+          role="alert"
+          className="mt-5 rounded-panel border border-error/25 bg-error-soft px-3.5 py-3"
+        >
+          <p className="text-sm font-bold text-error-text">
+            Finish this step before continuing
+          </p>
+          <ul className="mt-1.5 space-y-1">
+            {visibleStepIssues.map((issue) => (
+              <li key={issue.id} className="text-sm font-medium text-error-text">
+                {issue.message}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
+      {submitError ? (
+        <p
+          role="alert"
+          className="mt-5 rounded-panel border border-error/25 bg-error-soft px-3.5 py-2.5 text-sm font-medium text-error-text"
+        >
+          {submitError}
+        </p>
+      ) : null}
+
       {/* ------------------------------------------------------------ Nav */}
       <div className="mt-6 flex flex-wrap items-center gap-2.5 border-t border-border pt-5">
         <Button
           variant="outline"
           size="compact"
-          disabled={index === 0}
-          onClick={() => setIndex((value) => Math.max(value - 1, 0))}
+          disabled={index === 0 || submitting !== null}
+          onClick={() => {
+            setIndex((value) => Math.max(value - 1, 0));
+            setShowStepIssues(false);
+            setErrors({});
+          }}
         >
           <ChevronLeft aria-hidden />
           Back
@@ -221,26 +384,31 @@ export function CampaignWizard() {
           <Button
             variant="outline"
             size="compact"
-            onClick={() => finish("Campaign saved as draft")}
+            disabled={submitting !== null}
+            onClick={() => submit("draft")}
           >
-            Save Draft
+            {submitting === "draft" ? (
+              <>
+                <Loader2 className="animate-spin" aria-hidden />
+                Saving…
+              </>
+            ) : (
+              "Save Draft"
+            )}
           </Button>
 
           {step === "send" ? (
             <Button
               size="compact"
-              disabled={!confirmed || blockers.length > 0}
-              onClick={() =>
-                finish(
-                  draft.sendMode === "later"
-                    ? "Campaign scheduled successfully"
-                    : derived.isSocial
-                      ? "Campaign published successfully"
-                      : "Campaign launched successfully",
-                )
-              }
+              disabled={!confirmed || blockers.length > 0 || submitting !== null}
+              onClick={() => submit("launch")}
             >
-              {draft.sendMode === "later" ? (
+              {submitting === "launch" ? (
+                <>
+                  <Loader2 className="animate-spin" aria-hidden />
+                  {draft.sendMode === "later" ? "Scheduling…" : "Sending…"}
+                </>
+              ) : draft.sendMode === "later" ? (
                 <>
                   <Clock aria-hidden />
                   Schedule Campaign
@@ -253,7 +421,11 @@ export function CampaignWizard() {
               )}
             </Button>
           ) : (
-            <Button size="compact" onClick={goNext}>
+            <Button
+              size="compact"
+              disabled={submitting !== null}
+              onClick={goNext}
+            >
               Continue
               <ChevronRight aria-hidden />
             </Button>

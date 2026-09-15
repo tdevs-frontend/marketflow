@@ -4,6 +4,7 @@ import {
 } from "@/lib/campaign-fixtures";
 import { TEMPLATES } from "@/lib/whatsapp-fixtures";
 import { hasCapability, publishableAccounts } from "@/lib/social-fixtures";
+import { WORKSPACE_NOW } from "@/lib/workspace-clock";
 import type { CampaignDraft, WizardStep } from "@/types/marketing";
 import type { DraftDerived } from "./draft";
 
@@ -102,6 +103,31 @@ export function preflight(
 
   if (draft.sendMode === "later" && !draft.date) {
     add("date", "blocker", "schedule", "Scheduled, but no send date is set.");
+  }
+
+  /*
+   * A send time in the past.
+   *
+   * Compared as text against the workspace clock rather than through `Date`:
+   * `WORKSPACE_NOW` is what every other module measures against, and a
+   * `Date.now()` here would make `preflight` impure — the server and the
+   * client would disagree about whether a draft is late, which is a hydration
+   * mismatch in a function that runs during render.
+   *
+   * Timezone-naive on purpose. It catches the mistake people actually make
+   * (picking a date that has already gone by) without pretending to resolve
+   * `draft.timezone`, which needs a real zone database the backend will own.
+   */
+  if (draft.sendMode === "later" && draft.date) {
+    const scheduled = `${draft.date}T${draft.time || "00:00"}`;
+    if (scheduled <= WORKSPACE_NOW.slice(0, 16)) {
+      add(
+        "past-date",
+        "blocker",
+        "schedule",
+        "That send time has already passed. Pick a date and time in the future.",
+      );
+    }
   }
 
   if (draft.allowedDays.length === 0) {
