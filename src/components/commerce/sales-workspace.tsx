@@ -4,15 +4,19 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Banknote,
+  BookOpen,
+  CalendarDays,
+  Package,
   Receipt,
   RotateCcw,
   ShoppingCart,
   TrendingUp,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 import { PageHeader } from "@/components/layout/page-header";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardBody, CardHeader } from "@/components/ui/card";
+import { Card, CardBody } from "@/components/ui/card";
 import {
   DateRangePicker,
   DEFAULT_RANGE,
@@ -318,12 +322,57 @@ export function SalesWorkspace() {
 }
 
 /**
+ * How each of the three cards is dressed.
+ *
+ * The colours are not picked for this component: physical is cyan, digital is
+ * the email blue and services are the SMS violet everywhere else in Commerce —
+ * the same mapping the Products KPI row uses — so a merchant who has learnt
+ * that violet means "service" on one page is not taught something else here.
+ *
+ * Structure is identical across the three on purpose. Only the hue, the icon
+ * and the wording change; three differently-shaped cards in one row would read
+ * as three unrelated widgets rather than one comparison.
+ */
+const GROUP_STYLE: Record<
+  ProductType,
+  { title: string; subtitle: string; icon: LucideIcon; tone: string; bar: string }
+> = {
+  physical: {
+    title: "Top Physical Products",
+    subtitle: "Best performing physical items by revenue",
+    icon: Package,
+    tone: "border-accent/30 bg-accent-soft text-accent",
+    bar: "bg-accent",
+  },
+  digital: {
+    title: "Top Digital Products",
+    subtitle: "Best performing digital items by revenue",
+    icon: BookOpen,
+    tone: "border-email-border bg-email-soft text-email",
+    bar: "bg-email",
+  },
+  service: {
+    title: "Top Services",
+    subtitle: "Best performing services by revenue",
+    icon: CalendarDays,
+    tone: "border-sms-border bg-sms-soft text-sms",
+    bar: "bg-sms",
+  },
+};
+
+/**
  * The best sellers of each type, side by side.
  *
  * Three short lists rather than one ranked table, because a merchant selling
  * all three kinds wants to know their best *service* without it being buried
  * under physical volume. A type with nothing sold is dropped rather than shown
  * empty.
+ *
+ * Each card is a small leaderboard: rank, what it is, what it sold, what it
+ * made. The bar under each row is the part that makes it readable at a glance —
+ * it is drawn against the *top seller in that card*, not against some global
+ * total, so it answers "how far ahead is first place" rather than restating the
+ * revenue figure already printed beside it.
  */
 function TopSellers() {
   const groups = (["physical", "digital", "service"] as ProductType[])
@@ -332,53 +381,114 @@ function TopSellers() {
 
   if (groups.length === 0) return null;
 
-  const TITLE: Record<ProductType, string> = {
-    physical: "Top Physical Products",
-    digital: "Top Digital Products",
-    service: "Top Services",
-  };
-
   return (
-    <div className={cn("grid gap-4", groups.length > 1 && "lg:grid-cols-3")}>
-      {groups.map((group) => (
-        <Card key={group.type}>
-          <CardHeader title={TITLE[group.type]} />
-          <CardBody className="p-2">
-            <ul className="space-y-0.5">
-              {group.items.map((item, index) => (
-                <li key={item.id}>
-                  <Link
-                    href={`${APP_ROUTES.products}/${item.id}/edit`}
-                    className="flex items-center gap-3 rounded-panel px-3 py-2.5 transition-colors hover:bg-surface-secondary focus-visible:shadow-focus focus-visible:outline-none"
-                  >
-                    <span className="grid size-6 shrink-0 place-items-center rounded-full bg-surface-secondary text-meta font-bold text-text-secondary">
-                      {index + 1}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-medium text-text-primary">
-                        {item.name}
-                      </span>
-                      <span className="block text-meta text-text-muted">
-                        {formatNumber(item.sales?.unitsSold ?? 0)}{" "}
-                        {UNIT_NOUN[item.type][
-                          (item.sales?.unitsSold ?? 0) === 1 ? "one" : "many"
-                        ]}
-                      </span>
-                    </span>
-                    <span className="shrink-0 text-sm font-bold text-text-primary tabular-nums">
-                      {formatCurrency(item.sales?.revenue ?? 0)}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </CardBody>
-        </Card>
-      ))}
+    <div
+      className={cn(
+        "grid gap-4",
+        /* Two up on a tablet, three on a desktop — and neither if there is
+           only one type with sales, where a third-width card would look
+           like two are missing. */
+        groups.length > 1 && "sm:grid-cols-2",
+        groups.length > 2 && "lg:grid-cols-3",
+      )}
+    >
+      {groups.map((group) => {
+        const style = GROUP_STYLE[group.type];
+        const Icon = style.icon;
+        /* The leader sets the scale. Guarded so a single zero-revenue row
+           cannot divide by nothing. */
+        const leader = Math.max(
+          ...group.items.map((item) => item.sales?.revenue ?? 0),
+          1,
+        );
+
+        return (
+          <Card key={group.type}>
+            {/* The header is built here rather than with `CardHeader` because
+                it wants a heavier title and an icon; the border, padding and
+                rhythm are the ones `CardHeader` already sets, so the card
+                still matches every other card on the page. */}
+            <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-4">
+              <div className="min-w-0">
+                <h3 className="truncate text-base font-bold text-text-primary">
+                  {style.title}
+                </h3>
+                <p className="mt-0.5 text-sm font-medium text-text-secondary">
+                  {style.subtitle}
+                </p>
+              </div>
+              <span
+                className={cn(
+                  "grid size-9 shrink-0 place-items-center rounded-panel border",
+                  style.tone,
+                )}
+              >
+                <Icon className="size-4.5" aria-hidden />
+              </span>
+            </div>
+
+            <CardBody className="p-2">
+              <ul className="space-y-0.5">
+                {group.items.map((item, index) => {
+                  const revenue = item.sales?.revenue ?? 0;
+                  const sold = item.sales?.unitsSold ?? 0;
+
+                  return (
+                    <li key={item.id}>
+                      <Link
+                        href={`${APP_ROUTES.products}/${item.id}`}
+                        className="block rounded-panel px-3 py-2.5 transition-colors hover:bg-surface-secondary focus-visible:shadow-focus focus-visible:outline-none"
+                      >
+                        <span className="flex items-center gap-3">
+                          <span
+                            className={cn(
+                              "grid size-8 shrink-0 place-items-center rounded-full border text-sm font-bold tabular-nums",
+                              style.tone,
+                            )}
+                          >
+                            {index + 1}
+                          </span>
+
+                          <span className="min-w-0 flex-1">
+                            <span className="block truncate text-sm font-bold text-text-primary">
+                              {item.name}
+                            </span>
+                            <span className="block text-sm font-medium text-text-secondary">
+                              {formatNumber(sold)}{" "}
+                              {UNIT_NOUN[item.type][sold === 1 ? "one" : "many"]}
+                            </span>
+                          </span>
+
+                          <span className="shrink-0 text-base font-bold text-text-primary tabular-nums">
+                            {formatCurrency(revenue)}
+                          </span>
+                        </span>
+
+                        {/* Decorative: the number it encodes is printed two
+                            inches to its left, so it carries no label. */}
+                        <span
+                          aria-hidden
+                          className="mt-2 block h-1 overflow-hidden rounded-full bg-surface-secondary"
+                        >
+                          <span
+                            className={cn("block h-full rounded-full", style.bar)}
+                            style={{
+                              width: `${Math.max((revenue / leader) * 100, 4)}%`,
+                            }}
+                          />
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </CardBody>
+          </Card>
+        );
+      })}
     </div>
   );
 }
-
 /**
  * The earliest timestamp a range admits, or `null` for everything.
  *
