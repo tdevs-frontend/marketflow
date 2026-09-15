@@ -6,7 +6,6 @@ import {
   Archive,
   CheckCircle2,
   BookOpen,
-  Boxes,
   CalendarDays,
   Copy,
   Eye,
@@ -16,6 +15,7 @@ import {
   Package,
   Pencil,
   Trash2,
+  Truck,
 } from "lucide-react";
 
 import Link from "next/link";
@@ -112,27 +112,45 @@ function kpis(counts: ProductCounts): CommerceKpi[] {
        */
       value: formatNumber(counts.all),
       icon: Package,
+      tone: "brand",
       hint: `${counts.active} active · ${counts.draft} draft${
         counts.archived ? ` · ${counts.archived} archived` : ""
       }`,
     },
+    /*
+     * One identity colour per kind of product.
+     *
+     * The three types used to share a single brand tint with no tone at all on
+     * two of them, so the strip read as one number repeated four times and a
+     * merchant had to read every label to find the one they wanted. Each type
+     * now keeps the hue it already has elsewhere in the product — cyan for the
+     * things that ship, the email blue for downloads, the SMS violet for
+     * booked time — so the colour is a second way to find the card rather than
+     * decoration invented for this row.
+     */
     {
       label: "Physical Products",
       value: formatNumber(counts.physical),
-      icon: Boxes,
-      tone: "brand",
+      /* A truck, not a box: `Package` already carries Total Products, and two
+         box glyphs side by side at 20px are the same shape twice. This one
+         says what the card's own hint says — these are the things that get
+         shipped — so the icon and the text agree. */
+      icon: Truck,
+      tone: "accent",
       hint: "Shipped to customers",
     },
     {
       label: "Digital Products",
       value: formatNumber(counts.digital),
       icon: BookOpen,
+      tone: "email",
       hint: "Downloads and access",
     },
     {
       label: "Services",
       value: formatNumber(counts.service),
       icon: CalendarDays,
+      tone: "sms",
       hint: "Booked and delivered",
     },
   ];
