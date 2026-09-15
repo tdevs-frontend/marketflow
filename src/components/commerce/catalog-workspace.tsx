@@ -203,18 +203,44 @@ function CatalogPreview({
               product.lowStockThreshold,
             );
             const available = state !== "out-of-stock";
+            const cover =
+              product.images.find((image) => image.isThumbnail) ??
+              product.images[0];
 
             return (
               <article
                 key={product.id}
                 className="overflow-hidden rounded-panel border border-border bg-surface"
               >
-                <div className="grid aspect-video place-items-center bg-primary-subtle">
-                  <ProductThumb size="lg" className="border-0 bg-transparent" />
+                {/*
+                 * The real photograph, in the container that already existed.
+                 *
+                 * `relative` and the absolute fill are what let the image cover
+                 * the frame without the grid centring shrinking it — the
+                 * aspect-video box, the tinted ground and the card's rounding
+                 * are all untouched, so nothing reflows and a product with no
+                 * photo still falls back to the icon tile it used to show.
+                 */}
+                <div className="relative grid aspect-video place-items-center overflow-hidden bg-primary-subtle">
+                  {cover ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={cover.url}
+                      alt={cover.alt ?? product.name}
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 size-full object-cover"
+                    />
+                  ) : (
+                    <ProductThumb
+                      size="lg"
+                      className="border-0 bg-transparent"
+                    />
+                  )}
                 </div>
 
                 <div className="p-3.5">
-                  <h4 className="truncate text-sm font-medium text-text-primary">
+                  <h4 className="truncate text-base font-bold text-text-primary">
                     {product.name}
                   </h4>
 
@@ -376,7 +402,11 @@ function CreateCatalogDialog({
                     onCheckedChange={() => toggle(product.id)}
                     label={`Add ${product.name} to catalog`}
                   />
-                  <ProductThumb size="sm" />
+                  <ProductThumb
+                    size="sm"
+                    url={product.images.find((image) => image.isThumbnail)?.url}
+                    alt={product.name}
+                  />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-[15px] font-bold text-text-primary">
                       {product.name}
@@ -453,9 +483,17 @@ export function CatalogWorkspace() {
 
             {/* A row of thumbs says more about a catalog than a count does. */}
             <div className="mt-4 flex items-center gap-1.5">
-              {catalog.productIds.slice(0, 4).map((id) => (
-                <ProductThumb key={id} size="sm" />
-              ))}
+              {catalog.productIds.slice(0, 4).map((id) => {
+                const item = commerceProductById(id);
+                return (
+                  <ProductThumb
+                    key={id}
+                    size="sm"
+                    url={item?.images.find((image) => image.isThumbnail)?.url}
+                    alt={item?.name}
+                  />
+                );
+              })}
               {catalog.productIds.length > 4 ? (
                 <span className="grid size-8 place-items-center rounded-panel border border-border bg-surface-secondary text-sm font-medium text-text-muted">
                   +{catalog.productIds.length - 4}

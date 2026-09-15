@@ -1748,6 +1748,66 @@ function variantsFor(item: Product): Partial<Product> {
   };
 }
 
+/* -------------------------------------------------------------------------- */
+/* Product photography                                                        */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * One photograph per product, self-hosted under `public/products`.
+ *
+ * Real images rather than an icon tile, because the catalogue preview is the
+ * one screen in the product that a *customer* sees — a grid of identical grey
+ * placeholders tells a merchant nothing about whether their storefront is worth
+ * sharing, which is the only question that screen exists to answer.
+ *
+ * Self-hosted rather than hot-linked. They are downloaded, cropped to 800x450
+ * and committed, so the preview cannot be broken by a third party rotating a
+ * URL, needs no `remotePatterns` entry, and renders with no network at all.
+ * Every file is 16-100KB; the whole set is under a megabyte.
+ *
+ * Sourced from Unsplash, whose licence permits commercial use without
+ * attribution. Each is chosen to match what the product actually is — a studio
+ * shirt for the shirt, a chat-bubble render for the template pack, a headset
+ * for the support plan — so nothing is a stock-photo stand-in for a different
+ * product.
+ */
+const PRODUCT_PHOTO: Record<string, string> = {
+  "prd-premium": "/products/premium-package.jpg",
+  "prd-starter": "/products/starter-package.jpg",
+  "prd-business": "/products/business-package.jpg",
+  "prd-growth": "/products/growth-package.jpg",
+  "prd-wa-seat": "/products/whatsapp-seat.jpg",
+  "prd-sms-credits": "/products/sms-credits.jpg",
+  "prd-priority": "/products/priority-support.jpg",
+  "prd-wa-templates": "/products/whatsapp-templates.jpg",
+  "prd-email-templates": "/products/email-templates.jpg",
+  "prd-onboarding": "/products/onboarding-session.jpg",
+  "prd-team-training": "/products/team-training.jpg",
+  "prd-qr-stand": "/products/qr-stand.jpg",
+  "prd-tshirt": "/products/tshirt.jpg",
+  "prd-guide": "/products/marketing-guide.jpg",
+  "prd-consult": "/products/consultation.jpg",
+};
+
+/**
+ * The photograph, joined in front of whatever the product already had.
+ *
+ * It becomes the thumbnail and anything authored keeps its place behind it —
+ * which matters for the T-shirt, whose three colour swatches are what its
+ * variants point at and must not be replaced by a single photo of a shirt.
+ */
+function imagesFor(item: Product): Partial<Product> {
+  const url = PRODUCT_PHOTO[item.id];
+  if (!url) return {};
+
+  return {
+    images: [
+      { id: `${item.id}-cover`, url, alt: item.name, isThumbnail: true },
+      ...item.images.map((image) => ({ ...image, isThumbnail: false })),
+    ],
+  };
+}
+
 /** Defaults for anything the tables above do not name. */
 function detailFor(item: Product): Partial<Product> {
   switch (item.type) {
@@ -1824,6 +1884,7 @@ export function productSales(productId: string): ProductSales {
 export const COMMERCE_PRODUCTS: Product[] = PRODUCTS.map((item) => ({
   ...item,
   ...detailFor(item),
+  ...imagesFor(item),
   ...variantsFor(item),
   sales: productSales(item.id),
 }));
