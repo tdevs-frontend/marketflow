@@ -406,6 +406,7 @@ export function ProductsWorkspace() {
          */}
         <div className="mb-4 -mx-1 overflow-x-auto px-1">
           <SegmentedControl
+            variant="filter"
             label="Filter products by type"
             value={view}
             onChange={(next) => {
