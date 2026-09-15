@@ -121,16 +121,23 @@ export function SalesWorkspace() {
       tone: "success",
       hint: "What reached the business",
     },
+    /*
+     * Orders is the one *count* in a row of money, so it takes the blue and
+     * leaves indigo, green and violet to the three currency figures. Both of
+     * these were untoned and came out as the same grey tile.
+     */
     {
       label: "Orders",
       value: formatNumber(totals.orders),
       icon: ShoppingCart,
+      tone: "info",
       hint: "Excluding failed payments",
     },
     {
       label: "Average Order Value",
       value: formatCurrency(totals.averageOrderValue),
       icon: Receipt,
+      tone: "sms",
       hint: "Net, per order",
     },
     {

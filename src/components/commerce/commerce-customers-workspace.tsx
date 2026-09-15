@@ -68,9 +68,12 @@ export function CommerceCustomersWorkspace() {
       hint: "Contacts who have purchased",
     },
     {
+      /* Blue for the newest cohort, so it is not the same grey as Lifetime
+         Revenue two cards along. */
       label: "New Customers",
       value: formatNumber(totals.new),
       icon: UserPlus,
+      tone: "info",
       hint: "First purchase only",
     },
     {
@@ -81,9 +84,12 @@ export function CommerceCustomersWorkspace() {
       hint: "Bought more than once",
     },
     {
+      /* Violet, not the indigo of Total Customers: the row's two headline
+         figures are a count and a sum, and they should not read alike. */
       label: "Lifetime Revenue",
       value: formatCurrency(totals.lifetimeRevenue),
       icon: Wallet,
+      tone: "sms",
       hint: "Across every order",
     },
   ];

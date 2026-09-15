@@ -45,9 +45,13 @@ function kpis(): CommerceKpi[] {
 
   return [
     {
+      /* Cyan for the count, indigo for the money — on a page whose whole job
+         is warning and error states, the two neutral figures still have to be
+         told apart. */
       label: "Total Items",
       value: formatNumber(INVENTORY.reduce((sum, item) => sum + item.stock, 0)),
       icon: Boxes,
+      tone: "accent",
       /* Rows, not products — a shirt in twelve sizes is twelve things to count
          and one thing to sell, and this page is about the counting. */
       hint: `${INVENTORY.length} tracked ${INVENTORY.length === 1 ? "item" : "items"}`,

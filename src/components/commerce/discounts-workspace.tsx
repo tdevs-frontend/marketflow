@@ -47,28 +47,35 @@ function kpis(): CommerceKpi[] {
 
   return [
     {
+      /* All four of these used to be two pairs: Active and Revenue Generated
+         both indigo, Redemptions and Discount Given both untoned grey. The row
+         now runs violet, blue, amber, green — and the two money figures are
+         deliberately the furthest apart, because one is a cost and one is a
+         return and reading them as the same thing is the whole risk. */
       label: "Active Discounts",
       value: formatNumber(active.length),
       icon: BadgePercent,
-      tone: "brand",
+      tone: "sms",
       hint: `${DISCOUNTS.length} total`,
     },
     {
       label: "Total Redemptions",
       value: formatNumber(redemptions),
       icon: Tag,
+      tone: "info",
     },
     {
       label: "Discount Given",
       value: formatCurrency(given),
       icon: CircleDollarSign,
+      tone: "warning",
       hint: "Cost of the offers",
     },
     {
       label: "Revenue Generated",
       value: formatCurrency(revenue),
       icon: TrendingUp,
-      tone: "brand",
+      tone: "success",
       /* The comparison that decides whether an offer was worth running. */
       hint: `${(revenue / Math.max(given, 1)).toFixed(1)}× return on discount`,
     },

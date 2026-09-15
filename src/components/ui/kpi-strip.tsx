@@ -27,6 +27,7 @@ export type KpiTone =
   | "accent"
   | "email"
   | "sms"
+  | "info"
   | "success"
   | "warning"
   | "danger";
@@ -38,19 +39,24 @@ export type KpiTone =
  * with one neutral border, so a strip still reads as a row of one kind of
  * object rather than a set of coloured panels.
  *
- * Every tile is bordered, so the eight tones stay the same object in eight
- * colours rather than some outlined and some not.
+ * Every tile is bordered and every border belongs to its own tint. A grey
+ * hairline around an amber fill is the mismatch this map exists to prevent:
+ * the border is the quiet edge of the same colour, never a second one.
  *
- * The four *identity* tones carry their own hue in the border; the three
- * *state* tones take the neutral one, because a green or red hairline is a
- * second, quieter way of saying the same thing the fill already says.
+ * Three families ship a border token — `primary`, `email`, `sms` — and use it.
+ * The rest have no `-border` step, so rather than invent a hex the border is
+ * mixed from the family's own solid hue with an alpha. The alphas are measured,
+ * not guessed: the three tokened borders sit at 1.33, 1.31 and 1.27 against
+ * their own fills, so each derived one is tuned to that same ~1.30 weight and
+ * the whole row reads as one set of tiles.
  *
- * `primary`, `email` and `sms` own a matching border token. Cyan does not —
- * there is no `--color-accent-border` — so rather than invent a hex, the
- * border is mixed from `--color-accent` itself. 30% is not a guess: the three
- * tokened borders sit at 1.33, 1.31 and 1.27 against their own fills, and
- * `accent/30` lands on 1.31, so the cyan tile reads at exactly the weight of
- * the three beside it.
+ *   accent/30  1.31    success/25  1.29    warning/40  1.30
+ *   danger/20  1.34    info/20     1.29
+ *
+ * Note that `info` and `email` are the *same blue* — `--color-info` and
+ * `--color-email` are both #2563eb, differing only in how deep their soft is.
+ * They are not interchangeable in one row: pick `email` when the thing is the
+ * Email channel, `info` when it is a state, and never put both side by side.
  */
 const TONES: Record<KpiTone, string> = {
   neutral: "border-border bg-surface-secondary text-text-muted",
@@ -58,9 +64,10 @@ const TONES: Record<KpiTone, string> = {
   accent: "border-accent/30 bg-accent-soft text-accent",
   email: "border-email-border bg-email-soft text-email",
   sms: "border-sms-border bg-sms-soft text-sms",
-  success: "border-border bg-success-soft text-success-text",
-  warning: "border-border bg-warning-soft text-warning-text",
-  danger: "border-border bg-error-soft text-error-text",
+  info: "border-info/20 bg-info-soft text-info-text",
+  success: "border-success/25 bg-success-soft text-success-text",
+  warning: "border-warning/40 bg-warning-soft text-warning-text",
+  danger: "border-error/20 bg-error-soft text-error-text",
 };
 
 /**

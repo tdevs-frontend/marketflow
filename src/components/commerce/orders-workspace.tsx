@@ -52,15 +52,39 @@ function kpis(): CommerceKpi[] {
   ).reduce((sum, item) => sum + item.total, 0);
 
   return [
-    { label: "Total Orders", value: formatNumber(ORDERS.length), icon: ShoppingCart },
+    /*
+     * One tone per stage, so the row reads as a pipeline rather than five
+     * identical tiles. Three of these used to carry no tone at all and came out
+     * the same grey, which put Total, Processing and Completed side by side as
+     * the same object.
+     *
+     * The states keep their zero behaviour: nothing pending is not a warning,
+     * so the amber only appears when there is something to act on.
+     */
+    {
+      label: "Total Orders",
+      value: formatNumber(ORDERS.length),
+      icon: ShoppingCart,
+      tone: "accent",
+    },
     {
       label: "Pending",
       value: formatNumber(pending.length),
       icon: Clock,
       tone: pending.length ? "warning" : "neutral",
     },
-    { label: "Processing", value: formatNumber(processing.length), icon: RefreshCw },
-    { label: "Completed", value: formatNumber(completed.length), icon: Package },
+    {
+      label: "Processing",
+      value: formatNumber(processing.length),
+      icon: RefreshCw,
+      tone: "info",
+    },
+    {
+      label: "Completed",
+      value: formatNumber(completed.length),
+      icon: Package,
+      tone: "success",
+    },
     {
       label: "Revenue",
       value: formatCurrency(revenue),
