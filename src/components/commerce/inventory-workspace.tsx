@@ -266,70 +266,83 @@ export function InventoryWorkspace() {
 
         {/* Activity */}
         <Card className="p-5">
-          <h2 className="text-base">Inventory Activity</h2>
-          <p className="mt-1 text-sm text-text-secondary font-medium">
+          <h2 className="text-base font-bold text-text-primary">
+            Inventory Activity
+          </h2>
+          <p className="mt-1 text-sm font-medium text-text-secondary">
             Every movement, newest first.
           </p>
 
-          <ol className="mt-4">
+          {/* Bled out by the row padding, so the text column still lines up
+              with the title while the focus ring clears it. */}
+          <ol className="-mx-2 mt-4">
             {STOCK_ACTIVITY.map((entry, index) => {
               const positive = entry.delta > 0;
               const last = index === STOCK_ACTIVITY.length - 1;
 
               return (
-                <li key={entry.id} className="relative flex gap-3 pb-4 last:pb-0">
+                <li key={entry.id} className="relative">
+                  {/* Dead centre of the 36px circle: 8px of row padding plus
+                      half the circle. It runs 6px past the row box so the next
+                      row's own padding does not break the line. */}
                   {last ? null : (
                     <span
                       aria-hidden
-                      className="absolute top-9 bottom-0 left-4 w-px bg-border"
+                      className="absolute top-12.5 -bottom-1.5 left-6.5 w-px bg-border"
                     />
                   )}
 
-                  <span
-                    className={cn(
-                      "grid size-8 shrink-0 place-items-center rounded-full",
-                      positive
-                        ? "bg-primary-soft text-primary"
-                        : "bg-error-soft text-error-text",
-                    )}
+                  <Link
+                    href={`${APP_ROUTES.products}/${entry.productId}`}
+                    className="flex gap-3 rounded-panel px-2 py-2.5 focus-visible:shadow-focus focus-visible:outline-none"
                   >
-                    {positive ? (
-                      <Plus className="size-4" aria-hidden />
-                    ) : (
-                      <Minus className="size-4" aria-hidden />
-                    )}
-                  </span>
+                    <span
+                      className={cn(
+                        "grid size-9 shrink-0 place-items-center rounded-full border",
+                        positive
+                          ? "border-primary-border bg-primary-soft text-primary"
+                          : "border-error/20 bg-error-soft text-error-text",
+                      )}
+                    >
+                      {positive ? (
+                        <Plus className="size-4" aria-hidden />
+                      ) : (
+                        <Minus className="size-4" aria-hidden />
+                      )}
+                    </span>
 
-                  <div className="min-w-0 flex-1 pt-0.5">
-                    <p className="text-sm">
-                      <span
-                        className={cn(
-                          "font-bold tabular-nums",
-                          positive ? "text-primary" : "text-error",
-                        )}
-                      >
-                        {positive ? "+" : ""}
-                        {entry.delta}
-                      </span>{" "}
-                      <span className="font-medium text-text-primary">
-                        {entry.productName}
-                      </span>
-                      {/* Which shelf moved. Without it the feed says a number
-                          changed somewhere inside a product. */}
-                      {entry.variantName ? (
-                        <span className="font-medium text-text-secondary">
-                          {" · "}
-                          {entry.variantName}
+                    {/* `pt-2` centres the first line against the circle. */}
+                    <span className="min-w-0 flex-1 space-y-0.5 pt-2">
+                      <span className="block text-sm">
+                        <span
+                          className={cn(
+                            "font-bold tabular-nums",
+                            positive ? "text-primary" : "text-error",
+                          )}
+                        >
+                          {positive ? "+" : ""}
+                          {entry.delta}
+                        </span>{" "}
+                        <span className="font-semibold text-text-primary">
+                          {entry.productName}
                         </span>
-                      ) : null}
-                    </p>
-                    <p className="mt-0.5 text-sm text-text-secondary">
-                      {entry.note ?? REASON_LABEL[entry.reason]}
-                    </p>
-                    <p className="text-sm text-text-muted">
-                      {formatRelativeTime(entry.at)}
-                    </p>
-                  </div>
+                        {/* Which shelf moved. Without it the feed says a number
+                            changed somewhere inside a product. */}
+                        {entry.variantName ? (
+                          <span className="font-medium text-text-secondary">
+                            {" · "}
+                            {entry.variantName}
+                          </span>
+                        ) : null}
+                      </span>
+                      <span className="block text-sm font-medium text-text-secondary">
+                        {entry.note ?? REASON_LABEL[entry.reason]}
+                      </span>
+                      <span className="block text-sm font-medium text-text-muted">
+                        {formatRelativeTime(entry.at)}
+                      </span>
+                    </span>
+                  </Link>
                 </li>
               );
             })}
