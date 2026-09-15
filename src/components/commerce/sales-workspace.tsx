@@ -324,10 +324,23 @@ export function SalesWorkspace() {
 /**
  * How each of the three cards is dressed.
  *
- * The colours are not picked for this component: physical is cyan, digital is
- * the email blue and services are the SMS violet everywhere else in Commerce —
- * the same mapping the Products KPI row uses — so a merchant who has learnt
- * that violet means "service" on one page is not taught something else here.
+ * The hues come from the *Brand* block of `variables.css` — primary, accent
+ * and secondary — and deliberately not from Channel identity. `--color-email`
+ * and `--color-sms` mean "the Email channel" and "the SMS channel" in this
+ * product; spending them on a product category makes a violet tile on Top
+ * Services read as SMS, which is a claim about a module that has nothing to do
+ * with the card. The brand's own indigo-cyan-violet is what a merchant already
+ * reads as "this dashboard".
+ *
+ * Two classes per group rather than one, because the tile and the rank badge
+ * want different ink. The icon is decorative and takes the hue; the rank is a
+ * *number*, so it takes `text-text-primary` — cyan on cyan-soft is 2.33:1,
+ * fine behind an icon and far too faint to set a digit in.
+ *
+ * Where a family has no soft or border step, the tint is mixed from its own
+ * token rather than invented: `secondary/10` and `secondary/20` land at the
+ * same 1.33:1 weight `primary-border` has against `primary-soft`, so the three
+ * tiles read as one set.
  *
  * Structure is identical across the three on purpose. Only the hue, the icon
  * and the wording change; three differently-shaped cards in one row would read
@@ -335,28 +348,53 @@ export function SalesWorkspace() {
  */
 const GROUP_STYLE: Record<
   ProductType,
-  { title: string; subtitle: string; icon: LucideIcon; tone: string; bar: string }
+  {
+    title: string;
+    subtitle: string;
+    icon: LucideIcon;
+    /** Header tile: ground, border and the icon's ink. */
+    tile: string;
+    /** Rank badge: ground and border only — the digit is set separately. */
+    badge: string;
+    bar: string;
+  }
 > = {
   physical: {
     title: "Top Physical Products",
     subtitle: "Best performing physical items by revenue",
     icon: Package,
-    tone: "border-accent/30 bg-accent-soft text-accent",
-    bar: "bg-accent",
+    tile: "border-primary-border bg-primary-soft text-primary",
+    badge: "border-primary-border bg-primary-soft",
+    bar: "bg-primary",
   },
   digital: {
     title: "Top Digital Products",
     subtitle: "Best performing digital items by revenue",
     icon: BookOpen,
-    tone: "border-email-border bg-email-soft text-email",
-    bar: "bg-email",
+    /*
+     * Blue, not the brand cyan.
+     *
+     * `accent` is the only Brand hue left once indigo and violet are taken,
+     * and it cannot be read: #06b6d4 on `accent-soft` is 2.33:1, which is
+     * below the 3:1 this file's own tokens hold themselves to. `info` is the
+     * one family with a purpose-built ink step — `--color-info-text` — and it
+     * lands at 5.49:1, between the 5.62 of primary and the 4.91 of secondary,
+     * so all three cards read at one weight.
+     *
+     * It is also the tone `kpi-strip` already defines for exactly this, which
+     * is why the classes below are identical to the ones a KPI tile uses.
+     */
+    tile: "border-info/20 bg-info-soft text-info-text",
+    badge: "border-info/20 bg-info-soft",
+    bar: "bg-info",
   },
   service: {
     title: "Top Services",
     subtitle: "Best performing services by revenue",
     icon: CalendarDays,
-    tone: "border-sms-border bg-sms-soft text-sms",
-    bar: "bg-sms",
+    tile: "border-secondary/20 bg-secondary/10 text-secondary",
+    badge: "border-secondary/20 bg-secondary/10",
+    bar: "bg-secondary",
   },
 };
 
@@ -420,7 +458,7 @@ function TopSellers() {
               <span
                 className={cn(
                   "grid size-9 shrink-0 place-items-center rounded-panel border",
-                  style.tone,
+                  style.tile,
                 )}
               >
                 <Icon className="size-4.5" aria-hidden />
@@ -442,8 +480,8 @@ function TopSellers() {
                         <span className="flex items-center gap-3">
                           <span
                             className={cn(
-                              "grid size-8 shrink-0 place-items-center rounded-full border text-sm font-bold tabular-nums",
-                              style.tone,
+                              "grid size-8 shrink-0 place-items-center rounded-full border text-sm font-bold text-text-primary tabular-nums",
+                              style.badge,
                             )}
                           >
                             {index + 1}
