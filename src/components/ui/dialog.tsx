@@ -63,7 +63,7 @@ function Header({
   return (
     <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-4">
       <div>
-        <h2 className="text-base">{title}</h2>
+        <h2 className="text-base sm:text-lg">{title}</h2>
         {description ? (
           <p className="mt-1 text-sm text-text-secondary font-medium">{description}</p>
         ) : null}
