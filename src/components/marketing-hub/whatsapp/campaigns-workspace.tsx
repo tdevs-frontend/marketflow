@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { TABLE_PAGE_SIZE } from "@/constants/app";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog } from "@/components/ui/dialog";
@@ -40,7 +41,8 @@ import { MarketingStats, type MarketingStat } from "../marketing-stats";
 import { ChannelPerformanceChart } from "../channel-performance-chart";
 
 const ALL = "all";
-const PER_PAGE = 8;
+/* The dashboard-wide row count. */
+const PER_PAGE = TABLE_PAGE_SIZE;
 
 const SORT_OPTIONS = [
   { value: "createdAt", label: "Newest first" },

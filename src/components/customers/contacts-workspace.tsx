@@ -72,7 +72,6 @@ import {
   ActiveFilterChips,
   BulkActionBar,
   ColumnsMenu,
-  RowsPerPage,
   type ColumnOption,
   type FilterChip,
 } from "./customer-toolbar";
@@ -848,21 +847,15 @@ export function ContactsWorkspace() {
               ))}
             </ul>
 
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-              <RowsPerPage
-                value={table.pageSize}
-                onChange={table.setPageSize}
+            <div className="mt-4">
+              <Pagination
+                page={current}
+                totalPages={totalPages}
+                total={filtered.length}
+                perPage={table.pageSize}
+                onChange={table.setPage}
+                noun="contacts"
               />
-              <div className="min-w-0 flex-1">
-                <Pagination
-                  page={current}
-                  totalPages={totalPages}
-                  total={filtered.length}
-                  perPage={table.pageSize}
-                  onChange={table.setPage}
-                  noun="contacts"
-                />
-              </div>
             </div>
           </>
         )}

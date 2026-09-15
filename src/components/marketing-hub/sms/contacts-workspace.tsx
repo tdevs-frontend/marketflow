@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { AvatarLabel } from "@/components/ui/avatar";
+import { TABLE_PAGE_SIZE } from "@/constants/app";
 import { Badge, type BadgeTone } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -56,7 +57,8 @@ import type { SmsContact, SmsContactStatus } from "@/types/sms";
  */
 
 const ALL = "all";
-const PER_PAGE = 10;
+/* The dashboard-wide row count. */
+const PER_PAGE = TABLE_PAGE_SIZE;
 const theme = CHANNEL_THEME.sms;
 
 const STATUS_TONES: Record<SmsContactStatus, BadgeTone> = {

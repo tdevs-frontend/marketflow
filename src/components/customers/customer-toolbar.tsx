@@ -5,9 +5,7 @@ import { Columns3, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Menu } from "@/components/ui/menu";
-import { Select } from "@/components/ui/select";
 import { Tooltip } from "@/components/ui/tooltip";
-import { PAGE_SIZES } from "@/hooks/useTableState";
 import { cn } from "@/lib/utils";
 
 /* -------------------------------------------------------------------------- */
@@ -156,44 +154,6 @@ export function ColumnsMenu<T extends string>({
         },
       ]}
     />
-  );
-}
-
-/* -------------------------------------------------------------------------- */
-/* Rows per page                                                              */
-/* -------------------------------------------------------------------------- */
-
-/**
- * Rows per page, beside the pagination it controls.
- *
- * Hidden below `sm`: on a phone the list is a stack of cards and the choice
- * between 20 and 100 of them is not one anybody wants to make by thumb.
- */
-export function RowsPerPage({
-  value,
-  onChange,
-  className,
-}: {
-  value: number;
-  onChange: (value: number) => void;
-  className?: string;
-}) {
-  return (
-    <div className={cn("flex items-center gap-2 max-sm:hidden", className)}>
-      <span className="text-sm whitespace-nowrap text-text-muted">Rows</span>
-      <Select
-        label="Rows per page"
-        hideLabel
-        size="sm"
-        value={String(value)}
-        onChange={(next) => onChange(Number(next))}
-        options={PAGE_SIZES.map((size) => ({
-          value: String(size),
-          label: String(size),
-        }))}
-        className="w-20"
-      />
-    </div>
   );
 }
 

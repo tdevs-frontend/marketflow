@@ -61,8 +61,38 @@ export function Pagination({
   const step = (delta: number) =>
     onChange(Math.min(Math.max(page + delta, 1), totalPages));
 
+  /*
+   * Disabled says inactive with colour, not with opacity.
+   *
+   * `opacity-40` faded the whole control — border included — so on the first
+   * and last page the arrow stopped being a button at all: the box dissolved
+   * into the card and the chevron landed around 2:1 against it. A merchant
+   * could not tell whether the control was off or simply not there, which is
+   * the one thing a disabled state has to communicate.
+   *
+   * So the shape stays at full strength and only the ink steps back: a tinted
+   * ground plus muted text, which holds about 4.2:1 while still reading
+   * clearly quieter than the 8.7:1 of an enabled arrow. This is the same
+   * correction `Button`'s primary variant already makes — see the
+   * `disabled:opacity-100` note there — that muting an already-neutral
+   * surface by opacity buys nothing and costs the contrast.
+   *
+   * The cursor is the other half of saying so, and `pointer-events-none` was
+   * what prevented it: an element that takes no pointer events cannot answer
+   * one with a cursor either, so the arrow kept the plain pointer and gave no
+   * feedback at all on hover. It is dropped for `cursor-not-allowed`, which is
+   * what `Input`, `Select`, `Checkbox` and the menu items already use.
+   *
+   * Dropping it means the hover rules would otherwise still match a disabled
+   * button — `:hover` applies to disabled controls even though they fire no
+   * events — so they are scoped to `enabled:` rather than left to light up a
+   * control that cannot be clicked.
+   */
   const arrow =
-    "grid size-8 place-items-center rounded-btn border border-border text-text-secondary transition-colors hover:border-border-strong hover:text-text-primary disabled:pointer-events-none disabled:opacity-40 focus-visible:shadow-focus focus-visible:outline-none";
+    "grid size-8 place-items-center rounded-btn border border-border text-text-secondary transition-colors" +
+    " enabled:hover:border-border-strong enabled:hover:text-text-primary" +
+    " disabled:cursor-not-allowed disabled:bg-surface-secondary disabled:text-text-muted" +
+    " focus-visible:shadow-focus focus-visible:outline-none";
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
@@ -87,7 +117,7 @@ export function Pagination({
           aria-label="Previous page"
           className={arrow}
         >
-          <ChevronLeft className="size-4" aria-hidden />
+          <ChevronLeft className="size-5" aria-hidden />
         </button>
 
         {pageWindow(page, totalPages).map((value, index) =>
@@ -107,7 +137,7 @@ export function Pagination({
               aria-label={`Page ${value}`}
               aria-current={value === page ? "page" : undefined}
               className={cn(
-                "grid size-8 place-items-center rounded-btn text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                "grid size-8 place-items-center rounded-btn text-sm font-bold transition-colors focus-visible:shadow-focus focus-visible:outline-none",
                 value === page
                   ? "bg-primary text-white"
                   : "border border-border text-text-secondary hover:border-border-strong hover:text-text-primary",

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { TABLE_PAGE_SIZE } from "@/constants/app";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -48,7 +49,8 @@ import { PostStatusBadge, PostThumb } from "./post-status";
  */
 
 const ALL = "all";
-const PER_PAGE = 9;
+/* The dashboard-wide row count. */
+const PER_PAGE = TABLE_PAGE_SIZE;
 
 type View = "grid" | "table";
 

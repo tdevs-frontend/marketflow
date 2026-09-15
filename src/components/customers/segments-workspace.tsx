@@ -26,6 +26,7 @@ import { FilterBar } from "@/components/ui/filter-bar";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { KpiStrip, type Kpi } from "@/components/ui/kpi-strip";
 import { Menu } from "@/components/ui/menu";
+import { Pagination } from "@/components/ui/pagination";
 import { Select } from "@/components/ui/select";
 import {
   SortableTH,
@@ -55,7 +56,6 @@ import { formatDate, formatNumber, formatRelativeTime } from "@/lib/format";
 import { ContactStatusBadge, LifecycleBadge } from "./customer-badges";
 import {
   ActiveFilterChips,
-  RowsPerPage,
   type FilterChip,
 } from "./customer-toolbar";
 import {
@@ -579,7 +579,7 @@ function SegmentDrawer({
  */
 export function CustomerSegmentsWorkspace() {
   const toast = useToast();
-  const table = useTableState<FilterKey>(FILTERS, { defaultPageSize: 20 });
+  const table = useTableState<FilterKey>(FILTERS);
 
   const [searchDraft, setSearchDraft] = useState(table.search);
   const debounced = useDebounce(searchDraft, 300);
@@ -958,15 +958,23 @@ export function CustomerSegmentsWorkspace() {
               })}
             </ul>
 
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-              <RowsPerPage
-                value={table.pageSize}
-                onChange={table.setPageSize}
+            {/*
+              * Real pagination, not just a count.
+              *
+              * The list was already being sliced to a page — `totalPages` was
+              * computed and then never rendered — so anything past the first
+              * page was unreachable and the footer reported a total the table
+              * was not showing. The shared component fixes both.
+              */}
+            <div className="mt-4">
+              <Pagination
+                page={page}
+                totalPages={totalPages}
+                total={filtered.length}
+                perPage={table.pageSize}
+                onChange={table.setPage}
+                noun="segments"
               />
-              <p className="text-sm text-text-muted">
-                {formatNumber(filtered.length)} segment
-                {filtered.length === 1 ? "" : "s"}
-              </p>
             </div>
           </>
         )}

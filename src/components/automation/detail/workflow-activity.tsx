@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { TABLE_PAGE_SIZE } from "@/constants/app";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { FilterBar } from "@/components/ui/filter-bar";
@@ -33,7 +34,8 @@ const DATE_WINDOWS = [
   { value: "all", label: "All time", hours: Infinity },
 ];
 
-const PAGE_SIZE = 15;
+/* The dashboard-wide row count. */
+const PAGE_SIZE = TABLE_PAGE_SIZE;
 
 export function WorkflowActivity({ workflow }: { workflow: Workflow }) {
   const [search, setSearch] = useState("");

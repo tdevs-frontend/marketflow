@@ -103,7 +103,7 @@ const SCOPE_OPTIONS = [
 export function ActivityWorkspace() {
   const toast = useToast();
   const permissions = useWorkspacePermissions();
-  const table = useTableState<FilterKey>(FILTERS, { defaultPageSize: 20 });
+  const table = useTableState<FilterKey>(FILTERS);
 
   const [selected, setSelected] = useState<WorkspaceAuditEvent | null>(null);
   const [range, setRange] = useState<DateRangeValue>(DEFAULT_RANGE);

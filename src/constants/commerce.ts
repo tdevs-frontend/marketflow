@@ -17,6 +17,7 @@ import type {
   SalesChannel,
   VariantStatus,
 } from "@/types/commerce";
+import { TABLE_PAGE_SIZE } from "@/constants/app";
 
 /** `value` is the stored key, `label` the merchant-facing wording. */
 export interface Option<T extends string> {
@@ -109,9 +110,14 @@ export const DISCOUNT_STATUSES: Option<DiscountStatus>[] = [
   { value: "draft", label: "Draft" },
 ];
 
-export const PRODUCTS_PER_PAGE = 8;
-export const ORDERS_PER_PAGE = 8;
-export const CATEGORIES_PER_PAGE = 8;
+/*
+ * Commerce re-exports the dashboard-wide row count rather than setting its
+ * own. These were three separate 8s; the aliases are kept so the call sites
+ * still read in their own vocabulary, but there is one number behind them.
+ */
+export const PRODUCTS_PER_PAGE = TABLE_PAGE_SIZE;
+export const ORDERS_PER_PAGE = TABLE_PAGE_SIZE;
+export const CATEGORIES_PER_PAGE = TABLE_PAGE_SIZE;
 
 /* -------------------------------------------------------------------------- */
 /* Fulfilment, per product type                                               */

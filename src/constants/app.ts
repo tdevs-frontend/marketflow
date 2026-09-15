@@ -81,9 +81,20 @@ export const APP_ROUTES = {
 
 export const AUTH_TOKEN_KEY = "marketflow.token";
 
-export const DEFAULT_PAGE_SIZE = 20;
-
-export const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const;
+/**
+ * How many rows a dashboard table shows, everywhere.
+ *
+ * One number for the whole product rather than a control on each table. The
+ * per-table choice it replaces was offered as a Rows dropdown on four tables
+ * and hard-coded at 8, 9, 10, 15 or 20 on the rest — so the same list changed
+ * height depending on which page you reached it from, and the setting a
+ * merchant picked on Contacts meant nothing on Orders.
+ *
+ * 15 is the working number: enough rows that a page is worth scanning and few
+ * enough that the footer stays on screen at a laptop height, which is what
+ * makes the pagination usable rather than something you scroll to find.
+ */
+export const TABLE_PAGE_SIZE = 15;
 
 export const CHANNELS = ["email", "sms", "whatsapp"] as const;
 

@@ -30,7 +30,6 @@ import { Tooltip } from "@/components/ui/tooltip";
 import { useToast } from "@/components/ui/toast";
 import {
   ActiveFilterChips,
-  RowsPerPage,
   type FilterChip,
 } from "@/components/customers/customer-toolbar";
 import { AUTOMATION_ROUTES, WORKFLOW_STATUSES } from "@/constants/automation";
@@ -613,18 +612,15 @@ export function WorkflowsWorkspace() {
         )}
 
         {rows.length > 0 ? (
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-            <RowsPerPage value={table.pageSize} onChange={table.setPageSize} />
-            <div className="min-w-0 flex-1">
-              <Pagination
-                page={current}
-                totalPages={totalPages}
-                total={filtered.length}
-                perPage={table.pageSize}
-                onChange={table.setPage}
-                noun="workflows"
-              />
-            </div>
+          <div className="mt-4">
+            <Pagination
+              page={current}
+              totalPages={totalPages}
+              total={filtered.length}
+              perPage={table.pageSize}
+              onChange={table.setPage}
+              noun="workflows"
+            />
           </div>
         ) : null}
       </Card>

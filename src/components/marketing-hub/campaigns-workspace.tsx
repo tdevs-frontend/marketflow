@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Archive, Pause, Play, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { TABLE_PAGE_SIZE } from "@/constants/app";
 import { Card } from "@/components/ui/card";
 import { Dialog } from "@/components/ui/dialog";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -23,7 +24,8 @@ import type { CampaignStatus, MarketingChannel } from "@/types/marketing";
 import { CampaignTable, type CampaignSortField } from "./campaign-table";
 
 const ALL = "all";
-const PER_PAGE = 8;
+/* The dashboard-wide row count. */
+const PER_PAGE = TABLE_PAGE_SIZE;
 
 const SORT_OPTIONS: { value: CampaignSortField; label: string }[] = [
   { value: "createdAt", label: "Newest first" },

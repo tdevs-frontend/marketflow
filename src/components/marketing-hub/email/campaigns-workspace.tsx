@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 
 import { Button, ButtonLink } from "@/components/ui/button";
+import { TABLE_PAGE_SIZE } from "@/constants/app";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ChartCard } from "@/components/ui/chart-card";
@@ -57,7 +58,8 @@ import { EMAIL_STATUS_OPTIONS, EmailCampaignStatusBadge } from "./campaign-row";
  */
 
 const ALL = "all";
-const PER_PAGE = 8;
+/* The dashboard-wide row count. */
+const PER_PAGE = TABLE_PAGE_SIZE;
 const theme = CHANNEL_THEME.email;
 
 const SORT_OPTIONS = [

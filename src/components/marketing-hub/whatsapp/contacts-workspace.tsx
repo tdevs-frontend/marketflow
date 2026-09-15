@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { PageHeader } from "@/components/layout/page-header";
+import { TABLE_PAGE_SIZE } from "@/constants/app";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -45,7 +46,8 @@ import {
 } from "./contact-dialogs";
 
 const ALL = "all";
-const PER_PAGE = 8;
+/* The dashboard-wide row count. */
+const PER_PAGE = TABLE_PAGE_SIZE;
 
 /** "This month" is May 2026 in the fixture data. */
 const MONTH_START = new Date("2026-05-01T00:00:00Z");

@@ -71,7 +71,7 @@ const ROLE_OPTIONS = [
 export function TeamWorkspace() {
   const toast = useToast();
   const permissions = useWorkspacePermissions();
-  const table = useTableState<FilterKey>(FILTERS, { defaultPageSize: 20 });
+  const table = useTableState<FilterKey>(FILTERS);
 
   const [members, setMembers] = useState<WorkspaceMember[]>(WORKSPACE_MEMBERS);
   const [inviting, setInviting] = useState(false);

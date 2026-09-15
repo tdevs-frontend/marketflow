@@ -19,7 +19,6 @@ import { Pagination } from "@/components/ui/pagination";
 import { Select } from "@/components/ui/select";
 import {
   ActiveFilterChips,
-  RowsPerPage,
   type FilterChip,
 } from "@/components/customers/customer-toolbar";
 import { EXECUTION_STATUSES, NODE_TYPES } from "@/constants/automation";
@@ -117,7 +116,7 @@ export function ActivityWorkspace({
 }: {
   initialRun?: WorkflowRun;
 }) {
-  const table = useTableState<FilterKey>(FILTERS, { defaultPageSize: 20 });
+  const table = useTableState<FilterKey>(FILTERS);
 
   const [searchDraft, setSearchDraft] = useState(table.search);
   const debounced = useDebounce(searchDraft, 300);
@@ -349,18 +348,15 @@ export function ActivityWorkspace({
                 onOpen={(runId) => setOpenRun(runById(runId) ?? null)}
               />
 
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                <RowsPerPage value={table.pageSize} onChange={table.setPageSize} />
-                <div className="min-w-0 flex-1">
-                  <Pagination
-                    page={current}
-                    totalPages={totalPages}
-                    total={filtered.length}
-                    perPage={table.pageSize}
-                    onChange={table.setPage}
-                    noun="steps"
-                  />
-                </div>
+              <div className="mt-4">
+                <Pagination
+                  page={current}
+                  totalPages={totalPages}
+                  total={filtered.length}
+                  perPage={table.pageSize}
+                  onChange={table.setPage}
+                  noun="steps"
+                />
               </div>
             </>
           )}

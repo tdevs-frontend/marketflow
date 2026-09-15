@@ -4,6 +4,7 @@ import { useCallback, useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import type { SortDirection } from "@/components/ui/table";
+import { TABLE_PAGE_SIZE } from "@/constants/app";
 
 /**
  * Table state that lives in the URL rather than in component state.
@@ -27,16 +28,13 @@ export interface TableStateOptions<Column extends string> {
   columns?: readonly Column[];
   /** Columns hidden unless the user turns them on. */
   hiddenByDefault?: readonly Column[];
-  defaultPageSize?: number;
 }
-
-export const PAGE_SIZES = [20, 50, 100] as const;
 
 export function useTableState<
   Filter extends string,
   Column extends string = string,
 >(filterKeys: readonly Filter[], options: TableStateOptions<Column> = {}) {
-  const { columns = [], hiddenByDefault = [], defaultPageSize = 20 } = options;
+  const { columns = [], hiddenByDefault = [] } = options;
 
   const router = useRouter();
   const pathname = usePathname();
@@ -79,10 +77,16 @@ export function useTableState<
   const sortField = params.get("sort");
   const sortDirection: SortDirection = params.get("dir") === "asc" ? "asc" : "desc";
 
-  const rawSize = Number(params.get("size"));
-  const pageSize = (PAGE_SIZES as readonly number[]).includes(rawSize)
-    ? rawSize
-    : defaultPageSize;
+  /*
+   * Page size is fixed, and deliberately not a URL param.
+   *
+   * It used to read `?size=` and back a Rows dropdown. That put a display
+   * preference in the same place as the filters — so a shared link carried one
+   * person's row count to everyone who opened it — and it only ever existed on
+   * four of the dashboard's tables, which is how the same list ended up a
+   * different height depending on where you reached it from.
+   */
+  const pageSize = TABLE_PAGE_SIZE;
 
   const page = Math.max(1, Number(params.get("page")) || 1);
 
@@ -161,9 +165,6 @@ export function useTableState<
       ),
 
     setPage: (value: number) => write({ page: value === 1 ? null : value }),
-
-    setPageSize: (value: number) =>
-      write({ size: value === defaultPageSize ? null : value, page: null }),
 
     toggleColumn: (column: Column) => {
       const next = new Set(hidden);

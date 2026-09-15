@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { TABLE_PAGE_SIZE } from "@/constants/app";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -54,7 +55,8 @@ import { SmsComposer, SmsPreview } from "./composer";
  */
 
 const ALL = "all";
-const PER_PAGE = 8;
+/* The dashboard-wide row count. */
+const PER_PAGE = TABLE_PAGE_SIZE;
 const theme = CHANNEL_THEME.sms;
 
 const TOTALS = smsTotals(SMS_CAMPAIGNS);
