@@ -1,15 +1,8 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useRef } from "react";
 import type { LucideIcon } from "lucide-react";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import { panelId, tabId } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
@@ -39,8 +32,12 @@ export interface ProductTabsProps {
  * The count, as a chip rather than "(14)".
  *
  * `min-w` and `tabular-nums` together are what stop the row twitching: without
- * them a tab jumps sideways the moment its count crosses from 9 to 10, and the
- * underline chases it.
+ * them a tab jumps sideways the moment its count crosses from 9 to 10.
+ *
+ * The active chip steps one rung deeper than the tab it sits in —
+ * `primary-soft-hover` on `primary-soft` — so it stays a distinct object rather
+ * than dissolving into the tab's own ground. It holds 5.1:1 against that deeper
+ * tint, which a digit needs and a decorative icon would not.
  *
  * A zero is dimmed but never disabled. "Nothing archived" is a useful answer,
  * and a tab you cannot click is a tab that refuses to tell you so.
@@ -49,11 +46,11 @@ function CountChip({ count, active }: { count: number; active: boolean }) {
   return (
     <span
       className={cn(
-        "inline-flex min-w-6 items-center justify-center rounded-full px-1.5 py-0.5 text-xs font-bold tabular-nums transition-colors",
+        "inline-flex h-5 w-5 items-center justify-center rounded-full text-meta font-bold tabular-nums transition-colors leading-none",
         active
-          ? "bg-primary-soft text-primary-dark"
-          : "bg-surface-secondary text-text-secondary",
-        count === 0 && "opacity-55",
+          ? "bg-primary-soft-hover text-primary"
+          : "bg-surface text-text-secondary",
+        count === 0 && "opacity-80",
       )}
     >
       {count}
@@ -68,16 +65,17 @@ function CountChip({ count, active }: { count: number; active: boolean }) {
 /**
  * The product list's filter row.
  *
- * Underlined tabs on the table's own rule rather than a pill track floating
- * above it: the row and the table beneath it are one object, and a grey capsule
- * with its own edges made the filters look like a widget that had landed on the
- * page. The single bottom border is shared — the active tab's marker sits *on*
- * the line the table hangs from.
+ * Filled tabs rather than an underline. An underline is the right marker when
+ * tabs swap whole panels and the reader is already looking at them; these are
+ * the first control on the page and have to announce themselves as *filters*
+ * from across the screen. A tinted, bordered box does that at a glance — the
+ * selected filter reads as switched on, rather than as a line you have to go
+ * looking for.
  *
- * The marker is one element that moves, not a border per tab. That is what lets
- * it travel between tabs instead of blinking out and in, and it animates on
- * `transform` alone — `translateX` for position and `scaleX` on a 1px bar for
- * width — so the browser never re-lays-out the row mid-slide.
+ * Every tab carries a border, transparent when idle, so selecting one cannot
+ * shift the row by a pixel. There is no sliding marker any more: the fill *is*
+ * the marker, and a bar underneath a filled box would be the same thing said
+ * twice.
  */
 export function ProductTabs({
   tabs,
@@ -87,35 +85,7 @@ export function ProductTabs({
   loading = false,
   className,
 }: ProductTabsProps) {
-  const listRef = useRef<HTMLDivElement>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
   const buttons = useRef(new Map<string, HTMLButtonElement>());
-
-  const [marker, setMarker] = useState({ x: 0, width: 0 });
-  /* The first measurement must not animate, or the marker slides in from the
-     left edge on every mount. */
-  const [ready, setReady] = useState(false);
-
-  const measure = useCallback(() => {
-    const list = listRef.current;
-    const active = buttons.current.get(activeTab);
-    if (!list || !active) return;
-    setMarker({ x: active.offsetLeft, width: active.offsetWidth });
-  }, [activeTab]);
-
-  useLayoutEffect(() => {
-    measure();
-    /* Fonts and a horizontal scroll both change the geometry after first
-       paint, so the marker is re-measured rather than trusted once. */
-    const observer = new ResizeObserver(measure);
-    if (listRef.current) observer.observe(listRef.current);
-    return () => observer.disconnect();
-  }, [measure, tabs, loading]);
-
-  useEffect(() => {
-    const id = requestAnimationFrame(() => setReady(true));
-    return () => cancelAnimationFrame(id);
-  }, []);
 
   /* On a phone the active tab can start off-screen — a filter you cannot see
      is one you will not realise is applied. `nearest` keeps the page itself
@@ -172,25 +142,27 @@ export function ProductTabs({
         tabIndex={active ? 0 : -1}
         onClick={() => onTabChange(tab.id)}
         className={cn(
-          /* `first:pl-0` is what lines the first label up with the table's
-             first column — the same rule `TH` and `TD` already use, so the
-             row and the header below it start on one vertical. */
-          "group inline-flex shrink-0 snap-start items-center gap-2 border-b-2 px-3 py-2.5 text-sm whitespace-nowrap transition-colors first:pl-0",
-          "focus-visible:rounded-btn focus-visible:shadow-focus focus-visible:outline-none",
-          /* The 2px border is never painted — it only holds the height steady
-             so the row does not move when the marker slides under a tab. Hover
-             is a colour change alone: a grey rule appearing under whichever tab
-             the pointer crossed competed with the indigo one marking the tab
-             that is actually selected. */
+          "inline-flex shrink-0 snap-start items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[15px] whitespace-nowrap transition-colors leading-none",
+          "focus-visible:shadow-focus focus-visible:outline-none",
+          /* Weight lives in the branches, never in the base: it is a
+             font-*family* swap here, and two of them on one element would be
+             settled by stylesheet order rather than by which branch ran. */
           active
-            ? "border-transparent font-semibold text-primary"
-            : "border-transparent font-semibold text-text-secondary hover:text-text-primary",
+            ? "border-primary-border bg-primary-soft font-semibold text-primary"
+            : "border-transparent bg-surface-secondary font-bold text-text-secondary hover:bg-border hover:text-text-primary leading-none",
         )}
       >
         <Icon className="size-3.5 shrink-0" aria-hidden />
         {tab.label}
         {loading ? (
-          <Skeleton className="h-5 w-6 rounded-full" />
+          /* Not `Skeleton`: its ground is `surface-secondary`, which is now
+             the idle tab's own colour, so it would pulse invisibly. A
+             className cannot fix that — `cn()` is a plain join and the
+             component's own background wins on stylesheet order. */
+          <span
+            aria-hidden
+            className="h-5 w-6 animate-pulse rounded-full bg-surface"
+          />
         ) : (
           <CountChip count={tab.count} active={active} />
         )}
@@ -199,43 +171,26 @@ export function ProductTabs({
   };
 
   return (
-    <div className={cn("relative border-b border-border", className)}>
-      <div ref={scrollRef} className="no-scrollbar snap-x overflow-x-auto">
+    <div className={cn("relative", className)}>
+      <div className="no-scrollbar snap-x overflow-x-auto">
         <div
-          ref={listRef}
           role="tablist"
           aria-label="Filter products"
           aria-orientation="horizontal"
           onKeyDown={onKeyDown}
-          /* `min-w-max` keeps the row from wrapping; it overflows and scrolls
-             instead. No `w-full`, because nothing is pushed to the far edge
-             any more — every tab reads left to right in one sequence. */
-          className="relative flex min-w-max items-center gap-1"
+          /*
+           * `min-w-max` keeps the row from wrapping; it overflows and scrolls
+           * instead.
+           *
+           * No negative margin. The row used to be pulled left by one tab's
+           * padding so the first *label* sat on the table's first column —
+           * correct while a tab was only its text, and wrong now that every tab
+           * is a filled box: it left the first box hanging into the card's
+           * padding. With a visible edge, the edge is the thing to align.
+           */
+          className="flex min-w-max items-center gap-1"
         >
-          {/*
-            * One uninterrupted sequence.
-            *
-            * Type and lifecycle were split by a rule at one point. It bought
-            * less than it cost: the tabs already read in that order, the
-            * arrow keys already run straight through them, and a divider in
-            * a row this short mostly added a thing to look at. Order carries
-            * the grouping now.
-            */}
           {tabs.map(renderTab)}
-
-          {/* The marker. 1px wide and scaled, so position and size are one
-              composited transform rather than a layout pass per frame. */}
-          <span
-            aria-hidden
-            className={cn(
-              "absolute -bottom-px left-0 h-0.5 w-px origin-left rounded-full bg-primary",
-              ready && "transition-transform duration-200 ease-out",
-              marker.width === 0 && "opacity-0",
-            )}
-            style={{
-              transform: `translateX(${marker.x}px) scaleX(${marker.width})`,
-            }}
-          />
         </div>
       </div>
 
@@ -243,7 +198,7 @@ export function ProductTabs({
           the row already fits. */}
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-surface to-transparent md:hidden"
+        className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-linear-to-l from-surface to-transparent md:hidden"
       />
     </div>
   );
