@@ -1,12 +1,16 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useCallback, useId, useMemo, useState } from "react";
 import {
   Archive,
+  Briefcase,
   CheckCircle2,
   BookOpen,
   CalendarDays,
+  Download,
+  FileEdit,
+  Layers,
   Copy,
   Eye,
   Plus,
@@ -45,7 +49,8 @@ import {
   STOCK_STATUSES,
   UNIT_NOUN,
 } from "@/constants/commerce";
-import { SegmentedControl } from "@/components/ui/segmented-control";
+import { panelId, tabId } from "@/components/ui/tabs";
+import { ProductTabs, type ProductTab } from "./product-tabs";
 import {
   COMMERCE_PRODUCTS,
   CATEGORIES,
@@ -160,24 +165,34 @@ function kpis(counts: ProductCounts): CommerceKpi[] {
 /* -------------------------------------------------------------------------- */
 
 /**
- * The views the strip offers: three product types, then two lifecycle states.
+ * The views the row offers: three product types, then two lifecycle states.
  *
- * Draft and Archived sit alongside the types rather than only in the status
- * dropdown because they are how a merchant *browses* — "show me what is not
- * live yet" — while the dropdown narrows within a view.
+ * Both are ways of narrowing one list, which is why they share a row. They
+ * do answer different questions — type is what a merchant sells, draft and
+ * archived are where a thing is in its life — and the order says so: the
+ * three types first, then the two states any of them can be in.
  */
 type ProductView = typeof ALL | ProductType | "draft" | "archived";
 
-const PRODUCT_VIEWS: { value: ProductView; label: string }[] = [
-  { value: ALL, label: "All" },
-  { value: "physical", label: "Physical" },
-  { value: "digital", label: "Digital" },
-  { value: "service", label: "Services" },
-  { value: "draft", label: "Draft" },
-  { value: "archived", label: "Archived" },
+const PRODUCT_VIEWS: {
+  value: ProductView;
+  label: string;
+  icon: ProductTab["icon"];
+}[] = [
+  { value: ALL, label: "All", icon: Layers },
+  { value: "physical", label: "Physical", icon: Package },
+  { value: "digital", label: "Digital", icon: Download },
+  { value: "service", label: "Services", icon: Briefcase },
+  { value: "draft", label: "Draft", icon: FileEdit },
+  { value: "archived", label: "Archived", icon: Archive },
 ];
 
-export function ProductsWorkspace() {
+export function ProductsWorkspace({
+  initialTab,
+}: {
+  /** The raw `?tab=` the route read. Validated below, not by the caller. */
+  initialTab?: string;
+}) {
   const router = useRouter();
   /*
    * One list, filtered — not six pages.
@@ -187,7 +202,43 @@ export function ProductsWorkspace() {
    * merchant who only sells services should be able to reach their whole
    * catalogue without meeting a Physical tab that is always empty.
    */
-  const [view, setView] = useState<ProductView>(ALL);
+  const idBase = useId();
+
+  /*
+   * The tab is state, and the URL is kept in step with it.
+   *
+   * Seeded from the server-read `?tab=`, so a refresh or a pasted link opens
+   * on the right view with the list already rendered. Every change writes the
+   * parameter back with `replace` rather than `push` — switching a filter is
+   * not a step a merchant wants to walk back through one tab at a time — and
+   * `scroll: false` keeps the page where they were reading.
+   */
+  const [view, setViewState] = useState<ProductView>(() =>
+    /* A hand-edited URL lands on All, not on a view that filters the list
+       to nothing. */
+    PRODUCT_VIEWS.some((item) => item.value === initialTab)
+      ? (initialTab as ProductView)
+      : ALL,
+  );
+
+  const setView = useCallback(
+    (next: string) => {
+      setViewState(next as ProductView);
+
+      /* Built from the live query string so any other parameter survives. */
+      const query = new URLSearchParams(window.location.search);
+      /* The default never reaches the URL, so a clean list has a clean link. */
+      if (next === ALL) query.delete("tab");
+      else query.set("tab", next);
+
+      const search = query.toString();
+      router.replace(
+        search ? `${window.location.pathname}?${search}` : window.location.pathname,
+        { scroll: false },
+      );
+    },
+    [router],
+  );
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<string>(ALL);
   const [status, setStatus] = useState<ProductStatus | typeof ALL>(ALL);
@@ -397,29 +448,33 @@ export function ProductsWorkspace() {
 
       <Card className="p-5">
         {/*
-         * The view strip.
+         * The view row.
          *
-         * `SegmentedControl`, not `Tabs` — these swap a filter on one list
-         * rather than switching panels, and claiming `role="tablist"` would
-         * promise arrow-key movement between panels that do not exist. It is
-         * the same component the analytics toolbars use.
+         * Real `role="tablist"` semantics now, which the old pill track could
+         * not claim: these tabs own one panel — the list below — and arrow
+         * keys move between them, so the role is earned rather than borrowed.
+         *
+         * It bleeds to the card's edges and pads back in, so its rule runs the
+         * full width while its labels start on the same x as the table's first
+         * column. The two read as one grid rather than a control sitting above
+         * a table.
          */}
-        <div className="mb-4 -mx-1 overflow-x-auto px-1">
-          <SegmentedControl
-            variant="filter"
-            label="Filter products by type"
-            value={view}
-            onChange={(next) => {
-              setView(next);
-              setPage(1);
-              setSelected([]);
-            }}
-            options={PRODUCT_VIEWS.map((item) => ({
-              value: item.value,
-              label: `${item.label} (${viewCounts[item.value] ?? 0})`,
-            }))}
-          />
-        </div>
+        <ProductTabs
+          className="-mx-5 mb-5 px-5"
+          idBase={idBase}
+          activeTab={view}
+          tabs={PRODUCT_VIEWS.map((item) => ({
+            id: item.value,
+            label: item.label,
+            count: viewCounts[item.value] ?? 0,
+            icon: item.icon,
+          }))}
+          onTabChange={(next) => {
+            setView(next);
+            setPage(1);
+            setSelected([]);
+          }}
+        />
 
         <FilterBar
           search={search}
@@ -506,6 +561,19 @@ export function ProductsWorkspace() {
           </div>
         ) : null}
 
+        {/*
+          * The panel the tabs control.
+          *
+          * `aria-controls` on a tab has to point at something, or it is a
+          * dangling reference that tells a screen reader nothing. This is
+          * that target: one panel for all six tabs, labelled by whichever is
+          * currently selected.
+          */}
+        <div
+          id={panelId(idBase, "list")}
+          role="tabpanel"
+          aria-labelledby={tabId(idBase, view)}
+        >
         {rows.length === 0 ? (
           <EmptyState
             title="No products match those filters"
@@ -785,6 +853,7 @@ export function ProductsWorkspace() {
             </div>
           </>
         )}
+        </div>
       </Card>
 
     </>
