@@ -275,7 +275,14 @@ export const PRODUCT_TYPE_LABEL: Record<ProductType, string> = {
   service: "Service",
 };
 
-/** The three cards on the "What are you selling?" step. */
+/**
+ * The three product types, with the copy that explains them.
+ *
+ * These were the three cards on a "What are you selling?" dialog that opened
+ * before the create form. The dialog is gone — the type is a field on the form
+ * itself — but the descriptions are still the clearest statement of what each
+ * type means, and `/products/new` uses the labels for its heading.
+ */
 export const PRODUCT_TYPE_CHOICES: {
   value: ProductType;
   label: string;

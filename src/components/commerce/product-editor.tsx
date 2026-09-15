@@ -156,8 +156,8 @@ function draftFrom(product?: Product, initialType?: ProductType): Draft {
     name: product?.name ?? "",
     description: product?.description ?? "",
     categoryId: product?.categoryId ?? CATEGORIES[0].id,
-    /* An existing product's type wins; otherwise the chooser's answer; only
-     then the default, for anyone who reached the form directly. */
+    /* An existing product's type wins; otherwise whatever `?type=` asked for;
+     only then the default, which is what almost everyone gets. */
     type: product?.type ?? initialType ?? "physical",
     price: product ? String(product.price) : "",
     salePrice: product?.salePrice ? String(product.salePrice) : "",
@@ -215,11 +215,13 @@ export function ProductEditor({
 }: {
   product?: Product;
   /**
-   * The answer to "what are you selling?", carried from the chooser.
+   * The type to open on, from `?type=` in the URL.
    *
    * Only used when creating: an existing product's type comes from the record.
-   * Passing it through the URL rather than a store keeps `/products/new?type=service`
-   * a link a merchant can bookmark or share.
+   * Nothing in the UI sets it since Add Product started linking straight to
+   * the form — the merchant picks the type on the first tab — but it is kept
+   * because it makes `/products/new?type=service` a shareable link, and it
+   * costs one optional prop.
    */
   initialType?: ProductType;
 }) {

@@ -11,7 +11,6 @@ export * from "./inventory-workspace";
 export * from "./catalog-workspace";
 export * from "./discounts-workspace";
 
-export * from "./product-type-dialog";
 export * from "./product-views-nav";
 export * from "./sales-workspace";
 export * from "./commerce-customers-workspace";

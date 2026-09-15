@@ -21,7 +21,7 @@ import {
 import Link from "next/link";
 
 import { PageHeader } from "@/components/layout/page-header";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -46,7 +46,6 @@ import {
   UNIT_NOUN,
 } from "@/constants/commerce";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import { ProductTypeDialog } from "./product-type-dialog";
 import {
   COMMERCE_PRODUCTS,
   CATEGORIES,
@@ -189,7 +188,6 @@ export function ProductsWorkspace() {
    * catalogue without meeting a Physical tab that is always empty.
    */
   const [view, setView] = useState<ProductView>(ALL);
-  const [choosingType, setChoosingType] = useState(false);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<string>(ALL);
   const [status, setStatus] = useState<ProductStatus | typeof ALL>(ALL);
@@ -373,12 +371,24 @@ export function ProductsWorkspace() {
               <Upload aria-hidden />
               Import
             </Button>
-            {/* Opens the type chooser rather than linking straight to the
-                form: which fields the form shows depends on the answer. */}
-            <Button size="compact" onClick={() => setChoosingType(true)}>
+            {/*
+              * Straight to the form.
+              *
+              * This used to open a "What are you selling?" dialog first, on
+              * the theory that the answer decides which fields the form
+              * shows. It no longer does: Product Type is a field on the
+              * form's own first tab and every tab after it adapts live, so
+              * the dialog was an extra click to answer a question the form
+              * asks again anyway.
+              *
+              * A link rather than a button, now there is nothing to open —
+              * it is a navigation, so it middle-clicks and opens in a new
+              * tab like one.
+              */}
+            <ButtonLink href={`${APP_ROUTES.products}/new`} size="compact">
               <Plus aria-hidden />
               Add Product
-            </Button>
+            </ButtonLink>
           </div>
         }
       />
@@ -775,11 +785,6 @@ export function ProductsWorkspace() {
           </>
         )}
       </Card>
-
-      {/* Mounted only while open, so a cancelled choice leaves nothing. */}
-      {choosingType ? (
-        <ProductTypeDialog open onClose={() => setChoosingType(false)} />
-      ) : null}
 
     </>
   );

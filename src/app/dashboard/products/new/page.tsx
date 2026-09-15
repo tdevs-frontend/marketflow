@@ -15,9 +15,13 @@ const TYPES = PRODUCT_TYPE_CHOICES.map((choice) => choice.value);
 /**
  * The product form, opened with the type already chosen.
  *
- * `?type=` comes from the "What are you selling?" step. It is validated rather
- * than trusted — a hand-edited URL should land on the physical form, not on a
- * form in an impossible state.
+ * `?type=` is optional. Add Product now links straight here and the merchant
+ * picks the type on the form's first tab, so nothing produces the parameter —
+ * but it is still honoured, because "/products/new?type=service" is a link
+ * worth being able to bookmark or hand to someone.
+ *
+ * Validated rather than trusted either way: a hand-edited URL should land on
+ * the default form, not on a form in an impossible state.
  */
 export default async function NewProductPage({
   searchParams,
