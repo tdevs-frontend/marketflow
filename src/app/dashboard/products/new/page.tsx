@@ -37,7 +37,7 @@ export default async function NewProductPage({
     <>
       <Link
         href={APP_ROUTES.products}
-        className="inline-flex w-fit items-center gap-1.5 rounded-btn text-sm font-medium text-text-muted transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
+        className="inline-flex w-fit items-center gap-1.5 rounded-btn text-[15px] font-medium text-text-muted transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
       >
         <ChevronLeft className="size-4" aria-hidden />
         Back to products

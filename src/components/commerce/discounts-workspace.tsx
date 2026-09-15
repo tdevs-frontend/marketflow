@@ -173,7 +173,7 @@ export function DiscountsWorkspace() {
       <Card className="p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-base">All discounts</h2>
+            <h2 className="text-base">All Discounts</h2>
             <p className="mt-1 text-sm text-text-secondary font-medium">
               Codes customers can redeem at checkout.
             </p>

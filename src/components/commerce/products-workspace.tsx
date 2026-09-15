@@ -626,7 +626,7 @@ export function ProductsWorkspace() {
                           <span className="font-bold tabular-nums text-text-primary">
                             {formatNumber(item.sales?.unitsSold ?? 0)}
                           </span>
-                          <span className="ml-1 text-sm font-normal text-text-muted">
+                          <span className="ml-1 text-sm font-medium text-text-muted">
                             {UNIT_NOUN[item.type][
                               (item.sales?.unitsSold ?? 0) === 1 ? "one" : "many"
                             ]}
