@@ -175,7 +175,7 @@ export function ProductTabs({
           /* `first:pl-0` is what lines the first label up with the table's
              first column — the same rule `TH` and `TD` already use, so the
              row and the header below it start on one vertical. */
-          "group inline-flex shrink-0 snap-start items-center gap-2 font-semibold border-b-2 px-3 py-2.5 text-sm whitespace-nowrap transition-colors first:pl-0",
+          "group inline-flex shrink-0 snap-start items-center gap-2 border-b-2 px-3 py-2.5 text-sm whitespace-nowrap transition-colors first:pl-0",
           "focus-visible:rounded-btn focus-visible:shadow-focus focus-visible:outline-none",
           /* The 2px border is never painted — it only holds the height steady
              so the row does not move when the marker slides under a tab. Hover
@@ -184,7 +184,7 @@ export function ProductTabs({
              that is actually selected. */
           active
             ? "border-transparent font-semibold text-primary"
-            : "border-transparent font-medium text-text-muted hover:text-text-primary",
+            : "border-transparent font-semibold text-text-secondary hover:text-text-primary",
         )}
       >
         <Icon className="size-3.5 shrink-0" aria-hidden />
