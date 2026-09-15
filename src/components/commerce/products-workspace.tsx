@@ -63,10 +63,17 @@ import type {
 } from "@/types/commerce";
 import { CommerceKpis, type CommerceKpi } from "./commerce-kpis";
 import {
+  formatPriceRange,
+  hasLiveVariants,
+  priceRangeOf,
+  variantCount,
+} from "@/lib/variants";
+import {
   ProductStatusBadge,
   ProductThumb,
   ProductTypeLabel,
   StockBadge,
+  VariantCountBadge,
 } from "./commerce-badges";
 import { FilterBar } from "./filter-bar";
 
@@ -276,13 +283,17 @@ export function ProductsWorkspace() {
   }
 
   const editHref = (id: string) => `${APP_ROUTES.products}/${id}/edit`;
+  const detailHref = (id: string) => `${APP_ROUTES.products}/${id}`;
+  /* The variant badge goes straight to the grid rather than to an overview the
+     merchant then has to navigate out of. */
+  const variantsHref = (id: string) => `${detailHref(id)}?tab=variants`;
 
   /* Navigation is real; the writes stop at the mutations in `commerceApi`. */
   const rowActions = (item: Product) => [
     {
       label: "View product",
       icon: <Eye className="size-4" />,
-      onSelect: () => router.push(editHref(item.id)),
+      onSelect: () => router.push(detailHref(item.id)),
     },
     {
       label: "Edit product",
@@ -528,12 +539,29 @@ export function ProductsWorkspace() {
                             <ProductThumb />
                             <div className="min-w-0">
                               <Link
-                                href={editHref(item.id)}
+                                href={detailHref(item.id)}
                                 className="block truncate font-bold text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
                               >
                                 {item.name}
                               </Link>
-                              <ProductTypeLabel type={item.type} />
+                              {/*
+                                * One row per product, always — a shirt with
+                                * twelve sizes is still one thing a merchant
+                                * sells, and spilling its variants into this
+                                * list would bury the eleven other products.
+                                * The count is the way in, not a preview.
+                                */}
+                              <div className="flex flex-wrap items-center gap-1.5">
+                                <ProductTypeLabel type={item.type} />
+                                {hasLiveVariants(item) ? (
+                                  <Link
+                                    href={variantsHref(item.id)}
+                                    className="rounded-full focus-visible:shadow-focus focus-visible:outline-none"
+                                  >
+                                    <VariantCountBadge count={variantCount(item)} />
+                                  </Link>
+                                ) : null}
+                              </div>
                             </div>
                           </div>
                         </TD>
@@ -541,8 +569,15 @@ export function ProductsWorkspace() {
                         <TD className="text-text-secondary">{item.categoryName}</TD>
                         <TD className="font-mono text-sm text-text-muted">{item.sku}</TD>
 
+                        {/* A product that sells at more than one price says so.
+                            Showing only the cheapest variant is how a customer
+                            gets quoted $29 for a $34 shirt. */}
                         <TD align="right">
-                          {item.salePrice ? (
+                          {hasLiveVariants(item) ? (
+                            <span className="font-bold whitespace-nowrap text-text-primary">
+                              {formatPriceRange(priceRangeOf(item))}
+                            </span>
+                          ) : item.salePrice ? (
                             <span className="whitespace-nowrap">
                               <span className="font-bold text-text-primary">
                                 {formatCurrency(item.salePrice)}
@@ -638,7 +673,7 @@ export function ProductsWorkspace() {
 
                       <div className="min-w-0 flex-1">
                         <Link
-                          href={editHref(item.id)}
+                          href={detailHref(item.id)}
                           className="block truncate text-sm font-medium text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
                         >
                           {item.name}
@@ -646,6 +681,14 @@ export function ProductsWorkspace() {
                         <p className="mt-0.5 font-mono text-sm text-text-muted">
                           {item.sku} · {item.categoryName}
                         </p>
+                        {hasLiveVariants(item) ? (
+                          <Link
+                            href={variantsHref(item.id)}
+                            className="mt-1 inline-flex rounded-full focus-visible:shadow-focus focus-visible:outline-none"
+                          >
+                            <VariantCountBadge count={variantCount(item)} />
+                          </Link>
+                        ) : null}
                       </div>
 
                       <Menu items={rowActions(item)} label={`Actions for ${item.name}`} />
@@ -659,7 +702,9 @@ export function ProductsWorkspace() {
                         ) : null}
                       </div>
                       <p className="text-sm font-bold text-text-primary">
-                        {formatCurrency(item.salePrice ?? item.price)}
+                        {hasLiveVariants(item)
+                          ? formatPriceRange(priceRangeOf(item))
+                          : formatCurrency(item.salePrice ?? item.price)}
                         <span className="ml-2 text-sm font-medium text-text-muted">
                           {formatNumber(item.sales?.unitsSold ?? 0)}{" "}
                           {UNIT_NOUN[item.type][

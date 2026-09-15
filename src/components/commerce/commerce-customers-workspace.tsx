@@ -367,9 +367,33 @@ function CustomerDrawer({
                 </span>
               </div>
 
-              <p className="mt-1 text-sm text-text-secondary font-medium">
-                {order.lines.map((line) => line.productName).join(", ")}
-              </p>
+              {/*
+                * What they actually bought, variant included.
+                *
+                * A history that reads "Premium T-Shirt" three times cannot
+                * answer the one question this panel is opened for — what size
+                * to offer them next — so the line names the combination the
+                * order recorded.
+                */}
+              <ul className="mt-1 space-y-0.5">
+                {order.lines.map((line) => (
+                  <li
+                    key={`${line.productId}-${line.variantId ?? "base"}`}
+                    className="text-sm font-medium text-text-secondary"
+                  >
+                    {line.productName}
+                    {line.variantName ? (
+                      <span className="text-text-muted">
+                        {" · "}
+                        {line.variantName}
+                      </span>
+                    ) : null}
+                    {line.quantity > 1 ? (
+                      <span className="text-text-muted"> × {line.quantity}</span>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
 
               <div className="mt-1.5 flex flex-wrap items-center gap-2">
                 <OrderStatusBadge status={order.status} />

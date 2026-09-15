@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
-import { ImagePlus, Star, Upload } from "lucide-react";
+import { ImagePlus, Layers, Star, Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,21 +10,39 @@ import { Field, Input, Textarea } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { TabPanel, Tabs, type TabItem } from "@/components/ui/tabs";
 import { PRODUCT_STATUSES, PRODUCT_TYPES } from "@/constants/commerce";
-import { CATEGORIES } from "@/lib/commerce-fixtures";
+import { CATEGORIES, COMMERCE_PRODUCTS } from "@/lib/commerce-fixtures";
+import { collectSkus, duplicateSkuIds, rollUpStock } from "@/lib/variants";
 import { cn, slugify } from "@/lib/utils";
-import type { Product, ProductStatus, ProductType } from "@/types/commerce";
+import type {
+  Product,
+  ProductStatus,
+  ProductType,
+  ProductVariant,
+  VariantOption,
+} from "@/types/commerce";
+import { VariantManager } from "./variants";
 
 type TabKey =
   | "basic"
   | "pricing"
+  | "variants"
   | "inventory"
   | "media"
   | "seo"
   | "advanced";
 
+/*
+ * Variants sits directly after Pricing, because pricing is what it changes.
+ *
+ * Once it is on, the product no longer has one price or one stock figure —
+ * both become readings of the grid. Meeting it before Inventory is what makes
+ * the disabled Stock field on the next tab read as a consequence of a choice
+ * rather than as a broken form.
+ */
 const TABS: TabItem<TabKey>[] = [
   { value: "basic", label: "Basic Information" },
   { value: "pricing", label: "Pricing" },
+  { value: "variants", label: "Variants" },
   { value: "inventory", label: "Inventory" },
   { value: "media", label: "Media" },
   { value: "seo", label: "SEO" },
@@ -51,6 +69,16 @@ interface Draft {
   featured: boolean;
   visibility: "visible" | "hidden";
   tags: string;
+  /*
+   * Variants live in the draft like everything else on this form.
+   *
+   * They are kept even while `hasVariants` is off, so switching the toggle back
+   * and forth does not destroy a grid the merchant already filled in — turning
+   * the question off is an answer, not a delete.
+   */
+  hasVariants: boolean;
+  options: VariantOption[];
+  variants: ProductVariant[];
 }
 
 function draftFrom(product?: Product, initialType?: ProductType): Draft {
@@ -76,6 +104,9 @@ function draftFrom(product?: Product, initialType?: ProductType): Draft {
     featured: product?.featured ?? false,
     visibility: product?.visibility ?? "visible",
     tags: product?.tags.join(", ") ?? "",
+    hasVariants: product?.hasVariants ?? false,
+    options: product?.options ?? [],
+    variants: product?.variants ?? [],
   };
 }
 
@@ -130,6 +161,12 @@ export function ProductEditor({
   const set = <K extends keyof Draft>(key: K, value: Draft[K]) =>
     setDraft((prev) => ({ ...prev, [key]: value }));
 
+  /* Variants own stock only for a physical product — a service's capacity and
+     a digital licence are managed on the variant, not in the warehouse. */
+  const variantsManageStock =
+    draft.hasVariants && draft.type === "physical" && draft.variants.length > 0;
+  const rolledUp = rollUpStock(draft.variants);
+
   /**
    * Validates across every tab, not just the visible one — a required field
    * hidden behind an unopened tab must still block publishing, and the message
@@ -144,10 +181,32 @@ export function ProductEditor({
       next.salePrice = "Sale price should be below the regular price.";
     }
     if (!draft.sku.trim()) next.sku = "Enter a SKU.";
+
+    /*
+     * Variant codes have to be unique across the whole catalogue, not just
+     * within this product — a SKU is what a warehouse, a courier and an invoice
+     * all key on, so two of them meaning different things is a picking error.
+     * Blocking here as well as flagging in the table is the difference between
+     * a warning a merchant can publish past and a rule.
+     */
+    if (draft.hasVariants) {
+      const clashes = duplicateSkuIds(
+        draft.variants,
+        collectSkus(COMMERCE_PRODUCTS, { productId: product?.id }),
+      );
+      if (clashes.size > 0) {
+        next.variants = `${clashes.size} variant ${clashes.size === 1 ? "code is" : "codes are"} already in use.`;
+      }
+      if (draft.variants.some((variant) => !variant.sku.trim())) {
+        next.variants = "Every variant needs a code.";
+      }
+    }
+
     setErrors(next);
 
     if (next.name) setTab("basic");
     else if (next.price || next.salePrice) setTab("pricing");
+    else if (next.variants) setTab("variants");
     else if (next.sku) setTab("inventory");
 
     return Object.keys(next).length === 0;
@@ -298,10 +357,41 @@ export function ProductEditor({
           </TabPanel>
         ) : null}
 
+        {tab === "variants" ? (
+          <TabPanel idBase={idBase} value="variants">
+            <VariantManager
+              type={draft.type}
+              baseSku={draft.sku}
+              basePrice={Number(draft.salePrice || draft.price) || 0}
+              enabled={draft.hasVariants}
+              onEnabledChange={(value) => set("hasVariants", value)}
+              options={draft.options}
+              variants={draft.variants}
+              onChange={(options, variants) =>
+                setDraft((prev) => ({ ...prev, options, variants }))
+              }
+              productId={product?.id}
+              fallbackImage={
+                product?.images.find((image) => image.isThumbnail)?.url ??
+                product?.images[0]?.url
+              }
+            />
+          </TabPanel>
+        ) : null}
+
         {tab === "inventory" ? (
           <TabPanel idBase={idBase} value="inventory" className="space-y-5">
             <div className={GRID}>
-              <Field label="SKU" htmlFor="sku" error={errors.sku}>
+              <Field
+                label="SKU"
+                htmlFor="sku"
+                error={errors.sku}
+                hint={
+                  variantsManageStock
+                    ? "The stem every variant code is generated from."
+                    : undefined
+                }
+              >
                 <Input
                   id="sku"
                   value={draft.sku}
@@ -311,14 +401,32 @@ export function ProductEditor({
                 />
               </Field>
 
-              <Field label="Stock Quantity" htmlFor="stock">
+              {/*
+                * Stock is the variants' to own, or the product's — never both.
+                *
+                * A parent quantity sitting beside twelve variant quantities is
+                * two answers to one question, and the moment they disagree the
+                * merchant has no way to tell which one the shop is selling
+                * against. So when variants are on, these two fields show the
+                * roll-up and refuse to be edited; the numbers are changed on
+                * the Variants tab, where the stock actually is.
+                */}
+              <Field
+                label="Stock Quantity"
+                htmlFor="stock"
+                hint={
+                  variantsManageStock
+                    ? "Totalled from the active variants."
+                    : undefined
+                }
+              >
                 <Input
                   id="stock"
                   type="number"
                   inputMode="numeric"
                   min={0}
-                  value={draft.stock}
-                  disabled={!draft.trackInventory}
+                  value={variantsManageStock ? rolledUp.stock : draft.stock}
+                  disabled={!draft.trackInventory || variantsManageStock}
                   onChange={(event) => set("stock", event.target.value)}
                 />
               </Field>
@@ -326,19 +434,41 @@ export function ProductEditor({
               <Field
                 label="Low Stock Threshold"
                 htmlFor="lowStockThreshold"
-                hint="Below this, the product shows as Low Stock."
+                hint={
+                  variantsManageStock
+                    ? "Each variant carries its own."
+                    : "Below this, the product shows as Low Stock."
+                }
               >
                 <Input
                   id="lowStockThreshold"
                   type="number"
                   inputMode="numeric"
                   min={0}
-                  value={draft.lowStockThreshold}
-                  disabled={!draft.trackInventory}
+                  value={
+                    variantsManageStock
+                      ? rolledUp.lowStockThreshold
+                      : draft.lowStockThreshold
+                  }
+                  disabled={!draft.trackInventory || variantsManageStock}
                   onChange={(event) => set("lowStockThreshold", event.target.value)}
                 />
               </Field>
             </div>
+
+            {variantsManageStock ? (
+              <p className="flex flex-wrap items-center gap-2 rounded-panel border border-primary-border bg-primary-soft px-3.5 py-3 text-sm text-primary-dark">
+                <Layers className="size-4 shrink-0" aria-hidden />
+                Stock is tracked per variant.
+                <button
+                  type="button"
+                  onClick={() => setTab("variants")}
+                  className="font-bold underline underline-offset-2 focus-visible:shadow-focus focus-visible:outline-none"
+                >
+                  Manage it on the Variants tab
+                </button>
+              </p>
+            ) : null}
 
             <Toggle
               id="trackInventory"

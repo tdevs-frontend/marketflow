@@ -146,12 +146,33 @@ export function OrderDrawer({
             </h3>
             <ul className="mt-2.5 divide-y divide-border rounded-panel border border-border">
               {order.lines.map((line) => (
-                <li key={line.productId} className="flex items-center gap-3 p-3">
+                <li
+                  key={`${line.productId}-${line.variantId ?? "base"}`}
+                  className="flex items-center gap-3 p-3"
+                >
                   <ProductThumb size="sm" />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium text-text-primary">
                       {line.productName}
                     </p>
+                    {/*
+                      * Exactly what was bought.
+                      *
+                      * An order that says only "Premium T-Shirt" cannot be
+                      * packed, and the SKU beside it is the number that goes on
+                      * the picking slip — so both are read off the line the
+                      * order stored, never looked up from the product now.
+                      */}
+                    {line.variantName ? (
+                      <p className="truncate text-sm font-medium text-text-secondary">
+                        {line.variantName}
+                        {line.sku ? (
+                          <span className="ml-1.5 font-mono text-text-muted">
+                            {line.sku}
+                          </span>
+                        ) : null}
+                      </p>
+                    ) : null}
                     <p className="text-sm text-text-muted">
                       {line.quantity} × {formatCurrency(line.unitPrice)}
                     </p>

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
   Boxes,
@@ -17,6 +18,7 @@ import { Dialog } from "@/components/ui/dialog";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
+import { APP_ROUTES } from "@/constants";
 import { STOCK_ADJUSTMENT_REASONS } from "@/constants/commerce";
 import { INVENTORY, STOCK_ACTIVITY, stockStatusOf } from "@/lib/commerce-fixtures";
 import { formatCurrency, formatNumber, formatRelativeTime } from "@/lib/format";
@@ -46,7 +48,9 @@ function kpis(): CommerceKpi[] {
       label: "Total Items",
       value: formatNumber(INVENTORY.reduce((sum, item) => sum + item.stock, 0)),
       icon: Boxes,
-      hint: `${INVENTORY.length} tracked products`,
+      /* Rows, not products — a shirt in twelve sizes is twelve things to count
+         and one thing to sell, and this page is about the counting. */
+      hint: `${INVENTORY.length} tracked ${INVENTORY.length === 1 ? "item" : "items"}`,
     },
     {
       label: "Low Stock",
@@ -70,16 +74,32 @@ function kpis(): CommerceKpi[] {
   ];
 }
 
+/**
+ * A row's identity.
+ *
+ * Product id alone stopped being unique the moment stock moved to the variant:
+ * twelve T-shirt rows all share one `productId`, so the adjustment dialog's
+ * selection, the table's keys and the "which shelf" question all key on the
+ * pair. `variantId` is absent for a product that has no variants, which is
+ * exactly the single-row case this keeps working.
+ */
+const rowKey = (item: { productId: string; variantId?: string }) =>
+  item.variantId ? `${item.productId}::${item.variantId}` : item.productId;
+
+/** "Premium T-Shirt — M / Black", or just the product where there is no variant. */
+const rowLabel = (item: { productName: string; variantName?: string }) =>
+  item.variantName ? `${item.productName} — ${item.variantName}` : item.productName;
+
 export function InventoryWorkspace() {
   const [open, setOpen] = useState(false);
-  const [productId, setProductId] = useState(INVENTORY[0]?.productId ?? "");
+  const [target, setTarget] = useState(INVENTORY[0] ? rowKey(INVENTORY[0]) : "");
   const [delta, setDelta] = useState("0");
   const [reason, setReason] = useState<StockAdjustmentReason>("stock-received");
   const [note, setNote] = useState("");
 
   const selected = useMemo(
-    () => INVENTORY.find((item) => item.productId === productId),
-    [productId],
+    () => INVENTORY.find((item) => rowKey(item) === target),
+    [target],
   );
 
   const parsedDelta = Number(delta) || 0;
@@ -105,7 +125,7 @@ export function InventoryWorkspace() {
             <div>
               <h2 className="text-base">Stock levels</h2>
               <p className="mt-1 text-sm text-text-secondary font-medium">
-                Sorted by how close each product is to running out.
+                One row per variant, sorted by how close each is to running out.
               </p>
             </div>
             <Button size="compact" onClick={() => setOpen(true)}>
@@ -115,9 +135,14 @@ export function InventoryWorkspace() {
           </div>
 
           <div className="mt-4 max-lg:hidden">
-            <Table minWidth="62rem">
+            <Table minWidth="68rem">
               <THead>
                 <TH>Product</TH>
+                {/* Variant gets a column of its own rather than being appended
+                    to the product name: it is what a picker scans for, and a
+                    name that reads "Premium T-Shirt — M / Black" cannot be
+                    sorted, filtered or truncated independently of the product. */}
+                <TH>Variant</TH>
                 <TH>SKU</TH>
                 <TH align="right">Current</TH>
                 <TH align="right">Reserved</TH>
@@ -133,14 +158,22 @@ export function InventoryWorkspace() {
                   const state = stockStatusOf(item.stock, item.lowStockThreshold);
 
                   return (
-                    <TR key={item.productId}>
+                    <TR key={rowKey(item)}>
                       <TD>
                         <div className="flex items-center gap-3">
                           <ProductThumb size="sm" />
-                          <p className="truncate font-bold text-text-primary">
+                          <Link
+                            href={`${APP_ROUTES.products}/${item.productId}`}
+                            className="truncate font-bold text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
+                          >
                             {item.productName}
-                          </p>
+                          </Link>
                         </div>
+                      </TD>
+                      <TD className="text-text-secondary">
+                        {item.variantName ?? (
+                          <span className="text-text-muted">—</span>
+                        )}
                       </TD>
                       <TD className="font-mono text-sm text-text-muted">{item.sku}</TD>
                       <TD align="right" className="font-bold text-text-primary tabular-nums">
@@ -181,7 +214,7 @@ export function InventoryWorkspace() {
 
               return (
                 <li
-                  key={item.productId}
+                  key={rowKey(item)}
                   className="rounded-panel border border-border p-3.5"
                 >
                   <div className="flex items-start gap-3">
@@ -190,6 +223,11 @@ export function InventoryWorkspace() {
                       <p className="truncate text-sm font-medium text-text-primary">
                         {item.productName}
                       </p>
+                      {item.variantName ? (
+                        <p className="truncate text-sm font-medium text-text-secondary">
+                          {item.variantName}
+                        </p>
+                      ) : null}
                       <p className="font-mono text-sm text-text-muted">
                         {item.sku}
                       </p>
@@ -272,6 +310,14 @@ export function InventoryWorkspace() {
                       <span className="font-medium text-text-primary">
                         {entry.productName}
                       </span>
+                      {/* Which shelf moved. Without it the feed says a number
+                          changed somewhere inside a product. */}
+                      {entry.variantName ? (
+                        <span className="font-medium text-text-secondary">
+                          {" · "}
+                          {entry.variantName}
+                        </span>
+                      ) : null}
                     </p>
                     <p className="mt-0.5 text-sm text-text-secondary">
                       {entry.note ?? REASON_LABEL[entry.reason]}
@@ -291,7 +337,7 @@ export function InventoryWorkspace() {
         open={open}
         onClose={() => setOpen(false)}
         title="Stock adjustment"
-        description="Record stock coming in or going out, with a reason."
+        description="Record stock coming in or going out, against the exact item it moved."
         footer={
           <>
             <Button variant="outline" size="compact" onClick={() => setOpen(false)}>
@@ -308,16 +354,26 @@ export function InventoryWorkspace() {
         }
       >
         <div className="space-y-5">
-          <Field label="Product" htmlFor="adj-product">
+          {/*
+            * The adjustment targets a variant, not a product.
+            *
+            * "+24 Premium T-Shirt" is not something anyone can act on once the
+            * shirt exists in twelve sizes — there is no shelf it describes. The
+            * option list is therefore one entry per stocked combination, with
+            * the SKU as the second line because that is what is printed on the
+            * box being counted.
+            */}
+          <Field label="Item" htmlFor="adj-product">
             <Select
               id="adj-product"
-              label="Product"
+              label="Item"
               hideLabel={false}
-              value={productId}
-              onChange={setProductId}
+              value={target}
+              onChange={setTarget}
               options={INVENTORY.map((item) => ({
-                value: item.productId,
-                label: item.productName,
+                value: rowKey(item),
+                label: rowLabel(item),
+                hint: item.sku,
               }))}
             />
           </Field>

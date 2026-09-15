@@ -296,6 +296,14 @@ export function OrdersWorkspace() {
                               </span>
                             ) : null}
                           </p>
+                          {/* The combination, under the product rather than
+                              appended to it — the name stays scannable and the
+                              variant stays legible when the cell truncates. */}
+                          {first.variantName ? (
+                            <p className="truncate text-sm text-text-muted">
+                              {first.variantName}
+                            </p>
+                          ) : null}
                         </TD>
 
                         <TD>
@@ -368,6 +376,9 @@ export function OrdersWorkspace() {
                     </p>
                     <p className="truncate text-sm text-text-secondary">
                       {order.lines[0].productName}
+                      {order.lines[0].variantName
+                        ? ` · ${order.lines[0].variantName}`
+                        : ""}
                       {order.lines.length > 1
                         ? ` +${order.lines.length - 1} more`
                         : ""}

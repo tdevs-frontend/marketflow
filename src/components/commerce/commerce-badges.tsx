@@ -1,4 +1,4 @@
-import { Package } from "lucide-react";
+import { Layers, Package } from "lucide-react";
 
 import { Badge, type BadgeTone } from "@/components/ui/badge";
 import {
@@ -19,6 +19,7 @@ import type {
   CustomerType,
   FulfillmentStatus,
   SaleStatus,
+  VariantStatus,
 } from "@/types/commerce";
 
 const PRODUCT_TONES: Record<ProductStatus, BadgeTone> = {
@@ -229,6 +230,38 @@ export function CustomerTypeBadge({ type }: { type: CustomerType }) {
   return (
     <Badge tone={CUSTOMER_TONES[type]} size="sm" className="normal-case">
       {CUSTOMER_TYPES.find((item) => item.value === type)?.label ?? type}
+    </Badge>
+  );
+}
+
+/**
+ * Whether one combination is sellable.
+ *
+ * Neutral rather than red for `inactive`: a switched-off size is a deliberate
+ * merchandising choice, not a fault, and colouring it as an error puts a row of
+ * alarms down a table where nothing is wrong.
+ */
+export function VariantStatusBadge({ status }: { status: VariantStatus }) {
+  return (
+    <Badge tone={status === "active" ? "success" : "neutral"} size="sm">
+      {status}
+    </Badge>
+  );
+}
+
+/**
+ * The "6 variants" marker on a parent product row.
+ *
+ * Deliberately a count and not a list: the product list answers "what do I
+ * sell", and spilling twelve sizes into it answers a question nobody asked
+ * while burying the eleven other products. The count is the link into the
+ * detail page's Variants tab, which is where that question belongs.
+ */
+export function VariantCountBadge({ count }: { count: number }) {
+  return (
+    <Badge tone="brand" size="sm" className="normal-case">
+      <Layers className="size-3" aria-hidden />
+      {count} {count === 1 ? "variant" : "variants"}
     </Badge>
   );
 }

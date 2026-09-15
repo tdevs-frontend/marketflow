@@ -5,6 +5,7 @@ import type {
   InventoryItem,
   Order,
   Product,
+  ProductVariant,
   StockAdjustment,
   StockStatus,
   CommerceCustomer,
@@ -21,12 +22,16 @@ import type {
   SaleStatus,
   SalesChannel,
   ServiceDetails,
+  VariantOption,
+  VariantSales,
 } from "@/types/commerce";
 import {
   CUSTOMER_RULES,
   FULFILLMENT_FLOW,
   ORDER_PROGRESS,
 } from "@/constants/commerce";
+import { hasLiveVariants, rollUpStock, variantName } from "@/lib/variants";
+import { slugify } from "@/lib/utils";
 
 /**
  * Placeholder commerce data.
@@ -107,13 +112,20 @@ export const CATEGORIES: Category[] = [
 /* -------------------------------------------------------------------------- */
 
 function product(
-  partial: Omit<Product, "images" | "visibility" | "trackInventory" | "slug"> &
-    Partial<Pick<Product, "images" | "visibility" | "trackInventory" | "slug">>,
+  partial: Omit<
+    Product,
+    "images" | "visibility" | "trackInventory" | "slug" | "hasVariants"
+  > &
+    Partial<
+      Pick<Product, "images" | "visibility" | "trackInventory" | "slug" | "hasVariants">
+    >,
 ): Product {
   return {
     images: [],
     visibility: "visible",
     trackInventory: true,
+    /* Off unless a product opts in. Most products are one thing at one price. */
+    hasVariants: false,
     slug: partial.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
     ...partial,
   };
@@ -347,6 +359,81 @@ export const PRODUCTS: Product[] = [
     createdAt: "2025-09-18T10:00:00Z",
     updatedAt: "2026-04-30T08:15:00Z",
   }),
+
+  /*
+   * The three products that carry variants.
+   *
+   * One per type on purpose: the option builder, the generated grid and the
+   * management table each adapt to what is being sold, and a fixture set with
+   * only a T-shirt in it would let a service regression ship unnoticed.
+   *
+   * `price` on each is the *base* — the figure a variant falls back to when it
+   * sets no price of its own — and `stock` is left at the roll-up of the
+   * variants below rather than authored twice. See `rollUpStock`.
+   */
+  product({
+    id: "prd-tshirt",
+    name: "Premium T-Shirt",
+    description:
+      "Heavyweight combed cotton, printed in-house. Sizes S to XL in three colours.",
+    sku: "TS",
+    type: "physical",
+    categoryId: "cat-hardware",
+    categoryName: "Hardware",
+    status: "active",
+    price: 29,
+    costPrice: 11,
+    taxRate: 5,
+    stock: 96,
+    lowStockThreshold: 5,
+    hasVariants: true,
+    featured: true,
+    tags: ["apparel", "merch"],
+    seoTitle: "Premium T-Shirt — MarketFlow",
+    createdAt: "2026-02-18T10:00:00Z",
+    updatedAt: "2026-05-31T14:20:00Z",
+  }),
+  product({
+    id: "prd-guide",
+    name: "Marketing Guide",
+    description:
+      "120 pages on turning conversations into customers, with the templates.",
+    sku: "MG",
+    type: "digital",
+    categoryId: "cat-templates",
+    categoryName: "Templates",
+    status: "active",
+    price: 39,
+    costPrice: 0,
+    stock: 0,
+    lowStockThreshold: 0,
+    trackInventory: false,
+    hasVariants: true,
+    featured: false,
+    tags: ["guide", "download"],
+    createdAt: "2026-03-22T10:00:00Z",
+    updatedAt: "2026-05-29T11:05:00Z",
+  }),
+  product({
+    id: "prd-consult",
+    name: "Consultation",
+    description: "One-to-one strategy time with a MarketFlow specialist.",
+    sku: "CONS",
+    type: "service",
+    categoryId: "cat-training",
+    categoryName: "Training",
+    status: "active",
+    price: 120,
+    costPrice: 40,
+    stock: 0,
+    lowStockThreshold: 0,
+    trackInventory: false,
+    hasVariants: true,
+    featured: false,
+    tags: ["consulting"],
+    createdAt: "2026-01-28T10:00:00Z",
+    updatedAt: "2026-05-30T16:40:00Z",
+  }),
 ];
 
 /** Where a product sits against its own threshold. */
@@ -484,6 +571,166 @@ function order(
 }
 
 export const ORDERS: Order[] = [
+  /*
+   * The variant orders.
+   *
+   * Every line here names the exact combination bought, its SKU and the price
+   * that combination sold at. That is the whole point of §16: an order that
+   * records only "Premium T-Shirt" cannot be packed, cannot be refunded
+   * correctly, and cannot tell the merchant that it is the black mediums that
+   * keep selling out.
+   */
+  order({
+    id: "ord-10253",
+    reference: "#MF-10253",
+    customer: {
+      id: "cus-sarah",
+      name: "Sarah Ahmed",
+      email: "sarah@brightretail.co",
+      whatsappNumber: "+8801711223344",
+    },
+    lines: [
+      {
+        productId: "prd-tshirt",
+        productName: "Premium T-Shirt",
+        variantId: "var-m-black",
+        variantName: "M / Black",
+        sku: "TS-M-BLK",
+        quantity: 2,
+        unitPrice: 29,
+      },
+    ],
+    discount: 0,
+    status: "delivered",
+    paymentStatus: "paid",
+    paymentMethod: "Card · Visa 4242",
+    placedAt: "2026-05-31T15:40:00Z",
+  }),
+  order({
+    id: "ord-10252",
+    reference: "#MF-10252",
+    customer: {
+      id: "cus-john",
+      name: "John Smith",
+      email: "john@smithagency.io",
+      whatsappNumber: "+447700900123",
+    },
+    /* Two sizes of the same shirt — separate lines, because they are separate
+       things to pick, and one of them costs more. */
+    lines: [
+      {
+        productId: "prd-tshirt",
+        productName: "Premium T-Shirt",
+        variantId: "var-l-black",
+        variantName: "L / Black",
+        sku: "TS-L-BLK",
+        quantity: 1,
+        unitPrice: 29,
+      },
+      {
+        productId: "prd-tshirt",
+        productName: "Premium T-Shirt",
+        variantId: "var-xl-black",
+        variantName: "XL / Black",
+        sku: "TS-XL-BLK",
+        quantity: 1,
+        unitPrice: 34,
+      },
+    ],
+    discount: 0,
+    status: "shipped",
+    paymentStatus: "paid",
+    paymentMethod: "Card · Mastercard 8123",
+    placedAt: "2026-05-31T11:20:00Z",
+  }),
+  order({
+    id: "ord-10251",
+    reference: "#MF-10251",
+    customer: {
+      id: "cus-maria",
+      name: "Maria Gomez",
+      email: "maria@casaverde.mx",
+      whatsappNumber: "+5215512345678",
+    },
+    lines: [
+      {
+        productId: "prd-guide",
+        productName: "Marketing Guide",
+        variantId: "var-commercial",
+        variantName: "Commercial",
+        sku: "MG-COMM",
+        quantity: 1,
+        unitPrice: 59,
+      },
+    ],
+    discount: 0,
+    status: "delivered",
+    paymentStatus: "paid",
+    paymentMethod: "Card · Visa 1188",
+    sourceCampaign: "Summer Sale",
+    placedAt: "2026-05-31T09:05:00Z",
+  }),
+  order({
+    id: "ord-10250",
+    reference: "#MF-10250",
+    customer: {
+      id: "cus-hannah",
+      name: "Hannah Park",
+      email: "hannah@parkbeauty.kr",
+      whatsappNumber: "+821012345678",
+    },
+    lines: [
+      {
+        productId: "prd-consult",
+        productName: "Consultation",
+        variantId: "var-60-minutes",
+        variantName: "60 Minutes",
+        sku: "CONS-60",
+        quantity: 1,
+        unitPrice: 120,
+      },
+    ],
+    discount: 0,
+    status: "delivered",
+    paymentStatus: "paid",
+    paymentMethod: "Card · Visa 7742",
+    placedAt: "2026-05-30T17:30:00Z",
+  }),
+  order({
+    id: "ord-10249",
+    reference: "#MF-10249",
+    customer: {
+      id: "cus-omar",
+      name: "Omar Haddad",
+      email: "omar@haddadtrading.ae",
+      whatsappNumber: "+971501234567",
+    },
+    lines: [
+      {
+        productId: "prd-tshirt",
+        productName: "Premium T-Shirt",
+        variantId: "var-m-black",
+        variantName: "M / Black",
+        sku: "TS-M-BLK",
+        quantity: 3,
+        unitPrice: 29,
+      },
+      {
+        productId: "prd-guide",
+        productName: "Marketing Guide",
+        variantId: "var-personal",
+        variantName: "Personal",
+        sku: "MG-PERS",
+        quantity: 1,
+        unitPrice: 39,
+      },
+    ],
+    discount: 0,
+    status: "processing",
+    paymentStatus: "paid",
+    paymentMethod: "Card · Amex 3005",
+    placedAt: "2026-05-30T13:10:00Z",
+  }),
   order({
     id: "ord-10248",
     reference: "#MF-10248",
@@ -666,33 +913,43 @@ export const ORDERS: Order[] = [
 /* Inventory                                                                  */
 /* -------------------------------------------------------------------------- */
 
-/** Derived from the products, so stock never disagrees between the two pages. */
-/**
- * Warehouse stock: physical products that are tracked, and nothing else.
- *
- * The type check is the addition. `trackInventory` alone let a digital product
- * or a service appear in the warehouse the moment someone ticked the box on the
- * old shared form — which is how a consultation ends up with a reorder level.
- *
- * Finite digital licences and service capacity are real, and they are managed
- * on the product itself (`digital.licensesAvailable`, `service.capacityPerSlot`)
- * rather than here, because they are not stock that gets picked and shipped.
- */
-export const INVENTORY: InventoryItem[] = PRODUCTS.filter(
-  (item) => item.type === "physical" && item.trackInventory,
-).map((item) => ({
-  productId: item.id,
-  productName: item.name,
-  sku: item.sku,
-  stock: item.stock,
-  reserved:
-    item.stock > 40 ? Math.round(item.stock * 0.08) : Math.min(item.stock, 2),
-  lowStockThreshold: item.lowStockThreshold,
-  unitCost: item.costPrice ?? 0,
-  updatedAt: item.updatedAt,
-}));
-
 export const STOCK_ACTIVITY: StockAdjustment[] = [
+  /* Variant-level movements. An adjustment naming only the product is unusable
+     once stock is held per size — "+24 Premium T-Shirt" does not say which
+     shelf. */
+  {
+    id: "adj-0a",
+    productId: "prd-tshirt",
+    productName: "Premium T-Shirt",
+    variantId: "var-m-black",
+    variantName: "M / Black",
+    delta: 24,
+    reason: "stock-received",
+    note: "Restock from printer",
+    at: "2026-05-31T14:20:00Z",
+  },
+  {
+    id: "adj-0b",
+    productId: "prd-tshirt",
+    productName: "Premium T-Shirt",
+    variantId: "var-l-blue",
+    variantName: "L / Blue",
+    delta: -6,
+    reason: "order",
+    note: "Order #MF-10252",
+    at: "2026-05-31T09:40:00Z",
+  },
+  {
+    id: "adj-0c",
+    productId: "prd-tshirt",
+    productName: "Premium T-Shirt",
+    variantId: "var-xl-blue",
+    variantName: "XL / Blue",
+    delta: -2,
+    reason: "damage",
+    note: "Print misalignment",
+    at: "2026-05-30T17:05:00Z",
+  },
   {
     id: "adj-1",
     productId: "prd-premium",
@@ -909,15 +1166,13 @@ export const DISCOUNTS: Discount[] = [
  * default for its type.
  */
 const PHYSICAL_DETAIL: Record<string, PhysicalDetails> = {
-  "prd-swag": {
+  /* The only physical product that carries variants. Weight and dimensions sit
+     here because they describe the shirt; per-size weight, where it differs,
+     lives on the variant. */
+  "prd-tshirt": {
     weightGrams: 180,
     dimensionsCm: { length: 30, width: 22, height: 3 },
     shippingRequired: true,
-    variants: [
-      { id: "var-s", optionName: "Size", optionValue: "Small", sku: "MF-SWAG-S", stock: 18 },
-      { id: "var-m", optionName: "Size", optionValue: "Medium", sku: "MF-SWAG-M", stock: 24 },
-      { id: "var-l", optionName: "Size", optionValue: "Large", sku: "MF-SWAG-L", stock: 12 },
-    ],
   },
 };
 
@@ -980,6 +1235,224 @@ const SERVICE_DETAIL: Record<string, ServiceDetails> = {
     capacityPerSlot: 12,
   },
 };
+
+/* -------------------------------------------------------------------------- */
+/* Variant options and grids                                                  */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The axes each variant-bearing product varies along.
+ *
+ * Kept beside the grids below rather than inside the product literals for the
+ * same reason the detail tables are: twelve T-shirt rows inline would bury the
+ * eleven products that have no variants at all.
+ */
+const PRODUCT_OPTIONS: Record<string, VariantOption[]> = {
+  "prd-tshirt": [
+    { id: "opt-size", name: "Size", values: ["S", "M", "L", "XL"] },
+    { id: "opt-color", name: "Color", values: ["Black", "White", "Blue"] },
+  ],
+  "prd-guide": [
+    {
+      id: "opt-license",
+      name: "License Type",
+      values: ["Personal", "Commercial", "Extended"],
+    },
+  ],
+  "prd-consult": [
+    {
+      id: "opt-duration",
+      name: "Duration",
+      values: ["30 Minutes", "60 Minutes", "90 Minutes"],
+    },
+  ],
+};
+
+/**
+ * One row of a variant grid.
+ *
+ * `id` and `name` are derived from the values rather than typed, exactly as
+ * `generateVariants` derives them — so a fixture cannot drift into a shape the
+ * generator would never produce.
+ */
+function variant(
+  optionValues: string[],
+  partial: Partial<ProductVariant> & { sku: string },
+): ProductVariant {
+  return {
+    id: `var-${slugify(optionValues.join("-"))}`,
+    optionValues,
+    status: "active",
+    updatedAt: "2026-05-31T14:20:00Z",
+    ...partial,
+  };
+}
+
+/**
+ * The grids themselves.
+ *
+ * Note what is *absent*: most rows set no `price`, because they sell at the
+ * parent's. Only the sizes and tiers that genuinely cost more carry one, which
+ * is what makes the product list read "$29 – $34" rather than "$29" twelve
+ * times over.
+ */
+const PRODUCT_VARIANTS: Record<string, ProductVariant[]> = {
+  /* Four sizes across three colours. XL costs more to make, so it is the only
+     axis that overrides the base price. */
+  "prd-tshirt": [
+    variant(["S", "Black"], { sku: "TS-S-BLK", stock: 22, reserved: 2, lowStockThreshold: 5 }),
+    variant(["S", "White"], { sku: "TS-S-WHT", stock: 14, reserved: 1, lowStockThreshold: 5 }),
+    variant(["S", "Blue"], { sku: "TS-S-BLU", stock: 9, reserved: 0, lowStockThreshold: 5 }),
+    variant(["M", "Black"], { sku: "TS-M-BLK", stock: 15, reserved: 3, lowStockThreshold: 5 }),
+    variant(["M", "White"], { sku: "TS-M-WHT", stock: 11, reserved: 1, lowStockThreshold: 5 }),
+    variant(["M", "Blue"], { sku: "TS-M-BLU", stock: 6, reserved: 1, lowStockThreshold: 5 }),
+    variant(["L", "Black"], { sku: "TS-L-BLK", stock: 19, reserved: 2, lowStockThreshold: 5 }),
+    variant(["L", "White"], { sku: "TS-L-WHT", stock: 8, reserved: 0, lowStockThreshold: 5 }),
+    /* Low: four on the shelf against a threshold of five. */
+    variant(["L", "Blue"], { sku: "TS-L-BLU", stock: 4, reserved: 1, lowStockThreshold: 5 }),
+    variant(["XL", "Black"], {
+      sku: "TS-XL-BLK",
+      price: 34,
+      stock: 12,
+      reserved: 1,
+      lowStockThreshold: 5,
+    }),
+    variant(["XL", "White"], {
+      sku: "TS-XL-WHT",
+      price: 34,
+      stock: 5,
+      reserved: 0,
+      lowStockThreshold: 5,
+    }),
+    /* Out of stock, and switched off rather than left sellable. */
+    variant(["XL", "Blue"], {
+      sku: "TS-XL-BLU",
+      price: 34,
+      stock: 0,
+      reserved: 0,
+      lowStockThreshold: 5,
+      status: "inactive",
+    }),
+  ],
+
+  /* Licence tiers. No stock, no weight, no shipping — the fields a digital
+     variant has are the file, the download limit and how long access lasts. */
+  "prd-guide": [
+    variant(["Personal"], {
+      sku: "MG-PERS",
+      licenseType: "Personal",
+      fileName: "marketing-guide.zip",
+      fileSizeMb: 34,
+      downloadLimit: 5,
+      accessExpiryDays: 365,
+      updatedAt: "2026-05-29T11:05:00Z",
+    }),
+    variant(["Commercial"], {
+      sku: "MG-COMM",
+      price: 59,
+      licenseType: "Commercial",
+      fileName: "marketing-guide.zip",
+      fileSizeMb: 34,
+      downloadLimit: null,
+      accessExpiryDays: null,
+      updatedAt: "2026-05-29T11:05:00Z",
+    }),
+    variant(["Extended"], {
+      sku: "MG-EXT",
+      price: 129,
+      compareAtPrice: 159,
+      licenseType: "Extended",
+      fileName: "marketing-guide-extended.zip",
+      fileSizeMb: 58,
+      downloadLimit: null,
+      accessExpiryDays: null,
+      updatedAt: "2026-05-29T11:05:00Z",
+    }),
+  ],
+
+  /* Session lengths. The number that matters is bookings per day, which is
+     capacity and is emphatically not stock. */
+  "prd-consult": [
+    variant(["30 Minutes"], {
+      sku: "CONS-30",
+      price: 70,
+      durationMinutes: 30,
+      capacityPerSlot: 8,
+      bookingRequired: true,
+      locationType: "online",
+      updatedAt: "2026-05-30T16:40:00Z",
+    }),
+    variant(["60 Minutes"], {
+      sku: "CONS-60",
+      durationMinutes: 60,
+      capacityPerSlot: 5,
+      bookingRequired: true,
+      locationType: "online",
+      updatedAt: "2026-05-30T16:40:00Z",
+    }),
+    variant(["90 Minutes"], {
+      sku: "CONS-90",
+      price: 170,
+      durationMinutes: 90,
+      capacityPerSlot: 3,
+      bookingRequired: true,
+      locationType: "business-location",
+      updatedAt: "2026-05-30T16:40:00Z",
+    }),
+  ],
+};
+
+/**
+ * What one combination has sold, from the order book.
+ *
+ * The variant-level twin of `productSales`, and derived the same way: orders
+ * are the ledger, and a units-sold figure stored on the variant is a figure
+ * that disagrees with them by the end of the week.
+ */
+export function variantSales(productId: string, variantId: string): VariantSales {
+  const lines = ORDERS.flatMap((entry) =>
+    entry.lines
+      .filter((line) => line.productId === productId && line.variantId === variantId)
+      .map((line) => ({ entry, line })),
+  );
+
+  return {
+    unitsSold: lines.reduce((sum, { line }) => sum + line.quantity, 0),
+    revenue: lines.reduce(
+      (sum, { line }) => sum + line.unitPrice * line.quantity,
+      0,
+    ),
+    orders: new Set(lines.map(({ entry }) => entry.id)).size,
+    lastSoldAt: lines
+      .map(({ entry }) => entry.placedAt)
+      .sort()
+      .at(-1),
+  };
+}
+
+/**
+ * A product's variants, with their sales attached and the parent's stock
+ * recomputed from them.
+ *
+ * The roll-up is the important half. `Product.stock` is authored in the literal
+ * above for products without variants and *overwritten* here for products with
+ * them, so there is exactly one answer to "how many Premium T-Shirts are
+ * there" and it is the sum of the sizes.
+ */
+function variantsFor(item: Product): Partial<Product> {
+  if (!item.hasVariants) return {};
+
+  const variants = (PRODUCT_VARIANTS[item.id] ?? []).map((entry) => ({
+    ...entry,
+    sales: variantSales(item.id, entry.id),
+  }));
+
+  return {
+    options: PRODUCT_OPTIONS[item.id] ?? [],
+    variants,
+    ...(item.type === "physical" ? rollUpStock(variants) : {}),
+  };
+}
 
 /** Defaults for anything the tables above do not name. */
 function detailFor(item: Product): Partial<Product> {
@@ -1057,11 +1530,70 @@ export function productSales(productId: string): ProductSales {
 export const COMMERCE_PRODUCTS: Product[] = PRODUCTS.map((item) => ({
   ...item,
   ...detailFor(item),
+  ...variantsFor(item),
   sales: productSales(item.id),
 }));
 
 export const commerceProductById = (id: string) =>
   COMMERCE_PRODUCTS.find((item) => item.id === id);
+
+/* -------------------------------------------------------------------------- */
+/* Inventory                                                                  */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Warehouse stock: physical products that are tracked, and nothing else.
+ *
+ * The type check matters. `trackInventory` alone let a digital product or a
+ * service appear in the warehouse the moment someone ticked the box on the old
+ * shared form — which is how a consultation ends up with a reorder level.
+ *
+ * Finite digital licences and service capacity are real, and they are managed
+ * on the variant (`downloadLimit`, `capacityPerSlot`) rather than here, because
+ * they are not stock that gets picked and shipped.
+ *
+ * One row *per variant*, not per product. "96 Premium T-Shirts" is not a figure
+ * anyone can pick against when a third of them are XL, and a merchant adjusting
+ * stock has to be able to say which size arrived. Products without variants
+ * keep their single row and leave the variant fields unset, so the table reads
+ * the same for both.
+ *
+ * Derived from `COMMERCE_PRODUCTS` rather than the raw literals, because that
+ * is where the variant grids are attached — which is also why this sits below
+ * them in the file rather than up with the other fixtures.
+ */
+export const INVENTORY: InventoryItem[] = COMMERCE_PRODUCTS.filter(
+  (item) => item.type === "physical" && item.trackInventory,
+).flatMap((item) => {
+  if (!hasLiveVariants(item)) {
+    return [
+      {
+        productId: item.id,
+        productName: item.name,
+        sku: item.sku,
+        stock: item.stock,
+        reserved:
+          item.stock > 40 ? Math.round(item.stock * 0.08) : Math.min(item.stock, 2),
+        lowStockThreshold: item.lowStockThreshold,
+        unitCost: item.costPrice ?? 0,
+        updatedAt: item.updatedAt,
+      },
+    ];
+  }
+
+  return (item.variants ?? []).map((entry) => ({
+    productId: item.id,
+    productName: item.name,
+    variantId: entry.id,
+    variantName: variantName(entry.optionValues),
+    sku: entry.sku,
+    stock: entry.stock ?? 0,
+    reserved: entry.reserved ?? 0,
+    lowStockThreshold: entry.lowStockThreshold ?? item.lowStockThreshold,
+    unitCost: entry.costPrice ?? item.costPrice ?? 0,
+    updatedAt: entry.updatedAt,
+  }));
+});
 
 /** Totals for the Products KPI row — counts by type, not stock levels. */
 export function productTotals(list: Product[] = COMMERCE_PRODUCTS) {
@@ -1113,6 +1645,11 @@ export const SALES: Sale[] = ORDERS.map((order) => {
         ? `${headline?.productName} +${order.lines.length - 1} more`
         : (headline?.productName ?? "—"),
     productId: headline?.productId ?? "",
+    /* The combination behind the headline line, when it had one. Reported
+       rather than recomputed: Sales reads the order book, and the line is
+       what the order book recorded. */
+    variantId: headline?.variantId,
+    variantName: headline?.variantName,
     type: order.orderType,
     channel: order.channel,
     gross: order.subtotal,

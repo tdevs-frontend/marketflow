@@ -94,6 +94,8 @@ export function SalesWorkspace() {
           sale.orderReference,
           sale.customerName,
           sale.productName,
+          /* Searchable, so "XL" or "Commercial" finds the sales it should. */
+          sale.variantName ?? "",
           CHANNEL_LABEL[sale.channel],
         ]
           .join(" ")
@@ -261,6 +263,15 @@ export function SalesWorkspace() {
                           <span className="block truncate font-normal text-text-secondary">
                             {sale.productName}
                           </span>
+                          {/* Which combination earned it. "Premium T-Shirt"
+                              alone cannot tell a merchant that it is the black
+                              mediums carrying the product — which is the
+                              question this page exists to answer. */}
+                          {sale.variantName ? (
+                            <span className="block truncate text-sm text-text-muted">
+                              {sale.variantName}
+                            </span>
+                          ) : null}
                         </TD>
 
                         <TD>

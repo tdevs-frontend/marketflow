@@ -58,6 +58,26 @@ export interface Product {
   digital?: DigitalDetails;
   service?: ServiceDetails;
 
+  /*
+   * Variants.
+   *
+   * Optional, and off by default: most products are one thing at one price, and
+   * a form that opens with an empty option grid teaches a merchant selling a
+   * single ebook that they have work to do. `hasVariants` is the merchant's
+   * answer to that question, kept as its own flag rather than inferred from a
+   * non-empty array — a product mid-setup has the toggle on and no options yet,
+   * and inferring would flip it back off under them.
+   *
+   * When it is on, `variants` is the source of truth for price and stock and
+   * the parent's own `price`/`stock` become derived readings of it. See
+   * `priceRangeOf` and `rollUpStock` in `lib/variants`.
+   */
+  hasVariants: boolean;
+  /** The axes, in display order. At most `MAX_VARIANT_OPTIONS`. */
+  options?: VariantOption[];
+  /** One per combination of option values. Generated, then edited. */
+  variants?: ProductVariant[];
+
   /** What it has sold. Derived from orders; see `productSales` in fixtures. */
   sales?: ProductSales;
 
@@ -139,6 +159,19 @@ export interface OrderLine {
   productName: string;
   quantity: number;
   unitPrice: number;
+  /*
+   * Exactly what was bought, when the product has variants.
+   *
+   * Stored on the line rather than looked up from the product later: a variant
+   * can be renamed, repriced or deleted, and an order has to keep saying what
+   * the customer actually received. `sku` is captured for the same reason — it
+   * is the number that goes on a picking slip.
+   */
+  variantId?: string;
+  /** "Medium / Black". */
+  variantName?: string;
+  /** The variant's SKU when there is one, else the product's. */
+  sku?: string;
 }
 
 export interface OrderCustomer {
@@ -210,6 +243,16 @@ export interface InventoryItem {
   productId: string;
   productName: string;
   sku: string;
+  /*
+   * The variant this row counts, when the product has them.
+   *
+   * Inventory is per variant, not per product: "12 Premium T-Shirts" is not a
+   * number anyone can pick against when three of them are XL. A product without
+   * variants keeps one row and leaves these unset.
+   */
+  variantId?: string;
+  /** "Medium / Black". */
+  variantName?: string;
   stock: number;
   /** Held by unfulfilled orders, so not sellable. */
   reserved: number;
@@ -229,6 +272,16 @@ export interface StockAdjustment {
   id: string;
   productId: string;
   productName: string;
+  /*
+   * Which combination moved, when the product has variants.
+   *
+   * An adjustment that names only the product is unusable the moment stock is
+   * held per variant: "+20 Premium T-Shirt" tells a merchant nothing about
+   * which shelf to look at. `variantName` rides along so the activity feed
+   * reads without a second lookup.
+   */
+  variantId?: string;
+  variantName?: string;
   /** Signed: positive receives stock, negative removes it. */
   delta: number;
   reason: StockAdjustmentReason;
@@ -238,6 +291,8 @@ export interface StockAdjustment {
 
 export interface CreateStockAdjustmentPayload {
   productId: string;
+  /** The variant being adjusted, when the product has them. */
+  variantId?: string;
   delta: number;
   reason: StockAdjustmentReason;
   note?: string;
@@ -341,20 +396,6 @@ export interface PhysicalDetails {
   weightGrams?: number;
   dimensionsCm?: { length: number; width: number; height: number };
   shippingRequired: boolean;
-  /** Size, colour and so on. Optional — most products have none. */
-  variants?: ProductVariant[];
-}
-
-export interface ProductVariant {
-  id: string;
-  /** "Size", "Colour". */
-  optionName: string;
-  /** "Medium", "Navy". */
-  optionValue: string;
-  sku: string;
-  /** Overrides the parent price when set. */
-  price?: number;
-  stock: number;
 }
 
 export type DigitalAccessType = "download" | "stream" | "external-url" | "license-key";
@@ -489,6 +530,16 @@ export interface Sale {
   /** The headline item; the order holds the full list. */
   productName: string;
   productId: string;
+  /*
+   * The variant behind the headline item, when it had one.
+   *
+   * Sales is a reading of the order book, so it reports what the order line
+   * recorded. "Premium T-Shirt" alone cannot tell a merchant which size is
+   * actually selling — which is the whole question this page exists to answer.
+   */
+  variantId?: string;
+  /** "Medium / Black". */
+  variantName?: string;
   type: OrderType;
   channel: SalesChannel;
   gross: number;
@@ -537,4 +588,122 @@ export interface CommerceCustomer {
   /** Which types they buy, for the type filter on the customers table. */
   purchasedTypes: ProductType[];
   customerType: CustomerType;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Variants                                                                   */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * A variant is live or it is not.
+ *
+ * Deliberately two states rather than the product's three. `draft` and
+ * `archived` are answers to "is this thing in my catalogue at all", which is a
+ * question about the *product* — a single size of a shirt is never
+ * independently unpublished, it is either sellable or it is switched off while
+ * the shirt stays on sale. Two states also keep the table's Disable action
+ * honest: one toggle, one meaning.
+ */
+export type VariantStatus = "active" | "inactive";
+
+/**
+ * One axis a product varies along, and the values it takes.
+ *
+ * Order matters and is the array's own order: it fixes how a variant reads
+ * ("Medium / Black", never "Black / Medium") and which position in
+ * `ProductVariant.optionValues` belongs to which option. Reordering options
+ * therefore has to reorder every variant's values in step — see
+ * `reorderVariantValues` in `lib/variants`.
+ */
+export interface VariantOption {
+  id: string;
+  /** "Size", "Colour", "License Type". */
+  name: string;
+  /** "S", "M", "L". Unique within the option. */
+  values: string[];
+}
+
+/**
+ * One sellable combination.
+ *
+ * Lives on `Product` rather than inside `PhysicalDetails`, because a licence
+ * tier and a session length are variants in exactly the same sense that a shirt
+ * size is: same option builder, same generated grid, same table. Burying them
+ * under the physical detail object is what forced the old single-option stub to
+ * be physical-only, and a merchant selling a 30- and a 60-minute consultation
+ * had nowhere to put them.
+ *
+ * The type-specific fields are all optional and only the ones matching the
+ * parent's `type` are ever read or written — the same discipline `Product`
+ * already uses for its three detail objects. A digital variant has no weight, a
+ * service has no stock, and showing those fields empty is how a merchant learns
+ * the form is not about their business.
+ */
+export interface ProductVariant {
+  id: string;
+  /**
+   * One value per option, in option order: `["Medium", "Black"]`.
+   *
+   * The identity of the variant. Two variants of the same product can never
+   * share it — that is what makes regeneration idempotent.
+   */
+  optionValues: string[];
+  /** SKU for physical and digital, service code for a service. */
+  sku: string;
+  /**
+   * What this combination costs. `undefined` inherits the parent's price.
+   *
+   * Undefined rather than a copy of the parent figure: a variant that stores
+   * its own 29 silently stops following the product when the product is
+   * repriced, and a merchant who set no variant price never asked for that.
+   */
+  price?: number;
+  /** Shown struck through beside `price`. The "was" number. */
+  compareAtPrice?: number;
+  costPrice?: number;
+  status: VariantStatus;
+  /** Falls back to the product's thumbnail when unset. */
+  imageUrl?: string;
+
+  /* Physical */
+  stock?: number;
+  /** Held by unfulfilled orders, so not sellable. */
+  reserved?: number;
+  lowStockThreshold?: number;
+  weightGrams?: number;
+  barcode?: string;
+
+  /* Digital */
+  fileName?: string;
+  fileSizeMb?: number;
+  /** `null` for unlimited downloads. */
+  downloadLimit?: number | null;
+  /** Days after purchase before access lapses. `null` never expires. */
+  accessExpiryDays?: number | null;
+  licenseType?: string;
+
+  /* Service */
+  durationMinutes?: number;
+  /** Bookings this variant can take per slot. `null` is unlimited. */
+  capacityPerSlot?: number | null;
+  bookingRequired?: boolean;
+  locationType?: ServiceLocationType;
+
+  /** Derived from orders, like `ProductSales`. Never authored. */
+  sales?: VariantSales;
+  updatedAt: string;
+}
+
+/** What one combination has sold. The variant-level cut of `ProductSales`. */
+export interface VariantSales {
+  unitsSold: number;
+  revenue: number;
+  orders: number;
+  lastSoldAt?: string;
+}
+
+/** Lowest and highest sellable price across a product's variants. */
+export interface PriceRange {
+  min: number;
+  max: number;
 }

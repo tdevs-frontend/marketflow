@@ -15,6 +15,7 @@ import type {
   OrderType,
   SaleStatus,
   SalesChannel,
+  VariantStatus,
 } from "@/types/commerce";
 
 /** `value` is the stored key, `label` the merchant-facing wording. */
@@ -301,3 +302,85 @@ export function formatDuration(minutes: number): string {
   const rest = minutes % 60;
   return rest === 0 ? `${hours} hour${hours === 1 ? "" : "s"}` : `${hours}h ${rest}m`;
 }
+
+/* -------------------------------------------------------------------------- */
+/* Variants                                                                   */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Three axes, and no more.
+ *
+ * Not an arbitrary cap: the generated grid is the product of every option's
+ * value count, so a fourth axis is where a merchant accidentally creates four
+ * hundred rows they then have to price one at a time. Shopify settled on the
+ * same number for the same reason. The builder says so in the hint rather than
+ * silently disabling the button.
+ */
+export const MAX_VARIANT_OPTIONS = 3;
+
+/**
+ * The ceiling on generated combinations.
+ *
+ * A safety rail rather than a product decision — it exists so a stray paste of
+ * two hundred values into a value field cannot lock the browser up building a
+ * table nobody asked for.
+ */
+export const MAX_VARIANTS = 100;
+
+/**
+ * What each product type actually varies along.
+ *
+ * Suggestions in the option-name field, not a fixed list — a merchant can type
+ * anything. The point is that the *first* thing a merchant selling a service
+ * sees offered is "Duration" and not "Size", which is the difference between a
+ * form that knows what they sell and a clothing form they have to work around.
+ */
+export const VARIANT_OPTION_PRESETS: Record<ProductType, string[]> = {
+  physical: ["Size", "Color", "Material", "Pack Size"],
+  digital: ["License Type", "Package", "File Format", "Access Level"],
+  service: ["Duration", "Package", "Tier", "Service Level"],
+};
+
+/**
+ * The quantity column, in each type's own vocabulary.
+ *
+ * A service has capacity, not stock — labelling a consultation's daily booking
+ * limit "Stock" is the same mistake as marking a booking *Shipped*, and it is
+ * the reason `FULFILLMENT_FLOW` above exists. `noun` is the unit the figure is
+ * counted in, for the drawer's supporting line.
+ */
+export const VARIANT_QUANTITY_LABEL: Record<
+  ProductType,
+  { column: string; noun: string }
+> = {
+  physical: { column: "Stock", noun: "in stock" },
+  digital: { column: "Delivery", noun: "licenses" },
+  service: { column: "Capacity", noun: "bookings/day" },
+};
+
+/** The media column's heading, which is a file for a digital variant. */
+export const VARIANT_MEDIA_LABEL: Record<ProductType, string> = {
+  physical: "Image",
+  digital: "File",
+  service: "Image",
+};
+
+/** What a variant's identifying code is called, per type. */
+export const VARIANT_CODE_LABEL: Record<ProductType, string> = {
+  physical: "SKU",
+  digital: "SKU / Code",
+  service: "Service Code",
+};
+
+export const VARIANT_STATUSES: Option<VariantStatus>[] = [
+  { value: "active", label: "Active" },
+  { value: "inactive", label: "Inactive" },
+];
+
+/** Licence tiers offered as suggestions on a digital variant. */
+export const LICENSE_TYPES: Option<string>[] = [
+  { value: "personal", label: "Personal" },
+  { value: "commercial", label: "Commercial" },
+  { value: "extended", label: "Extended" },
+  { value: "team", label: "Team" },
+];
