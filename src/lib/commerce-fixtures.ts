@@ -59,13 +59,21 @@ import { slugify } from "@/lib/utils";
 export const COMMERCE_NOW = "2026-06-02T10:00:00.000Z";
 export const COMMERCE_NOW_MS = new Date(COMMERCE_NOW).getTime();
 
-export const CATEGORIES: Category[] = [
+/**
+ * The category records.
+ *
+ * `productCount` is deliberately absent from these literals: it is derived from
+ * the catalogue by `CATEGORIES` below. The authored figures this replaced had
+ * already drifted — they summed to 12 against a catalogue of 15, so the
+ * Categories page reported three products that were filed somewhere it could
+ * not see.
+ */
+const CATEGORY_RECORDS: Omit<Category, "productCount">[] = [
   {
     id: "cat-packages",
     name: "Service Packages",
     slug: "service-packages",
     description: "Bundled retainers sold as a single line item.",
-    productCount: 4,
     status: "active",
     updatedAt: "2026-05-28T09:20:00Z",
   },
@@ -74,7 +82,6 @@ export const CATEGORIES: Category[] = [
     name: "Add-ons",
     slug: "add-ons",
     description: "Extras attached to an existing package.",
-    productCount: 3,
     status: "active",
     updatedAt: "2026-05-26T14:05:00Z",
   },
@@ -83,7 +90,6 @@ export const CATEGORIES: Category[] = [
     name: "Templates",
     slug: "templates",
     description: "Downloadable message and campaign templates.",
-    productCount: 2,
     status: "active",
     updatedAt: "2026-05-22T11:40:00Z",
   },
@@ -92,7 +98,6 @@ export const CATEGORIES: Category[] = [
     name: "Training",
     slug: "training",
     description: "Live onboarding and team training sessions.",
-    productCount: 2,
     status: "active",
     updatedAt: "2026-05-19T16:30:00Z",
   },
@@ -101,9 +106,102 @@ export const CATEGORIES: Category[] = [
     name: "Hardware",
     slug: "hardware",
     description: "Physical devices shipped to customers.",
-    productCount: 1,
     status: "archived",
     updatedAt: "2026-04-30T08:15:00Z",
+  },
+
+  /*
+   * The channel and practice categories.
+   *
+   * Named after the modules a MarketFlow merchant already works in — WhatsApp,
+   * Email, SMS, Social, Automation, Analytics, Integrations — so the catalogue
+   * is filed the same way the product is navigated, rather than inventing a
+   * second vocabulary for the same business.
+   *
+   * Several hold nothing yet, and that is the honest state rather than a gap:
+   * a category is created before the products that go in it, and
+   * `productCount` is derived, so none of them can claim otherwise.
+   */
+  {
+    id: "cat-whatsapp",
+    name: "WhatsApp Solutions",
+    slug: "whatsapp-solutions",
+    description: "Seats, templates and inbox tooling for the WhatsApp channel.",
+    status: "active",
+    updatedAt: "2026-05-31T10:15:00Z",
+  },
+  {
+    id: "cat-email",
+    name: "Email Marketing",
+    slug: "email-marketing",
+    description: "Campaign layouts, sending credits and deliverability add-ons.",
+    status: "active",
+    updatedAt: "2026-05-30T13:45:00Z",
+  },
+  {
+    id: "cat-sms",
+    name: "SMS Marketing",
+    slug: "sms-marketing",
+    description: "Credit packs and shortcode provisioning for outbound SMS.",
+    status: "active",
+    updatedAt: "2026-05-29T09:10:00Z",
+  },
+  {
+    id: "cat-social",
+    name: "Social Media",
+    slug: "social-media",
+    description: "Scheduling, asset packs and multi-account publishing.",
+    status: "active",
+    updatedAt: "2026-05-27T15:20:00Z",
+  },
+  {
+    id: "cat-automation",
+    name: "Automation Services",
+    slug: "automation-services",
+    description: "Built-for-you workflows, triggers and journey design.",
+    status: "active",
+    updatedAt: "2026-05-25T11:05:00Z",
+  },
+  {
+    id: "cat-consulting",
+    name: "Consulting",
+    slug: "consulting",
+    description: "Strategy sessions billed by the hour or by the engagement.",
+    status: "active",
+    updatedAt: "2026-05-24T08:40:00Z",
+  },
+  {
+    id: "cat-support",
+    name: "Support Plans",
+    slug: "support-plans",
+    description: "Response-time guarantees sold alongside a package.",
+    status: "active",
+    updatedAt: "2026-05-21T17:25:00Z",
+  },
+  {
+    id: "cat-analytics",
+    name: "Analytics & Reports",
+    slug: "analytics-reports",
+    description: "Dashboards, scheduled exports and attribution reporting.",
+    status: "active",
+    updatedAt: "2026-05-18T12:00:00Z",
+  },
+  {
+    id: "cat-integrations",
+    name: "Integrations",
+    slug: "integrations",
+    description: "Connectors, webhooks and API access tiers.",
+    status: "active",
+    updatedAt: "2026-05-15T10:30:00Z",
+  },
+  /* Retired: the tooling it covered was folded into the channel categories. */
+  {
+    id: "cat-marketing-tools",
+    name: "Marketing Tools",
+    slug: "marketing-tools",
+    description: "Legacy grouping, replaced by the per-channel categories.",
+    status: "archived",
+    updatedAt: "2026-03-11T09:00:00Z",
   },
 ];
 
@@ -460,6 +558,50 @@ export const PRODUCTS: Product[] = [
     updatedAt: "2026-05-30T16:40:00Z",
   }),
 ];
+
+/* -------------------------------------------------------------------------- */
+/* Categories, with their product counts                                      */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The categories, counted against the catalogue that actually exists.
+ *
+ * Derived rather than authored, for the same reason `productSales` is: a count
+ * typed beside a category is a second answer to a question the products already
+ * answer, and it goes stale the first time one is refiled. The figures this
+ * replaced had done exactly that.
+ *
+ * Defined here rather than beside `CATEGORY_RECORDS` because it has to read
+ * `PRODUCTS`, which is declared above — the same ordering `INVENTORY` follows.
+ *
+ * Archived products still count. A category's product count answers "what is
+ * filed here", not "what is on sale" — deleting a category would orphan an
+ * archived product just as surely as a live one, which is the rule the table's
+ * disabled Delete action depends on.
+ */
+export const CATEGORIES: Category[] = CATEGORY_RECORDS.map((record) => ({
+  ...record,
+  productCount: PRODUCTS.filter((item) => item.categoryId === record.id).length,
+}));
+
+export const categoryById = (id: string) =>
+  CATEGORIES.find((item) => item.id === id);
+
+/**
+ * The one summary the Categories page quotes, computed once.
+ *
+ * `products` is the number of products *filed in a category*, not the size of
+ * the catalogue — the two are the same today and would diverge the moment a
+ * product were left uncategorised, and the footer should say what it counted.
+ */
+export function categoryTotals(list: Category[] = CATEGORIES) {
+  return {
+    categories: list.length,
+    products: list.reduce((sum, item) => sum + item.productCount, 0),
+    active: list.filter((item) => item.status === "active").length,
+    archived: list.filter((item) => item.status === "archived").length,
+  };
+}
 
 /** Where a product sits against its own threshold. */
 export function stockStatusOf(

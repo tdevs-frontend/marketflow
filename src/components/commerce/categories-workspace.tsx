@@ -11,16 +11,18 @@ import {
   Trash2,
 } from "lucide-react";
 
+import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog } from "@/components/ui/dialog";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Menu } from "@/components/ui/menu";
+import { Pagination } from "@/components/ui/pagination";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
-import { CATEGORY_STATUSES } from "@/constants/commerce";
-import { CATEGORIES } from "@/lib/commerce-fixtures";
-import { formatDate } from "@/lib/format";
+import { CATEGORIES_PER_PAGE, CATEGORY_STATUSES } from "@/constants/commerce";
+import { CATEGORIES, categoryTotals } from "@/lib/commerce-fixtures";
+import { formatDate, formatNumber } from "@/lib/format";
 import { slugify } from "@/lib/utils";
 import type { Category, CategoryStatus } from "@/types/commerce";
 import { CategoryStatusBadge } from "./commerce-badges";
@@ -48,6 +50,7 @@ export function CategoriesWorkspace() {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<Draft>(EMPTY);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
 
   const set = <K extends keyof Draft>(key: K, value: Draft[K]) =>
     setDraft((prev) => ({ ...prev, [key]: value }));
@@ -88,25 +91,76 @@ export function CategoriesWorkspace() {
     [editing],
   );
 
-  const totalProducts = CATEGORIES.reduce((sum, item) => sum + item.productCount, 0);
+  /*
+   * The page's totals and its rows come from one place.
+   *
+   * `categoryTotals` counts the whole set, not the visible slice — a footer
+   * that said "8 categories" on page one and "7" on page two would be
+   * describing the pagination rather than the catalogue.
+   */
+  const totals = categoryTotals();
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(CATEGORIES.length / CATEGORIES_PER_PAGE),
+  );
+  const current = Math.min(page, totalPages);
+  const rows = CATEGORIES.slice(
+    (current - 1) * CATEGORIES_PER_PAGE,
+    current * CATEGORIES_PER_PAGE,
+  );
+
+  /*
+   * The closing total, in the footer's left slot beneath the range.
+   *
+   * It deliberately does *not* repeat the category count: the line directly
+   * above it already reads "of 15 categories", and stacking "15 categories
+   * covering 15 products" under that stutters. What the range line cannot say
+   * is how much of the catalogue these categories actually account for, so
+   * that is what this adds — together they read as one sentence.
+   */
+  const summary = (
+    <>
+      Covering{" "}
+      <span className="font-medium text-text-secondary">
+        {formatNumber(totals.products)}
+      </span>{" "}
+      {totals.products === 1 ? "product" : "products"}
+      {totals.archived > 0 ? (
+        <>
+          {" · "}
+          <span className="font-medium text-text-secondary">
+            {formatNumber(totals.archived)}
+          </span>{" "}
+          archived
+        </>
+      ) : null}
+    </>
+  );
 
   return (
     <>
-      <Card className="p-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-text-secondary">
-            <span className="font-medium text-text-primary">{CATEGORIES.length}</span>{" "}
-            categories covering{" "}
-            <span className="font-medium text-text-primary">{totalProducts}</span>{" "}
-            products.
-          </p>
+      {/*
+        * The header lives here rather than in the route, because Add Category
+        * opens a dialog this component owns — the same arrangement
+        * `ProductsWorkspace` uses. Putting the button in the page and its state
+        * one file away is what pushed it into the card in the first place.
+        */}
+      <PageHeader
+        title="Categories"
+        description="Organize physical products, digital products and services into categories."
+        action={
           <Button size="compact" onClick={openCreate}>
             <Plus aria-hidden />
             Add Category
           </Button>
-        </div>
+        }
+      />
 
-        <div className="mt-4 max-md:hidden">
+      {/* The card opens on the table itself — the count that used to sit above
+          it is a closing total and now reads in the footer. */}
+      <Card className="p-5">
+        <div className="max-md:hidden">
           <Table minWidth="48rem">
             <THead>
               <TH>Category</TH>
@@ -118,7 +172,7 @@ export function CategoriesWorkspace() {
             </THead>
 
             <TBody>
-              {CATEGORIES.map((item) => (
+              {rows.map((item) => (
                 <TR key={item.id}>
                   <TD>
                     <div className="flex items-center gap-3">
@@ -188,8 +242,8 @@ export function CategoriesWorkspace() {
           </Table>
         </div>
 
-        <ul className="mt-4 space-y-2.5 md:hidden">
-          {CATEGORIES.map((item) => (
+        <ul className="space-y-2.5 md:hidden">
+          {rows.map((item) => (
             <li key={item.id} className="rounded-panel border border-border p-3.5">
               <div className="flex items-start gap-3">
                 <span className="grid size-9 shrink-0 place-items-center rounded-panel bg-primary-soft text-primary">
@@ -231,6 +285,18 @@ export function CategoriesWorkspace() {
             </li>
           ))}
         </ul>
+
+        <div className="mt-4">
+          <Pagination
+            page={current}
+            totalPages={totalPages}
+            total={CATEGORIES.length}
+            perPage={CATEGORIES_PER_PAGE}
+            onChange={setPage}
+            noun="categories"
+            summary={summary}
+          />
+        </div>
       </Card>
 
       <Dialog

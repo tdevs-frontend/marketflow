@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -31,6 +32,7 @@ export function Pagination({
   onChange,
   /** Names what is being paged, for the "1–8 of 12" line. */
   noun = "results",
+  summary,
 }: {
   page: number;
   totalPages: number;
@@ -38,6 +40,18 @@ export function Pagination({
   perPage: number;
   onChange: (page: number) => void;
   noun?: string;
+  /**
+   * A second line under the range, in the same left slot.
+   *
+   * For the reading a table wants to leave a merchant with once they have
+   * finished scanning it — "15 categories covering 15 products". It sits here
+   * rather than above the table because it is a closing total, not a heading,
+   * and rather than in its own row because a footer with two bars in it reads
+   * as two controls.
+   *
+   * Optional, so every existing caller renders exactly as before.
+   */
+  summary?: ReactNode;
 }) {
   if (total === 0) return null;
 
@@ -52,10 +66,18 @@ export function Pagination({
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
-      <p className="text-sm text-text-muted">
-        Showing <span className="font-medium text-text-secondary">{first}–{last}</span>{" "}
-        of <span className="font-medium text-text-secondary">{total}</span> {noun}
-      </p>
+      <div className="min-w-0">
+        <p className="text-sm text-text-muted">
+          Showing{" "}
+          <span className="font-medium text-text-secondary">
+            {first}–{last}
+          </span>{" "}
+          of <span className="font-medium text-text-secondary">{total}</span> {noun}
+        </p>
+        {summary ? (
+          <p className="mt-0.5 text-sm text-text-muted">{summary}</p>
+        ) : null}
+      </div>
 
       <nav aria-label="Pagination" className="flex items-center gap-1">
         <button

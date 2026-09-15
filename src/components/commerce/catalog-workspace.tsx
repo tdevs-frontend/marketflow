@@ -63,7 +63,9 @@ function ShareRow({
       <span
         className={cn(
           "grid size-9 shrink-0 place-items-center rounded-btn",
-          primary ? "bg-primary text-white" : "bg-surface-secondary text-text-muted",
+          primary
+            ? "bg-primary text-white"
+            : "bg-surface-secondary text-text-muted",
         )}
       >
         {icon}
@@ -77,7 +79,9 @@ function ShareRow({
         >
           {label}
         </span>
-        <span className="block text-sm font-medium text-text-muted">{hint}</span>
+        <span className="block text-sm font-medium text-text-muted">
+          {hint}
+        </span>
       </span>
     </button>
   );
@@ -194,7 +198,10 @@ function CatalogPreview({
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           {products.map((product) => {
-            const state = stockStatusOf(product.stock, product.lowStockThreshold);
+            const state = stockStatusOf(
+              product.stock,
+              product.lowStockThreshold,
+            );
             const available = state !== "out-of-stock";
 
             return (
@@ -276,7 +283,9 @@ function CreateCatalogDialog({
   /* The joined catalogue, not the raw literal: a product with variants has
      its stock rolled up and its price expressed as a range, and reading the
      literal here showed a figure no other page agreed with. */
-  const selectable = COMMERCE_PRODUCTS.filter((item) => item.status === "active");
+  const selectable = COMMERCE_PRODUCTS.filter(
+    (item) => item.status === "active",
+  );
 
   function toggle(id: string) {
     setPicked((prev) =>
@@ -317,7 +326,11 @@ function CreateCatalogDialog({
     >
       <div className="space-y-5">
         <div className="grid gap-5 sm:grid-cols-2">
-          <Field label="Catalog Name" htmlFor="cat-name" error={error ?? undefined}>
+          <Field
+            label="Catalog Name"
+            htmlFor="cat-name"
+            error={error ?? undefined}
+          >
             <Input
               id="cat-name"
               value={name}
@@ -365,10 +378,10 @@ function CreateCatalogDialog({
                   />
                   <ProductThumb size="sm" />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-medium text-text-primary">
+                    <span className="block truncate text-[15px] font-bold text-text-primary">
                       {product.name}
                     </span>
-                    <span className="block text-sm text-text-muted">
+                    <span className="block text-sm text-text-muted font-medium">
                       {product.categoryName}
                     </span>
                   </span>
@@ -395,7 +408,8 @@ export function CatalogWorkspace() {
   const [creating, setCreating] = useState(false);
 
   /* The header's Preview opens whatever customers would actually land on. */
-  const published = CATALOGS.find((item) => item.status === "published") ?? null;
+  const published =
+    CATALOGS.find((item) => item.status === "published") ?? null;
 
   return (
     <>
@@ -501,13 +515,15 @@ export function CatalogWorkspace() {
         <button
           type="button"
           onClick={() => setCreating(true)}
-          className="flex min-h-56 flex-col items-center justify-center gap-2 rounded-card border border-dashed border-border-strong bg-surface-secondary/60 p-5 text-center transition-colors hover:border-primary hover:bg-primary-subtle focus-visible:shadow-focus focus-visible:outline-none"
+          className="flex min-h-56 flex-col items-center justify-center gap-2 rounded-card border border-dashed border-border-strong bg-primary-subtle/50 p-5 text-center transition-colors hover:border-primary hover:bg-primary-subtle focus-visible:shadow-focus focus-visible:outline-none"
         >
           <span className="grid size-10 place-items-center rounded-full bg-surface text-primary">
             <Plus className="size-5" aria-hidden />
           </span>
-          <span className="text-sm font-medium text-text-primary">Create catalog</span>
-          <span className="max-w-48 text-sm text-text-muted">
+          <span className="text-base font-bold text-text-primary">
+            Create catalog
+          </span>
+          <span className="max-w-50 text-sm text-text-mute font-medium">
             Group products for a campaign, a season or a customer segment.
           </span>
         </button>
@@ -516,8 +532,10 @@ export function CatalogWorkspace() {
       <Card className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-base">
-            {formatNumber(COMMERCE_PRODUCTS.filter((item) => item.featured).length)} featured
-            products lead your catalogs
+            {formatNumber(
+              COMMERCE_PRODUCTS.filter((item) => item.featured).length,
+            )}{" "}
+            featured products lead your catalogs
           </h2>
           <p className="mt-1 text-sm text-text-secondary font-medium">
             Featured products appear first wherever a catalog is shared.
@@ -526,7 +544,10 @@ export function CatalogWorkspace() {
       </Card>
 
       <ShareDialog catalog={sharing} onClose={() => setSharing(null)} />
-      <CatalogPreview catalog={previewing} onClose={() => setPreviewing(null)} />
+      <CatalogPreview
+        catalog={previewing}
+        onClose={() => setPreviewing(null)}
+      />
       <CreateCatalogDialog open={creating} onClose={() => setCreating(false)} />
     </>
   );
