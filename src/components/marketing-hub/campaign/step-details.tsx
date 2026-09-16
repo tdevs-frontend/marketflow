@@ -1,11 +1,16 @@
 "use client";
 
-import { Mail, MessageCircle, Share2, Smartphone } from "lucide-react";
+import type { ReactNode } from "react";
+import { Mail, MessageCircle, Smartphone } from "lucide-react";
 
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { BrandIcon } from "@/components/ui/brand-icon";
 import { SocialAccountSelector } from "@/components/integrations/social";
+import { CHANNEL_THEME, PLATFORM_THEME } from "@/constants/channels";
+import { publishableAccounts } from "@/lib/social-fixtures";
+import { cn } from "@/lib/utils";
 import {
   CAMPAIGN_OBJECTIVES,
   CAMPAIGN_TAGS,
@@ -30,58 +35,152 @@ import type { StepProps } from "./types";
  * Review with no verified sender.
  */
 
-/*
- * The four channels wear the landing page's glyphs.
+/**
+ * The four channels, wearing the landing page's module card.
  *
- * WhatsApp, Email and SMS are `MessageCircle`, `Mail` and `Smartphone` —
- * the same three `platform/platform-features` gives those modules in the
- * "All-in-one growth platform" section, so a channel is the same object in the
- * marketing story and in the wizard that creates one. WhatsApp keeps Lucide's
- * speech bubble rather than the brand mark for the same reason it does there:
- * `ui/brand-icon` carries the logos, and a real logo on a channel card would
- * out-shout the other three.
+ * "All-in-one growth platform" describes a module with a tinted tile, a bold
+ * title, a line of body and a status pill; this is that card with the one thing
+ * a landing card never needs — a pressed state. The tile is the same 44px
+ * square at 12px radius holding a 20px glyph at 1.9 stroke, and the glyphs are
+ * the section's own: `MessageCircle`, `Mail` and `Smartphone` are exactly what
+ * `platform/platform-features` gives those three modules, so the card a
+ * merchant reads on the marketing site and the card they click to create a
+ * campaign are one object.
  *
- * Social has no counterpart in that section — it is a channel the wizard sends
- * on but the landing rails don't list — so it keeps `Share2`, the Lucide glyph
- * the integration catalogue already uses for it. The platform logos belong to
- * the accounts underneath, where `SocialAccountSelector` renders each one's own
- * mark; a single Instagram logo on a card that also publishes to Facebook,
- * LinkedIn and X would name one of the four.
+ * No colour is invented here. WhatsApp, Email and SMS take their soft ground
+ * and ink from `CHANNEL_THEME` — the table every chip, stat card and chart
+ * series in their modules already reads, and the same tokens the landing
+ * section tints its tiles with, which is why the two match without sharing a
+ * constant. Social has no channel hue worth wearing (`CHANNEL_THEME.social` is
+ * the Planner's slate), so it takes Instagram's from `PLATFORM_THEME`, the
+ * table behind every account mark that appears under the card once it is
+ * chosen.
  */
 const CHANNEL_CARDS: {
   value: MarketingChannel;
   label: string;
   hint: string;
-  icon: typeof Mail;
+  /** Already sized and weighted — the tile only centres it. */
+  icon: ReactNode;
+  /** Soft ground plus ink, for the tile. */
+  tile: string;
+  /** The status pill's bullet, in the tile's hue. */
+  dot: string;
 }[] = [
   {
     value: "whatsapp",
     label: "WhatsApp",
     hint: "Highest read rate. Template needed for the first message.",
-    icon: MessageCircle,
+    icon: <MessageCircle aria-hidden className="size-5" strokeWidth={1.9} />,
+    tile: cn(CHANNEL_THEME.whatsapp.soft, CHANNEL_THEME.whatsapp.text),
+    dot: CHANNEL_THEME.whatsapp.accent,
   },
   {
     value: "email",
     label: "Email",
     hint: "Best for long-form and rich layouts.",
-    icon: Mail,
+    icon: <Mail aria-hidden className="size-5" strokeWidth={1.9} />,
+    tile: cn(CHANNEL_THEME.email.soft, CHANNEL_THEME.email.text),
+    dot: CHANNEL_THEME.email.accent,
   },
   {
     value: "sms",
     label: "SMS",
     hint: "Short, urgent, no images. Billed per segment.",
-    icon: Smartphone,
+    icon: <Smartphone aria-hidden className="size-5" strokeWidth={1.9} />,
+    tile: cn(CHANNEL_THEME.sms.soft, CHANNEL_THEME.sms.text),
+    dot: CHANNEL_THEME.sms.accent,
   },
   {
     value: "social",
     label: "Social",
     hint: "Publish campaign content to connected social accounts and track engagement.",
-    icon: Share2,
+    /* The mark `PlatformMark` renders on every account row under this card, so
+       the glyph does not change between choosing the channel and choosing the
+       accounts it publishes to. */
+    icon: <BrandIcon name={PLATFORM_THEME.instagram.icon} className="size-5" />,
+    tile: cn(PLATFORM_THEME.instagram.soft, PLATFORM_THEME.instagram.text),
+    dot: PLATFORM_THEME.instagram.swatch,
   },
 ];
 
+/** "2 connections" — the pill's reading, in the landing card's voice. */
+function plural(count: number, noun: string) {
+  return `${count} ${noun}${count === 1 ? "" : "s"}`;
+}
+
+/**
+ * One channel card: `FeatureCard`'s anatomy, plus a pressed state.
+ *
+ * Selected swaps the white ground for the brand's subtle tint and the hairline
+ * for the brand border — the dashboard's existing selected treatment, not a new
+ * one — and drops the hover lift, so a chosen card sits still while the other
+ * three still rise to the cursor. The tile keeps its own tone either way: the
+ * channel's colour is what identifies it, and recolouring it on selection would
+ * hide the thing being selected.
+ */
+function ChannelCard({
+  card,
+  status,
+  selected,
+  onSelect,
+}: {
+  card: (typeof CHANNEL_CARDS)[number];
+  status: string;
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={selected}
+      onClick={onSelect}
+      className={cn(
+        "flex w-full items-start gap-3 rounded-card border p-4 text-left shadow-card",
+        "transition-[translate,box-shadow,border-color,background-color] duration-250 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        "focus-visible:shadow-focus focus-visible:outline-none",
+        "motion-reduce:transition-none motion-reduce:hover:translate-y-0",
+        selected
+          ? "border-primary bg-primary-subtle"
+          : "border-border bg-surface hover:-translate-y-[3px] hover:border-primary-border hover:shadow-card-hover",
+      )}
+    >
+      <span
+        className={cn(
+          "grid size-11 shrink-0 place-items-center rounded-[12px]",
+          card.tile,
+        )}
+      >
+        {card.icon}
+      </span>
+
+      <span className="min-w-0 flex-1">
+        <span className="block text-sm leading-snug font-bold tracking-tight text-text-primary">
+          {card.label}
+        </span>
+        <span className="mt-0.5 block text-sm leading-normal font-medium text-text-secondary">
+          {card.hint}
+        </span>
+        <Badge tone="neutral" size="sm" className="mt-2">
+          <span aria-hidden className={cn("size-1.5 rounded-full", card.dot)} />
+          {status}
+        </Badge>
+      </span>
+    </button>
+  );
+}
+
 export function DetailsStep(props: StepProps) {
   const { draft, set, setChannel, errors } = props;
+
+  /* What each channel can actually send from, counted off the same fixtures the
+     sender section below reads — the pill is a reading, not a label. */
+  const status: Record<MarketingChannel, string> = {
+    whatsapp: plural(WHATSAPP_CONNECTIONS.length, "connection"),
+    email: plural(EMAIL_SENDERS.length, "sender"),
+    sms: plural(SMS_PROVIDERS.length, "provider"),
+    social: plural(publishableAccounts().length, "account"),
+  };
 
   return (
     <div className="space-y-5">
@@ -136,24 +235,15 @@ export function DetailsStep(props: StepProps) {
 
       <StepSection title="Channel">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {CHANNEL_CARDS.map((card) => {
-            const Icon = card.icon;
-
-            return (
-              <OptionCard
-                key={card.value}
-                selected={draft.channel === card.value}
-                onClick={() => setChannel(card.value)}
-                /* 1.9, the weight `FeatureIcon` draws the landing tiles at.
-                   Lucide's default 2 is heavier than the section these glyphs
-                   come from, which is visible when the two sit on one screen. */
-                icon={<Icon aria-hidden strokeWidth={1.9} />}
-                title={card.label}
-                hint={card.hint}
-                className="flex-col items-stretch"
-              />
-            );
-          })}
+          {CHANNEL_CARDS.map((card) => (
+            <ChannelCard
+              key={card.value}
+              card={card}
+              status={status[card.value]}
+              selected={draft.channel === card.value}
+              onSelect={() => setChannel(card.value)}
+            />
+          ))}
         </div>
       </StepSection>
 
