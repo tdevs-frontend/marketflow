@@ -25,21 +25,32 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
+import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { BrandIcon } from "@/components/ui/brand-icon";
 import { ButtonLink } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { PanelCard } from "@/components/ui/chart-card";
 import { Avatar } from "@/components/ui/avatar";
 import { ProgressBar } from "@/components/ui/progress";
 import { StatsGrid, MiniStat, type StatItem } from "@/components/ui/stats-card";
 import { CHANNEL_THEME } from "@/constants/channels";
+import { INTEGRATION_ROUTES } from "@/constants/integrations";
 import { APP_ROUTES } from "@/constants";
 import { CONVERSATIONS } from "@/lib/marketing-fixtures";
 import { AUTOMATION_FLOWS } from "@/lib/automation-fixtures";
 import {
   WA_ACTIVITY,
+  WA_CONNECTION,
   WA_INBOX_SNAPSHOT,
   WA_OVERVIEW_TOTALS,
 } from "@/lib/whatsapp-fixtures";
-import { formatCount, formatNumber, formatPercent, formatRelativeTime } from "@/lib/format";
+import {
+  formatCount,
+  formatNumber,
+  formatPercent,
+  formatRelativeTime,
+  rate,
+} from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { ActivityFeed } from "../shared/activity-feed";
 import { RecentConversations } from "../shared/recent-conversations";
@@ -202,6 +213,114 @@ const QUICK_ACTIONS: {
   },
 ];
 
+/* -------------------------------------------------------------------------- */
+/* Connection                                                                 */
+/* -------------------------------------------------------------------------- */
+
+/** Meta's own three-step rating, on the ramp the rest of the product uses. */
+const QUALITY_TONE: Record<"high" | "medium" | "low", BadgeTone> = {
+  high: "success",
+  medium: "warning",
+  low: "danger",
+};
+
+/**
+ * Whether the channel can send, as the first thing on the page.
+ *
+ * Above the KPIs on purpose: every number below assumes the account is
+ * connected, inside its send limit and receiving webhooks. When one of those
+ * three is wrong, it is the only thing on the page worth reading — a merchant
+ * chasing a flat reply rate should find a failing webhook here, not in the
+ * Integrations module two clicks away.
+ *
+ * A strip rather than a panel. It is a precondition, not a reading, and the
+ * moment it earns a card of its own it starts competing with the metrics it
+ * exists to qualify.
+ */
+function ConnectionStatus() {
+  const used = rate(WA_CONNECTION.windowUsed, WA_CONNECTION.tierLimit);
+
+  return (
+    <Card className="p-4">
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-4">
+        <div className="flex min-w-0 items-center gap-3">
+          <span
+            className={cn(
+              "grid size-10 shrink-0 place-items-center rounded-btn",
+              theme.soft,
+              theme.text,
+            )}
+          >
+            <BrandIcon name="whatsapp" className="size-5" />
+          </span>
+
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-text-primary">
+              {WA_CONNECTION.businessName}
+            </p>
+            <p className="truncate text-meta font-medium text-text-secondary tabular-nums">
+              {WA_CONNECTION.phone}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge tone="success" size="sm" className="gap-1.5">
+            <span aria-hidden className="size-1.5 rounded-full bg-success" />
+            Connected
+          </Badge>
+          <Badge tone={QUALITY_TONE[WA_CONNECTION.quality]} size="sm">
+            {WA_CONNECTION.quality} quality
+          </Badge>
+          {WA_CONNECTION.verified ? (
+            <Badge tone="neutral" size="sm">
+              Business verified
+            </Badge>
+          ) : (
+            <Badge tone="danger" size="sm">
+              Not verified
+            </Badge>
+          )}
+          <Badge
+            tone={WA_CONNECTION.webhookHealthy ? "neutral" : "danger"}
+            size="sm"
+          >
+            {WA_CONNECTION.webhookHealthy ? "Webhook healthy" : "Webhook failing"}
+          </Badge>
+        </div>
+
+        {/* The send ceiling, which is the one piece of connection health that
+            is a quantity rather than a state. */}
+        <div className="min-w-48 flex-1">
+          <div className="flex items-baseline justify-between gap-2">
+            <p className={SECTION_RULE}>24-hour send limit</p>
+            <p className="text-sm font-bold text-text-primary tabular-nums">
+              {formatNumber(WA_CONNECTION.windowUsed)} /{" "}
+              {formatCount(WA_CONNECTION.tierLimit)}
+            </p>
+          </div>
+          <ProgressBar
+            value={used}
+            label="Share of the 24-hour send limit used"
+            tone={used >= 90 ? "bg-error" : used >= 75 ? "bg-warning" : theme.accent}
+            size="sm"
+            className="mt-1.5"
+          />
+        </div>
+
+        <ButtonLink
+          href={INTEGRATION_ROUTES.whatsapp}
+          variant="outline"
+          size="sm"
+          className="shrink-0"
+        >
+          Manage connection
+        </ButtonLink>
+      </div>
+    </Card>
+  );
+}
+
 export function WhatsAppOverview() {
   const conversations = [...CONVERSATIONS]
     .sort(
@@ -217,6 +336,8 @@ export function WhatsAppOverview() {
 
   return (
     <>
+      <ConnectionStatus />
+
       <StatsGrid items={STATS} accent={ACCENT} columns={5} />
 
       <div className="grid gap-4 xl:grid-cols-3">

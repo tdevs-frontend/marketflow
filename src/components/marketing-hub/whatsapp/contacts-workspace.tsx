@@ -25,9 +25,11 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { Menu } from "@/components/ui/menu";
 import { Pagination } from "@/components/ui/pagination";
 import { Select } from "@/components/ui/select";
+import { StatsGrid, type StatItem } from "@/components/ui/stats-card";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
 import { useToast } from "@/components/ui/toast";
 import { FilterBar } from "@/components/commerce/filter-bar";
+import { CHANNEL_THEME } from "@/constants/channels";
 import { AGENTS } from "@/lib/marketing-fixtures";
 import {
   CONTACT_STATUSES,
@@ -37,7 +39,6 @@ import {
 } from "@/lib/whatsapp-fixtures";
 import { formatDate, formatNumber, formatRelativeTime } from "@/lib/format";
 import type { WhatsAppContact, WhatsAppContactStatus } from "@/types/marketing";
-import { MarketingStats, type MarketingStat } from "../marketing-stats";
 import {
   ContactAvatar,
   ContactDetailsSheet,
@@ -49,10 +50,25 @@ const ALL = "all";
 /* The dashboard-wide row count. */
 const PER_PAGE = TABLE_PAGE_SIZE;
 
+/**
+ * The channel accent the stat row wears.
+ *
+ * This page used to render `MarketingStats`, a second stat-row component whose
+ * cards were the same shape as `StatsGrid`'s but whose labels sat a step down
+ * the scale and whose icon tiles were always neutral grey. Walking from
+ * Overview to Contacts changed the label size and drained the colour out of the
+ * tiles for no reason a merchant could name. One component now, with WhatsApp's
+ * green, so all five stat rows in the module match.
+ */
+const ACCENT = {
+  soft: CHANNEL_THEME.whatsapp.soft,
+  text: CHANNEL_THEME.whatsapp.text,
+};
+
 /** "This month" is May 2026 in the fixture data. */
 const MONTH_START = new Date("2026-05-01T00:00:00Z");
 
-function stats(): MarketingStat[] {
+function stats(): StatItem[] {
   const active = WHATSAPP_CONTACTS.filter((item) => item.status === "active");
   const blocked = WHATSAPP_CONTACTS.filter((item) => item.status === "blocked");
   const fresh = WHATSAPP_CONTACTS.filter(
@@ -228,7 +244,7 @@ export function ContactsWorkspace() {
         }
       />
 
-      <MarketingStats items={stats()} />
+      <StatsGrid items={stats()} accent={ACCENT} />
 
       <Card className="p-5">
         <FilterBar

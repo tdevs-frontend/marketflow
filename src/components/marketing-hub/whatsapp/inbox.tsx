@@ -13,7 +13,6 @@ import {
   Phone,
   Search,
   Send,
-  Smile,
   UserPlus,
   X,
 } from "lucide-react";
@@ -272,6 +271,7 @@ function ChatWindow({
   onOpenDetails: () => void;
   onSend: (body: string) => void;
 }) {
+  const toast = useToast();
   const [draft, setDraft] = useState("");
   const [showReplies, setShowReplies] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -405,11 +405,24 @@ function ChatWindow({
 
         <div className="flex items-end gap-2">
           <div className="flex shrink-0 gap-1">
-            <Button variant="ghost" size="sm" aria-label="Attach a file">
+            {/*
+             * Two of the three buttons here had no handler at all.
+             *
+             * Attach stays and now behaves like every other stubbed action in
+             * the module — Import, Export, Duplicate all raise a toast: media
+             * is a real WhatsApp message type and the composer should say so.
+             * The emoji button is gone. Every platform WhatsApp runs on has an
+             * emoji key on its own keyboard, so the control bought nothing even
+             * when it worked, and a button that does nothing at all is worse
+             * than no button.
+             */}
+            <Button
+              variant="ghost"
+              size="sm"
+              aria-label="Attach a file"
+              onClick={() => toast("Attachments open from your device library")}
+            >
               <Paperclip aria-hidden />
-            </Button>
-            <Button variant="ghost" size="sm" aria-label="Insert emoji">
-              <Smile aria-hidden />
             </Button>
             <Button
               variant="ghost"

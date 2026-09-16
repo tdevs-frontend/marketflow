@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 
 import { Badge, type BadgeTone } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -33,6 +33,7 @@ import { StatsGrid, type StatItem } from "@/components/ui/stats-card";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
 import { useToast } from "@/components/ui/toast";
 import { CHANNEL_THEME } from "@/constants/channels";
+import { AUTOMATION_ROUTES } from "@/constants/automation";
 import { AUTOMATION_STATUSES, countSteps, flowsForChannel } from "@/lib/automation-fixtures";
 import { formatCount, formatNumber, formatPercent, formatRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -275,10 +276,12 @@ export function AutomationsWorkspace({ channel }: { channel: MessagingChannel })
                   Clear filters
                 </Button>
               ) : (
-                <Button size="sm">
+                /* Was a handler-less button, so the one route out of an empty
+                   workspace went nowhere. */
+                <ButtonLink href={AUTOMATION_ROUTES.create} size="sm">
                   <Plus aria-hidden />
                   Create Automation
-                </Button>
+                </ButtonLink>
               )
             }
           />

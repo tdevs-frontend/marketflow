@@ -1,4 +1,5 @@
 import type { Option } from "@/constants/commerce";
+import { WHATSAPP_CONNECTIONS } from "@/lib/campaign-fixtures";
 import type { ActivityEntry } from "@/lib/overview-fixtures";
 import type {
   Campaign,
@@ -566,6 +567,34 @@ export const WA_OVERVIEW_TOTALS = {
 /* -------------------------------------------------------------------------- */
 /* Operational state                                                          */
 /* -------------------------------------------------------------------------- */
+
+/**
+ * Can this account send at all, and how much headroom is left.
+ *
+ * The identity is read from WHATSAPP_CONNECTIONS rather than restated: the
+ * campaign wizard's sender picker is driven by that list, and an Overview that
+ * names a different number than the one a campaign will send from is worse
+ * than an Overview that names none.
+ *
+ * What is added here is the health Meta reports and nothing else stores — the
+ * quality rating, the rolling 24-hour send limit, and whether the inbound
+ * webhook is delivering. Those three are the reasons a WhatsApp account stops
+ * working, and none of them is visible anywhere else in the product.
+ */
+const PRIMARY_CONNECTION = WHATSAPP_CONNECTIONS[0];
+const PRIMARY_NUMBER = PRIMARY_CONNECTION.numbers[0];
+
+export const WA_CONNECTION = {
+  businessName: PRIMARY_CONNECTION.label,
+  /** The list stores "+880 1700 000000 — Primary"; the label is not the number. */
+  phone: PRIMARY_NUMBER.label.split(" — ")[0],
+  quality: PRIMARY_NUMBER.quality,
+  verified: PRIMARY_CONNECTION.verified,
+  /** Messages allowed in a rolling 24 hours at the current tier. */
+  tierLimit: 100_000,
+  windowUsed: 42_180,
+  webhookHealthy: true,
+};
 
 /**
  * The inbox as it stands right now — the overview's subject.

@@ -1,16 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import {
-  Archive,
-  CheckCheck,
-  Eye,
-  MessageSquare,
-  Pause,
-  Play,
-  Send,
-  Trash2,
-} from "lucide-react";
+import { Archive, Pause, Play, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { TABLE_PAGE_SIZE } from "@/constants/app";
@@ -26,6 +17,7 @@ import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
 import { useToast } from "@/components/ui/toast";
 import { ButtonLink } from "@/components/ui/button";
 import { FilterBar } from "@/components/commerce/filter-bar";
+import { cn } from "@/lib/utils";
 import { APP_ROUTES } from "@/constants";
 import {
   AUDIENCES,
@@ -33,12 +25,9 @@ import {
   CAMPAIGN_STATUS_OPTIONS,
   rateOf,
 } from "@/lib/marketing-fixtures";
-import { whatsappTotals } from "@/lib/whatsapp-fixtures";
 import { formatDate, formatNumber, formatPercent } from "@/lib/format";
 import type { CampaignStatus } from "@/types/marketing";
 import { CampaignStatusBadge } from "../campaign-status";
-import { MarketingStats, type MarketingStat } from "../marketing-stats";
-import { ChannelPerformanceChart } from "../channel-performance-chart";
 
 const ALL = "all";
 /* The dashboard-wide row count. */
@@ -55,54 +44,6 @@ type SortField = (typeof SORT_OPTIONS)[number]["value"];
 
 /** Only WhatsApp campaigns — the unified list lives at /marketing/campaigns. */
 const WHATSAPP_CAMPAIGNS = CAMPAIGNS.filter((item) => item.channel === "whatsapp");
-
-const TOTALS = whatsappTotals(WHATSAPP_CAMPAIGNS);
-
-const STATS: MarketingStat[] = [
-  {
-    label: "Messages Sent",
-    value: formatNumber(TOTALS.sent),
-    changePercent: 12.5,
-    icon: Send,
-    hint: "vs last month",
-  },
-  {
-    label: "Delivered",
-    value: formatNumber(TOTALS.delivered),
-    changePercent: 9.8,
-    icon: CheckCheck,
-    hint: `${formatPercent(rateOf(TOTALS.delivered, TOTALS.sent))} of sent`,
-  },
-  {
-    label: "Read",
-    value: formatNumber(TOTALS.read),
-    changePercent: 16.2,
-    icon: Eye,
-    hint: `${formatPercent(rateOf(TOTALS.read, TOTALS.delivered))} of delivered`,
-  },
-  {
-    label: "Replies",
-    value: formatNumber(TOTALS.replies),
-    changePercent: 24.6,
-    icon: MessageSquare,
-    hint: `${formatPercent(rateOf(TOTALS.replies, TOTALS.delivered))} reply rate`,
-  },
-];
-
-/**
- * The funnel as a chart: each campaign's sent → delivered → read → replies,
- * which is the shape a WhatsApp marketer reads a campaign by.
- */
-const TOP_FIVE = [...WHATSAPP_CAMPAIGNS]
-  .filter((item) => item.sent > 0)
-  .sort((a, b) => b.sent - a.sent)
-  .slice(0, 5);
-
-const CHART_SERIES = [
-  { name: "Delivered", data: TOP_FIVE.map((item) => item.delivered) },
-  { name: "Read", data: TOP_FIVE.map((item) => item.opened) },
-  { name: "Replies", data: TOP_FIVE.map((item) => item.replies) },
-];
 
 export function WhatsAppCampaignsWorkspace() {
   const toast = useToast();
@@ -160,27 +101,20 @@ export function WhatsAppCampaignsWorkspace() {
     setSelected([]);
   }
 
+  /*
+   * The list, and nothing above it.
+   *
+   * This page carried a four-card stat row and a "Campaign Performance" bar
+   * chart. Both were readings of the whole channel rather than of any campaign
+   * in the table, both were computed from the same `whatsappTotals()` call the
+   * Analytics KPIs use, and the chart plotted the five largest sends — which is
+   * Analytics' "Campaign Comparison" with a different sort. A list page's job
+   * is the list; the per-campaign delivery figures now live in the row they
+   * belong to, including the failure count, which none of the removed cards
+   * ever showed.
+   */
   return (
     <>
-      <MarketingStats items={STATS} />
-
-      <Card className="p-5">
-        <div>
-          <h2 className="text-base">Campaign Performance</h2>
-          <p className="mt-1 text-sm text-text-secondary font-medium">
-            Delivered, read and replies for your five largest sends.
-          </p>
-        </div>
-
-        <div className="mt-2 -ml-2.5">
-          <ChannelPerformanceChart
-            categories={TOP_FIVE.map((item) => item.name)}
-            series={CHART_SERIES}
-            height={280}
-          />
-        </div>
-      </Card>
-
       <Card className="p-5">
         <FilterBar
           search={search}
@@ -309,7 +243,7 @@ export function WhatsAppCampaignsWorkspace() {
           <>
             {/* Desktop */}
             <div className="mt-4 max-lg:hidden">
-              <Table minWidth="72rem">
+              <Table minWidth="78rem">
                 <THead>
                   <TH className="w-10 pr-0">
                     <Checkbox
@@ -331,6 +265,7 @@ export function WhatsAppCampaignsWorkspace() {
                   <TH align="right">Delivered</TH>
                   <TH align="right">Read</TH>
                   <TH align="right">Replies</TH>
+                  <TH align="right">Failed</TH>
                   <TH>Status</TH>
                   <TH>Created</TH>
                   <TH align="right">Actions</TH>
@@ -398,6 +333,20 @@ export function WhatsAppCampaignsWorkspace() {
                           {formatNumber(campaign.replies)}
                         </TD>
 
+                        {/* The only column where a number above zero is the
+                            problem, so it is the only one that takes the error
+                            ink — a zero stays muted rather than shouting that
+                            nothing went wrong. */}
+                        <TD align="right" className="tabular-nums">
+                          {campaign.failed > 0 ? (
+                            <span className="font-bold text-error">
+                              {formatNumber(campaign.failed)}
+                            </span>
+                          ) : (
+                            <span className="text-text-muted">0</span>
+                          )}
+                        </TD>
+
                         <TD>
                           <CampaignStatusBadge status={campaign.status} />
                         </TD>
@@ -410,11 +359,6 @@ export function WhatsAppCampaignsWorkspace() {
                           <Menu
                             label={`Actions for ${campaign.name}`}
                             items={[
-                              {
-                                label: "View report",
-                                icon: <Eye className="size-4" />,
-                                onSelect: () => {},
-                              },
                               {
                                 label: running ? "Pause campaign" : "Resume campaign",
                                 icon: running ? (
@@ -490,21 +434,34 @@ export function WhatsAppCampaignsWorkspace() {
                       <CampaignStatusBadge status={campaign.status} />
                     </div>
 
-                    <dl className="mt-3 grid grid-cols-4 gap-2 text-center">
+                    {/* Five cells rather than the desktop table's ten columns,
+                        but the same five figures — a merchant checking a send on
+                        a phone should not have to take the failure count on
+                        trust. Labels drop to the metadata step to buy the width
+                        the fifth cell costs. */}
+                    <dl className="mt-3 grid grid-cols-5 gap-1.5 text-center">
                       {[
-                        { label: "Sent", value: campaign.sent },
-                        { label: "Delivered", value: campaign.delivered },
-                        { label: "Read", value: campaign.opened },
-                        { label: "Replies", value: campaign.replies },
+                        { label: "Sent", value: campaign.sent, failed: false },
+                        { label: "Delivered", value: campaign.delivered, failed: false },
+                        { label: "Read", value: campaign.opened, failed: false },
+                        { label: "Replies", value: campaign.replies, failed: false },
+                        { label: "Failed", value: campaign.failed, failed: true },
                       ].map((cell) => (
                         <div
                           key={cell.label}
-                          className="rounded-panel bg-surface-secondary py-2"
+                          className="rounded-panel bg-surface-secondary px-1 py-2"
                         >
-                          <dt className="text-sm font-medium text-text-muted">
+                          <dt className="text-meta font-medium text-text-muted">
                             {cell.label}
                           </dt>
-                          <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">
+                          <dd
+                            className={cn(
+                              "mt-0.5 text-sm font-bold tabular-nums",
+                              cell.failed && cell.value > 0
+                                ? "text-error"
+                                : "text-text-primary",
+                            )}
+                          >
                             {formatNumber(cell.value)}
                           </dd>
                         </div>
