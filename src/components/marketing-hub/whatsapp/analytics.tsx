@@ -11,29 +11,35 @@ import {
   XCircle,
 } from "lucide-react";
 
+import { Badge, type BadgeTone } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ChartCard, PanelCard } from "@/components/ui/chart-card";
 import { DateRangePicker, DEFAULT_RANGE, type DateRangeValue } from "@/components/ui/date-range";
+import { MeterRow } from "@/components/ui/progress";
 import { Select } from "@/components/ui/select";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import { StatsGrid, type StatItem } from "@/components/ui/stats-card";
+import { StatsGrid, MiniStat, type StatItem } from "@/components/ui/stats-card";
+import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
 import { useToast } from "@/components/ui/toast";
 import { BarsChart } from "@/components/dashboard/charts/bars-chart";
 import { TrendChart } from "@/components/dashboard/charts/trend-chart";
 import {
   CHANNEL_SERIES,
   OUTCOME_COLORS,
+  RATE_COLORS,
   channelPair,
 } from "@/components/dashboard/charts/chart-theme";
 import { CHANNEL_THEME } from "@/constants/channels";
 import { AUDIENCES, CAMPAIGNS } from "@/lib/marketing-fixtures";
 import {
-  WA_AUDIENCE_ENGAGEMENT,
+  WA_AUDIENCE_INSIGHTS,
+  WA_CONVERSATION_VOLUME,
   WA_DAY_LABELS,
   WA_FUNNEL,
+  WA_RESPONSE_TIME,
   WA_SERIES,
-  WA_TOP_TEMPLATES,
+  WA_TEMPLATE_PERFORMANCE,
   rateSeries,
   whatsappTotals,
 } from "@/lib/whatsapp-fixtures";
@@ -42,13 +48,20 @@ import { ConversionFunnel } from "../shared/conversion-funnel";
 import { RankedList } from "../shared/ranked-list";
 
 /**
- * WhatsApp analytics.
+ * WhatsApp analytics — the performance page.
  *
  * Six KPIs rather than the usual four, because the WhatsApp funnel has six
  * genuinely distinct outcomes and collapsing failed and opt-outs into "other"
  * hides the two that need acting on. Failures and opt-outs carry
  * `invertTrend`, so a rise in either shows red — the one place in the app
  * where growth is bad news.
+ *
+ * This page owns every trend in the module. Message performance, the delivery
+ * breakdown, conversation volume and the campaign comparison used to be drawn
+ * on the Overview as well, from these same fixtures; they are now here only,
+ * and the Overview reports the state of the queue instead. The rule the split
+ * follows: if the reading is a rate, a trend or a ranking over a period, it
+ * belongs here; if it is something waiting to be done, it belongs there.
  */
 
 const theme = CHANNEL_THEME.whatsapp;
@@ -139,6 +152,55 @@ const COMPARISON = [...WA_CAMPAIGNS]
   .filter((campaign) => campaign.delivered > 0)
   .sort((a, b) => rate(b.opened, b.delivered) - rate(a.opened, a.delivered))
   .slice(0, 6);
+
+/* -------------------------------------------------------------------------- */
+/* Response time                                                              */
+/* -------------------------------------------------------------------------- */
+
+const RESPONSE_TOTAL = WA_RESPONSE_TIME.buckets.reduce(
+  (sum, bucket) => sum + bucket.count,
+  0,
+);
+
+/**
+ * The first three buckets are the ones inside the 15-minute target.
+ *
+ * Derived from the bucket list rather than stored beside it: a stored
+ * "within target" figure and a bucket breakdown are two statements of one
+ * fact, and the stored one is the one that goes stale when a bucket moves.
+ */
+const WITHIN_TARGET = WA_RESPONSE_TIME.buckets
+  .slice(0, 3)
+  .reduce((sum, bucket) => sum + bucket.count, 0);
+
+/**
+ * A ramp, not a palette. The buckets are one population sorted by how long it
+ * waited, so the colour walks from the channel's own green through amber to
+ * red at the tail — the only rows a team acts on.
+ */
+const BUCKET_TONES = [
+  "bg-primary",
+  "bg-primary-light",
+  "bg-accent",
+  "bg-warning",
+  "bg-warning",
+  "bg-error",
+];
+
+/* -------------------------------------------------------------------------- */
+/* Templates                                                                  */
+/* -------------------------------------------------------------------------- */
+
+const CATEGORY_TONE: Record<string, BadgeTone> = {
+  marketing: "brand",
+  utility: "info",
+  authentication: "neutral",
+};
+
+/** Best reply rate first — the column the table exists to rank by. */
+const TEMPLATE_ROWS = [...WA_TEMPLATE_PERFORMANCE].sort(
+  (a, b) => rate(b.replies, b.delivered) - rate(a.replies, a.delivered),
+);
 
 export function WhatsAppAnalytics() {
   const toast = useToast();
@@ -241,10 +303,171 @@ export function WhatsAppAnalytics() {
         </ChartCard>
 
         <PanelCard
-          title="Conversion Funnel"
+          title="Conversation Funnel"
           description="Sent through to an order, over the period."
         >
           <ConversionFunnel stages={WA_FUNNEL} />
+        </PanelCard>
+      </div>
+
+      <div className="grid gap-4 xl:grid-cols-2">
+        {/*
+         * Conversation volume moved here from the Overview.
+         *
+         * It is a four-week trend, which made it the odd panel out on a page
+         * about what is waiting in the queue — and it belongs beside response
+         * time, because the two together are the whole story of the inbox:
+         * how much came in, and how fast it was answered.
+         */}
+        <ChartCard
+          title="Conversation Volume"
+          description="Threads opened by a contact, and threads we opened."
+          legend={[
+            {
+              label: "Inbound",
+              swatch: "bg-primary",
+              value: formatNumber(WA_CONVERSATION_VOLUME.inbound.at(-1) ?? 0),
+            },
+            {
+              label: "Outbound",
+              swatch: "bg-border-strong",
+              value: formatNumber(WA_CONVERSATION_VOLUME.outbound.at(-1) ?? 0),
+            },
+          ]}
+        >
+          <TrendChart
+            categories={WA_DAY_LABELS}
+            series={[
+              { name: "Inbound", data: WA_CONVERSATION_VOLUME.inbound },
+              { name: "Outbound", data: WA_CONVERSATION_VOLUME.outbound },
+            ]}
+            colors={[CHANNEL_SERIES.whatsapp[0], OUTCOME_COLORS.neutral]}
+            height={260}
+            unit="threads"
+          />
+        </ChartCard>
+
+        <ChartCard
+          title="Response Time"
+          description="How long a contact waits for the first human reply."
+          legend={[
+            {
+              label: "Median",
+              swatch: theme.accent,
+              value: `${WA_RESPONSE_TIME.medianMinutes}m`,
+            },
+            {
+              label: "90th percentile",
+              swatch: "bg-warning",
+              value: `${WA_RESPONSE_TIME.p90Minutes}m`,
+            },
+          ]}
+        >
+          {/*
+           * Median and p90, not a mean. One thread left overnight drags an
+           * average past every number a team would recognise, and the gap
+           * between these two lines is the finding: the middle of the queue is
+           * fast, the tail is where a customer gives up.
+           */}
+          <TrendChart
+            categories={WA_DAY_LABELS}
+            series={[
+              { name: "Median", data: [...WA_RESPONSE_TIME.median] },
+              { name: "90th percentile", data: [...WA_RESPONSE_TIME.p90] },
+            ]}
+            colors={[CHANNEL_SERIES.whatsapp[0], RATE_COLORS.warn]}
+            variant="line"
+            height={260}
+            unit="min"
+          />
+        </ChartCard>
+      </div>
+
+      <div className="grid gap-4 xl:grid-cols-3">
+        <PanelCard
+          title="Response Time Distribution"
+          description={`Every first reply in the period, against the ${WA_RESPONSE_TIME.targetMinutes}-minute target.`}
+        >
+          <div className="space-y-4">
+            {WA_RESPONSE_TIME.buckets.map((bucket, index) => (
+              <MeterRow
+                key={bucket.label}
+                label={bucket.label}
+                value={rate(bucket.count, RESPONSE_TOTAL)}
+                display={formatPercent(rate(bucket.count, RESPONSE_TOTAL))}
+                tone={BUCKET_TONES[index]}
+                hint={`${formatNumber(bucket.count)} replies`}
+              />
+            ))}
+          </div>
+
+          <div className="mt-5 grid grid-cols-3 gap-2 border-t border-border pt-4">
+            <MiniStat
+              label="Median"
+              value={`${WA_RESPONSE_TIME.medianMinutes}m`}
+            />
+            <MiniStat label="90th pct" value={`${WA_RESPONSE_TIME.p90Minutes}m`} />
+            <MiniStat
+              label="On target"
+              value={formatPercent(rate(WITHIN_TARGET, RESPONSE_TOTAL))}
+              hint={`under ${WA_RESPONSE_TIME.targetMinutes}m`}
+            />
+          </div>
+        </PanelCard>
+
+        <PanelCard
+          title="Template Performance"
+          description="Every template that sent in the period, best reply rate first."
+          className="xl:col-span-2"
+        >
+          <Table minWidth="34rem">
+            <THead>
+              <TH>Template</TH>
+              <TH align="right">Sent</TH>
+              <TH align="right">Delivered</TH>
+              <TH align="right">Read rate</TH>
+              <TH align="right">Reply rate</TH>
+            </THead>
+            <TBody>
+              {TEMPLATE_ROWS.map((template) => (
+                <TR key={template.id}>
+                  <TD>
+                    <div className="flex min-w-0 items-center gap-2.5">
+                      {/* Monospace, because a template name is an identifier
+                          the merchant types into the API, not prose. */}
+                      <span className="truncate font-mono text-sm text-text-primary">
+                        {template.name}
+                      </span>
+                      <Badge
+                        tone={CATEGORY_TONE[template.category] ?? "neutral"}
+                        size="sm"
+                        className="shrink-0"
+                      >
+                        {template.category}
+                      </Badge>
+                    </div>
+                  </TD>
+                  <TD align="right" className="tabular-nums">
+                    {formatNumber(template.sent)}
+                  </TD>
+                  <TD align="right" className="tabular-nums">
+                    {formatNumber(template.delivered)}
+                  </TD>
+                  <TD align="right" className="tabular-nums">
+                    {formatPercent(rate(template.read, template.delivered))}
+                  </TD>
+                  {/* The column the table is sorted by, so it carries the
+                      weight — everything else on the row is context for it. */}
+                  <TD
+                    align="right"
+                    className="font-bold text-text-primary tabular-nums"
+                  >
+                    {formatPercent(rate(template.replies, template.delivered))}
+                  </TD>
+                </TR>
+              ))}
+            </TBody>
+          </Table>
         </PanelCard>
       </div>
 
@@ -275,7 +498,61 @@ export function WhatsAppAnalytics() {
         />
       </ChartCard>
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-4 xl:grid-cols-3">
+        <PanelCard
+          title="Audience Insights"
+          description="Reply rate by segment, and what it costs in opt-outs."
+          className="xl:col-span-2"
+        >
+          <Table minWidth="34rem">
+            <THead>
+              <TH>Segment</TH>
+              <TH align="right">Contacts</TH>
+              <TH align="right">Delivered</TH>
+              <TH align="right">Read rate</TH>
+              <TH align="right">Reply rate</TH>
+              <TH align="right">Opt-out</TH>
+            </THead>
+            <TBody>
+              {WA_AUDIENCE_INSIGHTS.map((row) => (
+                <TR key={row.label}>
+                  <TD className="text-text-primary">{row.label}</TD>
+                  <TD align="right" className="tabular-nums">
+                    {formatNumber(row.contacts)}
+                  </TD>
+                  <TD align="right" className="tabular-nums">
+                    {formatNumber(row.delivered)}
+                  </TD>
+                  <TD align="right" className="tabular-nums">
+                    {formatPercent(row.readRate)}
+                  </TD>
+                  <TD
+                    align="right"
+                    className="font-bold text-text-primary tabular-nums"
+                  >
+                    {formatPercent(row.replyRate)}
+                  </TD>
+                  {/*
+                   * The one column where a bigger number is worse, so it is the
+                   * only one that changes colour: past 2% a segment is being
+                   * messaged more than it wants.
+                   */}
+                  <TD
+                    align="right"
+                    className={
+                      row.optOutRate >= 2
+                        ? "font-semibold text-error tabular-nums"
+                        : "tabular-nums"
+                    }
+                  >
+                    {formatPercent(row.optOutRate)}
+                  </TD>
+                </TR>
+              ))}
+            </TBody>
+          </Table>
+        </PanelCard>
+
         <PanelCard
           title="Top Campaigns"
           description="By reply rate, among sends over 200."
@@ -294,38 +571,6 @@ export function WhatsAppAnalytics() {
                 display: formatPercent(rate(campaign.replies, campaign.delivered)),
                 share: rate(campaign.replies, campaign.delivered),
               }))}
-          />
-        </PanelCard>
-
-        <PanelCard
-          title="Top Audiences"
-          description="Reply rate by segment. Smaller lists reply more."
-        >
-          <RankedList
-            tone="bg-accent"
-            items={WA_AUDIENCE_ENGAGEMENT.map((item) => ({
-              id: item.label,
-              label: item.label,
-              secondary: `${formatNumber(item.contacts)} contacts`,
-              display: formatPercent(item.replyRate),
-              share: item.replyRate,
-            }))}
-          />
-        </PanelCard>
-
-        <PanelCard
-          title="Best Templates"
-          description="By reply rate. Utility templates beat marketing ones."
-        >
-          <RankedList
-            tone="bg-primary-light"
-            items={WA_TOP_TEMPLATES.map((template) => ({
-              id: template.id,
-              label: template.name,
-              secondary: `${formatNumber(template.sent)} sent`,
-              display: formatPercent(template.replyRate),
-              share: template.replyRate,
-            }))}
           />
         </PanelCard>
       </div>

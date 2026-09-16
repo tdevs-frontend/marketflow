@@ -13,7 +13,7 @@ export default function WhatsAppOverviewPage() {
     <>
       <PageHeader
         title="WhatsApp Overview"
-        description="Delivery, conversations and automations for your WhatsApp Business account."
+        description="What is waiting in the inbox, what ran on its own, and where to go next. Performance lives on Analytics."
         secondaryActions={
           <ButtonLink
             href={APP_ROUTES.whatsappInbox}

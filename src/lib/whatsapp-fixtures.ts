@@ -1,4 +1,5 @@
 import type { Option } from "@/constants/commerce";
+import type { ActivityEntry } from "@/lib/overview-fixtures";
 import type {
   Campaign,
   TemplateCategory,
@@ -469,23 +470,77 @@ export const WA_CONVERSATION_VOLUME = {
   outbound: [1_284, 1_486, 1_342, 1_628, 1_512, 1_784, 1_886, 2_048, 2_246, 2_312],
 };
 
-/** Reply rate by audience, for the engagement panel. */
-export const WA_AUDIENCE_ENGAGEMENT = [
-  { label: "VIP Customers", contacts: 318, replyRate: 28.4 },
-  { label: "Recent Purchasers", contacts: 1_248, replyRate: 22.1 },
-  { label: "New Leads", contacts: 2_148, replyRate: 18.6 },
-  { label: "All Contacts", contacts: 12_480, replyRate: 15.8 },
-  { label: "Inactive Customers", contacts: 3_460, replyRate: 6.2 },
+/**
+ * Audience insight rows, one per segment.
+ *
+ * Counts where a count is the fact and rates where the rate is: the analytics
+ * table ranks by read and reply rate, and opt-out rate is the column that says
+ * a segment is being over-messaged. Ordered best reply rate first, which is
+ * also smallest-list first — the finding the panel exists to make.
+ */
+export const WA_AUDIENCE_INSIGHTS = [
+  { label: "VIP Customers", contacts: 318, delivered: 3_120, readRate: 91.4, replyRate: 28.4, optOutRate: 0.4 },
+  { label: "Recent Purchasers", contacts: 1_248, delivered: 11_860, readRate: 86.2, replyRate: 22.1, optOutRate: 0.8 },
+  { label: "New Leads", contacts: 2_148, delivered: 19_240, readRate: 82.6, replyRate: 18.6, optOutRate: 1.6 },
+  { label: "All Contacts", contacts: 12_480, delivered: 118_460, readRate: 79.8, replyRate: 15.8, optOutRate: 2.1 },
+  { label: "Inactive Customers", contacts: 3_460, delivered: 24_180, readRate: 61.2, replyRate: 6.2, optOutRate: 4.8 },
 ];
 
-/** Best-performing templates, ranked by reply rate. */
-export const WA_TOP_TEMPLATES = [
-  { id: "tpl-order-confirmation", name: "order_confirmation", sent: 12_480, replyRate: 34.2 },
-  { id: "tpl-feedback", name: "post_purchase_feedback", sent: 11_842, replyRate: 26.8 },
-  { id: "tpl-abandoned-cart", name: "abandoned_checkout", sent: 6_842, replyRate: 21.4 },
-  { id: "tpl-seasonal-offer", name: "seasonal_offer_v3", sent: 18_420, replyRate: 14.6 },
-  { id: "tpl-shipping-update", name: "shipping_update", sent: 12_186, replyRate: 9.2 },
+/**
+ * Per-template outcomes, as counts.
+ *
+ * Counts, not rates: the table shows a read rate and a reply rate for the same
+ * template, and two stored percentages that must agree with each other and
+ * with the send count is two fields too many. The id matches TEMPLATES above,
+ * so a row can be traced back to the library.
+ *
+ * login_verification is in the list deliberately — an authentication template
+ * nobody replies to is not a failing template, and a list that quietly drops
+ * it teaches the wrong lesson about the reply-rate column.
+ */
+export const WA_TEMPLATE_PERFORMANCE = [
+  { id: "tpl-order-confirmation", name: "order_confirmation", category: "utility", sent: 12_480, delivered: 12_284, read: 10_692, replies: 4_201 },
+  { id: "tpl-feedback", name: "post_purchase_feedback", category: "utility", sent: 11_842, delivered: 11_608, read: 9_204, replies: 3_111 },
+  { id: "tpl-abandoned-cart", name: "abandoned_checkout", category: "marketing", sent: 6_842, delivered: 6_704, read: 5_216, replies: 1_435 },
+  { id: "tpl-welcome", name: "welcome_message", category: "marketing", sent: 8_640, delivered: 8_468, read: 6_910, replies: 1_432 },
+  { id: "tpl-payment-reminder", name: "payment_reminder", category: "utility", sent: 5_240, delivered: 5_146, read: 4_262, replies: 812 },
+  { id: "tpl-seasonal-offer", name: "seasonal_offer_v3", category: "marketing", sent: 18_420, delivered: 18_052, read: 14_260, replies: 2_636 },
+  { id: "tpl-shipping-update", name: "shipping_update", category: "utility", sent: 12_186, delivered: 11_990, read: 9_830, replies: 1_103 },
+  { id: "tpl-otp", name: "login_verification", category: "authentication", sent: 9_180, delivered: 9_062, read: 8_340, replies: 128 },
 ];
+
+/* -------------------------------------------------------------------------- */
+/* Response time                                                              */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * How long a contact waits for the first human reply.
+ *
+ * Median and p90 rather than a mean: one thread left overnight drags an average
+ * past every number a team would recognise, and the gap between the two lines
+ * is the actual finding — a median of 8 minutes with a p90 of 23 is a queue
+ * that is fine until it is not.
+ *
+ * The buckets sum to 49,831, the Replied stage of WA_FUNNEL. Same population
+ * counted two ways, so the funnel and the distribution cannot drift apart.
+ */
+export const WA_RESPONSE_TIME = {
+  /** Minutes, one point per WA_DAY_LABELS entry. */
+  median: [12, 11, 13, 10, 11, 10, 9, 9, 8, 8],
+  p90: [38, 35, 41, 32, 34, 29, 28, 26, 25, 23],
+  buckets: [
+    { label: "Under 1 min", count: 6_420 },
+    { label: "1-5 min", count: 14_860 },
+    { label: "5-15 min", count: 12_240 },
+    { label: "15-60 min", count: 9_480 },
+    { label: "1-4 hours", count: 4_860 },
+    { label: "Over 4 hours", count: 1_971 },
+  ],
+  medianMinutes: 8,
+  p90Minutes: 23,
+  /** The first three buckets sit inside it — the panel derives that, not this. */
+  targetMinutes: 15,
+} as const;
 
 /** The WhatsApp-only funnel, from sent through to an order. */
 export const WA_FUNNEL = [
@@ -504,4 +559,103 @@ export const WA_OVERVIEW_TOTALS = {
   automationsChange: 33.3,
   optInRate: 94.2,
   avgResponseMinutes: 8,
+  /** Down is the good direction, so the stat carries invertTrend. */
+  responseChange: -22.4,
 } as const;
+
+/* -------------------------------------------------------------------------- */
+/* Operational state                                                          */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The inbox as it stands right now — the overview's subject.
+ *
+ * Deliberately none of this is a rate over a period. It is the queue: how many
+ * threads are open, how many nobody owns, how many are sitting on an inbound
+ * message with no answer. The analytics page reports how the channel
+ * performed; this reports what is waiting.
+ *
+ * The agent rows sum to open minus unassigned, so the roster and the headline
+ * count describe the same 48 threads.
+ */
+export const WA_INBOX_SNAPSHOT = {
+  open: 48,
+  openChange: 12.5,
+  pending: 17,
+  resolvedToday: 34,
+  unassigned: 9,
+  /** Last message is inbound and nobody has answered it yet. */
+  awaitingReply: 23,
+  awaitingChange: -14.8,
+  unreadMessages: 61,
+  agents: [
+    { name: "Nadia Karim", open: 18, avgResponseMinutes: 6 },
+    { name: "Imran Hossain", open: 14, avgResponseMinutes: 9 },
+    { name: "Tanvir Alam", open: 7, avgResponseMinutes: 12 },
+  ],
+} as const;
+
+/**
+ * What the WhatsApp module did, most recent first.
+ *
+ * Module-scoped rather than a filter over RECENT_ACTIVITY: that feed is the
+ * cross-channel one on the Marketing workspace and carries three WhatsApp rows
+ * out of eight, which is a feed with holes in it rather than a channel's own
+ * history. Same ActivityEntry shape, so one component renders both.
+ */
+export const WA_ACTIVITY: ActivityEntry[] = [
+  {
+    id: "wa-act-1",
+    kind: "campaign",
+    title: "Autumn Collection Launch started sending",
+    detail: "8,420 of 12,480 delivered",
+    channel: "whatsapp",
+    actor: "Nadia Karim",
+    at: "2026-09-08T09:42:00Z",
+  },
+  {
+    id: "wa-act-2",
+    kind: "automation",
+    title: "Abandoned Cart Recovery processed 46 contacts",
+    detail: "38 completed the flow, 8 still waiting",
+    channel: "whatsapp",
+    actor: "System",
+    at: "2026-09-08T08:30:00Z",
+  },
+  {
+    id: "wa-act-3",
+    kind: "alert",
+    title: "vip_early_access rejected by Meta",
+    detail: "Excessive urgency and punctuation in a marketing template",
+    channel: "whatsapp",
+    actor: "Meta review",
+    at: "2026-09-08T07:05:00Z",
+  },
+  {
+    id: "wa-act-4",
+    kind: "template",
+    title: "autumn_promo_v2 approved",
+    detail: "Marketing template, English (US)",
+    channel: "whatsapp",
+    actor: "Meta review",
+    at: "2026-09-07T18:20:00Z",
+  },
+  {
+    id: "wa-act-5",
+    kind: "conversion",
+    title: "18 orders attributed to WhatsApp",
+    detail: "$4,260 from Summer Sale replies in the last day",
+    channel: "whatsapp",
+    actor: "System",
+    at: "2026-09-07T16:45:00Z",
+  },
+  {
+    id: "wa-act-6",
+    kind: "contact",
+    title: "486 contacts opted in",
+    detail: "From the storefront widget, taking the list to 94.2% opted in",
+    channel: "whatsapp",
+    actor: "System",
+    at: "2026-09-07T11:15:00Z",
+  },
+];

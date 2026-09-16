@@ -1,115 +1,121 @@
+/*
+ * A client component although nothing here is interactive.
+ *
+ * `StatsGrid` is one, and `StatItem.icon` is a component function — which a
+ * server component cannot hand across the boundary ("Functions cannot be passed
+ * directly to Client Components"). The directive is the cheapest fix; the
+ * alternative is passing icon *names* through the stat row, which would mean
+ * changing a component every other module depends on.
+ */
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
 import {
-  CheckCheck,
+  BarChart3,
+  ChevronRight,
+  Clock,
+  FileText,
+  Inbox,
+  Megaphone,
   MessageSquare,
-  Send,
+  UserPlus,
   Users,
   Workflow,
+  Zap,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 import { ButtonLink } from "@/components/ui/button";
-import { ChartCard, PanelCard } from "@/components/ui/chart-card";
-import { MeterRow } from "@/components/ui/progress";
-import { InfoHint } from "@/components/ui/tooltip";
-import { SegmentedControl } from "@/components/ui/segmented-control";
+import { PanelCard } from "@/components/ui/chart-card";
+import { Avatar } from "@/components/ui/avatar";
+import { ProgressBar } from "@/components/ui/progress";
 import { StatsGrid, MiniStat, type StatItem } from "@/components/ui/stats-card";
-import { TrendChart } from "@/components/dashboard/charts/trend-chart";
-import { BarsChart } from "@/components/dashboard/charts/bars-chart";
-import {
-  CHANNEL_SERIES,
-  OUTCOME_COLORS,
-} from "@/components/dashboard/charts/chart-theme";
 import { CHANNEL_THEME } from "@/constants/channels";
 import { APP_ROUTES } from "@/constants";
-import { CAMPAIGNS, CONVERSATIONS } from "@/lib/marketing-fixtures";
+import { CONVERSATIONS } from "@/lib/marketing-fixtures";
 import { AUTOMATION_FLOWS } from "@/lib/automation-fixtures";
 import {
-  WA_CONVERSATION_VOLUME,
-  WA_DAY_LABELS,
-  WA_FUNNEL,
+  WA_ACTIVITY,
+  WA_INBOX_SNAPSHOT,
   WA_OVERVIEW_TOTALS,
-  WA_SERIES,
-  rateSeries,
-  whatsappTotals,
 } from "@/lib/whatsapp-fixtures";
-import { formatCount, formatNumber, formatPercent, formatRelativeTime, rate } from "@/lib/format";
+import { formatCount, formatNumber, formatPercent, formatRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { FunnelStrip } from "../shared/conversion-funnel";
+import { ActivityFeed } from "../shared/activity-feed";
 import { RecentConversations } from "../shared/recent-conversations";
 
 /**
- * The WhatsApp module's landing page.
+ * The WhatsApp module's landing page — the operational one.
  *
- * Built around the one thing WhatsApp has that Email and SMS do not: a
- * two-way conversation. So the delivery funnel is a compact strip rather than
- * the hero, and the room goes to message performance, conversation volume and
- * the inbox — the numbers that tell you whether people are talking back.
+ * Everything here answers "what is happening, and what do I do next": the
+ * queue, the threads waiting, what the automations ran, what changed, and the
+ * five links a merchant opens this module to reach.
+ *
+ * Nothing here is a trend. The page used to carry a message-performance chart,
+ * a delivery-rate breakdown and a campaign comparison — three readings that
+ * Analytics already owns, drawn from the same fixtures, so the two pages
+ * answered the same question with two different layouts and a merchant had to
+ * learn which one was authoritative. Performance moved out wholesale; see
+ * `whatsapp/analytics`. What is left is the state of the channel right now,
+ * which no other page reports.
  */
 
 const theme = CHANNEL_THEME.whatsapp;
 const ACCENT = { soft: theme.soft, text: theme.text };
+const SNAPSHOT = WA_INBOX_SNAPSHOT;
 
 /**
  * One tone per subsystem, for the KPI row's icon tiles.
  *
- * The row covers four different things — an audience, a send, a conversation
- * and a robot — and five identical green tiles made the icons decorative:
- * nothing could be found without reading its label. Every pair below is a
+ * The row covers five different things — a queue, a wait, a clock, a robot and
+ * an audience — and five identical green tiles made the icons decorative:
+ * nothing could be found without reading its label. Every pair is a
  * `-soft`/ink pair that already exists in the ramp, and each is the colour that
- * thing wears elsewhere in the product, so the row teaches the same vocabulary
- * the rest of the dashboard uses:
- *
- *   contacts     the channel's own green, because they are WhatsApp's audience
- *   messages     the information blue every "sent" figure uses
- *   delivery     success, the ramp that means it arrived
- *   replies      the brand's violet, the conversational half of the pair
- *   automations  indigo, matching the flow tiles further down this same page
+ * thing wears elsewhere in the product.
  */
 const TILES = {
-  contacts: { soft: theme.soft, text: theme.text },
-  messages: { soft: "bg-info-soft", text: "text-info-text" },
-  delivery: { soft: "bg-success-soft", text: "text-success-text" },
-  replies: { soft: "bg-primary-subtle", text: "text-secondary" },
+  conversations: { soft: "bg-primary-subtle", text: "text-secondary" },
+  waiting: { soft: "bg-warning-soft", text: "text-warning-text" },
+  response: { soft: "bg-info-soft", text: "text-info-text" },
   automation: { soft: "bg-primary-soft", text: "text-primary" },
+  contacts: { soft: theme.soft, text: theme.text },
 };
 
-const WA_CAMPAIGNS = CAMPAIGNS.filter((campaign) => campaign.channel === "whatsapp");
-const TOTALS = whatsappTotals(WA_CAMPAIGNS);
-
+/**
+ * Five readings of the queue, not of the campaign log.
+ *
+ * Sent, delivery rate and reply rate used to sit here. They are the first three
+ * KPIs on Analytics, computed from the same `whatsappTotals()` call, so the two
+ * rows could only ever agree — which made one of them redundant rather than
+ * reassuring. These five have no counterpart on the other page.
+ */
 const STATS: StatItem[] = [
   {
-    label: "Total Contacts",
-    value: formatCount(WA_OVERVIEW_TOTALS.contacts),
-    changePercent: WA_OVERVIEW_TOTALS.contactsChange,
-    icon: Users,
-    accent: TILES.contacts,
-    hint: `${formatPercent(WA_OVERVIEW_TOTALS.optInRate)} opted in`,
-  },
-  {
-    label: "Messages Sent",
-    value: formatCount(TOTALS.sent),
-    changePercent: 18.2,
-    icon: Send,
-    accent: TILES.messages,
-    hint: "vs last 30 days",
-  },
-  {
-    label: "Delivery Rate",
-    value: formatPercent(rate(TOTALS.delivered, TOTALS.sent)),
-    changePercent: 0.6,
-    icon: CheckCheck,
-    accent: TILES.delivery,
-    hint: `${formatNumber(TOTALS.failed)} failed`,
-  },
-  {
-    label: "Reply Rate",
-    value: formatPercent(rate(TOTALS.replies, TOTALS.delivered)),
-    changePercent: 6.4,
+    label: "Open Conversations",
+    value: formatNumber(SNAPSHOT.open),
+    changePercent: SNAPSHOT.openChange,
     icon: MessageSquare,
-    accent: TILES.replies,
-    hint: `avg reply in ${WA_OVERVIEW_TOTALS.avgResponseMinutes}m`,
+    accent: TILES.conversations,
+    hint: `${SNAPSHOT.pending} pending · ${SNAPSHOT.resolvedToday} closed today`,
+  },
+  {
+    label: "Awaiting Reply",
+    value: formatNumber(SNAPSHOT.awaitingReply),
+    changePercent: SNAPSHOT.awaitingChange,
+    icon: Inbox,
+    accent: TILES.waiting,
+    hint: `${SNAPSHOT.unassigned} with no owner`,
+    /* A shrinking backlog is the good outcome, so the trend flips. */
+    invertTrend: true,
+  },
+  {
+    label: "Avg First Response",
+    value: `${WA_OVERVIEW_TOTALS.avgResponseMinutes}m`,
+    changePercent: WA_OVERVIEW_TOTALS.responseChange,
+    icon: Clock,
+    accent: TILES.response,
+    hint: "median, across all agents",
+    invertTrend: true,
   },
   {
     label: "Active Automations",
@@ -119,21 +125,84 @@ const STATS: StatItem[] = [
     accent: TILES.automation,
     hint: "running now",
   },
+  {
+    label: "Opted-in Contacts",
+    value: formatCount(WA_OVERVIEW_TOTALS.contacts),
+    changePercent: WA_OVERVIEW_TOTALS.contactsChange,
+    icon: Users,
+    accent: TILES.contacts,
+    hint: `${formatPercent(WA_OVERVIEW_TOTALS.optInRate)} of the list`,
+  },
 ];
 
-type MessageView = "volume" | "rates";
-
-/** The five largest sends — a campaign comparison needs comparable volumes. */
-const TOP_FIVE = [...WA_CAMPAIGNS]
-  .filter((campaign) => campaign.sent > 0)
-  .sort((a, b) => b.sent - a.sent)
-  .slice(0, 5);
+/** The panel rules, in one place so the three panels cannot drift apart. */
+const SECTION_RULE =
+  "text-meta font-semibold tracking-[0.08em] text-text-secondary uppercase";
 
 const WA_FLOWS = AUTOMATION_FLOWS.filter((flow) => flow.channel === "whatsapp");
 
-export function WhatsAppOverview() {
-  const [view, setView] = useState<MessageView>("volume");
+/* Contacts mid-flow: a share of everything the flows have processed. */
+const IN_FLOW = Math.round(
+  WA_FLOWS.reduce((sum, flow) => sum + flow.contactsProcessed, 0) * 0.064,
+);
 
+const AVG_SUCCESS =
+  WA_FLOWS.reduce((sum, flow) => sum + flow.successRate, 0) /
+  Math.max(WA_FLOWS.length, 1);
+
+/**
+ * The five destinations this module is opened to reach.
+ *
+ * Links rather than buttons: every one is a route, so they are middle-clickable
+ * and keyboard-reachable without a handler. The last is Analytics — the page
+ * that now owns every trend this one used to draw, and the tile is how a
+ * merchant looking for a delivery rate finds where it went.
+ */
+const QUICK_ACTIONS: {
+  label: string;
+  hint: string;
+  href: string;
+  icon: LucideIcon;
+  tone: { soft: string; text: string };
+}[] = [
+  {
+    label: "New Campaign",
+    hint: "Send a template to an audience",
+    href: APP_ROUTES.marketingCampaignNew,
+    icon: Megaphone,
+    tone: TILES.contacts,
+  },
+  {
+    label: "New Template",
+    hint: "Draft and submit for Meta review",
+    href: APP_ROUTES.whatsappTemplates,
+    icon: FileText,
+    tone: TILES.response,
+  },
+  {
+    label: "Add Contacts",
+    hint: "Import numbers and opt-in status",
+    href: APP_ROUTES.whatsappContacts,
+    icon: UserPlus,
+    tone: TILES.conversations,
+  },
+  {
+    label: "New Automation",
+    hint: "Trigger a flow from an event",
+    href: APP_ROUTES.whatsappAutomations,
+    icon: Zap,
+    tone: TILES.automation,
+  },
+  {
+    label: "View Analytics",
+    hint: "Delivery, response times and templates",
+    href: APP_ROUTES.whatsappAnalytics,
+    icon: BarChart3,
+    tone: TILES.waiting,
+  },
+];
+
+export function WhatsAppOverview() {
   const conversations = [...CONVERSATIONS]
     .sort(
       (a, b) =>
@@ -142,180 +211,132 @@ export function WhatsAppOverview() {
     )
     .slice(0, 5);
 
+  /* Bars are scaled against the busiest agent, not against the total: the
+     question is who is carrying the queue, not what share of it each holds. */
+  const busiest = Math.max(...SNAPSHOT.agents.map((agent) => agent.open), 1);
+
   return (
     <>
       <StatsGrid items={STATS} accent={ACCENT} columns={5} />
 
       <div className="grid gap-4 xl:grid-cols-3">
-        <ChartCard
-          title="Message Performance"
-          description={
-            view === "volume"
-              ? "Sent, delivered and read over the last four weeks."
-              : "Delivery, read and reply rates. Each is a share of the step before it."
-          }
+        <PanelCard
+          title="Inbox"
+          description="The queue as it stands, and who is carrying it."
           className="xl:col-span-2"
           action={
-            <SegmentedControl
-              label="Message metric"
-              value={view}
-              onChange={setView}
-              options={[
-                { value: "volume", label: "Volume" },
-                { value: "rates", label: "Rates" },
-              ]}
-            />
-          }
-          legend={
-            view === "volume"
-              ? [
-                  { label: "Sent", swatch: "bg-primary", value: formatNumber(WA_SERIES.sent.at(-1) ?? 0) },
-                  { label: "Delivered", swatch: "bg-primary-light", value: formatNumber(WA_SERIES.delivered.at(-1) ?? 0) },
-                  { label: "Read", swatch: "bg-accent", value: formatNumber(WA_SERIES.read.at(-1) ?? 0) },
-                ]
-              : [
-                  { label: "Delivery rate", swatch: "bg-primary" },
-                  { label: "Read rate", swatch: "bg-primary-light" },
-                  { label: "Reply rate", swatch: "bg-accent" },
-                ]
+            <ButtonLink
+              href={APP_ROUTES.whatsappInbox}
+              variant="outline"
+              size="sm"
+            >
+              Open inbox
+            </ButtonLink>
           }
         >
-          {view === "volume" ? (
-            <TrendChart
-              categories={WA_DAY_LABELS}
-              series={[
-                { name: "Sent", data: WA_SERIES.sent },
-                { name: "Delivered", data: WA_SERIES.delivered },
-                { name: "Read", data: WA_SERIES.read },
-              ]}
-              colors={CHANNEL_SERIES.whatsapp}
-              unit="messages"
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            <MiniStat
+              label="Open"
+              value={formatNumber(SNAPSHOT.open)}
+              hint={`${formatNumber(SNAPSHOT.unreadMessages)} unread`}
             />
-          ) : (
-            <TrendChart
-              categories={WA_DAY_LABELS}
-              series={[
-                {
-                  name: "Delivery rate",
-                  data: rateSeries(WA_SERIES.delivered, WA_SERIES.sent),
-                },
-                {
-                  name: "Read rate",
-                  data: rateSeries(WA_SERIES.read, WA_SERIES.delivered),
-                },
-                {
-                  name: "Reply rate",
-                  data: rateSeries(WA_SERIES.replied, WA_SERIES.delivered),
-                },
-              ]}
-              colors={CHANNEL_SERIES.whatsapp}
-              variant="line"
-              format="percent"
-              yAxisMax={100}
+            <MiniStat
+              label="Awaiting reply"
+              value={formatNumber(SNAPSHOT.awaitingReply)}
+              hint="inbound, unanswered"
             />
-          )}
-        </ChartCard>
-
-        <PanelCard
-          title="Delivery Breakdown"
-          description="Where the last 30 days of messages ended up."
-          action={
-            <InfoHint content="Each rate is a share of the step above it, not of the total sent — a read rate is of delivered messages." />
-          }
-        >
-          <div className="space-y-4">
-            <MeterRow
-              label="Delivered"
-              value={rate(TOTALS.delivered, TOTALS.sent)}
-              display={formatPercent(rate(TOTALS.delivered, TOTALS.sent))}
-              tone="bg-primary"
-              hint={`${formatNumber(TOTALS.delivered)} of ${formatNumber(TOTALS.sent)} sent`}
+            <MiniStat
+              label="Unassigned"
+              value={formatNumber(SNAPSHOT.unassigned)}
+              hint="no owner yet"
             />
-            <MeterRow
-              label="Read"
-              value={rate(TOTALS.read, TOTALS.delivered)}
-              display={formatPercent(rate(TOTALS.read, TOTALS.delivered))}
-              tone="bg-primary-light"
-              hint={`${formatNumber(TOTALS.read)} of delivered`}
-            />
-            <MeterRow
-              label="Replied"
-              value={rate(TOTALS.replies, TOTALS.delivered)}
-              display={formatPercent(rate(TOTALS.replies, TOTALS.delivered))}
-              tone="bg-accent"
-              hint={`${formatNumber(TOTALS.replies)} conversations started`}
-            />
-            <MeterRow
-              label="Failed"
-              value={rate(TOTALS.failed, TOTALS.sent)}
-              display={formatPercent(rate(TOTALS.failed, TOTALS.sent))}
-              tone="bg-error"
-              hint={`${formatNumber(TOTALS.failed)} undelivered`}
+            <MiniStat
+              label="Closed today"
+              value={formatNumber(SNAPSHOT.resolvedToday)}
+              hint={`${formatNumber(SNAPSHOT.pending)} still pending`}
             />
           </div>
 
           <div className="mt-5 border-t border-border pt-4">
-            <p className="text-sm font-semibold tracking-[0.08em] text-text-secondary uppercase">
-              Campaign funnel
-            </p>
-            <FunnelStrip stages={WA_FUNNEL.slice(1)} className="mt-3" />
+            <p className={SECTION_RULE}>Agent load</p>
+
+            <ul className="mt-3 space-y-3.5">
+              {SNAPSHOT.agents.map((agent) => (
+                <li key={agent.name} className="flex items-center gap-3">
+                  <Avatar name={agent.name} size="sm" />
+
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-text-primary">
+                      {agent.name}
+                    </p>
+                    <ProgressBar
+                      value={(agent.open / busiest) * 100}
+                      label={`${agent.name} open threads`}
+                      tone={theme.accent}
+                      size="sm"
+                      className="mt-1.5"
+                    />
+                  </div>
+
+                  {/* The count is the figure; the wait annotates it. Giving both
+                      the same size leaves the row with two numbers and no
+                      reading order. */}
+                  <div className="shrink-0 text-right">
+                    <p className="text-base leading-none font-bold text-text-primary tabular-nums">
+                      {agent.open}
+                    </p>
+                    <p className="mt-1 text-meta font-medium text-text-secondary tabular-nums">
+                      {agent.avgResponseMinutes}m avg
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
+        </PanelCard>
+
+        <PanelCard
+          title="Quick Actions"
+          description="The five places this module starts from."
+        >
+          <ul className="space-y-2">
+            {QUICK_ACTIONS.map((action) => (
+              <li key={action.href}>
+                <Link
+                  href={action.href}
+                  className="flex items-center gap-3 rounded-panel border border-border px-3 py-2.5 transition-colors hover:border-primary-border hover:bg-primary-soft/60 focus-visible:shadow-focus focus-visible:outline-none"
+                >
+                  <span
+                    className={cn(
+                      "grid size-9 shrink-0 place-items-center rounded-btn",
+                      action.tone.soft,
+                      action.tone.text,
+                    )}
+                  >
+                    <action.icon className="size-4.5" aria-hidden />
+                  </span>
+
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-semibold text-text-primary">
+                      {action.label}
+                    </span>
+                    <span className="block truncate text-meta text-text-secondary">
+                      {action.hint}
+                    </span>
+                  </span>
+
+                  <ChevronRight
+                    className="size-4 shrink-0 text-text-muted"
+                    aria-hidden
+                  />
+                </Link>
+              </li>
+            ))}
+          </ul>
         </PanelCard>
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-2">
-        <ChartCard
-          title="Conversation Volume"
-          description="Threads opened by a contact, and threads we opened."
-          legend={[
-            {
-              label: "Inbound",
-              swatch: "bg-primary",
-              value: formatNumber(WA_CONVERSATION_VOLUME.inbound.at(-1) ?? 0),
-            },
-            {
-              label: "Outbound",
-              swatch: "bg-border-strong",
-              value: formatNumber(WA_CONVERSATION_VOLUME.outbound.at(-1) ?? 0),
-            },
-          ]}
-        >
-          <TrendChart
-            categories={WA_DAY_LABELS}
-            series={[
-              { name: "Inbound", data: WA_CONVERSATION_VOLUME.inbound },
-              { name: "Outbound", data: WA_CONVERSATION_VOLUME.outbound },
-            ]}
-            colors={[CHANNEL_SERIES.whatsapp[0], OUTCOME_COLORS.neutral]}
-            height={260}
-            unit="threads"
-          />
-        </ChartCard>
-
-        <ChartCard
-          title="Campaign Performance"
-          description="Delivered, read and replies for the five largest sends."
-          legend={[
-            { label: "Delivered", swatch: "bg-primary" },
-            { label: "Read", swatch: "bg-primary-light" },
-            { label: "Replies", swatch: "bg-accent" },
-          ]}
-        >
-          <BarsChart
-            categories={TOP_FIVE.map((campaign) => campaign.name)}
-            series={[
-              { name: "Delivered", data: TOP_FIVE.map((c) => c.delivered) },
-              { name: "Read", data: TOP_FIVE.map((c) => c.opened) },
-              { name: "Replies", data: TOP_FIVE.map((c) => c.replies) },
-            ]}
-            colors={CHANNEL_SERIES.whatsapp}
-            horizontal
-            height={260}
-          />
-        </ChartCard>
-      </div>
-
-      <div className="grid gap-4 xl:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
         <PanelCard
           title="Recent Conversations"
           description="The five most recently active threads."
@@ -336,7 +357,7 @@ export function WhatsAppOverview() {
           description="What ran on its own in the last 30 days."
           action={
             <ButtonLink
-              href={`${theme.base}/automations`}
+              href={APP_ROUTES.whatsappAutomations}
               variant="ghost"
               size="sm"
             >
@@ -373,10 +394,6 @@ export function WhatsAppOverview() {
                   </p>
                 </div>
 
-                {/* The count is the figure; the rate annotates it. Giving both
-                    the same size left the row with two numbers and no reading
-                    order, so the count steps up and the rate drops to the
-                    metadata step under it. */}
                 <div className="shrink-0 text-right">
                   <p className="text-base leading-none font-bold text-text-primary tabular-nums">
                     {formatNumber(flow.contactsProcessed)}
@@ -389,27 +406,29 @@ export function WhatsAppOverview() {
             ))}
           </ul>
 
+          {/*
+           * Three readings of the flows themselves.
+           *
+           * Opt-in rate and average reply time used to sit in this footer, and
+           * both are now KPIs in the row at the top of the page — a figure
+           * stated twice on one screen is a figure a merchant checks twice.
+           */}
           <div className="mt-4 grid grid-cols-3 gap-2 border-t border-border pt-4">
+            <MiniStat label="In flow" value={formatNumber(IN_FLOW)} hint="waiting" />
+            <MiniStat label="Live flows" value={formatNumber(WA_FLOWS.length)} />
             <MiniStat
-              label="In flow"
-              value={formatNumber(
-                Math.round(
-                  WA_FLOWS.reduce((sum, flow) => sum + flow.contactsProcessed, 0) *
-                    0.064,
-                ),
-              )}
-              hint="waiting"
-            />
-            <MiniStat
-              label="Opt-in rate"
-              value={formatPercent(WA_OVERVIEW_TOTALS.optInRate)}
-            />
-            <MiniStat
-              label="Avg reply"
-              value={`${WA_OVERVIEW_TOTALS.avgResponseMinutes}m`}
-              hint="first response"
+              label="Avg success"
+              value={formatPercent(AVG_SUCCESS)}
+              hint="completed the flow"
             />
           </div>
+        </PanelCard>
+
+        <PanelCard
+          title="Recent Activity"
+          description="Everything this module did in the last two days."
+        >
+          <ActivityFeed entries={WA_ACTIVITY} />
         </PanelCard>
       </div>
     </>
