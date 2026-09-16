@@ -176,7 +176,7 @@ export function WhatsAppInbox({ className }: { className?: string }) {
                       {conversation.time}
                     </span>
                   </div>
-                  <p className="mt-0.5 truncate text-sm text-text-secondary">
+                  <p className="mt-0.5 truncate text-sm font-medium text-text-secondary">
                     {conversation.preview}
                   </p>
                 </div>

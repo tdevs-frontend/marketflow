@@ -103,7 +103,7 @@ export function SegmentedControl<T extends string>({
             onClick={() => onChange(option.value)}
             aria-pressed={selected}
             className={cn(
-              "whitespace-nowrap focus-visible:shadow-focus focus-visible:outline-none",
+              "font-semibold whitespace-nowrap focus-visible:shadow-focus focus-visible:outline-none",
               SIZES[size],
               style.item,
               selected ? style.active : style.idle,

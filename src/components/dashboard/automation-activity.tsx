@@ -216,7 +216,7 @@ export function AutomationActivity({ className }: { className?: string }) {
                     description rather than off the edge of the card. */}
                 <div className="flex min-w-0 flex-1 flex-col gap-1.5 pt-0.5 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
                   <div className="min-w-0">
-                    <p className="truncate text-[15px] font-bold text-text-primary">
+                    <p className="truncate text-base font-semibold text-text-primary">
                       {item.title}
                     </p>
 

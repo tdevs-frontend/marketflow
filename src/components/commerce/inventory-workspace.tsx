@@ -20,7 +20,11 @@ import { Select } from "@/components/ui/select";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
 import { APP_ROUTES } from "@/constants";
 import { STOCK_ADJUSTMENT_REASONS } from "@/constants/commerce";
-import { INVENTORY, STOCK_ACTIVITY, stockStatusOf } from "@/lib/commerce-fixtures";
+import {
+  INVENTORY,
+  STOCK_ACTIVITY,
+  stockStatusOf,
+} from "@/lib/commerce-fixtures";
 import { formatCurrency, formatNumber, formatRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { StockAdjustmentReason } from "@/types/commerce";
@@ -36,7 +40,8 @@ function kpis(): CommerceKpi[] {
     (item) => stockStatusOf(item.stock, item.lowStockThreshold) === "low-stock",
   );
   const out = INVENTORY.filter(
-    (item) => stockStatusOf(item.stock, item.lowStockThreshold) === "out-of-stock",
+    (item) =>
+      stockStatusOf(item.stock, item.lowStockThreshold) === "out-of-stock",
   );
   const value = INVENTORY.reduce(
     (sum, item) => sum + item.stock * item.unitCost,
@@ -92,11 +97,15 @@ const rowKey = (item: { productId: string; variantId?: string }) =>
 
 /** "Premium T-Shirt — M / Black", or just the product where there is no variant. */
 const rowLabel = (item: { productName: string; variantName?: string }) =>
-  item.variantName ? `${item.productName} — ${item.variantName}` : item.productName;
+  item.variantName
+    ? `${item.productName} — ${item.variantName}`
+    : item.productName;
 
 export function InventoryWorkspace() {
   const [open, setOpen] = useState(false);
-  const [target, setTarget] = useState(INVENTORY[0] ? rowKey(INVENTORY[0]) : "");
+  const [target, setTarget] = useState(
+    INVENTORY[0] ? rowKey(INVENTORY[0]) : "",
+  );
   const [delta, setDelta] = useState("0");
   const [reason, setReason] = useState<StockAdjustmentReason>("stock-received");
   const [note, setNote] = useState("");
@@ -159,7 +168,10 @@ export function InventoryWorkspace() {
               <TBody>
                 {rows.map((item) => {
                   const available = item.stock - item.reserved;
-                  const state = stockStatusOf(item.stock, item.lowStockThreshold);
+                  const state = stockStatusOf(
+                    item.stock,
+                    item.lowStockThreshold,
+                  );
 
                   return (
                     <TR key={rowKey(item)}>
@@ -179,11 +191,19 @@ export function InventoryWorkspace() {
                           <span className="text-text-muted">—</span>
                         )}
                       </TD>
-                      <TD className="font-mono text-sm text-text-muted">{item.sku}</TD>
-                      <TD align="right" className="font-bold text-text-primary tabular-nums">
+                      <TD className="font-mono text-sm text-text-muted">
+                        {item.sku}
+                      </TD>
+                      <TD
+                        align="right"
+                        className="font-bold text-text-primary tabular-nums"
+                      >
                         {item.stock}
                       </TD>
-                      <TD align="right" className="text-text-secondary tabular-nums">
+                      <TD
+                        align="right"
+                        className="text-text-secondary tabular-nums"
+                      >
                         {item.reserved}
                       </TD>
                       <TD
@@ -195,7 +215,10 @@ export function InventoryWorkspace() {
                       >
                         {available}
                       </TD>
-                      <TD align="right" className="text-text-muted tabular-nums">
+                      <TD
+                        align="right"
+                        className="text-text-muted tabular-nums"
+                      >
                         {item.lowStockThreshold}
                       </TD>
                       <TD>
@@ -294,7 +317,7 @@ export function InventoryWorkspace() {
 
                   <Link
                     href={`${APP_ROUTES.products}/${entry.productId}`}
-                    className="flex gap-3 rounded-panel px-2 py-2.5 focus-visible:shadow-focus focus-visible:outline-none"
+                    className="flex gap-3 rounded-panel px-2 py-2 focus-visible:shadow-focus focus-visible:outline-none"
                   >
                     <span
                       className={cn(
@@ -313,10 +336,10 @@ export function InventoryWorkspace() {
 
                     {/* `pt-2` centres the first line against the circle. */}
                     <span className="min-w-0 flex-1 space-y-0.5 pt-2">
-                      <span className="block text-sm">
+                      <span className="block text-base">
                         <span
                           className={cn(
-                            "font-bold tabular-nums",
+                            "font-semibold tabular-nums",
                             positive ? "text-primary" : "text-error",
                           )}
                         >
@@ -338,7 +361,7 @@ export function InventoryWorkspace() {
                       <span className="block text-sm font-medium text-text-secondary">
                         {entry.note ?? REASON_LABEL[entry.reason]}
                       </span>
-                      <span className="block text-sm font-medium text-text-muted">
+                      <span className="block text-sm text-text-muted">
                         {formatRelativeTime(entry.at)}
                       </span>
                     </span>
@@ -357,7 +380,11 @@ export function InventoryWorkspace() {
         description="Record stock coming in or going out, against the exact item it moved."
         footer={
           <>
-            <Button variant="outline" size="compact" onClick={() => setOpen(false)}>
+            <Button
+              variant="outline"
+              size="compact"
+              onClick={() => setOpen(false)}
+            >
               Cancel
             </Button>
             <Button
@@ -372,14 +399,14 @@ export function InventoryWorkspace() {
       >
         <div className="space-y-5">
           {/*
-            * The adjustment targets a variant, not a product.
-            *
-            * "+24 Premium T-Shirt" is not something anyone can act on once the
-            * shirt exists in twelve sizes — there is no shelf it describes. The
-            * option list is therefore one entry per stocked combination, with
-            * the SKU as the second line because that is what is printed on the
-            * box being counted.
-            */}
+           * The adjustment targets a variant, not a product.
+           *
+           * "+24 Premium T-Shirt" is not something anyone can act on once the
+           * shirt exists in twelve sizes — there is no shelf it describes. The
+           * option list is therefore one entry per stocked combination, with
+           * the SKU as the second line because that is what is printed on the
+           * box being counted.
+           */}
           <Field label="Item" htmlFor="adj-product">
             <Select
               id="adj-product"
@@ -409,7 +436,9 @@ export function InventoryWorkspace() {
               label="Adjustment"
               htmlFor="adj-delta"
               hint="Negative removes stock."
-              error={resulting < 0 ? "That would take stock below zero." : undefined}
+              error={
+                resulting < 0 ? "That would take stock below zero." : undefined
+              }
             >
               <Input
                 id="adj-delta"
@@ -446,7 +475,11 @@ export function InventoryWorkspace() {
             />
           </Field>
 
-          <Field label="Note" htmlFor="adj-note" hint="Optional. Shows in the activity feed.">
+          <Field
+            label="Note"
+            htmlFor="adj-note"
+            hint="Optional. Shows in the activity feed."
+          >
             <Textarea
               id="adj-note"
               value={note}

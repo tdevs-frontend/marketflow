@@ -137,7 +137,7 @@ export function CampaignPerformance({ className }: { className?: string }) {
             ))}
           </dl>
 
-          <ul className="mt-4 flex flex-1 flex-col gap-4">
+          <ul className="mt-4 flex flex-1 flex-col gap-5">
             {ordered.map((campaign) => {
               const share = leader === 0 ? 0 : (campaign[tab] / leader) * 100;
               const conversion =
@@ -146,7 +146,7 @@ export function CampaignPerformance({ className }: { className?: string }) {
               return (
                 <li key={campaign.name}>
                   <div className="flex items-baseline justify-between gap-3">
-                    <p className="truncate text-sm font-medium text-text-primary">
+                    <p className="truncate text-base font-medium text-text-primary">
                       {campaign.name}
                     </p>
                     <span className="shrink-0 text-sm font-bold text-text-primary tabular-nums">
@@ -157,7 +157,7 @@ export function CampaignPerformance({ className }: { className?: string }) {
                   <ProgressBar
                     value={share}
                     label={`${campaign.name} ${active.label.toLowerCase()}`}
-                    className="mt-2"
+                    className="mt-1.5"
                   />
 
                   <p className="mt-1.5 flex items-center gap-1.5 text-sm text-text-secondary font-medium">

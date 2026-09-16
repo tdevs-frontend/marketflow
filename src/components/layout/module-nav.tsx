@@ -65,7 +65,7 @@ export function ModuleNav({
             href={item.href}
             aria-current={current ? "page" : undefined}
             className={cn(
-              "-mb-px inline-flex shrink-0 items-center gap-2 border-b-2 px-3 py-2.5 text-base font-bold whitespace-nowrap transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+              "-mb-px inline-flex shrink-0 items-center gap-2 border-b-2 px-3 py-2.5 text-base font-semibold whitespace-nowrap transition-colors focus-visible:shadow-focus focus-visible:outline-none",
               /* The resting colour lives here rather than in the base string:
                  `cn()` is a plain join, and `.text-text-secondary` is emitted
                  after `.text-primary`, so a base-level colour would win the

@@ -50,7 +50,23 @@ export function SalesFunnel({ className }: { className?: string }) {
         </p>
       </div>
 
-      <ol className="mt-5 flex-1">
+      {/*
+       * One rhythm, set in a single place: the `py-2.5` on each step line.
+       *
+       * Every gap in the funnel is that one value. A bar has 10px under it
+       * before the step line, the step line has 10px under it before the next
+       * bar, and the first bar is spaced exactly like the other four because
+       * nothing else contributes — no `gap-y` on this list, no margin on the
+       * items. Change the rhythm by changing that one padding.
+       *
+       * This column stays `flex-1` so the footer keeps the card's bottom edge.
+       * At `lg` the funnel sits beside the orders table and the grid stretches
+       * it to that table's height, which is taller than five bars need; the
+       * leftover has to land somewhere, and it lands here, as open space above
+       * the divider rather than as four inflated gaps between the stages. The
+       * stages hold their spacing at every width, and the footer stays put.
+       */}
+      <ol className="mt-5 flex flex-1 flex-col gap-1.5">
         {STAGES.map((stage, index) => {
           const previous = index > 0 ? STAGES[index - 1] : null;
           const stepRate = previous
@@ -64,7 +80,7 @@ export function SalesFunnel({ className }: { className?: string }) {
           return (
             <li key={stage.label}>
               {stepRate !== null ? (
-                <p className="flex flex-wrap items-center gap-x-1.5 py-1 pl-1 text-sm">
+                <p className="flex flex-wrap items-center gap-x-1.5 py-2.5 pl-1 text-sm">
                   <ChevronDown
                     className="size-3 shrink-0 text-text-muted"
                     aria-hidden
@@ -101,11 +117,11 @@ export function SalesFunnel({ className }: { className?: string }) {
         })}
       </ol>
 
-      <div className="mt-5 flex items-center justify-between gap-3 border-t border-border pt-4">
-        <span className="text-sm text-text-secondary font-medium">
+      <div className="mt-6 flex items-center justify-between gap-3 border-t border-border pt-5">
+        <span className="text-base text-text-secondary font-medium">
           Visitor → Customer
         </span>
-        <span className="text-lg leading-none font-bold text-primary tabular-nums">
+        <span className="text-lg leading-none font-semibold text-primary tabular-nums">
           {((LAST.count / TOP) * 100).toFixed(1)}%
         </span>
       </div>
