@@ -153,6 +153,27 @@ export function ContactDetailsSheet({
             ))}
           </dl>
 
+          {/*
+           * Why they left, and when the record says they did.
+           *
+           * `blocked` on its own does not distinguish a STOP reply from a spam
+           * report, and the two mean different things: one is a preference, the
+           * other is a quality-rating event that costs the whole account
+           * sending headroom. The panel that asks an agent to respect an
+           * opt-out should say which it was.
+           */}
+          {contact.optOut ? (
+            <div className="rounded-panel border border-error/25 bg-error-soft px-3.5 py-3">
+              <p className="text-sm font-semibold text-error-text">
+                Opted out · {formatDate(contact.optOut.at)}
+              </p>
+              <p className="mt-1 text-sm text-error-text/90">
+                {contact.optOut.reason}. Only a fresh opt-in makes this contact
+                reachable again.
+              </p>
+            </div>
+          ) : null}
+
           <section>
             <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
               Tags

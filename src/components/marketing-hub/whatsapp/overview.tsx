@@ -549,7 +549,8 @@ export function WhatsAppOverview() {
           title="Recent Activity"
           description="Everything this module did in the last two days."
         >
-          <ActivityFeed entries={WA_ACTIVITY} />
+          {/* 14px titles, matching the two panels beside it. */}
+          <ActivityFeed entries={WA_ACTIVITY} titleSize="sm" />
         </PanelCard>
       </div>
     </>

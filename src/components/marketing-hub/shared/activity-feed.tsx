@@ -37,9 +37,22 @@ const KINDS: Record<ActivityKind, { icon: LucideIcon; tone: string }> = {
  */
 export function ActivityFeed({
   entries,
+  titleSize = "base",
   className,
 }: {
   entries: ActivityEntry[];
+  /**
+   * The entry title's step on the type scale.
+   *
+   * `base` is the default and what the Marketing workspace uses, where the feed
+   * is a half-width panel beside a ranked list set at the same step. `sm` is
+   * for a panel sharing a row with `RecentConversations` or an automation list,
+   * both of which title their rows at 14px — three panels side by side with two
+   * title sizes between them reads as a mistake, because it is one.
+   *
+   * Same escape hatch as `RankedList.labelSize`, for the same reason.
+   */
+  titleSize?: "sm" | "base";
   className?: string;
 }) {
   return (
@@ -64,7 +77,12 @@ export function ActivityFeed({
             </div>
 
             <div className={cn("min-w-0 flex-1", last ? "pb-0" : "pb-5")}>
-              <p className="text-base leading-snug font-semibold text-text-primary">
+              <p
+                className={cn(
+                  "leading-snug font-semibold text-text-primary",
+                  titleSize === "base" ? "text-base" : "text-sm",
+                )}
+              >
                 {entry.title}
               </p>
               <p className="mt-0.5 text-sm leading-relaxed text-text-secondary">

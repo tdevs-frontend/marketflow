@@ -512,6 +512,7 @@ export const CONVERSATIONS: Conversation[] = [
     status: "open",
     unread: 2,
     online: true,
+    sessionOpen: true,
     contact: {
       id: "cus-sarah",
       name: "Sarah Ahmed",
@@ -549,6 +550,7 @@ export const CONVERSATIONS: Conversation[] = [
     id: "conv-john",
     status: "pending",
     unread: 1,
+    sessionOpen: true,
     online: false,
     contact: {
       id: "cus-john",
@@ -574,6 +576,8 @@ export const CONVERSATIONS: Conversation[] = [
     id: "conv-maria",
     status: "open",
     unread: 0,
+    /* We answered, she has not come back, and the window has run out. */
+    sessionOpen: false,
     online: true,
     contact: {
       id: "cus-maria",
@@ -606,6 +610,7 @@ export const CONVERSATIONS: Conversation[] = [
     id: "conv-omar",
     status: "resolved",
     unread: 0,
+    sessionOpen: false,
     online: false,
     contact: {
       id: "cus-omar",
@@ -638,6 +643,7 @@ export const CONVERSATIONS: Conversation[] = [
     id: "conv-priya",
     status: "pending",
     unread: 3,
+    sessionOpen: true,
     online: false,
     contact: {
       id: "cus-priya",

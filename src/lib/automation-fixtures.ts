@@ -196,6 +196,52 @@ export const AUTOMATION_FLOWS: AutomationFlow[] = [
     ],
   },
   {
+    /*
+     * The lifecycle stage the channel was missing.
+     *
+     * WhatsApp had welcome, follow-up, cart recovery and order confirmation —
+     * everything up to and including the first purchase, and nothing after a
+     * customer goes quiet. Win-back is the one flow a merchant asks for once
+     * the list is big enough to have a lapsed half, and it is the flow that
+     * justifies keeping an opted-in contact on the list at all.
+     */
+    id: "af-winback",
+    name: "Win-back",
+    description: "Reaches a lapsed customer twice, then stops and tags them.",
+    channel: "whatsapp",
+    status: "active",
+    triggerLabel: "No order in 60 days",
+    triggerIcon: "clock",
+    contactsProcessed: 3_460,
+    successRate: 12.4,
+    lastActivityAt: "2026-09-08T06:20:00Z",
+    createdAt: "2026-06-17T10:40:00Z",
+    steps: [
+      send("s1", "whatsapp", "Template: we_miss_you", 3_460),
+      wait("s2", "5 days", 3_460),
+      condition("s3", "Replied or ordered", 3_460, [
+        {
+          label: "Came back",
+          steps: [goal("s3a", "Customer reactivated", 429)],
+        },
+        {
+          label: "Still quiet",
+          steps: [
+            send("s3b", "whatsapp", "Template: winback_offer_15", 3_031),
+            wait("s3c", "7 days", 3_031),
+            act(
+              "s3d",
+              "Tag contact",
+              "Tagged Inactive Customers — no further sends",
+              "tag",
+              2_698,
+            ),
+          ],
+        },
+      ]),
+    ],
+  },
+  {
     id: "af-order-confirmation",
     name: "Order Confirmation",
     description: "Transactional. Confirmation, dispatch and a feedback request.",

@@ -359,6 +359,10 @@ export const WHATSAPP_CONTACTS: WhatsAppContact[] = [
     email: "hannah@parkbeauty.kr",
     tags: ["Customer"],
     status: "blocked",
+    optOut: {
+      at: "2026-05-28T10:15:00Z",
+      reason: "Reported the message as spam",
+    },
     lastActivityAt: "2026-05-28T10:15:00Z",
     createdAt: "2026-03-07T12:20:00Z",
     notes: "Reported our messages as spam. Do not contact.",
@@ -404,7 +408,13 @@ export const WHATSAPP_CONTACTS: WhatsAppContact[] = [
     lastName: "Tanaka",
     phone: "+81 90 1234 5678",
     tags: ["Lead"],
-    status: "inactive",
+    /* The canonical path: a STOP reply. Blocked rather than inactive — going
+       quiet and asking to be left alone are not the same state. */
+    status: "blocked",
+    optOut: {
+      at: "2026-04-30T09:10:00Z",
+      reason: "Replied STOP",
+    },
     lastActivityAt: "2026-04-30T09:10:00Z",
     createdAt: "2026-03-25T10:40:00Z",
   },
@@ -556,8 +566,9 @@ export const WA_FUNNEL = [
 export const WA_OVERVIEW_TOTALS = {
   contacts: 12_480,
   contactsChange: 18.4,
-  activeAutomations: 4,
-  automationsChange: 33.3,
+  /* Five since Win-back joined them; see `AUTOMATION_FLOWS`. */
+  activeAutomations: 5,
+  automationsChange: 25.0,
   optInRate: 94.2,
   avgResponseMinutes: 8,
   /** Down is the good direction, so the stat carries invertTrend. */

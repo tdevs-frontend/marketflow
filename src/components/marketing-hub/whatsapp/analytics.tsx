@@ -45,7 +45,6 @@ import {
 } from "@/lib/whatsapp-fixtures";
 import { formatCount, formatNumber, formatPercent, rate } from "@/lib/format";
 import { ConversionFunnel } from "../shared/conversion-funnel";
-import { RankedList } from "../shared/ranked-list";
 
 /**
  * WhatsApp analytics — the performance page.
@@ -179,9 +178,9 @@ const WITHIN_TARGET = WA_RESPONSE_TIME.buckets
  * red at the tail — the only rows a team acts on.
  */
 const BUCKET_TONES = [
-  "bg-primary",
-  "bg-primary-light",
-  "bg-accent",
+  "bg-whatsapp-dark",
+  "bg-whatsapp",
+  "bg-whatsapp-bright",
   "bg-warning",
   "bg-warning",
   "bg-error",
@@ -245,9 +244,17 @@ export function WhatsAppAnalytics() {
       <ChartCard
         title="Message Volume"
         description="Every outcome across the period, stacked to the total sent."
+        /*
+         * Swatches come from the channel ramp, not the brand ramp.
+         *
+         * Every legend on this page named an indigo that no chart on it draws:
+         * `bg-primary` is #4f46e5, and these bars are #34d399 and #059669. A
+         * legend whose colour does not match its series is worse than no
+         * legend — it is a key that mislabels the thing it is keying.
+         */
         legend={[
-          { label: "Read", swatch: "bg-primary-light" },
-          { label: "Delivered, unread", swatch: "bg-primary" },
+          { label: "Read", swatch: "bg-whatsapp-bright" },
+          { label: "Delivered, unread", swatch: "bg-whatsapp" },
           { label: "Failed", swatch: "bg-error" },
         ]}
       >
@@ -325,7 +332,7 @@ export function WhatsAppAnalytics() {
           legend={[
             {
               label: "Inbound",
-              swatch: "bg-primary",
+              swatch: "bg-whatsapp",
               value: formatNumber(WA_CONVERSATION_VOLUME.inbound.at(-1) ?? 0),
             },
             {
@@ -475,8 +482,8 @@ export function WhatsAppAnalytics() {
         title="Campaign Comparison"
         description="Read and reply rate side by side, best read rate first."
         legend={[
-          { label: "Read rate", swatch: "bg-primary" },
-          { label: "Reply rate", swatch: "bg-accent" },
+          { label: "Read rate", swatch: "bg-whatsapp" },
+          { label: "Reply rate", swatch: "bg-whatsapp-bright" },
         ]}
       >
         <BarsChart
@@ -498,82 +505,58 @@ export function WhatsAppAnalytics() {
         />
       </ChartCard>
 
-      <div className="grid gap-4 xl:grid-cols-3">
-        <PanelCard
-          title="Audience Insights"
-          description="Reply rate by segment, and what it costs in opt-outs."
-          className="xl:col-span-2"
-        >
-          <Table minWidth="34rem">
-            <THead>
-              <TH>Segment</TH>
-              <TH align="right">Contacts</TH>
-              <TH align="right">Delivered</TH>
-              <TH align="right">Read rate</TH>
-              <TH align="right">Reply rate</TH>
-              <TH align="right">Opt-out</TH>
-            </THead>
-            <TBody>
-              {WA_AUDIENCE_INSIGHTS.map((row) => (
-                <TR key={row.label}>
-                  <TD className="text-text-primary">{row.label}</TD>
-                  <TD align="right" className="tabular-nums">
-                    {formatNumber(row.contacts)}
-                  </TD>
-                  <TD align="right" className="tabular-nums">
-                    {formatNumber(row.delivered)}
-                  </TD>
-                  <TD align="right" className="tabular-nums">
-                    {formatPercent(row.readRate)}
-                  </TD>
-                  <TD
-                    align="right"
-                    className="font-bold text-text-primary tabular-nums"
-                  >
-                    {formatPercent(row.replyRate)}
-                  </TD>
-                  {/*
-                   * The one column where a bigger number is worse, so it is the
-                   * only one that changes colour: past 2% a segment is being
-                   * messaged more than it wants.
-                   */}
-                  <TD
-                    align="right"
-                    className={
-                      row.optOutRate >= 2
-                        ? "font-semibold text-error tabular-nums"
-                        : "tabular-nums"
-                    }
-                  >
-                    {formatPercent(row.optOutRate)}
-                  </TD>
-                </TR>
-              ))}
-            </TBody>
-          </Table>
-        </PanelCard>
-
-        <PanelCard
-          title="Top Campaigns"
-          description="By reply rate, among sends over 200."
-        >
-          <RankedList
-            tone={theme.accent}
-            items={WA_CAMPAIGNS.filter((campaign) => campaign.delivered > 200)
-              .sort(
-                (a, b) => rate(b.replies, b.delivered) - rate(a.replies, a.delivered),
-              )
-              .slice(0, 5)
-              .map((campaign) => ({
-                id: campaign.id,
-                label: campaign.name,
-                secondary: `${formatNumber(campaign.delivered)} delivered · ${formatNumber(campaign.replies)} replies`,
-                display: formatPercent(rate(campaign.replies, campaign.delivered)),
-                share: rate(campaign.replies, campaign.delivered),
-              }))}
-          />
-        </PanelCard>
-      </div>
+      <PanelCard
+        title="Audience Insights"
+        description="Reply rate by segment, and what it costs in opt-outs."
+      >
+        <Table minWidth="34rem">
+          <THead>
+            <TH>Segment</TH>
+            <TH align="right">Contacts</TH>
+            <TH align="right">Delivered</TH>
+            <TH align="right">Read rate</TH>
+            <TH align="right">Reply rate</TH>
+            <TH align="right">Opt-out</TH>
+          </THead>
+          <TBody>
+            {WA_AUDIENCE_INSIGHTS.map((row) => (
+              <TR key={row.label}>
+                <TD className="text-text-primary">{row.label}</TD>
+                <TD align="right" className="tabular-nums">
+                  {formatNumber(row.contacts)}
+                </TD>
+                <TD align="right" className="tabular-nums">
+                  {formatNumber(row.delivered)}
+                </TD>
+                <TD align="right" className="tabular-nums">
+                  {formatPercent(row.readRate)}
+                </TD>
+                <TD
+                  align="right"
+                  className="font-bold text-text-primary tabular-nums"
+                >
+                  {formatPercent(row.replyRate)}
+                </TD>
+                {/*
+                 * The one column where a bigger number is worse, so it is the
+                 * only one that changes colour: past 2% a segment is being
+                 * messaged more than it wants.
+                 */}
+                <TD
+                  align="right"
+                  className={
+                    row.optOutRate >= 2
+                      ? "font-semibold text-error tabular-nums"
+                      : "tabular-nums"
+                  }
+                >
+                  {formatPercent(row.optOutRate)}
+                </TD>
+              </TR>
+            ))}
+          </TBody>
+        </Table>
+      </PanelCard>
     </>
   );
 }

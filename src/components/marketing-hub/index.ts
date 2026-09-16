@@ -6,7 +6,6 @@
  * group — different audience, different components, same obvious name.
  */
 export * from "./campaign-status";
-export * from "./channel-performance-chart";
 export * from "./campaign-table";
 export * from "./marketing-overview";
 export * from "./campaigns-workspace";

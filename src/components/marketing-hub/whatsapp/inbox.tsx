@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 import { Badge, type BadgeTone } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Tag } from "@/components/ui/tag";
@@ -31,6 +31,7 @@ import {
   CONVERSATIONS,
   QUICK_REPLIES,
 } from "@/lib/marketing-fixtures";
+import { APP_ROUTES } from "@/constants";
 import { formatRelativeTime } from "@/lib/format";
 import { cn, initials } from "@/lib/utils";
 
@@ -41,7 +42,7 @@ const contactInitials = (name: string) => {
 };
 import type { Conversation, InboxMessage } from "@/types/marketing";
 
-type Scope = "all" | "unread" | "mine";
+type Scope = "all" | "unread" | "unassigned" | "mine";
 
 /**
  * The list's scope, as tabs rather than a segmented control.
@@ -57,7 +58,16 @@ type Scope = "all" | "unread" | "mine";
 const SCOPE_TABS: TabItem<Scope>[] = [
   { value: "all", label: "All" },
   { value: "unread", label: "Unread" },
-  { value: "mine", label: "Assigned to me" },
+  /*
+   * Unassigned is here because the Overview counts it.
+   *
+   * The queue panel reports "9 with no owner" and, until now, the Inbox had no
+   * way to show those nine — a number on a dashboard that the tool underneath
+   * it could not act on. "Assigned to me" shortens to "Mine" to buy the fourth
+   * tab its width in a 320px column.
+   */
+  { value: "unassigned", label: "Unassigned" },
+  { value: "mine", label: "Mine" },
 ];
 
 /** The signed-in agent, until auth carries a real one. */
@@ -229,6 +239,15 @@ function ConversationList({
                             {conversation.unread}
                           </span>
                         ) : null}
+                        {/* A closed window is the row's other actionable fact,
+                            and it never coincides with an unread count — an
+                            inbound message is what reopens the window. */}
+                        {conversation.sessionOpen ? null : (
+                          <Clock
+                            className="size-3.5 shrink-0 text-warning-text"
+                            aria-label="Reply window closed"
+                          />
+                        )}
                       </span>
                     </span>
                   </button>
@@ -320,6 +339,28 @@ function ChatWindow({
           </p>
         </div>
 
+        {/*
+         * The window state, beside the name rather than in the composer alone.
+         *
+         * An agent picking a thread needs to know before they start typing
+         * whether they can type at all — finding out at the send button is how
+         * a reply gets lost.
+         */}
+        <Badge
+          tone={conversation.sessionOpen ? "success" : "warning"}
+          size="sm"
+          className="hidden shrink-0 gap-1.5 sm:inline-flex"
+        >
+          <span
+            aria-hidden
+            className={cn(
+              "size-1.5 rounded-full",
+              conversation.sessionOpen ? "bg-success" : "bg-warning",
+            )}
+          />
+          {conversation.sessionOpen ? "Session open" : "Session closed"}
+        </Badge>
+
         <Button
           variant="outline"
           size="sm"
@@ -403,6 +444,31 @@ function ChatWindow({
           </ul>
         ) : null}
 
+        {/*
+         * Outside the window the composer does not pretend.
+         *
+         * Meta rejects a free-form message sent more than 24 hours after the
+         * contact's last inbound one, so a textarea that accepts the text and a
+         * Send button that fails is a worse answer than a strip saying what the
+         * rule is and pointing at the templates that satisfy it.
+         */}
+        {conversation.sessionOpen ? null : (
+          <div className="mb-2.5 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-panel border border-warning/40 bg-warning-soft/60 px-3.5 py-2.5">
+            <p className="min-w-0 flex-1 text-sm font-medium text-warning-text">
+              The 24-hour reply window has closed. Only an approved template can
+              be sent to this contact.
+            </p>
+            <ButtonLink
+              href={APP_ROUTES.whatsappTemplates}
+              variant="outline"
+              size="sm"
+              className="shrink-0"
+            >
+              Choose a template
+            </ButtonLink>
+          </div>
+        )}
+
         <div className="flex items-end gap-2">
           <div className="flex shrink-0 gap-1">
             {/*
@@ -420,6 +486,7 @@ function ChatWindow({
               variant="ghost"
               size="sm"
               aria-label="Attach a file"
+              disabled={!conversation.sessionOpen}
               onClick={() => toast("Attachments open from your device library")}
             >
               <Paperclip aria-hidden />
@@ -440,6 +507,12 @@ function ChatWindow({
             value={draft}
             rows={1}
             aria-label="Message"
+            disabled={!conversation.sessionOpen}
+            placeholder={
+              conversation.sessionOpen
+                ? undefined
+                : "Template required outside the 24-hour window"
+            }
             className="min-h-11 flex-1 resize-none py-3"
             onChange={(event) => setDraft(event.target.value)}
             onKeyDown={(event) => {
@@ -454,7 +527,7 @@ function ChatWindow({
           <Button
             size="compact"
             onClick={submit}
-            disabled={!draft.trim()}
+            disabled={!draft.trim() || !conversation.sessionOpen}
             aria-label="Send message"
             className="shrink-0"
           >
@@ -755,6 +828,7 @@ export function WhatsAppInbox({
     return conversations.filter((item) => {
       if (term && !item.contact.name.toLowerCase().includes(term)) return false;
       if (scope === "unread" && item.unread === 0) return false;
+      if (scope === "unassigned" && item.contact.assignedAgent) return false;
       if (scope === "mine" && item.contact.assignedAgent !== CURRENT_AGENT) {
         return false;
       }

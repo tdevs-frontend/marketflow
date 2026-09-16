@@ -136,6 +136,18 @@ export interface Conversation {
   status: ConversationStatus;
   unread: number;
   online: boolean;
+  /**
+   * Whether the 24-hour customer service window is still open.
+   *
+   * Meta's rule, and the one a merchant trips on most: free-form replies are
+   * allowed only within 24 hours of the contact's last inbound message. After
+   * that only an approved template may be sent.
+   *
+   * Stored rather than derived because the fixture clocks are frozen — a live
+   * implementation computes it from the last inbound `at` against now, and
+   * this field is what that computation would return.
+   */
+  sessionOpen: boolean;
   /** Newest last, the order they render in. */
   messages: InboxMessage[];
 }
@@ -521,6 +533,20 @@ export interface WhatsAppTemplate {
 
 export type WhatsAppContactStatus = "active" | "inactive" | "blocked";
 
+/**
+ * Why and when a contact stopped being reachable.
+ *
+ * Separate from `status`, which says whether we may send; this says what
+ * happened. A merchant auditing a drop in list size needs the reason, and
+ * "blocked" on its own does not distinguish someone who replied STOP from
+ * someone who reported the message as spam — the second is a quality-rating
+ * event and the first is not.
+ */
+export interface WhatsAppOptOut {
+  at: string;
+  reason: string;
+}
+
 export interface WhatsAppContact {
   id: string;
   firstName: string;
@@ -529,6 +555,7 @@ export interface WhatsAppContact {
   email?: string;
   tags: string[];
   status: WhatsAppContactStatus;
+  optOut?: WhatsAppOptOut;
   assignedAgent?: string;
   lastActivityAt: string;
   createdAt: string;

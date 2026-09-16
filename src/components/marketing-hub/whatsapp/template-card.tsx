@@ -4,8 +4,12 @@ import { Badge, type BadgeTone } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Menu } from "@/components/ui/menu";
-import { formatRelativeTime } from "@/lib/format";
-import { TEMPLATE_LANGUAGES, TEMPLATE_USE_CASES } from "@/lib/whatsapp-fixtures";
+import { formatNumber, formatPercent, formatRelativeTime, rate } from "@/lib/format";
+import {
+  TEMPLATE_LANGUAGES,
+  TEMPLATE_USE_CASES,
+  WA_TEMPLATE_PERFORMANCE,
+} from "@/lib/whatsapp-fixtures";
 import { cn } from "@/lib/utils";
 import type {
   TemplateCategory,
@@ -45,6 +49,18 @@ export function TemplateStatusBadge({ status }: { status: TemplateStatus }) {
   );
 }
 
+/**
+ * How a template has actually done, for the card that offers to edit it.
+ *
+ * Analytics has computed this all along and the library never showed it, so
+ * deciding which of two promotional templates to reuse meant leaving Templates,
+ * reading the performance table, and coming back. A template that has never
+ * sent has no row and the card simply omits the line — a "0% reply rate" on a
+ * draft is a lie about a template nobody has tried.
+ */
+const performanceOf = (id: string) =>
+  WA_TEMPLATE_PERFORMANCE.find((item) => item.id === id);
+
 export const useCaseLabel = (useCase: TemplateUseCase) =>
   TEMPLATE_USE_CASES.find((item) => item.value === useCase)?.label ?? useCase;
 
@@ -65,6 +81,8 @@ export function TemplateCard({
   onDuplicate: () => void;
   onDelete: () => void;
 }) {
+  const performance = performanceOf(template.id);
+
   return (
     <Card className="flex flex-col p-5">
       <div className="flex items-start justify-between gap-3">
@@ -130,7 +148,34 @@ export function TemplateCard({
         </div>
       ) : null}
 
-      <div className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-3.5 text-sm text-text-muted">
+      {/*
+       * How it has done, above the language and the timestamp.
+       *
+       * Reply rate is bold because it is the figure that decides which of two
+       * templates to reuse; the send count is the context that says whether the
+       * rate is worth trusting. A template that has never sent shows neither,
+       * and the rule below moves up to carry the card's footer on its own.
+       */}
+      {performance ? (
+        <div className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-3.5 text-sm">
+          <span className="text-text-muted">
+            {formatNumber(performance.sent)} sent
+          </span>
+          <span className="text-text-secondary">
+            <span className="font-bold text-text-primary tabular-nums">
+              {formatPercent(rate(performance.replies, performance.delivered))}
+            </span>{" "}
+            reply rate
+          </span>
+        </div>
+      ) : null}
+
+      <div
+        className={cn(
+          "flex items-center justify-between gap-3 text-sm text-text-muted",
+          performance ? "mt-2.5" : "mt-4 border-t border-border pt-3.5",
+        )}
+      >
         <span>{languageLabel(template.language)}</span>
         <span>Updated {formatRelativeTime(template.updatedAt)}</span>
       </div>
