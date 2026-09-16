@@ -28,18 +28,29 @@ export function RankedList({
   /** Leading glyph, e.g. a platform or channel mark. */
   renderMark,
   numbered = true,
+  labelSize = "sm",
   className,
 }: {
   items: RankedItem[];
   tone?: string;
   renderMark?: (item: RankedItem, index: number) => ReactNode;
   numbered?: boolean;
+  /**
+   * The label's step on the type scale.
+   *
+   * `sm` is the default and what every analytics panel uses: there the ranked
+   * list is one of several supporting readings on the page, and a 16px label
+   * would outrank the panel's own heading. `base` is for the panel where the
+   * ranked row *is* the card's subject — Automation Performance on the
+   * Marketing workspace — and the name needs to carry the row.
+   */
+  labelSize?: "sm" | "base";
   className?: string;
 }) {
   const best = Math.max(...items.map((item) => item.share), 1);
 
   return (
-    <ol className={cn("space-y-3", className)}>
+    <ol className={cn("space-y-5", className)}>
       {items.map((item, index) => (
         <li key={item.id} className="flex items-center gap-3">
           {numbered ? (
@@ -52,7 +63,12 @@ export function RankedList({
 
           <div className="min-w-0 flex-1">
             <div className="flex items-baseline justify-between gap-3">
-              <p className="truncate text-sm font-medium text-text-primary">
+              <p
+                className={cn(
+                  "truncate font-medium text-text-primary",
+                  labelSize === "base" ? "text-base" : "text-sm",
+                )}
+              >
                 {item.label}
               </p>
               <p className="shrink-0 text-sm font-bold text-text-primary tabular-nums">

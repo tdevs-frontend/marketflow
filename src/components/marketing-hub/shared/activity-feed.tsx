@@ -64,7 +64,7 @@ export function ActivityFeed({
             </div>
 
             <div className={cn("min-w-0 flex-1", last ? "pb-0" : "pb-5")}>
-              <p className="text-sm leading-snug font-semibold text-text-primary">
+              <p className="text-base leading-snug font-semibold text-text-primary">
                 {entry.title}
               </p>
               <p className="mt-0.5 text-sm leading-relaxed text-text-secondary">

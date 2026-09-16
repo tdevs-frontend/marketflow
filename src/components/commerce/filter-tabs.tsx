@@ -154,7 +154,7 @@ export function FilterTabs({
              settled by stylesheet order rather than by which branch ran. */
           active
             ? "border-primary-border bg-primary-soft font-semibold text-primary"
-            : "border-transparent bg-surface-secondary font-bold text-text-secondary hover:bg-border hover:text-text-primary leading-none",
+            : "border-transparent bg-surface-secondary font-semibold text-text-secondary hover:bg-border hover:text-text-primary leading-none",
         )}
       >
         <Icon className="size-3.5 shrink-0" aria-hidden />

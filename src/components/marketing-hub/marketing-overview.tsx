@@ -299,7 +299,7 @@ export function MarketingOverview() {
             </ButtonLink>
           }
         >
-          <RankedList items={AUTOMATION_RANKING} />
+          <RankedList items={AUTOMATION_RANKING} labelSize="base" />
         </PanelCard>
 
         <PanelCard
