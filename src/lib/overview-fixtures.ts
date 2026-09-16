@@ -169,6 +169,30 @@ export const CONVERSION_FUNNEL: FunnelStage[] = [
   { label: "Converted", count: 8_420, hint: "Placed an order" },
 ];
 
+/**
+ * The two rate metrics the Marketing workspace opens with.
+ *
+ * Read out of the funnel rather than stated, so the KPI row and the funnel
+ * panel below it cannot drift apart — they are the same five numbers, once as
+ * a headline and once as a shape. Only the period-over-period changes are
+ * fixtures, because a rate's movement is not derivable from a single window.
+ *
+ * Deliberately not on the merchant overview: engagement and click-through are
+ * how a campaign performed, not how the business did. The overview's KPI row
+ * answers leads, conversations, orders and revenue, and these two would only
+ * blur that line.
+ */
+const reached = CONVERSION_FUNNEL[0].count;
+
+export const MARKETING_RATES = {
+  /** Opened, read or viewed, over everyone reached. */
+  engagement: (CONVERSION_FUNNEL[1].count / reached) * 100,
+  engagementChange: 5.2,
+  /** Followed a link or button, over everyone reached. */
+  click: (CONVERSION_FUNNEL[2].count / reached) * 100,
+  clickChange: 3.8,
+} as const;
+
 /* -------------------------------------------------------------------------- */
 /* Top performers                                                             */
 /* -------------------------------------------------------------------------- */

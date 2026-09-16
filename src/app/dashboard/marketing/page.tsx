@@ -13,7 +13,7 @@ export default function MarketingPage() {
     <>
       <PageHeader
         title="Marketing"
-        description="Turn conversations, campaigns and customer data into measurable growth."
+        description="Campaigns, channels, audiences and automation — how the marketing is performing."
         action={
           <ButtonLink href={APP_ROUTES.marketingCampaignNew} size="compact">
             <Plus aria-hidden />
