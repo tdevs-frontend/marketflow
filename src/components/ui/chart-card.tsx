@@ -43,7 +43,7 @@ export function ChartCard({
     <Card className={cn("flex flex-col p-5", className)}>
       <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0">
-          <h2 className="text-base">{title}</h2>
+          <h2 className="text-base sm:text-lg">{title}</h2>
           {description ? (
             <p className="mt-1 text-sm text-text-secondary font-medium">{description}</p>
           ) : null}
@@ -109,7 +109,7 @@ export function PanelCard({
     <Card className={cn("flex flex-col p-5", className)}>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="text-base">{title}</h2>
+          <h2 className="text-base sm:text-lg">{title}</h2>
           {description ? (
             <p className="mt-1 text-sm text-text-secondary font-medium">{description}</p>
           ) : null}
