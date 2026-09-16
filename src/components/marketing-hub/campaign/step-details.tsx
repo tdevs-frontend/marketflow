@@ -1,12 +1,11 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Mail, MessageCircle, Smartphone } from "lucide-react";
+import { Mail, MessageCircle, Share2, Smartphone } from "lucide-react";
 
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { BrandIcon } from "@/components/ui/brand-icon";
 import { SocialAccountSelector } from "@/components/integrations/social";
 import { CHANNEL_THEME, PLATFORM_THEME } from "@/constants/channels";
 import { publishableAccounts } from "@/lib/social-fixtures";
@@ -47,14 +46,16 @@ import type { StepProps } from "./types";
  * merchant reads on the marketing site and the card they click to create a
  * campaign are one object.
  *
- * No colour is invented here. WhatsApp, Email and SMS take their soft ground
- * and ink from `CHANNEL_THEME` — the table every chip, stat card and chart
- * series in their modules already reads, and the same tokens the landing
+ * No colour is invented here. WhatsApp, Email and SMS take their soft ground,
+ * ink and hairline from `CHANNEL_THEME` — the table every chip, stat card and
+ * chart series in their modules already reads, and the same tokens the landing
  * section tints its tiles with, which is why the two match without sharing a
- * constant. Social has no channel hue worth wearing (`CHANNEL_THEME.social` is
- * the Planner's slate), so it takes Instagram's from `PLATFORM_THEME`, the
- * table behind every account mark that appears under the card once it is
- * chosen.
+ * constant. Social is the exception, and says why at its own entry.
+ *
+ * Every tile carries that hairline. On the four soft grounds — mint, powder
+ * blue, lilac, pink — the square's edge is otherwise doing all its work at
+ * around 1.1:1 against a white card, which holds up in a mock-up and dissolves
+ * on a real screen.
  */
 const CHANNEL_CARDS: {
   value: MarketingChannel;
@@ -62,7 +63,7 @@ const CHANNEL_CARDS: {
   hint: string;
   /** Already sized and weighted — the tile only centres it. */
   icon: ReactNode;
-  /** Soft ground plus ink, for the tile. */
+  /** Soft ground, ink and hairline for the tile, all in the channel's hue. */
   tile: string;
   /** The status pill's bullet, in the tile's hue. */
   dot: string;
@@ -72,7 +73,12 @@ const CHANNEL_CARDS: {
     label: "WhatsApp",
     hint: "Highest read rate. Template needed for the first message.",
     icon: <MessageCircle aria-hidden className="size-5" strokeWidth={1.9} />,
-    tile: cn(CHANNEL_THEME.whatsapp.soft, CHANNEL_THEME.whatsapp.text),
+    tile: cn(
+      CHANNEL_THEME.whatsapp.soft,
+      CHANNEL_THEME.whatsapp.text,
+      "border",
+      CHANNEL_THEME.whatsapp.border,
+    ),
     dot: CHANNEL_THEME.whatsapp.accent,
   },
   {
@@ -80,7 +86,12 @@ const CHANNEL_CARDS: {
     label: "Email",
     hint: "Best for long-form and rich layouts.",
     icon: <Mail aria-hidden className="size-5" strokeWidth={1.9} />,
-    tile: cn(CHANNEL_THEME.email.soft, CHANNEL_THEME.email.text),
+    tile: cn(
+      CHANNEL_THEME.email.soft,
+      CHANNEL_THEME.email.text,
+      "border",
+      CHANNEL_THEME.email.border,
+    ),
     dot: CHANNEL_THEME.email.accent,
   },
   {
@@ -88,18 +99,29 @@ const CHANNEL_CARDS: {
     label: "SMS",
     hint: "Short, urgent, no images. Billed per segment.",
     icon: <Smartphone aria-hidden className="size-5" strokeWidth={1.9} />,
-    tile: cn(CHANNEL_THEME.sms.soft, CHANNEL_THEME.sms.text),
+    tile: cn(
+      CHANNEL_THEME.sms.soft,
+      CHANNEL_THEME.sms.text,
+      "border",
+      CHANNEL_THEME.sms.border,
+    ),
     dot: CHANNEL_THEME.sms.accent,
   },
   {
     value: "social",
     label: "Social",
     hint: "Publish campaign content to connected social accounts and track engagement.",
-    /* The mark `PlatformMark` renders on every account row under this card, so
-       the glyph does not change between choosing the channel and choosing the
-       accounts it publishes to. */
-    icon: <BrandIcon name={PLATFORM_THEME.instagram.icon} className="size-5" />,
-    tile: cn(PLATFORM_THEME.instagram.soft, PLATFORM_THEME.instagram.text),
+    /* `Share2` rather than a platform's logo: this one card stands for four
+       networks at once, and whichever logo it wore would name one of them and
+       leave the other three out. The logos belong to the account rows below,
+       where each is a particular account.
+
+       The pink stays — it is what separates Social from the three channels
+       either side of it, and `CHANNEL_THEME.social` is the Planner's slate,
+       which reads as disabled next to them. It is the only tile mixing its own
+       ground, since that hue has no `-soft` and `-border` pair on the ramp. */
+    icon: <Share2 aria-hidden className="size-5" strokeWidth={1.9} />,
+    tile: "bg-instagram/8 text-instagram border border-instagram/15",
     dot: PLATFORM_THEME.instagram.swatch,
   },
 ];

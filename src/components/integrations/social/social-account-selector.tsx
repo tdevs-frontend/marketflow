@@ -86,7 +86,7 @@ export function SocialAccountSelector({
         );
       })}
 
-      <p className="text-meta text-text-muted">
+      <p className="text-meta text-text-muted font-medium">
         Accounts come from{" "}
         <Link
           href={INTEGRATION_ROUTES.social}
