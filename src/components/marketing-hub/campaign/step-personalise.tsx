@@ -190,7 +190,7 @@ export function PersonaliseStep(props: StepProps) {
 
       {/* ------------------------------------------------------- Preview */}
       <div className="lg:sticky lg:top-4 lg:self-start">
-        <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+        <p className="text-base font-semibold text-text-primary/80">
           Preview for a sample contact
         </p>
         <div className="mt-2.5">

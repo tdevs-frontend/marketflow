@@ -33,9 +33,15 @@ export function StepSection({
     <section className={className}>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h3 className="text-sm font-bold text-text-secondary">{title}</h3>
+          {/* The legend is the largest thing in a step's body and the only ink
+              at full strength: a step is a stack of these, and a heading set at
+              body size in secondary ink leaves the person reading a wall with
+              no shape. The hint under it sits one step up from muted for the
+              same reason — it is the sentence explaining the section, not an
+              aside, and it is frequently the only instruction on screen. */}
+          <h3 className="text-base font-bold text-text-primary">{title}</h3>
           {hint ? (
-            <p className="mt-1 text-sm font-medium text-text-muted">{hint}</p>
+            <p className="mt-1 text-sm font-medium text-text-secondary">{hint}</p>
           ) : null}
         </div>
         {action}
@@ -101,11 +107,14 @@ export function OptionCard({
       ) : null}
 
       <span className="min-w-0 flex-1">
-        <span className="block text-base font-bold text-text-primary">
+        <span className="block text-sm font-bold text-text-primary">
           {title}
         </span>
         {hint ? (
-          <span className="mt-0.5 block text-sm font-medium text-text-muted">
+          /* Secondary, not muted: on an objective card this line is the entire
+             difference between two choices, so it has to survive being read at
+             a glance on a laptop screen. */
+          <span className="mt-0.5 block text-sm font-medium text-text-secondary">
             {hint}
           </span>
         ) : null}

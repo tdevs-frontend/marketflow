@@ -1,14 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { Check, ImagePlus, Upload, X } from "lucide-react";
+import { useRef, useState } from "react";
+import { AlertCircle, Check, ImagePlus, Loader2, Upload, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { useToast } from "@/components/ui/toast";
-import { MEDIA_ASSETS, MEDIA_FOLDERS } from "@/lib/social-fixtures";
+import {
+  ACCEPTED_MEDIA,
+  uploadMedia,
+  useMediaAssets,
+} from "@/lib/media-store";
+import { MEDIA_FOLDERS } from "@/lib/social-fixtures";
 import { cn } from "@/lib/utils";
 import type { MediaAsset } from "@/types/social";
 
@@ -21,12 +27,58 @@ import type { MediaAsset } from "@/types/social";
  * store would mean the same hero image existing twice with two names, two sizes
  * and no idea which the Planner is using.
  *
- * "Upload new" lands in the library first and is then selected here, which is
- * why it is a toast rather than a second file model.
+ * "Upload New" keeps that rule rather than bypassing it: the file goes into the
+ * library through `lib/media-store` and is then selected here, so it is
+ * available to the Planner and to the next campaign the moment it lands.
  */
 
 const GRID_TILE =
   "group relative aspect-square overflow-hidden rounded-panel border transition-colors focus-visible:shadow-focus focus-visible:outline-none";
+
+/**
+ * An asset's picture, at whatever size the caller gives it.
+ *
+ * Fixtures have no thumbnail and uploads do, so this is the one place that
+ * decides between them — every surface showing an asset uses it and none of
+ * them repeats the fallback. A video shows its own first frame rather than a
+ * film icon: the point of a preview is recognising the clip.
+ */
+export function AssetThumb({
+  asset,
+  className,
+}: {
+  asset: MediaAsset;
+  className?: string;
+}) {
+  if (!asset.url) {
+    return <span aria-hidden className={cn("block", asset.tone, className)} />;
+  }
+
+  if (asset.type === "video") {
+    return (
+      <video
+        aria-hidden
+        src={asset.url}
+        muted
+        playsInline
+        preload="metadata"
+        className={cn("block object-cover", asset.tone, className)}
+      />
+    );
+  }
+
+  return (
+    /* A `blob:` URL has nothing for the image optimiser to fetch, so this stays
+       a plain `img` — `next/image` would route it through `/_next/image` and
+       404 on every upload. */
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={asset.url}
+      alt=""
+      className={cn("block object-cover", asset.tone, className)}
+    />
+  );
+}
 
 export function MediaPicker({
   selected,
@@ -41,7 +93,12 @@ export function MediaPicker({
   max?: number;
 }) {
   const [open, setOpen] = useState(false);
-  const chosen = MEDIA_ASSETS.filter((asset) => selected.includes(asset.id));
+  const assets = useMediaAssets();
+  /* Ordered by the campaign's own list, not the library's, so the first
+     attachment stays the one that publishes first. */
+  const chosen = selected
+    .map((id) => assets.find((asset) => asset.id === id))
+    .filter((asset): asset is MediaAsset => Boolean(asset));
 
   return (
     <div className="space-y-2.5">
@@ -67,12 +124,9 @@ export function MediaPicker({
           <ul className="flex flex-wrap gap-2.5">
             {chosen.map((asset) => (
               <li key={asset.id} className="relative">
-                <span
-                  aria-hidden
-                  className={cn(
-                    "block size-20 rounded-panel border border-border",
-                    asset.tone,
-                  )}
+                <AssetThumb
+                  asset={asset}
+                  className="size-20 overflow-hidden rounded-panel border border-border"
                 />
                 <button
                   type="button"
@@ -126,12 +180,20 @@ function MediaDialog({
   max?: number;
 }) {
   const toast = useToast();
+  const assets = useMediaAssets();
+  const fileInput = useRef<HTMLInputElement>(null);
   const [folder, setFolder] = useState("all");
   const [search, setSearch] = useState("");
   /* Edited in the dialog and committed on Done, so a cancelled browse leaves
      the campaign exactly as it was. */
   const [draft, setDraft] = useState<string[]>(selected);
   const [hydrated, setHydrated] = useState(false);
+  /* How many files are being read right now, and what came back broken. The
+     count rather than a boolean: "Uploading 3 files" is the honest label, and a
+     spinner that cannot say how much is left should at least say how much
+     there was. */
+  const [uploading, setUploading] = useState(0);
+  const [failures, setFailures] = useState<string[]>([]);
 
   /* Re-seed from the campaign once per open, adjusted during render so the
      first paint already shows the right ticks. Without this the dialog keeps
@@ -143,7 +205,7 @@ function MediaDialog({
   }
   if (!open && hydrated) setHydrated(false);
 
-  const visible = MEDIA_ASSETS.filter((asset) => {
+  const visible = assets.filter((asset) => {
     if (folder !== "all" && asset.folderId !== folder) return false;
     if (!search.trim()) return true;
     const needle = search.toLowerCase();
@@ -164,6 +226,48 @@ function MediaDialog({
       }
       return [...prev, asset.id];
     });
+  }
+
+  /**
+   * Read the picked files into the library, then tick what landed.
+   *
+   * Selecting for the campaign is the point of uploading from here — an upload
+   * that leaves the file sitting in the grid untouched makes the person hunt
+   * for their own image among forty others. `max` still rules: on a channel
+   * that takes one asset, the first one in wins and the rest wait in the
+   * library rather than silently replacing it.
+   */
+  async function upload(files: File[]) {
+    if (files.length === 0) return;
+
+    setUploading(files.length);
+    setFailures([]);
+
+    try {
+      const { added, rejected } = await uploadMedia(
+        files,
+        /* "All folders" is a view, not a destination. */
+        folder === "all" ? MEDIA_FOLDERS[1].id : folder,
+      );
+
+      setFailures(rejected);
+
+      if (added.length > 0) {
+        setDraft((prev) => {
+          const room = max ? Math.max(0, max - prev.length) : added.length;
+          return [...prev, ...added.slice(0, room).map((asset) => asset.id)];
+        });
+        toast(
+          `${added.length} file${added.length === 1 ? "" : "s"} added to the Media Library`,
+        );
+      }
+    } catch {
+      /* Decoding runs in the browser, so a throw here is the browser itself
+         giving up — say so rather than leaving the spinner running. */
+      setFailures(["Those files could not be read. Try again."]);
+    } finally {
+      setUploading(0);
+    }
   }
 
   return (
@@ -218,16 +322,77 @@ function MediaDialog({
             variant="outline"
             size="sm"
             className="ml-auto"
-            onClick={() =>
-              toast("Uploads land in the Media Library, then attach from here")
-            }
+            disabled={uploading > 0}
+            onClick={() => fileInput.current?.click()}
           >
-            <Upload aria-hidden />
-            Upload New
+            {uploading > 0 ? (
+              <Loader2 aria-hidden className="animate-spin" />
+            ) : (
+              <Upload aria-hidden />
+            )}
+            {uploading > 0 ? "Uploading…" : "Upload New"}
           </Button>
+
+          {/* The control is the button above; this stays in the DOM because a
+              file dialog can only be opened from a real input. */}
+          <input
+            ref={fileInput}
+            type="file"
+            multiple
+            accept={ACCEPTED_MEDIA}
+            className="sr-only"
+            tabIndex={-1}
+            onChange={(event) => {
+              const files = Array.from(event.target.files ?? []);
+              /* Cleared before the read, so picking the same file twice in a
+                 row still fires `change` the second time. */
+              event.target.value = "";
+              void upload(files);
+            }}
+          />
         </div>
 
-        {visible.length === 0 ? (
+        {uploading > 0 ? (
+          <p className="flex items-center gap-2 rounded-panel border border-primary-border bg-primary-soft px-3.5 py-2.5 text-sm font-medium text-primary-dark">
+            <Loader2 aria-hidden className="size-4 shrink-0 animate-spin" />
+            Reading {uploading} file{uploading === 1 ? "" : "s"}…
+          </p>
+        ) : null}
+
+        {failures.length > 0 ? (
+          <div className="rounded-panel border border-error/25 bg-error-soft px-3.5 py-2.5">
+            <p className="flex items-center gap-2 text-sm font-bold text-error-text">
+              <AlertCircle aria-hidden className="size-4 shrink-0" />
+              {failures.length} file{failures.length === 1 ? "" : "s"} not
+              uploaded
+            </p>
+            <ul className="mt-1 space-y-0.5">
+              {failures.map((failure) => (
+                <li key={failure} className="text-sm font-medium text-error-text">
+                  {failure}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
+        {assets.length === 0 ? (
+          <EmptyState
+            compact
+            title="The library is empty"
+            description="Upload an image or video and it is available to every campaign and post."
+            action={
+              <Button
+                size="sm"
+                disabled={uploading > 0}
+                onClick={() => fileInput.current?.click()}
+              >
+                <Upload aria-hidden />
+                Upload media
+              </Button>
+            }
+          />
+        ) : visible.length === 0 ? (
           <p className="rounded-panel border border-dashed border-border px-3.5 py-8 text-center text-sm font-medium text-text-muted">
             No assets match that search.
           </p>
@@ -248,6 +413,8 @@ function MediaDialog({
                       on ? "border-primary" : "border-border hover:border-border-strong",
                     )}
                   >
+                    <AssetThumb asset={asset} className="size-full" />
+
                     {on ? (
                       <span className="absolute top-1.5 right-1.5 grid size-5 place-items-center rounded-full bg-primary text-white">
                         <Check className="size-3" strokeWidth={3} aria-hidden />

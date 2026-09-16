@@ -58,6 +58,16 @@ export interface MediaAsset {
    */
   tone: string;
   uploadedAt: string;
+  /**
+   * The thumbnail, where there is one.
+   *
+   * Optional because the fixtures have none — they are swatches, and inventing
+   * stock photography for them would make an empty library look finished. A
+   * file uploaded through `lib/media-store` does have one, so anything
+   * rendering an asset shows the real thing when it can and the `tone` swatch
+   * when it cannot.
+   */
+  url?: string;
 }
 
 export interface MediaFolder {

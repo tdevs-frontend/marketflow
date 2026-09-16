@@ -482,7 +482,7 @@ function Stepper({
             >
               <span
                 className={cn(
-                  "grid size-5.5 shrink-0 place-items-center rounded-full border text-xs font-bold tabular-nums landing-none",
+                  "grid size-5.5 shrink-0 place-items-center rounded-full border text-xs font-bold tabular-nums leading-none",
                   current
                     ? "border-primary bg-primary text-white"
                     : done
@@ -505,7 +505,7 @@ function Stepper({
                   nothing about where you are. */}
               <span
                 className={cn(
-                  "text-[15px] font-medium whitespace-nowrap leading-none",
+                  "text-base font-medium whitespace-nowrap leading-none",
                   current
                     ? "font-semibold text-text-primary"
                     : done

@@ -4,11 +4,12 @@ import { Check, CheckCheck, Link2 } from "lucide-react";
 
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { PLATFORM_THEME } from "@/constants/channels";
-import { MEDIA_ASSETS } from "@/lib/social-fixtures";
+import { useMediaAssets } from "@/lib/media-store";
 import { cn } from "@/lib/utils";
 import type { CampaignDraft } from "@/types/marketing";
 import type { SocialPlatform } from "@/types/social";
 import { PlatformMark } from "../shared/channel-badge";
+import { AssetThumb } from "./media-picker";
 import { composedCaption, renderPersonalised } from "./draft";
 import type { DraftDerived } from "./draft";
 
@@ -228,6 +229,10 @@ function SocialPreview({
   onPlatformChange: (value: SocialPlatform) => void;
   caption: string;
 }) {
+  /* Above the early return: an asset uploaded in the composer has to reach the
+     preview, and a hook behind a branch is not a hook. */
+  const assets = useMediaAssets();
+
   if (derived.platforms.length === 0) {
     return <EmptyPreview label="Pick an account to see how this post will look." />;
   }
@@ -236,7 +241,7 @@ function SocialPreview({
     ? platform
     : derived.platforms[0];
   const account = derived.accounts.find((item) => item.platform === active);
-  const media = MEDIA_ASSETS.find((asset) => asset.id === draft.mediaIds[0]);
+  const media = assets.find((asset) => asset.id === draft.mediaIds[0]);
   const fold = PLATFORM_FOLD[active];
 
   return (
@@ -269,13 +274,12 @@ function SocialPreview({
           </div>
 
           {media ? (
-            <span
-              aria-hidden
+            <AssetThumb
+              asset={media}
               className={cn(
-                "block w-full",
+                "w-full",
                 /* Instagram crops to square, the rest keep 16:9. */
                 active === "instagram" ? "aspect-square" : "aspect-video",
-                media.tone,
               )}
             />
           ) : null}

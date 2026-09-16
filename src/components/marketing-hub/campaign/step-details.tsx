@@ -177,7 +177,10 @@ function ChannelCard({
       </span>
 
       <span className="min-w-0 flex-1">
-        <span className="block text-sm leading-snug font-bold tracking-tight text-text-primary">
+        {/* A step up from the landing card's 14px title. That card is one of
+            eight in a marketing rail being skimmed; this one is a choice being
+            made, and it names the channel every later step is shaped by. */}
+        <span className="block text-base leading-snug font-bold tracking-tight text-text-primary">
           {card.label}
         </span>
         <span className="mt-0.5 block text-sm leading-normal font-medium text-text-secondary">
