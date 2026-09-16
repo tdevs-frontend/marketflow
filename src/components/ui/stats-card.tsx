@@ -19,6 +19,16 @@ export interface StatItem {
    * unsubscribes, failures, opt-outs.
    */
   invertTrend?: boolean;
+  /**
+   * This stat's own icon tile, overriding the grid's accent.
+   *
+   * For a row where the metrics are different *kinds* of thing rather than five
+   * readings of one: messages, delivery, replies and automations are four
+   * subsystems, and five identical green tiles make the eye scan the labels to
+   * tell them apart. It colours the tile only — the trend below stays on the
+   * grid's accent, so a row still reads as one module.
+   */
+  accent?: { soft: string; text: string };
 }
 
 export interface StatsGridProps {
@@ -70,6 +80,7 @@ export function StatsGrid({ items, accent, columns, className }: StatsGridProps)
         const rising = item.changePercent >= 0;
         const good = item.invertTrend ? !rising : rising;
         const TrendIcon = rising ? ArrowUpRight : ArrowDownRight;
+        const tile = item.accent ?? accent;
 
         return (
           <Card key={item.label} className="p-5">
@@ -80,8 +91,8 @@ export function StatsGrid({ items, accent, columns, className }: StatsGridProps)
               <span
                 className={cn(
                   "grid size-8 shrink-0 place-items-center rounded-btn",
-                  accent
-                    ? cn(accent.soft, accent.text)
+                  tile
+                    ? cn(tile.soft, tile.text)
                     : "bg-surface-secondary text-text-muted",
                 )}
               >

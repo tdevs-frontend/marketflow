@@ -35,6 +35,7 @@ import {
   whatsappTotals,
 } from "@/lib/whatsapp-fixtures";
 import { formatCount, formatNumber, formatPercent, formatRelativeTime, rate } from "@/lib/format";
+import { cn } from "@/lib/utils";
 import { FunnelStrip } from "../shared/conversion-funnel";
 import { RecentConversations } from "../shared/recent-conversations";
 
@@ -50,6 +51,30 @@ import { RecentConversations } from "../shared/recent-conversations";
 const theme = CHANNEL_THEME.whatsapp;
 const ACCENT = { soft: theme.soft, text: theme.text };
 
+/**
+ * One tone per subsystem, for the KPI row's icon tiles.
+ *
+ * The row covers four different things — an audience, a send, a conversation
+ * and a robot — and five identical green tiles made the icons decorative:
+ * nothing could be found without reading its label. Every pair below is a
+ * `-soft`/ink pair that already exists in the ramp, and each is the colour that
+ * thing wears elsewhere in the product, so the row teaches the same vocabulary
+ * the rest of the dashboard uses:
+ *
+ *   contacts     the channel's own green, because they are WhatsApp's audience
+ *   messages     the information blue every "sent" figure uses
+ *   delivery     success, the ramp that means it arrived
+ *   replies      the brand's violet, the conversational half of the pair
+ *   automations  indigo, matching the flow tiles further down this same page
+ */
+const TILES = {
+  contacts: { soft: theme.soft, text: theme.text },
+  messages: { soft: "bg-info-soft", text: "text-info-text" },
+  delivery: { soft: "bg-success-soft", text: "text-success-text" },
+  replies: { soft: "bg-primary-subtle", text: "text-secondary" },
+  automation: { soft: "bg-primary-soft", text: "text-primary" },
+};
+
 const WA_CAMPAIGNS = CAMPAIGNS.filter((campaign) => campaign.channel === "whatsapp");
 const TOTALS = whatsappTotals(WA_CAMPAIGNS);
 
@@ -59,6 +84,7 @@ const STATS: StatItem[] = [
     value: formatCount(WA_OVERVIEW_TOTALS.contacts),
     changePercent: WA_OVERVIEW_TOTALS.contactsChange,
     icon: Users,
+    accent: TILES.contacts,
     hint: `${formatPercent(WA_OVERVIEW_TOTALS.optInRate)} opted in`,
   },
   {
@@ -66,6 +92,7 @@ const STATS: StatItem[] = [
     value: formatCount(TOTALS.sent),
     changePercent: 18.2,
     icon: Send,
+    accent: TILES.messages,
     hint: "vs last 30 days",
   },
   {
@@ -73,6 +100,7 @@ const STATS: StatItem[] = [
     value: formatPercent(rate(TOTALS.delivered, TOTALS.sent)),
     changePercent: 0.6,
     icon: CheckCheck,
+    accent: TILES.delivery,
     hint: `${formatNumber(TOTALS.failed)} failed`,
   },
   {
@@ -80,6 +108,7 @@ const STATS: StatItem[] = [
     value: formatPercent(rate(TOTALS.replies, TOTALS.delivered)),
     changePercent: 6.4,
     icon: MessageSquare,
+    accent: TILES.replies,
     hint: `avg reply in ${WA_OVERVIEW_TOTALS.avgResponseMinutes}m`,
   },
   {
@@ -87,6 +116,7 @@ const STATS: StatItem[] = [
     value: formatCount(WA_OVERVIEW_TOTALS.activeAutomations),
     changePercent: WA_OVERVIEW_TOTALS.automationsChange,
     icon: Workflow,
+    accent: TILES.automation,
     hint: "running now",
   },
 ];
@@ -225,7 +255,7 @@ export function WhatsAppOverview() {
           </div>
 
           <div className="mt-5 border-t border-border pt-4">
-            <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+            <p className="text-sm font-semibold tracking-[0.08em] text-text-secondary uppercase">
               Campaign funnel
             </p>
             <FunnelStrip stages={WA_FUNNEL.slice(1)} className="mt-3" />
@@ -314,28 +344,44 @@ export function WhatsAppOverview() {
             </ButtonLink>
           }
         >
+          {/* Same three-part row as the conversations panel beside it — tile,
+              thread of text, right-aligned figures — so two lists sitting side
+              by side read as one page rather than two components. */}
           <ul className="divide-y divide-border">
             {WA_FLOWS.map((flow) => (
-              <li key={flow.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-                <span className="grid size-8 shrink-0 place-items-center rounded-btn bg-primary-soft text-primary">
-                  <Workflow className="size-4" aria-hidden />
+              <li
+                key={flow.id}
+                className="flex items-center gap-3 py-3.5 first:pt-0 last:pb-0"
+              >
+                <span
+                  className={cn(
+                    "grid size-9 shrink-0 place-items-center rounded-btn",
+                    TILES.automation.soft,
+                    TILES.automation.text,
+                  )}
+                >
+                  <Workflow className="size-4.5" aria-hidden />
                 </span>
 
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-text-primary">
+                  <p className="truncate text-sm font-semibold text-text-primary">
                     {flow.name}
                   </p>
-                  <p className="text-sm text-text-muted">
+                  <p className="mt-0.5 truncate text-sm text-text-secondary">
                     {flow.triggerLabel} · active{" "}
                     {formatRelativeTime(flow.lastActivityAt)}
                   </p>
                 </div>
 
+                {/* The count is the figure; the rate annotates it. Giving both
+                    the same size left the row with two numbers and no reading
+                    order, so the count steps up and the rate drops to the
+                    metadata step under it. */}
                 <div className="shrink-0 text-right">
-                  <p className="text-sm font-bold text-text-primary tabular-nums">
+                  <p className="text-base leading-none font-bold text-text-primary tabular-nums">
                     {formatNumber(flow.contactsProcessed)}
                   </p>
-                  <p className="text-sm text-text-muted tabular-nums">
+                  <p className="mt-1 text-meta font-medium text-text-secondary tabular-nums">
                     {formatPercent(flow.successRate)} success
                   </p>
                 </div>
