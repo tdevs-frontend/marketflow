@@ -11,33 +11,29 @@
 
    /* ---------------------------------------------------------------- Type */
    /*
-   * Weight is a family name, not a `font-weight`.
+   * Two families, and weight is a weight again.
    *
-   * Tailwind resolves `font-<name>` against `--font-*` before
-   * `--font-weight-*`, so a token named after a weight utility turns it into a
-   * family swap. Keep one per utility in use — dropping one hands it back to
-   * Tailwind as a real `font-weight`, i.e. a faux bold over the book cut.
+   * This block used to carry a token per weight utility — `--font-medium`,
+   * `--font-bold` and so on — because Tailwind resolves `font-<name>` against
+   * `--font-*` before `--font-weight-*`, and the old kits shipped as discrete
+   * static cuts where `SatoshiMedium` was a family rather than a 500. Those
+   * tokens are gone. The typefaces now come from Google Fonts as variable
+   * families with genuine 400/500/600/700, so `font-medium` goes back to
+   * meaning `font-weight: 500` — Tailwind's own default, on a face that has a
+   * real Medium to render it with.
    *
-   * The values are indirections rather than family names, so the *typeface*
-   * is chosen in one place — `font-themes.css` — while this block keeps
-   * owning the *mapping* from utility to cut. Satoshi is on; Circular Std is
-   * one line away and still fully installed.
+   * That change deletes a whole class of bug rather than trading one for
+   * another. Under the old scheme a weight utility *replaced the family*, so
+   * `<h2 className="font-semibold">` silently took a heading off the heading
+   * face — invisible while headings and body were cuts of one typeface, and a
+   * different typeface the moment they were not. Nothing can do that now: a
+   * weight utility sets a weight, and the family comes from the element.
    *
-   * The mapping is deliberately unchanged from the Circular Std original,
-   * including `semibold` landing on the bold cut: neither typeface has a 600,
-   * and inventing one would relight every card title and heading in the
-   * product. Same ramp, different face.
+   * Only two family tokens remain, and they are the seam between the two
+   * faces. The typeface behind each is chosen in `font-themes.css`.
    */
-   --font-sans: var(--font-active-book);
-   --font-heading: var(--font-active-bold);
-
-   --font-book: var(--font-active-book);
-   --font-normal: var(--font-active-book);
-   --font-medium: var(--font-active-medium);
-   --font-semibold: var(--font-active-bold);
-   --font-bold: var(--font-active-bold);
-   --font-extrabold: var(--font-active-black);
-   --font-black: var(--font-active-black);
+   --font-sans: var(--font-active-body);
+   --font-heading: var(--font-active-display);
 
    /*
    * The metadata step — 13px.

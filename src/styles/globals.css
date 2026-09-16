@@ -48,18 +48,19 @@
   h6 {
     @apply font-heading;
     color: var(--color-text-primary);
-    /* `font-heading` resolves to a bold *cut*, which is already bold; asking
-       for 600 here would stack a synthesized faux bold on top of it. True of
-       both typefaces — neither declares a `font-weight` on its faces. */
-    font-weight: 400;
-    letter-spacing: -0.02em;
+    /*
+     * A real 700, where this used to be `font-weight: 400` over a bold *cut*.
+     * Stack Sans Notch carries its own 400–700, so the weight is asked for
+     * rather than baked into the family name — and a heading that wants a
+     * lighter setting says so with `font-semibold` or `font-medium`, which now
+     * change the weight instead of swapping the face out from under it.
+     */
+    font-weight: 700;
   }
 
-  /* Same reason — the UA's `bolder` would fake a heavier Book. */
   b,
   strong {
-    font-family: var(--font-bold);
-    font-weight: 400;
+    font-weight: 700;
   }
 }
 

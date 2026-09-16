@@ -1,38 +1,51 @@
 /**
- * The font theme: which typeface the product is currently set in.
+ * The font theme: which typefaces the product is currently set in.
  *
  * ─────────────────────────────────────────────────────────────────────────
- *  TO PUT THE WHOLE APP BACK ON CIRCULAR STD
+ *  TO PUT THE WHOLE APP BACK ON A PREVIOUS TYPEFACE
  *
  *  Either — one attribute, no rebuild:
- *      <html data-font="legacy">        (in `app/layout.tsx`)
+ *      <html data-font="satoshi">       (in `app/layout.tsx`)
+ *      <html data-font="legacy">        Circular Std
  *
- *  Or — permanently, in the THE SWITCH block below: change the four
- *  `--font-active-*` lines from `--font-satoshi-*` to `--font-legacy-*`.
+ *  Or — permanently, in THE SWITCH block below: point `--font-active-body`
+ *  and `--font-active-display` at that theme's stack.
  *
  *  Nothing else, either way. No component, no Tailwind class, no utility.
+ *  Every old kit is still installed; nothing was deleted to make room.
  * ─────────────────────────────────────────────────────────────────────────
  *
- * Why four variables and not the single `--font-primary` a normal project
- * would have:
+ * Two variables where there used to be four, and that is the whole story of
+ * this file's rewrite.
  *
- * This codebase spends weight as a **family name**. `font-medium` resolves to
- * the Medium *cut*, not to `font-weight: 500`, because Tailwind matches
- * `font-<name>` against `--font-*` before `--font-weight-*`. Both typefaces
- * here ship as discrete static cuts, so a theme is not one family — it is four
- * of them that have to move together. A single variable could only ever change
- * body text, and would leave every heading, button and label on the old face.
+ * The old kits ship as discrete static cuts — `SatoshiMedium` is a *family*,
+ * not a weight — so the project spent weight as a family name and a theme had
+ * to move four families at once. The typefaces now come from Google Fonts as
+ * single variable families carrying real 400–700, so `font-medium` is
+ * `font-weight: 500` again (see the `@theme` block in `variables.css`) and a
+ * theme is what it should always have been: a family for headings, a family
+ * for everything else.
  *
- * `--font-primary` does exist below, as the body-face alias for hand-written
- * CSS. It is an output of the switch, not the switch itself.
- *
- * The `@theme` block in `variables.css` points at these and generates the
- * utilities from them, so nothing downstream knows which typeface is on.
+ * The old cut-families are still declared and still resolve — nothing that
+ * names `SatoshiBold` broke — but nothing in the active theme names them. They
+ * serve the `data-font` switches at the bottom of this file and nothing else.
  */
 
 :root {
-  /* ---------------------------------------------------------- Satoshi */
-  /* Faces declared in `satoshi-fonts.css`. */
+  /* ------------------------------------------------- The faces, by name */
+  /*
+   * Loaded in `app/layout.tsx` from Google Fonts. Named here and nowhere else,
+   * so the typeface is one edit rather than a search across the codebase.
+   */
+  --font-notch: "Stack Sans Notch";
+  --font-gsans: "Google Sans Flex";
+
+  /*
+   * The old kits, exactly as `satoshi-fonts.css` and `circular-std-fonts.css`
+   * declare them: one family per cut, each a static face. Nothing in the active
+   * theme names them — they are here for the `data-font` switches below, and
+   * because deleting a still-installed typeface's names helps nobody.
+   */
   --font-satoshi-book: "SatoshiRegular";
   --font-satoshi-medium: "SatoshiMedium";
   --font-satoshi-bold: "SatoshiBold";
@@ -40,12 +53,6 @@
   /* No token points here — Satoshi has a Light cut, Circular Std does not. */
   --font-satoshi-light: "SatoshiLight";
 
-  /* ----------------------------------------------------- Circular Std */
-  /*
-   * The previous system, preserved exactly. `circular-std-fonts.css` and every
-   * file under `public/fonts/circular-std-fonts/` are untouched — this theme
-   * is one attribute away, not one restore-from-git away.
-   */
   --font-legacy-book: "CircularStdBook";
   --font-legacy-medium: "CircularStdMedium";
   --font-legacy-bold: "CircularStdBold";
@@ -55,52 +62,60 @@
 
   /*
    * Which theme is on, in words. Nothing reads it — it is the label, so this
-   * file answers "what font is the app in" without tracing four indirections.
-   *
-   * Deliberately *not* named `--font-satoshi`: that would read like a usable
-   * family, and it is not one. The registered families are `SatoshiRegular`,
-   * `SatoshiMedium` and so on; a bare "Satoshi" matches no face and would drop
-   * the page to the browser default without an error anywhere.
+   * file answers "what font is the app in" without tracing the indirections.
    */
-  --font-active-name: "Satoshi";
+  --font-active-name: "Stack Sans Notch + Google Sans Flex";
 
-  /* The four cuts the rest of the app resolves through. */
-  --font-active-book: var(--font-satoshi-book);
-  --font-active-medium: var(--font-satoshi-medium);
-  --font-active-bold: var(--font-satoshi-bold);
-  --font-active-black: var(--font-satoshi-black);
+  /*
+   * The last rung, and the only one. The generic stack stays because a
+   * `font-family` with a single name and nothing after it has nowhere to go
+   * while the webfont is in flight, or if Google Fonts is unreachable — the
+   * browser picks its default serif, which is the one outcome nobody wants.
+   */
+  --font-fallback: system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /** Headings. */
+  --font-active-display: var(--font-notch), var(--font-fallback);
+
+  /** Body, UI, controls — everything that is not a heading. */
+  --font-active-body: var(--font-gsans), var(--font-fallback);
 
   /*
    * The body face, for hand-written CSS that wants a font-family and has no
    * business knowing which typeface is on. Components should use the Tailwind
    * utilities instead; this is the escape hatch.
    */
-  --font-primary: var(--font-active-book);
+  --font-primary: var(--font-active-body);
 }
 
 /*
  * Runtime switching.
  *
  * Put `data-font="legacy"` on `<html>` and the whole app renders in Circular
- * Std without a rebuild — useful for comparing the two side by side, and the
+ * Std without a rebuild — useful for comparing typefaces side by side, and the
  * shape a user-facing appearance setting would plug into later. The attribute
  * selector outranks the bare `:root` above, so the CSS default stands until
  * something explicitly asks otherwise.
+ *
+ * Neither of these has a display face, so headings and body share one typeface
+ * — which is exactly how the product looked before Stack Sans Notch arrived.
+ *
+ * Both name a *cut*, because that is all these kits are: static faces with no
+ * weight axis. Headings take the Bold cut and body the Book, and the weight
+ * utilities in between are synthesized by the browser rather than drawn by the
+ * typeface. Acceptable for a comparison switch, and the reason neither is the
+ * active theme.
  */
 :root[data-font="legacy"] {
   --font-active-name: "Circular Std";
 
-  --font-active-book: var(--font-legacy-book);
-  --font-active-medium: var(--font-legacy-medium);
-  --font-active-bold: var(--font-legacy-bold);
-  --font-active-black: var(--font-legacy-black);
+  --font-active-display: var(--font-legacy-bold), var(--font-fallback);
+  --font-active-body: var(--font-legacy-book), var(--font-fallback);
 }
 
 :root[data-font="satoshi"] {
   --font-active-name: "Satoshi";
 
-  --font-active-book: var(--font-satoshi-book);
-  --font-active-medium: var(--font-satoshi-medium);
-  --font-active-bold: var(--font-satoshi-bold);
-  --font-active-black: var(--font-satoshi-black);
+  --font-active-display: var(--font-satoshi-bold), var(--font-fallback);
+  --font-active-body: var(--font-satoshi-book), var(--font-fallback);
 }

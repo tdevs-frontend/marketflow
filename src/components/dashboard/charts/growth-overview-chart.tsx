@@ -33,8 +33,13 @@ import {
  */
 const AXIS_LABELS = {
   ...AXIS_LABEL_STYLE,
-  fontFamily: "var(--font-medium)",
-  fontWeight: 400,
+  /* The body face and a real 500. This used to name `--font-medium`, which was
+     a *family* — the Medium cut — back when weight was spelled as a family
+     name. That token is gone now that the typefaces carry their own weights,
+     and a chart asking for a variable that no longer resolves would have
+     dropped its axis labels to ApexCharts' built-in Helvetica. */
+  fontFamily: "var(--font-primary)",
+  fontWeight: 500,
   fontSize: "13px",
   colors: CHART_COLORS.textSecondary,
 };
