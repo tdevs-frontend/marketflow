@@ -505,7 +505,7 @@ function Stepper({
                   nothing about where you are. */}
               <span
                 className={cn(
-                  "text-[15px] font-medium whitespace-nowrap",
+                  "text-[15px] font-medium whitespace-nowrap leading-none",
                   current
                     ? "font-semibold text-text-primary"
                     : done

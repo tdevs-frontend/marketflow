@@ -126,8 +126,8 @@ export function SummaryRow({
 }) {
   return (
     <div className="flex items-start justify-between gap-4 py-2.5">
-      <dt className="text-sm text-text-secondary">{label}</dt>
-      <dd className="max-w-[60%] text-right text-sm font-medium text-text-primary">
+      <dt className="text-sm text-text-secondary font-medium">{label}</dt>
+      <dd className="max-w-[60%] text-right text-sm font-bold text-text-primary/80">
         {value}
       </dd>
     </div>

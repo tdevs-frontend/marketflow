@@ -62,7 +62,7 @@ export function SocialAccountSelector({
           <label
             key={account.id}
             className={cn(
-              "flex cursor-pointer items-center gap-3 rounded-panel border p-3 transition-all focus-within:shadow-focus",
+              "flex cursor-pointer items-center gap-3 rounded-panel border p-3 transition-all",
               on
                 ? "border-primary bg-primary-soft"
                 : "border-border bg-surface hover:border-border-strong hover:bg-surface-secondary",
