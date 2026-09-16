@@ -108,12 +108,16 @@ export const dashboardNav: NavSection[] = [
         icon: "message-circle",
         items: [
           { title: "Overview", href: "/dashboard/marketing/whatsapp" },
+          /* Second, not last. WhatsApp is the only channel with an Inbox, and
+             appending it after a run of six entries every other channel shares
+             left the sidebar out of step with the module's own strip, which
+             has always read Overview then Inbox. One order, stated twice. */
+          { title: "Inbox", href: "/dashboard/marketing/whatsapp/inbox" },
           { title: "Campaigns", href: "/dashboard/marketing/whatsapp/campaigns" },
           { title: "Templates", href: "/dashboard/marketing/whatsapp/templates" },
           { title: "Contacts", href: "/dashboard/marketing/whatsapp/contacts" },
           { title: "Automations", href: "/dashboard/marketing/whatsapp/automations" },
           { title: "Analytics", href: "/dashboard/marketing/whatsapp/analytics" },
-          { title: "Inbox", href: "/dashboard/marketing/whatsapp/inbox" },
         ],
       },
       {
