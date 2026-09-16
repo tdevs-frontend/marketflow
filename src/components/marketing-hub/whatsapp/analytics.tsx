@@ -441,8 +441,10 @@ export function WhatsAppAnalytics() {
                   <TD>
                     <div className="flex min-w-0 items-center gap-2.5">
                       {/* Monospace, because a template name is an identifier
-                          the merchant types into the API, not prose. */}
-                      <span className="truncate font-mono text-sm text-text-primary">
+                          the merchant types into the API, not prose. Semibold
+                          because it is the row's subject and every figure to
+                          its right is an attribute of it. */}
+                      <span className="truncate font-mono text-sm font-semibold text-text-primary">
                         {template.name}
                       </span>
                       <Badge
@@ -463,11 +465,16 @@ export function WhatsAppAnalytics() {
                   <TD align="right" className="tabular-nums">
                     {formatPercent(rate(template.read, template.delivered))}
                   </TD>
-                  {/* The column the table is sorted by, so it carries the
-                      weight — everything else on the row is context for it. */}
+                  {/*
+                   * The column the table is sorted by, so it carries the weight
+                   * — and the channel's green, because a reply is the outcome
+                   * this whole module exists to produce. The one coloured
+                   * column in the table; the rest stay on the neutral ramp so
+                   * the green means something.
+                   */}
                   <TD
                     align="right"
-                    className="font-bold text-text-primary tabular-nums"
+                    className="font-bold text-whatsapp-dark tabular-nums"
                   >
                     {formatPercent(rate(template.replies, template.delivered))}
                   </TD>
@@ -521,7 +528,8 @@ export function WhatsAppAnalytics() {
           <TBody>
             {WA_AUDIENCE_INSIGHTS.map((row) => (
               <TR key={row.label}>
-                <TD className="text-text-primary">{row.label}</TD>
+                {/* The row's subject, matching the template table beside it. */}
+                <TD className="font-semibold text-text-primary">{row.label}</TD>
                 <TD align="right" className="tabular-nums">
                   {formatNumber(row.contacts)}
                 </TD>
@@ -531,9 +539,12 @@ export function WhatsAppAnalytics() {
                 <TD align="right" className="tabular-nums">
                   {formatPercent(row.readRate)}
                 </TD>
+                {/* Same metric as the template table, so the same green. It
+                    reads against the opt-out column two cells over: what a
+                    segment gives back, and what it costs to ask. */}
                 <TD
                   align="right"
-                  className="font-bold text-text-primary tabular-nums"
+                  className="font-bold text-whatsapp-dark tabular-nums"
                 >
                   {formatPercent(row.replyRate)}
                 </TD>

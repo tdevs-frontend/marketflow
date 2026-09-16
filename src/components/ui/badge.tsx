@@ -2,7 +2,24 @@ import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-export type BadgeTone = "neutral" | "brand" | "success" | "warning" | "danger" | "info";
+export type BadgeTone =
+  | "neutral"
+  | "brand"
+  | "success"
+  | "warning"
+  | "danger"
+  | "info"
+  /**
+   * The channel's own green, for a state that is good *on WhatsApp* —
+   * an approved template, a connected number.
+   *
+   * Distinct from `success` on purpose: that is the product's generic green
+   * (#16a34a) and means "this worked". This is #059669, the ramp every
+   * WhatsApp chart, tile and meter in the module already draws in, and using
+   * it here is what makes an approved template read as part of the same
+   * workspace rather than as a generic pass.
+   */
+  | "whatsapp";
 export type BadgeSize = "sm" | "md";
 
 const TONES: Record<BadgeTone, string> = {
@@ -12,6 +29,7 @@ const TONES: Record<BadgeTone, string> = {
   warning: "bg-warning-soft text-warning-text",
   danger: "bg-error-soft text-error-text",
   info: "bg-info-soft text-info-text",
+  whatsapp: "bg-whatsapp-soft text-whatsapp-dark",
 };
 
 /**

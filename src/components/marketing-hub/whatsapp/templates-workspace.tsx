@@ -142,7 +142,7 @@ export function TemplatesWorkspace() {
         </FilterBar>
 
         <p className="mt-4 text-sm text-text-secondary">
-          <span className="font-medium text-text-primary">{filtered.length}</span>{" "}
+          <span className="font-bold text-text-primary">{filtered.length}</span>{" "}
           {filtered.length === 1 ? "template" : "templates"}
           {activeFilters > 0 || search ? " match your filters" : " in this workspace"}.
         </p>

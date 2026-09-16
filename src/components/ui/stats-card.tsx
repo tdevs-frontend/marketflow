@@ -145,7 +145,10 @@ export function MiniStat({
         className,
       )}
     >
-      <p className="text-sm font-medium text-text-muted">
+      {/* Secondary, not muted: this is the tile's only label, and a metric
+          whose name is the faintest thing in the box is a metric nobody reads
+          twice. The hint below it stays muted — that one is tertiary. */}
+      <p className="text-sm font-medium text-text-secondary">
         {label}
       </p>
       <p className="mt-1 text-lg leading-none font-bold text-text-primary tabular-nums">

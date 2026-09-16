@@ -51,15 +51,29 @@ export const BASE_GRID: ApexOptions["grid"] = {
   padding: { top: 0, right: 8, bottom: 0, left: 8 },
 };
 
+/**
+ * Axis ticks, on secondary ink rather than muted.
+ *
+ * At 11px an axis label is the smallest type on the page, and `textMuted`
+ * (#64748b) put the smallest type on the lowest contrast the ramp has — 5.0:1,
+ * which passes and still reads as a smudge under a chart. `textSecondary`
+ * (#475569) is 7.5:1 at no cost in weight, size or layout.
+ */
 export const AXIS_LABEL_STYLE = {
-  colors: CHART_COLORS.textMuted,
+  colors: CHART_COLORS.textSecondary,
   fontSize: "11px",
   fontWeight: 500,
 };
 
+/**
+ * Tooltips already inherit the app's face from `BASE_CHART.fontFamily`; what
+ * they did not inherit was the type scale. 13px is `--text-meta`, the rung the
+ * rest of the dashboard sets metadata on, so a tooltip now reads at the same
+ * size as the legend it is explaining.
+ */
 export const BASE_TOOLTIP: ApexOptions["tooltip"] = {
   theme: "light",
-  style: { fontSize: "12px" },
+  style: { fontSize: "13px" },
   marker: { show: true },
 };
 

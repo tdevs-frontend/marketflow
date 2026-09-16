@@ -19,7 +19,8 @@ import type {
 } from "@/types/marketing";
 
 const STATUS_TONES: Record<TemplateStatus, BadgeTone> = {
-  approved: "success",
+  /* The channel's green rather than the generic one — see `BadgeTone`. */
+  approved: "whatsapp",
   pending: "warning",
   rejected: "danger",
 };
@@ -38,7 +39,7 @@ export function TemplateStatusBadge({ status }: { status: TemplateStatus }) {
         className={cn(
           "size-1.5 rounded-full",
           status === "approved"
-            ? "bg-success"
+            ? "bg-whatsapp"
             : status === "pending"
               ? "bg-warning"
               : "bg-error",
@@ -88,7 +89,9 @@ export function TemplateCard({
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           {/* Template names are the API identifier, so they render as code. */}
-          <h3 className="truncate font-mono text-sm font-medium text-text-primary">
+          {/* The card's subject, so it carries the card: semibold, not medium.
+              It was set one weight below the badges underneath it. */}
+          <h3 className="truncate font-mono text-sm font-semibold text-text-primary">
             {template.name}
           </h3>
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
@@ -132,7 +135,11 @@ export function TemplateCard({
 
       {template.variables.length > 0 ? (
         <div className="mt-3">
-          <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+          {/* The module's section rule — 13px semibold on secondary, the same
+              setting as the headings in the Inbox details panel and the Overview
+              panels. It was 14px medium on muted, which is a heading set
+              lighter than the list it introduces. */}
+          <p className="text-meta font-semibold tracking-[0.08em] text-text-secondary uppercase">
             Variables
           </p>
           <ul className="mt-1.5 flex flex-wrap gap-1.5">
@@ -176,8 +183,14 @@ export function TemplateCard({
           performance ? "mt-2.5" : "mt-4 border-t border-border pt-3.5",
         )}
       >
-        <span>{languageLabel(template.language)}</span>
-        <span>Updated {formatRelativeTime(template.updatedAt)}</span>
+        {/* The language is a property of the template; the timestamp is only
+            when it last moved. Metadata and muted, in that order. */}
+        <span className="font-medium text-text-secondary">
+          {languageLabel(template.language)}
+        </span>
+        <span className="text-text-muted">
+          Updated {formatRelativeTime(template.updatedAt)}
+        </span>
       </div>
 
       <div className="mt-3 flex gap-2">

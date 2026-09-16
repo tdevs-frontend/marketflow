@@ -54,9 +54,16 @@ export function ChartCard({
       {legend?.length ? (
         <ul className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
           {legend.map((item) => (
+            /*
+             * The legend names the series, so it reads at secondary rather than
+             * muted — it was the one label on a chart card set lighter than the
+             * description above it. Where a legend carries a figure, the figure
+             * outranks its own label: bold on primary ink, because it is a
+             * reading and the label is a key to it.
+             */
             <li
               key={item.label}
-              className="inline-flex items-center gap-1.5 text-sm text-text-muted"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-text-secondary"
             >
               <span
                 aria-hidden
@@ -64,7 +71,7 @@ export function ChartCard({
               />
               {item.label}
               {item.value ? (
-                <span className="font-medium text-text-secondary tabular-nums">
+                <span className="font-bold text-text-primary tabular-nums">
                   {item.value}
                 </span>
               ) : null}
