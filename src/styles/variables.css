@@ -31,6 +31,13 @@
    *
    * Only two family tokens remain, and they are the seam between the two
    * faces. The typeface behind each is chosen in `font-themes.css`.
+   *
+   * `--font-heading` is also the seam between the two *surfaces*. The value
+   * below is the landing rule — headings in the display face — and THE SURFACE
+   * RULE in `font-themes.css` restates the token inside `[data-surface="app"]`
+   * so the dashboard resolves it to the body face instead. Declaring it here
+   * is what makes `font-heading` a utility at all; overriding it there is what
+   * makes the two surfaces differ. Neither needs a component to change.
    */
    --font-sans: var(--font-active-body);
    --font-heading: var(--font-active-display);

@@ -73,7 +73,7 @@ function PreviewBlock({ block }: { block: EmailBlock }) {
     case "logo":
       return (
         <div className="border-b border-border px-6 py-5 text-center">
-          <p className="font-heading text-sm tracking-tight text-primary-dark">
+          <p className="text-sm tracking-tight text-primary-dark">
             {block.content}
           </p>
         </div>

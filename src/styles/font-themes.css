@@ -21,14 +21,18 @@
  * The old kits ship as discrete static cuts — `SatoshiMedium` is a *family*,
  * not a weight — so the project spent weight as a family name and a theme had
  * to move four families at once. The typefaces now come from Google Fonts as
- * single variable families carrying real 400–700, so `font-medium` is
+ * single variable families carrying real 400/500/600/700, so `font-medium` is
  * `font-weight: 500` again (see the `@theme` block in `variables.css`) and a
  * theme is what it should always have been: a family for headings, a family
  * for everything else.
  *
  * The old cut-families are still declared and still resolve — nothing that
  * names `SatoshiBold` broke — but nothing in the active theme names them. They
- * serve the `data-font` switches at the bottom of this file and nothing else.
+ * are fallback assets, serving the `data-font` switches at the bottom of this
+ * file and nothing else.
+ *
+ * Which of the two faces a given page may spend is not decided here but in THE
+ * SURFACE RULE below: the landing pages get both, the dashboard gets one.
  */
 
 :root {
@@ -86,6 +90,48 @@
    * utilities instead; this is the escape hatch.
    */
   --font-primary: var(--font-active-body);
+}
+
+/* ------------------------------------------------------ THE SURFACE RULE */
+
+/*
+ * Which faces a surface is allowed to spend.
+ *
+ * The product is two typographic systems, not one:
+ *
+ *   Landing    Two faces. Stack Sans Notch sets every heading — hero, section,
+ *              CTA, feature, pricing, footer — and Google Sans Flex sets the
+ *              body, nav, buttons, cards and every other run of UI text. The
+ *              display face is doing brand work there, and a landing page is
+ *              where brand work belongs.
+ *
+ *   Dashboard  One face. Google Sans Flex sets everything, headings included:
+ *              sidebar, header, page titles, cards, tables, filters, inputs,
+ *              buttons, tabs, badges, modals. A workspace someone reads for
+ *              eight hours wants the type to disappear, and a display face on
+ *              a panel title is a second voice competing with the data under
+ *              it.
+ *
+ * `--font-heading` is the seam, and it is a *token*, so the switch is one
+ * declaration and no component has to know it happened. The `@theme` block in
+ * `variables.css` points that token at the display face, which makes the
+ * landing rules the default — and the default is what the auth screens and
+ * anything rendered up at `<body>` (the toast viewport) inherit, so the public
+ * side stays whole without needing a label of its own.
+ *
+ * The dashboard then restates the token for its own subtree. It has to be
+ * `--font-heading` itself rather than `--font-active-display`: a custom
+ * property is substituted where it is *declared*, so `--font-heading` was
+ * already resolved to a face back on `:root`, and re-pointing what it used to
+ * read would change nothing down here.
+ *
+ * Applied in `app/dashboard/layout.tsx`, which wraps every dashboard route.
+ * Nothing in this app portals to `document.body` — dialogs are native
+ * `<dialog>` elements, which stay in the DOM where they are written — so the
+ * subtree really is every pixel of the workspace.
+ */
+[data-surface="app"] {
+  --font-heading: var(--font-active-body);
 }
 
 /*

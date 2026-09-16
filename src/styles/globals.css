@@ -1,5 +1,17 @@
 @import "tailwindcss";
+
+/*
+ * The fallback kits, declared and nothing more.
+ *
+ * Neither is in the active theme — see `font-themes.css` — and an `@font-face`
+ * nothing names is never fetched, so this costs a parse and no bytes. They are
+ * here so the `data-font="satoshi"` and `data-font="legacy"` switches have real
+ * faces to land on; Circular Std used to be missing from this list, which left
+ * the legacy switch falling through to `system-ui` rather than to Circular Std.
+ */
 @import "./satoshi-fonts.css";
+@import "./circular-std-fonts.css";
+
 @import "./font-themes.css";
 @import "./variables.css";
 
