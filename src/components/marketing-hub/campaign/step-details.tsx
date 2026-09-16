@@ -30,6 +30,24 @@ import type { StepProps } from "./types";
  * Review with no verified sender.
  */
 
+/*
+ * The four channels wear the landing page's glyphs.
+ *
+ * WhatsApp, Email and SMS are `MessageCircle`, `Mail` and `Smartphone` —
+ * the same three `platform/platform-features` gives those modules in the
+ * "All-in-one growth platform" section, so a channel is the same object in the
+ * marketing story and in the wizard that creates one. WhatsApp keeps Lucide's
+ * speech bubble rather than the brand mark for the same reason it does there:
+ * `ui/brand-icon` carries the logos, and a real logo on a channel card would
+ * out-shout the other three.
+ *
+ * Social has no counterpart in that section — it is a channel the wizard sends
+ * on but the landing rails don't list — so it keeps `Share2`, the Lucide glyph
+ * the integration catalogue already uses for it. The platform logos belong to
+ * the accounts underneath, where `SocialAccountSelector` renders each one's own
+ * mark; a single Instagram logo on a card that also publishes to Facebook,
+ * LinkedIn and X would name one of the four.
+ */
 const CHANNEL_CARDS: {
   value: MarketingChannel;
   label: string;
@@ -126,7 +144,10 @@ export function DetailsStep(props: StepProps) {
                 key={card.value}
                 selected={draft.channel === card.value}
                 onClick={() => setChannel(card.value)}
-                icon={<Icon aria-hidden />}
+                /* 1.9, the weight `FeatureIcon` draws the landing tiles at.
+                   Lucide's default 2 is heavier than the section these glyphs
+                   come from, which is visible when the two sit on one screen. */
+                icon={<Icon aria-hidden strokeWidth={1.9} />}
                 title={card.label}
                 hint={card.hint}
                 className="flex-col items-stretch"
