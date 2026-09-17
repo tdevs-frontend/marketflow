@@ -130,6 +130,7 @@ export const dashboardNav: NavSection[] = [
           { title: "Contacts", href: "/dashboard/marketing/email/contacts" },
           { title: "Automations", href: "/dashboard/marketing/email/automations" },
           { title: "Analytics", href: "/dashboard/marketing/email/analytics" },
+          { title: "Senders", href: "/dashboard/marketing/email/senders" },
         ],
       },
       {

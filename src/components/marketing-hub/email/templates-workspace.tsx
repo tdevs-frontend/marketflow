@@ -36,13 +36,14 @@ import { EmailTemplateBuilder } from "./template-builder";
 const ALL = "all";
 
 const CATEGORY_TONES: Record<EmailTemplateCategory, BadgeTone> = {
-  welcome: "brand",
   newsletter: "info",
   promotion: "warning",
-  "product-launch": "info",
-  "abandoned-cart": "warning",
+  welcome: "brand",
   "follow-up": "neutral",
-  "re-engagement": "neutral",
+  /* Transactional is the one shelf that is not marketing at all — a receipt
+     goes to someone who never opted in — so it wears its own tone rather than
+     sharing the neutral the follow-ups use. */
+  transactional: "success",
 };
 
 /**
@@ -149,6 +150,16 @@ function LayoutThumb({ template }: { template: EmailTemplate }) {
 export function EmailTemplatesWorkspace() {
   const toast = useToast();
 
+  /*
+   * The library is state, not the fixture read straight through.
+   *
+   * Duplicate and Delete used to raise a toast and change nothing, so the card
+   * you had just copied never appeared and the one you deleted was still
+   * there — a confirmation dialog whose confirmation did nothing. Seeded from
+   * the fixture, which a backend will replace with the fetched list.
+   */
+  const [templates, setTemplates] = useState(EMAIL_TEMPLATES);
+
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<EmailTemplateCategory | typeof ALL>(ALL);
   const [status, setStatus] = useState<"published" | "draft" | typeof ALL>(ALL);
@@ -160,10 +171,33 @@ export function EmailTemplatesWorkspace() {
 
   const activeFilters = (category === ALL ? 0 : 1) + (status === ALL ? 0 : 1);
 
+  /** A copy, as a draft, named the way every copy in this product is named. */
+  function duplicate(template: EmailTemplate) {
+    const copy: EmailTemplate = {
+      ...template,
+      id: `${template.id}-copy-${templates.length}`,
+      name: `${template.name} (copy)`,
+      status: "draft",
+      /* A copy inherits the layout, never the record of sends the original
+         earned — its own usage starts at nothing. */
+      usageCount: 0,
+      openRate: 0,
+      updatedAt: template.updatedAt,
+    };
+
+    setTemplates((prev) => [copy, ...prev]);
+    toast(`${template.name} duplicated`, "success");
+  }
+
+  function remove(template: EmailTemplate) {
+    setTemplates((prev) => prev.filter((item) => item.id !== template.id));
+    toast(`${template.name} deleted`);
+  }
+
   const rows = useMemo(() => {
     const term = search.trim().toLowerCase();
 
-    return EMAIL_TEMPLATES.filter((template) => {
+    return templates.filter((template) => {
       if (
         term &&
         !template.name.toLowerCase().includes(term) &&
@@ -180,7 +214,7 @@ export function EmailTemplatesWorkspace() {
       if (sort === "openRate") return b.openRate - a.openRate;
       return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
     });
-  }, [category, search, sort, status]);
+  }, [category, search, sort, status, templates]);
 
   /* Edit takes over the page. The header stays so the way back is obvious. */
   if (editing) {
@@ -264,7 +298,7 @@ export function EmailTemplatesWorkspace() {
         {rows.length === 0 ? (
           <EmptyState
             title="No templates match those filters"
-            description="Try a different search term, or clear the filters to see all nine."
+            description={`Try a different search term, or clear the filters to see all ${templates.length}.`}
             action={
               <Button
                 size="sm"
@@ -312,7 +346,7 @@ export function EmailTemplatesWorkspace() {
                         {
                           label: "Duplicate",
                           icon: <Copy className="size-4" />,
-                          onSelect: () => toast(`${template.name} duplicated`),
+                          onSelect: () => duplicate(template),
                         },
                         {
                           label: "Delete",
@@ -352,9 +386,13 @@ export function EmailTemplatesWorkspace() {
                           template.openRate > 0 ? "text-email" : "text-text-muted",
                         )}
                       >
+                        {/* A transactional template has no campaign behind it
+                            to average, so it says what it is, not 0%. */}
                         {template.openRate > 0
                           ? formatPercent(template.openRate)
-                          : "No sends"}
+                          : template.category === "transactional"
+                            ? "Automated"
+                            : "No sends"}
                       </dd>
                     </div>
                   </dl>
@@ -463,7 +501,7 @@ export function EmailTemplatesWorkspace() {
       <ConfirmDialog
         open={Boolean(pendingDelete)}
         onClose={() => setPendingDelete(null)}
-        onConfirm={() => toast(`${pendingDelete?.name} deleted`)}
+        onConfirm={() => pendingDelete && remove(pendingDelete)}
         title={`Delete ${pendingDelete?.name}?`}
         confirmLabel="Delete template"
       >

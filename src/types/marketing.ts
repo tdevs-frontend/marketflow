@@ -159,16 +159,26 @@ export interface Conversation {
 /**
  * The seven steps of the campaign wizard, in order.
  *
- * `personalization` and `send` are separate steps rather than parts of
- * `content` and `review`: merge tags are where a campaign most often goes
- * wrong (a missing fallback ships "Hi ," to a thousand people), and the final
- * send deserves a screen whose only job is confirming an irreversible action.
+ * `sender` is its own step rather than a section at the bottom of `campaign`.
+ * Who a message comes from is a decision with its own consequences — a
+ * reputation, a reply mailbox, an unverified connection that cannot send — and
+ * buried under the channel picker it was the part of the form people scrolled
+ * past. Placing it after `content` also puts it where it is actually decided:
+ * the sender you want depends on what you have just written.
+ *
+ * Merge tags moved the other way, into `content`, because a fallback is an
+ * edit to the message. Asking for the message on one screen and for what
+ * happens when half of it is missing on the next is one thought split across
+ * two steps.
+ *
+ * `send` stays separate from `review`: the final send deserves a screen whose
+ * only job is confirming an irreversible action.
  */
 export type WizardStep =
   | "campaign"
   | "audience"
   | "content"
-  | "personalization"
+  | "sender"
   | "schedule"
   | "review"
   | "send";

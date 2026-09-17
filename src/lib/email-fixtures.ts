@@ -1,8 +1,11 @@
 import type { Option } from "@/constants/commerce";
+import type { ActivityEntry } from "@/lib/overview-fixtures";
 import type {
   EmailCampaign,
   EmailContact,
   EmailContactStatus,
+  EmailProviderStatus,
+  EmailSenderIdentity,
   EmailTemplate,
   EmailTemplateCategory,
   EngagementLevel,
@@ -23,13 +26,11 @@ import type {
 /* -------------------------------------------------------------------------- */
 
 export const EMAIL_TEMPLATE_CATEGORIES: Option<EmailTemplateCategory>[] = [
-  { value: "welcome", label: "Welcome" },
   { value: "newsletter", label: "Newsletter" },
   { value: "promotion", label: "Promotion" },
-  { value: "product-launch", label: "Product Launch" },
-  { value: "abandoned-cart", label: "Abandoned Cart" },
+  { value: "welcome", label: "Welcome" },
   { value: "follow-up", label: "Follow-up" },
-  { value: "re-engagement", label: "Re-engagement" },
+  { value: "transactional", label: "Transactional" },
 ];
 
 export const EMAIL_CONTACT_STATUSES: Option<EmailContactStatus>[] = [
@@ -65,11 +66,122 @@ export const EMAIL_TAGS = [
   "Trial",
 ];
 
-export const SENDER_IDENTITIES = [
-  { value: "hello@marketflow.io", label: "MarketFlow · hello@marketflow.io" },
-  { value: "sales@marketflow.io", label: "MarketFlow Sales · sales@marketflow.io" },
-  { value: "support@marketflow.io", label: "MarketFlow Support · support@marketflow.io" },
+/**
+ * Who this workspace sends as.
+ *
+ * The sending identity is the one piece of email configuration that is a
+ * marketing decision rather than an infrastructure one — it is what a recipient
+ * reads before the subject line — so it lives in the channel module, while the
+ * transport underneath it stays in Integrations → Email. `EMAIL_PROVIDER`
+ * below is that transport, read here and never re-entered.
+ */
+export const EMAIL_SENDER_IDENTITIES: EmailSenderIdentity[] = [
+  {
+    id: "sender-hello",
+    name: "MarketFlow",
+    email: "hello@marketflow.io",
+    replyTo: "support@marketflow.io",
+    status: "verified",
+    spf: true,
+    dkim: true,
+    dmarc: true,
+    isDefault: true,
+    sent30d: 29_252,
+    deliveryRate: 98.1,
+    createdAt: "2025-08-02T09:00:00Z",
+  },
+  {
+    id: "sender-sales",
+    name: "MarketFlow Sales",
+    email: "sales@marketflow.io",
+    replyTo: "sales@marketflow.io",
+    status: "verified",
+    spf: true,
+    dkim: true,
+    /* Published at `p=none` — reporting only, so it counts as configured but
+       instructs nothing. The senders page says as much rather than showing a
+       tick that implies enforcement. */
+    dmarc: false,
+    isDefault: false,
+    sent30d: 6_820,
+    deliveryRate: 98.0,
+    createdAt: "2026-01-16T10:30:00Z",
+  },
+  {
+    id: "sender-support",
+    name: "MarketFlow Support",
+    email: "support@marketflow.io",
+    replyTo: "support@marketflow.io",
+    status: "verified",
+    spf: true,
+    dkim: true,
+    dmarc: true,
+    isDefault: false,
+    sent30d: 486,
+    deliveryRate: 98.8,
+    createdAt: "2026-02-08T14:00:00Z",
+  },
+  {
+    id: "sender-billing",
+    name: "MarketFlow Billing",
+    email: "billing@marketflow.io",
+    replyTo: "support@marketflow.io",
+    status: "pending",
+    spf: true,
+    dkim: false,
+    dmarc: false,
+    isDefault: false,
+    sent30d: 0,
+    deliveryRate: 0,
+    createdAt: "2026-09-07T11:20:00Z",
+  },
 ];
+
+/** The transport every identity above sends over. Owned by Integrations. */
+export const EMAIL_PROVIDER: EmailProviderStatus = {
+  name: "Amazon SES",
+  mode: "smtp",
+  host: "email-smtp.eu-west-1.amazonaws.com",
+  port: 587,
+  encryption: "STARTTLS",
+  connected: true,
+  dailyLimit: 20_000,
+  sentToday: 2_480,
+  rateLimit: 40,
+  lastCheckedAt: "2026-09-08T09:40:00Z",
+};
+
+/**
+ * The identity a new campaign starts on.
+ *
+ * Falls back to the first row rather than to `undefined`: the wizard reads
+ * this during module initialisation, and a workspace whose default flag was
+ * cleared should still open with a sender rather than an empty select.
+ */
+export const defaultSenderIdentity =
+  EMAIL_SENDER_IDENTITIES.find((sender) => sender.isDefault) ??
+  EMAIL_SENDER_IDENTITIES[0];
+
+export const senderLabel = (sender: EmailSenderIdentity) =>
+  `${sender.name} · ${sender.email}`;
+
+/**
+ * The identities as select options.
+ *
+ * Derived rather than listed a second time: the campaign wizard, the campaign
+ * filter and the senders page are all choosing from the same four rows, and a
+ * parallel list is how one of them ends up offering an address that no longer
+ * verifies. Only verified identities are offered — an unverified one cannot
+ * send, so putting it in the dropdown is offering a choice that fails later.
+ */
+export const SENDER_IDENTITIES: Option<string>[] = EMAIL_SENDER_IDENTITIES.filter(
+  (sender) => sender.status === "verified",
+).map((sender) => ({ value: sender.email, label: senderLabel(sender) }));
+
+/** Reply-to options — every identity's mailbox, plus the discard address. */
+export const REPLY_TO_ADDRESSES: Option<string>[] = [
+  ...new Set(EMAIL_SENDER_IDENTITIES.map((sender) => sender.replyTo)),
+].map((email) => ({ value: email, label: email }));
 
 /* -------------------------------------------------------------------------- */
 /* Campaigns                                                                  */
@@ -87,6 +199,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     audienceSize: 18_420,
     fromName: "MarketFlow",
     fromEmail: "hello@marketflow.io",
+    replyTo: "support@marketflow.io",
     sent: 18_420,
     delivered: 18_064,
     opened: 7_046,
@@ -94,7 +207,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 356,
     unsubscribed: 84,
     complained: 6,
-    revenue: 12_480,
+    converted: 246,
     templateId: "et-newsletter",
     createdAt: "2026-09-01T09:00:00Z",
     scheduledAt: "2026-09-02T08:00:00Z",
@@ -110,6 +223,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     audienceSize: 9_640,
     fromName: "MarketFlow Sales",
     fromEmail: "sales@marketflow.io",
+    replyTo: "sales@marketflow.io",
     sent: 6_820,
     delivered: 6_684,
     opened: 2_874,
@@ -117,7 +231,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 136,
     unsubscribed: 41,
     complained: 3,
-    revenue: 18_240,
+    converted: 184,
     templateId: "et-promotion",
     createdAt: "2026-09-05T11:30:00Z",
     scheduledAt: "2026-09-06T09:00:00Z",
@@ -133,6 +247,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     audienceSize: 1_248,
     fromName: "MarketFlow",
     fromEmail: "hello@marketflow.io",
+    replyTo: "support@marketflow.io",
     sent: 1_248,
     delivered: 1_236,
     opened: 892,
@@ -140,7 +255,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 12,
     unsubscribed: 4,
     complained: 0,
-    revenue: 4_820,
+    converted: 92,
     templateId: "et-welcome",
     createdAt: "2026-08-28T08:15:00Z",
   },
@@ -155,6 +270,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     audienceSize: 2_140,
     fromName: "MarketFlow",
     fromEmail: "hello@marketflow.io",
+    replyTo: "support@marketflow.io",
     sent: 1_684,
     delivered: 1_662,
     opened: 812,
@@ -162,7 +278,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 22,
     unsubscribed: 9,
     complained: 1,
-    revenue: 14_620,
+    converted: 128,
     templateId: "et-abandoned-cart",
     createdAt: "2026-08-24T13:40:00Z",
   },
@@ -177,6 +293,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     audienceSize: 4_280,
     fromName: "MarketFlow",
     fromEmail: "hello@marketflow.io",
+    replyTo: "support@marketflow.io",
     sent: 4_280,
     delivered: 4_212,
     opened: 2_148,
@@ -184,7 +301,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 68,
     unsubscribed: 22,
     complained: 2,
-    revenue: 21_840,
+    converted: 214,
     templateId: "et-product-launch",
     createdAt: "2026-08-18T10:00:00Z",
     scheduledAt: "2026-08-19T09:00:00Z",
@@ -200,6 +317,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     audienceSize: 3_460,
     fromName: "MarketFlow",
     fromEmail: "hello@marketflow.io",
+    replyTo: "support@marketflow.io",
     sent: 3_460,
     delivered: 3_284,
     opened: 986,
@@ -207,7 +325,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 176,
     unsubscribed: 118,
     complained: 8,
-    revenue: 6_240,
+    converted: 38,
     templateId: "et-re-engagement",
     createdAt: "2026-08-12T14:20:00Z",
     scheduledAt: "2026-08-13T10:00:00Z",
@@ -223,6 +341,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     audienceSize: 9_640,
     fromName: "MarketFlow",
     fromEmail: "hello@marketflow.io",
+    replyTo: "support@marketflow.io",
     sent: 0,
     delivered: 0,
     opened: 0,
@@ -230,7 +349,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 0,
     unsubscribed: 0,
     complained: 0,
-    revenue: 0,
+    converted: 0,
     templateId: "et-newsletter",
     createdAt: "2026-09-07T15:20:00Z",
     scheduledAt: "2026-09-24T13:00:00Z",
@@ -246,6 +365,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     audienceSize: 318,
     fromName: "MarketFlow",
     fromEmail: "hello@marketflow.io",
+    replyTo: "support@marketflow.io",
     sent: 0,
     delivered: 0,
     opened: 0,
@@ -253,7 +373,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 0,
     unsubscribed: 0,
     complained: 0,
-    revenue: 0,
+    converted: 0,
     templateId: "et-product-launch",
     createdAt: "2026-09-06T09:40:00Z",
     scheduledAt: "2026-09-12T08:00:00Z",
@@ -269,6 +389,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     audienceSize: 1_248,
     fromName: "MarketFlow Support",
     fromEmail: "support@marketflow.io",
+    replyTo: "support@marketflow.io",
     sent: 486,
     delivered: 480,
     opened: 212,
@@ -276,7 +397,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 6,
     unsubscribed: 3,
     complained: 0,
-    revenue: 0,
+    converted: 0,
     templateId: "et-follow-up",
     createdAt: "2026-08-30T11:10:00Z",
   },
@@ -291,6 +412,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     audienceSize: 18_420,
     fromName: "MarketFlow",
     fromEmail: "hello@marketflow.io",
+    replyTo: "support@marketflow.io",
     sent: 380,
     delivered: 0,
     opened: 0,
@@ -298,7 +420,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 380,
     unsubscribed: 0,
     complained: 0,
-    revenue: 0,
+    converted: 0,
     templateId: "et-promotion",
     createdAt: "2026-08-22T09:40:00Z",
     scheduledAt: "2026-08-23T08:00:00Z",
@@ -314,6 +436,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     audienceSize: 4_280,
     fromName: "MarketFlow",
     fromEmail: "hello@marketflow.io",
+    replyTo: "support@marketflow.io",
     sent: 0,
     delivered: 0,
     opened: 0,
@@ -321,7 +444,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 0,
     unsubscribed: 0,
     complained: 0,
-    revenue: 0,
+    converted: 0,
     createdAt: "2026-09-08T07:30:00Z",
   },
   {
@@ -335,6 +458,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     audienceSize: 4_280,
     fromName: "MarketFlow",
     fromEmail: "hello@marketflow.io",
+    replyTo: "support@marketflow.io",
     sent: 0,
     delivered: 0,
     opened: 0,
@@ -342,12 +466,19 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 0,
     unsubscribed: 0,
     complained: 0,
-    revenue: 0,
+    converted: 0,
     createdAt: "2026-09-04T16:05:00Z",
   },
 ];
 
-/** Totals across the email campaigns, for the stat row. */
+/**
+ * Totals across the email campaigns, for the stat row and the funnel.
+ *
+ * Counts only — no attributed revenue. Money earned belongs to the Marketing
+ * workspace, which can weigh email against the other three channels; inside
+ * the channel it would only ever be email compared against itself, and it
+ * crowds out the four numbers that actually diagnose an email programme.
+ */
 export function emailTotals(campaigns: EmailCampaign[]) {
   return campaigns.reduce(
     (totals, campaign) => ({
@@ -355,18 +486,20 @@ export function emailTotals(campaigns: EmailCampaign[]) {
       delivered: totals.delivered + campaign.delivered,
       opened: totals.opened + campaign.opened,
       clicked: totals.clicked + campaign.clicked,
+      converted: totals.converted + campaign.converted,
       bounced: totals.bounced + campaign.bounced,
       unsubscribed: totals.unsubscribed + campaign.unsubscribed,
-      revenue: totals.revenue + campaign.revenue,
+      complained: totals.complained + campaign.complained,
     }),
     {
       sent: 0,
       delivered: 0,
       opened: 0,
       clicked: 0,
+      converted: 0,
       bounced: 0,
       unsubscribed: 0,
-      revenue: 0,
+      complained: 0,
     },
   );
 }
@@ -451,7 +584,7 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
     id: "et-product-launch",
     name: "Product Launch",
     description: "One feature, three benefits, one button.",
-    category: "product-launch",
+    category: "promotion",
     status: "published",
     subject: "Introducing {{product}}",
     previewText: "The visual builder is live for every plan.",
@@ -476,7 +609,7 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
     id: "et-abandoned-cart",
     name: "Abandoned Basket",
     description: "Product block pulled from the order, with a single recovery link.",
-    category: "abandoned-cart",
+    category: "follow-up",
     status: "published",
     subject: "You left something behind",
     previewText: "Still available — we held it for you.",
@@ -514,7 +647,7 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
     id: "et-re-engagement",
     name: "Win-back",
     description: "For contacts with no open in 90 days. Short, no imagery.",
-    category: "re-engagement",
+    category: "follow-up",
     status: "published",
     subject: "Your workspace is still here",
     previewText: "Pick up where you left off — nothing was deleted.",
@@ -571,6 +704,52 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
     usageCount: 0,
     openRate: 0,
     updatedAt: "2026-09-03T14:50:00Z",
+  },
+  {
+    id: "et-order-confirmation",
+    name: "Order Confirmation",
+    description: "Sent on payment. Order lines, total and a tracking link.",
+    category: "transactional",
+    status: "published",
+    subject: "Order {{order_id}} confirmed",
+    previewText: "We are packing it now.",
+    blocks: [
+      { id: "b1", type: "logo", content: "MarketFlow" },
+      { id: "b2", type: "heading", content: "Thanks, {{first_name}} — order confirmed" },
+      { id: "b3", type: "products", content: "Order lines", meta: "Dynamic" },
+      { id: "b4", type: "text", content: "Total {{order_total}}, paid on {{order_date}}." },
+      { id: "b5", type: "button", content: "Track this order", meta: "{{tracking_url}}" },
+      { id: "b6", type: "footer", content: "MarketFlow · This is a receipt, not marketing" },
+    ],
+    /* Transactional sends are not campaigns, so the library has no open rate
+       to average for them — the card says "Automated" rather than 0%. */
+    usageCount: 0,
+    openRate: 0,
+    updatedAt: "2026-08-15T09:30:00Z",
+  },
+  {
+    id: "et-password-reset",
+    name: "Password Reset",
+    description: "One link, one expiry, nothing else. No imagery, no footer links.",
+    category: "transactional",
+    status: "published",
+    subject: "Reset your MarketFlow password",
+    previewText: "The link expires in 30 minutes.",
+    blocks: [
+      { id: "b1", type: "logo", content: "MarketFlow" },
+      { id: "b2", type: "heading", content: "Reset your password" },
+      {
+        id: "b3",
+        type: "text",
+        content:
+          "Use the button below within 30 minutes. If you did not ask for this, nothing has changed and you can ignore it.",
+      },
+      { id: "b4", type: "button", content: "Set a new password", meta: "{{reset_url}}" },
+      { id: "b5", type: "footer", content: "MarketFlow · Sent because someone requested a reset" },
+    ],
+    usageCount: 0,
+    openRate: 0,
+    updatedAt: "2026-07-28T16:10:00Z",
   },
 ];
 
@@ -902,18 +1081,72 @@ export const EMAIL_SERIES = {
   bounceRate: [5.1, 2.4, 1.6, 1.9, 1.3, 1.4, 1.2, 1.9, 2.0, 1.7],
 };
 
-/** Where opens happen. Drives the device split donut. */
-export const EMAIL_DEVICE_SPLIT = [
-  { label: "Mobile", value: 24_180 },
-  { label: "Desktop", value: 11_640 },
-  { label: "Tablet", value: 2_788 },
-];
+/* -------------------------------------------------------------------------- */
+/* Activity                                                                   */
+/* -------------------------------------------------------------------------- */
 
-/** Opens by hour bucket, for the "best send time" panel. */
-export const EMAIL_SEND_TIMES = [
-  { label: "06:00–09:00", rate: 34.2 },
-  { label: "09:00–12:00", rate: 48.6 },
-  { label: "12:00–15:00", rate: 41.8 },
-  { label: "15:00–18:00", rate: 37.4 },
-  { label: "18:00–21:00", rate: 29.1 },
+/**
+ * What has happened on this channel, newest first.
+ *
+ * The same `ActivityEntry` shape the Marketing workspace and the WhatsApp
+ * module already render through `ActivityFeed`, so the Email overview gets the
+ * feed rather than a second timeline component. Email's version of "something
+ * happened" is deliverability as much as delivery — a bounce spike and a
+ * domain warning are the entries that need acting on today.
+ */
+export const EMAIL_ACTIVITY: ActivityEntry[] = [
+  {
+    id: "em-act-1",
+    kind: "campaign",
+    title: "Back to Business is sending",
+    detail: "6,820 of 9,640 sent · 43.0% open so far",
+    channel: "email",
+    actor: "Nadia Karim",
+    at: "2026-09-08T09:20:00Z",
+  },
+  {
+    id: "em-act-2",
+    kind: "alert",
+    title: "End of Season Clearance failed",
+    detail: "380 hard bounces before the send was stopped automatically",
+    channel: "email",
+    actor: "System",
+    at: "2026-09-08T08:05:00Z",
+  },
+  {
+    id: "em-act-3",
+    kind: "template",
+    title: "Order Confirmation updated",
+    detail: "Tracking link block replaced the plain order URL",
+    channel: "email",
+    actor: "Tomás Silva",
+    at: "2026-09-07T17:40:00Z",
+  },
+  {
+    id: "em-act-4",
+    kind: "campaign",
+    title: "October Webinar Invite scheduled",
+    detail: "9,640 leads · sends 24 September, 13:00",
+    channel: "email",
+    actor: "Nadia Karim",
+    at: "2026-09-07T15:20:00Z",
+  },
+  {
+    id: "em-act-5",
+    kind: "contact",
+    title: "128 contacts subscribed",
+    detail: "Storefront signup and checkout, over the last seven days",
+    channel: "email",
+    actor: "System",
+    at: "2026-09-07T09:00:00Z",
+  },
+  {
+    id: "em-act-6",
+    kind: "automation",
+    title: "Onboarding — Day 1 sent to 96 new customers",
+    detail: "71.8% opened, 30.8% clicked through to the setup guide",
+    channel: "email",
+    actor: "System",
+    at: "2026-09-06T08:30:00Z",
+  },
 ];

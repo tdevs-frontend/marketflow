@@ -7,6 +7,7 @@ import {
   utmSlug,
   utmSourceFor,
 } from "@/lib/campaign-fixtures";
+import { defaultSenderIdentity } from "@/lib/email-fixtures";
 import { AUDIENCES } from "@/lib/marketing-fixtures";
 import { segmentsForChannel } from "@/lib/segment-fixtures";
 import { publishableAccounts } from "@/lib/social-fixtures";
@@ -37,8 +38,8 @@ export const EMPTY_DRAFT: CampaignDraft = {
   sender: {
     whatsappConnectionId: "wa-main",
     whatsappNumberId: "wa-num-primary",
-    emailFrom: "hello@marketflow.io",
-    emailReplyTo: "hello@marketflow.io",
+    emailFrom: defaultSenderIdentity.email,
+    emailReplyTo: defaultSenderIdentity.replyTo,
     smsProviderId: "twilio",
     smsSenderId: "MARKETFLOW",
   },

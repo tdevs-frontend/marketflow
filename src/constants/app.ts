@@ -34,6 +34,7 @@ export const APP_ROUTES = {
   emailContacts: "/dashboard/marketing/email/contacts",
   emailAutomations: "/dashboard/marketing/email/automations",
   emailAnalytics: "/dashboard/marketing/email/analytics",
+  emailSenders: "/dashboard/marketing/email/senders",
 
   /* SMS module */
   smsOverview: "/dashboard/marketing/sms",

@@ -20,7 +20,7 @@ import {
 import { DetailsStep } from "./step-details";
 import { AudienceStep } from "./step-audience";
 import { ContentStep } from "./step-content";
-import { PersonaliseStep } from "./step-personalise";
+import { SenderStep } from "./step-sender";
 import { ScheduleStep } from "./step-schedule";
 import { ReviewStep } from "./step-review";
 import { SendStep } from "./step-send";
@@ -32,10 +32,11 @@ import { blockersIn, preflight } from "./validation";
 /**
  * The campaign wizard.
  *
- * Seven steps, unchanged, because they are the right seven: what it is, who
- * gets it, what it says, how it is personalised, when it sends, a check, and a
- * confirmation. What changed is the depth of each — sender configuration,
- * exclusions and eligibility, a per-channel composer, tracking and validation.
+ * Seven steps: what it is, who gets it, what it says, who it comes from, when
+ * it sends, a check, and a confirmation. Personalisation folded into Content,
+ * where a merge tag is written, and the sender configuration it displaced came
+ * out of the Details step, where it had been a fourth section under a channel
+ * picker and was routinely left on its defaults.
  *
  * This file owns the draft and nothing else. Each step renders part of it and
  * writes back through `set`; everything computed from the draft is derived on
@@ -51,7 +52,7 @@ const STEPS: { value: WizardStep; label: string }[] = [
   { value: "campaign", label: "Details" },
   { value: "audience", label: "Audience" },
   { value: "content", label: "Content" },
-  { value: "personalization", label: "Personalise" },
+  { value: "sender", label: "Sender" },
   { value: "schedule", label: "Schedule" },
   { value: "review", label: "Review" },
   { value: "send", label: "Send" },
@@ -81,13 +82,22 @@ const INLINE_ISSUE_IDS = new Set([
   "social-account",
 ]);
 
-export function CampaignWizard() {
+/**
+ * @param channel Which channel to open on, when the wizard was reached from a
+ *   channel module rather than from the cross-channel campaign list. It is a
+ *   starting point, not a lock — the Details step can still change it — and a
+ *   restored draft always wins, because a half-written campaign outranks the
+ *   link someone happened to arrive by.
+ */
+export function CampaignWizard({ channel }: { channel?: MarketingChannel }) {
   const router = useRouter();
   const toast = useToast();
 
   const [index, setIndex] = useState(0);
   const [furthest, setFurthest] = useState(0);
-  const [draft, setDraft] = useState<CampaignDraft>(EMPTY_DRAFT);
+  const [draft, setDraft] = useState<CampaignDraft>(() =>
+    channel ? applyChannel(EMPTY_DRAFT, channel) : EMPTY_DRAFT,
+  );
   const [errors, setErrors] = useState<Record<string, string>>({});
   /* The send step asks for one explicit confirmation. Reset whenever the draft
      changes, so a tick made before an edit never carries over. */
@@ -202,11 +212,12 @@ export function CampaignWizard() {
   function validateStep(): boolean {
     const next: Record<string, string> = {};
 
-    if (step === "campaign") {
-      if (!draft.name.trim()) next.name = "Name the campaign.";
-      if (draft.channel === "social" && draft.socialAccountIds.length === 0) {
-        next.socialAccountIds = "Pick at least one account to publish to.";
-      }
+    if (step === "campaign" && !draft.name.trim()) {
+      next.name = "Name the campaign.";
+    }
+
+    if (step === "sender" && draft.channel === "social" && draft.socialAccountIds.length === 0) {
+      next.socialAccountIds = "Pick at least one account to publish to.";
     }
 
     if (
@@ -321,7 +332,7 @@ export function CampaignWizard() {
         {step === "campaign" ? <DetailsStep {...stepProps} /> : null}
         {step === "audience" ? <AudienceStep {...stepProps} /> : null}
         {step === "content" ? <ContentStep {...stepProps} /> : null}
-        {step === "personalization" ? <PersonaliseStep {...stepProps} /> : null}
+        {step === "sender" ? <SenderStep {...stepProps} /> : null}
         {step === "schedule" ? <ScheduleStep {...stepProps} /> : null}
         {step === "review" ? <ReviewStep {...stepProps} /> : null}
         {step === "send" ? (

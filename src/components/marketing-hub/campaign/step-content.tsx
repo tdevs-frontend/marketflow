@@ -12,6 +12,7 @@ import { TEMPLATES } from "@/lib/whatsapp-fixtures";
 import { cn } from "@/lib/utils";
 import type { AbTestField, AbWinnerMetric } from "@/types/marketing";
 import { MediaPicker } from "./media-picker";
+import { PersonalisationSection } from "./personalisation";
 import { ChannelPreview } from "./previews";
 import { StepSection, TogglePanel, WarningNote } from "./shared";
 import type { StepProps } from "./types";
@@ -24,6 +25,11 @@ import type { StepProps } from "./types";
  * with a subject line above it and a WhatsApp message with no template picker.
  * Each branch below asks only for what its channel actually sends, and the
  * preview beside it is the same channel's.
+ *
+ * Personalisation sits under the composer rather than on a step of its own.
+ * Merge tags are written here, so the fallback each one needs belongs here too
+ * — a tag typed on one screen and its "what if this contact has no first name"
+ * answered on the next is one decision asked twice.
  */
 
 const HASHTAG_SUGGESTIONS = [
@@ -44,6 +50,8 @@ export function ContentStep(props: StepProps) {
         {draft.channel === "email" ? <EmailComposer {...props} /> : null}
         {draft.channel === "sms" ? <SmsComposer {...props} /> : null}
         {draft.channel === "social" ? <SocialComposer {...props} /> : null}
+
+        <PersonalisationSection {...props} />
 
         <AbTestSection {...props} />
       </div>

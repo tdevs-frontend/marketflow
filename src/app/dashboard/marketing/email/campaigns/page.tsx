@@ -15,7 +15,10 @@ export default function EmailCampaignsPage() {
         title="Email Campaigns"
         description="Create, schedule and measure email campaigns — by subject line, not just by name."
         action={
-          <ButtonLink href={APP_ROUTES.marketingCampaignNew} size="compact">
+          <ButtonLink
+            href={`${APP_ROUTES.marketingCampaignNew}?channel=email`}
+            size="compact"
+          >
             <Plus aria-hidden />
             Create Campaign
           </ButtonLink>

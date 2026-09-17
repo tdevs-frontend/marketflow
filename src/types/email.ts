@@ -20,6 +20,8 @@ export interface EmailCampaign {
   audienceSize: number;
   fromName: string;
   fromEmail: string;
+  /** Where replies land. Often a monitored inbox rather than the sender. */
+  replyTo: string;
   sent: number;
   delivered: number;
   opened: number;
@@ -28,20 +30,29 @@ export interface EmailCampaign {
   bounced: number;
   unsubscribed: number;
   complained: number;
-  revenue: number;
+  /** Clicks that reached the campaign's goal — the funnel's last stage. */
+  converted: number;
   templateId?: string;
   createdAt: string;
   scheduledAt?: string;
 }
 
+/**
+ * The library's shelves.
+ *
+ * Five, and deliberately not one per use case. A shelf earns its place by being
+ * something a merchant *browses for* — the seven it replaced split promotions
+ * across "Promotion", "Product Launch" and "Abandoned Cart", so the shelf a
+ * template sat on stopped predicting anything about it. Transactional is the
+ * one genuinely different kind: receipts and resets go to people who did not
+ * opt in, and they are never sent as a campaign.
+ */
 export type EmailTemplateCategory =
-  | "welcome"
   | "newsletter"
   | "promotion"
-  | "product-launch"
-  | "abandoned-cart"
+  | "welcome"
   | "follow-up"
-  | "re-engagement";
+  | "transactional";
 
 export type EmailTemplateStatus = "published" | "draft";
 
@@ -107,4 +118,63 @@ export interface EmailContact {
   campaigns: number;
   lastActivityAt: string;
   createdAt: string;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Senders                                                                    */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Whether the sending domain has been proved to belong to this workspace.
+ *
+ * `pending` is a DNS record that has been published but not yet seen, and
+ * `failed` is one that was seen and then stopped resolving. They read the same
+ * on a dashboard and mean completely different things to whoever has to fix it.
+ */
+export type SenderStatus = "verified" | "pending" | "failed";
+
+/**
+ * One "from" line a campaign can go out on.
+ *
+ * Reply-to lives on the identity rather than on the campaign, because it is a
+ * property of the mailbox someone is prepared to monitor. A campaign may
+ * override it, and the wizard says so when it does.
+ */
+export interface EmailSenderIdentity {
+  id: string;
+  /** The display name in an inbox, e.g. "MarketFlow Sales". */
+  name: string;
+  email: string;
+  replyTo: string;
+  status: SenderStatus;
+  /** Domain authentication, all three of which a mailbox provider checks. */
+  spf: boolean;
+  dkim: boolean;
+  dmarc: boolean;
+  /** The identity a campaign starts on, and the only one that cannot be removed. */
+  isDefault: boolean;
+  sent30d: number;
+  deliveryRate: number;
+  createdAt: string;
+}
+
+/**
+ * The transport underneath every identity.
+ *
+ * Owned by Integrations → Email — this module reads it and links there rather
+ * than offering a second set of credentials to fill in.
+ */
+export interface EmailProviderStatus {
+  name: string;
+  /** SMTP carries a host and a port; an API provider carries a region. */
+  mode: "smtp" | "api";
+  host: string;
+  port: number;
+  encryption: string;
+  connected: boolean;
+  dailyLimit: number;
+  sentToday: number;
+  /** Messages per second the provider accepts before it starts queueing. */
+  rateLimit: number;
+  lastCheckedAt: string;
 }

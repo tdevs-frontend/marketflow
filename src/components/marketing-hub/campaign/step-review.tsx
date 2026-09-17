@@ -57,6 +57,15 @@ export function ReviewStep(props: StepProps) {
                 ) : null}
                 <SummaryRow label="Channel" value={derived.channelLabel} />
                 <SummaryRow label="Sender" value={<SenderSummary {...props} />} />
+                {draft.channel === "email" ? (
+                  <>
+                    <SummaryRow label="Subject" value={draft.subject || "Not set"} />
+                    <SummaryRow
+                      label="Preview text"
+                      value={draft.previewText || "None — the first line of the body shows instead"}
+                    />
+                  </>
+                ) : null}
                 <SummaryRow label="Audience" value={<AudienceSummary {...props} />} />
                 {derived.isSocial ? null : (
                   <>
@@ -391,7 +400,18 @@ function SenderSummary({ draft, derived }: StepProps) {
   }
 
   if (draft.channel === "email") {
-    return <>{draft.sender.emailFrom || "Not set"}</>;
+    if (!draft.sender.emailFrom) return <>Not set</>;
+    return (
+      <>
+        {draft.sender.emailFrom}
+        {draft.sender.emailReplyTo &&
+        draft.sender.emailReplyTo !== draft.sender.emailFrom ? (
+          <span className="block text-sm text-text-muted">
+            replies to {draft.sender.emailReplyTo}
+          </span>
+        ) : null}
+      </>
+    );
   }
 
   if (draft.channel === "sms") {

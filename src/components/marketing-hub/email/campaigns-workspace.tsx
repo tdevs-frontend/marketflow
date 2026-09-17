@@ -19,7 +19,6 @@ import { Button, ButtonLink } from "@/components/ui/button";
 import { TABLE_PAGE_SIZE } from "@/constants/app";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ChartCard } from "@/components/ui/chart-card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EmptyState } from "@/components/ui/empty-state";
 import { FilterBar } from "@/components/ui/filter-bar";
@@ -31,8 +30,6 @@ import { Select } from "@/components/ui/select";
 import { StatsGrid, type StatItem } from "@/components/ui/stats-card";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
 import { useToast } from "@/components/ui/toast";
-import { channelPair } from "@/components/dashboard/charts/chart-theme";
-import { BarsChart } from "@/components/dashboard/charts/bars-chart";
 import { CHANNEL_THEME } from "@/constants/channels";
 import { APP_ROUTES } from "@/constants";
 import { AUDIENCES } from "@/lib/marketing-fixtures";
@@ -105,12 +102,6 @@ const STATS: StatItem[] = [
     invertTrend: true,
   },
 ];
-
-/** The five biggest sends, for the comparison chart. */
-const TOP_FIVE = [...EMAIL_CAMPAIGNS]
-  .filter((campaign) => campaign.delivered > 0)
-  .sort((a, b) => b.sent - a.sent)
-  .slice(0, 5);
 
 export function EmailCampaignsWorkspace() {
   const toast = useToast();
@@ -195,33 +186,6 @@ export function EmailCampaignsWorkspace() {
   return (
     <>
       <StatsGrid items={STATS} accent={{ soft: theme.soft, text: theme.text }} />
-
-      <ChartCard
-        title="Campaign Comparison"
-        description="Open and click rate for the five largest sends."
-        legend={[
-          { label: "Open rate", swatch: "bg-email" },
-          { label: "Click rate", swatch: "bg-accent" },
-        ]}
-      >
-        <BarsChart
-          categories={TOP_FIVE.map((campaign) => campaign.name)}
-          series={[
-            {
-              name: "Open rate",
-              data: TOP_FIVE.map((c) => Number(rate(c.opened, c.delivered).toFixed(1))),
-            },
-            {
-              name: "Click rate",
-              data: TOP_FIVE.map((c) => Number(rate(c.clicked, c.delivered).toFixed(1))),
-            },
-          ]}
-          colors={channelPair("email")}
-          horizontal
-          height={280}
-          unit="%"
-        />
-      </ChartCard>
 
       <Card className="p-5">
         <FilterBar

@@ -10,7 +10,7 @@ export default function EmailAnalyticsPage() {
     <>
       <PageHeader
         title="Email Analytics"
-        description="Engagement and deliverability side by side — they fail for different reasons and need different fixes."
+        description="The funnel, the engagement trend and every campaign side by side."
       />
 
       <EmailAnalytics />

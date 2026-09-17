@@ -76,7 +76,7 @@ export function preflight(
     add(
       "fallbacks",
       "warning",
-      "personalization",
+      "content",
       `${derived.missingFallbacks.length} merge tag${
         derived.missingFallbacks.length === 1 ? " has" : "s have"
       } no fallback. Contacts missing that field receive the tag as written.`,
@@ -151,16 +151,16 @@ export function preflight(
     );
 
     if (!connection) {
-      add("wa-connection", "blocker", "campaign", "No WhatsApp connection selected.");
+      add("wa-connection", "blocker", "sender", "No WhatsApp connection selected.");
     } else if (!connection.verified) {
       add(
         "wa-verified",
         "blocker",
-        "campaign",
+        "sender",
         `${connection.label} is not verified and cannot send.`,
       );
     } else if (!connection.numbers.some((n) => n.id === draft.sender.whatsappNumberId)) {
-      add("wa-number", "blocker", "campaign", "No sender number selected.");
+      add("wa-number", "blocker", "sender", "No sender number selected.");
     }
 
     const template = TEMPLATES.find((item) => item.id === draft.templateId);
@@ -190,7 +190,7 @@ export function preflight(
         add(
           "wa-variables",
           "blocker",
-          "personalization",
+          "content",
           `Template variables not mapped: ${unmapped
             .map((name) => `{{${name}}}`)
             .join(", ")}.`,
@@ -203,7 +203,7 @@ export function preflight(
 
   if (draft.channel === "email") {
     if (!draft.sender.emailFrom) {
-      add("email-sender", "blocker", "campaign", "No sending identity selected.");
+      add("email-sender", "blocker", "sender", "No sending identity selected.");
     }
     if (!draft.subject.trim()) {
       add("email-subject", "blocker", "content", "The email has no subject line.");
@@ -220,7 +220,7 @@ export function preflight(
       add(
         "email-replyto",
         "warning",
-        "campaign",
+        "sender",
         "No reply-to address, so replies go to the sending identity.",
       );
     }
@@ -230,7 +230,7 @@ export function preflight(
 
   if (draft.channel === "sms") {
     if (!draft.sender.smsProviderId) {
-      add("sms-provider", "blocker", "campaign", "No SMS provider selected.");
+      add("sms-provider", "blocker", "sender", "No SMS provider selected.");
     } else if (
       !smsSenderOptions(draft.sender.smsProviderId).some(
         (item) => item.value === draft.sender.smsSenderId,
@@ -239,7 +239,7 @@ export function preflight(
       add(
         "sms-sender",
         "blocker",
-        "campaign",
+        "sender",
         "The selected sender ID is not available on this provider.",
       );
     }
@@ -258,7 +258,7 @@ export function preflight(
 
   if (draft.channel === "social") {
     if (draft.socialAccountIds.length === 0) {
-      add("social-account", "blocker", "campaign", "No social account selected.");
+      add("social-account", "blocker", "sender", "No social account selected.");
     }
 
     /* Selection is filtered to publishable accounts, but a token can expire
@@ -269,7 +269,7 @@ export function preflight(
       add(
         "social-permission",
         "blocker",
-        "campaign",
+        "sender",
         `${stale.length} selected account${
           stale.length === 1 ? " no longer has" : "s no longer have"
         } publishing permission.`,
@@ -295,7 +295,7 @@ export function preflight(
       add(
         "social-media-permission",
         "warning",
-        "campaign",
+        "sender",
         `${noMediaCapability.length} account${
           noMediaCapability.length === 1 ? "" : "s"
         } cannot upload media and will publish text only.`,

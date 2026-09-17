@@ -13,14 +13,17 @@ export default function EmailOverviewPage() {
     <>
       <PageHeader
         title="Email Overview"
-        description="Deliverability, engagement and revenue across every email campaign."
+        description="Delivery, engagement and what has happened on the channel today."
         secondaryActions={
           <ButtonLink href={APP_ROUTES.emailTemplates} variant="outline" size="compact">
             Templates
           </ButtonLink>
         }
         action={
-          <ButtonLink href={APP_ROUTES.marketingCampaignNew} size="compact">
+          <ButtonLink
+            href={`${APP_ROUTES.marketingCampaignNew}?channel=email`}
+            size="compact"
+          >
             <Plus aria-hidden />
             Create Campaign
           </ButtonLink>

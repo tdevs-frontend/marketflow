@@ -43,6 +43,7 @@ export * from "./email/campaigns-workspace";
 export * from "./email/template-builder";
 export * from "./email/templates-workspace";
 export * from "./email/contacts-workspace";
+export * from "./email/senders-workspace";
 export * from "./email/analytics";
 
 /* SMS */

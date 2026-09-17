@@ -1,5 +1,5 @@
 import type { Option } from "@/constants/commerce";
-import { SENDER_IDENTITIES } from "@/lib/email-fixtures";
+import { REPLY_TO_ADDRESSES, SENDER_IDENTITIES } from "@/lib/email-fixtures";
 import { SMS_SENDER_IDS } from "@/lib/sms-fixtures";
 import { SEGMENTS } from "@/lib/segment-fixtures";
 import type {
@@ -129,11 +129,17 @@ export const WHATSAPP_CONNECTIONS: WhatsAppConnection[] = [
 /** Re-exported so the wizard has one import for senders, not three. */
 export const EMAIL_SENDERS = SENDER_IDENTITIES;
 
+/**
+ * Reply-to choices — every mailbox an identity already replies to, plus the
+ * one address that is not a mailbox at all. Derived rather than listed again,
+ * so adding a sender in Email → Senders offers its reply-to here too.
+ */
 export const EMAIL_REPLY_TO = [
-  { value: "hello@marketflow.io", label: "hello@marketflow.io" },
-  { value: "sales@marketflow.io", label: "sales@marketflow.io" },
-  { value: "support@marketflow.io", label: "support@marketflow.io" },
-  { value: "no-reply@marketflow.io", label: "no-reply@marketflow.io (replies discarded)" },
+  ...REPLY_TO_ADDRESSES,
+  {
+    value: "no-reply@marketflow.io",
+    label: "no-reply@marketflow.io (replies discarded)",
+  },
 ];
 
 export interface SmsProvider {
