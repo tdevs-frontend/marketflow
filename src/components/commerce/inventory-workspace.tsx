@@ -5,9 +5,7 @@ import { useMemo, useState } from "react";
 import {
   Boxes,
   CircleDollarSign,
-  Minus,
   PackageX,
-  Plus,
   SlidersHorizontal,
   TriangleAlert,
 } from "lucide-react";
@@ -20,20 +18,12 @@ import { Select } from "@/components/ui/select";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
 import { APP_ROUTES } from "@/constants";
 import { STOCK_ADJUSTMENT_REASONS } from "@/constants/commerce";
-import {
-  INVENTORY,
-  STOCK_ACTIVITY,
-  stockStatusOf,
-} from "@/lib/commerce-fixtures";
+import { INVENTORY, stockStatusOf } from "@/lib/commerce-fixtures";
 import { formatCurrency, formatNumber, formatRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { StockAdjustmentReason } from "@/types/commerce";
 import { CommerceKpis, type CommerceKpi } from "./commerce-kpis";
 import { ProductThumb, StockBadge } from "./commerce-badges";
-
-const REASON_LABEL = Object.fromEntries(
-  STOCK_ADJUSTMENT_REASONS.map((item) => [item.value, item.label]),
-) as Record<StockAdjustmentReason, string>;
 
 function kpis(): CommerceKpi[] {
   const low = INVENTORY.filter(
@@ -132,246 +122,176 @@ export function InventoryWorkspace() {
     <>
       <CommerceKpis items={kpis()} />
 
-      <div className="grid gap-4 xl:grid-cols-3">
-        <Card className="p-5 xl:col-span-2">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h2 className="text-base">Stock levels</h2>
-              <p className="mt-1 text-sm text-text-secondary font-medium">
-                One row per variant, sorted by how close each is to running out.
-              </p>
-            </div>
-            <Button size="compact" onClick={() => setOpen(true)}>
-              <SlidersHorizontal aria-hidden />
-              Stock Adjustment
-            </Button>
+      {/*
+        The table takes the whole width.
+
+        It used to sit in two thirds of an `xl:grid-cols-3` row with an
+        Inventory Activity feed in the remaining third — a timeline of every
+        movement, newest first, which is history rather than stock. This page
+        is what to reorder and what to count today; the movement log still
+        exists where it can be acted on, on the Activity tab of the product it
+        belongs to, scoped to that product instead of the whole catalogue.
+
+        Nine columns had been living in two thirds of an already narrow content
+        column, so the 68rem minimum the table sets meant a horizontal scroll on
+        every desktop. Full width does not remove that scroll everywhere — 68rem
+        is 68rem, and it still bites under about a 1500px viewport — but it is
+        now roughly half the overscroll it was, and Product and Variant get the
+        measure to spell themselves out.
+      */}
+      <Card className="p-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-base">Stock levels</h2>
+            <p className="mt-1 text-sm text-text-secondary font-medium">
+              One row per variant, sorted by how close each is to running out.
+            </p>
           </div>
+          <Button size="compact" onClick={() => setOpen(true)}>
+            <SlidersHorizontal aria-hidden />
+            Stock Adjustment
+          </Button>
+        </div>
 
-          <div className="mt-4 max-lg:hidden">
-            <Table minWidth="68rem">
-              <THead>
-                <TH>Product</TH>
-                {/* Variant gets a column of its own rather than being appended
-                    to the product name: it is what a picker scans for, and a
-                    name that reads "Premium T-Shirt — M / Black" cannot be
-                    sorted, filtered or truncated independently of the product. */}
-                <TH>Variant</TH>
-                <TH>SKU</TH>
-                <TH align="right">Current</TH>
-                <TH align="right">Reserved</TH>
-                <TH align="right">Available</TH>
-                <TH align="right">Threshold</TH>
-                <TH>Status</TH>
-                <TH>Updated</TH>
-              </THead>
+        <div className="mt-4 max-lg:hidden">
+          <Table minWidth="68rem">
+            <THead>
+              <TH>Product</TH>
+              {/* Variant gets a column of its own rather than being appended
+                  to the product name: it is what a picker scans for, and a
+                  name that reads "Premium T-Shirt — M / Black" cannot be
+                  sorted, filtered or truncated independently of the product. */}
+              <TH>Variant</TH>
+              <TH>SKU</TH>
+              <TH align="right">Current</TH>
+              <TH align="right">Reserved</TH>
+              <TH align="right">Available</TH>
+              <TH align="right">Threshold</TH>
+              <TH>Status</TH>
+              <TH>Updated</TH>
+            </THead>
 
-              <TBody>
-                {rows.map((item) => {
-                  const available = item.stock - item.reserved;
-                  const state = stockStatusOf(
-                    item.stock,
-                    item.lowStockThreshold,
-                  );
+            <TBody>
+              {rows.map((item) => {
+                const available = item.stock - item.reserved;
+                const state = stockStatusOf(
+                  item.stock,
+                  item.lowStockThreshold,
+                );
 
-                  return (
-                    <TR key={rowKey(item)}>
-                      <TD>
-                        <div className="flex items-center gap-3">
-                          <ProductThumb size="sm" />
-                          <Link
-                            href={`${APP_ROUTES.products}/${item.productId}`}
-                            className="truncate font-bold text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
-                          >
-                            {item.productName}
-                          </Link>
-                        </div>
-                      </TD>
-                      <TD className="text-text-secondary">
-                        {item.variantName ?? (
-                          <span className="text-text-muted">—</span>
-                        )}
-                      </TD>
-                      <TD className="font-mono text-sm text-text-muted">
-                        {item.sku}
-                      </TD>
-                      <TD
-                        align="right"
-                        className="font-bold text-text-primary tabular-nums"
-                      >
-                        {item.stock}
-                      </TD>
-                      <TD
-                        align="right"
-                        className="text-text-secondary tabular-nums"
-                      >
-                        {item.reserved}
-                      </TD>
-                      <TD
-                        align="right"
-                        className={cn(
-                          "font-medium tabular-nums",
-                          available <= 0 ? "text-error" : "text-text-primary",
-                        )}
-                      >
-                        {available}
-                      </TD>
-                      <TD
-                        align="right"
-                        className="text-text-muted tabular-nums"
-                      >
-                        {item.lowStockThreshold}
-                      </TD>
-                      <TD>
-                        <StockBadge status={state} variant="health" />
-                      </TD>
-                      <TD className="text-sm whitespace-nowrap text-text-muted">
-                        {formatRelativeTime(item.updatedAt)}
-                      </TD>
-                    </TR>
-                  );
-                })}
-              </TBody>
-            </Table>
-          </div>
-
-          <ul className="mt-4 space-y-2.5 lg:hidden">
-            {rows.map((item) => {
-              const available = item.stock - item.reserved;
-              const state = stockStatusOf(item.stock, item.lowStockThreshold);
-
-              return (
-                <li
-                  key={rowKey(item)}
-                  className="rounded-panel border border-border p-3.5"
-                >
-                  <div className="flex items-start gap-3">
-                    <ProductThumb size="sm" />
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-text-primary">
-                        {item.productName}
-                      </p>
-                      {item.variantName ? (
-                        <p className="truncate text-sm font-medium text-text-secondary">
-                          {item.variantName}
-                        </p>
-                      ) : null}
-                      <p className="font-mono text-sm text-text-muted">
-                        {item.sku}
-                      </p>
-                    </div>
-                    <StockBadge status={state} variant="health" />
-                  </div>
-
-                  <dl className="mt-3 grid grid-cols-3 gap-2 text-center">
-                    {[
-                      { label: "Current", value: item.stock },
-                      { label: "Reserved", value: item.reserved },
-                      { label: "Available", value: available },
-                    ].map((cell) => (
-                      <div
-                        key={cell.label}
-                        className="rounded-panel bg-surface-secondary py-2"
-                      >
-                        <dt className="text-sm font-medium text-text-muted">
-                          {cell.label}
-                        </dt>
-                        <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">
-                          {cell.value}
-                        </dd>
+                return (
+                  <TR key={rowKey(item)}>
+                    <TD>
+                      <div className="flex items-center gap-3">
+                        <ProductThumb size="sm" />
+                        <Link
+                          href={`${APP_ROUTES.products}/${item.productId}`}
+                          className="truncate font-bold text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
+                        >
+                          {item.productName}
+                        </Link>
                       </div>
-                    ))}
-                  </dl>
-                </li>
-              );
-            })}
-          </ul>
-        </Card>
-
-        {/* Activity */}
-        <Card className="p-5">
-          <h2 className="text-base font-bold text-text-primary">
-            Inventory Activity
-          </h2>
-          <p className="mt-1 text-sm font-medium text-text-secondary">
-            Every movement, newest first.
-          </p>
-
-          {/* Bled out by the row padding, so the text column still lines up
-              with the title while the focus ring clears it. */}
-          <ol className="-mx-2 mt-4">
-            {STOCK_ACTIVITY.map((entry, index) => {
-              const positive = entry.delta > 0;
-              const last = index === STOCK_ACTIVITY.length - 1;
-
-              return (
-                <li key={entry.id} className="relative">
-                  {/* Dead centre of the 36px circle: 8px of row padding plus
-                      half the circle. It runs 6px past the row box so the next
-                      row's own padding does not break the line. */}
-                  {last ? null : (
-                    <span
-                      aria-hidden
-                      className="absolute top-12.5 -bottom-1.5 left-6.5 w-px bg-border"
-                    />
-                  )}
-
-                  <Link
-                    href={`${APP_ROUTES.products}/${entry.productId}`}
-                    className="flex gap-3 rounded-panel px-2 py-2 focus-visible:shadow-focus focus-visible:outline-none"
-                  >
-                    <span
+                    </TD>
+                    <TD className="text-text-secondary">
+                      {item.variantName ?? (
+                        <span className="text-text-muted">—</span>
+                      )}
+                    </TD>
+                    <TD className="font-mono text-sm text-text-muted">
+                      {item.sku}
+                    </TD>
+                    <TD
+                      align="right"
+                      className="font-bold text-text-primary tabular-nums"
+                    >
+                      {item.stock}
+                    </TD>
+                    <TD
+                      align="right"
+                      className="text-text-secondary tabular-nums"
+                    >
+                      {item.reserved}
+                    </TD>
+                    <TD
+                      align="right"
                       className={cn(
-                        "grid size-9 shrink-0 place-items-center rounded-full border",
-                        positive
-                          ? "border-primary-border bg-primary-soft text-primary"
-                          : "border-error/20 bg-error-soft text-error-text",
+                        "font-medium tabular-nums",
+                        available <= 0 ? "text-error" : "text-text-primary",
                       )}
                     >
-                      {positive ? (
-                        <Plus className="size-4" aria-hidden />
-                      ) : (
-                        <Minus className="size-4" aria-hidden />
-                      )}
-                    </span>
+                      {available}
+                    </TD>
+                    <TD
+                      align="right"
+                      className="text-text-muted tabular-nums"
+                    >
+                      {item.lowStockThreshold}
+                    </TD>
+                    <TD>
+                      <StockBadge status={state} variant="health" />
+                    </TD>
+                    <TD className="text-sm whitespace-nowrap text-text-muted">
+                      {formatRelativeTime(item.updatedAt)}
+                    </TD>
+                  </TR>
+                );
+              })}
+            </TBody>
+          </Table>
+        </div>
 
-                    {/* `pt-2` centres the first line against the circle. */}
-                    <span className="min-w-0 flex-1 space-y-0.5 pt-2">
-                      <span className="block text-base">
-                        <span
-                          className={cn(
-                            "font-semibold tabular-nums",
-                            positive ? "text-primary" : "text-error",
-                          )}
-                        >
-                          {positive ? "+" : ""}
-                          {entry.delta}
-                        </span>{" "}
-                        <span className="font-semibold text-text-primary">
-                          {entry.productName}
-                        </span>
-                        {/* Which shelf moved. Without it the feed says a number
-                            changed somewhere inside a product. */}
-                        {entry.variantName ? (
-                          <span className="font-medium text-text-secondary">
-                            {" · "}
-                            {entry.variantName}
-                          </span>
-                        ) : null}
-                      </span>
-                      <span className="block text-sm font-medium text-text-secondary">
-                        {entry.note ?? REASON_LABEL[entry.reason]}
-                      </span>
-                      <span className="block text-sm text-text-muted">
-                        {formatRelativeTime(entry.at)}
-                      </span>
-                    </span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ol>
-        </Card>
-      </div>
+        <ul className="mt-4 space-y-2.5 lg:hidden">
+          {rows.map((item) => {
+            const available = item.stock - item.reserved;
+            const state = stockStatusOf(item.stock, item.lowStockThreshold);
+
+            return (
+              <li
+                key={rowKey(item)}
+                className="rounded-panel border border-border p-3.5"
+              >
+                <div className="flex items-start gap-3">
+                  <ProductThumb size="sm" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-text-primary">
+                      {item.productName}
+                    </p>
+                    {item.variantName ? (
+                      <p className="truncate text-sm font-medium text-text-secondary">
+                        {item.variantName}
+                      </p>
+                    ) : null}
+                    <p className="font-mono text-sm text-text-muted">
+                      {item.sku}
+                    </p>
+                  </div>
+                  <StockBadge status={state} variant="health" />
+                </div>
+
+                <dl className="mt-3 grid grid-cols-3 gap-2 text-center">
+                  {[
+                    { label: "Current", value: item.stock },
+                    { label: "Reserved", value: item.reserved },
+                    { label: "Available", value: available },
+                  ].map((cell) => (
+                    <div
+                      key={cell.label}
+                      className="rounded-panel bg-surface-secondary py-2"
+                    >
+                      <dt className="text-sm font-medium text-text-muted">
+                        {cell.label}
+                      </dt>
+                      <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">
+                        {cell.value}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </li>
+            );
+          })}
+        </ul>
+      </Card>
 
       <Dialog
         open={open}
@@ -478,7 +398,7 @@ export function InventoryWorkspace() {
           <Field
             label="Note"
             htmlFor="adj-note"
-            hint="Optional. Shows in the activity feed."
+            hint="Optional. Shows on the product's Activity tab."
           >
             <Textarea
               id="adj-note"
