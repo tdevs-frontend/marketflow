@@ -24,10 +24,42 @@ export const MARKETING_TOTALS = {
   campaignsChange: 8.4,
   messagesSent: 482_450,
   messagesSentChange: 18.2,
+  /*
+   * Distinct people, not distinct sends.
+   *
+   * Deliberately well under `messagesSent`: a contact on three campaigns in
+   * the period counts once here and three times there, and a "reach" figure
+   * that matches the message count exactly is one nobody believes. The ratio
+   * is roughly 2.6 sends per person reached.
+   */
+  audienceReach: 186_400,
+  audienceReachChange: 11.3,
   conversions: 8_420,
   conversionsChange: 14.6,
   revenue: 184_250,
   revenueChange: 21.4,
+} as const;
+
+/**
+ * The state of the audience, as four counts a marketer acts on.
+ *
+ * Placeholder figures — swap for `useGetAudienceInsightsQuery()` once the API
+ * is live. Kept here rather than derived from `CONTACTS` because that fixture
+ * is a two-dozen-row table for the contacts screen: deriving from it would put
+ * "New Contacts 3" beside "Messages Sent 482,450" and make the page read as
+ * two unrelated datasets.
+ *
+ * `unsubscribed` is the one that is bad when it rises, which is why the panel
+ * that renders it inverts the trend rather than colouring growth green.
+ */
+export const AUDIENCE_INSIGHTS = {
+  newContacts: 3_240,
+  newContactsChange: 14.2,
+  /** High intent: clicked or replied in the last 30 days without converting. */
+  highIntentLeads: 1_186,
+  highIntentLeadsChange: 9.4,
+  unsubscribed: 412,
+  unsubscribedChange: 3.1,
 } as const;
 
 /* -------------------------------------------------------------------------- */
