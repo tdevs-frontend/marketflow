@@ -74,11 +74,14 @@ export function RecentConversations({
               <div className="relative shrink-0">
                 <Avatar name={conversation.contact.name} />
                 {conversation.online ? (
-                  /* Ringed in the card's own white so the dot reads as a badge
-                     on the avatar rather than a hole punched through it. */
+                  /* The channel's own green, ringed in the card's white so the
+                     dot reads as a badge on the avatar rather than a hole
+                     punched through it. It was `primary-light` — the brand
+                     indigo — which made presence the one thing on a WhatsApp
+                     panel not wearing the channel's colour. */
                   <span
                     aria-label="Online"
-                    className="absolute -right-0.5 -bottom-0.5 size-2.5 rounded-full bg-primary-light ring-2 ring-surface"
+                    className="absolute -right-0.5 -bottom-0.5 size-2.5 rounded-full bg-whatsapp ring-2 ring-surface"
                   />
                 ) : null}
               </div>

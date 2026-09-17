@@ -9,21 +9,7 @@
  */
 "use client";
 
-import Link from "next/link";
-import {
-  BarChart3,
-  ChevronRight,
-  Clock,
-  FileText,
-  Inbox,
-  Megaphone,
-  MessageSquare,
-  UserPlus,
-  Users,
-  Workflow,
-  Zap,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { Clock, Inbox, MessageSquare, Users, Workflow } from "lucide-react";
 
 import { Badge, type BadgeTone } from "@/components/ui/badge";
 import { BrandIcon } from "@/components/ui/brand-icon";
@@ -59,8 +45,19 @@ import { RecentConversations } from "../shared/recent-conversations";
  * The WhatsApp module's landing page — the operational one.
  *
  * Everything here answers "what is happening, and what do I do next": the
- * queue, the threads waiting, what the automations ran, what changed, and the
- * five links a merchant opens this module to reach.
+ * threads waiting, the queue behind them, what the automations ran, and what
+ * changed.
+ *
+ * It used to open that second row on a Quick Actions card — five links to
+ * Campaigns, Templates, Contacts, Automations and Analytics. Every one is a
+ * tab in the module's own nav directly above it, so the card was the
+ * navigation rendered a second time and dressed as content. Removed rather
+ * than swapped for different shortcuts, and the conversation list took the
+ * slot: threads waiting on a reply are what the page is for.
+ *
+ * Both rows are even pairs now. Three cards sharing a three-column row gave
+ * each of them a third of the page, which is under the measure a conversation
+ * row or a timeline entry was drawn at.
  *
  * Nothing here is a trend. The page used to carry a message-performance chart,
  * a delivery-rate breakdown and a campaign comparison — three readings that
@@ -160,58 +157,6 @@ const IN_FLOW = Math.round(
 const AVG_SUCCESS =
   WA_FLOWS.reduce((sum, flow) => sum + flow.successRate, 0) /
   Math.max(WA_FLOWS.length, 1);
-
-/**
- * The five destinations this module is opened to reach.
- *
- * Links rather than buttons: every one is a route, so they are middle-clickable
- * and keyboard-reachable without a handler. The last is Analytics — the page
- * that now owns every trend this one used to draw, and the tile is how a
- * merchant looking for a delivery rate finds where it went.
- */
-const QUICK_ACTIONS: {
-  label: string;
-  hint: string;
-  href: string;
-  icon: LucideIcon;
-  tone: { soft: string; text: string };
-}[] = [
-  {
-    label: "New Campaign",
-    hint: "Send a template to an audience",
-    href: APP_ROUTES.marketingCampaignNew,
-    icon: Megaphone,
-    tone: TILES.contacts,
-  },
-  {
-    label: "New Template",
-    hint: "Draft and submit for Meta review",
-    href: APP_ROUTES.whatsappTemplates,
-    icon: FileText,
-    tone: TILES.response,
-  },
-  {
-    label: "Add Contacts",
-    hint: "Import numbers and opt-in status",
-    href: APP_ROUTES.whatsappContacts,
-    icon: UserPlus,
-    tone: TILES.conversations,
-  },
-  {
-    label: "New Automation",
-    hint: "Trigger a flow from an event",
-    href: APP_ROUTES.whatsappAutomations,
-    icon: Zap,
-    tone: TILES.automation,
-  },
-  {
-    label: "View Analytics",
-    hint: "Delivery, response times and templates",
-    href: APP_ROUTES.whatsappAnalytics,
-    icon: BarChart3,
-    tone: TILES.waiting,
-  },
-];
 
 /* -------------------------------------------------------------------------- */
 /* Connection                                                                 */
@@ -340,11 +285,39 @@ export function WhatsAppOverview() {
 
       <StatsGrid items={STATS} accent={ACCENT} columns={5} />
 
-      <div className="grid gap-4 xl:grid-cols-3">
+      {/*
+        Conversations first, where Quick Actions used to be.
+
+        That card was five links — Campaigns, Templates, Contacts, Automations
+        and Analytics — and every one of them is a tab in the module's own nav
+        directly above it, so it was the navigation rendered a second time and
+        dressed as content. Removed rather than swapped for different
+        shortcuts: what the slot is worth is the threads waiting on a reply.
+
+        An even pair, so the two cards share a baseline. Inbox gives up the
+        two-thirds it held while Quick Actions took the remaining third; at half
+        each, the conversation rows get the measure they were drawn at and the
+        queue's four counts still sit four across.
+      */}
+      <div className="grid gap-4 lg:grid-cols-2">
+        <PanelCard
+          title="Recent Conversations"
+          description="The five most recently active threads."
+          action={
+            <ButtonLink href={APP_ROUTES.whatsappInbox} variant="ghost" size="sm">
+              Open inbox
+            </ButtonLink>
+          }
+        >
+          <RecentConversations
+            conversations={conversations}
+            hrefBase={APP_ROUTES.whatsappInbox}
+          />
+        </PanelCard>
+
         <PanelCard
           title="Inbox"
           description="The queue as it stands, and who is carrying it."
-          className="xl:col-span-2"
           action={
             <ButtonLink
               href={APP_ROUTES.whatsappInbox}
@@ -415,64 +388,18 @@ export function WhatsAppOverview() {
             </ul>
           </div>
         </PanelCard>
-
-        <PanelCard
-          title="Quick Actions"
-          description="The five places this module starts from."
-        >
-          <ul className="space-y-2">
-            {QUICK_ACTIONS.map((action) => (
-              <li key={action.href}>
-                <Link
-                  href={action.href}
-                  className="flex items-center gap-3 rounded-panel border border-border px-3 py-2.5 transition-colors hover:border-primary-border hover:bg-primary-soft/60 focus-visible:shadow-focus focus-visible:outline-none"
-                >
-                  <span
-                    className={cn(
-                      "grid size-9 shrink-0 place-items-center rounded-btn",
-                      action.tone.soft,
-                      action.tone.text,
-                    )}
-                  >
-                    <action.icon className="size-4.5" aria-hidden />
-                  </span>
-
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-semibold text-text-primary">
-                      {action.label}
-                    </span>
-                    <span className="block truncate text-meta text-text-secondary">
-                      {action.hint}
-                    </span>
-                  </span>
-
-                  <ChevronRight
-                    className="size-4 shrink-0 text-text-muted"
-                    aria-hidden
-                  />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </PanelCard>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
-        <PanelCard
-          title="Recent Conversations"
-          description="The five most recently active threads."
-          action={
-            <ButtonLink href={APP_ROUTES.whatsappInbox} variant="ghost" size="sm">
-              Open inbox
-            </ButtonLink>
-          }
-        >
-          <RecentConversations
-            conversations={conversations}
-            hrefBase={APP_ROUTES.whatsappInbox}
-          />
-        </PanelCard>
+      {/*
+        The analytics pair, at even width.
 
+        These two and Recent Conversations used to share a three-column row, so
+        each got a third of the page — which left a timeline entry's icon,
+        title, detail and timestamp competing inside about 380px. Two cards at
+        half the page each, and grid stretch keeps them the same height without
+        either one naming a height of its own.
+      */}
+      <div className="grid gap-4 lg:grid-cols-2">
         <PanelCard
           title="Automation Activity"
           description="What ran on its own in the last 30 days."
