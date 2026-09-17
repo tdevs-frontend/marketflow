@@ -19,47 +19,50 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { StatsGrid, MiniStat, type StatItem } from "@/components/ui/stats-card";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
 import { useToast } from "@/components/ui/toast";
-import { BarsChart } from "@/components/dashboard/charts/bars-chart";
 import { TrendChart } from "@/components/dashboard/charts/trend-chart";
-import {
-  CHANNEL_SERIES,
-  OUTCOME_COLORS,
-  RATE_COLORS,
-} from "@/components/dashboard/charts/chart-theme";
+import { CHANNEL_SERIES } from "@/components/dashboard/charts/chart-theme";
 import { CHANNEL_THEME } from "@/constants/channels";
 import { AUDIENCES, CAMPAIGNS } from "@/lib/marketing-fixtures";
 import {
-  WA_ACTIVE_HOURS,
-  WA_AUDIENCE_INSIGHTS,
-  WA_CONVERSATION_VOLUME,
   WA_DAY_LABELS,
-  WA_ENGAGEMENT_BEHAVIOUR,
   WA_FUNNEL,
   WA_INBOX_SNAPSHOT,
   WA_RESPONSE_TIME,
   WA_SERIES,
   WA_TEMPLATE_PERFORMANCE,
-  rateSeries,
   whatsappTotals,
 } from "@/lib/whatsapp-fixtures";
 import { formatCount, formatNumber, formatPercent, rate } from "@/lib/format";
 import { ConversionFunnel } from "../shared/conversion-funnel";
 
 /**
- * WhatsApp analytics — the channel's own performance page, and nothing else's.
+ * WhatsApp analytics — the channel's own operational performance, and nothing
+ * else's.
  *
- * Six things in order: what was sent and how much of it landed, the trend
- * behind that, the funnel from a message to an order, how fast the inbox
- * answered and who answered it, which templates earn their slot, and how
- * customers behave once a thread is open.
+ * Five things in order: what was sent and how much landed (the KPI row), how
+ * that moved (one trend), where the population thinned and whether speed was
+ * the cause (the funnel beside the response-time spread), which templates earn
+ * their slot, and who worked the inbox.
  *
- * Campaign Comparison is gone. It ranked WhatsApp campaigns on read and reply
- * rate, which is a *campaign* reading rather than a *channel* one — the
- * Campaigns page owns the list and the Marketing overview owns the
- * cross-channel comparison, so this page was the third place to rank the same
- * six campaigns. Nothing on it now reports revenue, sales or audience growth
- * either; Commerce, Sales and the Customers module own those, and a WhatsApp
- * page restating them is how a merchant ends up unsure which figure is real.
+ * It was nine panels. What came out and why:
+ *
+ * - Campaign Comparison ranked WhatsApp campaigns on read and reply rate. That
+ *   is a *campaign* reading, and the Campaigns page owns the list while the
+ *   Marketing overview owns the cross-channel view.
+ * - Conversation Volume plotted inbound against outbound threads, which is the
+ *   same trend the one chart above it now carries.
+ * - Response Time plotted median against p90 as a line, which the Distribution
+ *   panel beside the funnel already says as a spread — and says better, since
+ *   the shape of the tail is the finding rather than its two summary numbers.
+ *   The Distribution stayed; the line went.
+ * - A delivery/read/reply rate switcher drew a third view of the KPI row's own
+ *   two rates.
+ * - Customer Engagement Insights and Top Segments were audience analysis; the
+ *   Customers module owns that.
+ *
+ * Nothing here reports revenue, sales or audience growth: Commerce, Sales and
+ * Customers own those, and a WhatsApp page restating them is how a merchant
+ * ends up unsure which figure is real.
  *
  * The split with the module's Overview is by *what kind of fact*, not by
  * subject: a rate, a trend or a ranking over a period belongs here; something
@@ -135,34 +138,6 @@ const TREND_WINDOWS: { value: TrendWindow; label: string; points: number }[] = [
   { value: "90d", label: "90 days", points: 10 },
 ];
 
-type RateMetric = "delivery" | "read" | "reply";
-
-const RATE_META: Record<
-  RateMetric,
-  { label: string; description: string; part: number[]; total: number[]; hex: string }
-> = {
-  delivery: {
-    label: "Delivery rate",
-    description: "Delivered as a share of sent. A dip here is a number problem.",
-    part: WA_SERIES.delivered,
-    total: WA_SERIES.sent,
-    hex: CHANNEL_SERIES.whatsapp[0],
-  },
-  read: {
-    label: "Read rate",
-    description: "Read as a share of delivered. A dip here is a content problem.",
-    part: WA_SERIES.read,
-    total: WA_SERIES.delivered,
-    hex: CHANNEL_SERIES.whatsapp[1],
-  },
-  reply: {
-    label: "Reply rate",
-    description: "Replies as a share of delivered. This is the one that predicts revenue.",
-    part: WA_SERIES.replied,
-    total: WA_SERIES.delivered,
-    hex: CHANNEL_SERIES.whatsapp[2],
-  },
-};
 
 /* -------------------------------------------------------------------------- */
 /* Response time                                                              */
@@ -215,16 +190,6 @@ const AGENT_ROWS = [...WA_INBOX_SNAPSHOT.agents].sort(
   (a, b) => b.resolutionRate - a.resolutionRate,
 );
 
-/** The busiest two-hour bucket, named in the panel's description. */
-const PEAK_HOUR = (() => {
-  const peak = WA_ACTIVE_HOURS.messages.reduce(
-    (best, value, index) =>
-      value > WA_ACTIVE_HOURS.messages[best] ? index : best,
-    0,
-  );
-  return { label: WA_ACTIVE_HOURS.labels[peak] };
-})();
-
 /* -------------------------------------------------------------------------- */
 /* Templates                                                                  */
 /* -------------------------------------------------------------------------- */
@@ -244,10 +209,8 @@ export function WhatsAppAnalytics() {
   const toast = useToast();
   const [range, setRange] = useState<DateRangeValue>(DEFAULT_RANGE);
   const [audience, setAudience] = useState("all");
-  const [metric, setMetric] = useState<RateMetric>("read");
   const [trendWindow, setTrendWindow] = useState<TrendWindow>("30d");
 
-  const meta = RATE_META[metric];
 
   /*
    * The trend's series, sliced to the chosen window.
@@ -263,9 +226,9 @@ export function WhatsAppAnalytics() {
 
     return {
       labels: tail(WA_DAY_LABELS),
-      read: tail(WA_SERIES.read),
-      delivered: tail(WA_SERIES.delivered),
-      failed: tail(WA_SERIES.failed),
+      sent: tail(WA_SERIES.sent),
+      replied: tail(WA_SERIES.replied),
+      conversions: tail(WA_SERIES.conversions),
     };
   })();
 
@@ -302,8 +265,8 @@ export function WhatsAppAnalytics() {
       <StatsGrid items={STATS} accent={ACCENT} columns={4} />
 
       <ChartCard
-        title="Message Engagement Trend"
-        description="Every outcome across the window, stacked to the total sent."
+        title="Engagement Trend"
+        description="Messages out, replies back and orders placed, across the window."
         action={
           <SegmentedControl
             label="Trend window"
@@ -317,149 +280,65 @@ export function WhatsAppAnalytics() {
          * Swatches come from the channel ramp, not the brand ramp.
          *
          * Every legend on this page named an indigo that no chart on it draws:
-         * `bg-primary` is #4f46e5, and these bars are #34d399 and #059669. A
+         * `bg-primary` is #4f46e5, and these lines are #059669 and #34d399. A
          * legend whose colour does not match its series is worse than no
          * legend — it is a key that mislabels the thing it is keying.
          */
         legend={[
-          { label: "Read", swatch: "bg-whatsapp-bright" },
-          { label: "Delivered, unread", swatch: "bg-whatsapp" },
-          { label: "Failed", swatch: "bg-error" },
+          { label: "Messages", swatch: "bg-whatsapp" },
+          { label: "Replies", swatch: "bg-whatsapp-bright" },
+          { label: "Conversions", swatch: "bg-chart-neutral-strong" },
         ]}
       >
-        <BarsChart
+        {/*
+         * Three lines, not a stacked delivery breakdown.
+         *
+         * This card used to stack read, delivered-unread and failed to the
+         * total sent — which is the delivery story, and the delivery story was
+         * already the KPI row's Delivery Rate and the funnel's first two
+         * stages. Three separate panels answering it left the page with no
+         * chart of what the channel actually produced.
+         *
+         * Lines rather than bars because the three series are orders of
+         * magnitude apart — 35,200 messages against 597 conversions — and
+         * stacked bars would bury the bottom two inside the axis. A line keeps
+         * the shape of a small series readable next to a large one.
+         */}
+        <TrendChart
           categories={trend.labels}
           series={[
-            { name: "Read", data: trend.read },
-            {
-              name: "Delivered, unread",
-              /* Delivered minus read, so the stack sums to delivered rather
-                 than double-counting the read messages inside it. */
-              data: trend.delivered.map(
-                (value, index) => value - trend.read[index],
-              ),
-            },
-            { name: "Failed", data: trend.failed },
+            { name: "Messages", data: trend.sent },
+            { name: "Replies", data: trend.replied },
+            { name: "Conversions", data: trend.conversions },
           ]}
-          colors={[
-            OUTCOME_COLORS.succeeded,
-            OUTCOME_COLORS.partial,
-            OUTCOME_COLORS.failed,
-          ]}
-          stacked
+          colors={CHANNEL_SERIES.whatsapp}
+          variant="line"
           unit="messages"
         />
       </ChartCard>
 
-      <div className="grid gap-4 xl:grid-cols-3">
-        <ChartCard
-          title={meta.label}
-          description={meta.description}
-          className="xl:col-span-2"
-          action={
-            <SegmentedControl
-              label="Rate metric"
-              value={metric}
-              onChange={setMetric}
-              options={[
-                { value: "delivery", label: "Delivery" },
-                { value: "read", label: "Read" },
-                { value: "reply", label: "Reply" },
-              ]}
-            />
-          }
-        >
-          <TrendChart
-            categories={WA_DAY_LABELS}
-            series={[{ name: meta.label, data: rateSeries(meta.part, meta.total) }]}
-            colors={[meta.hex]}
-            format="percent"
-            yAxisMax={100}
-          />
-        </ChartCard>
+      {/*
+        The funnel and the response-time spread, side by side.
 
+        They pair because they are the channel's two failure modes read
+        together: the funnel says where the population is lost, the
+        distribution says whether the loss is a speed problem. A tail of
+        four-hour first replies beside a collapse between Delivered and
+        Replies is a different diagnosis from the same collapse with every
+        reply inside a minute.
+
+        This is the only response-time panel on the page. A Response Time
+        trend used to sit beside it saying the same thing as a line, and
+        Agent Performance below breaks the figure out per person.
+      */}
+      <div className="grid gap-4 lg:grid-cols-2">
         <PanelCard
           title="Conversation Funnel"
           description="Sent through to an order, over the period."
         >
           <ConversionFunnel stages={WA_FUNNEL} />
         </PanelCard>
-      </div>
 
-      <div className="grid gap-4 xl:grid-cols-2">
-        {/*
-         * Conversation volume moved here from the Overview.
-         *
-         * It is a four-week trend, which made it the odd panel out on a page
-         * about what is waiting in the queue — and it belongs beside response
-         * time, because the two together are the whole story of the inbox:
-         * how much came in, and how fast it was answered.
-         */}
-        <ChartCard
-          title="Conversation Volume"
-          description="Threads opened by a contact, and threads we opened."
-          legend={[
-            {
-              label: "Inbound",
-              swatch: "bg-whatsapp",
-              value: formatNumber(WA_CONVERSATION_VOLUME.inbound.at(-1) ?? 0),
-            },
-            {
-              label: "Outbound",
-              swatch: "bg-border-strong",
-              value: formatNumber(WA_CONVERSATION_VOLUME.outbound.at(-1) ?? 0),
-            },
-          ]}
-        >
-          <TrendChart
-            categories={WA_DAY_LABELS}
-            series={[
-              { name: "Inbound", data: WA_CONVERSATION_VOLUME.inbound },
-              { name: "Outbound", data: WA_CONVERSATION_VOLUME.outbound },
-            ]}
-            colors={[CHANNEL_SERIES.whatsapp[0], OUTCOME_COLORS.neutral]}
-            height={260}
-            unit="threads"
-          />
-        </ChartCard>
-
-        <ChartCard
-          title="Response Time"
-          description="How long a contact waits for the first human reply."
-          legend={[
-            {
-              label: "Median",
-              swatch: theme.accent,
-              value: `${WA_RESPONSE_TIME.medianMinutes}m`,
-            },
-            {
-              label: "90th percentile",
-              swatch: "bg-warning",
-              value: `${WA_RESPONSE_TIME.p90Minutes}m`,
-            },
-          ]}
-        >
-          {/*
-           * Median and p90, not a mean. One thread left overnight drags an
-           * average past every number a team would recognise, and the gap
-           * between these two lines is the finding: the middle of the queue is
-           * fast, the tail is where a customer gives up.
-           */}
-          <TrendChart
-            categories={WA_DAY_LABELS}
-            series={[
-              { name: "Median", data: [...WA_RESPONSE_TIME.median] },
-              { name: "90th percentile", data: [...WA_RESPONSE_TIME.p90] },
-            ]}
-            colors={[CHANNEL_SERIES.whatsapp[0], RATE_COLORS.warn]}
-            variant="line"
-            height={260}
-            unit="min"
-          />
-        </ChartCard>
-      </div>
-
-      <div className="grid gap-4 xl:grid-cols-3">
         <PanelCard
           title="Response Time Distribution"
           description={`Every first reply in the period, against the ${WA_RESPONSE_TIME.targetMinutes}-minute target.`}
@@ -490,12 +369,12 @@ export function WhatsAppAnalytics() {
             />
           </div>
         </PanelCard>
+      </div>
 
-        <PanelCard
-          title="Template Performance"
-          description="Every template that sent in the period, best reply rate first."
-          className="xl:col-span-2"
-        >
+      <PanelCard
+        title="Template Performance"
+        description="Every template that sent in the period, best reply rate first."
+      >
           <Table minWidth="34rem">
             <THead>
               <TH>Template</TH>
@@ -562,18 +441,22 @@ export function WhatsAppAnalytics() {
               ))}
             </TBody>
           </Table>
-        </PanelCard>
-      </div>
+      </PanelCard>
+
       {/*
         Inbox performance: who handled the queue, and how well.
 
-        The response-time panels above report the channel's speed as one
-        number; this reports it per agent, which is the reading a team lead
-        acts on. The roster is `WA_INBOX_SNAPSHOT.agents` — the same seven the
-        Overview's Agent Load panel draws — so the two pages can never name a
-        different team. What differs is the window: `open` is the queue right
-        now and `handled` is the period, which is why Overview shows one and
-        this shows the other.
+        This is now the only place response time is reported. A Response Time
+        trend and a Response Time Distribution used to sit above it, which made
+        three panels answering "how fast is the inbox" on one page — and the
+        two charts answered it for the channel as a whole, where only the per
+        agent reading tells a team lead who needs help.
+
+        The roster is `WA_INBOX_SNAPSHOT.agents` — the same seven the Overview's
+        Agent Load panel draws — so the two pages can never name a different
+        team. What differs is the window: `open` is the queue right now and
+        `handled` is the period, which is why Overview shows one and this shows
+        the other.
       */}
       <PanelCard
         title="Agent Performance"
@@ -607,121 +490,6 @@ export function WhatsAppAnalytics() {
                   className="font-bold text-whatsapp-dark tabular-nums"
                 >
                   {formatPercent(agent.resolutionRate)}
-                </TD>
-              </TR>
-            ))}
-          </TBody>
-        </Table>
-      </PanelCard>
-
-      <PanelCard
-        title="Customer Engagement Insights"
-        description="When customers message, which segments answer, and how they behave."
-      >
-        <div className="grid gap-5 lg:grid-cols-2">
-          <div>
-            <p className="text-sm font-semibold text-text-primary">
-              Active hours
-            </p>
-            <p className="mt-0.5 text-sm text-text-secondary">
-              Inbound messages by time of day. Peak is {PEAK_HOUR.label}.
-            </p>
-            <div className="-ml-2.5 mt-3">
-              <BarsChart
-                categories={[...WA_ACTIVE_HOURS.labels]}
-                series={[
-                  { name: "Messages", data: [...WA_ACTIVE_HOURS.messages] },
-                ]}
-                colors={[CHANNEL_SERIES.whatsapp[0]]}
-                height={180}
-                unit="messages"
-              />
-            </div>
-          </div>
-
-          <div>
-            <p className="text-sm font-semibold text-text-primary">
-              Engagement behaviour
-            </p>
-            <p className="mt-0.5 text-sm text-text-secondary">
-              What a conversation looks like once it starts.
-            </p>
-            <dl className="mt-3 divide-y divide-border">
-              {WA_ENGAGEMENT_BEHAVIOUR.map((item) => (
-                <div
-                  key={item.label}
-                  className="flex items-baseline justify-between gap-3 py-2.5"
-                >
-                  <dt className="min-w-0">
-                    <span className="block truncate text-sm font-medium text-text-primary">
-                      {item.label}
-                    </span>
-                    <span className="block truncate text-sm text-text-muted">
-                      {item.hint}
-                    </span>
-                  </dt>
-                  <dd className="shrink-0 text-base font-bold text-text-primary tabular-nums">
-                    {item.kind === "rate"
-                      ? formatPercent(item.value)
-                      : item.value.toFixed(1)}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </div>
-      </PanelCard>
-
-      <PanelCard
-        title="Top Segments"
-        description="Reply rate by segment, and what it costs in opt-outs."
-      >
-        <Table minWidth="34rem">
-          <THead>
-            <TH>Segment</TH>
-            <TH align="right">Contacts</TH>
-            <TH align="right">Delivered</TH>
-            <TH align="right">Read rate</TH>
-            <TH align="right">Reply rate</TH>
-            <TH align="right">Opt-out</TH>
-          </THead>
-          <TBody>
-            {WA_AUDIENCE_INSIGHTS.map((row) => (
-              <TR key={row.label}>
-                {/* The row's subject, matching the template table beside it. */}
-                <TD className="font-semibold text-text-primary">{row.label}</TD>
-                <TD align="right" className="tabular-nums">
-                  {formatNumber(row.contacts)}
-                </TD>
-                <TD align="right" className="tabular-nums">
-                  {formatNumber(row.delivered)}
-                </TD>
-                <TD align="right" className="tabular-nums">
-                  {formatPercent(row.readRate)}
-                </TD>
-                {/* Same metric as the template table, so the same green. It
-                    reads against the opt-out column two cells over: what a
-                    segment gives back, and what it costs to ask. */}
-                <TD
-                  align="right"
-                  className="font-bold text-whatsapp-dark tabular-nums"
-                >
-                  {formatPercent(row.replyRate)}
-                </TD>
-                {/*
-                 * The one column where a bigger number is worse, so it is the
-                 * only one that changes colour: past 2% a segment is being
-                 * messaged more than it wants.
-                 */}
-                <TD
-                  align="right"
-                  className={
-                    row.optOutRate >= 2
-                      ? "font-semibold text-error tabular-nums"
-                      : "tabular-nums"
-                  }
-                >
-                  {formatPercent(row.optOutRate)}
                 </TD>
               </TR>
             ))}

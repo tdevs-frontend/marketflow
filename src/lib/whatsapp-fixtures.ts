@@ -469,6 +469,15 @@ export const WA_SERIES = {
   ],
   failed: [516, 438, 472, 411, 472, 509, 450, 629, 756, 492],
   optOuts: [42, 51, 46, 58, 54, 62, 68, 74, 86, 82],
+  /**
+   * Orders placed inside a thread, per point.
+   *
+   * Sums to 4,980 — the Conversions stage of `WA_FUNNEL` — so the trend and
+   * the funnel are the same population counted two ways and cannot drift. It
+   * tracks `replied` rather than `sent`, because a conversion here follows a
+   * conversation rather than a broadcast.
+   */
+  conversions: [316, 409, 347, 484, 409, 515, 588, 588, 615, 709],
 };
 
 /** A rate series as percentages, for the charts that plot one. */
