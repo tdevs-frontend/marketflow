@@ -30,8 +30,6 @@ export interface EmailCampaign {
   bounced: number;
   unsubscribed: number;
   complained: number;
-  /** Clicks that reached the campaign's goal — the funnel's last stage. */
-  converted: number;
   templateId?: string;
   createdAt: string;
   scheduledAt?: string;
@@ -90,6 +88,15 @@ export interface EmailTemplate {
   usageCount: number;
   /** Average open rate across those campaigns, or 0 if never sent. */
   openRate: number;
+  /**
+   * Average click rate across the same campaigns, of delivered.
+   *
+   * Beside `openRate` rather than derived from it, and the pair is the point:
+   * a template whose subject line wins the open and whose body loses the click
+   * is a different problem from one nobody opens, and one number cannot say
+   * which of the two you have.
+   */
+  clickRate: number;
   updatedAt: string;
 }
 
@@ -118,6 +125,28 @@ export interface EmailContact {
   campaigns: number;
   lastActivityAt: string;
   createdAt: string;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Trend                                                                      */
+/* -------------------------------------------------------------------------- */
+
+/** The windows the performance trend can be read over. */
+export type EmailTrendPeriod = "7d" | "30d" | "90d";
+
+/**
+ * One period's worth of sending, at whatever grain suits it.
+ *
+ * The three periods carry their own labels rather than sharing an axis: seven
+ * days is read daily, thirty in three-day steps and ninety in ten-day ones, and
+ * forcing ninety daily points through a 320px chart draws a hairball rather
+ * than a trend.
+ */
+export interface EmailTrendSeries {
+  labels: string[];
+  sent: number[];
+  opened: number[];
+  clicked: number[];
 }
 
 /* -------------------------------------------------------------------------- */

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 
 import { ChartCard, PanelCard } from "@/components/ui/chart-card";
 import { DEFAULT_RANGE, type DateRangeValue } from "@/components/ui/date-range";
@@ -13,93 +14,96 @@ import {
   CHANNEL_SERIES,
   RATE_COLORS,
 } from "@/components/dashboard/charts/chart-theme";
+import { SparklineChart } from "@/components/dashboard/charts/sparkline-chart";
 import { TrendChart } from "@/components/dashboard/charts/trend-chart";
+import { CHANNEL_THEME } from "@/constants/channels";
 import {
   EMAIL_CAMPAIGNS,
-  EMAIL_DAY_LABELS,
   EMAIL_SERIES,
+  EMAIL_TEMPLATES,
+  EMAIL_TREND_PERIODS,
+  EMAIL_TRENDS,
   emailTotals,
 } from "@/lib/email-fixtures";
 import { formatNumber, formatPercent, rate } from "@/lib/format";
-import type { FunnelStage } from "@/lib/overview-fixtures";
-import { ConversionFunnel } from "../shared/conversion-funnel";
+import { cn } from "@/lib/utils";
+import type { EmailTrendPeriod } from "@/types/email";
 import { EmailCampaignStatusBadge } from "./campaign-row";
 
 /**
  * Email analytics.
  *
- * Three things, and deliberately only three: where the sends went, how
- * engagement moved, and which campaigns did better than which. It replaced a
- * page carrying nine panels, of which a stat row, a device donut, a send-time
- * list and a template ranking were already on the Overview, and a stacked
- * volume chart said the same thing as the trend directly above it. Two of the
- * rest reported attributed revenue, which belongs to the cross-channel
- * workspace where email can be weighed against WhatsApp and SMS rather than
- * against itself.
+ * Four panels, and each answers a question someone can act on: are the four
+ * rates healthy, is the sending programme growing or shrinking, which campaigns
+ * beat the average, and which templates are worth reusing.
  *
- * The comparison is a table rather than the paired bar chart it used to be.
- * Six campaigns on a horizontal bar chart compared two rates and no volume, so
- * a 71.8% open rate on 1,236 delivered sorted above a 39.0% on 18,064 with
- * nothing on screen to say why that is not the better campaign.
+ * The page opened on a Sent → Delivered → Opened → Clicked → Converted funnel
+ * until this revision. It was the most generic thing on it — every channel's
+ * analytics can draw that shape, so it said nothing about *email* — and the two
+ * stages nobody could act on from here, delivered and converted, are exactly
+ * the ones a campaign's own report exists to explain. The engagement card in
+ * its place carries the same information where it is useful: as four rates with
+ * their direction of travel, which is what tells you whether to rewrite a
+ * subject line or go and look at a bounce log.
+ *
+ * Still no revenue, orders or list growth. Those are cross-channel questions
+ * and the Marketing workspace is where four channels can be compared; here they
+ * would only ever be email measured against itself.
  */
 
 const TOTALS = emailTotals(EMAIL_CAMPAIGNS);
 
 /**
- * Sent → Delivered → Opened → Clicked → Converted.
+ * The four rates, with the shape each has been making.
  *
- * Every stage is a subset of the one above it, so the drop between two rows is
- * a real loss rather than two unrelated measures compared. Converted counts
- * clicks that reached the campaign's goal, which is why it hangs off Clicked
- * and not off Delivered.
+ * `invert` marks the two where a fall is the good outcome. Without it a bounce
+ * rate dropping a point and an open rate dropping a point are drawn the same
+ * colour, which is the one mistake this card cannot afford — these are the
+ * numbers people scan for red.
  */
-const FUNNEL: FunnelStage[] = [
-  { label: "Sent", count: TOTALS.sent, hint: "Handed to the provider" },
-  { label: "Delivered", count: TOTALS.delivered, hint: "Accepted by the inbox" },
-  { label: "Opened", count: TOTALS.opened, hint: "Pixel or image loaded" },
-  { label: "Clicked", count: TOTALS.clicked, hint: "Followed a link" },
-  { label: "Converted", count: TOTALS.converted, hint: "Reached the campaign goal" },
-];
-
-type RateMetric = "open" | "click" | "bounce";
-
-/**
- * One chart, three readings. Separate rather than three lines on one axis:
- * opens run near 40%, clicks near 14% and bounces near 2%, and plotted
- * together the two that matter most when something breaks are flat lines along
- * the bottom.
- */
-const RATE_META: Record<
-  RateMetric,
-  { label: string; description: string; data: number[]; hex: string; max: number }
-> = {
-  open: {
-    label: "Open rate",
-    description: "Opens as a share of delivered. Subject lines move this number.",
+const ENGAGEMENT: {
+  label: string;
+  value: number;
+  hint: string;
+  changePercent: number;
+  data: number[];
+  invert?: boolean;
+}[] = [
+  {
+    label: "Open Rate",
+    value: rate(TOTALS.opened, TOTALS.delivered),
+    hint: `${formatNumber(TOTALS.opened)} opens of delivered`,
+    changePercent: 3.8,
     data: EMAIL_SERIES.openRate,
-    hex: CHANNEL_SERIES.email[0],
-    max: 60,
   },
-  click: {
-    label: "Click rate",
-    description: "Clicks as a share of delivered. The body and the button move this one.",
+  {
+    label: "Click Rate",
+    value: rate(TOTALS.clicked, TOTALS.delivered),
+    hint: `${formatPercent(rate(TOTALS.clicked, Math.max(TOTALS.opened, 1)))} of opens`,
+    changePercent: 6.2,
     data: EMAIL_SERIES.clickRate,
-    hex: RATE_COLORS.warn,
-    max: 30,
   },
-  bounce: {
-    label: "Bounce rate",
-    description: "Above 2% sustained and the sending domain starts to suffer.",
+  {
+    label: "Bounce Rate",
+    value: rate(TOTALS.bounced, TOTALS.sent),
+    hint: "Above 2% risks the sending domain",
+    changePercent: -1.4,
     data: EMAIL_SERIES.bounceRate,
-    hex: RATE_COLORS.bad,
-    max: 8,
+    invert: true,
   },
-};
+  {
+    label: "Unsubscribe Rate",
+    value: rate(TOTALS.unsubscribed, TOTALS.delivered),
+    hint: `${formatNumber(TOTALS.unsubscribed)} opted out`,
+    changePercent: -0.6,
+    data: EMAIL_SERIES.unsubscribeRate,
+    invert: true,
+  },
+];
 
 const SORT_OPTIONS = [
   { value: "openRate", label: "Best open rate" },
   { value: "clickRate", label: "Best click rate" },
-  { value: "conversionRate", label: "Best conversion rate" },
   { value: "sent", label: "Most sent" },
 ] as const;
 
@@ -108,15 +112,19 @@ type SortField = (typeof SORT_OPTIONS)[number]["value"];
 /** Sent campaigns only — a scheduled campaign has no rate to compare. */
 const SENT = EMAIL_CAMPAIGNS.filter((campaign) => campaign.delivered > 0);
 
+/** Templates with sends behind them. A 0% average is an absence, not a result. */
+const USED_TEMPLATES = EMAIL_TEMPLATES.filter(
+  (template) => template.usageCount > 0,
+);
+
 /**
  * The seam the dashboard's date filter plugs into.
  *
  * Nothing narrows on the range yet, and the function says so rather than
- * pretending: `EMAIL_SERIES` is ten fixed points with no dates attached, and a
- * campaign carries a `createdAt` but none of the per-day figures the rates are
- * computed from. Filtering here today would either do nothing or empty the
- * table, and a page that silently drops rows is worse than one that reports the
- * whole set.
+ * pretending: a campaign carries a `createdAt` but none of the per-day figures
+ * the rates are computed from. Filtering here today would either do nothing or
+ * empty the table, and a page that silently drops rows is worse than one that
+ * reports the whole set.
  *
  * It exists so the range arrives as data on a real code path instead of as a
  * prop nobody reads: when the central filter and dated fixtures land, this is
@@ -125,6 +133,11 @@ const SENT = EMAIL_CAMPAIGNS.filter((campaign) => campaign.delivered > 0);
 function withinRange<T>(rows: T[], range: DateRangeValue): T[] {
   void range;
   return rows;
+}
+
+/** The trend's own window, seeded from the page range when the two can agree. */
+function periodFor(range: DateRangeValue): EmailTrendPeriod {
+  return range.preset === "7d" || range.preset === "90d" ? range.preset : "30d";
 }
 
 export interface EmailAnalyticsProps {
@@ -141,12 +154,16 @@ export interface EmailAnalyticsProps {
 }
 
 export function EmailAnalytics({ range = DEFAULT_RANGE }: EmailAnalyticsProps) {
-  const [metric, setMetric] = useState<RateMetric>("open");
+  /* The chart's window is its own control, initialised from the page range.
+     Reading three months of sending is a thing you do *to* a chart, and making
+     it reset the campaign table and every rate on the page would be a heavier
+     answer than the question deserves. */
+  const [period, setPeriod] = useState<EmailTrendPeriod>(() => periodFor(range));
   const [sort, setSort] = useState<SortField>("openRate");
 
-  const meta = RATE_META[metric];
+  const trend = EMAIL_TRENDS[period];
 
-  const comparison = useMemo(() => {
+  const campaigns = useMemo(() => {
     const rows = withinRange(SENT, range);
 
     return [...rows].sort((a, b) => {
@@ -154,54 +171,112 @@ export function EmailAnalytics({ range = DEFAULT_RANGE }: EmailAnalyticsProps) {
       if (sort === "clickRate") {
         return rate(b.clicked, b.delivered) - rate(a.clicked, a.delivered);
       }
-      if (sort === "conversionRate") {
-        return rate(b.converted, b.clicked) - rate(a.converted, a.clicked);
-      }
       return rate(b.opened, b.delivered) - rate(a.opened, a.delivered);
     });
   }, [range, sort]);
+
+  const templates = [...USED_TEMPLATES].sort((a, b) => b.openRate - a.openRate);
 
   return (
     <>
       <div className="grid gap-4 xl:grid-cols-3">
         <ChartCard
-          title="Engagement Trend"
-          description={meta.description}
+          title="Email Performance Trend"
+          description="Sends, opens and clicks over the window you pick."
           className="xl:col-span-2"
           action={
             <SegmentedControl
-              label="Rate metric"
-              value={metric}
-              onChange={setMetric}
-              options={[
-                { value: "open", label: "Open" },
-                { value: "click", label: "Click" },
-                { value: "bounce", label: "Bounce" },
-              ]}
+              label="Trend period"
+              value={period}
+              onChange={setPeriod}
+              options={EMAIL_TREND_PERIODS}
             />
           }
-          legend={[{ label: meta.label, swatch: "bg-email" }]}
+          legend={[
+            {
+              label: "Sent",
+              swatch: "bg-email",
+              value: formatNumber(trend.sent.at(-1) ?? 0),
+            },
+            {
+              label: "Opened",
+              swatch: "bg-accent",
+              value: formatNumber(trend.opened.at(-1) ?? 0),
+            },
+            {
+              label: "Clicked",
+              swatch: "bg-border-strong",
+              value: formatNumber(trend.clicked.at(-1) ?? 0),
+            },
+          ]}
         >
           <TrendChart
-            categories={EMAIL_DAY_LABELS}
-            series={[{ name: meta.label, data: meta.data }]}
-            colors={[meta.hex]}
-            variant="line"
-            format="percent"
-            yAxisMax={meta.max}
+            categories={trend.labels}
+            series={[
+              { name: "Sent", data: trend.sent },
+              { name: "Opened", data: trend.opened },
+              { name: "Clicked", data: trend.clicked },
+            ]}
+            colors={CHANNEL_SERIES.email}
+            unit="emails"
           />
         </ChartCard>
 
         <PanelCard
-          title="Email Funnel"
-          description="Sent through to a conversion, over the period."
+          title="Email Engagement Overview"
+          description="The four rates that decide whether this channel keeps working."
         >
-          <ConversionFunnel stages={FUNNEL} />
+          <ul className="divide-y divide-border">
+            {ENGAGEMENT.map((metric) => {
+              const rising = metric.changePercent >= 0;
+              const good = metric.invert ? !rising : rising;
+              const TrendIcon = rising ? ArrowUpRight : ArrowDownRight;
+
+              return (
+                <li
+                  key={metric.label}
+                  className="flex items-center gap-3 py-3.5 first:pt-0 last:pb-0"
+                >
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-text-secondary">
+                      {metric.label}
+                    </p>
+                    <p className="mt-1 flex flex-wrap items-baseline gap-x-2">
+                      <span className="text-2xl leading-none font-bold text-text-primary tabular-nums">
+                        {formatPercent(metric.value)}
+                      </span>
+                      <span
+                        className={cn(
+                          "inline-flex items-center gap-0.5 text-sm font-medium",
+                          good ? "text-email" : "text-error",
+                        )}
+                      >
+                        <TrendIcon className="size-3.5" aria-hidden />
+                        {Math.abs(metric.changePercent).toFixed(1)}%
+                      </span>
+                    </p>
+                    <p className="mt-1 truncate text-sm text-text-muted">
+                      {metric.hint}
+                    </p>
+                  </div>
+
+                  {/* The shape, not a second reading of the number beside it —
+                      no axes, because at 40px the direction is the signal. */}
+                  <div className="w-24 shrink-0" aria-hidden>
+                    <SparklineChart
+                      data={metric.data}
+                      color={good ? CHANNEL_THEME.email.hex : RATE_COLORS.bad}
+                    />
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
         </PanelCard>
       </div>
 
       <PanelCard
-        title="Campaign Comparison"
+        title="Campaign Performance"
         description="Every campaign that has actually sent, ranked on the metric you pick."
         action={
           <Select
@@ -210,14 +285,14 @@ export function EmailAnalytics({ range = DEFAULT_RANGE }: EmailAnalyticsProps) {
             value={sort}
             onChange={(next) => setSort(next as SortField)}
             options={[...SORT_OPTIONS]}
-            className="lg:w-48"
+            className="lg:w-44"
           />
         }
       >
-        {comparison.length === 0 ? (
-          /* No local reset to offer any more: the period is set upstairs, so
-             the empty state says where to change it rather than handing over a
-             button that would only undo a filter this card no longer owns. */
+        {campaigns.length === 0 ? (
+          /* No local reset to offer: the period is set upstairs, so the empty
+             state says where to change it rather than handing over a button
+             that would only undo a filter this card does not own. */
           <EmptyState
             title="No sent campaigns in this period"
             description="Nothing was sent in the selected date range. Widen it in the dashboard filter."
@@ -226,31 +301,28 @@ export function EmailAnalytics({ range = DEFAULT_RANGE }: EmailAnalyticsProps) {
           <>
             {/* Desktop */}
             <div className="max-lg:hidden">
-              <Table minWidth="64rem">
+              <Table minWidth="56rem">
                 <THead>
                   <TH>Campaign</TH>
                   <TH align="right">Sent</TH>
-                  <TH align="right">Delivered</TH>
                   <TH>Open rate</TH>
                   <TH>Click rate</TH>
-                  <TH align="right">Converted</TH>
-                  <TH align="right">Unsub.</TH>
                   <TH>Status</TH>
                 </THead>
 
                 <TBody>
-                  {comparison.map((campaign) => {
+                  {campaigns.map((campaign) => {
                     const openRate = rate(campaign.opened, campaign.delivered);
                     const clickRate = rate(campaign.clicked, campaign.delivered);
 
                     return (
                       <TR key={campaign.id}>
                         <TD>
-                          <p className="max-w-56 truncate font-bold text-text-primary">
+                          <p className="max-w-64 truncate font-bold text-text-primary">
                             {campaign.name}
                           </p>
-                          <p className="max-w-56 truncate text-sm text-text-muted">
-                            {campaign.audienceLabel}
+                          <p className="max-w-64 truncate text-sm text-text-muted">
+                            {campaign.subject}
                           </p>
                         </TD>
 
@@ -258,11 +330,7 @@ export function EmailAnalytics({ range = DEFAULT_RANGE }: EmailAnalyticsProps) {
                           {formatNumber(campaign.sent)}
                         </TD>
 
-                        <TD align="right" className="text-text-secondary tabular-nums">
-                          {formatNumber(campaign.delivered)}
-                        </TD>
-
-                        <TD className="w-28">
+                        <TD className="w-36">
                           <p className="text-sm font-bold text-text-primary tabular-nums">
                             {formatPercent(openRate)}
                           </p>
@@ -275,7 +343,7 @@ export function EmailAnalytics({ range = DEFAULT_RANGE }: EmailAnalyticsProps) {
                           />
                         </TD>
 
-                        <TD className="w-28">
+                        <TD className="w-36">
                           <p className="text-sm font-bold text-text-primary tabular-nums">
                             {formatPercent(clickRate)}
                           </p>
@@ -286,33 +354,6 @@ export function EmailAnalytics({ range = DEFAULT_RANGE }: EmailAnalyticsProps) {
                             size="sm"
                             className="mt-1.5"
                           />
-                        </TD>
-
-                        <TD align="right" className="tabular-nums">
-                          {campaign.converted === 0 ? (
-                            <span className="text-text-muted">—</span>
-                          ) : (
-                            <>
-                              <span className="font-bold text-text-primary">
-                                {formatNumber(campaign.converted)}
-                              </span>
-                              <span className="block text-sm text-text-muted">
-                                {formatPercent(rate(campaign.converted, campaign.clicked))}{" "}
-                                of clicks
-                              </span>
-                            </>
-                          )}
-                        </TD>
-
-                        <TD align="right" className="tabular-nums">
-                          <span className="text-text-secondary">
-                            {formatNumber(campaign.unsubscribed)}
-                          </span>
-                          <span className="block text-sm text-text-muted">
-                            {formatPercent(
-                              rate(campaign.unsubscribed, campaign.delivered),
-                            )}
-                          </span>
                         </TD>
 
                         <TD>
@@ -327,7 +368,7 @@ export function EmailAnalytics({ range = DEFAULT_RANGE }: EmailAnalyticsProps) {
 
             {/* Mobile */}
             <ul className="space-y-2.5 lg:hidden">
-              {comparison.map((campaign) => (
+              {campaigns.map((campaign) => (
                 <li
                   key={campaign.id}
                   className="rounded-panel border border-border p-3.5"
@@ -338,13 +379,13 @@ export function EmailAnalytics({ range = DEFAULT_RANGE }: EmailAnalyticsProps) {
                         {campaign.name}
                       </p>
                       <p className="truncate text-sm text-text-muted">
-                        {campaign.audienceLabel}
+                        {campaign.subject}
                       </p>
                     </div>
                     <EmailCampaignStatusBadge status={campaign.status} />
                   </div>
 
-                  <dl className="mt-3 grid grid-cols-4 gap-2 text-center">
+                  <dl className="mt-3 grid grid-cols-3 gap-2 text-center">
                     {[
                       { label: "Sent", value: formatNumber(campaign.sent) },
                       {
@@ -355,13 +396,119 @@ export function EmailAnalytics({ range = DEFAULT_RANGE }: EmailAnalyticsProps) {
                         label: "Click",
                         value: formatPercent(rate(campaign.clicked, campaign.delivered)),
                       },
-                      {
-                        label: "Conv.",
-                        value:
-                          campaign.converted === 0
-                            ? "—"
-                            : formatNumber(campaign.converted),
-                      },
+                    ].map((cell) => (
+                      <div
+                        key={cell.label}
+                        className="rounded-panel bg-surface-secondary py-2"
+                      >
+                        <dt className="text-sm font-medium text-text-muted">
+                          {cell.label}
+                        </dt>
+                        <dd className="mt-0.5 text-sm font-bold text-text-primary tabular-nums">
+                          {cell.value}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </PanelCard>
+
+      <PanelCard
+        title="Top Performing Templates"
+        description="Averaged across every campaign that used them, best open rate first."
+      >
+        {templates.length === 0 ? (
+          <EmptyState
+            title="No template has been sent yet"
+            description="Once a campaign goes out on a template, its averages appear here."
+          />
+        ) : (
+          <>
+            {/* Desktop */}
+            <div className="max-lg:hidden">
+              <Table minWidth="48rem">
+                <THead>
+                  <TH>Template</TH>
+                  <TH align="right">Usage</TH>
+                  <TH>Open rate</TH>
+                  <TH>Click rate</TH>
+                </THead>
+
+                <TBody>
+                  {templates.map((template) => (
+                    <TR key={template.id}>
+                      <TD>
+                        <p className="max-w-64 truncate font-bold text-text-primary">
+                          {template.name}
+                        </p>
+                        <p className="max-w-64 truncate text-sm text-text-muted">
+                          {template.subject}
+                        </p>
+                      </TD>
+
+                      <TD align="right" className="tabular-nums">
+                        <span className="font-bold text-text-primary">
+                          {formatNumber(template.usageCount)}
+                        </span>
+                        <span className="block text-sm text-text-muted">
+                          campaign{template.usageCount === 1 ? "" : "s"}
+                        </span>
+                      </TD>
+
+                      <TD className="w-40">
+                        <p className="text-sm font-bold text-text-primary tabular-nums">
+                          {formatPercent(template.openRate)}
+                        </p>
+                        <ProgressBar
+                          value={template.openRate}
+                          label={`${template.name} open rate`}
+                          tone="bg-email"
+                          size="sm"
+                          className="mt-1.5"
+                        />
+                      </TD>
+
+                      <TD className="w-40">
+                        <p className="text-sm font-bold text-text-primary tabular-nums">
+                          {formatPercent(template.clickRate)}
+                        </p>
+                        <ProgressBar
+                          value={template.clickRate}
+                          label={`${template.name} click rate`}
+                          tone="bg-accent"
+                          size="sm"
+                          className="mt-1.5"
+                        />
+                      </TD>
+                    </TR>
+                  ))}
+                </TBody>
+              </Table>
+            </div>
+
+            {/* Mobile */}
+            <ul className="space-y-2.5 lg:hidden">
+              {templates.map((template) => (
+                <li
+                  key={template.id}
+                  className="rounded-panel border border-border p-3.5"
+                >
+                  <p className="truncate text-sm font-medium text-text-primary">
+                    {template.name}
+                  </p>
+                  <p className="truncate text-sm text-text-muted">
+                    {template.subject}
+                  </p>
+
+                  <dl className="mt-3 grid grid-cols-3 gap-2 text-center">
+                    {[
+                      { label: "Usage", value: formatNumber(template.usageCount) },
+                      { label: "Open", value: formatPercent(template.openRate) },
+                      { label: "Click", value: formatPercent(template.clickRate) },
                     ].map((cell) => (
                       <div
                         key={cell.label}

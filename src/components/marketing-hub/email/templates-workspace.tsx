@@ -68,6 +68,7 @@ const BLANK_TEMPLATE: EmailTemplate = {
   ],
   usageCount: 0,
   openRate: 0,
+  clickRate: 0,
   /* A fixed date, not `Date.now()`: a module-scope clock read differs between
      the server render and hydration, and an unsaved template has no
      meaningful modified time anyway. */
@@ -182,6 +183,7 @@ export function EmailTemplatesWorkspace() {
          earned — its own usage starts at nothing. */
       usageCount: 0,
       openRate: 0,
+      clickRate: 0,
       updatedAt: template.updatedAt,
     };
 

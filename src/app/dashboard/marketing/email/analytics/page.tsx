@@ -21,7 +21,7 @@ export default function EmailAnalyticsPage() {
       */}
       <PageHeader
         title="Email Analytics"
-        description="The funnel, the engagement trend and every campaign side by side."
+        description="Engagement, the sending trend, and which campaigns and templates earned it."
         secondaryActions={<EmailAnalyticsExport />}
       />
 

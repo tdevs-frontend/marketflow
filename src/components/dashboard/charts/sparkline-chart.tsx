@@ -10,6 +10,15 @@ export interface SparklineChartProps {
   data: number[];
   /** Stroke colour only. */
   trend?: "up" | "down";
+  /**
+   * A literal hex, overriding what `trend` would pick.
+   *
+   * For sparklines inside a channel module, where the indigo the trend defaults
+   * to is a second brand colour sitting beside the channel's own. Apex computes
+   * its gradient stops from the value it is given, so this is a hex rather than
+   * a CSS variable — the same reason `CHANNEL_THEME` carries one.
+   */
+  color?: string;
   height?: number;
 }
 
@@ -17,9 +26,11 @@ export interface SparklineChartProps {
 export function SparklineChart({
   data,
   trend = "up",
+  color: override,
   height = 40,
 }: SparklineChartProps) {
-  const color = trend === "up" ? CHART_COLORS.primary : CHART_COLORS.error;
+  const color =
+    override ?? (trend === "up" ? CHART_COLORS.primary : CHART_COLORS.error);
 
   const options = useMemo<ApexOptions>(
     () => ({

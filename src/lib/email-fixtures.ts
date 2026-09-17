@@ -8,6 +8,8 @@ import type {
   EmailSenderIdentity,
   EmailTemplate,
   EmailTemplateCategory,
+  EmailTrendPeriod,
+  EmailTrendSeries,
   EngagementLevel,
 } from "@/types/email";
 
@@ -207,7 +209,6 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 356,
     unsubscribed: 84,
     complained: 6,
-    converted: 246,
     templateId: "et-newsletter",
     createdAt: "2026-09-01T09:00:00Z",
     scheduledAt: "2026-09-02T08:00:00Z",
@@ -231,7 +232,6 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 136,
     unsubscribed: 41,
     complained: 3,
-    converted: 184,
     templateId: "et-promotion",
     createdAt: "2026-09-05T11:30:00Z",
     scheduledAt: "2026-09-06T09:00:00Z",
@@ -255,7 +255,6 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 12,
     unsubscribed: 4,
     complained: 0,
-    converted: 92,
     templateId: "et-welcome",
     createdAt: "2026-08-28T08:15:00Z",
   },
@@ -278,7 +277,6 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 22,
     unsubscribed: 9,
     complained: 1,
-    converted: 128,
     templateId: "et-abandoned-cart",
     createdAt: "2026-08-24T13:40:00Z",
   },
@@ -301,7 +299,6 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 68,
     unsubscribed: 22,
     complained: 2,
-    converted: 214,
     templateId: "et-product-launch",
     createdAt: "2026-08-18T10:00:00Z",
     scheduledAt: "2026-08-19T09:00:00Z",
@@ -325,7 +322,6 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 176,
     unsubscribed: 118,
     complained: 8,
-    converted: 38,
     templateId: "et-re-engagement",
     createdAt: "2026-08-12T14:20:00Z",
     scheduledAt: "2026-08-13T10:00:00Z",
@@ -349,7 +345,6 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 0,
     unsubscribed: 0,
     complained: 0,
-    converted: 0,
     templateId: "et-newsletter",
     createdAt: "2026-09-07T15:20:00Z",
     scheduledAt: "2026-09-24T13:00:00Z",
@@ -373,7 +368,6 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 0,
     unsubscribed: 0,
     complained: 0,
-    converted: 0,
     templateId: "et-product-launch",
     createdAt: "2026-09-06T09:40:00Z",
     scheduledAt: "2026-09-12T08:00:00Z",
@@ -397,7 +391,6 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 6,
     unsubscribed: 3,
     complained: 0,
-    converted: 0,
     templateId: "et-follow-up",
     createdAt: "2026-08-30T11:10:00Z",
   },
@@ -420,7 +413,6 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 380,
     unsubscribed: 0,
     complained: 0,
-    converted: 0,
     templateId: "et-promotion",
     createdAt: "2026-08-22T09:40:00Z",
     scheduledAt: "2026-08-23T08:00:00Z",
@@ -444,7 +436,6 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 0,
     unsubscribed: 0,
     complained: 0,
-    converted: 0,
     createdAt: "2026-09-08T07:30:00Z",
   },
   {
@@ -466,7 +457,6 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     bounced: 0,
     unsubscribed: 0,
     complained: 0,
-    converted: 0,
     createdAt: "2026-09-04T16:05:00Z",
   },
 ];
@@ -486,7 +476,6 @@ export function emailTotals(campaigns: EmailCampaign[]) {
       delivered: totals.delivered + campaign.delivered,
       opened: totals.opened + campaign.opened,
       clicked: totals.clicked + campaign.clicked,
-      converted: totals.converted + campaign.converted,
       bounced: totals.bounced + campaign.bounced,
       unsubscribed: totals.unsubscribed + campaign.unsubscribed,
       complained: totals.complained + campaign.complained,
@@ -496,7 +485,6 @@ export function emailTotals(campaigns: EmailCampaign[]) {
       delivered: 0,
       opened: 0,
       clicked: 0,
-      converted: 0,
       bounced: 0,
       unsubscribed: 0,
       complained: 0,
@@ -532,6 +520,7 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
     ],
     usageCount: 24,
     openRate: 71.8,
+    clickRate: 30.8,
     updatedAt: "2026-08-28T08:15:00Z",
   },
   {
@@ -554,6 +543,7 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
     ],
     usageCount: 12,
     openRate: 39.0,
+    clickRate: 10.2,
     updatedAt: "2026-09-01T09:00:00Z",
   },
   {
@@ -578,6 +568,7 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
     ],
     usageCount: 18,
     openRate: 42.1,
+    clickRate: 13.3,
     updatedAt: "2026-09-05T11:30:00Z",
   },
   {
@@ -603,6 +594,7 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
     ],
     usageCount: 9,
     openRate: 50.2,
+    clickRate: 18.7,
     updatedAt: "2026-08-18T10:00:00Z",
   },
   {
@@ -622,6 +614,7 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
     ],
     usageCount: 31,
     openRate: 48.9,
+    clickRate: 20.8,
     updatedAt: "2026-08-24T13:40:00Z",
   },
   {
@@ -641,6 +634,7 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
     ],
     usageCount: 14,
     openRate: 44.2,
+    clickRate: 19.8,
     updatedAt: "2026-08-30T11:10:00Z",
   },
   {
@@ -665,6 +659,7 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
     ],
     usageCount: 7,
     openRate: 28.5,
+    clickRate: 6.5,
     updatedAt: "2026-08-12T14:20:00Z",
   },
   {
@@ -684,6 +679,7 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
     ],
     usageCount: 0,
     openRate: 0,
+    clickRate: 0,
     updatedAt: "2026-09-07T10:25:00Z",
   },
   {
@@ -703,6 +699,7 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
     ],
     usageCount: 0,
     openRate: 0,
+    clickRate: 0,
     updatedAt: "2026-09-03T14:50:00Z",
   },
   {
@@ -725,6 +722,7 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
        to average for them — the card says "Automated" rather than 0%. */
     usageCount: 0,
     openRate: 0,
+    clickRate: 0,
     updatedAt: "2026-08-15T09:30:00Z",
   },
   {
@@ -749,6 +747,7 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
     ],
     usageCount: 0,
     openRate: 0,
+    clickRate: 0,
     updatedAt: "2026-07-28T16:10:00Z",
   },
 ];
@@ -1079,7 +1078,62 @@ export const EMAIL_SERIES = {
   openRate: [30.0, 38.6, 51.0, 39.4, 45.9, 38.4, 41.0, 39.0, 43.0, 40.9],
   clickRate: [6.5, 12.3, 18.7, 15.3, 19.4, 12.3, 17.2, 10.2, 13.3, 14.7],
   bounceRate: [5.1, 2.4, 1.6, 1.9, 1.3, 1.4, 1.2, 1.9, 2.0, 1.7],
+  /* The Aug 12 spike is the win-back send: 118 opt-outs from 3,284 delivered.
+     Mailing a list that has not opened in 90 days is how you find out how many
+     of them wanted off it. */
+  unsubscribeRate: [3.4, 0.9, 0.5, 0.7, 0.5, 0.6, 0.4, 0.5, 0.6, 0.5],
 };
+
+/**
+ * Sends, opens and clicks over each period the trend offers.
+ *
+ * Three stored windows rather than one series sliced three ways: the numbers
+ * are aggregates over a bucket, and the last ten days of a 90-day chart are not
+ * the same readings as the last ten days of a 30-day one — taking a slice would
+ * report ten-day totals as three-day ones. `30d` is assembled from the series
+ * above rather than repeated, so the module still has one set of thirty-day
+ * figures and the Overview cannot disagree with this page about them.
+ */
+export const EMAIL_TRENDS: Record<EmailTrendPeriod, EmailTrendSeries> = {
+  "7d": {
+    labels: ["Sep 2", "Sep 3", "Sep 4", "Sep 5", "Sep 6", "Sep 7", "Sep 8"],
+    sent: [18_420, 1_240, 980, 6_820, 2_140, 1_560, 4_120],
+    opened: [7_046, 512, 402, 2_874, 918, 648, 1_684],
+    clicked: [1_842, 168, 121, 892, 286, 204, 604],
+  },
+  "30d": {
+    labels: EMAIL_DAY_LABELS,
+    sent: EMAIL_SERIES.sent,
+    opened: EMAIL_SERIES.opened,
+    clicked: EMAIL_SERIES.clicked,
+  },
+  "90d": {
+    labels: [
+      "Jun 12",
+      "Jun 22",
+      "Jul 2",
+      "Jul 12",
+      "Jul 22",
+      "Aug 1",
+      "Aug 11",
+      "Aug 21",
+      "Aug 31",
+      "Sep 8",
+    ],
+    sent: [
+      12_480, 9_640, 14_820, 11_260, 16_940, 10_480, 13_720, 9_180, 12_460,
+      18_420,
+    ],
+    opened: [4_310, 3_420, 5_640, 4_180, 6_720, 4_020, 5_480, 3_640, 5_120, 7_460],
+    clicked: [1_180, 920, 1_640, 1_120, 1_980, 1_060, 1_520, 980, 1_460, 2_240],
+  },
+};
+
+export const EMAIL_TREND_PERIODS: { value: EmailTrendPeriod; label: string }[] = [
+  { value: "7d", label: "7 days" },
+  { value: "30d", label: "30 days" },
+  { value: "90d", label: "90 days" },
+];
 
 /* -------------------------------------------------------------------------- */
 /* Activity                                                                   */
