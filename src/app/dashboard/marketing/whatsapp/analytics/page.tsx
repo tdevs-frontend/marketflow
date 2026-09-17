@@ -10,7 +10,7 @@ export default function WhatsAppAnalyticsPage() {
     <>
       <PageHeader
         title="WhatsApp Analytics"
-        description="Volume, delivery, response times and conversion — and which campaigns, audiences and templates earned them."
+        description="Volume, delivery, response times and conversion — and which templates and agents earned them."
       />
 
       <WhatsAppAnalytics />

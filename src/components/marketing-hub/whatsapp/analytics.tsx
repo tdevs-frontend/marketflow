@@ -1,64 +1,55 @@
 "use client";
 
 import { useState } from "react";
-import {
-  CheckCheck,
-  Download,
-  MessageSquare,
-  Send,
-} from "lucide-react";
+import { CheckCheck, MessageSquare, Send } from "lucide-react";
 
 import { Badge, type BadgeTone } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { ChartCard, PanelCard } from "@/components/ui/chart-card";
-import { DateRangePicker, DEFAULT_RANGE, type DateRangeValue } from "@/components/ui/date-range";
-import { MeterRow } from "@/components/ui/progress";
-import { Select } from "@/components/ui/select";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import { StatsGrid, MiniStat, type StatItem } from "@/components/ui/stats-card";
+import { StatsGrid, type StatItem } from "@/components/ui/stats-card";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
-import { useToast } from "@/components/ui/toast";
 import { TrendChart } from "@/components/dashboard/charts/trend-chart";
 import { CHANNEL_SERIES } from "@/components/dashboard/charts/chart-theme";
 import { CHANNEL_THEME } from "@/constants/channels";
-import { AUDIENCES, CAMPAIGNS } from "@/lib/marketing-fixtures";
+import { CAMPAIGNS } from "@/lib/marketing-fixtures";
 import {
   WA_DAY_LABELS,
-  WA_FUNNEL,
   WA_INBOX_SNAPSHOT,
-  WA_RESPONSE_TIME,
   WA_SERIES,
   WA_TEMPLATE_PERFORMANCE,
   whatsappTotals,
 } from "@/lib/whatsapp-fixtures";
 import { formatCount, formatNumber, formatPercent, rate } from "@/lib/format";
-import { ConversionFunnel } from "../shared/conversion-funnel";
 
 /**
  * WhatsApp analytics — the channel's own operational performance, and nothing
  * else's.
  *
- * Five things in order: what was sent and how much landed (the KPI row), how
- * that moved (one trend), where the population thinned and whether speed was
- * the cause (the funnel beside the response-time spread), which templates earn
- * their slot, and who worked the inbox.
+ * Four things in order: what was sent and how much landed (the KPI row), how
+ * that moved (one trend), which templates earn their slot, and who worked the
+ * inbox.
  *
- * It was nine panels. What came out and why:
+ * It was nine panels and a toolbar. What came out and why:
  *
  * - Campaign Comparison ranked WhatsApp campaigns on read and reply rate. That
  *   is a *campaign* reading, and the Campaigns page owns the list while the
  *   Marketing overview owns the cross-channel view.
  * - Conversation Volume plotted inbound against outbound threads, which is the
  *   same trend the one chart above it now carries.
- * - Response Time plotted median against p90 as a line, which the Distribution
- *   panel beside the funnel already says as a spread — and says better, since
- *   the shape of the tail is the finding rather than its two summary numbers.
- *   The Distribution stayed; the line went.
+ * - Response Time and Response Time Distribution both answered "how fast is
+ *   the inbox" for the channel as a whole. Agent Performance answers it per
+ *   person, which is the reading a team lead can act on, and it is the only
+ *   one left.
+ * - The Conversation Funnel drew the message pipeline from Sent to Converted.
+ *   Its first two stages are the KPI row's Delivered and Delivery Rate, and
+ *   the Marketing overview carries a cross-channel funnel of its own.
  * - A delivery/read/reply rate switcher drew a third view of the KPI row's own
  *   two rates.
  * - Customer Engagement Insights and Top Segments were audience analysis; the
  *   Customers module owns that.
+ * - The page-level toolbar — a date-range picker, an audience select and an
+ *   export button — sat above a chart that already carried its own window
+ *   control, and was wired to none of the other panels.
  *
  * Nothing here reports revenue, sales or audience growth: Commerce, Sales and
  * Customers own those, and a WhatsApp page restating them is how a merchant
@@ -138,41 +129,6 @@ const TREND_WINDOWS: { value: TrendWindow; label: string; points: number }[] = [
   { value: "90d", label: "90 days", points: 10 },
 ];
 
-
-/* -------------------------------------------------------------------------- */
-/* Response time                                                              */
-/* -------------------------------------------------------------------------- */
-
-const RESPONSE_TOTAL = WA_RESPONSE_TIME.buckets.reduce(
-  (sum, bucket) => sum + bucket.count,
-  0,
-);
-
-/**
- * The first three buckets are the ones inside the 15-minute target.
- *
- * Derived from the bucket list rather than stored beside it: a stored
- * "within target" figure and a bucket breakdown are two statements of one
- * fact, and the stored one is the one that goes stale when a bucket moves.
- */
-const WITHIN_TARGET = WA_RESPONSE_TIME.buckets
-  .slice(0, 3)
-  .reduce((sum, bucket) => sum + bucket.count, 0);
-
-/**
- * A ramp, not a palette. The buckets are one population sorted by how long it
- * waited, so the colour walks from the channel's own green through amber to
- * red at the tail — the only rows a team acts on.
- */
-const BUCKET_TONES = [
-  "bg-whatsapp-dark",
-  "bg-whatsapp",
-  "bg-whatsapp-bright",
-  "bg-warning",
-  "bg-warning",
-  "bg-error",
-];
-
 /* -------------------------------------------------------------------------- */
 /* Agents and engagement                                                      */
 /* -------------------------------------------------------------------------- */
@@ -205,11 +161,24 @@ const TEMPLATE_ROWS = [...WA_TEMPLATE_PERFORMANCE].sort(
   (a, b) => rate(b.replies, b.delivered) - rate(a.replies, a.delivered),
 );
 
-export function WhatsAppAnalytics() {
-  const toast = useToast();
-  const [range, setRange] = useState<DateRangeValue>(DEFAULT_RANGE);
-  const [audience, setAudience] = useState("all");
-  const [trendWindow, setTrendWindow] = useState<TrendWindow>("30d");
+export function WhatsAppAnalytics({ range }: { range?: TrendWindow } = {}) {
+  /*
+   * The window the trend opens on, seeded by the caller.
+   *
+   * This page carried its own toolbar — a date-range picker, an audience
+   * select and an export button — sitting above a page that already had a
+   * window control on the chart the window actually applies to. Two date
+   * controls on one screen is one too many, and the page-level one was the
+   * wrong place: the KPI row, the funnel and the two tables all read whole
+   * period totals that no picker was wired to.
+   *
+   * `range` is the seam for the centralised filter. When a dashboard-level or
+   * card-level control exists it passes the selection in here and the trend
+   * opens on it; until then the chart's own control is the only thing driving
+   * it, and the default holds. Nothing passes `range` yet — it is deliberately
+   * optional so wiring it later is one prop rather than a refactor.
+   */
+  const [trendWindow, setTrendWindow] = useState<TrendWindow>(range ?? "30d");
 
 
   /*
@@ -234,34 +203,6 @@ export function WhatsAppAnalytics() {
 
   return (
     <>
-      <Card className="p-4">
-        <div className="flex flex-wrap items-center gap-2.5">
-          <DateRangePicker value={range} onChange={setRange} />
-
-          <Select
-            label="Filter by audience"
-            size="sm"
-            value={audience}
-            onChange={setAudience}
-            options={[
-              { value: "all", label: "All audiences" },
-              ...AUDIENCES.map((item) => ({ value: item.value, label: item.label })),
-            ]}
-            className="w-full lg:w-44"
-          />
-
-          <Button
-            variant="outline"
-            size="compact"
-            onClick={() => toast("Report queued — we will email the CSV when it is ready")}
-            className="lg:ml-auto"
-          >
-            <Download aria-hidden />
-            Export
-          </Button>
-        </div>
-      </Card>
-
       <StatsGrid items={STATS} accent={ACCENT} columns={4} />
 
       <ChartCard
@@ -316,61 +257,6 @@ export function WhatsAppAnalytics() {
           unit="messages"
         />
       </ChartCard>
-
-      {/*
-        The funnel and the response-time spread, side by side.
-
-        They pair because they are the channel's two failure modes read
-        together: the funnel says where the population is lost, the
-        distribution says whether the loss is a speed problem. A tail of
-        four-hour first replies beside a collapse between Delivered and
-        Replies is a different diagnosis from the same collapse with every
-        reply inside a minute.
-
-        This is the only response-time panel on the page. A Response Time
-        trend used to sit beside it saying the same thing as a line, and
-        Agent Performance below breaks the figure out per person.
-      */}
-      <div className="grid gap-4 lg:grid-cols-2">
-        <PanelCard
-          title="Conversation Funnel"
-          description="Sent through to an order, over the period."
-        >
-          <ConversionFunnel stages={WA_FUNNEL} />
-        </PanelCard>
-
-        <PanelCard
-          title="Response Time Distribution"
-          description={`Every first reply in the period, against the ${WA_RESPONSE_TIME.targetMinutes}-minute target.`}
-        >
-          <div className="space-y-4">
-            {WA_RESPONSE_TIME.buckets.map((bucket, index) => (
-              <MeterRow
-                key={bucket.label}
-                label={bucket.label}
-                value={rate(bucket.count, RESPONSE_TOTAL)}
-                display={formatPercent(rate(bucket.count, RESPONSE_TOTAL))}
-                tone={BUCKET_TONES[index]}
-                hint={`${formatNumber(bucket.count)} replies`}
-              />
-            ))}
-          </div>
-
-          <div className="mt-5 grid grid-cols-3 gap-2 border-t border-border pt-4">
-            <MiniStat
-              label="Median"
-              value={`${WA_RESPONSE_TIME.medianMinutes}m`}
-            />
-            <MiniStat label="90th pct" value={`${WA_RESPONSE_TIME.p90Minutes}m`} />
-            <MiniStat
-              label="On target"
-              value={formatPercent(rate(WITHIN_TARGET, RESPONSE_TOTAL))}
-              hint={`under ${WA_RESPONSE_TIME.targetMinutes}m`}
-            />
-          </div>
-        </PanelCard>
-      </div>
-
       <PanelCard
         title="Template Performance"
         description="Every template that sent in the period, best reply rate first."
