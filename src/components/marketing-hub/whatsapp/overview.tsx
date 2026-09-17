@@ -214,8 +214,7 @@ function loadBand(percent: number): { tone: string; label: string } {
 }
 
 /** The panel rules, in one place so the three panels cannot drift apart. */
-const SECTION_RULE =
-  "text-[15px] font-semibold text-text-primary capitalize";
+const SECTION_RULE = "text-[15px] font-semibold text-text-primary capitalize";
 
 const WA_FLOWS = AUTOMATION_FLOWS.filter((flow) => flow.channel === "whatsapp");
 
@@ -300,7 +299,9 @@ function ConnectionStatus() {
             tone={WA_CONNECTION.webhookHealthy ? "neutral" : "danger"}
             size="sm"
           >
-            {WA_CONNECTION.webhookHealthy ? "Webhook healthy" : "Webhook failing"}
+            {WA_CONNECTION.webhookHealthy
+              ? "Webhook healthy"
+              : "Webhook failing"}
           </Badge>
         </div>
 
@@ -317,7 +318,9 @@ function ConnectionStatus() {
           <ProgressBar
             value={used}
             label="Share of the 24-hour send limit used"
-            tone={used >= 90 ? "bg-error" : used >= 75 ? "bg-warning" : theme.accent}
+            tone={
+              used >= 90 ? "bg-error" : used >= 75 ? "bg-warning" : theme.accent
+            }
             size="sm"
             className="mt-1.5"
           />
@@ -385,7 +388,11 @@ export function WhatsAppOverview() {
           title="Recent Conversations"
           description="The five most recently active threads."
           action={
-            <ButtonLink href={APP_ROUTES.whatsappInbox} variant="ghost" size="sm">
+            <ButtonLink
+              href={APP_ROUTES.whatsappInbox}
+              variant="ghost"
+              size="sm"
+            >
               Open inbox
             </ButtonLink>
           }
@@ -397,7 +404,7 @@ export function WhatsAppOverview() {
         </PanelCard>
 
         <PanelCard
-          title="Inbox"
+          title="Whatsapp Inbox"
           description="The queue as it stands, and who is carrying it."
           action={
             <ButtonLink
@@ -595,8 +602,15 @@ export function WhatsAppOverview() {
            * stated twice on one screen is a figure a merchant checks twice.
            */}
           <div className="mt-4 grid grid-cols-3 gap-2 border-t border-border pt-4">
-            <MiniStat label="In flow" value={formatNumber(IN_FLOW)} hint="waiting" />
-            <MiniStat label="Live flows" value={formatNumber(WA_FLOWS.length)} />
+            <MiniStat
+              label="In flow"
+              value={formatNumber(IN_FLOW)}
+              hint="waiting"
+            />
+            <MiniStat
+              label="Live flows"
+              value={formatNumber(WA_FLOWS.length)}
+            />
             <MiniStat
               label="Avg success"
               value={formatPercent(AVG_SUCCESS)}

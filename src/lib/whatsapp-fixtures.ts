@@ -510,14 +510,14 @@ export const WA_AUDIENCE_INSIGHTS = [
  * it teaches the wrong lesson about the reply-rate column.
  */
 export const WA_TEMPLATE_PERFORMANCE = [
-  { id: "tpl-order-confirmation", name: "order_confirmation", category: "utility", sent: 12_480, delivered: 12_284, read: 10_692, replies: 4_201 },
-  { id: "tpl-feedback", name: "post_purchase_feedback", category: "utility", sent: 11_842, delivered: 11_608, read: 9_204, replies: 3_111 },
-  { id: "tpl-abandoned-cart", name: "abandoned_checkout", category: "marketing", sent: 6_842, delivered: 6_704, read: 5_216, replies: 1_435 },
-  { id: "tpl-welcome", name: "welcome_message", category: "marketing", sent: 8_640, delivered: 8_468, read: 6_910, replies: 1_432 },
-  { id: "tpl-payment-reminder", name: "payment_reminder", category: "utility", sent: 5_240, delivered: 5_146, read: 4_262, replies: 812 },
-  { id: "tpl-seasonal-offer", name: "seasonal_offer_v3", category: "marketing", sent: 18_420, delivered: 18_052, read: 14_260, replies: 2_636 },
-  { id: "tpl-shipping-update", name: "shipping_update", category: "utility", sent: 12_186, delivered: 11_990, read: 9_830, replies: 1_103 },
-  { id: "tpl-otp", name: "login_verification", category: "authentication", sent: 9_180, delivered: 9_062, read: 8_340, replies: 128 },
+  { id: "tpl-order-confirmation", name: "order_confirmation", category: "utility", sent: 12_480, delivered: 12_284, read: 10_692, replies: 4_201, conversions: 892 },
+  { id: "tpl-feedback", name: "post_purchase_feedback", category: "utility", sent: 11_842, delivered: 11_608, read: 9_204, replies: 3_111, conversions: 214 },
+  { id: "tpl-abandoned-cart", name: "abandoned_checkout", category: "marketing", sent: 6_842, delivered: 6_704, read: 5_216, replies: 1_435, conversions: 806 },
+  { id: "tpl-welcome", name: "welcome_message", category: "marketing", sent: 8_640, delivered: 8_468, read: 6_910, replies: 1_432, conversions: 341 },
+  { id: "tpl-payment-reminder", name: "payment_reminder", category: "utility", sent: 5_240, delivered: 5_146, read: 4_262, replies: 812, conversions: 468 },
+  { id: "tpl-seasonal-offer", name: "seasonal_offer_v3", category: "marketing", sent: 18_420, delivered: 18_052, read: 14_260, replies: 2_636, conversions: 1_642 },
+  { id: "tpl-shipping-update", name: "shipping_update", category: "utility", sent: 12_186, delivered: 11_990, read: 9_830, replies: 1_103, conversions: 126 },
+  { id: "tpl-otp", name: "login_verification", category: "authentication", sent: 9_180, delivered: 9_062, read: 8_340, replies: 128, conversions: 0 },
 ];
 
 /* -------------------------------------------------------------------------- */
@@ -553,13 +553,83 @@ export const WA_RESPONSE_TIME = {
   targetMinutes: 15,
 } as const;
 
-/** The WhatsApp-only funnel, from sent through to an order. */
+/**
+ * The WhatsApp-only funnel, from a message sent through to an order.
+ *
+ * Read used to sit between Delivered and Replies. It came out with the read
+ * rate: a blue tick is a *delivery* fact rather than an engagement one, and at
+ * 249,155 it sat so close to Delivered that the funnel's first real drop —
+ * 311,444 down to 49,831 — was split across two steps and read as two small
+ * losses instead of the one large one it is.
+ *
+ * Qualified Leads takes its place, between a reply and an order: a contact who
+ * asked about a product or a price rather than one who only answered. That is
+ * the step a marketer can act on, and nothing else on the page reported it.
+ */
 export const WA_FUNNEL = [
-  { label: "Sent", count: 317_800, hint: "Messages handed to Meta" },
+  { label: "Messages", count: 317_800, hint: "Handed to Meta" },
   { label: "Delivered", count: 311_444, hint: "Reached the handset" },
-  { label: "Read", count: 249_155, hint: "Blue ticks" },
-  { label: "Replied", count: 49_831, hint: "Started a conversation" },
-  { label: "Converted", count: 4_980, hint: "Placed an order" },
+  { label: "Replies", count: 49_831, hint: "Wrote back at least once" },
+  { label: "Qualified Leads", count: 12_460, hint: "Asked about a product" },
+  { label: "Conversions", count: 4_980, hint: "Placed an order" },
+];
+
+/* -------------------------------------------------------------------------- */
+/* Customer engagement                                                        */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * When customers actually message, in two-hour buckets across the day.
+ *
+ * Local time, summed over the period. The shape is the finding: a morning rise,
+ * a lunch dip and a long evening peak, which is when a broadcast should be
+ * scheduled and when the inbox needs to be staffed. Twelve buckets rather than
+ * twenty-four because an hourly axis at card width is unreadable and the
+ * two-hour shape is the same shape.
+ */
+export const WA_ACTIVE_HOURS = {
+  labels: [
+    "12a", "2a", "4a", "6a", "8a", "10a",
+    "12p", "2p", "4p", "6p", "8p", "10p",
+  ],
+  messages: [
+    420, 180, 140, 640, 2_480, 4_120,
+    5_260, 4_480, 5_180, 6_940, 7_320, 3_260,
+  ],
+  /** The bucket the panel names as the peak. Derived by the panel, not stored. */
+} as const;
+
+/**
+ * How customers behave once a thread is open.
+ *
+ * Four readings that are properties of the *conversation*, not of the sending:
+ * nothing here is derivable from `WA_SERIES`, which counts messages leaving.
+ */
+export const WA_ENGAGEMENT_BEHAVIOUR = [
+  {
+    label: "Replies within 5 min",
+    value: 62.4,
+    kind: "rate" as const,
+    hint: "of customers who answer at all",
+  },
+  {
+    label: "Messages per conversation",
+    value: 4.8,
+    kind: "count" as const,
+    hint: "median, both directions",
+  },
+  {
+    label: "Return within 30 days",
+    value: 38.2,
+    kind: "rate" as const,
+    hint: "opened a second conversation",
+  },
+  {
+    label: "Started by the customer",
+    value: 44.6,
+    kind: "rate" as const,
+    hint: "rather than by a campaign",
+  },
 ];
 
 /** Contact and automation counts the overview reports but campaigns do not. */
@@ -623,6 +693,16 @@ export type WaInboxAgent = {
   avatarUrl?: string;
   /** Signed into the inbox right now. */
   online: boolean;
+  /**
+   * Threads closed over the reporting period.
+   *
+   * A period total, where `open` is a snapshot of this moment — the Overview
+   * asks who is carrying the queue right now, Analytics asks who carried it.
+   * Both read the same roster so the two pages cannot name different agents.
+   */
+  handled: number;
+  /** Share of `handled` that ended resolved rather than abandoned or reopened. */
+  resolutionRate: number;
 };
 
 /**
@@ -643,6 +723,8 @@ const INBOX_AGENTS: WaInboxAgent[] = [
     avgResponseMinutes: 6,
     avatarUrl: "/customer-avatar-1.jpg",
     online: true,
+    handled: 1_284,
+    resolutionRate: 96.2,
   },
   {
     name: "Imran Hossain",
@@ -650,24 +732,51 @@ const INBOX_AGENTS: WaInboxAgent[] = [
     avgResponseMinutes: 9,
     avatarUrl: "/customer-avatar-2.jpg",
     online: true,
+    handled: 1_046,
+    resolutionRate: 94.8,
   },
-  { name: "Tanvir Alam", open: 7, avgResponseMinutes: 12, online: false },
+  {
+    name: "Tanvir Alam",
+    open: 7,
+    avgResponseMinutes: 12,
+    online: false,
+    handled: 612,
+    resolutionRate: 91.4,
+  },
   {
     name: "Sarah Ahmed",
     open: 12,
     avgResponseMinutes: 8,
     avatarUrl: "/customer-avatar-3.jpg",
     online: true,
+    handled: 908,
+    resolutionRate: 95.1,
   },
-  { name: "Maria Gomez", open: 9, avgResponseMinutes: 10, online: true },
+  {
+    name: "Maria Gomez",
+    open: 9,
+    avgResponseMinutes: 10,
+    online: true,
+    handled: 734,
+    resolutionRate: 92.6,
+  },
   {
     name: "John Smith",
     open: 6,
     avgResponseMinutes: 14,
     avatarUrl: "/customer-avatar-4.jpg",
     online: false,
+    handled: 486,
+    resolutionRate: 89.8,
   },
-  { name: "Priya Nair", open: 4, avgResponseMinutes: 18, online: false },
+  {
+    name: "Priya Nair",
+    open: 4,
+    avgResponseMinutes: 18,
+    online: false,
+    handled: 352,
+    resolutionRate: 88.4,
+  },
 ];
 
 /**
