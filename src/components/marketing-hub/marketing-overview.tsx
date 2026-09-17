@@ -11,11 +11,11 @@ import { APP_ROUTES } from "@/constants";
 import { AUTOMATION_ROUTES } from "@/constants/automation";
 import { CAMPAIGNS } from "@/lib/marketing-fixtures";
 import { SEGMENTS } from "@/lib/segment-fixtures";
-import { LIVE_WORKFLOWS } from "@/lib/workflow-fixtures";
 import {
   AUDIENCE_INSIGHTS,
   CHANNEL_ROWS,
   CHANNEL_VOLUME,
+  LEAD_GROWTH,
   MARKETING_RATES,
   MARKETING_TOTALS,
   RECENT_ACTIVITY,
@@ -23,14 +23,13 @@ import {
   WEEK_LABELS,
 } from "@/lib/overview-fixtures";
 import { formatCount, formatNumber, formatPercent } from "@/lib/format";
-import { cn } from "@/lib/utils";
-import type { CampaignStatus } from "@/types/marketing";
 import { CampaignTable } from "./campaign-table";
 import { ActivityStream } from "./shared/activity-stream";
+import { AudienceInsights } from "./shared/audience-insights";
 import {
-  AutomationPerformance,
-  summariseAutomations,
-} from "./shared/automation-performance";
+  CampaignHealthPanel,
+  campaignHealth,
+} from "./shared/campaign-health";
 import { ChannelPerformanceTable } from "./shared/channel-performance";
 import { TopCampaigns } from "./shared/top-campaigns";
 
@@ -112,76 +111,59 @@ const STATS: StatItem[] = [
 /* -------------------------------------------------------------------------- */
 
 /**
- * A count with a coloured marker, as used by the two state panels below.
- *
- * The same tile the dashboard's WhatsApp inbox counts its queue with — tinted
- * ground, a dot carrying the state, the figure under the label. Local to this
- * file because two panels on one page is not yet a pattern; if a third wants
- * it, it moves to `ui/`.
- */
-function StateTile({
-  label,
-  value,
-  tone,
-  hint,
-}: {
-  label: string;
-  value: string;
-  /** Background utility for the dot. */
-  tone: string;
-  hint?: string;
-}) {
-  return (
-    <div className="rounded-panel bg-surface-secondary px-3.5 py-3">
-      <p className="flex items-center gap-1.5 text-sm font-medium text-text-secondary">
-        <span aria-hidden className={cn("size-1.5 shrink-0 rounded-full", tone)} />
-        <span className="truncate">{label}</span>
-      </p>
-      <p className="mt-1.5 text-xl leading-none font-bold text-text-primary tabular-nums">
-        {value}
-      </p>
-      {hint ? (
-        <p className="mt-1.5 truncate text-sm text-text-muted">{hint}</p>
-      ) : null}
-    </div>
-  );
-}
-
-/**
- * Campaign health, counted off the campaign list itself.
+ * The health score and the counts behind it, read off the campaign list and
+ * the channel table.
  *
  * Derived rather than stated, so this panel and the Recent Campaigns table
- * below it can never disagree about how many campaigns are running. The four
- * states are the ones a marketer does something about; `draft` and `paused`
- * are deliberately absent — a draft is not yet marketing and a paused campaign
- * is already someone's decision, whereas a failed one is a job for today.
+ * below it can never disagree about how many campaigns are running, and the
+ * delivery rate is the same arithmetic the Channel Performance table shows one
+ * row at a time.
  */
-const HEALTH: { label: string; status: CampaignStatus; tone: string }[] = [
-  { label: "Running", status: "running", tone: "bg-whatsapp" },
-  { label: "Scheduled", status: "scheduled", tone: "bg-info" },
-  { label: "Completed", status: "completed", tone: "bg-border-strong" },
-  { label: "Failed", status: "failed", tone: "bg-error" },
-];
-
-/**
- * The automation panel's numbers, summed off the workflow records themselves.
- *
- * `LIVE_WORKFLOWS` is everything unarchived, which includes paused, drafts and
- * the one in error — right for this panel, because a paused flow's contacts
- * are still in the pipeline and a drop-off that ignored them would flatter the
- * completion rate. `activeFlows` narrows to `status === "active"` on its own.
- *
- * Distinct from the merchant overview's Automation Activity, which is a run
- * log: what happened, in order. This is what the journeys are *worth*.
- */
-const AUTOMATION_SUMMARY = summariseAutomations(LIVE_WORKFLOWS);
+const CAMPAIGN_HEALTH = campaignHealth(
+  CAMPAIGNS,
+  CHANNEL_ROWS,
+  MARKETING_RATES.engagement,
+);
 
 /** Movement against the previous 90 days, which a snapshot cannot derive. */
-const AUTOMATION_CHANGES = {
-  entered: 16.4,
-  completed: 19.2,
-  completionRate: 2.8,
+const CAMPAIGN_HEALTH_CHANGES = {
+  active: 8.4,
+  delivery: 0.6,
+  engagement: MARKETING_RATES.engagementChange,
 };
+
+/**
+ * The audience total, taken from the `All Contacts` system segment.
+ *
+ * That segment is defined as everyone with a valid opt-in on at least one
+ * channel, which is exactly what "total audience" means on a page about
+ * sending — and reading it from the segment rather than restating it keeps
+ * this card and the Segments screen on one number.
+ */
+const TOTAL_AUDIENCE = SEGMENTS.find((item) => item.system) ?? SEGMENTS[0];
+
+/**
+ * The audiences worth sending to, largest first.
+ *
+ * `system` segments are dropped: "All Contacts" is the total stated directly
+ * above the chips, and leaving it in would make the largest chip a restatement
+ * of the headline rather than a fifth thing to send to.
+ */
+const TARGETABLE_SEGMENTS = [...SEGMENTS]
+  .filter((item) => !item.system)
+  .sort((a, b) => b.contacts - a.contacts);
+
+/**
+ * New contacts per week, for the sparkline.
+ *
+ * The three arrival routes summed: the card asks how fast the audience is
+ * growing, not which door it came through, and three faint lines in a 28px box
+ * is a shape nobody can read anyway.
+ */
+const NEW_CONTACTS_TREND = LEAD_GROWTH.inbound.map(
+  (value, index) =>
+    value + LEAD_GROWTH.outbound[index] + LEAD_GROWTH.referral[index],
+);
 
 export function MarketingOverview() {
   /* Newest five, which is what "recent" means on an overview. */
@@ -225,58 +207,36 @@ export function MarketingOverview() {
             </ButtonLink>
           }
         >
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {HEALTH.map((state) => (
-              <StateTile
-                key={state.status}
-                label={state.label}
-                tone={state.tone}
-                value={formatNumber(
-                  CAMPAIGNS.filter((item) => item.status === state.status)
-                    .length,
-                )}
-              />
-            ))}
-          </div>
+          <CampaignHealthPanel
+            health={CAMPAIGN_HEALTH}
+            changes={CAMPAIGN_HEALTH_CHANGES}
+            icons={{
+              active: Megaphone,
+              delivery: Send,
+              engagement: Eye,
+            }}
+          />
         </PanelCard>
 
         <PanelCard
           title="Audience Insights"
-          description="Who the campaigns are reaching, and who is leaving."
+          description="Who the campaigns can reach, and which way it is moving."
           action={
             <ButtonLink href={APP_ROUTES.segments} variant="ghost" size="sm">
               View segments
             </ButtonLink>
           }
         >
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <StateTile
-              label="New Contacts"
-              tone="bg-primary"
-              value={formatCount(AUDIENCE_INSIGHTS.newContacts)}
-              hint="last 90 days"
-            />
-            <StateTile
-              label="Active Segments"
-              tone="bg-info"
-              value={formatNumber(SEGMENTS.length)}
-              hint="targetable now"
-            />
-            <StateTile
-              label="High Intent"
-              tone="bg-warning"
-              value={formatCount(AUDIENCE_INSIGHTS.highIntentLeads)}
-              hint="clicked, not converted"
-            />
-            {/* The one count on the page where up is bad, which is why it is
-                the only tile drawn in the error tone. */}
-            <StateTile
-              label="Unsubscribed"
-              tone="bg-error"
-              value={formatCount(AUDIENCE_INSIGHTS.unsubscribed)}
-              hint="last 90 days"
-            />
-          </div>
+          <AudienceInsights
+            total={TOTAL_AUDIENCE.contacts}
+            totalChange={TOTAL_AUDIENCE.growth}
+            newContacts={AUDIENCE_INSIGHTS.newContacts}
+            newContactsChange={AUDIENCE_INSIGHTS.newContactsChange}
+            topSource={AUDIENCE_INSIGHTS.topSource}
+            trend={NEW_CONTACTS_TREND}
+            segments={TARGETABLE_SEGMENTS}
+            segmentsHref={APP_ROUTES.segments}
+          />
         </PanelCard>
       </div>
 
@@ -358,34 +318,30 @@ export function MarketingOverview() {
         </PanelCard>
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-2">
-        <PanelCard
-          title="Automation Performance"
-          description="Track how your automated journeys are converting."
-          action={
-            <ButtonLink
-              href={AUTOMATION_ROUTES.workflows}
-              variant="ghost"
-              size="sm"
-            >
-              View workflows
-            </ButtonLink>
-          }
-        >
-          <AutomationPerformance
-            summary={AUTOMATION_SUMMARY}
-            hrefFor={(id) => `${AUTOMATION_ROUTES.workflows}/${id}`}
-            changes={AUTOMATION_CHANGES}
-          />
-        </PanelCard>
+      {/*
+        Full width, because it is now the only card on its row.
 
-        <PanelCard
-          title="Marketing Activity"
-          description="Latest campaign and channel events."
-        >
-          <ActivityStream entries={RECENT_ACTIVITY} />
-        </PanelCard>
-      </div>
+        Automation Performance used to sit beside it and has been removed: the
+        Automation module owns that analysis in full, and a summary of it here
+        made this page the second place to read how the journeys are doing. The
+        stream keeps its automation *events*, which is the part that belongs to
+        a marketing log rather than to an automation report.
+      */}
+      <PanelCard
+        title="Marketing Activity"
+        description="Latest campaign and channel events."
+        action={
+          <ButtonLink
+            href={AUTOMATION_ROUTES.workflows}
+            variant="ghost"
+            size="sm"
+          >
+            View workflows
+          </ButtonLink>
+        }
+      >
+        <ActivityStream entries={RECENT_ACTIVITY} />
+      </PanelCard>
     </>
   );
 }

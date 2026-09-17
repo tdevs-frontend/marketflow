@@ -60,6 +60,14 @@ export const AUDIENCE_INSIGHTS = {
   highIntentLeadsChange: 9.4,
   unsubscribed: 412,
   unsubscribedChange: 3.1,
+  /**
+   * Where most of the new contacts came in.
+   *
+   * Stated rather than derived: `CONTACT_SOURCES` in `customer-fixtures` is a
+   * list of the six sources a contact form can record, not a count of what
+   * each one brought, and the contacts table it belongs to is two dozen rows.
+   */
+  topSource: { label: "WhatsApp", share: 42.4 },
 } as const;
 
 /* -------------------------------------------------------------------------- */
