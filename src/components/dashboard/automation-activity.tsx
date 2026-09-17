@@ -224,7 +224,7 @@ export function AutomationActivity({ className }: { className?: string }) {
                         the run is only legible once you know which flow
                         produced it, and that is the fact the rest of the
                         sentence hangs off. */}
-                    <p className="mt-0.5 truncate text-sm font-medium text-text-muted">
+                    <p className="mt-0.5 truncate text-sm text-text-muted">
                       {item.workflow ? (
                         <>
                           <span className="text-text-secondary">

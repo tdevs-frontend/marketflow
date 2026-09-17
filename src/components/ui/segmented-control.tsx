@@ -51,8 +51,11 @@ const VARIANTS: Record<
 > = {
   control: {
     track: "gap-0.5 rounded-btn p-0.5",
-    item: "rounded-[4px] font-bold transition-colors",
-    active: "bg-surface text-primary",
+    item: "rounded-[4px] font-bold transition-all",
+    /* The selected chip is lifted off the track, not just inked differently.
+       On a `bg-gray/50` track a white fill alone is a faint step, and the
+       shadow is what makes the press register as a chip that came forward. */
+    active: "bg-surface text-primary shadow-btn",
     idle: "text-text-muted hover:text-text-primary",
   },
   filter: {

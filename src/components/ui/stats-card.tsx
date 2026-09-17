@@ -120,7 +120,7 @@ export function StatsGrid({ items, accent, columns, className }: StatsGridProps)
               </span>
             </div>
 
-            <p className="mt-3 text-3xl leading-none font-bold text-text-primary">
+            <p className="mt-2 text-3xl leading-none font-bold text-text-primary">
               {item.value}
             </p>
 
