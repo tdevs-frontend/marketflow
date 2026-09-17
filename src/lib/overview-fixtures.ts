@@ -182,6 +182,92 @@ export const CHANNEL_ROWS: ChannelRow[] = [
 ];
 
 /* -------------------------------------------------------------------------- */
+/* Channel activity and effectiveness                                         */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * One of the three effectiveness readings a channel is judged on.
+ *
+ * `kind` exists because Social does not measure in percentages the way the
+ * messaging channels do: its clicks and leads are counts, and drawing 4,200
+ * clicks as a 4,200% bar — or silently dividing it by something — is how a
+ * comparison widget starts lying. A `count` metric prints its figure and
+ * skips the bar.
+ */
+export interface ChannelMetric {
+  label: string;
+  kind: "rate" | "count";
+  value: number;
+}
+
+export interface ChannelActivityRow {
+  channel: Channel;
+  /** Messages for the messaging channels, posts for Social. */
+  volume: number;
+  /** The noun `volume` is counted in — "messages", "emails", "posts". */
+  unit: string;
+  /** Exactly three, and not the same three for every channel. */
+  metrics: [ChannelMetric, ChannelMetric, ChannelMetric];
+}
+
+/**
+ * How much each channel carried, and how well it did.
+ *
+ * The two halves used to be separate cards — a send-volume chart above a
+ * performance table — which asked a reader to hold "WhatsApp sent the most"
+ * and "WhatsApp converts best" in their head and join them. They are one
+ * question about one channel, so they are one row.
+ *
+ * The three metrics deliberately differ per channel. A shared column set would
+ * have to be the intersection of what the four can measure, which is almost
+ * nothing: SMS has no read receipt, Email has no reply rate worth the name,
+ * and Social has no delivery at all. Naming each channel's own three is the
+ * only way the card says something true about every one of them.
+ */
+export const CHANNEL_ACTIVITY: ChannelActivityRow[] = [
+  {
+    channel: "whatsapp",
+    volume: 45_280,
+    unit: "messages",
+    metrics: [
+      { label: "Delivery", kind: "rate", value: 92 },
+      { label: "Reply", kind: "rate", value: 18 },
+      { label: "Conversion", kind: "rate", value: 12 },
+    ],
+  },
+  {
+    channel: "email",
+    volume: 32_640,
+    unit: "emails",
+    metrics: [
+      { label: "Open", kind: "rate", value: 48 },
+      { label: "Click", kind: "rate", value: 12 },
+      { label: "Conversion", kind: "rate", value: 6 },
+    ],
+  },
+  {
+    channel: "sms",
+    volume: 18_450,
+    unit: "messages",
+    metrics: [
+      { label: "Delivery", kind: "rate", value: 84 },
+      { label: "Reply", kind: "rate", value: 10 },
+      { label: "Conversion", kind: "rate", value: 7 },
+    ],
+  },
+  {
+    channel: "social",
+    volume: 96,
+    unit: "posts",
+    metrics: [
+      { label: "Engagement", kind: "rate", value: 36 },
+      { label: "Clicks", kind: "count", value: 4_200 },
+      { label: "Leads", kind: "count", value: 1_200 },
+    ],
+  },
+];
+
+/* -------------------------------------------------------------------------- */
 /* Conversion funnel                                                          */
 /* -------------------------------------------------------------------------- */
 

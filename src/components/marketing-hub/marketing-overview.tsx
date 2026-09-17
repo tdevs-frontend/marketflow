@@ -3,26 +3,23 @@
 import { Eye, Megaphone, Send, Users } from "lucide-react";
 
 import { ButtonLink } from "@/components/ui/button";
-import { ChartCard, PanelCard } from "@/components/ui/chart-card";
+import { PanelCard } from "@/components/ui/chart-card";
 import { StatsGrid, type StatItem } from "@/components/ui/stats-card";
-import { TrendChart } from "@/components/dashboard/charts/trend-chart";
-import { CHANNEL_HEXES, CHANNEL_ORDER, CHANNEL_THEME } from "@/constants/channels";
 import { APP_ROUTES } from "@/constants";
 import { AUTOMATION_ROUTES } from "@/constants/automation";
 import { CAMPAIGNS } from "@/lib/marketing-fixtures";
 import { SEGMENTS } from "@/lib/segment-fixtures";
 import {
   AUDIENCE_INSIGHTS,
+  CHANNEL_ACTIVITY,
   CHANNEL_ROWS,
-  CHANNEL_VOLUME,
   LEAD_GROWTH,
   MARKETING_RATES,
   MARKETING_TOTALS,
   RECENT_ACTIVITY,
   TOP_CAMPAIGNS,
-  WEEK_LABELS,
 } from "@/lib/overview-fixtures";
-import { formatCount, formatNumber, formatPercent } from "@/lib/format";
+import { formatCount, formatPercent } from "@/lib/format";
 import { CampaignTable } from "./campaign-table";
 import { ActivityStream } from "./shared/activity-stream";
 import { AudienceInsights } from "./shared/audience-insights";
@@ -30,7 +27,7 @@ import {
   CampaignHealthPanel,
   campaignHealth,
 } from "./shared/campaign-health";
-import { ChannelPerformanceTable } from "./shared/channel-performance";
+import { ChannelActivity } from "./shared/channel-activity";
 import { TopCampaigns } from "./shared/top-campaigns";
 
 /**
@@ -171,11 +168,6 @@ export function MarketingOverview() {
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 5);
 
-  const volumeSeries = CHANNEL_ORDER.map((channel) => ({
-    name: CHANNEL_THEME[channel].label,
-    data: CHANNEL_VOLUME[channel],
-  }));
-
   return (
     <>
       <StatsGrid items={STATS} columns={4} />
@@ -254,42 +246,32 @@ export function MarketingOverview() {
         had already answered. Revenue per channel is still on the Channel
         Performance table below, where it is a comparison rather than a trend.
       */}
-      <ChartCard
-        title="Channel Send Volume"
-        description="What the campaigns sent each week, per channel. Social counts posts."
-        action={
-          <ButtonLink href={APP_ROUTES.analytics} variant="ghost" size="sm">
-            Full report
-          </ButtonLink>
-        }
-        legend={CHANNEL_ORDER.map((channel) => ({
-          label: CHANNEL_THEME[channel].label,
-          swatch: CHANNEL_THEME[channel].accent,
-          value: formatNumber(CHANNEL_VOLUME[channel].at(-1) ?? 0),
-        }))}
-      >
-        <TrendChart
-          categories={WEEK_LABELS}
-          series={volumeSeries}
-          colors={CHANNEL_HEXES}
-          variant="line"
-          unit="sent"
-        />
-      </ChartCard>
+      {/*
+        One card, two questions.
 
+        Channel Send Volume used to sit above this as a card of its own — a
+        twelve-week line of what each channel sent — and the table below it
+        answered how well each channel did. That split asked a reader to hold
+        "WhatsApp sent the most" and "WhatsApp converts best" in their head and
+        join the two up. They are one question about one channel, so the volume
+        has moved inside and the separate card is gone.
+
+        The body is per-channel tiles rather than the table this card used to
+        hold, because the four channels are no longer being measured on the
+        same three things: SMS has no read receipt, Email has no meaningful
+        reply rate, Social has no delivery at all. Shared columns would need a
+        column of em dashes per row to say that.
+      */}
       <PanelCard
         title="Channel Performance"
-        description="How the four channels compare over the last 90 days."
+        description="Track channel activity, reach, and marketing effectiveness."
         action={
           <ButtonLink href={APP_ROUTES.analytics} variant="ghost" size="sm">
             Full report
           </ButtonLink>
         }
       >
-        {/* `Table` already owns the negative gutter and the horizontal scroll,
-            so the panel must not add its own — two -mx-5 would push the rows
-            20px outside the card. */}
-        <ChannelPerformanceTable rows={CHANNEL_ROWS} />
+        <ChannelActivity rows={CHANNEL_ACTIVITY} />
       </PanelCard>
 
       <div className="grid gap-4 xl:grid-cols-3">
