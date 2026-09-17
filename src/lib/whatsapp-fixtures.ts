@@ -608,6 +608,69 @@ export const WA_CONNECTION = {
 };
 
 /**
+ * One agent on the WhatsApp queue.
+ *
+ * Typed rather than inferred from the literal below, because `avatarUrl` is
+ * present on some rows and absent on others and `as const` would then hand the
+ * panel a union it cannot read the property off at all.
+ */
+export type WaInboxAgent = {
+  name: string;
+  /** Threads they are currently carrying. */
+  open: number;
+  avgResponseMinutes: number;
+  /** Their profile photo. Absent means the avatar falls back to initials. */
+  avatarUrl?: string;
+  /** Signed into the inbox right now. */
+  online: boolean;
+};
+
+/**
+ * The seven agents on the queue.
+ *
+ * Unordered here on purpose — the panel sorts by open threads, so adding an
+ * eighth agent anywhere in this list still renders busiest-first.
+ *
+ * Four of the seven carry a photo and three do not, which is the real shape of
+ * a support roster: a workspace has whatever its agents uploaded. A fixture
+ * where everyone has a picture hides the initials fallback until production
+ * finds it.
+ */
+const INBOX_AGENTS: WaInboxAgent[] = [
+  {
+    name: "Nadia Karim",
+    open: 18,
+    avgResponseMinutes: 6,
+    avatarUrl: "/customer-avatar-1.jpg",
+    online: true,
+  },
+  {
+    name: "Imran Hossain",
+    open: 14,
+    avgResponseMinutes: 9,
+    avatarUrl: "/customer-avatar-2.jpg",
+    online: true,
+  },
+  { name: "Tanvir Alam", open: 7, avgResponseMinutes: 12, online: false },
+  {
+    name: "Sarah Ahmed",
+    open: 12,
+    avgResponseMinutes: 8,
+    avatarUrl: "/customer-avatar-3.jpg",
+    online: true,
+  },
+  { name: "Maria Gomez", open: 9, avgResponseMinutes: 10, online: true },
+  {
+    name: "John Smith",
+    open: 6,
+    avgResponseMinutes: 14,
+    avatarUrl: "/customer-avatar-4.jpg",
+    online: false,
+  },
+  { name: "Priya Nair", open: 4, avgResponseMinutes: 18, online: false },
+];
+
+/**
  * The inbox as it stands right now — the overview's subject.
  *
  * Deliberately none of this is a rate over a period. It is the queue: how many
@@ -628,21 +691,8 @@ export const WA_INBOX_SNAPSHOT = {
   awaitingReply: 23,
   awaitingChange: -14.8,
   unreadMessages: 61,
-  /**
-   * The seven agents on the queue.
-   *
-   * Unordered here on purpose — the panel sorts by open threads, so adding an
-   * eighth agent anywhere in this list still renders busiest-first.
-   */
-  agents: [
-    { name: "Nadia Karim", open: 18, avgResponseMinutes: 6 },
-    { name: "Imran Hossain", open: 14, avgResponseMinutes: 9 },
-    { name: "Tanvir Alam", open: 7, avgResponseMinutes: 12 },
-    { name: "Sarah Ahmed", open: 12, avgResponseMinutes: 8 },
-    { name: "Maria Gomez", open: 9, avgResponseMinutes: 10 },
-    { name: "John Smith", open: 6, avgResponseMinutes: 14 },
-    { name: "Priya Nair", open: 4, avgResponseMinutes: 18 },
-  ],
+  /** The roster, unordered — the panel sorts it busiest-first. */
+  agents: INBOX_AGENTS,
   /**
    * Open threads one agent is expected to carry.
    *

@@ -1,10 +1,20 @@
 import { cn, initials } from "@/lib/utils";
 
-export type AvatarSize = "xs" | "sm" | "md" | "lg";
+export type AvatarSize = "xs" | "sm" | "sm+" | "md" | "lg";
 
+/*
+ * A t-shirt ladder on 8px steps, plus one half-step.
+ *
+ * `sm+` is 36px, between `sm` and `md`, and is named for where it sits rather
+ * than given a letter of its own: it exists for list rows that carry a photo,
+ * where 32px is too small for a face to read and 40px pushes the row taller
+ * than the two lines of text beside it. Anything that is not such a row wants
+ * one of the four whole steps.
+ */
 const SIZES: Record<AvatarSize, string> = {
   xs: "size-6 text-xs",
   sm: "size-8 text-sm",
+  "sm+": "size-9 text-sm",
   md: "size-10 text-sm",
   lg: "size-12 text-sm",
 };

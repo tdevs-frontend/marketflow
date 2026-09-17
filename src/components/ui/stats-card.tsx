@@ -149,22 +149,32 @@ export function StatsGrid({ items, accent, columns, className }: StatsGridProps)
 /**
  * A metric with no trend — a total, a count, a rate that has no prior period
  * to compare against. Used inside cards, in rows of three or four.
+ *
+ * `tone` follows `Avatar`'s: a ground-and-edge class pair, for the rows where
+ * the tiles mean different things — a queue state, a health band — and the
+ * neutral outline everywhere else, which is the default. It replaces the edge
+ * rather than joining it, since `cn` concatenates and two border colours on one
+ * box is a coin toss over which one the stylesheet happens to order last.
  */
 export function MiniStat({
   label,
   value,
   hint,
+  tone,
   className,
 }: {
   label: string;
   value: string;
   hint?: string;
+  /** Class pair for ground and edge. Defaults to the neutral outlined tile. */
+  tone?: string;
   className?: string;
 }) {
   return (
     <div
       className={cn(
-        "rounded-panel border border-border px-3.5 py-3 text-center",
+        "rounded-panel border px-3.5 py-3 text-center",
+        tone ?? "border-border",
         className,
       )}
     >

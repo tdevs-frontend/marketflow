@@ -169,6 +169,37 @@ const AGENT_TONES: Record<string, string> = {
 };
 
 /**
+ * A tint per queue state, for the Inbox card's four counts.
+ *
+ * Four numbers in a row on one white ground read as the same number printed
+ * four times; what a supervisor is actually scanning for is a *state* — what is
+ * live, what is waiting on us, what nobody owns, what is done — and the tint
+ * separates those before a label is read. Each colour is the one that state
+ * already wears in this product — the KPI row directly above this card tints
+ * its Awaiting Reply tile with the same warning amber.
+ *
+ * The status softs are carried at 60% and the other two at full strength, which
+ * lands all four at roughly the same weight over white — `success-soft` and
+ * `warning-soft` are a good deal heavier than the violet and slate beside them,
+ * and four tints that disagree about how loud they are read as an alert rather
+ * than as a legend.
+ *
+ * Edges are tinted to match rather than left on the neutral border: a coloured
+ * ground inside a grey outline is the one combination that looks like a
+ * highlighted cell instead of a designed tile.
+ */
+const QUEUE_TINTS = {
+  /** Live conversations — the healthy state, so the success green. */
+  open: "border-success/20 bg-success-soft/60",
+  /** Waiting on us. Same amber the Awaiting Reply KPI wears. */
+  awaiting: "border-warning/25 bg-warning-soft/60",
+  /** Nobody owns these. Violet — unclaimed work, not a warning. */
+  unassigned: "border-primary/15 bg-primary-subtle",
+  /** Settled. The neutral slate, so "done" is the quietest tile in the row. */
+  closed: "border-border-strong/60 bg-surface-secondary",
+};
+
+/**
  * What a load percentage means, as the colour of the bar.
  *
  * Three bands rather than a gradient: the question a supervisor asks is "who
@@ -383,21 +414,25 @@ export function WhatsAppOverview() {
               label="Open"
               value={formatNumber(SNAPSHOT.open)}
               hint={`${formatNumber(SNAPSHOT.unreadMessages)} unread`}
+              tone={QUEUE_TINTS.open}
             />
             <MiniStat
               label="Awaiting reply"
               value={formatNumber(SNAPSHOT.awaitingReply)}
               hint="inbound, unanswered"
+              tone={QUEUE_TINTS.awaiting}
             />
             <MiniStat
               label="Unassigned"
               value={formatNumber(SNAPSHOT.unassigned)}
               hint="no owner yet"
+              tone={QUEUE_TINTS.unassigned}
             />
             <MiniStat
               label="Closed today"
               value={formatNumber(SNAPSHOT.resolvedToday)}
               hint={`${formatNumber(SNAPSHOT.pending)} still pending`}
+              tone={QUEUE_TINTS.closed}
             />
           </div>
 
@@ -417,11 +452,39 @@ export function WhatsAppOverview() {
             <ul className="mt-3 space-y-3">
               {agentLoad.map((agent) => (
                 <li key={agent.name} className="flex items-center gap-3">
-                  <Avatar
-                    name={agent.name}
-                    size="sm"
-                    tone={AGENT_TONES[agent.name]}
-                  />
+                  {/*
+                    The photo, with presence on it.
+
+                    36px rather than the 32 this sat at: at 32 a face is a
+                    thumbnail of a face, and the row is two lines of text tall,
+                    so the larger chip aligns with the pair instead of floating
+                    against the name alone. `Avatar` falls back to the agent's
+                    initials on its own when there is no photo, which is three
+                    of the seven and is what a real roster looks like. The
+                    tint keyed to their name carries that fallback, and it is
+                    the same tint their photo would have sat on.
+
+                    The dot is composed here rather than added to the
+                    primitive, same as the dashboard inbox does it: an avatar
+                    has no business knowing whether someone is signed in. The
+                    ring is the card's own white, so the dot reads as sitting
+                    on top of the photo rather than cut out of it.
+                  */}
+                  <span className="relative shrink-0">
+                    <Avatar
+                      name={agent.name}
+                      src={agent.avatarUrl}
+                      size="sm+"
+                      tone={AGENT_TONES[agent.name]}
+                    />
+                    {agent.online ? (
+                      <span
+                        className="absolute right-0 bottom-0 size-2.5 rounded-full bg-whatsapp ring-2 ring-surface"
+                        role="img"
+                        aria-label="Online"
+                      />
+                    ) : null}
+                  </span>
 
                   <div className="min-w-0 flex-1">
                     <div className="flex items-baseline justify-between gap-2">
