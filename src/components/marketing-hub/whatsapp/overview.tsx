@@ -200,17 +200,28 @@ const QUEUE_TINTS = {
 };
 
 /**
- * What a load percentage means, as the colour of the bar.
+ * What a load means, as a badge rather than a bar.
  *
  * Three bands rather than a gradient: the question a supervisor asks is "who
  * needs help", and that has a yes, a maybe and a no. The thresholds are where
  * a queue stops being comfortable — over 70% of capacity an agent is behind,
  * under 40% they have room for the next thread.
+ *
+ * The percentage still decides the band; it just no longer appears on screen.
+ * A bar per agent made the panel the fourth meter on a page that already draws
+ * one for the send limit, and it answered "how full" when the question was
+ * "who needs help" — seven bar lengths have to be compared against each other
+ * before they mean anything, where three badge colours sort themselves.
+ *
+ * "Medium" and "Balanced" rather than "Medium load" and "Low load": a badge is
+ * read in a column beside six others, and the word that changes is the only
+ * one worth printing. `Badge` capitalises what it is given, so these land as
+ * "High Load", "Medium" and "Balanced".
  */
-function loadBand(percent: number): { tone: string; label: string } {
-  if (percent >= 70) return { tone: "bg-error", label: "High load" };
-  if (percent >= 40) return { tone: "bg-warning", label: "Medium load" };
-  return { tone: "bg-whatsapp", label: "Low load" };
+function loadBand(percent: number): { tone: BadgeTone; label: string } {
+  if (percent >= 70) return { tone: "danger", label: "High load" };
+  if (percent >= 40) return { tone: "warning", label: "Medium" };
+  return { tone: "success", label: "Balanced" };
 }
 
 /** The panel rules, in one place so the three panels cannot drift apart. */
@@ -358,10 +369,11 @@ export function WhatsAppOverview() {
    */
   const agentLoad = [...SNAPSHOT.agents]
     .sort((a, b) => b.open - a.open)
-    .map((agent) => {
-      const load = (agent.open / SNAPSHOT.agentCapacity) * 100;
-      return { ...agent, load, band: loadBand(load) };
-    });
+    .map((agent) => ({
+      ...agent,
+      /* The share of capacity is the classifier, not a figure the row prints. */
+      band: loadBand((agent.open / SNAPSHOT.agentCapacity) * 100),
+    }));
 
   return (
     <>
@@ -447,35 +459,40 @@ export function WhatsAppOverview() {
             <p className={SECTION_RULE}>Agent load</p>
 
             {/*
-              Two lines an agent, not three.
+              A roster, not a chart.
 
-              Seven agents at three lines each ran to about 420px of list,
-              which pushed this card well past Recent Conversations beside it
-              and undid the even pair the row is built on. Folding the counts
-              up onto the name line and the percentage in beside the bar it
-              labels keeps all four facts and gets the row back to roughly the
-              height of a conversation row, so the two cards end level.
+              Seven progress bars with a percentage beside each made this the
+              second meter on the page — the send limit above draws one too —
+              and a bar answers "how full" when what a supervisor is asking is
+              "who needs help". The band is a badge now, so the three states
+              read as three colours down a column instead of as seven lengths
+              that have to be compared against each other first.
+
+              Dividers rather than gaps. A row carrying a face, a name, two
+              figures and a badge needs a line to say where it ends, and a
+              hairline does that without the seven boxes a card per agent
+              would put on a card that is already inside a card.
             */}
-            <ul className="mt-3 space-y-3">
+            <ul className="mt-2 divide-y divide-border">
               {agentLoad.map((agent) => (
-                <li key={agent.name} className="flex items-center gap-3">
+                <li key={agent.name} className="flex items-center gap-3 py-3">
                   {/*
                     The photo, with presence on it.
 
-                    36px rather than the 32 this sat at: at 32 a face is a
-                    thumbnail of a face, and the row is two lines of text tall,
-                    so the larger chip aligns with the pair instead of floating
-                    against the name alone. `Avatar` falls back to the agent's
-                    initials on its own when there is no photo, which is three
-                    of the seven and is what a real roster looks like. The
-                    tint keyed to their name carries that fallback, and it is
-                    the same tint their photo would have sat on.
+                    36px: at 32 a face is a thumbnail of a face, and the row is
+                    two lines of text tall, so the larger chip aligns with the
+                    pair rather than floating against the name alone. `Avatar`
+                    falls back to initials on its own where there is no photo,
+                    which is three of the seven and is what a real roster looks
+                    like; the tint keyed to their name carries that fallback.
 
                     The dot is composed here rather than added to the
                     primitive, same as the dashboard inbox does it: an avatar
-                    has no business knowing whether someone is signed in. The
-                    ring is the card's own white, so the dot reads as sitting
-                    on top of the photo rather than cut out of it.
+                    has no business knowing whether someone is signed in. It is
+                    drawn for both states — grey is "not here", and an absent
+                    dot would be indistinguishable from a dot that failed to
+                    render. The ring is the card's own white, so it reads as
+                    sitting on the photo rather than cut out of it.
                   */}
                   <span className="relative shrink-0">
                     <Avatar
@@ -484,45 +501,33 @@ export function WhatsAppOverview() {
                       size="sm+"
                       tone={AGENT_TONES[agent.name]}
                     />
-                    {agent.online ? (
-                      <span
-                        className="absolute right-0 bottom-0 size-2.5 rounded-full bg-whatsapp ring-2 ring-surface"
-                        role="img"
-                        aria-label="Online"
-                      />
-                    ) : null}
+                    <span
+                      className={cn(
+                        "absolute right-0 bottom-0 size-2.5 rounded-full ring-2 ring-surface",
+                        agent.online ? "bg-whatsapp" : "bg-border-strong",
+                      )}
+                      role="img"
+                      aria-label={agent.online ? "Online" : "Offline"}
+                    />
                   </span>
 
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-baseline justify-between gap-2">
-                      <p className="truncate text-sm font-semibold text-text-primary">
-                        {agent.name}
-                      </p>
-                      {/* The count is the figure and the wait annotates it, so
-                          only the count takes primary ink. */}
-                      <p className="shrink-0 text-meta text-text-secondary tabular-nums">
-                        <span className="font-bold text-text-primary">
-                          {agent.open}
-                        </span>{" "}
-                        chats · {agent.avgResponseMinutes}m
-                      </p>
-                    </div>
-
-                    <div className="mt-1.5 flex items-center gap-2">
-                      <ProgressBar
-                        value={agent.load}
-                        label={`${agent.name}: ${agent.band.label}, ${agent.open} of ${SNAPSHOT.agentCapacity} threads`}
-                        tone={agent.band.tone}
-                        size="sm"
-                        className="min-w-0 flex-1"
-                      />
-                      {/* Fixed width, so seven percentages line up as a column
-                          however many digits each one has. */}
-                      <span className="w-8 shrink-0 text-right text-meta font-bold text-text-primary tabular-nums">
-                        {Math.round(agent.load)}%
-                      </span>
-                    </div>
+                    <p className="truncate text-sm font-semibold text-text-primary">
+                      {agent.name}
+                    </p>
+                    {/* The count is the figure the list is ranked on, so it
+                        keeps primary ink; the wait annotates it. */}
+                    <p className="mt-0.5 truncate text-meta text-text-secondary tabular-nums">
+                      <span className="font-bold text-text-primary">
+                        {agent.open}
+                      </span>{" "}
+                      chats · {agent.avgResponseMinutes}m avg response
+                    </p>
                   </div>
+
+                  <Badge tone={agent.band.tone} size="sm" className="shrink-0">
+                    {agent.band.label}
+                  </Badge>
                 </li>
               ))}
             </ul>
