@@ -70,6 +70,7 @@ import {
   formatPriceRange,
   hasLiveVariants,
   priceRangeOf,
+  productImage,
   variantCount,
 } from "@/lib/variants";
 import {
@@ -660,7 +661,10 @@ export function ProductsWorkspace({
 
                         <TD>
                           <div className="flex items-center gap-3">
-                            <ProductThumb />
+                            <ProductThumb
+                              url={productImage(item)}
+                              alt={item.name}
+                            />
                             <div className="min-w-0">
                               <Link
                                 href={detailHref(item.id)}
@@ -793,7 +797,7 @@ export function ProductsWorkspace({
                         label={`Select ${item.name}`}
                         className="mt-1"
                       />
-                      <ProductThumb />
+                      <ProductThumb url={productImage(item)} alt={item.name} />
 
                       <div className="min-w-0 flex-1">
                         <Link

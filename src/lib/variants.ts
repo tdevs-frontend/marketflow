@@ -453,6 +453,27 @@ export function findVariant(
 }
 
 /**
+ * The image that stands for a product: its thumbnail, or its first photo.
+ *
+ * `images.find((image) => image.isThumbnail)?.url ?? images[0]?.url` was
+ * written out at five call sites — the catalogue picker, the catalogue rows,
+ * the detail header, the variant manager and `variantImage` below — which is
+ * five chances to disagree about what a product looks like. The `?? images[0]`
+ * half is the part that kept getting dropped: a product whose media was
+ * uploaded without one being marked as the thumbnail has photos and would
+ * still have rendered the empty-state icon.
+ *
+ * Undefined when the product genuinely has no media, which is what selects the
+ * fallback icon in `ProductThumb`.
+ */
+export function productImage(product: Product): string | undefined {
+  return (
+    product.images.find((image) => image.isThumbnail)?.url ??
+    product.images[0]?.url
+  );
+}
+
+/**
  * A variant's image, falling back to the product's.
  *
  * The fallback is the point: a merchant who has uploaded one shirt photo should
@@ -462,11 +483,7 @@ export function variantImage(
   variant: ProductVariant,
   product: Product,
 ): string | undefined {
-  return (
-    variant.imageUrl ??
-    product.images.find((image) => image.isThumbnail)?.url ??
-    product.images[0]?.url
-  );
+  return variant.imageUrl ?? productImage(product);
 }
 
 /** A fresh option, named from whichever of the type's presets is unused. */

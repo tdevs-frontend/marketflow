@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Layers, Package } from "lucide-react";
 
 import { Badge, type BadgeTone } from "@/components/ui/badge";
@@ -128,9 +129,25 @@ export function ProductTypeLabel({ type }: { type: ProductType }) {
   return <span className="text-sm text-text-muted">{TYPE_LABELS[type]}</span>;
 }
 
+/** The rendered box, in pixels, so `next/image` can be told what to serve. */
+const THUMB_PX = { sm: 32, md: 40, lg: 56 } as const;
+
 /**
  * Product thumbnail. Falls back to a tinted icon tile rather than a broken
  * image or a grey box, so a product with no artwork still reads as a product.
+ *
+ * Two renderers, chosen by where the file lives.
+ *
+ * The catalogue's photographs are committed under `public/products` at 800x450
+ * and 16-100KB each. Fifteen of those on one page of the product table is
+ * roughly 900KB fetched to paint fifteen 40px squares, so a same-origin path
+ * goes through `next/image`, which serves a resized WebP at the box's own size
+ * and costs a few KB a row instead.
+ *
+ * Anything else — a merchant's uploaded image on a CDN, once that exists — is
+ * left on a plain `<img>`. `next/image` refuses a remote host that is not in
+ * `remotePatterns`, and that refusal is a runtime error, so routing an unknown
+ * origin through it would trade a heavy thumbnail for a broken page.
  */
 export function ProductThumb({
   url,
@@ -145,6 +162,8 @@ export function ProductThumb({
 }) {
   const box = { sm: "size-8", md: "size-10", lg: "size-14" }[size];
   const icon = { sm: "size-3.5", md: "size-4", lg: "size-5" }[size];
+  const px = THUMB_PX[size];
+  const local = url?.startsWith("/");
 
   return (
     <span
@@ -155,8 +174,26 @@ export function ProductThumb({
       )}
     >
       {url ? (
-        /* eslint-disable-next-line @next/next/no-img-element */
-        <img src={url} alt={alt ?? ""} className="size-full object-cover" />
+        local ? (
+          <Image
+            src={url}
+            alt={alt ?? ""}
+            width={px}
+            height={px}
+            className="size-full object-cover"
+          />
+        ) : (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={url}
+            alt={alt ?? ""}
+            width={px}
+            height={px}
+            loading="lazy"
+            decoding="async"
+            className="size-full object-cover"
+          />
+        )
       ) : (
         <Package className={icon} aria-hidden />
       )}
