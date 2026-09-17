@@ -1,7 +1,10 @@
 import type { LucideIcon } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
+import { KPI_TILE, KPI_TONES, type KpiTone } from "@/components/ui/kpi-tones";
 import { cn } from "@/lib/utils";
+
+export type { KpiTone };
 
 export interface Kpi {
   label: string;
@@ -11,64 +14,6 @@ export interface Kpi {
   tone?: KpiTone;
   hint?: string;
 }
-
-/**
- * The tones a tile can take.
- *
- * The first four are identity colours — the brand and the three channel hues —
- * and they exist so a strip of four tiles can be told apart at a glance rather
- * than read one label at a time. The last four are *states*: success, warning
- * and danger mean something happened, and spending them on "this card is the
- * digital one" is how a merchant stops trusting green to mean good news.
- */
-export type KpiTone =
-  | "neutral"
-  | "brand"
-  | "accent"
-  | "email"
-  | "sms"
-  | "info"
-  | "success"
-  | "warning"
-  | "danger";
-
-/**
- * Each tone, as the icon tile it colours.
- *
- * The tile is the only coloured thing on the card — the surface stays white
- * with one neutral border, so a strip still reads as a row of one kind of
- * object rather than a set of coloured panels.
- *
- * Every tile is bordered and every border belongs to its own tint. A grey
- * hairline around an amber fill is the mismatch this map exists to prevent:
- * the border is the quiet edge of the same colour, never a second one.
- *
- * Three families ship a border token — `primary`, `email`, `sms` — and use it.
- * The rest have no `-border` step, so rather than invent a hex the border is
- * mixed from the family's own solid hue with an alpha. The alphas are measured,
- * not guessed: the three tokened borders sit at 1.33, 1.31 and 1.27 against
- * their own fills, so each derived one is tuned to that same ~1.30 weight and
- * the whole row reads as one set of tiles.
- *
- *   accent/30  1.31    success/25  1.29    warning/40  1.30
- *   danger/20  1.34    info/20     1.29
- *
- * Note that `info` and `email` are the *same blue* — `--color-info` and
- * `--color-email` are both #2563eb, differing only in how deep their soft is.
- * They are not interchangeable in one row: pick `email` when the thing is the
- * Email channel, `info` when it is a state, and never put both side by side.
- */
-const TONES: Record<KpiTone, string> = {
-  neutral: "border-border bg-surface-secondary text-text-muted",
-  brand: "border-primary-border bg-primary-soft text-primary",
-  accent: "border-accent/30 bg-accent-soft text-accent",
-  email: "border-email-border bg-email-soft text-email",
-  sms: "border-sms-border bg-sms-soft text-sms",
-  info: "border-info/20 bg-info-soft text-info-text",
-  success: "border-success/25 bg-success-soft text-success-text",
-  warning: "border-warning/40 bg-warning-soft text-warning-text",
-  danger: "border-error/20 bg-error-soft text-error-text",
-};
 
 /**
  * The KPI strip a workspace page opens with. Four or five tiles, one line
@@ -112,11 +57,11 @@ export function KpiStrip({
               </p>
               <span
                 className={cn(
-                  "grid size-9 shrink-0 place-items-center rounded-panel border",
-                  TONES[item.tone ?? "neutral"],
+                  KPI_TILE,
+                  KPI_TONES[item.tone ?? "neutral"],
                 )}
               >
-                <Icon className="size-4.5" aria-hidden />
+                <Icon className="size-5" aria-hidden />
               </span>
             </div>
 

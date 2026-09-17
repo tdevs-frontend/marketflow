@@ -6,20 +6,19 @@ import {
   Archive,
   Briefcase,
   CheckCircle2,
-  BookOpen,
-  CalendarDays,
+  Copy,
   Download,
+  Eye,
+  FileDown,
   FileEdit,
   Layers,
-  Copy,
-  Eye,
-  Plus,
-  Upload,
   Megaphone,
   Package,
   Pencil,
+  Plus,
   Trash2,
-  Truck,
+  Upload,
+  Warehouse,
 } from "lucide-react";
 
 import Link from "next/link";
@@ -135,25 +134,32 @@ function kpis(counts: ProductCounts): CommerceKpi[] {
     {
       label: "Physical Products",
       value: formatNumber(counts.physical),
-      /* A truck, not a box: `Package` already carries Total Products, and two
-         box glyphs side by side at 20px are the same shape twice. This one
-         says what the card's own hint says — these are the things that get
-         shipped — so the icon and the text agree. */
-      icon: Truck,
+      /* A warehouse, not a second box: `Package` already carries Total
+         Products, and two box glyphs side by side at 20px are the same shape
+         twice. This one says what the card's own hint says — these are the
+         things that are stocked and shipped — so the icon and the text
+         agree. */
+      icon: Warehouse,
       tone: "accent",
       hint: "Shipped to customers",
     },
     {
       label: "Digital Products",
       value: formatNumber(counts.digital),
-      icon: BookOpen,
+      /* A file coming down, matching the hint: a download is the thing a
+         buyer actually receives here. Distinct from the Digital tab's plain
+         `Download` arrow directly below, so the two rows do not repeat one
+         glyph at two sizes. */
+      icon: FileDown,
       tone: "email",
       hint: "Downloads and access",
     },
     {
       label: "Services",
       value: formatNumber(counts.service),
-      icon: CalendarDays,
+      /* The same briefcase the Services tab uses, so the card and the filter
+         it corresponds to are found by the same mark. */
+      icon: Briefcase,
       tone: "sms",
       hint: "Booked and delivered",
     },

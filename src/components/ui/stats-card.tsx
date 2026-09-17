@@ -3,6 +3,7 @@
 import { ArrowDownRight, ArrowUpRight, type LucideIcon } from "lucide-react";
 
 import { Card } from "./card";
+import { KPI_TILE, KPI_TONES, type KpiTone } from "@/components/ui/kpi-tones";
 import { cn } from "@/lib/utils";
 
 export interface StatItem {
@@ -29,6 +30,16 @@ export interface StatItem {
    * grid's accent, so a row still reads as one module.
    */
   accent?: { soft: string; text: string };
+  /**
+   * This stat's tile as a named tone from the shared map, border included.
+   *
+   * The successor to `accent` above, and what a new call site should reach for:
+   * `accent` is a bare `{ soft, text }` pair, so every caller that wanted a
+   * bordered tile had to name the border itself and they drifted. Set on the
+   * item rather than the grid, because a row that needs tones needs a
+   * different one per card.
+   */
+  tone?: KpiTone;
 }
 
 export interface StatsGridProps {
@@ -83,28 +94,40 @@ export function StatsGrid({ items, accent, columns, className }: StatsGridProps)
         const tile = item.accent ?? accent;
 
         return (
-          <Card key={item.label} className="p-5">
+          <Card
+            key={item.label}
+            className="flex h-full flex-col p-5 hover:border-border-strong hover:shadow-card-hover"
+          >
             <div className="flex items-start justify-between gap-3">
-              <p className="text-base font-medium text-text-secondary">
+              <p className="text-sm font-medium text-text-secondary">
                 {item.label}
               </p>
               <span
                 className={cn(
-                  "grid size-8 shrink-0 place-items-center rounded-btn",
-                  tile
-                    ? cn(tile.soft, tile.text)
-                    : "bg-surface-secondary text-text-muted",
+                  KPI_TILE,
+                  /* `tone` wins over `accent`: the named tone carries its own
+                     border, the `{ soft, text }` pair predates the map and has
+                     none, so that path keeps the tile's box and hides its edge
+                     rather than drawing a grey hairline around a tinted fill. */
+                  item.tone
+                    ? KPI_TONES[item.tone]
+                    : tile
+                      ? cn("border-transparent", tile.soft, tile.text)
+                      : KPI_TONES.neutral,
                 )}
               >
-                <Icon className="size-4" aria-hidden />
+                <Icon className="size-5" aria-hidden />
               </span>
             </div>
 
-            <p className="mt-3 text-[1.75rem] leading-none font-bold text-text-primary">
+            <p className="mt-3 text-3xl leading-none font-bold text-text-primary">
               {item.value}
             </p>
 
-            <p className="mt-3 flex flex-wrap items-center gap-x-1.5 text-sm">
+            {/* `mt-auto` is what makes a row of these read as one band: the
+                labels wrap to two lines on some cards and one on others, and
+                without it every trend line sits at a different height. */}
+            <p className="mt-auto flex flex-wrap items-center gap-x-1.5 pt-3 text-sm">
               <span
                 className={cn(
                   "inline-flex items-center gap-0.5 font-medium",

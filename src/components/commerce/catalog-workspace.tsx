@@ -408,14 +408,14 @@ function CreateCatalogDialog({
                     alt={product.name}
                   />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[15px] font-bold text-text-primary">
+                    <span className="block truncate text-[15px] font-semibold text-text-primary">
                       {product.name}
                     </span>
-                    <span className="block text-sm text-text-muted font-medium">
+                    <span className="block text-sm text-text-muted">
                       {product.categoryName}
                     </span>
                   </span>
-                  <span className="shrink-0 text-sm font-medium text-text-primary tabular-nums">
+                  <span className="shrink-0 text-sm font-semibold text-text-primary tabular-nums">
                     {formatCurrency(product.salePrice ?? product.price)}
                   </span>
                 </label>
