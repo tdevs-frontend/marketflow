@@ -4,6 +4,9 @@ import { useState } from "react";
 import {
   CheckCircle2,
   ExternalLink,
+  Gauge,
+  Info,
+  Mail,
   MailCheck,
   Pencil,
   Plus,
@@ -11,6 +14,7 @@ import {
   Star,
   Trash2,
   XCircle,
+  Zap,
 } from "lucide-react";
 
 import { Badge, type BadgeTone } from "@/components/ui/badge";
@@ -20,7 +24,7 @@ import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Dialog } from "@/components/ui/dialog";
 import { PanelCard } from "@/components/ui/chart-card";
 import { Field, Input } from "@/components/ui/input";
-import { MeterRow } from "@/components/ui/progress";
+import { KPI_TONES, type KpiTone } from "@/components/ui/kpi-tones";
 import { Menu } from "@/components/ui/menu";
 import { MiniStat } from "@/components/ui/stats-card";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
@@ -31,7 +35,12 @@ import {
   EMAIL_SENDER_IDENTITIES,
   senderLabel,
 } from "@/lib/email-fixtures";
-import { formatNumber, formatPercent, formatRelativeTime } from "@/lib/format";
+import {
+  formatCount,
+  formatNumber,
+  formatPercent,
+  formatRelativeTime,
+} from "@/lib/format";
 import { isValidEmail } from "@/lib/validation";
 import { cn } from "@/lib/utils";
 import type { EmailSenderIdentity, SenderStatus } from "@/types/email";
@@ -48,6 +57,16 @@ import type { EmailSenderIdentity, SenderStatus } from "@/types/email";
  * connection state, with one link to Integrations → Email where the credentials
  * actually live. Re-offering a host and a password field on this page would
  * mean two places to change the same secret and one of them silently stale.
+ *
+ * The two panels are built to look unlike each other, because they answer
+ * unlike questions. Provider is a configuration read-out — monospace facts and
+ * two counters. Deliverability is a reputation list — one row per address, each
+ * scored and banded. Both used to be stacks of horizontal meters, which made a
+ * quota, a throughput ceiling and three delivery rates look like five readings
+ * of the same kind of thing when only the last three are comparable at all.
+ * Neither panel draws a bar now: a percentage of a daily quota is not a
+ * measurement anyone acts on, and a delivery rate between 98.0 and 98.8 is a
+ * band, not a length.
  *
  * Domain authentication is shown per identity rather than per domain, because
  * that is the granularity someone fixes it at — a DKIM record that has not
@@ -120,6 +139,138 @@ function AuthChecks({ sender }: { sender: EmailSenderIdentity }) {
   );
 }
 
+/**
+ * Messages per second going out right now.
+ *
+ * A reading the provider record does not carry — `EMAIL_PROVIDER` stores the
+ * ceiling, not the current throughput, which a live implementation would poll.
+ * It was already a literal inside the meter's label; it is named here so the
+ * three figures on the rate tile are visibly one sum.
+ */
+const CURRENT_SEND_RATE = 25;
+
+/**
+ * One provider counter: a number, what it is out of, and two facts under it.
+ *
+ * Deliberately not a meter. The quota is 12% used with thirteen hours left in
+ * the window, and a bar drawn at 12% invites reading that as a problem — what
+ * an operator actually wants is the headroom as a figure they can weigh against
+ * the send they are about to queue. The tile's job is to make three related
+ * numbers legible at once, not to rank one of them on a scale.
+ */
+function ProviderTile({
+  icon: Icon,
+  tone,
+  label,
+  value,
+  unit,
+  facts,
+}: {
+  icon: typeof Gauge;
+  tone: KpiTone;
+  label: string;
+  /** The headline figure, pre-formatted. */
+  value: string;
+  /** The muted line under it — what the figure is out of, or when it was taken. */
+  unit: string;
+  /** Exactly two, so the pair of tiles keeps one baseline grid. */
+  facts: [{ label: string; value: string }, { label: string; value: string }];
+}) {
+  return (
+    <div className="rounded-panel border border-border p-3.5">
+      <div className="flex items-center gap-2.5">
+        <span
+          className={cn(
+            "grid size-8 shrink-0 place-items-center rounded-panel border",
+            KPI_TONES[tone],
+          )}
+        >
+          <Icon className="size-4" aria-hidden />
+        </span>
+        <p className="text-sm font-medium text-text-secondary">{label}</p>
+      </div>
+
+      <p className="mt-3 text-2xl leading-none font-bold text-text-primary tabular-nums">
+        {value}
+      </p>
+      <p className="mt-1 text-sm text-text-muted">{unit}</p>
+
+      <dl className="mt-3 grid grid-cols-2 gap-3 border-t border-border pt-3">
+        {facts.map((fact) => (
+          <div key={fact.label} className="min-w-0">
+            <dt className="text-sm font-medium text-text-muted">{fact.label}</dt>
+            <dd className="mt-0.5 truncate text-sm font-bold text-text-primary tabular-nums">
+              {fact.value}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  );
+}
+
+/**
+ * Delivery rate as a band rather than a length.
+ *
+ * Every verified identity on a healthy account sits between 98.0% and 98.8%,
+ * which is three bars of visually identical length and no information at all.
+ * The band is the part someone acts on: Excellent needs nothing, Watch means go
+ * and look at the list, Poor means stop sending from that address today.
+ *
+ * Ordered highest first, so the first match wins and a rate cannot fall into
+ * two bands.
+ */
+const HEALTH_BANDS: { min: number; label: string; tone: KpiTone }[] = [
+  { min: 98, label: "Excellent", tone: "success" },
+  /* `info` rather than `email`: this blue is a state. The channel blue on the
+     same row would be saying "this is the Email module" a third time. */
+  { min: 95, label: "Healthy", tone: "info" },
+  { min: 90, label: "Watch", tone: "warning" },
+  { min: 0, label: "Poor", tone: "danger" },
+];
+
+const healthFor = (deliveryRate: number) =>
+  HEALTH_BANDS.find((band) => deliveryRate >= band.min) ?? HEALTH_BANDS[3];
+
+/** One identity's reputation: who it is on the left, how it is doing on the right. */
+function SenderHealthRow({ sender }: { sender: EmailSenderIdentity }) {
+  const health = healthFor(sender.deliveryRate);
+
+  return (
+    <li className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+      <span
+        className={cn(
+          "grid size-9 shrink-0 place-items-center rounded-panel border",
+          KPI_TONES[health.tone],
+        )}
+      >
+        <Mail className="size-4" aria-hidden />
+      </span>
+
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium text-text-primary">
+          {sender.email}
+        </p>
+        <p className="text-sm text-text-muted tabular-nums">
+          {formatNumber(sender.sent30d)} sent
+        </p>
+      </div>
+
+      <div className="shrink-0 text-right">
+        <span
+          className={cn(
+            "inline-flex rounded-btn border px-2 py-0.5 text-sm font-bold tabular-nums",
+            KPI_TONES[health.tone],
+          )}
+        >
+          {formatPercent(sender.deliveryRate)}
+        </span>
+        <p className="mt-1 text-sm font-medium text-text-muted">{health.label}</p>
+      </div>
+    </li>
+  );
+}
+
 export function EmailSendersWorkspace() {
   const toast = useToast();
 
@@ -131,7 +282,8 @@ export function EmailSendersWorkspace() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [pendingDelete, setPendingDelete] = useState<EmailSenderIdentity | null>(null);
 
-  const quotaUsed = (EMAIL_PROVIDER.sentToday / EMAIL_PROVIDER.dailyLimit) * 100;
+  const remaining = EMAIL_PROVIDER.dailyLimit - EMAIL_PROVIDER.sentToday;
+  const headroom = EMAIL_PROVIDER.rateLimit - CURRENT_SEND_RATE;
   const verified = senders.filter((sender) => sender.status === "verified");
 
   function openAdd() {
@@ -248,22 +400,32 @@ export function EmailSendersWorkspace() {
             </div>
           </dl>
 
-          <div className="mt-5 space-y-4 border-t border-border pt-4">
-            <MeterRow
-              label="Daily quota"
-              value={quotaUsed}
-              display={`${formatNumber(EMAIL_PROVIDER.sentToday)} of ${formatNumber(
-                EMAIL_PROVIDER.dailyLimit,
-              )}`}
-              tone="bg-email"
-              hint="Resets at midnight UTC"
+          {/* `formatCount` on the two headline figures and `formatNumber` on
+              the ceilings: a quota you are spending is read exactly, and the
+              limit it is measured against is a round number you only need the
+              size of. */}
+          <div className="mt-5 grid gap-3 border-t border-border pt-4 sm:grid-cols-2">
+            <ProviderTile
+              icon={Gauge}
+              tone="email"
+              label="Daily Usage"
+              value={formatCount(EMAIL_PROVIDER.sentToday)}
+              unit={`of ${formatNumber(EMAIL_PROVIDER.dailyLimit)}`}
+              facts={[
+                { label: "Remaining", value: formatCount(remaining) },
+                { label: "Reset", value: "Midnight UTC" },
+              ]}
             />
-            <MeterRow
-              label="Send rate"
-              value={62}
-              display={`25 of ${EMAIL_PROVIDER.rateLimit} per second`}
-              tone="bg-accent"
-              hint="Peak over the last hour"
+            <ProviderTile
+              icon={Zap}
+              tone="accent"
+              label="Send Rate"
+              value={`${CURRENT_SEND_RATE}/sec`}
+              unit="Peak over the last hour"
+              facts={[
+                { label: "Limit", value: `${EMAIL_PROVIDER.rateLimit}/sec` },
+                { label: "Available", value: `${headroom}/sec` },
+              ]}
             />
           </div>
         </PanelCard>
@@ -297,23 +459,23 @@ export function EmailSendersWorkspace() {
             />
           </div>
 
-          <div className="mt-4 space-y-4 border-t border-border pt-4">
+          {/* Verified only. An identity that cannot send has no reputation
+              yet, and a 0% score beside it would read as a failure rather than
+              as an absence — the table below is where its pending state is
+              reported. */}
+          <ul className="mt-4 divide-y divide-border border-t border-border pt-3">
             {verified.map((sender) => (
-              <MeterRow
-                key={sender.id}
-                label={sender.email}
-                value={sender.deliveryRate}
-                display={formatPercent(sender.deliveryRate)}
-                tone="bg-email"
-                hint={`${formatNumber(sender.sent30d)} sent`}
-              />
+              <SenderHealthRow key={sender.id} sender={sender} />
             ))}
-          </div>
+          </ul>
 
-          <p className="mt-4 rounded-panel bg-email-soft px-3 py-2.5 text-sm text-email-dark">
-            Reputation is earned per address, not per domain. A new identity
-            sends best if you ramp it over a week rather than opening on a full
-            list.
+          <p className="mt-4 flex items-start gap-2.5 rounded-panel border border-border bg-surface-secondary px-3.5 py-3 text-sm text-text-secondary">
+            <Info className="mt-0.5 size-4 shrink-0 text-text-muted" aria-hidden />
+            <span>
+              Reputation is earned per address, not per domain. A new identity
+              sends best if you ramp it over a week rather than opening on a full
+              list.
+            </span>
           </p>
         </PanelCard>
       </div>
