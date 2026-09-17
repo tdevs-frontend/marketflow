@@ -561,7 +561,7 @@ export function CatalogWorkspace() {
           <span className="text-base font-bold text-text-primary">
             Create catalog
           </span>
-          <span className="max-w-50 text-sm text-text-mute font-medium">
+          <span className="max-w-56 text-sm text-text-mute font-medium">
             Group products for a campaign, a season or a customer segment.
           </span>
         </button>
