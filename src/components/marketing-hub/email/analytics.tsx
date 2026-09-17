@@ -1,28 +1,19 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Download } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { ChartCard, PanelCard } from "@/components/ui/chart-card";
-import {
-  DateRangePicker,
-  DEFAULT_RANGE,
-  type DateRangeValue,
-} from "@/components/ui/date-range";
+import { DEFAULT_RANGE, type DateRangeValue } from "@/components/ui/date-range";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ProgressBar } from "@/components/ui/progress";
 import { Select } from "@/components/ui/select";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
-import { useToast } from "@/components/ui/toast";
 import {
   CHANNEL_SERIES,
   RATE_COLORS,
 } from "@/components/dashboard/charts/chart-theme";
 import { TrendChart } from "@/components/dashboard/charts/trend-chart";
-import { AUDIENCES } from "@/lib/marketing-fixtures";
 import {
   EMAIL_CAMPAIGNS,
   EMAIL_DAY_LABELS,
@@ -117,22 +108,46 @@ type SortField = (typeof SORT_OPTIONS)[number]["value"];
 /** Sent campaigns only — a scheduled campaign has no rate to compare. */
 const SENT = EMAIL_CAMPAIGNS.filter((campaign) => campaign.delivered > 0);
 
-const ALL = "all";
+/**
+ * The seam the dashboard's date filter plugs into.
+ *
+ * Nothing narrows on the range yet, and the function says so rather than
+ * pretending: `EMAIL_SERIES` is ten fixed points with no dates attached, and a
+ * campaign carries a `createdAt` but none of the per-day figures the rates are
+ * computed from. Filtering here today would either do nothing or empty the
+ * table, and a page that silently drops rows is worse than one that reports the
+ * whole set.
+ *
+ * It exists so the range arrives as data on a real code path instead of as a
+ * prop nobody reads: when the central filter and dated fixtures land, this is
+ * the one function that changes and every panel narrows with it.
+ */
+function withinRange<T>(rows: T[], range: DateRangeValue): T[] {
+  void range;
+  return rows;
+}
 
-export function EmailAnalytics() {
-  const toast = useToast();
-  const [range, setRange] = useState<DateRangeValue>(DEFAULT_RANGE);
-  const [audience, setAudience] = useState(ALL);
+export interface EmailAnalyticsProps {
+  /**
+   * The period this page reports on.
+   *
+   * Supplied by the dashboard's filter rather than chosen here — the page used
+   * to own a `DateRangePicker` of its own, which made it one of four analytics
+   * pages each answering "which 30 days" separately. Optional while the central
+   * control is being wired up, and the default is the same 30 days the picker
+   * opened on, so the page reads identically until something passes a range.
+   */
+  range?: DateRangeValue;
+}
+
+export function EmailAnalytics({ range = DEFAULT_RANGE }: EmailAnalyticsProps) {
   const [metric, setMetric] = useState<RateMetric>("open");
   const [sort, setSort] = useState<SortField>("openRate");
 
   const meta = RATE_META[metric];
 
   const comparison = useMemo(() => {
-    const rows =
-      audience === ALL
-        ? SENT
-        : SENT.filter((campaign) => campaign.segment === audience);
+    const rows = withinRange(SENT, range);
 
     return [...rows].sort((a, b) => {
       if (sort === "sent") return b.sent - a.sent;
@@ -144,38 +159,10 @@ export function EmailAnalytics() {
       }
       return rate(b.opened, b.delivered) - rate(a.opened, a.delivered);
     });
-  }, [audience, sort]);
+  }, [range, sort]);
 
   return (
     <>
-      <Card className="p-4">
-        <div className="flex flex-wrap items-center gap-2.5">
-          <DateRangePicker value={range} onChange={setRange} />
-
-          <Select
-            label="Filter by audience"
-            size="sm"
-            value={audience}
-            onChange={setAudience}
-            options={[
-              { value: ALL, label: "All audiences" },
-              ...AUDIENCES.map((item) => ({ value: item.value, label: item.label })),
-            ]}
-            className="w-full lg:w-44"
-          />
-
-          <Button
-            variant="outline"
-            size="compact"
-            onClick={() => toast("Report queued — we will email the CSV when it is ready")}
-            className="lg:ml-auto"
-          >
-            <Download aria-hidden />
-            Export
-          </Button>
-        </div>
-      </Card>
-
       <div className="grid gap-4 xl:grid-cols-3">
         <ChartCard
           title="Engagement Trend"
@@ -228,14 +215,12 @@ export function EmailAnalytics() {
         }
       >
         {comparison.length === 0 ? (
+          /* No local reset to offer any more: the period is set upstairs, so
+             the empty state says where to change it rather than handing over a
+             button that would only undo a filter this card no longer owns. */
           <EmptyState
-            title="No sent campaigns in this audience"
-            description="Pick another audience, or widen the date range."
-            action={
-              <Button size="sm" variant="outline" onClick={() => setAudience(ALL)}>
-                All audiences
-              </Button>
-            }
+            title="No sent campaigns in this period"
+            description="Nothing was sent in the selected date range. Widen it in the dashboard filter."
           />
         ) : (
           <>
