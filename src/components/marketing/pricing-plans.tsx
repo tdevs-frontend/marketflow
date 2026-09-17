@@ -123,7 +123,7 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
         <div className="flex items-start justify-between gap-3">
           <h3 className="text-base font-bold text-text-primary">{plan.name}</h3>
           {featured ? (
-            <span className="shrink-0 rounded-full brand-gradient px-2.5 py-1 text-xs font-bold tracking-[0.08em] text-white uppercase shadow-btn">
+            <span className="shrink-0 rounded-full brand-gradient px-2.5 py-1 text-xs font-bold  text-white uppercase shadow-btn">
               Most popular
             </span>
           ) : null}

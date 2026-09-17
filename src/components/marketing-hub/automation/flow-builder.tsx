@@ -51,7 +51,7 @@ export function FlowBuilder({ flow }: { flow: AutomationFlow }) {
     <div className="grid gap-4 xl:grid-cols-[15rem_minmax(0,1fr)_18rem]">
       {/* ------------------------------------------------------------ Palette */}
       <Card className="h-max p-4 xl:sticky xl:top-22">
-        <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+        <p className="text-sm font-medium  text-text-muted uppercase">
           Add a step
         </p>
 
@@ -159,7 +159,7 @@ export function FlowBuilder({ flow }: { flow: AutomationFlow }) {
         {selected ? (
           <Card className="p-4">
             <div className="flex items-start justify-between gap-3">
-              <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+              <p className="text-sm font-medium  text-text-muted uppercase">
                 Step settings
               </p>
               <Badge tone="neutral">{selected.type}</Badge>
@@ -226,7 +226,7 @@ export function FlowBuilder({ flow }: { flow: AutomationFlow }) {
         )}
 
         <Card className="p-4">
-          <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+          <p className="text-sm font-medium  text-text-muted uppercase">
             Automation
           </p>
 

@@ -554,7 +554,7 @@ function ChatWindow({
  * which is the lightest weight on the palette's lightest ink.
  */
 const SECTION_HEADING =
-  "text-meta font-semibold tracking-[0.08em] text-text-secondary uppercase";
+  "text-meta font-semibold  text-text-secondary uppercase";
 
 function ContactDetails({
   conversation,

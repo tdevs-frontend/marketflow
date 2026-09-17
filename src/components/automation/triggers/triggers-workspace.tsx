@@ -272,7 +272,7 @@ export function TriggersWorkspace() {
               {groups.map((group) => (
                 <section key={group.value}>
                   <div className="mb-3">
-                    <h2 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+                    <h2 className="text-sm font-medium  text-text-muted uppercase">
                       {group.label}
                     </h2>
                     <p className="mt-0.5 text-sm text-text-muted">
@@ -289,7 +289,7 @@ export function TriggersWorkspace() {
             </div>
           ) : (
             <>
-              <h2 className="mb-3 text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h2 className="mb-3 text-sm font-medium  text-text-muted uppercase">
                 {triggerCategoryLabel(category as TriggerCategory)}
               </h2>
               <TriggerTable

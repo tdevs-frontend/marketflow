@@ -106,7 +106,7 @@ export function HeroDashboard() {
             <TrendingUp className="h-4 w-4" aria-hidden />
           </span>
           <span>
-            <span className="block text-xs font-medium uppercase tracking-[0.08em] text-text-muted">
+            <span className="block text-xs font-medium uppercase  text-text-muted">
               Reply rate
             </span>
             <span className="block text-base font-bold leading-tight text-text-primary">+38%</span>

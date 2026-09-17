@@ -196,7 +196,7 @@ export function SmsComposer({
 
       {/* ------------------------------------------------- Personalisation */}
       <div>
-        <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+        <p className="text-sm font-medium  text-text-muted uppercase">
           Personalisation
         </p>
         <ul className="mt-2 flex flex-wrap gap-1.5">

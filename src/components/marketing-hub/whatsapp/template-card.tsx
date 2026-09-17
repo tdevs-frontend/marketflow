@@ -139,7 +139,7 @@ export function TemplateCard({
               setting as the headings in the Inbox details panel and the Overview
               panels. It was 14px medium on muted, which is a heading set
               lighter than the list it introduces. */}
-          <p className="text-meta font-semibold tracking-[0.08em] text-text-secondary uppercase">
+          <p className="text-meta font-semibold  text-text-secondary uppercase">
             Variables
           </p>
           <ul className="mt-1.5 flex flex-wrap gap-1.5">

@@ -631,7 +631,7 @@ export function SmsContactsWorkspace() {
             </div>
 
             <section>
-              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium  text-text-muted uppercase">
                 Profile
               </h3>
               <dl className="mt-2 space-y-2 text-sm">
@@ -659,7 +659,7 @@ export function SmsContactsWorkspace() {
             </section>
 
             <section>
-              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium  text-text-muted uppercase">
                 Tags
               </h3>
               <div className="mt-2">
@@ -668,7 +668,7 @@ export function SmsContactsWorkspace() {
             </section>
 
             <section>
-              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium  text-text-muted uppercase">
                 Campaign history
               </h3>
               {detail.messages === 0 ? (

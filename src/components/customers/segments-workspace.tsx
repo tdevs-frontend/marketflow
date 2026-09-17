@@ -266,7 +266,7 @@ function SegmentBuilderDialog({
         {type === "dynamic" ? (
           <section>
             <div className="flex items-center justify-between gap-3">
-              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium  text-text-muted uppercase">
                 Conditions
               </h3>
             </div>
@@ -505,7 +505,7 @@ function SegmentDrawer({
               ) : (
                 <>
                   <section>
-                    <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+                    <h3 className="text-sm font-medium  text-text-muted uppercase">
                       Campaigns
                     </h3>
                     {segment.usage.campaigns.length ? (
@@ -531,7 +531,7 @@ function SegmentDrawer({
                   </section>
 
                   <section>
-                    <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+                    <h3 className="text-sm font-medium  text-text-muted uppercase">
                       Automations
                     </h3>
                     {segment.usage.automations.length ? (

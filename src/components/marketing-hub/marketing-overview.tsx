@@ -11,7 +11,7 @@ import { APP_ROUTES } from "@/constants";
 import { AUTOMATION_ROUTES } from "@/constants/automation";
 import { CAMPAIGNS } from "@/lib/marketing-fixtures";
 import { SEGMENTS } from "@/lib/segment-fixtures";
-import { LIVE_WORKFLOWS, conversionRate } from "@/lib/workflow-fixtures";
+import { LIVE_WORKFLOWS } from "@/lib/workflow-fixtures";
 import {
   AUDIENCE_INSIGHTS,
   CHANNEL_ROWS,
@@ -26,9 +26,12 @@ import { formatCount, formatNumber, formatPercent } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { CampaignStatus } from "@/types/marketing";
 import { CampaignTable } from "./campaign-table";
-import { ActivityFeed } from "./shared/activity-feed";
+import { ActivityStream } from "./shared/activity-stream";
+import {
+  AutomationPerformance,
+  summariseAutomations,
+} from "./shared/automation-performance";
 import { ChannelPerformanceTable } from "./shared/channel-performance";
-import { RankedList, type RankedItem } from "./shared/ranked-list";
 import { TopCampaigns } from "./shared/top-campaigns";
 
 /**
@@ -161,33 +164,24 @@ const HEALTH: { label: string; status: CampaignStatus; tone: string }[] = [
 ];
 
 /**
- * Live workflows ranked by the share of entrants that converted.
+ * The automation panel's numbers, summed off the workflow records themselves.
  *
- * Rate rather than volume, for the same reason Top Performing ranks campaigns
- * that way: the workflow with the most conversions is usually just the one the
- * most contacts entered, and that tells you nothing about which flow to build
- * next. The volume is still on the second line, because a 22% rate over 1,840
- * contacts and a 9% rate over 18,420 are different kinds of good.
+ * `LIVE_WORKFLOWS` is everything unarchived, which includes paused, drafts and
+ * the one in error — right for this panel, because a paused flow's contacts
+ * are still in the pipeline and a drop-off that ignored them would flatter the
+ * completion rate. `activeFlows` narrows to `status === "active"` on its own.
  *
- * Distinct from the overview's Automation Activity, which is a run log — what
- * happened, in order. This is what the workflows are *worth*.
+ * Distinct from the merchant overview's Automation Activity, which is a run
+ * log: what happened, in order. This is what the journeys are *worth*.
  */
-const AUTOMATION_RANKING: RankedItem[] = [...LIVE_WORKFLOWS]
-  /* `LIVE_WORKFLOWS` is everything unarchived, which includes paused, drafts
-     and the one in error. A ranking of what marketing is running should only
-     hold what is actually running. */
-  .filter((workflow) => workflow.status === "active" && workflow.stats.entered > 0)
-  .sort((a, b) => conversionRate(b) - conversionRate(a))
-  .slice(0, 5)
-  .map((workflow) => ({
-    id: workflow.id,
-    label: workflow.name,
-    secondary: `${formatNumber(workflow.stats.entered)} entered · ${formatNumber(
-      workflow.stats.converted,
-    )} converted`,
-    display: formatPercent(conversionRate(workflow)),
-    share: conversionRate(workflow),
-  }));
+const AUTOMATION_SUMMARY = summariseAutomations(LIVE_WORKFLOWS);
+
+/** Movement against the previous 90 days, which a snapshot cannot derive. */
+const AUTOMATION_CHANGES = {
+  entered: 16.4,
+  completed: 19.2,
+  completionRate: 2.8,
+};
 
 export function MarketingOverview() {
   /* Newest five, which is what "recent" means on an overview. */
@@ -367,7 +361,7 @@ export function MarketingOverview() {
       <div className="grid gap-4 xl:grid-cols-2">
         <PanelCard
           title="Automation Performance"
-          description="Live workflows, ranked by the share of entrants that converted."
+          description="Track how your automated journeys are converting."
           action={
             <ButtonLink
               href={AUTOMATION_ROUTES.workflows}
@@ -378,14 +372,18 @@ export function MarketingOverview() {
             </ButtonLink>
           }
         >
-          <RankedList items={AUTOMATION_RANKING} labelSize="base" />
+          <AutomationPerformance
+            summary={AUTOMATION_SUMMARY}
+            hrefFor={(id) => `${AUTOMATION_ROUTES.workflows}/${id}`}
+            changes={AUTOMATION_CHANGES}
+          />
         </PanelCard>
 
         <PanelCard
           title="Marketing Activity"
-          description="Everything the marketing module did in the last two days."
+          description="Latest campaign and channel events."
         >
-          <ActivityFeed entries={RECENT_ACTIVITY} />
+          <ActivityStream entries={RECENT_ACTIVITY} />
         </PanelCard>
       </div>
     </>

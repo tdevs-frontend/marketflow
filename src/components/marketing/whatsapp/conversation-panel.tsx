@@ -122,7 +122,7 @@ export function ConversationPanel() {
 
       {/* Thread */}
       <div className="flex min-h-0 flex-1 flex-col justify-end gap-1 overflow-hidden px-2 pt-2 pb-1.5 @[440px]:gap-1.5 @[440px]:px-3">
-        <span className="mx-auto mb-0.5 hidden rounded-full bg-black/5 px-1.5 py-0.5 text-[6px] leading-none font-semibold tracking-[0.08em] text-text-muted uppercase @[440px]:block @[440px]:text-[7px]">
+        <span className="mx-auto mb-0.5 hidden rounded-full bg-black/5 px-1.5 py-0.5 text-[6px] leading-none font-semibold  text-text-muted uppercase @[440px]:block @[440px]:text-[7px]">
           Today
         </span>
 

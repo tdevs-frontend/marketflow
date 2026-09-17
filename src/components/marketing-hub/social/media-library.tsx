@@ -128,7 +128,7 @@ export function MediaLibrary() {
         {/* ------------------------------------------------------- Folders */}
         <Card className="h-max p-4 lg:sticky lg:top-22">
           <div className="flex items-center justify-between gap-2">
-            <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+            <p className="text-sm font-medium  text-text-muted uppercase">
               Folders
             </p>
             <button
@@ -172,7 +172,7 @@ export function MediaLibrary() {
           {/* Storage. Worth showing: a library is the first thing to fill a
               plan's quota, and the warning arrives too late otherwise. */}
           <div className="mt-4 border-t border-border pt-4">
-            <p className="flex items-center gap-1.5 text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+            <p className="flex items-center gap-1.5 text-sm font-medium  text-text-muted uppercase">
               <HardDrive className="size-3" aria-hidden />
               Storage
             </p>
@@ -529,7 +529,7 @@ export function MediaLibrary() {
             </dl>
 
             <section>
-              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium  text-text-muted uppercase">
                 Tags
               </h3>
               <div className="mt-2">

@@ -196,7 +196,7 @@ export function SocialAccounts() {
               </div>
 
               <div className="mt-4">
-                <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+                <p className="text-sm font-medium  text-text-muted uppercase">
                   Capabilities
                 </p>
                 <ul className="mt-1.5 flex flex-wrap gap-1.5">

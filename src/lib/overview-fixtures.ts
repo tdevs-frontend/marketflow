@@ -309,6 +309,30 @@ export type ActivityKind =
   | "conversion"
   | "alert";
 
+/**
+ * The four things a marketer groups their day by.
+ *
+ * Coarser than `ActivityKind` on purpose, and not derivable from it: a failed
+ * campaign has `kind: "alert"` because of how it should look, and belongs
+ * under Campaigns because of what it is about. Optional so the WhatsApp
+ * module's own feed, which builds `ActivityEntry` values of its own and
+ * renders them through the plain `ActivityFeed`, needs no change.
+ */
+export type ActivityCategory =
+  | "campaign"
+  | "automation"
+  | "audience"
+  | "channel";
+
+/** Where the thing that happened got to. Drives the badge on the right. */
+export type ActivityState =
+  | "running"
+  | "scheduled"
+  | "completed"
+  | "approved"
+  | "failed"
+  | "attention";
+
 export interface ActivityEntry {
   id: string;
   kind: ActivityKind;
@@ -318,6 +342,10 @@ export interface ActivityEntry {
   channel?: Channel;
   actor: string;
   at: string;
+  /** Grouping for the Marketing workspace's stream. */
+  category?: ActivityCategory;
+  /** Status shown beside the timestamp. Omit where there is nothing to say. */
+  state?: ActivityState;
 }
 
 export const RECENT_ACTIVITY: ActivityEntry[] = [
@@ -329,6 +357,8 @@ export const RECENT_ACTIVITY: ActivityEntry[] = [
     channel: "whatsapp",
     actor: "Nadia Karim",
     at: "2026-09-08T09:42:00Z",
+    category: "campaign",
+    state: "running",
   },
   {
     id: "act-2",
@@ -338,6 +368,8 @@ export const RECENT_ACTIVITY: ActivityEntry[] = [
     channel: "email",
     actor: "System",
     at: "2026-09-08T09:15:00Z",
+    category: "campaign",
+    state: "completed",
   },
   {
     id: "act-3",
@@ -347,6 +379,8 @@ export const RECENT_ACTIVITY: ActivityEntry[] = [
     channel: "whatsapp",
     actor: "System",
     at: "2026-09-08T08:30:00Z",
+    category: "automation",
+    state: "running",
   },
   {
     id: "act-4",
@@ -356,6 +390,8 @@ export const RECENT_ACTIVITY: ActivityEntry[] = [
     channel: "social",
     actor: "System",
     at: "2026-09-08T07:50:00Z",
+    category: "channel",
+    state: "attention",
   },
   {
     id: "act-5",
@@ -365,6 +401,8 @@ export const RECENT_ACTIVITY: ActivityEntry[] = [
     channel: "whatsapp",
     actor: "Meta review",
     at: "2026-09-07T18:20:00Z",
+    category: "channel",
+    state: "approved",
   },
   {
     id: "act-6",
@@ -373,6 +411,8 @@ export const RECENT_ACTIVITY: ActivityEntry[] = [
     detail: "From storefront-signups-sept.csv · 18 duplicates skipped",
     actor: "Imran Hossain",
     at: "2026-09-07T15:05:00Z",
+    category: "audience",
+    state: "completed",
   },
   {
     id: "act-7",
@@ -382,6 +422,8 @@ export const RECENT_ACTIVITY: ActivityEntry[] = [
     channel: "sms",
     actor: "Tanvir Alam",
     at: "2026-09-07T12:40:00Z",
+    category: "campaign",
+    state: "scheduled",
   },
   {
     id: "act-8",
@@ -391,5 +433,7 @@ export const RECENT_ACTIVITY: ActivityEntry[] = [
     channel: "email",
     actor: "System",
     at: "2026-09-06T16:10:00Z",
+    category: "campaign",
+    state: "failed",
   },
 ];

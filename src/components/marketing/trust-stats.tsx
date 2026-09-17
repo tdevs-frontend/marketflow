@@ -132,7 +132,7 @@ export function TrustStats() {
         </dl>
 
         <div className="mt-12 flex flex-col items-center gap-7">
-          <p className="text-xs font-semibold tracking-[0.08em] text-text-muted uppercase">
+          <p className="text-xs font-semibold  text-text-muted uppercase">
             Trusted by teams worldwide
           </p>
 

@@ -998,7 +998,7 @@ export function NodeInspector({
         <div className="min-w-0 flex-1">
           <p
             className={cn(
-              "text-sm font-medium tracking-[0.08em] uppercase",
+              "text-sm font-medium  uppercase",
               theme.text,
             )}
           >

@@ -663,7 +663,7 @@ export function SmsCampaignsWorkspace() {
           />
 
           <div>
-            <p className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+            <p className="text-sm font-medium  text-text-muted uppercase">
               Preview
             </p>
             <SmsPreview

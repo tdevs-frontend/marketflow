@@ -191,7 +191,7 @@ function LifecycleTracker({ contact }: { contact: CustomerContact }) {
   return (
     <div>
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+        <h3 className="text-sm font-medium  text-text-muted uppercase">
           Lifecycle
         </h3>
         {churned ? (

@@ -148,7 +148,7 @@ const STATS: StatItem[] = [
 
 /** The panel rules, in one place so the three panels cannot drift apart. */
 const SECTION_RULE =
-  "text-meta font-semibold tracking-[0.08em] text-text-secondary uppercase";
+  "text-meta font-semibold  text-text-secondary uppercase";
 
 const WA_FLOWS = AUTOMATION_FLOWS.filter((flow) => flow.channel === "whatsapp");
 

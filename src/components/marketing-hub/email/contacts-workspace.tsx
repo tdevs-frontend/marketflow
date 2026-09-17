@@ -632,7 +632,7 @@ export function EmailContactsWorkspace() {
             </div>
 
             <section>
-              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium  text-text-muted uppercase">
                 Profile
               </h3>
               <dl className="mt-2 space-y-2 text-sm">
@@ -660,7 +660,7 @@ export function EmailContactsWorkspace() {
             </section>
 
             <section>
-              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium  text-text-muted uppercase">
                 Tags
               </h3>
               <div className="mt-2">
@@ -669,7 +669,7 @@ export function EmailContactsWorkspace() {
             </section>
 
             <section>
-              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium  text-text-muted uppercase">
                 Campaign history
               </h3>
               {detail.campaigns === 0 ? (
@@ -702,7 +702,7 @@ export function EmailContactsWorkspace() {
             </section>
 
             <section>
-              <h3 className="text-sm font-medium tracking-[0.08em] text-text-muted uppercase">
+              <h3 className="text-sm font-medium  text-text-muted uppercase">
                 Activity timeline
               </h3>
               <ol className="mt-2 space-y-3">
