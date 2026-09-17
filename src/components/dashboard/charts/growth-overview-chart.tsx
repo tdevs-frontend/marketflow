@@ -51,6 +51,15 @@ export interface GrowthOverviewChartProps {
   previous: number[];
   seriesName: string;
   format: "number" | "currency";
+  /**
+   * The current series' hue, as hex.
+   *
+   * Passed in rather than fixed to the brand indigo because the card plots
+   * three different things through one chart, and a reader who has just
+   * pressed Orders should see the bars answer. Apex reads this back to compute
+   * its hover shade, so it cannot be a `var(--color-…)`.
+   */
+  color: string;
   height?: number;
 }
 
@@ -68,12 +77,14 @@ function tooltipMarkup({
   currentValue,
   previousValue,
   formatValue,
+  color,
 }: {
   label: string;
   seriesName: string;
   currentValue: number;
   previousValue: number;
   formatValue: (value: number) => string;
+  color: string;
 }): string {
   const change =
     previousValue === 0 ? null : ((currentValue - previousValue) / previousValue) * 100;
@@ -81,14 +92,16 @@ function tooltipMarkup({
   const changeMarkup =
     change === null
       ? `<span class="text-sm font-medium text-text-muted">—</span>`
-      : `<span class="text-sm font-bold tabular-nums ${
-          change >= 0 ? "text-primary" : "text-error"
+      : `<span class="text-sm font-bold tabular-nums" style="color:${
+          change >= 0 ? color : CHART_COLORS.error
         }">${change >= 0 ? "+" : "−"}${Math.abs(change).toFixed(1)}%</span>`;
 
+  /* The swatch is a rounded bar rather than a dot now that the series are
+     bars — a tooltip key should look like the mark it is naming. */
   const row = (swatch: string, name: string, value: number) => `
     <div class="flex items-center justify-between gap-6">
       <span class="inline-flex items-center gap-1.5 text-sm text-text-secondary">
-        <span class="size-2 shrink-0 rounded-full" style="background:${swatch}"></span>
+        <span class="h-2.5 w-1.5 shrink-0 rounded-xs" style="background:${swatch}"></span>
         ${name}
       </span>
       <span class="text-sm font-bold text-text-primary tabular-nums">${formatValue(value)}</span>
@@ -98,8 +111,8 @@ function tooltipMarkup({
     <div class="min-w-48 p-3">
       <p class="text-sm font-medium text-text-muted">${label}</p>
       <div class="mt-2 flex flex-col gap-1.5">
-        ${row(CHART_COLORS.primary, seriesName, currentValue)}
-        ${row(CHART_COLORS.neutralStrong, "Previous period", previousValue)}
+        ${row(color, seriesName, currentValue)}
+        ${row(CHART_COLORS.neutral, "Previous period", previousValue)}
       </div>
       <div class="mt-2 flex items-center justify-between gap-6 border-t border-border pt-2">
         <span class="text-sm text-text-muted">Change</span>
@@ -114,6 +127,7 @@ export function GrowthOverviewChart({
   previous,
   seriesName,
   format,
+  color,
   height = 300,
 }: GrowthOverviewChartProps) {
   const options = useMemo<ApexOptions>(() => {
@@ -122,31 +136,50 @@ export function GrowthOverviewChart({
       isCurrency ? formatCurrency(value) : formatNumber(value);
 
     return {
-      chart: { ...BASE_CHART, type: "area" },
-      /* Brand indigo leads; the comparison line stays neutral so the eye is
-         never asked to weigh two colours of equal strength against each other. */
-      colors: [CHART_COLORS.primary, CHART_COLORS.neutralStrong],
+      chart: { ...BASE_CHART, type: "bar" },
+      /*
+       * The metric's own hue against a light neutral.
+       *
+       * The comparison used to be `neutralStrong` (#94a3b8), which is right for
+       * a 1.5px dashed line and far too heavy as a filled column: at bar size
+       * it carried as much weight as the series it exists to be measured
+       * against. `neutral` (#cbd5e1) is the same family two steps lighter, so
+       * the pair still reads as one measurement taken twice.
+       */
+      colors: [color, CHART_COLORS.neutral],
       dataLabels: { enabled: false },
-      stroke: { curve: "smooth", width: [2.5, 1.5], dashArray: [0, 5] },
-      /* Only the current period is filled. Two stacked gradients would muddy
-         the overlap and make neither series readable. */
-      fill: {
-        type: ["gradient", "solid"],
-        gradient: {
-          shadeIntensity: 1,
-          opacityFrom: 0.24,
-          opacityTo: 0.01,
-          stops: [0, 100],
+      plotOptions: {
+        bar: {
+          /* The house bar geometry, as `bars-chart` sets it. */
+          borderRadius: 4,
+          borderRadiusApplication: "end",
+          /* The width of the *pair*, not of one bar. 62% leaves a gutter wider
+             than the two bars are apart, so the eye groups each period
+             together before it compares one period to the next. */
+          columnWidth: "62%",
         },
-        opacity: [1, 0],
       },
-      grid: BASE_GRID,
+      /* Bars carry their own edge; a stroke on top of a 4px radius only
+         softens the corner it is supposed to be crisping. */
+      stroke: { show: false },
+      fill: { opacity: 1 },
+      /* A lighter rule than the shared grid. Columns sit on top of the scale
+         rather than beside it, and at `--color-border` the rules read through
+         the gaps as stripes across the plot. */
+      grid: { ...BASE_GRID, borderColor: CHART_COLORS.gridSoft },
       legend: { show: false },
-      markers: {
-        size: 0,
-        strokeWidth: 2,
-        strokeColors: CHART_COLORS.surface,
-        hover: { size: 5 },
+      /*
+       * Deepen the hovered bar rather than lighten it.
+       *
+       * Apex's default hover is `lighten`, which washes a column towards white
+       * and is the one direction that costs the bar its identity — on the
+       * Orders tab a lightened green reads as a different green. Darkening
+       * keeps the hue and still registers as a response. `active` is off
+       * because a bar is not selectable and its click wash only looks broken.
+       */
+      states: {
+        hover: { filter: { type: "darken", value: 0.9 } },
+        active: { filter: { type: "none" } },
       },
       xaxis: {
         categories,
@@ -154,8 +187,12 @@ export function GrowthOverviewChart({
         axisTicks: { show: false },
         labels: { style: AXIS_LABELS, rotate: 0, hideOverlappingLabels: true },
         tooltip: { enabled: false },
+        /* A soft band behind the hovered category, in place of the line
+           chart's dashed crosshair — a vertical rule through a column means
+           nothing, whereas the band says which pair the tooltip belongs to. */
         crosshairs: {
-          stroke: { color: CHART_COLORS.grid, width: 1, dashArray: 4 },
+          fill: { type: "solid", color: CHART_COLORS.gridSoft },
+          stroke: { width: 0 },
         },
       },
       yaxis: {
@@ -180,14 +217,29 @@ export function GrowthOverviewChart({
             currentValue: series[0]?.[dataPointIndex] ?? 0,
             previousValue: series[1]?.[dataPointIndex] ?? 0,
             formatValue,
+            color,
           }),
       },
+      /*
+       * Phone width, where the 12-month range puts twenty-four columns in
+       * about 300px. Widening the pair to 86% spends the gutter between
+       * categories on the bars themselves, which is the trade worth making
+       * when the alternative is twenty-four hairlines.
+       */
+      responsive: [
+        {
+          breakpoint: 640,
+          options: {
+            plotOptions: { bar: { columnWidth: "86%", borderRadius: 3 } },
+          },
+        },
+      ],
     };
-  }, [categories, format, seriesName]);
+  }, [categories, color, format, seriesName]);
 
   return (
     <ApexChart
-      type="area"
+      type="bar"
       height={height}
       options={options}
       series={[

@@ -16,10 +16,20 @@ export const CHART_COLORS = {
   primaryDark: "#4338ca",
   primaryLight: "#818cf8",
   accent: "#06b6d4",
+  /* The two hues the growth chart takes when it is not plotting leads. They
+     mirror `--color-success` and `--color-sms`; see `METRICS` in
+     `dashboard/growth-overview`, which is the only thing that reads them. */
+  success: "#16a34a",
+  sms: "#9333ea",
   neutral: "#cbd5e1",
   /* The comparison series. See `--color-chart-neutral-strong`. */
   neutralStrong: "#94a3b8",
   grid: "#e2e8f0",
+  /* One step lighter than `grid`, for a chart whose rules should sit under the
+     series rather than beside it. It is `--color-surface-secondary`: the ramp
+     has no step between `border` and this, and a rule drawn in the page's own
+     tint recedes exactly as far as it should. */
+  gridSoft: "#f1f5f9",
   surface: "#ffffff",
   textMuted: "#64748b",
   textSecondary: "#475569",

@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { formatCurrency, formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { CHART_COLORS } from "./charts/chart-theme";
 import { GrowthOverviewChart } from "./charts/growth-overview-chart";
 import {
   DashboardRangeChips,
@@ -117,20 +118,68 @@ const SERIES: Record<RangeKey, RangeSeries> = {
   },
 };
 
-const METRICS: { value: MetricKey; label: string; format: "number" | "currency" }[] = [
-  { value: "leads", label: "Leads", format: "number" },
-  { value: "orders", label: "Orders", format: "number" },
-  { value: "revenue", label: "Revenue", format: "currency" },
+/**
+ * The three metrics, each with the hue its bars are drawn in.
+ *
+ * One colour per metric rather than brand indigo for all three: the legend and
+ * the columns are two confirmations of the same choice, and when they were
+ * both indigo the only thing that changed on a tab press was the height of the
+ * bars. Each hue is a theme token — the brand for leads, success green for
+ * orders, the SMS violet for revenue — named twice because Apex needs the hex
+ * and the legend needs the utility.
+ *
+ * `swatch` must stay in step with `color`; they are one decision spelled for
+ * two different consumers.
+ */
+interface MetricDefinition {
+  value: MetricKey;
+  label: string;
+  format: "number" | "currency";
+  /** For Apex, which cannot read a CSS variable. */
+  color: string;
+  /** The legend's mark, in the DOM. */
+  swatch: string;
+}
+
+const METRICS: MetricDefinition[] = [
+  {
+    value: "leads",
+    label: "Leads",
+    format: "number",
+    color: CHART_COLORS.primary,
+    swatch: "bg-primary",
+  },
+  {
+    value: "orders",
+    label: "Orders",
+    format: "number",
+    color: CHART_COLORS.success,
+    swatch: "bg-success",
+  },
+  {
+    value: "revenue",
+    label: "Revenue",
+    format: "currency",
+    color: CHART_COLORS.sms,
+    swatch: "bg-sms",
+  },
 ];
 
 /* -------------------------------------------------------------------------- */
 /* Section                                                                    */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * One legend entry, drawn as the mark it stands for.
+ *
+ * A short rounded column rather than the 2px rule this used to be: the series
+ * are bars now, and a legend whose key is a horizontal line is a legend the
+ * reader has to translate before it helps.
+ */
 function LegendSwatch({ className, children }: { className: string; children: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5 text-sm text-text-secondary">
-      <span aria-hidden className={cn("h-0.5 w-4 rounded-full", className)} />
+    <span className="inline-flex items-center gap-1.5 text-sm font-medium text-text-secondary">
+      <span aria-hidden className={cn("h-3 w-1.5 shrink-0 rounded-xs", className)} />
       {children}
     </span>
   );
@@ -187,8 +236,8 @@ export function GrowthOverview({ className }: { className?: string }) {
 
         {/* Own legend, so Apex's does not steal a strip of the plot area. */}
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-          <LegendSwatch className="bg-primary">{active.label}</LegendSwatch>
-          <LegendSwatch className="bg-chart-neutral-strong">Previous period</LegendSwatch>
+          <LegendSwatch className={active.swatch}>{active.label}</LegendSwatch>
+          <LegendSwatch className="bg-chart-neutral">Previous period</LegendSwatch>
         </div>
       </div>
 
@@ -220,6 +269,7 @@ export function GrowthOverview({ className }: { className?: string }) {
           previous={data.previous}
           seriesName={active.label}
           format={active.format}
+          color={active.color}
         />
       </div>
     </Card>
