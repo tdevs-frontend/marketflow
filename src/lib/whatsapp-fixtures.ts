@@ -628,11 +628,30 @@ export const WA_INBOX_SNAPSHOT = {
   awaitingReply: 23,
   awaitingChange: -14.8,
   unreadMessages: 61,
+  /**
+   * The seven agents on the queue.
+   *
+   * Unordered here on purpose — the panel sorts by open threads, so adding an
+   * eighth agent anywhere in this list still renders busiest-first.
+   */
   agents: [
     { name: "Nadia Karim", open: 18, avgResponseMinutes: 6 },
     { name: "Imran Hossain", open: 14, avgResponseMinutes: 9 },
     { name: "Tanvir Alam", open: 7, avgResponseMinutes: 12 },
+    { name: "Sarah Ahmed", open: 12, avgResponseMinutes: 8 },
+    { name: "Maria Gomez", open: 9, avgResponseMinutes: 10 },
+    { name: "John Smith", open: 6, avgResponseMinutes: 14 },
+    { name: "Priya Nair", open: 4, avgResponseMinutes: 18 },
   ],
+  /**
+   * Open threads one agent is expected to carry.
+   *
+   * The load bar used to be drawn against the *busiest colleague*, which made
+   * the top agent 100% by definition however light the day was, and meant every
+   * agent's bar moved when someone else picked up a thread. Against a capacity
+   * the reading is absolute: 18 of 20 is 90% whoever else is working.
+   */
+  agentCapacity: 20,
 } as const;
 
 /**

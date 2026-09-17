@@ -143,9 +143,48 @@ const STATS: StatItem[] = [
   },
 ];
 
+/**
+ * A tint per agent, for the avatar chip.
+ *
+ * `Avatar` is monochrome by default and says why: forty randomly tinted
+ * circles in a contact table is the fastest way to make a clean list look like
+ * a template. Its `tone` escape hatch exists for the few places where the
+ * avatar carries meaning, and it names an agent as one of them — a support
+ * queue is read by finding *your* row, and a colour finds it faster than a
+ * name does.
+ *
+ * Keyed by name rather than assigned by index, so the palette survives the
+ * sort below: an agent keeps their colour whether they are top of the queue or
+ * bottom of it. Every pair is an existing token — including the pink, which is
+ * `--color-instagram` at a tenth opacity, the one rose in the ramp.
+ */
+const AGENT_TONES: Record<string, string> = {
+  "Nadia Karim": "bg-whatsapp-soft text-whatsapp",
+  "Imran Hossain": "bg-info-soft text-info-text",
+  "Tanvir Alam": "bg-sms-soft text-sms",
+  "Sarah Ahmed": "bg-warning-soft text-warning-text",
+  "Maria Gomez": "bg-instagram/10 text-instagram",
+  "John Smith": "bg-primary-soft text-primary",
+  "Priya Nair": "bg-accent-soft text-accent",
+};
+
+/**
+ * What a load percentage means, as the colour of the bar.
+ *
+ * Three bands rather than a gradient: the question a supervisor asks is "who
+ * needs help", and that has a yes, a maybe and a no. The thresholds are where
+ * a queue stops being comfortable — over 70% of capacity an agent is behind,
+ * under 40% they have room for the next thread.
+ */
+function loadBand(percent: number): { tone: string; label: string } {
+  if (percent >= 70) return { tone: "bg-error", label: "High load" };
+  if (percent >= 40) return { tone: "bg-warning", label: "Medium load" };
+  return { tone: "bg-whatsapp", label: "Low load" };
+}
+
 /** The panel rules, in one place so the three panels cannot drift apart. */
 const SECTION_RULE =
-  "text-meta font-semibold  text-text-secondary uppercase";
+  "text-[15px] font-semibold text-text-primary capitalize";
 
 const WA_FLOWS = AUTOMATION_FLOWS.filter((flow) => flow.channel === "whatsapp");
 
@@ -275,9 +314,20 @@ export function WhatsAppOverview() {
     )
     .slice(0, 5);
 
-  /* Bars are scaled against the busiest agent, not against the total: the
-     question is who is carrying the queue, not what share of it each holds. */
-  const busiest = Math.max(...SNAPSHOT.agents.map((agent) => agent.open), 1);
+  /*
+   * Busiest first, with each agent's load against their own capacity.
+   *
+   * Sorted here rather than in the fixture so adding an eighth agent anywhere
+   * in that list still lands them in the right place, and so the one row a
+   * supervisor is looking for — whoever is closest to drowning — is always the
+   * first one they read.
+   */
+  const agentLoad = [...SNAPSHOT.agents]
+    .sort((a, b) => b.open - a.open)
+    .map((agent) => {
+      const load = (agent.open / SNAPSHOT.agentCapacity) * 100;
+      return { ...agent, load, band: loadBand(load) };
+    });
 
   return (
     <>
@@ -354,34 +404,54 @@ export function WhatsAppOverview() {
           <div className="mt-5 border-t border-border pt-4">
             <p className={SECTION_RULE}>Agent load</p>
 
-            <ul className="mt-3 space-y-3.5">
-              {SNAPSHOT.agents.map((agent) => (
+            {/*
+              Two lines an agent, not three.
+
+              Seven agents at three lines each ran to about 420px of list,
+              which pushed this card well past Recent Conversations beside it
+              and undid the even pair the row is built on. Folding the counts
+              up onto the name line and the percentage in beside the bar it
+              labels keeps all four facts and gets the row back to roughly the
+              height of a conversation row, so the two cards end level.
+            */}
+            <ul className="mt-3 space-y-3">
+              {agentLoad.map((agent) => (
                 <li key={agent.name} className="flex items-center gap-3">
-                  <Avatar name={agent.name} size="sm" />
+                  <Avatar
+                    name={agent.name}
+                    size="sm"
+                    tone={AGENT_TONES[agent.name]}
+                  />
 
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-text-primary">
-                      {agent.name}
-                    </p>
-                    <ProgressBar
-                      value={(agent.open / busiest) * 100}
-                      label={`${agent.name} open threads`}
-                      tone={theme.accent}
-                      size="sm"
-                      className="mt-1.5"
-                    />
-                  </div>
+                    <div className="flex items-baseline justify-between gap-2">
+                      <p className="truncate text-sm font-semibold text-text-primary">
+                        {agent.name}
+                      </p>
+                      {/* The count is the figure and the wait annotates it, so
+                          only the count takes primary ink. */}
+                      <p className="shrink-0 text-meta text-text-secondary tabular-nums">
+                        <span className="font-bold text-text-primary">
+                          {agent.open}
+                        </span>{" "}
+                        chats · {agent.avgResponseMinutes}m
+                      </p>
+                    </div>
 
-                  {/* The count is the figure; the wait annotates it. Giving both
-                      the same size leaves the row with two numbers and no
-                      reading order. */}
-                  <div className="shrink-0 text-right">
-                    <p className="text-base leading-none font-bold text-text-primary tabular-nums">
-                      {agent.open}
-                    </p>
-                    <p className="mt-1 text-meta font-medium text-text-secondary tabular-nums">
-                      {agent.avgResponseMinutes}m avg
-                    </p>
+                    <div className="mt-1.5 flex items-center gap-2">
+                      <ProgressBar
+                        value={agent.load}
+                        label={`${agent.name}: ${agent.band.label}, ${agent.open} of ${SNAPSHOT.agentCapacity} threads`}
+                        tone={agent.band.tone}
+                        size="sm"
+                        className="min-w-0 flex-1"
+                      />
+                      {/* Fixed width, so seven percentages line up as a column
+                          however many digits each one has. */}
+                      <span className="w-8 shrink-0 text-right text-meta font-bold text-text-primary tabular-nums">
+                        {Math.round(agent.load)}%
+                      </span>
+                    </div>
                   </div>
                 </li>
               ))}
