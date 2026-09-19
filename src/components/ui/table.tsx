@@ -61,8 +61,18 @@ export function TR({
   return (
     <tr
       className={cn(
-        "transition-colors hover:bg-primary-soft/50",
-        selected && "bg-primary-subtle",
+        "transition-colors",
+        /*
+         * Hover belongs to unselected rows only.
+         *
+         * Both branches set a background, and `hover:` sorts after the base
+         * utility, so a selected row used to swap its violet selection tint
+         * for the indigo hover tint the moment the cursor crossed it — the
+         * same row reading as two different states, and the two tints being
+         * different hues rather than two steps of one. A row that is already
+         * selected does not need a second colour to say so.
+         */
+        selected ? "bg-primary-subtle" : "hover:bg-primary-soft/50",
         className,
       )}
       {...props}

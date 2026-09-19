@@ -32,7 +32,7 @@ import { useToast } from "@/components/ui/toast";
 import { PLATFORM_ORDER, PLATFORM_THEME } from "@/constants/channels";
 import { POST_STATUSES, SOCIAL_POSTS } from "@/lib/social-fixtures";
 import { formatDateTime, formatNumber, formatRelativeTime } from "@/lib/format";
-import { cn, truncate } from "@/lib/utils";
+import { truncate } from "@/lib/utils";
 import type { PostStatus, SocialPlatform, SocialPost } from "@/types/social";
 import { PlatformStack } from "../shared/channel-badge";
 import { PostComposer } from "./post-composer";
@@ -319,11 +319,13 @@ export function SocialPostsWorkspace() {
 
                 return (
                   <li key={post.id}>
+                    {/* `selected` rather than a class: the tint has to come
+                        from the component, or `bg-surface` outranks it and the
+                        card stays white. Same treatment the table row uses, so
+                        the two views agree on what selected looks like. */}
                     <Card
-                      className={cn(
-                        "flex h-full flex-col overflow-hidden p-0",
-                        isSelected && "border-primary",
-                      )}
+                      selected={isSelected}
+                      className="flex h-full flex-col overflow-hidden p-0"
                     >
                       {/* Media band. 16:9 rather than square, so the card
                           height stays predictable across mixed assets — a
@@ -341,11 +343,21 @@ export function SocialPostsWorkspace() {
                         />
 
                         <div className="absolute top-2 left-2">
+                          {/* No background override. `cn` is a plain join,
+                              so `bg-surface/90` and the checkbox's own
+                              `bg-primary` were both emitted for the checked
+                              state and which one painted came down to the
+                              order Tailwind happened to write them in — the
+                              coin toss this design system warns about, with a
+                              white tick on a white box as the losing side. The
+                              scrim above already gives the unchecked box its
+                              contrast, so the component keeps both states.
+                              `shadow-btn` stays: that is lift, not colour. */}
                           <Checkbox
                             checked={isSelected}
                             onCheckedChange={() => toggle(post.id)}
                             label={`Select ${post.title}`}
-                            className="bg-surface/90 shadow-btn"
+                            className="shadow-btn"
                           />
                         </div>
                         <div className="absolute top-1 right-1">

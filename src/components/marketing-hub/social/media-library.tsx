@@ -380,7 +380,13 @@ export function MediaLibrary() {
                     >
                       <span
                         className={cn(
-                          "relative block aspect-square overflow-hidden rounded-panel border transition-all",
+                          /* 5px, not the panel radius: these tiles are
+                             pictures rather than panels, and a 12px corner on
+                             a 150px thumbnail eats a visible bite out of the
+                             image. `overflow-hidden` is what makes the photo
+                             take the corner — the radius is on the box, the
+                             asset just fills it. */
+                          "relative block aspect-square overflow-hidden rounded-[5px] border transition-all",
                           active
                             ? "border-primary shadow-focus"
                             : "border-border group-hover:border-border-strong group-hover:shadow-card",
@@ -494,7 +500,7 @@ export function MediaLibrary() {
                 panel is for is looking at the thing. */}
             <div
               className={cn(
-                "relative grid aspect-video place-items-center overflow-hidden rounded-panel",
+                "relative grid aspect-video place-items-center overflow-hidden rounded-[5px]",
                 detail.tone,
               )}
             >

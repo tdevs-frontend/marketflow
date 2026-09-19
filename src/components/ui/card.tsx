@@ -5,12 +5,30 @@ import { cn } from "@/lib/utils";
 export function Card({
   className,
   interactive = false,
+  selected = false,
   ref,
   children,
 }: {
   className?: string;
   /** Adds the lift-on-hover treatment. Use it for cards that link somewhere. */
   interactive?: boolean;
+  /**
+   * The product's selected-card treatment: the primary border and its tint.
+   *
+   * A prop rather than something a caller passes through `className`, because
+   * a caller *cannot*. `cn` is a plain join, so a `bg-primary-subtle` arriving
+   * in `className` lands next to this component's own `bg-surface` and the
+   * winner is whichever Tailwind happened to emit last — which is `bg-surface`,
+   * so the tint simply never appeared. Every selectable card in the product
+   * worked around that by drawing a border and no tint, while the table row
+   * beside it drew a tint and no border, and one act of selecting ended up
+   * looking like two different states.
+   *
+   * Setting it here also means the two utilities are mutually exclusive
+   * branches rather than overlapping declarations, so there is nothing left to
+   * sort. Neither state changes the box, so selecting never moves anything.
+   */
+  selected?: boolean;
   /**
    * For callers that need to measure or scroll to the card — the product
    * wizard scrolls its form back to the top on every step change. A plain prop
@@ -24,7 +42,10 @@ export function Card({
     <div
       ref={ref}
       className={cn(
-        "rounded-card border border-border bg-surface shadow-card transition-all",
+        "rounded-card border shadow-card transition-all",
+        selected
+          ? "border-primary bg-primary-subtle"
+          : "border-border bg-surface",
         interactive && "hover:-translate-y-0.5 hover:border-border-strong hover:shadow-card-hover",
         className,
       )}
