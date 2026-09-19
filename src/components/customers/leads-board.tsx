@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import {
   CircleDollarSign,
-  GripVertical,
   Percent,
   Plus,
   Target,
@@ -12,7 +11,7 @@ import {
 } from "lucide-react";
 
 import { PageHeader } from "@/components/layout/page-header";
-import { Avatar, AvatarLabel } from "@/components/ui/avatar";
+import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -162,28 +161,43 @@ function LeadCard({
       }}
       onDragEnd={onDragEnd}
       className={cn(
-        "group/lead rounded-panel border border-border bg-surface p-3 transition-shadow hover:shadow-card-hover",
+        /* `p-4` rather than `p-3`: the card carries six pieces of information
+           and 12px of gutter had the tags touching the edge. */
+        "group/lead rounded-panel border border-border bg-surface p-4 transition-shadow hover:shadow-card-hover",
         dragging && "opacity-40",
       )}
     >
-      <div className="flex items-start gap-2">
-        <span
-          aria-hidden
-          className="mt-0.5 shrink-0 cursor-grab text-border-strong transition-colors group-hover/lead:text-text-muted active:cursor-grabbing"
-        >
-          <GripVertical className="size-4" />
-        </span>
+      {/* No drag handle.
 
+          The grip was decorative — `aria-hidden`, with `draggable` living on
+          the card itself — so it advertised an affordance the whole card
+          already had, and cost 24px of the width the name needed. Dragging is
+          unchanged. */}
+      <div className="flex items-start gap-3">
+        {/* Composed here rather than through `AvatarLabel`, which renders the
+            name and the company at the same size and weight — the two lines
+            the card most needs to tell apart. Same `Avatar`, same size; only
+            the type beside it differs. It also stops a `<p>` from being
+            nested inside a `<button>`, which is not phrasing content. */}
         <button
           type="button"
           onClick={onOpen}
-          className="min-w-0 flex-1 rounded-btn text-left focus-visible:shadow-focus focus-visible:outline-none"
+          className="flex min-w-0 flex-1 items-center gap-2.5 rounded-btn text-left focus-visible:shadow-focus focus-visible:outline-none"
         >
-          <AvatarLabel
+          <Avatar
             name={contact ? contactName(contact) : lead.title}
-            secondary={contact?.company ?? undefined}
             size="sm"
           />
+          <span className="min-w-0">
+            <span className="block truncate text-sm leading-5 font-semibold text-text-primary">
+              {contact ? contactName(contact) : lead.title}
+            </span>
+            {contact?.company ? (
+              <span className="block truncate text-meta text-text-muted">
+                {contact.company}
+              </span>
+            ) : null}
+          </span>
         </button>
 
         <Menu
@@ -200,16 +214,19 @@ function LeadCard({
       <button
         type="button"
         onClick={onOpen}
-        className="mt-2.5 block w-full rounded-btn text-left focus-visible:shadow-focus focus-visible:outline-none"
+        className="mt-3.5 block w-full rounded-btn text-left focus-visible:shadow-focus focus-visible:outline-none"
       >
-        <p className="text-base leading-none font-bold text-text-primary tabular-nums">
+        {/* The money is the card's second reading after the name, and the one
+            a pipeline is scanned for. `tabular-nums` keeps the columns of
+            figures aligned down a stage. */}
+        <p className="text-lg leading-none font-bold text-text-primary tabular-nums">
           {formatCurrency(lead.value)}
         </p>
 
-        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1">
+        <div className="mt-3 flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
           <SourceBadge source={lead.source} />
           {lead.ownerId ? (
-            <span className="flex items-center gap-1.5 text-sm text-text-muted">
+            <span className="flex items-center gap-1.5 text-sm text-text-secondary">
               <Avatar name={ownerName(lead.ownerId)} size="xs" />
               {ownerName(lead.ownerId).split(" ")[0]}
             </span>
@@ -217,12 +234,12 @@ function LeadCard({
         </div>
 
         {lead.tags.length ? (
-          <div className="mt-2">
+          <div className="mt-3">
             <TagBadges tags={lead.tags} max={2} />
           </div>
         ) : null}
 
-        <p className="mt-2 truncate text-sm text-text-muted">
+        <p className="mt-3 truncate text-sm text-text-muted">
           {lead.lastActivity} · {formatRelativeTime(lead.lastActivityAt)}
         </p>
       </button>
@@ -553,7 +570,7 @@ export function LeadsBoard() {
                   }
                   onDrop={(event) => dropOn(column.stage, event)}
                   className={cn(
-                    "flex w-64 shrink-0 flex-col rounded-card border border-transparent bg-surface-secondary p-2.5 transition-colors",
+                    "flex w-66 shrink-0 flex-col rounded-card border border-transparent bg-surface-secondary p-2.5 transition-colors",
                     /* The drop state has to be unmistakable while a card is
                        mid-air — a 1px border change is invisible to someone
                        watching the cursor. */

@@ -1,10 +1,8 @@
 "use client";
 
-import { Columns3, X } from "lucide-react";
+import { X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Menu } from "@/components/ui/menu";
 import { Tooltip } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
@@ -75,85 +73,6 @@ export function ActiveFilterChips({
         Clear all
       </Button>
     </div>
-  );
-}
-
-/* -------------------------------------------------------------------------- */
-/* Column visibility                                                          */
-/* -------------------------------------------------------------------------- */
-
-export interface ColumnOption<T extends string> {
-  value: T;
-  label: string;
-  /** Columns the table cannot function without — Contact, Actions. */
-  locked?: boolean;
-}
-
-/**
- * Which columns are on show.
- *
- * A `Menu` of checkboxes rather than a dialog: the reader is mid-scan when
- * they reach for this, and a modal that covers the table they are adjusting
- * makes the change impossible to judge. Locked columns are listed but
- * disabled, so the menu still describes the whole table rather than implying
- * the identity column was forgotten.
- */
-export function ColumnsMenu<T extends string>({
-  columns,
-  isVisible,
-  onToggle,
-  onReset,
-}: {
-  columns: ColumnOption<T>[];
-  isVisible: (column: T) => boolean;
-  onToggle: (column: T) => void;
-  onReset: () => void;
-}) {
-  const hiddenCount = columns.filter(
-    (column) => !column.locked && !isVisible(column.value),
-  ).length;
-
-  return (
-    <Menu
-      label="Choose visible columns"
-      align="right"
-      trigger={
-        <span className="inline-flex h-10 items-center gap-2 rounded-btn border border-border bg-surface px-3.5 text-sm font-semibold text-text-secondary transition-all hover:border-border-strong hover:bg-surface-secondary hover:text-text-primary">
-          <Columns3 className="size-4" aria-hidden />
-          Columns
-          {hiddenCount > 0 ? (
-            <span className="grid size-4.5 place-items-center rounded-full bg-primary text-xs font-bold text-white">
-              {hiddenCount}
-            </span>
-          ) : null}
-        </span>
-      }
-      items={[
-        ...columns.map((column) => ({
-          label: column.label,
-          /* `closeOnSelect: false` — toggling three columns should not need the
-             menu reopened three times. */
-          closeOnSelect: false,
-          disabled: column.locked,
-          icon: (
-            <Checkbox
-              checked={column.locked ? true : isVisible(column.value)}
-              disabled={column.locked}
-              onCheckedChange={() => onToggle(column.value)}
-              label={`Show ${column.label}`}
-            />
-          ),
-          onSelect: () => {
-            if (!column.locked) onToggle(column.value);
-          },
-        })),
-        {
-          label: "Reset columns",
-          onSelect: onReset,
-          disabled: hiddenCount === 0,
-        },
-      ]}
-    />
   );
 }
 

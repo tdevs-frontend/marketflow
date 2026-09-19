@@ -27,7 +27,7 @@ export default function LeadsLoading() {
             {Array.from({ length: 6 }).map((_, column) => (
               <div
                 key={column}
-                className="flex w-64 shrink-0 flex-col gap-2.5 rounded-card bg-surface-secondary p-2.5"
+                className="flex w-66 shrink-0 flex-col gap-2.5 rounded-card bg-surface-secondary p-2.5"
               >
                 <div className="flex items-center justify-between px-1 pb-1">
                   <Skeleton className="h-3.5 w-20 rounded-full" />

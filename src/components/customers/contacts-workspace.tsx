@@ -71,8 +71,6 @@ import {
 import {
   ActiveFilterChips,
   BulkActionBar,
-  ColumnsMenu,
-  type ColumnOption,
   type FilterChip,
 } from "./customer-toolbar";
 import {
@@ -82,37 +80,6 @@ import {
   SourceBadge,
   TagBadges,
 } from "./customer-badges";
-
-/* -------------------------------------------------------------------------- */
-/* Columns                                                                    */
-/* -------------------------------------------------------------------------- */
-
-type Column =
-  | "phone"
-  | "channels"
-  | "status"
-  | "tags"
-  | "source"
-  | "value"
-  | "activity"
-  | "created";
-
-/** Contact and Actions are not listed: they are the row's identity and its
-    controls, and a table without either is not a table. */
-const COLUMNS: ColumnOption<Column>[] = [
-  { value: "phone", label: "Phone" },
-  { value: "channels", label: "Channels" },
-  { value: "status", label: "Status" },
-  { value: "tags", label: "Tags" },
-  { value: "source", label: "Source" },
-  { value: "value", label: "Lifetime value" },
-  { value: "activity", label: "Last activity" },
-  { value: "created", label: "Created" },
-];
-
-/* `created` is off by default — it is the least-read column and the one whose
-   absence buys the most room for tags. */
-const HIDDEN_BY_DEFAULT: Column[] = ["created"];
 
 type SortField = "name" | "value" | "activity" | "created";
 
@@ -186,10 +153,7 @@ function kpis(): Kpi[] {
  */
 export function ContactsWorkspace() {
   const toast = useToast();
-  const table = useTableState<FilterKey, Column>(FILTERS, {
-    columns: COLUMNS.map((column) => column.value),
-    hiddenByDefault: HIDDEN_BY_DEFAULT,
-  });
+  const table = useTableState<FilterKey>(FILTERS);
 
   /* Local mirror so the input stays responsive; the URL follows behind it. */
   const [searchDraft, setSearchDraft] = useState(table.search);
@@ -457,14 +421,6 @@ export function ContactsWorkspace() {
           placeholder="Search contacts…"
           activeCount={chips.length}
           onReset={clearEverything}
-          trailing={
-            <ColumnsMenu
-              columns={COLUMNS}
-              isVisible={table.isVisible}
-              onToggle={table.toggleColumn}
-              onReset={table.resetColumns}
-            />
-          }
         >
           <Select
             label="Filter by status"
@@ -663,42 +619,36 @@ export function ContactsWorkspace() {
                 >
                   Contact
                 </SortableTH>
-                {table.isVisible("phone") ? <TH>Phone</TH> : null}
-                {table.isVisible("channels") ? <TH>Channels</TH> : null}
-                {table.isVisible("status") ? <TH>Status</TH> : null}
-                {table.isVisible("tags") ? <TH>Tags</TH> : null}
-                {table.isVisible("source") ? <TH>Source</TH> : null}
-                {table.isVisible("value") ? (
-                  <SortableTH
-                    field="value"
-                    activeField={table.sortField}
-                    direction={table.sortDirection}
-                    onSort={table.toggleSort}
-                    align="right"
-                  >
-                    Value
-                  </SortableTH>
-                ) : null}
-                {table.isVisible("activity") ? (
-                  <SortableTH
-                    field="activity"
-                    activeField={table.sortField}
-                    direction={table.sortDirection}
-                    onSort={table.toggleSort}
-                  >
-                    Last activity
-                  </SortableTH>
-                ) : null}
-                {table.isVisible("created") ? (
-                  <SortableTH
-                    field="created"
-                    activeField={table.sortField}
-                    direction={table.sortDirection}
-                    onSort={table.toggleSort}
-                  >
-                    Created
-                  </SortableTH>
-                ) : null}
+                <TH>Phone</TH>
+                <TH>Channels</TH>
+                <TH>Status</TH>
+                <TH>Tags</TH>
+                <TH>Source</TH>
+                <SortableTH
+                  field="value"
+                  activeField={table.sortField}
+                  direction={table.sortDirection}
+                  onSort={table.toggleSort}
+                  align="right"
+                >
+                  Value
+                </SortableTH>
+                <SortableTH
+                  field="activity"
+                  activeField={table.sortField}
+                  direction={table.sortDirection}
+                  onSort={table.toggleSort}
+                >
+                  Last activity
+                </SortableTH>
+                <SortableTH
+                  field="created"
+                  activeField={table.sortField}
+                  direction={table.sortDirection}
+                  onSort={table.toggleSort}
+                >
+                  Created
+                </SortableTH>
                 <TH align="right" />
               </THead>
 
@@ -727,63 +677,45 @@ export function ContactsWorkspace() {
                       </button>
                     </TD>
 
-                    {table.isVisible("phone") ? (
-                      <TD className="text-sm whitespace-nowrap text-text-secondary">
-                        {item.phone ?? "—"}
-                      </TD>
-                    ) : null}
+                    <TD className="text-sm whitespace-nowrap text-text-secondary">
+                      {item.phone ?? "—"}
+                    </TD>
 
-                    {table.isVisible("channels") ? (
-                      <TD>
-                        <ChannelConsentBadges channels={item.optedInChannels} />
-                      </TD>
-                    ) : null}
+                    <TD>
+                      <ChannelConsentBadges channels={item.optedInChannels} />
+                    </TD>
 
-                    {table.isVisible("status") ? (
-                      <TD>
-                        <span className="flex flex-wrap items-center gap-1">
-                          <LifecycleBadge lifecycle={item.lifecycle} />
-                          <ContactStatusBadge status={item.status} />
-                        </span>
-                      </TD>
-                    ) : null}
+                    <TD>
+                      <span className="flex flex-wrap items-center gap-1">
+                        <LifecycleBadge lifecycle={item.lifecycle} />
+                        <ContactStatusBadge status={item.status} />
+                      </span>
+                    </TD>
 
-                    {table.isVisible("tags") ? (
-                      <TD>
-                        <TagBadges tags={item.tags} />
-                      </TD>
-                    ) : null}
+                    <TD>
+                      <TagBadges tags={item.tags} />
+                    </TD>
 
-                    {table.isVisible("source") ? (
-                      <TD>
-                        <SourceBadge source={item.source} />
-                      </TD>
-                    ) : null}
+                    <TD>
+                      <SourceBadge source={item.source} />
+                    </TD>
 
-                    {table.isVisible("value") ? (
-                      <TD
-                        align="right"
-                        className="text-sm font-bold whitespace-nowrap text-text-primary tabular-nums"
-                      >
-                        {item.lifetimeValue
-                          ? formatCurrency(item.lifetimeValue)
-                          : "—"}
-                      </TD>
-                    ) : null}
+                    <TD
+                      align="right"
+                      className="text-sm font-bold whitespace-nowrap text-text-primary tabular-nums"
+                    >
+                      {item.lifetimeValue ? formatCurrency(item.lifetimeValue) : "—"}
+                    </TD>
 
-                    {table.isVisible("activity") ? (
-                      <TD className="text-sm whitespace-nowrap text-text-muted">
-                        {item.lastContactedAt
-                          ? formatRelativeTime(item.lastContactedAt)
-                          : "Never"}
-                      </TD>
-                    ) : null}
+                    <TD className="text-sm whitespace-nowrap text-text-muted">
+                      {item.lastContactedAt
+                        ? formatRelativeTime(item.lastContactedAt)
+                        : "Never"}
+                    </TD>
 
-                    {table.isVisible("created") ? (
-                      <TD className="text-sm whitespace-nowrap text-text-muted">
-                        {formatDate(item.createdAt)}
-                      </TD>
-                    ) : null}
+                    <TD className="text-sm whitespace-nowrap text-text-muted">
+                      {formatDate(item.createdAt)}
+                    </TD>
 
                     <TD align="right">
                       <Menu
