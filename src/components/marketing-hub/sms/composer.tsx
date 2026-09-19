@@ -6,6 +6,7 @@ import { AlertTriangle, Plus, Signal } from "lucide-react";
 import { Field, Textarea } from "@/components/ui/input";
 import { Tooltip } from "@/components/ui/tooltip";
 import {
+  SMS_RATE_PER_SEGMENT,
   SMS_SUBSTITUTIONS,
   SMS_VARIABLES,
 } from "@/lib/sms-fixtures";
@@ -38,8 +39,8 @@ export function SmsComposer({
   onChange,
   /** Recipients, for the cost projection. Omit to hide it. */
   recipients,
-  /** Per-segment rate in USD. */
-  ratePerSegment = 0.045,
+  /** Per-segment rate in USD. Defaults to the workspace's blended rate. */
+  ratePerSegment = SMS_RATE_PER_SEGMENT,
   label = "Message",
   id = "sms-message",
   className,

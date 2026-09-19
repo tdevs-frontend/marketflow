@@ -1,14 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import {
   Archive,
-  CheckCheck,
+  CalendarClock,
   Copy,
-  DollarSign,
   Download,
   Eye,
-  MessageSquare,
   Pause,
   Play,
   Plus,
@@ -28,17 +26,29 @@ import { Field, Input } from "@/components/ui/input";
 import { FilterBar } from "@/components/ui/filter-bar";
 import { Menu } from "@/components/ui/menu";
 import { Pagination } from "@/components/ui/pagination";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Select } from "@/components/ui/select";
-import { StatsGrid, type StatItem } from "@/components/ui/stats-card";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
 import { useToast } from "@/components/ui/toast";
 import { CHANNEL_THEME } from "@/constants/channels";
 import { AUDIENCES } from "@/lib/marketing-fixtures";
-import { SMS_CAMPAIGNS, SMS_SENDER_IDS, smsTotals } from "@/lib/sms-fixtures";
-import { formatCount, formatCurrency, formatDate, formatNumber, formatPercent, rate } from "@/lib/format";
+import {
+  SMS_CAMPAIGNS,
+  SMS_RATE_PER_SEGMENT,
+  SMS_SENDERS,
+  SMS_SENDER_IDS,
+  SMS_SUBSTITUTIONS,
+} from "@/lib/sms-fixtures";
+import {
+  formatCurrency,
+  formatDate,
+  formatNumber,
+  formatPercent,
+  rate,
+} from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { CampaignStatus } from "@/types/marketing";
-import { countSmsSegments } from "@/types/sms";
+import { canReceiveReplies, countSmsSegments } from "@/types/sms";
 import { SMS_STATUS_OPTIONS, SmsCampaignStatusBadge } from "./campaign-row";
 import { SmsComposer, SmsPreview } from "./composer";
 
@@ -50,47 +60,26 @@ import { SmsComposer, SmsPreview } from "./composer";
  * *why* the cost is what it is, and putting them apart would make a two-part
  * campaign look simply expensive rather than fixable.
  *
- * Compose opens a dialog rather than a page. An SMS is one field and a
- * schedule — routing that through the seven-step wizard would be ceremony.
+ * No KPI row. This page used to open on Messages Sent, Delivered, Replies and
+ * Total Spend — the same four figures, from the same totals, that the module
+ * Overview shows one click away. A number that appears twice is a number that
+ * can disagree with itself, and neither copy is the one anyone came here for:
+ * this is where campaigns are found, filtered and started, and the table is
+ * the page.
+ *
+ * Compose opens a dialog rather than a page. An SMS is one message and a
+ * schedule — routing that through the seven-step campaign wizard would be
+ * ceremony. What the dialog does owe the reader is the chain that decides the
+ * bill, in the order it resolves: the message sets the segment count, the
+ * audience sets the recipients, and the two multiply into a cost that is
+ * committed the moment it is scheduled. So it is numbered, and the running
+ * total sits above the buttons rather than being something to work out.
  */
 
 const ALL = "all";
 /* The dashboard-wide row count. */
 const PER_PAGE = TABLE_PAGE_SIZE;
 const theme = CHANNEL_THEME.sms;
-
-const TOTALS = smsTotals(SMS_CAMPAIGNS);
-
-const STATS: StatItem[] = [
-  {
-    label: "Messages Sent",
-    value: formatCount(TOTALS.sent),
-    changePercent: 11.4,
-    icon: Send,
-    hint: "across all campaigns",
-  },
-  {
-    label: "Delivered",
-    value: formatCount(TOTALS.delivered),
-    changePercent: 11.8,
-    icon: CheckCheck,
-    hint: `${formatPercent(rate(TOTALS.delivered, TOTALS.sent))} delivery rate`,
-  },
-  {
-    label: "Replies",
-    value: formatCount(TOTALS.replies),
-    changePercent: 18.6,
-    icon: MessageSquare,
-    hint: `${formatPercent(rate(TOTALS.replies, TOTALS.delivered))} reply rate`,
-  },
-  {
-    label: "Total Spend",
-    value: formatCurrency(TOTALS.cost),
-    changePercent: 9.8,
-    icon: DollarSign,
-    hint: `${formatCurrency(TOTALS.cost / Math.max(TOTALS.sent, 1))} per message`,
-  },
-];
 
 const SORT_OPTIONS = [
   { value: "createdAt", label: "Newest first" },
@@ -101,6 +90,44 @@ const SORT_OPTIONS = [
 ] as const;
 
 type SortField = (typeof SORT_OPTIONS)[number]["value"];
+
+/**
+ * One numbered section of the compose dialog.
+ *
+ * A heading and a rule rather than a collapsible panel: the four steps have to
+ * stay readable at once, because what this dialog is trying to make obvious is
+ * that steps 2 and 3 multiply into the figure in the review line.
+ */
+function ComposeStep({
+  index,
+  title,
+  hint,
+  children,
+}: {
+  index: number;
+  title: string;
+  hint: string;
+  children: ReactNode;
+}) {
+  return (
+    <section>
+      <div className="flex items-start gap-2.5 border-b border-border pb-2.5">
+        <span
+          aria-hidden
+          className="mt-px grid size-5 shrink-0 place-items-center rounded-full bg-sms-soft text-xs font-bold text-sms-dark tabular-nums"
+        >
+          {index}
+        </span>
+        <div className="min-w-0">
+          <h3 className="text-sm font-semibold text-text-primary">{title}</h3>
+          <p className="mt-0.5 text-sm text-text-muted">{hint}</p>
+        </div>
+      </div>
+
+      <div className="mt-3.5">{children}</div>
+    </section>
+  );
+}
 
 export function SmsCampaignsWorkspace() {
   const toast = useToast();
@@ -125,9 +152,32 @@ export function SmsCampaignsWorkspace() {
   const [draftMessage, setDraftMessage] = useState(
     "Hi {{first_name}}, your appointment is scheduled for {{appointment_date}}.",
   );
+  /* Real state rather than an uncontrolled pair of inputs, because the review
+     line has to say what will actually happen — "Send now" and "9:00 AM on the
+     14th" are different promises and the button used to make both at once. */
+  const [schedule, setSchedule] = useState<"now" | "later">("later");
+  const [draftDate, setDraftDate] = useState("");
+  const [draftTime, setDraftTime] = useState("09:00");
 
   const recipients =
     AUDIENCES.find((item) => item.value === draftSegment)?.size ?? 0;
+
+  /* The same counter the composer draws, so the review line and the counter
+     above it can never disagree about what is being billed. */
+  const draftSegments = countSmsSegments(draftMessage, SMS_SUBSTITUTIONS).segments;
+  const draftCost = recipients * draftSegments * SMS_RATE_PER_SEGMENT;
+  const draftSenderRecord = SMS_SENDERS.find(
+    (sender) => sender.value === draftSender,
+  );
+  const scheduleLabel =
+    schedule === "now"
+      ? "Send now"
+      : draftDate
+        ? /* The midnight suffix keeps the parse local. A bare "2026-09-20" is
+             read as UTC, which renders as the 19th for anyone west of it — and
+             a send date that is off by one is the worst kind of wrong. */
+          `${formatDate(`${draftDate}T00:00:00`)} at ${draftTime}`
+        : "No date set";
 
   const activeFilters =
     (status === ALL ? 0 : 1) + (audience === ALL ? 0 : 1) + (from ? 1 : 0);
@@ -185,8 +235,6 @@ export function SmsCampaignsWorkspace() {
 
   return (
     <>
-      <StatsGrid items={STATS} accent={{ soft: theme.soft, text: theme.text }} />
-
       <Card className="p-5">
         <FilterBar
           search={search}
@@ -602,84 +650,186 @@ export function SmsCampaignsWorkspace() {
               onClick={() => {
                 setComposeOpen(false);
                 toast(
-                  `${draftName || "Campaign"} scheduled for ${formatNumber(recipients)} recipients`,
+                  schedule === "now"
+                    ? `${draftName || "Campaign"} sending to ${formatNumber(recipients)} recipients`
+                    : `${draftName || "Campaign"} scheduled · ${scheduleLabel} · ${formatNumber(recipients)} recipients`,
                 );
               }}
             >
-              Schedule
+              {schedule === "now" ? (
+                <>
+                  <Send aria-hidden />
+                  Send now
+                </>
+              ) : (
+                <>
+                  <CalendarClock aria-hidden />
+                  Schedule
+                </>
+              )}
             </Button>
           </>
         }
       >
+        {/* Numbered, because the four sections are a chain rather than a form:
+            the message decides the segment count, the audience decides the
+            recipients, and those two multiply into the figure in the review
+            line. Steps rather than a wizard — every step stays on screen, so
+            editing the message and watching the cost move is one motion. */}
         <div className="space-y-5">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Campaign name" htmlFor="sms-name">
-              <Input
-                id="sms-name"
-                value={draftName}
-                onChange={(event) => setDraftName(event.target.value)}
-              />
-            </Field>
+          <ComposeStep
+            index={1}
+            title="Campaign"
+            hint="An internal name, and what the handset shows as the sender."
+          >
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Campaign name" htmlFor="sms-name">
+                <Input
+                  id="sms-name"
+                  value={draftName}
+                  onChange={(event) => setDraftName(event.target.value)}
+                  placeholder="Weekend Flash Sale"
+                />
+              </Field>
 
+              <Field
+                label="Sender ID"
+                htmlFor="sms-sender"
+                hint={
+                  draftSenderRecord && !canReceiveReplies(draftSenderRecord.type)
+                    ? "Alphanumeric — replies to this campaign go nowhere."
+                    : "Replies come back to this number."
+                }
+              >
+                <Select
+                  id="sms-sender"
+                  hideLabel={false}
+                  label="Sender ID"
+                  value={draftSender}
+                  onChange={setDraftSender}
+                  options={SMS_SENDER_IDS}
+                />
+              </Field>
+            </div>
+          </ComposeStep>
+
+          <ComposeStep
+            index={2}
+            title="Message"
+            hint="The counter measures what the gateway bills, personalisation expanded."
+          >
+            <SmsComposer
+              value={draftMessage}
+              onChange={setDraftMessage}
+              recipients={recipients}
+            />
+
+            <div className="mt-4">
+              <p className="text-sm font-medium text-text-muted uppercase">
+                Preview
+              </p>
+              <SmsPreview
+                message={draftMessage}
+                senderId={draftSender}
+                className="mt-2"
+              />
+            </div>
+          </ComposeStep>
+
+          <ComposeStep
+            index={3}
+            title="Recipients"
+            hint="Opted-out and invalid numbers are excluded when it sends."
+          >
             <Field
-              label="Sender ID"
-              htmlFor="sms-sender"
-              hint="Alphanumeric senders cannot receive replies."
+              label="Audience"
+              htmlFor="sms-audience"
+              hint={`${formatNumber(recipients)} contacts will receive this.`}
             >
               <Select
-                id="sms-sender"
+                id="sms-audience"
                 hideLabel={false}
-                label="Sender ID"
-                value={draftSender}
-                onChange={setDraftSender}
-                options={SMS_SENDER_IDS}
+                label="Audience"
+                value={draftSegment}
+                onChange={setDraftSegment}
+                options={AUDIENCES.map((item) => ({
+                  value: item.value,
+                  label: item.label,
+                  hint: `${formatNumber(item.size)} contacts · ${item.hint}`,
+                }))}
               />
             </Field>
-          </div>
+          </ComposeStep>
 
-          <Field
-            label="Audience"
-            htmlFor="sms-audience"
-            hint={`${formatNumber(recipients)} contacts will receive this.`}
+          <ComposeStep
+            index={4}
+            title="Schedule"
+            hint="Sending starts immediately, or at the time you set."
           >
-            <Select
-              id="sms-audience"
-              hideLabel={false}
-              label="Audience"
-              value={draftSegment}
-              onChange={setDraftSegment}
-              options={AUDIENCES.map((item) => ({
-                value: item.value,
-                label: item.label,
-                hint: `${formatNumber(item.size)} contacts · ${item.hint}`,
-              }))}
+            <SegmentedControl
+              label="When to send"
+              value={schedule}
+              onChange={setSchedule}
+              options={[
+                { value: "now", label: "Send now" },
+                { value: "later", label: "Schedule" },
+              ]}
             />
-          </Field>
 
-          <SmsComposer
-            value={draftMessage}
-            onChange={setDraftMessage}
-            recipients={recipients}
-          />
+            {schedule === "later" ? (
+              <div className="mt-3 grid gap-4 sm:grid-cols-2">
+                <Field label="Send date" htmlFor="sms-date">
+                  <Input
+                    id="sms-date"
+                    type="date"
+                    value={draftDate}
+                    onChange={(event) => setDraftDate(event.target.value)}
+                  />
+                </Field>
+                <Field label="Send time" htmlFor="sms-time">
+                  <Input
+                    id="sms-time"
+                    type="time"
+                    value={draftTime}
+                    onChange={(event) => setDraftTime(event.target.value)}
+                  />
+                </Field>
+              </div>
+            ) : null}
+          </ComposeStep>
 
-          <div>
-            <p className="text-sm font-medium  text-text-muted uppercase">
-              Preview
+          {/* The review. Four figures and no controls: this is what the button
+              underneath commits to, and the cost is the one nobody can work
+              out in their head — segments times recipients times the rate. */}
+          <div
+            className={cn(
+              "rounded-panel border px-3.5 py-3",
+              theme.border,
+              theme.soft,
+            )}
+          >
+            <p className="text-sm font-medium text-text-muted uppercase">Review</p>
+
+            <dl className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {[
+                { label: "Segments", value: `${draftSegments} per message` },
+                { label: "Recipients", value: formatNumber(recipients) },
+                { label: "Estimated cost", value: formatCurrency(draftCost) },
+                { label: "Schedule", value: scheduleLabel },
+              ].map((cell) => (
+                <div key={cell.label} className="min-w-0">
+                  <dt className="text-sm text-text-muted">{cell.label}</dt>
+                  <dd className="mt-0.5 truncate text-sm font-bold text-text-primary tabular-nums">
+                    {cell.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+
+            <p className="mt-2.5 text-sm font-medium text-text-secondary">
+              Projected at the blended rate. The final bill follows the
+              destination rates, so an international audience lands higher.
             </p>
-            <SmsPreview
-              message={draftMessage}
-              senderId={draftSender}
-              className="mt-2"
-            />
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Send date" htmlFor="sms-date">
-              <Input id="sms-date" type="date" />
-            </Field>
-            <Field label="Send time" htmlFor="sms-time">
-              <Input id="sms-time" type="time" defaultValue="09:00" />
-            </Field>
           </div>
         </div>
       </Dialog>

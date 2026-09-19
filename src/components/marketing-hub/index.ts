@@ -54,7 +54,9 @@ export * from "./sms/overview";
 export * from "./sms/campaigns-workspace";
 export * from "./sms/templates-workspace";
 export * from "./sms/contacts-workspace";
+export * from "./sms/senders-workspace";
 export * from "./sms/analytics";
+export * from "./sms/analytics-export";
 
 /* Social Planner */
 export * from "./social/post-status";

@@ -3,8 +3,12 @@ import type {
   SmsCampaign,
   SmsContact,
   SmsContactStatus,
+  SmsSenderId,
+  SmsSenderType,
   SmsTemplate,
   SmsTemplateCategory,
+  SmsTrendPeriod,
+  SmsTrendSeries,
 } from "@/types/sms";
 
 /**
@@ -34,11 +38,86 @@ export const SMS_CONTACT_STATUSES: Option<SmsContactStatus>[] = [
   { value: "invalid", label: "Invalid number" },
 ];
 
-export const SMS_SENDER_IDS = [
-  { value: "MARKETFLOW", label: "MARKETFLOW (alphanumeric)" },
-  { value: "+8801700000000", label: "+880 1700 000000 (long code)" },
-  { value: "24680", label: "24680 (short code)" },
+export const SMS_SENDER_TYPES: Option<SmsSenderType>[] = [
+  { value: "alphanumeric", label: "Alphanumeric" },
+  { value: "long-code", label: "Long code" },
+  { value: "short-code", label: "Short code" },
 ];
+
+/**
+ * The sender IDs this workspace is allowed to present.
+ *
+ * A list rather than the single field the gateway integration holds, because
+ * which sender a campaign goes out on is a marketing decision with a
+ * consequence — an alphanumeric ID carries the brand and silently discards
+ * every reply, so a campaign that asks a question has to leave it. The gateway
+ * page still owns the credentials; this owns the choice.
+ */
+export const SMS_SENDERS: SmsSenderId[] = [
+  {
+    id: "sid-marketflow",
+    value: "MARKETFLOW",
+    type: "alphanumeric",
+    status: "active",
+    countries: ["Bangladesh", "United Arab Emirates", "United Kingdom", "India"],
+    sent30d: 9_038,
+    isDefault: true,
+  },
+  {
+    id: "sid-shortcode",
+    value: "24680",
+    type: "short-code",
+    status: "active",
+    countries: ["Bangladesh"],
+    sent30d: 11_828,
+    isDefault: false,
+  },
+  {
+    id: "sid-longcode",
+    value: "+8801700000000",
+    type: "long-code",
+    status: "active",
+    countries: ["Bangladesh"],
+    sent30d: 12,
+    isDefault: false,
+  },
+  {
+    id: "sid-mf-uk",
+    value: "MFLOWUK",
+    type: "alphanumeric",
+    status: "pending",
+    countries: ["United Kingdom"],
+    sent30d: 0,
+    isDefault: false,
+    note: "Awaiting UK sender ID registration — 3 to 5 working days.",
+  },
+];
+
+export const smsSenderLabel = (sender: SmsSenderId) =>
+  `${sender.value} (${
+    SMS_SENDER_TYPES.find((item) => item.value === sender.type)?.label ??
+    sender.type
+  })`;
+
+/**
+ * The composer's dropdown, derived rather than restated.
+ *
+ * Pending and blocked senders are left out: offering one would let a campaign
+ * be scheduled against an ID the carriers will refuse at send time.
+ */
+export const SMS_SENDER_IDS = SMS_SENDERS.filter(
+  (sender) => sender.status === "active",
+).map((sender) => ({ value: sender.value, label: smsSenderLabel(sender) }));
+
+/**
+ * The blended per-segment rate the cost projections are built on.
+ *
+ * A single number rather than the per-destination table, because a draft has
+ * no destination yet: an audience spans countries and the real bill is only
+ * known once the routing is. The projection says "about this much" honestly;
+ * `SMS_COST_BY_COUNTRY` says what it actually came to.
+ */
+export const SMS_RATE_PER_SEGMENT = 0.045;
 
 export const SMS_COUNTRIES = [
   "Bangladesh",
@@ -324,6 +403,15 @@ export function smsTotals(campaigns: SmsCampaign[]) {
 /* Templates                                                                  */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * Delivery and reply rate are both averages over every send of the template.
+ *
+ * They diverge hard, and the divergence is the point: the verification code
+ * delivers better than anything else on the list and is answered by nobody,
+ * while the feedback request is among the worst deliverers and the best earner
+ * of replies. A library ranked on delivery alone puts those two in exactly the
+ * wrong order.
+ */
 export const SMS_TEMPLATES: SmsTemplate[] = [
   {
     id: "st-appointment",
@@ -333,6 +421,7 @@ export const SMS_TEMPLATES: SmsTemplate[] = [
     variables: ["first_name", "appointment_date", "appointment_time"],
     usageCount: 42,
     deliveryRate: 98.6,
+    replyRate: 11.4,
     updatedAt: "2026-09-07T12:40:00Z",
   },
   {
@@ -343,6 +432,7 @@ export const SMS_TEMPLATES: SmsTemplate[] = [
     variables: ["order_id"],
     usageCount: 128,
     deliveryRate: 98.6,
+    replyRate: 1.8,
     updatedAt: "2026-08-30T07:00:00Z",
   },
   {
@@ -353,6 +443,7 @@ export const SMS_TEMPLATES: SmsTemplate[] = [
     variables: ["code", "company"],
     usageCount: 341,
     deliveryRate: 99.5,
+    replyRate: 0.1,
     updatedAt: "2026-06-02T08:00:00Z",
   },
   {
@@ -363,6 +454,7 @@ export const SMS_TEMPLATES: SmsTemplate[] = [
     variables: ["first_name"],
     usageCount: 24,
     deliveryRate: 96.8,
+    replyRate: 2.4,
     updatedAt: "2026-09-05T09:15:00Z",
   },
   {
@@ -373,6 +465,7 @@ export const SMS_TEMPLATES: SmsTemplate[] = [
     variables: ["first_name", "order_id", "amount"],
     usageCount: 18,
     deliveryRate: 98.1,
+    replyRate: 21.3,
     updatedAt: "2026-08-26T10:30:00Z",
   },
   {
@@ -383,6 +476,7 @@ export const SMS_TEMPLATES: SmsTemplate[] = [
     variables: [],
     usageCount: 12,
     deliveryRate: 97.6,
+    replyRate: 3.6,
     updatedAt: "2026-08-20T14:20:00Z",
   },
   {
@@ -393,6 +487,7 @@ export const SMS_TEMPLATES: SmsTemplate[] = [
     variables: ["first_name"],
     usageCount: 9,
     deliveryRate: 98.2,
+    replyRate: 24.8,
     updatedAt: "2026-09-08T08:20:00Z",
   },
   {
@@ -403,6 +498,7 @@ export const SMS_TEMPLATES: SmsTemplate[] = [
     variables: ["first_name"],
     usageCount: 6,
     deliveryRate: 96.6,
+    replyRate: 2.8,
     updatedAt: "2026-08-11T15:45:00Z",
   },
   {
@@ -413,6 +509,7 @@ export const SMS_TEMPLATES: SmsTemplate[] = [
     variables: ["appointment_date", "appointment_time"],
     usageCount: 31,
     deliveryRate: 98.4,
+    replyRate: 9.2,
     updatedAt: "2026-08-14T09:25:00Z",
   },
 ];
@@ -643,16 +740,85 @@ export const SMS_DAY_LABELS = [
 export const SMS_SERIES = {
   sent: [1_240, 1_848, 1_420, 2_186, 1_684, 1_920, 2_460, 2_840, 6_420, 3_186],
   delivered: [1_212, 1_818, 1_396, 2_142, 1_648, 1_884, 2_412, 2_784, 6_216, 3_142],
+  failed: [28, 30, 24, 44, 36, 36, 48, 56, 204, 44],
   replies: [28, 44, 32, 58, 41, 48, 62, 74, 148, 62],
   deliveryRate: [97.7, 98.4, 98.3, 98.0, 97.9, 98.1, 98.0, 98.0, 96.8, 98.6],
   optOutRate: [0.4, 0.3, 0.5, 0.4, 0.6, 0.3, 0.2, 0.3, 0.5, 0.1],
 };
 
-/** Cost split, for the spend panel. */
-export const SMS_COST_BY_COUNTRY = [
-  { label: "Bangladesh", value: 386.4 },
-  { label: "India", value: 214.8 },
-  { label: "United Kingdom", value: 168.2 },
-  { label: "United Arab Emirates", value: 96.4 },
-  { label: "Other", value: 132.1 },
+/**
+ * The one trend on SMS Analytics, at three windows.
+ *
+ * Four series in one chart rather than one chart per metric: sent, delivered,
+ * failed and replies are four readings of the same send, and the only
+ * questions worth asking of them — is the gap between sent and delivered
+ * widening, do replies track volume — can only be answered with all four on
+ * the same axis.
+ */
+export const SMS_TRENDS: Record<SmsTrendPeriod, SmsTrendSeries> = {
+  "7d": {
+    labels: ["Sep 2", "Sep 3", "Sep 4", "Sep 5", "Sep 6", "Sep 7", "Sep 8"],
+    sent: [2_840, 1_920, 2_260, 6_420, 2_480, 1_740, 3_186],
+    delivered: [2_784, 1_884, 2_214, 6_216, 2_432, 1_706, 3_142],
+    failed: [56, 36, 46, 204, 48, 34, 44],
+    replies: [74, 48, 56, 148, 62, 41, 62],
+  },
+  "30d": {
+    labels: SMS_DAY_LABELS,
+    sent: SMS_SERIES.sent,
+    delivered: SMS_SERIES.delivered,
+    failed: SMS_SERIES.failed,
+    replies: SMS_SERIES.replies,
+  },
+  "90d": {
+    labels: [
+      "Jun 12",
+      "Jun 22",
+      "Jul 2",
+      "Jul 12",
+      "Jul 22",
+      "Aug 1",
+      "Aug 11",
+      "Aug 21",
+      "Aug 31",
+      "Sep 8",
+    ],
+    sent: [
+      14_820, 12_460, 16_240, 13_980, 18_620, 12_840, 17_460, 15_280, 21_640,
+      19_820,
+    ],
+    delivered: [
+      14_502, 12_214, 15_924, 13_702, 18_212, 12_586, 17_108, 14_968, 21_016,
+      19_446,
+    ],
+    failed: [318, 246, 316, 278, 408, 254, 352, 312, 624, 374],
+    replies: [352, 298, 402, 336, 468, 314, 436, 382, 564, 496],
+  },
+};
+
+export const SMS_TREND_PERIODS: { value: SmsTrendPeriod; label: string }[] = [
+  { value: "7d", label: "7 days" },
+  { value: "30d", label: "30 days" },
+  { value: "90d", label: "90 days" },
+];
+
+/**
+ * Spend by destination, with the volume that earned it.
+ *
+ * Both numbers, because neither is the reading on its own: per-segment rates
+ * differ by an order of magnitude between destinations, so the country at the
+ * top of the spend list is not necessarily the one being messaged most. The
+ * rows sum to `smsTotals(SMS_CAMPAIGNS).sent` and `.cost` — the cost panel
+ * divides one by the other and the two have to agree.
+ */
+export const SMS_COST_BY_COUNTRY: {
+  label: string;
+  spend: number;
+  messages: number;
+}[] = [
+  { label: "Bangladesh", spend: 372.6, messages: 8_280 },
+  { label: "India", spend: 206.4, messages: 3_440 },
+  { label: "United Kingdom", spend: 161.04, messages: 2_684 },
+  { label: "United Arab Emirates", spend: 92.4, messages: 1_320 },
+  { label: "Other", spend: 125.64, messages: 5_154 },
 ];

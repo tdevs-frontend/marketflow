@@ -67,6 +67,17 @@ const STATUS_TONES: Record<SmsContactStatus, BadgeTone> = {
   invalid: "danger",
 };
 
+/**
+ * Consent state, worded the same everywhere it appears.
+ *
+ * The table, the phone card and the drawer each used to spell this themselves,
+ * and two of the three fell back to the raw status — so the same contact read
+ * "Opted out" in one place and "invalid" in another. It is the field on this
+ * page with legal weight behind it; it does not get to be approximate.
+ */
+const statusLabel = (status: SmsContactStatus) =>
+  SMS_CONTACT_STATUSES.find((item) => item.value === status)?.label ?? status;
+
 function stats(contacts: SmsContact[]): StatItem[] {
   const subscribed = contacts.filter((c) => c.status === "subscribed").length;
   const optedOut = contacts.filter((c) => c.status === "opted-out").length;
@@ -438,9 +449,7 @@ export function SmsContactsWorkspace() {
 
                         <TD>
                           <Badge tone={STATUS_TONES[contact.status]}>
-                            {contact.status === "opted-out"
-                              ? "Opted out"
-                              : contact.status}
+                            {statusLabel(contact.status)}
                           </Badge>
                         </TD>
 
@@ -532,12 +541,20 @@ export function SmsContactsWorkspace() {
                       >
                         <AvatarLabel name={name} secondary={contact.phone} size="sm" />
                       </button>
-                      <Badge tone={STATUS_TONES[contact.status]}>
-                        {contact.status === "opted-out" ? "Opted out" : contact.status}
+                      <Badge tone={STATUS_TONES[contact.status]} size="sm">
+                        {statusLabel(contact.status)}
                       </Badge>
                     </div>
 
-                    <div className="mt-3 flex items-center justify-between gap-3">
+                    {/* Country is a cost field on this channel and lead status
+                        is why the number is on the list at all. Both were
+                        desktop-only, which made the phone view a list of names
+                        with no reason to act on any of them. */}
+                    <p className="mt-2 text-sm text-text-muted">
+                      {contact.country} · {contact.leadStatus}
+                    </p>
+
+                    <div className="mt-2.5 flex items-center justify-between gap-3">
                       <TagList tags={contact.tags} />
                       <p className="shrink-0 text-sm text-text-muted tabular-nums">
                         {formatNumber(contact.messages)} sent ·{" "}
@@ -605,7 +622,7 @@ export function SmsContactsWorkspace() {
 
             <div className="flex flex-wrap items-center gap-1.5">
               <Badge tone={STATUS_TONES[detail.status]}>
-                {detail.status === "opted-out" ? "Opted out" : detail.status}
+                {statusLabel(detail.status)}
               </Badge>
               <Badge tone="neutral">{detail.leadStatus}</Badge>
             </div>
@@ -614,6 +631,14 @@ export function SmsContactsWorkspace() {
               <p className="rounded-panel border border-error/25 bg-error-soft px-3 py-2.5 text-sm text-error-text">
                 This number is not routable. Messages to it are billed and never
                 delivered — correct the number or delete the contact.
+              </p>
+            ) : null}
+
+            {detail.status === "opted-out" ? (
+              <p className="rounded-panel border border-warning/40 bg-warning-soft px-3 py-2.5 text-sm text-warning-text">
+                This person replied STOP. Campaigns and automations skip them,
+                and only they can opt back in — adding them to a segment does
+                not override it.
               </p>
             ) : null}
 

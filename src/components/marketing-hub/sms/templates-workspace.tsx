@@ -12,7 +12,6 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { Field, Input } from "@/components/ui/input";
 import { FilterBar } from "@/components/ui/filter-bar";
 import { Menu } from "@/components/ui/menu";
-import { ProgressBar } from "@/components/ui/progress";
 import { Select } from "@/components/ui/select";
 import { useToast } from "@/components/ui/toast";
 import {
@@ -22,7 +21,7 @@ import {
 } from "@/lib/sms-fixtures";
 import { formatNumber, formatPercent, formatRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { countSmsSegments } from "@/types/sms";
+import { SMS_CONCAT_LIMIT, SMS_SINGLE_LIMIT, countSmsSegments } from "@/types/sms";
 import type { SmsTemplate, SmsTemplateCategory } from "@/types/sms";
 import { SmsComposer, SmsPreview } from "./composer";
 
@@ -34,6 +33,19 @@ import { SmsComposer, SmsPreview } from "./composer";
  * summarise. The segment count sits on every card for the same reason it is in
  * the composer: a two-segment template doubles the cost of every campaign that
  * uses it, and that is worth knowing before you pick one.
+ *
+ * Text-first, and kept that way. The card used to draw a progress bar under
+ * the body showing characters against the segment capacity, which is the one
+ * reading here that a length cannot carry: what matters is not that a message
+ * fills 62% of its allowance, it is whether it crosses 160 and doubles the
+ * bill — a threshold, and the segment badge already names it. The bar is now a
+ * line of type, the card is shorter for it, and three of these fit the screen
+ * where two did.
+ *
+ * Three figures on the footer, not two. Delivery rate alone ranked the
+ * verification code above everything in the library and the feedback request
+ * near the bottom, which is exactly backwards for a template you are choosing
+ * because you want an answer.
  */
 
 const ALL = "all";
@@ -56,7 +68,9 @@ export function SmsTemplatesWorkspace() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<SmsTemplateCategory | typeof ALL>(ALL);
   const [length, setLength] = useState<"single" | "multi" | typeof ALL>(ALL);
-  const [sort, setSort] = useState<"updated" | "usage" | "delivery" | "name">("usage");
+  const [sort, setSort] = useState<
+    "updated" | "usage" | "delivery" | "reply" | "name"
+  >("usage");
 
   /* Separate from `editing`, because a new template has no record to edit. */
   const [editorOpen, setEditorOpen] = useState(false);
@@ -92,6 +106,7 @@ export function SmsTemplatesWorkspace() {
     }).sort((a, b) => {
       if (sort === "name") return a.name.localeCompare(b.name);
       if (sort === "delivery") return b.deliveryRate - a.deliveryRate;
+      if (sort === "reply") return b.replyRate - a.replyRate;
       if (sort === "updated") {
         return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
       }
@@ -156,6 +171,7 @@ export function SmsTemplatesWorkspace() {
             onChange={setSort}
             options={[
               { value: "usage", label: "Most used" },
+              { value: "reply", label: "Best reply rate" },
               { value: "delivery", label: "Best delivery" },
               { value: "updated", label: "Recently updated" },
               { value: "name", label: "Name A–Z" },
@@ -190,20 +206,26 @@ export function SmsTemplatesWorkspace() {
                 SMS_SUBSTITUTIONS,
               );
               const multipart = segments > 1;
+              /* Concatenated parts lose seven characters to the header, so a
+                 two-part template holds 306 rather than 320. */
+              const capacity = multipart ? SMS_CONCAT_LIMIT : SMS_SINGLE_LIMIT;
 
               return (
                 <li key={template.id}>
-                  <Card className="flex h-full flex-col p-5">
+                  <Card className="flex h-full flex-col p-4">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
                         <h3 className="truncate text-sm font-semibold text-text-primary">
                           {template.name}
                         </h3>
-                        <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                          <Badge tone={CATEGORY_TONES[template.category]}>
+                        <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                          <Badge tone={CATEGORY_TONES[template.category]} size="sm">
                             {categoryLabel(template.category)}
                           </Badge>
-                          <Badge tone={multipart ? "warning" : "neutral"}>
+                          <Badge
+                            tone={multipart ? "warning" : "neutral"}
+                            size="sm"
+                          >
                             {segments} segment{segments === 1 ? "" : "s"}
                           </Badge>
                         </div>
@@ -238,35 +260,26 @@ export function SmsTemplatesWorkspace() {
                     </div>
 
                     {/* Body in full — an SMS template is its body. */}
-                    <p className="mt-4 min-h-20 rounded-panel bg-surface-secondary px-3.5 py-3 font-mono text-sm leading-relaxed text-text-secondary">
+                    <p className="mt-3 rounded-panel bg-surface-secondary px-3 py-2.5 font-mono text-sm leading-relaxed text-text-secondary">
                       {template.body}
                     </p>
 
-                    <div className="mt-3">
-                      <div className="flex items-baseline justify-between gap-3">
-                        <p className="text-sm text-text-muted">
-                          {characters} characters when personalised
-                        </p>
-                        <p
-                          className={cn(
-                            "text-sm font-medium tabular-nums",
-                            multipart ? "text-warning-text" : "text-sms",
-                          )}
-                        >
-                          {segments * (segments > 1 ? 153 : 160)} available
-                        </p>
-                      </div>
-                      <ProgressBar
-                        value={(characters / (segments * (segments > 1 ? 153 : 160))) * 100}
-                        label={`${template.name} length`}
-                        tone={multipart ? "bg-warning" : "bg-sms"}
-                        size="sm"
-                        className="mt-1.5"
-                      />
-                    </div>
+                    {/* The length, as a sentence. The number that decides
+                        anything is the capacity it is measured against, and
+                        that only changes at the threshold the badge names. */}
+                    <p className="mt-2 text-sm text-text-muted tabular-nums">
+                      {characters} of {segments * capacity} characters
+                      <span className="text-text-muted"> when personalised</span>
+                      {multipart ? (
+                        <span className="font-medium text-warning-text">
+                          {" "}
+                          · billed {segments}×
+                        </span>
+                      ) : null}
+                    </p>
 
                     {template.variables.length > 0 ? (
-                      <ul className="mt-3 flex flex-wrap gap-1.5">
+                      <ul className="mt-2.5 flex flex-wrap gap-1.5">
                         {template.variables.map((variable) => (
                           <li
                             key={variable}
@@ -278,22 +291,39 @@ export function SmsTemplatesWorkspace() {
                       </ul>
                     ) : null}
 
-                    <dl className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-3.5 text-sm">
-                      <div>
-                        <dt className="text-text-muted">Used</dt>
-                        <dd className="font-bold text-text-primary tabular-nums">
-                          {formatNumber(template.usageCount)} times
-                        </dd>
-                      </div>
-                      <div className="text-right">
-                        <dt className="text-text-muted">Delivery</dt>
-                        <dd className="font-bold text-sms tabular-nums">
-                          {formatPercent(template.deliveryRate)}
-                        </dd>
-                      </div>
+                    {/* `mt-auto` pins the footer to the bottom of the card, so
+                        a row of these has its figures on one line however long
+                        the bodies above them run. */}
+                    <dl className="mt-auto grid grid-cols-3 gap-2 border-t border-border pt-3.5 text-sm">
+                      {[
+                        {
+                          label: "Used",
+                          value: formatNumber(template.usageCount),
+                          tone: "text-text-primary",
+                        },
+                        {
+                          label: "Delivery",
+                          value: formatPercent(template.deliveryRate),
+                          tone: "text-text-primary",
+                        },
+                        {
+                          label: "Reply",
+                          value: formatPercent(template.replyRate),
+                          tone: "text-sms",
+                        },
+                      ].map((cell) => (
+                        <div key={cell.label}>
+                          <dt className="text-text-muted">{cell.label}</dt>
+                          <dd
+                            className={cn("font-bold tabular-nums", cell.tone)}
+                          >
+                            {cell.value}
+                          </dd>
+                        </div>
+                      ))}
                     </dl>
 
-                    <p className="mt-2.5 text-sm text-text-muted">
+                    <p className="mt-2 text-sm text-text-muted">
                       Updated {formatRelativeTime(template.updatedAt)}
                     </p>
 
@@ -441,6 +471,10 @@ export function SmsTemplatesWorkspace() {
                 {
                   label: "Delivery rate",
                   value: formatPercent(previewing.deliveryRate),
+                },
+                {
+                  label: "Reply rate",
+                  value: formatPercent(previewing.replyRate),
                 },
               ].map((row) => (
                 <div key={row.label}>

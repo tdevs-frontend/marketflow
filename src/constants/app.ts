@@ -43,6 +43,7 @@ export const APP_ROUTES = {
   smsContacts: "/dashboard/marketing/sms/contacts",
   smsAutomations: "/dashboard/marketing/sms/automations",
   smsAnalytics: "/dashboard/marketing/sms/analytics",
+  smsSenders: "/dashboard/marketing/sms/senders",
 
   /* Social Planner. Calendar is the module's landing page, not an index. */
   socialCalendar: "/dashboard/marketing/social/calendar",

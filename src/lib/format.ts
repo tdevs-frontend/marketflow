@@ -25,6 +25,27 @@ export function formatCurrency(value: number, currency = "USD"): string {
   }).format(value);
 }
 
+/**
+ * A per-unit price, where the digits that matter sit below a cent.
+ *
+ * `formatCurrency` rounds to two places, which is right for a total and wrong
+ * for a rate: every SMS destination bills between $0.018 and $0.072 a segment,
+ * and at two decimals the whole spread collapses onto "$0.02" and "$0.07".
+ * Totals keep `formatCurrency`; only the divided figures use this.
+ */
+export function formatUnitCost(
+  value: number,
+  fractionDigits = 3,
+  currency = "USD",
+): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
+  }).format(value);
+}
+
 export function formatPercent(value: number, fractionDigits = 1): string {
   return `${value.toFixed(fractionDigits)}%`;
 }

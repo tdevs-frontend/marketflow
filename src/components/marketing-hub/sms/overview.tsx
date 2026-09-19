@@ -1,6 +1,11 @@
 "use client";
 
-import { useState } from "react";
+/*
+ * Still a client module although nothing here holds state any more: `StatsGrid`
+ * takes a Lucide component per stat, and a function prop cannot cross a server
+ * boundary. The Volume/Rates toggle that used to justify the directive is gone.
+ */
+
 import {
   CheckCheck,
   DollarSign,
@@ -11,40 +16,47 @@ import {
 
 import { ButtonLink } from "@/components/ui/button";
 import { ChartCard, PanelCard } from "@/components/ui/chart-card";
-import { MeterRow } from "@/components/ui/progress";
-import { SegmentedControl } from "@/components/ui/segmented-control";
-import { MiniStat, StatsGrid, type StatItem } from "@/components/ui/stats-card";
-import {
-  CHANNEL_SERIES,
-  RATE_COLORS,
-  SPEND_RAMP,
-} from "@/components/dashboard/charts/chart-theme";
-import { DonutChart } from "@/components/dashboard/charts/donut-chart";
+import { StatsGrid, type StatItem } from "@/components/ui/stats-card";
+import { CHANNEL_SERIES } from "@/components/dashboard/charts/chart-theme";
 import { TrendChart } from "@/components/dashboard/charts/trend-chart";
 import { CHANNEL_THEME } from "@/constants/channels";
 import { APP_ROUTES } from "@/constants";
 import {
   SMS_CAMPAIGNS,
-  SMS_COST_BY_COUNTRY,
   SMS_DAY_LABELS,
   SMS_SERIES,
   SMS_TEMPLATES,
   smsTotals,
 } from "@/lib/sms-fixtures";
-import { formatCount, formatCurrency, formatNumber, formatPercent, rate } from "@/lib/format";
+import {
+  formatCount,
+  formatCurrency,
+  formatNumber,
+  formatPercent,
+  rate,
+} from "@/lib/format";
+import { cn } from "@/lib/utils";
 import { countSmsSegments } from "@/types/sms";
 import { RankedList } from "../shared/ranked-list";
-import { SmsPreview } from "./composer";
 import { SmsCampaignStatusBadge } from "./campaign-row";
 
 /**
  * The SMS module's landing page.
  *
- * SMS is the channel where every message costs money, so this page is
- * organised around spend as much as around delivery: cost per country, cost
- * per conversion and the segment count all sit above the fold. Nothing else in
- * the product needs a spend panel; this channel would be irresponsible without
- * one.
+ * It answers one question — what is happening on this channel right now — and
+ * stops. Everything that answers "and why" lives on Analytics: this page used
+ * to carry a second volume chart on a Volume/Rates toggle, a spend-by-country
+ * donut, a cost-per-reply pair and a handset preview of a template, all of
+ * which exist on Analytics or Templates in a form you can actually act on.
+ * Four panels' worth of duplication came off, and what is left is the shape of
+ * an operational summary: five numbers, one chart, one outcome breakdown, and
+ * the two lists that say what to open next.
+ *
+ * The outcome breakdown is rows rather than meters. A delivery rate of 98.2%,
+ * a reply rate of 2.1% and an opt-out rate of 0.3% drawn as four bars makes
+ * the two that matter look like nothing at all, because they are being scaled
+ * against a hundred. Ink and count carry it instead, and colour is spent only
+ * where it means something: green delivered, red failed, amber opted out.
  */
 
 const theme = CHANNEL_THEME.sms;
@@ -90,23 +102,62 @@ const STATS: StatItem[] = [
   },
 ];
 
-type VolumeView = "volume" | "rates";
+/**
+ * Where the period's messages ended up.
+ *
+ * Four outcomes of one send, each with the denominator it is honestly measured
+ * against: delivery and failure against what was sent, replies and opt-outs
+ * against what actually arrived — nobody answers or leaves over a message that
+ * never landed.
+ */
+const OUTCOMES = [
+  {
+    label: "Delivered",
+    count: TOTALS.delivered,
+    share: rate(TOTALS.delivered, TOTALS.sent),
+    dot: "bg-success",
+    hint: "of messages sent",
+  },
+  {
+    label: "Failed",
+    count: TOTALS.failed,
+    share: rate(TOTALS.failed, TOTALS.sent),
+    dot: "bg-error",
+    hint: "invalid or unreachable, billed anyway",
+  },
+  {
+    label: "Replied",
+    count: TOTALS.replies,
+    share: rate(TOTALS.replies, TOTALS.delivered),
+    dot: "bg-accent",
+    hint: "of messages delivered",
+  },
+  {
+    label: "Opted out",
+    count: TOTALS.optOuts,
+    share: rate(TOTALS.optOuts, TOTALS.delivered),
+    dot: "bg-warning",
+    hint: "replied STOP",
+  },
+];
 
 /** The composer's own counter, applied to the live campaigns. */
 const MULTIPART = SMS_CAMPAIGNS.filter(
   (campaign) => countSmsSegments(campaign.message).segments > 1,
 );
 
+const RECENT = [...SMS_CAMPAIGNS]
+  .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+  .slice(0, 5);
+
+/* Ranked by how often they are reached for, which is the Overview's question.
+   Analytics ranks the same library by reply rate — that one asks which of them
+   earned their sends, and the two orders are deliberately different. */
+const TOP_TEMPLATES = [...SMS_TEMPLATES]
+  .sort((a, b) => b.usageCount - a.usageCount)
+  .slice(0, 6);
+
 export function SmsOverview() {
-  const [view, setView] = useState<VolumeView>("volume");
-
-  const recent = [...SMS_CAMPAIGNS]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 5);
-
-  const costTotal = SMS_COST_BY_COUNTRY.reduce((sum, item) => sum + item.value, 0);
-  const featured = SMS_TEMPLATES[0];
-
   return (
     <>
       <StatsGrid items={STATS} accent={ACCENT} columns={5} />
@@ -114,141 +165,89 @@ export function SmsOverview() {
       <div className="grid gap-4 xl:grid-cols-3">
         <ChartCard
           title="Message Volume"
-          description={
-            view === "volume"
-              ? "Sent, delivered and replies over the last four weeks."
-              : "Delivery rate against opt-out rate. Both are read against the left axis."
-          }
+          description="Sent, delivered and replies over the last four weeks."
           className="xl:col-span-2"
-          action={
-            <SegmentedControl
-              label="Volume metric"
-              value={view}
-              onChange={setView}
-              options={[
-                { value: "volume", label: "Volume" },
-                { value: "rates", label: "Rates" },
-              ]}
-            />
-          }
-          legend={
-            view === "volume"
-              ? [
-                  { label: "Sent", swatch: "bg-sms", value: formatNumber(SMS_SERIES.sent.at(-1) ?? 0) },
-                  { label: "Delivered", swatch: "bg-accent", value: formatNumber(SMS_SERIES.delivered.at(-1) ?? 0) },
-                  { label: "Replies", swatch: "bg-border-strong", value: formatNumber(SMS_SERIES.replies.at(-1) ?? 0) },
-                ]
-              : [
-                  { label: "Delivery rate", swatch: "bg-sms" },
-                  { label: "Opt-out rate", swatch: "bg-error" },
-                ]
-          }
+          legend={[
+            {
+              label: "Sent",
+              swatch: "bg-sms",
+              value: formatNumber(SMS_SERIES.sent.at(-1) ?? 0),
+            },
+            {
+              label: "Delivered",
+              swatch: "bg-accent",
+              value: formatNumber(SMS_SERIES.delivered.at(-1) ?? 0),
+            },
+            {
+              label: "Replies",
+              swatch: "bg-border-strong",
+              value: formatNumber(SMS_SERIES.replies.at(-1) ?? 0),
+            },
+          ]}
         >
-          {view === "volume" ? (
-            <TrendChart
-              categories={SMS_DAY_LABELS}
-              series={[
-                { name: "Sent", data: SMS_SERIES.sent },
-                { name: "Delivered", data: SMS_SERIES.delivered },
-                { name: "Replies", data: SMS_SERIES.replies },
-              ]}
-              colors={CHANNEL_SERIES.sms}
-              unit="messages"
-            />
-          ) : (
-            <TrendChart
-              categories={SMS_DAY_LABELS}
-              series={[
-                { name: "Delivery rate", data: SMS_SERIES.deliveryRate },
-                { name: "Opt-out rate", data: SMS_SERIES.optOutRate },
-              ]}
-              colors={[CHANNEL_SERIES.sms[0], RATE_COLORS.bad]}
-              variant="line"
-              format="percent"
-              yAxisMax={100}
-            />
-          )}
+          <TrendChart
+            categories={SMS_DAY_LABELS}
+            series={[
+              { name: "Sent", data: SMS_SERIES.sent },
+              { name: "Delivered", data: SMS_SERIES.delivered },
+              { name: "Replies", data: SMS_SERIES.replies },
+            ]}
+            colors={CHANNEL_SERIES.sms}
+            unit="messages"
+          />
         </ChartCard>
 
         <PanelCard
           title="Delivery Outcomes"
           description="Where the last 30 days of messages ended up."
+          /* A column, so the multi-part note below can be pushed to the foot of
+             the card and sit level with the chart's x-axis beside it. */
+          bodyClassName="flex flex-col"
         >
-          <div className="space-y-4">
-            <MeterRow
-              label="Delivered"
-              value={rate(TOTALS.delivered, TOTALS.sent)}
-              display={formatPercent(rate(TOTALS.delivered, TOTALS.sent))}
-              tone="bg-sms"
-              hint={`${formatNumber(TOTALS.delivered)} of ${formatNumber(TOTALS.sent)} sent`}
-            />
-            <MeterRow
-              label="Replied"
-              value={rate(TOTALS.replies, TOTALS.delivered)}
-              display={formatPercent(rate(TOTALS.replies, TOTALS.delivered))}
-              tone="bg-accent"
-              hint={`${formatNumber(TOTALS.replies)} replies received`}
-            />
-            <MeterRow
-              label="Failed"
-              value={rate(TOTALS.failed, TOTALS.sent)}
-              display={formatPercent(rate(TOTALS.failed, TOTALS.sent))}
-              tone="bg-error"
-              hint="Mostly invalid or unreachable numbers"
-            />
-            <MeterRow
-              label="Opted out"
-              value={rate(TOTALS.optOuts, TOTALS.delivered)}
-              display={formatPercent(rate(TOTALS.optOuts, TOTALS.delivered))}
-              tone="bg-warning"
-              hint={`${formatNumber(TOTALS.optOuts)} replied STOP`}
-            />
-          </div>
+          <ul className="divide-y divide-border">
+            {OUTCOMES.map((outcome) => (
+              <li key={outcome.label} className="py-3 first:pt-0">
+                <div className="flex items-baseline justify-between gap-3">
+                  <p className="flex min-w-0 items-center gap-2">
+                    <span
+                      aria-hidden
+                      className={cn("size-2 shrink-0 rounded-full", outcome.dot)}
+                    />
+                    <span className="truncate text-sm font-medium text-text-secondary">
+                      {outcome.label}
+                    </span>
+                  </p>
+                  <p className="shrink-0 text-base font-bold text-text-primary tabular-nums">
+                    {formatPercent(outcome.share)}
+                  </p>
+                </div>
+                <p className="mt-1 pl-4 text-sm text-text-muted tabular-nums">
+                  {formatNumber(outcome.count)} · {outcome.hint}
+                </p>
+              </li>
+            ))}
+          </ul>
 
-          <div className="mt-5 grid grid-cols-2 gap-2 border-t border-border pt-4">
-            <MiniStat
-              label="Clicks"
-              value={formatNumber(TOTALS.clicks)}
-              hint={`${formatPercent(rate(TOTALS.clicks, TOTALS.delivered))} of delivered`}
-            />
-            <MiniStat
-              label="Multi-part"
-              value={formatNumber(MULTIPART.length)}
-              hint={`of ${SMS_CAMPAIGNS.length} campaigns`}
-            />
+          {/* The one operational warning this page owes a reader: a multi-part
+              campaign is billed per part, and nothing else on the Overview
+              would say so. */}
+          <div className="mt-auto border-t border-border pt-4">
+            <p className="flex items-baseline justify-between gap-3 text-sm">
+              <span className="font-medium text-text-secondary">
+                Multi-part campaigns
+              </span>
+              <span className="font-bold text-text-primary tabular-nums">
+                {MULTIPART.length} of {SMS_CAMPAIGNS.length}
+              </span>
+            </p>
+            <p className="mt-1 text-sm text-text-muted">
+              Each part is billed separately.
+            </p>
           </div>
         </PanelCard>
       </div>
 
       <div className="grid gap-4 xl:grid-cols-3">
-        <ChartCard
-          title="Spend by Destination"
-          description="Rates vary by country, so volume and cost do not track."
-          bodyClassName="mt-0 ml-0"
-          footer={
-            <div className="grid grid-cols-2 gap-2">
-              <MiniStat
-                label="Per message"
-                value={formatCurrency(TOTALS.cost / Math.max(TOTALS.sent, 1))}
-                hint="blended"
-              />
-              <MiniStat
-                label="Per reply"
-                value={formatCurrency(TOTALS.cost / Math.max(TOTALS.replies, 1))}
-              />
-            </div>
-          }
-        >
-          <DonutChart
-            labels={SMS_COST_BY_COUNTRY.map((item) => item.label)}
-            values={SMS_COST_BY_COUNTRY.map((item) => item.value)}
-            colors={SPEND_RAMP}
-            centerLabel="Total spend"
-            centerValue={formatCurrency(costTotal)}
-            height={220}
-          />
-        </ChartCard>
-
         <PanelCard
           title="Recent Campaigns"
           description="The last five, newest first."
@@ -260,7 +259,7 @@ export function SmsOverview() {
           }
         >
           <ul className="divide-y divide-border">
-            {recent.map((campaign) => {
+            {RECENT.map((campaign) => {
               const { segments } = countSmsSegments(campaign.message);
 
               return (
@@ -279,25 +278,19 @@ export function SmsOverview() {
 
                   <dl className="flex shrink-0 items-center gap-4 text-right">
                     <div>
-                      <dt className="text-sm font-medium text-text-muted">
-                        Sent
-                      </dt>
+                      <dt className="text-sm font-medium text-text-muted">Sent</dt>
                       <dd className="text-sm font-bold text-text-primary tabular-nums">
                         {formatNumber(campaign.sent)}
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-sm font-medium text-text-muted">
-                        Parts
-                      </dt>
+                      <dt className="text-sm font-medium text-text-muted">Parts</dt>
                       <dd className="text-sm font-bold text-text-primary tabular-nums">
                         {segments}
                       </dd>
                     </div>
                     <div>
-                      <dt className="text-sm font-medium text-text-muted">
-                        Cost
-                      </dt>
+                      <dt className="text-sm font-medium text-text-muted">Cost</dt>
                       <dd className="text-sm font-bold text-text-primary tabular-nums">
                         {campaign.cost === 0 ? "—" : formatCurrency(campaign.cost)}
                       </dd>
@@ -310,12 +303,10 @@ export function SmsOverview() {
             })}
           </ul>
         </PanelCard>
-      </div>
 
-      <div className="grid gap-4 xl:grid-cols-2">
         <PanelCard
           title="Top Templates"
-          description="By delivery rate, across every send."
+          description="The messages this workspace reaches for most."
           action={
             <ButtonLink href={APP_ROUTES.smsTemplates} variant="ghost" size="sm">
               Library
@@ -324,49 +315,18 @@ export function SmsOverview() {
         >
           <RankedList
             tone={theme.accent}
-            items={[...SMS_TEMPLATES]
-              .sort((a, b) => b.usageCount - a.usageCount)
-              .slice(0, 6)
-              .map((template) => {
-                const { segments } = countSmsSegments(template.body);
+            items={TOP_TEMPLATES.map((template) => {
+              const { segments } = countSmsSegments(template.body);
 
-                return {
-                  id: template.id,
-                  label: template.name,
-                  secondary: `${formatNumber(template.usageCount)} sends · ${segments} segment${segments === 1 ? "" : "s"}`,
-                  display: formatPercent(template.deliveryRate),
-                  share: template.deliveryRate,
-                };
-              })}
+              return {
+                id: template.id,
+                label: template.name,
+                secondary: `${formatPercent(template.deliveryRate)} delivered · ${segments} segment${segments === 1 ? "" : "s"}`,
+                display: `${formatNumber(template.usageCount)} sends`,
+                share: template.usageCount,
+              };
+            })}
           />
-        </PanelCard>
-
-        <PanelCard
-          title="Message Preview"
-          description={`How "${featured.name}" arrives on a handset.`}
-          action={
-            <ButtonLink href={APP_ROUTES.smsTemplates} variant="ghost" size="sm">
-              Edit
-            </ButtonLink>
-          }
-        >
-          <SmsPreview message={featured.body} />
-
-          <div className="mt-4 grid grid-cols-3 gap-2">
-            <MiniStat
-              label="Characters"
-              value={formatNumber(countSmsSegments(featured.body).characters)}
-              hint="expanded"
-            />
-            <MiniStat
-              label="Segments"
-              value={String(countSmsSegments(featured.body).segments)}
-            />
-            <MiniStat
-              label="Delivery"
-              value={formatPercent(featured.deliveryRate)}
-            />
-          </div>
         </PanelCard>
       </div>
     </>
