@@ -18,9 +18,15 @@ import { SecuritySettings } from "./security-settings";
  * to pick between four things before knowing what was in any of them. They are
  * all *this page* — one screen, four readings.
  *
- * Billing & Subscription and API & Developer stay in the sidebar on purpose:
- * one is the company's money and the other is workspace configuration, and
- * neither is a preference belonging to whoever is signed in.
+ * General is a reading, not a form. Every field it used to offer — workspace
+ * name, timezone, from name, reply-to — already had an owner elsewhere, so it
+ * now shows the live values and links to the screens that own them rather
+ * than standing as a second editor for four settings that each had one.
+ *
+ * Billing keeps its own route: it is the company's money rather than a
+ * preference belonging to whoever is signed in, and it is long enough to want
+ * a page to itself. API & Developer is not here at all — that module already
+ * exists under Integrations, and General links across to it.
  *
  * `Tabs` is the component the rest of the dashboard already uses — the same
  * underline strip as the workflow detail screen, with the same `role="tablist"`

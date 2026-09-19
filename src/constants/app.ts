@@ -79,6 +79,17 @@ export const APP_ROUTES = {
   templates: "/dashboard/templates",
   integrations: "/dashboard/integrations",
   settings: "/dashboard/settings",
+  settingsBilling: "/dashboard/settings/billing",
+
+  /* The developer surface. Under Integrations rather than Settings, because
+     that is where it is already built — Settings links across to it. */
+  integrationsApi: "/dashboard/integrations/api",
+
+  /* Workspace configuration. Named here because Settings links across to it:
+     workspace name, timezone, currency and sender identity are owned by that
+     module, and General used to offer a second editor for two of them. */
+  workspaceSettings: "/dashboard/workspace/settings",
+  workspaceTeam: "/dashboard/workspace/team",
 } as const;
 
 export const AUTH_TOKEN_KEY = "marketflow.token";
