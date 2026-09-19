@@ -45,8 +45,6 @@ export function useWorkspaceSettings(): WorkspaceSettings {
   );
 }
 
-export const readWorkspaceSettings = (): WorkspaceSettings => snapshot;
-
 /**
  * Writes one section.
  *

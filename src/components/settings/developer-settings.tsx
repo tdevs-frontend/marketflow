@@ -5,25 +5,33 @@ import Link from "next/link";
 import { ArrowUpRight, ExternalLink, Plus } from "lucide-react";
 
 import { PageHeader } from "@/components/layout/page-header";
-import { Badge, type BadgeTone } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EmptyState } from "@/components/ui/empty-state";
-import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { useToast } from "@/components/ui/toast";
 import { ApiKeyTable } from "@/components/integrations/api/api-key-table";
 import { CreateApiKeyDialog } from "@/components/integrations/api/create-key-dialog";
+import { WebhookDetailDrawer } from "@/components/integrations/webhooks/webhook-detail-drawer";
+import {
+  CreateWebhookDialog,
+  DeleteWebhookDialog,
+} from "@/components/integrations/webhooks/webhook-dialogs";
+import { WebhookTable } from "@/components/integrations/webhooks/webhook-table";
 import { APP_ROUTES } from "@/constants/app";
 import { DEVELOPER_RESOURCES } from "@/constants/settings";
 import { addApiKey, revokeApiKey, useApiKeys } from "@/lib/api-key-store";
-import { formatCount, formatPercent, formatRelativeTime } from "@/lib/format";
-import { INTEGRATIONS_NOW_MS, WEBHOOKS } from "@/lib/integration-fixtures";
+import {
+  addWebhook,
+  removeWebhook,
+  updateWebhook,
+  useWebhooks,
+} from "@/lib/webhook-store";
 import {
   permissionHint,
   useWorkspacePermissions,
 } from "@/components/workspace/use-workspace-permissions";
-import type { ApiKey, WebhookStatus } from "@/types/integration";
+import type { ApiKey, Webhook, WebhookStatus } from "@/types/integration";
 
 import { SettingsSection } from "./settings-section";
 
@@ -36,13 +44,18 @@ import { SettingsSection } from "./settings-section";
  * emitted a page for it — so the row 404'd for anyone who clicked it.
  *
  * What it is *not* is a second developer module. Integrations already owns the
- * full surfaces: the key register with usage and a request log, and the webhook
+ * deep surfaces: the key register with usage and a request log, and the webhook
  * screen with per-endpoint delivery history. Rebuilding those here would give
  * the workspace two key tables that disagree the moment somebody revokes on one
- * of them. So this page renders the *same components* over the *same store* —
- * `ApiKeyTable` and `CreateApiKeyDialog` from `components/integrations/api`,
- * reading `lib/api-key-store` — and links across for the depth. Revoke a key
- * here and it is revoked there, because there is one register.
+ * of them.
+ *
+ * So every table, dialog and drawer on this page is imported from those modules
+ * and rendered over the same stores — `ApiKeyTable` and `CreateApiKeyDialog`
+ * over `lib/api-key-store`, `WebhookTable`, `WebhookDetailDrawer` and the
+ * webhook dialogs over `lib/webhook-store`. Revoke a key or pause an endpoint
+ * here and it is revoked or paused there, because there is one register of
+ * each. The links across are for the depth this page deliberately omits: the
+ * request log and the per-endpoint delivery history.
  *
  * Three sections, in the order a developer needs them: what can reach my data,
  * where am I sending events, and where do I read how any of it works.
@@ -53,36 +66,94 @@ import { SettingsSection } from "./settings-section";
  * only way to match a key in this table to the one in a config file.
  */
 
-const WEBHOOK_TONE: Record<WebhookStatus, BadgeTone> = {
-  active: "success",
-  paused: "neutral",
-  failing: "danger",
-};
-
-const WEBHOOK_LABEL: Record<WebhookStatus, string> = {
-  active: "Active",
-  paused: "Paused",
-  failing: "Failing",
-};
-
 export function DeveloperSettings() {
   const toast = useToast();
   const permissions = useWorkspacePermissions();
 
   const keys = useApiKeys();
+  const webhooks = useWebhooks();
+
   const [creating, setCreating] = useState(false);
   const [revoking, setRevoking] = useState<ApiKey | null>(null);
+
+  const [creatingWebhook, setCreatingWebhook] = useState(false);
+  const [selectedWebhook, setSelectedWebhook] = useState<Webhook | null>(null);
+  const [deletingWebhook, setDeletingWebhook] = useState<Webhook | null>(null);
 
   const canView = permissions.can("api_keys", "view");
   const canCreate = permissions.can("api_keys", "create");
   const canManage = permissions.can("api_keys", "manage");
+  const canEditWebhooks = permissions.can("webhooks", "edit");
+
+  /* One updater, so the drawer and the table can never hold two versions of
+     the same endpoint. The list lives in the store; `selectedWebhook` is a
+     local pointer into it and is re-pointed at the new object too. */
+  function patchWebhook(id: string, patch: Partial<Webhook>) {
+    updateWebhook(id, patch);
+    setSelectedWebhook((current) =>
+      current && current.id === id ? { ...current, ...patch } : current,
+    );
+  }
+
+  function toggleWebhook(webhook: Webhook) {
+    if (!canEditWebhooks) {
+      toast(permissionHint("editing webhooks", permissions.roleName), "error");
+      return;
+    }
+
+    const paused = webhook.status === "paused";
+    /* A previously failing endpoint comes back as failing, not as healthy —
+       enabling it does not repair whatever was timing out. */
+    const next: WebhookStatus = paused
+      ? webhook.failures24h > 0
+        ? "failing"
+        : "active"
+      : "paused";
+
+    patchWebhook(webhook.id, { status: next });
+    toast(
+      `${webhook.name} ${paused ? "enabled" : "disabled"}`,
+      paused ? "success" : "info",
+    );
+  }
+
+  /**
+   * The quick test from the row menu.
+   *
+   * Reports through toasts rather than opening the drawer: from a list the
+   * question is "is this one alive", and the answer should not cost a context
+   * switch. The drawer's own Test Webhook gives the full result panel.
+   */
+  function testWebhook(webhook: Webhook) {
+    toast(`Sending test event to ${webhook.name}…`, "info");
+
+    window.setTimeout(() => {
+      if (webhook.status === "failing") {
+        toast(
+          `${webhook.name} did not respond within ${webhook.timeoutSeconds}s`,
+          "error",
+        );
+        return;
+      }
+      toast(`${webhook.name} responded 200 in 186 ms`, "success");
+    }, 1200);
+  }
+
+  function deleteWebhook() {
+    if (!deletingWebhook) return;
+
+    removeWebhook(deletingWebhook.id);
+    if (selectedWebhook?.id === deletingWebhook.id) setSelectedWebhook(null);
+    toast(`${deletingWebhook.name} deleted`, "info");
+    setDeletingWebhook(null);
+  }
 
   if (!canView) {
     return (
       <>
         <PageHeader
           title="API & Developer"
-          description="How external systems connect to this workspace."
+          description="Manage API access, webhooks and developer integrations."
         />
         <Card>
           <EmptyState
@@ -100,7 +171,7 @@ export function DeveloperSettings() {
     <>
       <PageHeader
         title="API & Developer"
-        description="Keys, webhooks and reference for building against MarketFlow."
+        description="Manage API access, webhooks and developer integrations."
         action={
           canCreate ? (
             <Button onClick={() => setCreating(true)}>
@@ -188,79 +259,62 @@ export function DeveloperSettings() {
           title="Webhooks"
           description="Endpoints this workspace posts events to as they happen."
           action={
-            <Link
-              href={APP_ROUTES.integrationsWebhooks}
-              className={buttonVariants({ variant: "outline", size: "sm" })}
-            >
-              Manage webhooks
-              <ArrowUpRight aria-hidden />
-            </Link>
+            <div className="flex flex-wrap items-center gap-2">
+              {canEditWebhooks ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCreatingWebhook(true)}
+                >
+                  <Plus aria-hidden />
+                  Add webhook
+                </Button>
+              ) : null}
+              <Link
+                href={APP_ROUTES.integrationsWebhooks}
+                className={buttonVariants({ variant: "ghost", size: "sm" })}
+              >
+                Delivery history
+                <ArrowUpRight aria-hidden />
+              </Link>
+            </div>
           }
-          bodyClassName={WEBHOOKS.length > 0 ? "p-0" : undefined}
+          bodyClassName={webhooks.length > 0 ? "p-0" : undefined}
         >
-          {WEBHOOKS.length === 0 ? (
+          {webhooks.length === 0 ? (
             <EmptyState
               compact
               title="No webhook endpoints"
               description="Add an endpoint to receive events as they happen instead of polling for them."
+              action={
+                canEditWebhooks ? (
+                  <Button
+                    variant="outline"
+                    size="compact"
+                    onClick={() => setCreatingWebhook(true)}
+                  >
+                    Add webhook
+                  </Button>
+                ) : undefined
+              }
             />
           ) : (
             /*
-             * A summary, not the full webhook screen. Four columns answering
-             * "is it working" — everything that changes an endpoint lives one
-             * link away, where the delivery history is, because a retry you
-             * cannot inspect the log for is a retry taken on faith.
+             * The same `WebhookTable` the Integrations screen renders, over the
+             * same `lib/webhook-store`. Edit, Test, Disable and Delete are the
+             * real actions from that module, so pausing an endpoint here pauses
+             * it there — a webhook is live routing configuration, and two
+             * screens with their own copies would disagree about whether it is
+             * delivering with no way to tell which is right.
              */
             <div className="overflow-x-auto">
-              <Table minWidth="48rem">
-                <THead>
-                  <TH>Endpoint</TH>
-                  <TH>Events</TH>
-                  <TH>Status</TH>
-                  <TH align="right">Last delivery</TH>
-                </THead>
-                <TBody>
-                  {WEBHOOKS.map((webhook) => (
-                    <TR key={webhook.id}>
-                      <TD>
-                        <span className="block font-semibold text-text-primary">
-                          {webhook.name}
-                        </span>
-                        <span className="mt-0.5 block truncate font-mono text-meta font-normal text-text-muted">
-                          {webhook.url}
-                        </span>
-                      </TD>
-
-                      <TD className="font-normal text-text-secondary">
-                        {webhook.events.length} subscribed
-                      </TD>
-
-                      <TD>
-                        <Badge tone={WEBHOOK_TONE[webhook.status]}>
-                          {WEBHOOK_LABEL[webhook.status]}
-                        </Badge>
-                      </TD>
-
-                      <TD align="right" className="font-normal text-text-secondary">
-                        {webhook.lastDeliveryAt ? (
-                          <>
-                            {formatRelativeTime(
-                              webhook.lastDeliveryAt,
-                              INTEGRATIONS_NOW_MS,
-                            )}
-                            <span className="mt-0.5 block text-meta text-text-muted tabular-nums">
-                              {formatCount(webhook.deliveries24h)} in 24h ·{" "}
-                              {formatPercent(webhook.successRate)} ok
-                            </span>
-                          </>
-                        ) : (
-                          "Never"
-                        )}
-                      </TD>
-                    </TR>
-                  ))}
-                </TBody>
-              </Table>
+              <WebhookTable
+                webhooks={webhooks}
+                onOpen={setSelectedWebhook}
+                onToggle={toggleWebhook}
+                onTest={testWebhook}
+                onDelete={setDeletingWebhook}
+              />
             </div>
           )}
         </SettingsSection>
@@ -304,6 +358,37 @@ export function DeveloperSettings() {
           addApiKey(key);
           toast(`${key.name} created`, "success");
         }}
+      />
+
+      {/* Mounted only while open: the dialog holds a one-time signing secret,
+          and remounting is what guarantees it is gone once it is dismissed. */}
+      {creatingWebhook ? (
+        <CreateWebhookDialog
+          open
+          onClose={() => setCreatingWebhook(false)}
+          onCreate={(webhook) => {
+            addWebhook(webhook);
+            toast(`${webhook.name} added`, "success");
+          }}
+        />
+      ) : null}
+
+      <WebhookDetailDrawer
+        webhook={selectedWebhook}
+        open={Boolean(selectedWebhook)}
+        onClose={() => setSelectedWebhook(null)}
+        onToggle={toggleWebhook}
+        onDelete={setDeletingWebhook}
+        onRegenerate={(webhook) =>
+          toast(`Signing secret regenerated for ${webhook.name}`, "success")
+        }
+      />
+
+      <DeleteWebhookDialog
+        webhook={deletingWebhook}
+        open={Boolean(deletingWebhook)}
+        onClose={() => setDeletingWebhook(null)}
+        onConfirm={deleteWebhook}
       />
 
       {/*

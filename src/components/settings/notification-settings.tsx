@@ -41,7 +41,12 @@ import type {
 import { useWorkspacePermissions } from "@/components/workspace/use-workspace-permissions";
 
 import { ServiceNotice } from "./service-notice";
-import { SaveBar, SettingsSection, useSaveState } from "./settings-section";
+import {
+  SaveBar,
+  SettingsRow,
+  SettingsSection,
+  useSaveState,
+} from "./settings-section";
 
 /**
  * Notifications — two settings with one name, told apart.
@@ -82,7 +87,7 @@ export function NotificationSettings() {
     <>
       <PageHeader
         title="Notifications"
-        description="Choose how you receive important workspace notifications."
+        description="Choose which notifications you receive and how they reach you."
       />
 
       <div className="space-y-6">
@@ -318,19 +323,10 @@ function EventRow({
   onToggle: (channel: NotificationChannel, on: boolean) => void;
   idBase: string;
 }) {
-  const titleId = `${idBase}-${event.key}-title`;
-
   return (
-    <div className="flex flex-col gap-2.5 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-      <div className="min-w-0">
-        <p id={titleId} className="text-sm font-semibold text-text-primary">
-          {event.title}
-        </p>
-        <p className="mt-0.5 text-sm text-text-muted">{event.description}</p>
-      </div>
-
-      <div className="flex shrink-0 flex-wrap items-center gap-x-5 gap-y-2">
-        {event.mandatory ? (
+    <SettingsRow
+      actions={
+        event.mandatory ? (
           /*
            * Not a disabled checkbox. "Your password changed" is how somebody
            * finds out it was not them, and a product that lets that be muted
@@ -364,9 +360,12 @@ function EventRow({
               label={`${NOTIFICATION_CHANNEL_LABEL[channel]} — ${event.title}`}
             />
           ))
-        )}
-      </div>
-    </div>
+        )
+      }
+    >
+      <p className="text-sm font-semibold text-text-primary">{event.title}</p>
+      <p className="mt-0.5 text-sm text-text-muted">{event.description}</p>
+    </SettingsRow>
   );
 }
 
@@ -445,26 +444,15 @@ function WorkspacePolicy() {
             const permitted = draft.channels[event.key] ?? event.channels;
 
             return (
-              <div
+              <SettingsRow
                 key={event.key}
-                className="flex flex-col gap-2.5 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
-              >
-                <Checkbox
-                  id={`${id}-${event.key}-enabled`}
-                  checked={on}
-                  disabled={event.mandatory}
-                  onCheckedChange={(next) => setEnabled(event, next)}
-                  label={event.title}
-                  className="min-w-0"
-                />
-
-                <div
-                  className={cn(
-                    "flex shrink-0 flex-wrap items-center gap-x-5 gap-y-2",
-                    !on && "opacity-50",
-                  )}
-                >
-                  {event.mandatory ? (
+                /* Dimmed rather than hidden when the event is off: the channels
+                   an administrator had permitted are what they get back if they
+                   switch it on again, and removing them from view makes that
+                   look like a reset. */
+                className={cn(!on && "[&>div:last-child]:opacity-50")}
+                actions={
+                  event.mandatory ? (
                     <Badge tone="neutral">
                       <Lock className="size-3" aria-hidden />
                       Required
@@ -480,9 +468,17 @@ function WorkspacePolicy() {
                         label={`Allow ${NOTIFICATION_CHANNEL_LABEL[channel]} — ${event.title}`}
                       />
                     ))
-                  )}
-                </div>
-              </div>
+                  )
+                }
+              >
+                <Checkbox
+                  id={`${id}-${event.key}-enabled`}
+                  checked={on}
+                  disabled={event.mandatory}
+                  onCheckedChange={(next) => setEnabled(event, next)}
+                  label={event.title}
+                />
+              </SettingsRow>
             );
           })}
         </SettingsSection>

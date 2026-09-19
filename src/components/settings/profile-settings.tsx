@@ -11,13 +11,16 @@ import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/input";
 import { APP_ROUTES } from "@/constants/app";
 import { AVATAR_RULES } from "@/constants/settings";
+import { MEMBER_STATUS_LABEL } from "@/constants/workspace";
 import { CAPABILITIES, SESSION_MODE, removeAvatar, updateProfile, uploadAvatar } from "@/lib/account-service";
 import { useAccount } from "@/lib/account-store";
+import { formatDate } from "@/lib/format";
 import { isValidPhone } from "@/lib/validation";
 import { displayName } from "@/types/account";
 
 import { ServiceNotice } from "./service-notice";
 import {
+  DetailList,
   SaveBar,
   SettingsSection,
   useSaveState,
@@ -27,7 +30,7 @@ import {
  * Profile — the person, as opposed to the workspace.
  *
  * Everything on this page is about whoever is signed in and nobody else. The
- * workspace name, timezone and currency are one route away under General, and
+ * workspace name, timezone and currency belong to Workspace Settings, and
  * keeping the two apart is what makes either page answerable at a glance:
  * *who am I* here, *what is this workspace* there.
  *
@@ -40,18 +43,22 @@ import {
  * `setCredentials`. Five screens agreed on who was signed in and one did not,
  * so the one changed.
  *
- * Two blocks: the photo, and the details. Both are things you can change.
+ * Two blocks: the photo, and Your Details.
  *
- * There was a third — an "Account information" panel listing workspace, role,
- * account status, joined date, last active and user id as read-only facts — and
- * it is gone. Every one of those either already appears where it is actually
- * used or answers a question nobody asks on this page: role is on the details
- * form beside Job title, where the contrast between the two is the point;
- * workspace and status are the same for the whole team and belong to Workspace
- * Settings; a joined date and a last-active time are somebody else's view of
- * you, which is the Team directory's job. A settings page earns its length by
- * being editable, and a panel of facts at the bottom of it is where the eye
- * stops going.
+ * Your Details holds both halves of "who am I here" — the fields you can change
+ * on top, and what the workspace has granted you below a rule. They are one
+ * card because they are one answer; the read-only half was briefly a third card
+ * at the bottom of the page, which is where the eye stops going.
+ *
+ * The visual difference between the halves is deliberate and does the work no
+ * sentence would: real inputs above, a description list below. A row of greyed
+ * fields would say "you could edit this, but not now" and send somebody hunting
+ * for the unlock.
+ *
+ * Last-active and the user id are not here. Both are somebody else's view of
+ * you rather than something you manage, and the Team directory already shows
+ * them next to everyone else's for comparison, which is the only context in
+ * which either means anything.
  */
 
 export function ProfileSettings() {
@@ -61,7 +68,7 @@ export function ProfileSettings() {
     <>
       <PageHeader
         title="Profile"
-        description="Manage your personal information and account details."
+        description="Manage your personal account information."
       />
 
       <div className="space-y-6">
@@ -358,44 +365,96 @@ function YourDetails() {
         </Field>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Field
-          label="Job title"
-          htmlFor={`${id}-title`}
-          hint="Free text. Shown in the team directory."
-        >
-          <Input
-            id={`${id}-title`}
-            autoComplete="organization-title"
-            value={draft.jobTitle}
-            onChange={(event) => patch({ jobTitle: event.target.value })}
-          />
-        </Field>
+      <Field
+        label="Job title"
+        htmlFor={`${id}-title`}
+        hint="Free text. Shown in the team directory."
+      >
+        <Input
+          id={`${id}-title`}
+          autoComplete="organization-title"
+          value={draft.jobTitle}
+          onChange={(event) => patch({ jobTitle: event.target.value })}
+        />
+      </Field>
 
-        {/*
-          Role sits beside Job title on purpose, as the pairing the spec asks
-          for — and it is deliberately not a field. Job title is what you call
-          yourself; role is what you are allowed to do, and only an owner
-          grants it. Rendering it as a badge with the route that governs it
-          makes the difference visible without a sentence explaining it.
-        */}
-        <div className="space-y-1.5">
-          <p className="block text-sm font-bold text-text-secondary">Role</p>
-          <div className="flex h-11 items-center gap-2.5">
-            <Badge tone="brand">{user.roleName}</Badge>
-            <Link
-              href={APP_ROUTES.workspaceTeam}
-              className="text-sm font-semibold text-primary underline-offset-2 hover:underline"
-            >
-              Team and roles
-            </Link>
-          </div>
-          <p className="text-sm font-medium text-text-muted">
-            Granted by a workspace owner, not requested here.
-          </p>
-        </div>
-      </div>
+      <AccountInformation />
     </SettingsSection>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Account information                                                        */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * What the workspace has decided about you, inside the same card.
+ *
+ * It sits below the editable fields, behind a rule and under its own heading,
+ * rather than in a card of its own at the bottom of the page. Two reasons.
+ * These *are* your details — the same card should answer "who am I here" in
+ * full — and a separate card of read-only facts at the end of a settings page
+ * is where the eye stops going.
+ *
+ * A description list, not disabled inputs. A greyed-out field says "you could
+ * edit this, but not now" and sends somebody hunting for the unlock; a role
+ * granted by an owner and a joined date are not things anybody edits, and
+ * dressing them as fields invites the question. That contrast — real inputs
+ * above, plain facts below — is what makes the boundary legible without a
+ * sentence explaining it.
+ *
+ * Role carries the link to the screen that governs it, because "how do I change
+ * this?" is the one question this block does provoke.
+ */
+function AccountInformation() {
+  const user = useAccount();
+
+  return (
+    <div className="space-y-3 border-t border-border pt-5">
+      <div>
+        <h3 className="text-sm font-semibold text-text-primary">
+          Account information
+        </h3>
+        <p className="mt-0.5 text-sm text-text-muted">
+          Granted by the workspace. Not editable here.
+        </p>
+      </div>
+
+      <DetailList
+        columns={2}
+        items={[
+          {
+            label: "Role",
+            value: (
+              <span className="flex flex-wrap items-center gap-2">
+                <Badge tone="brand">{user.roleName}</Badge>
+                <Link
+                  href={APP_ROUTES.workspaceTeam}
+                  className="text-sm font-semibold text-primary underline-offset-2 hover:underline"
+                >
+                  Team and roles
+                </Link>
+              </span>
+            ),
+          },
+          { label: "Workspace", value: user.workspaceName },
+          {
+            label: "Status",
+            value: (
+              <Badge tone={user.status === "active" ? "success" : "warning"}>
+                {MEMBER_STATUS_LABEL[user.status]}
+              </Badge>
+            ),
+          },
+          {
+            label: "Joined",
+            value: user.joinedAt
+              ? formatDate(user.joinedAt)
+              : "Invitation not yet accepted",
+          },
+        ]}
+      />
+    </div>
   );
 }
 

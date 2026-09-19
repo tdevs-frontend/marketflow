@@ -1,7 +1,6 @@
 export * from "./billing-settings";
 export * from "./change-password-card";
 export * from "./developer-settings";
-export * from "./general-settings";
 export * from "./notification-settings";
 export * from "./profile-settings";
 export * from "./qr-code";
@@ -9,6 +8,7 @@ export * from "./recovery-codes";
 export * from "./security-settings";
 export * from "./service-notice";
 export * from "./settings-nav";
+export * from "./settings-overview";
 export * from "./settings-section";
 export * from "./settings-skeleton";
 export * from "./two-factor-card";

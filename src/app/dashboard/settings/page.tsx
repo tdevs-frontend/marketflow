@@ -1,19 +1,20 @@
 import type { Metadata } from "next";
 
-import { GeneralSettings } from "@/components/settings";
+import { SettingsOverview } from "@/components/settings";
 
 export const metadata: Metadata = {
   title: "Settings",
-  description: "Workspace name, locale, business details and default senders.",
+  description: "Manage your account, notifications, security and subscription.",
 };
 
 /**
- * General — the workspace, as opposed to the person.
+ * The account hub, not a form.
  *
- * The module's landing page, and deliberately the workspace one: somebody who
- * clicks "Settings" is usually after the workspace name, the timezone or the
- * currency. Anything personal is one link away under Profile.
+ * This route used to be "General" and carried a second copy of the workspace
+ * name, timezone, currency, business details and default senders — all of which
+ * Workspace Settings owns. It now shows those values read-only with a link to
+ * that editor, and gives each account section a live status line.
  */
 export default function SettingsPage() {
-  return <GeneralSettings />;
+  return <SettingsOverview />;
 }

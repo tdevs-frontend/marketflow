@@ -14,7 +14,13 @@ import { useToast } from "@/components/ui/toast";
 import { WEBHOOK_STATUS_LABEL } from "@/constants/integrations";
 import { useDebounce } from "@/hooks/useDebounce";
 import { formatCount, formatPercent } from "@/lib/format";
-import { WEBHOOKS, webhookTotals } from "@/lib/integration-fixtures";
+import { webhookTotals } from "@/lib/integration-fixtures";
+import {
+  addWebhook,
+  removeWebhook,
+  updateWebhook,
+  useWebhooks,
+} from "@/lib/webhook-store";
 import type { Webhook, WebhookStatus } from "@/types/integration";
 import { WebhookDetailDrawer } from "./webhook-detail-drawer";
 import {
@@ -50,7 +56,11 @@ const STATUS_OPTIONS = [
 export function WebhooksWorkspace() {
   const toast = useToast();
 
-  const [webhooks, setWebhooks] = useState<Webhook[]>(WEBHOOKS);
+  /* One register, shared with Settings → API & Developer. A webhook is live
+     routing configuration; two screens holding their own copies would disagree
+     about whether an endpoint is delivering, with no way to tell which is
+     right short of watching the downstream system. */
+  const webhooks = useWebhooks();
   const [search, setSearch] = useState("");
   const debounced = useDebounce(search, 250);
   const [status, setStatus] = useState<string>(ALL);
@@ -108,11 +118,10 @@ export function WebhooksWorkspace() {
   }, [debounced, status, webhooks]);
 
   /* One updater, so the drawer and the table can never hold two versions of
-     the same endpoint. `selected` is re-pointed at the new object too. */
+     the same endpoint. The list lives in the store; `selected` is a local
+     pointer into it and is re-pointed at the new object too. */
   function update(id: string, patch: Partial<Webhook>) {
-    setWebhooks((current) =>
-      current.map((item) => (item.id === id ? { ...item, ...patch } : item)),
-    );
+    updateWebhook(id, patch);
     setSelected((current) =>
       current && current.id === id ? { ...current, ...patch } : current,
     );
@@ -134,7 +143,7 @@ export function WebhooksWorkspace() {
 
   function remove() {
     if (!deleting) return;
-    setWebhooks((current) => current.filter((item) => item.id !== deleting.id));
+    removeWebhook(deleting.id);
     if (selected?.id === deleting.id) setSelected(null);
     toast(`${deleting.name} deleted`, "info");
     setDeleting(null);
@@ -241,7 +250,7 @@ export function WebhooksWorkspace() {
         <CreateWebhookDialog
           open
           onClose={() => setCreating(false)}
-          onCreate={(webhook) => setWebhooks((current) => [webhook, ...current])}
+          onCreate={addWebhook}
         />
       ) : null}
 

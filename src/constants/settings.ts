@@ -2,13 +2,11 @@ import type { LucideIcon } from "lucide-react";
 import {
   Bell,
   CreditCard,
-  Mail,
+  LayoutGrid,
   Megaphone,
-  MessageCircle,
+  MessagesSquare,
   Package,
-  Settings as SettingsIcon,
   ShieldCheck,
-  Smartphone,
   Terminal,
   UserPlus,
   UserRound,
@@ -34,9 +32,9 @@ import type {
  * for an event nothing emits is a switch the merchant sets once and is then
  * quietly failed by.
  *
- * The second is the page list. Settings is six routes now rather than one page
- * of tabs, and the sidebar, the in-module strip and the route table all have to
- * agree on what those six are. One array, three readers.
+ * The second is the page list. Settings is six routes, and the module's left
+ * navigation, the route table and every cross-link have to agree on what those
+ * six are. One array, read everywhere.
  */
 
 /* -------------------------------------------------------------------------- */
@@ -49,58 +47,105 @@ export interface SettingsPage {
   icon: LucideIcon;
   /** The one-line subtitle the page header renders. */
   description: string;
+  /** The shorter line used on the overview cards. */
+  summary: string;
+}
+
+export interface SettingsNavGroup {
+  /** The small caps heading above the group in the left navigation. */
+  title: string;
+  items: SettingsPage[];
 }
 
 /**
- * The six sections, in the order they are presented everywhere.
+ * Settings, grouped the way it is navigated.
  *
- * Ordered by how often a person needs them and by whose they are: the
- * workspace first, then the person, then the two that belong to somebody with
- * a particular job — the owner who pays, and the developer who integrates.
+ * Three groups, and the grouping is the mental model rather than decoration:
+ * the first is *you*, the second is *what the workspace pays for*, the third is
+ * *how other systems reach it*. A reader who wants the second or third knows it
+ * immediately from the heading and never scans the first.
  *
- * Security is one page holding two sections rather than two routes. Change
- * Password and Two-Factor are read together — "is my account safe" is one
- * question — and splitting them puts a route between the two halves of one
- * answer.
+ * **Overview is a destination, not a section.** It is the only link back to
+ * `/dashboard/settings`, which is where the workspace summary and the account
+ * status lines live; without it the hub is reachable only from the global
+ * sidebar, which is a dead end nobody looks for.
+ *
+ * **There is no General.** It used to be a second editor for the workspace name,
+ * timezone, currency, business details and default senders — every one of which
+ * Workspace Settings already owns. Two editors for one value is not a
+ * convenience, it is a question about which screen is telling the truth, and
+ * the merchant has no way to answer it. The overview carries a read-only
+ * summary of those values and one link to the screen that owns them.
  */
-export const SETTINGS_PAGES: SettingsPage[] = [
+export const SETTINGS_NAV: SettingsNavGroup[] = [
   {
-    title: "General",
-    href: APP_ROUTES.settings,
-    icon: SettingsIcon,
-    description: "Workspace name, locale, business details and default senders.",
+    title: "Settings",
+    items: [
+      {
+        title: "Overview",
+        href: APP_ROUTES.settings,
+        icon: LayoutGrid,
+        description: "Manage your account, notifications, security and subscription.",
+        summary: "Where everything in Settings lives.",
+      },
+      {
+        title: "Profile",
+        href: APP_ROUTES.settingsProfile,
+        icon: UserRound,
+        description: "Manage your personal account information.",
+        summary: "Your name, photo and contact details.",
+      },
+      {
+        title: "Notifications",
+        href: APP_ROUTES.settingsNotifications,
+        icon: Bell,
+        description: "Choose which notifications you receive and how they reach you.",
+        summary: "What reaches you, and on which channel.",
+      },
+      {
+        title: "Security",
+        href: APP_ROUTES.settingsSecurity,
+        icon: ShieldCheck,
+        description: "Protect your account and manage authentication.",
+        summary: "Password and two-factor authentication.",
+      },
+    ],
   },
   {
-    title: "Profile",
-    href: APP_ROUTES.settingsProfile,
-    icon: UserRound,
-    description: "Manage your personal information and account details.",
+    title: "Billing",
+    items: [
+      {
+        title: "Billing & Subscription",
+        href: APP_ROUTES.settingsBilling,
+        icon: CreditCard,
+        description: "Manage your MarketFlow plan, usage and billing.",
+        summary: "Your plan, usage and payment.",
+      },
+    ],
   },
   {
-    title: "Notifications",
-    href: APP_ROUTES.settingsNotifications,
-    icon: Bell,
-    description: "Choose how you receive important workspace notifications.",
-  },
-  {
-    title: "Security",
-    href: APP_ROUTES.settingsSecurity,
-    icon: ShieldCheck,
-    description: "Protect your account and manage authentication.",
-  },
-  {
-    title: "Billing & Subscription",
-    href: APP_ROUTES.settingsBilling,
-    icon: CreditCard,
-    description: "Your plan, what it costs and what this workspace is using.",
-  },
-  {
-    title: "API & Developer",
-    href: APP_ROUTES.settingsApi,
-    icon: Terminal,
-    description: "Keys, webhooks and reference for building against MarketFlow.",
+    title: "Developer",
+    items: [
+      {
+        title: "API & Developer",
+        href: APP_ROUTES.settingsApi,
+        icon: Terminal,
+        description: "Manage API access, webhooks and developer integrations.",
+        summary: "Keys, webhooks and documentation.",
+      },
+    ],
   },
 ];
+
+/** Flat, in navigation order. For lookups and for the overview grid. */
+export const SETTINGS_PAGES: SettingsPage[] = SETTINGS_NAV.flatMap(
+  (group) => group.items,
+);
+
+/** The five sections the overview links to — everything except itself. */
+export const SETTINGS_SECTIONS: SettingsPage[] = SETTINGS_PAGES.filter(
+  (page) => page.href !== APP_ROUTES.settings,
+);
 
 /* -------------------------------------------------------------------------- */
 /* Notification catalogue                                                     */
@@ -126,39 +171,27 @@ export const NOTIFICATION_CATEGORIES: NotificationCategoryDef[] = [
     icon: Megaphone,
   },
   {
-    key: "automations",
-    label: "Automations",
-    description: "Workflow runs and the steps inside them.",
-    icon: Workflow,
-  },
-  {
     key: "leads",
     label: "Leads",
     description: "People entering and moving through the pipeline.",
     icon: UserPlus,
   },
   {
-    key: "whatsapp",
-    label: "WhatsApp",
-    description: "The shared inbox and who is answering it.",
-    icon: MessageCircle,
+    key: "messaging",
+    label: "Messaging",
+    description: "Channel activity across WhatsApp, email and SMS.",
+    icon: MessagesSquare,
   },
   {
-    key: "email",
-    label: "Email",
-    description: "Sender identities and deliverability.",
-    icon: Mail,
-  },
-  {
-    key: "sms",
-    label: "SMS",
-    description: "Sender IDs and opt-outs.",
-    icon: Smartphone,
+    key: "automations",
+    label: "Automations",
+    description: "Workflow runs and the steps inside them.",
+    icon: Workflow,
   },
   {
     key: "orders",
     label: "Orders",
-    description: "Sales, payments and stock levels.",
+    description: "Sales and how they progress.",
     icon: Package,
   },
   {
@@ -166,12 +199,6 @@ export const NOTIFICATION_CATEGORIES: NotificationCategoryDef[] = [
     label: "Security",
     description: "Changes to how your account is protected.",
     icon: ShieldCheck,
-  },
-  {
-    key: "system",
-    label: "System",
-    description: "Connections and developer access.",
-    icon: Terminal,
   },
 ];
 
@@ -183,16 +210,22 @@ const IN_APP: NotificationChannel[] = ["in_app"];
  *
  * `defaultChannels` is the editorial part. The rule applied throughout: mail is
  * the default only where *not* knowing costs money or leaves a customer waiting
- * — a campaign that failed, an automation that threw, a payment that did not
- * go through, a connection that dropped. Everything else starts in-app, because
- * an inbox that fills with routine dashboard activity is an inbox somebody
- * builds a filter for, and the filter catches the important one too.
+ * — a campaign that failed, an automation that threw, an order whose payment did
+ * not go through. Everything else starts in-app, because an inbox that fills
+ * with routine dashboard activity is an inbox somebody builds a filter for, and
+ * the filter catches the important one too.
  *
- * The security rows are `mandatory`. "Your password changed" and "Two-factor
- * was turned off" are how a person finds out it was not them; a product that
- * lets those be muted has built the attacker a quiet room. They render as a
- * fixed state with a reason rather than as a disabled checkbox nobody can
- * explain.
+ * The security rows are `mandatory`. "Your password changed" and "Two-factor was
+ * turned off" are how a person finds out it was not them; a product that lets
+ * those be muted has built the attacker a quiet room. They render as a fixed
+ * state with a reason rather than as a disabled checkbox nobody can explain.
+ *
+ * The three Messaging rows are deliberately one row per channel rather than one
+ * per event. A merchant's question is "do I want to hear about WhatsApp", not
+ * "do I want to hear about inbound messages on conversations assigned to me but
+ * not about sender verification"; splitting them produced nine rows that were
+ * always set the same way. `source` still names every underlying trigger, so
+ * the row can be checked against the code.
  */
 export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
   /* -- Campaigns --------------------------------------------------------- */
@@ -203,7 +236,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "Get notified when a campaign finishes sending.",
     channels: BOTH,
     defaultChannels: IN_APP,
-    source: "lib/campaign-fixtures — campaign status reaches sent",
+    source: "lib/marketing-fixtures — campaign status reaches completed",
   },
   {
     key: "campaign.failed",
@@ -212,7 +245,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A send that stopped part way, with what it reached first.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "lib/campaign-fixtures — campaign status reaches failed",
+    source: "lib/marketing-fixtures — campaign status reaches failed",
   },
   {
     key: "campaign.scheduled",
@@ -221,7 +254,65 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "Confirmation that a campaign is queued, and for when.",
     channels: IN_APP,
     defaultChannels: IN_APP,
-    source: "lib/campaign-fixtures — campaign status reaches scheduled",
+    source: "lib/marketing-fixtures — campaign status reaches scheduled",
+  },
+
+  /* -- Leads ------------------------------------------------------------- */
+  {
+    key: "lead.captured",
+    category: "leads",
+    title: "New lead captured",
+    description: "Receive an alert when a new lead enters the workspace.",
+    channels: BOTH,
+    defaultChannels: IN_APP,
+    source: "lib/customer-fixtures — lead created",
+  },
+  {
+    key: "lead.assigned",
+    category: "leads",
+    title: "Lead assigned",
+    description: "Only leads where you are set as the owner.",
+    channels: BOTH,
+    defaultChannels: IN_APP,
+    source: "lib/customer-fixtures — lead ownerId set to you",
+  },
+  {
+    key: "lead.qualified",
+    category: "leads",
+    title: "Lead qualified",
+    description: "A lead you own moved into the qualified stage.",
+    channels: IN_APP,
+    defaultChannels: IN_APP,
+    source: "types/lead — stage reaches qualified",
+  },
+
+  /* -- Messaging --------------------------------------------------------- */
+  {
+    key: "messaging.whatsapp",
+    category: "messaging",
+    title: "WhatsApp activity",
+    description: "Conversations assigned to you, and replies on the ones you own.",
+    channels: BOTH,
+    defaultChannels: IN_APP,
+    source: "types/whatsapp — conversation assignee, inbound message",
+  },
+  {
+    key: "messaging.email",
+    category: "messaging",
+    title: "Email activity",
+    description: "Sender verification results and deliverability problems.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "types/email — SenderStatus, EmailProviderStatus",
+  },
+  {
+    key: "messaging.sms",
+    category: "messaging",
+    title: "SMS activity",
+    description: "Sender ID approvals, operator blocks and opt-outs.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "types/sms — SmsSenderStatus, SmsContactStatus",
   },
 
   /* -- Automations ------------------------------------------------------- */
@@ -244,129 +335,31 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     source: "lib/workflow-fixtures — run status failed",
   },
 
-  /* -- Leads ------------------------------------------------------------- */
-  {
-    key: "lead.captured",
-    category: "leads",
-    title: "New lead captured",
-    description: "Receive an alert when a new lead enters the workspace.",
-    channels: BOTH,
-    defaultChannels: IN_APP,
-    source: "lib/customer-fixtures — lead created",
-  },
-  {
-    key: "lead.qualified",
-    category: "leads",
-    title: "Lead qualified",
-    description: "A lead moved into the qualified stage.",
-    channels: IN_APP,
-    defaultChannels: IN_APP,
-    source: "types/lead — stage reaches qualified",
-  },
-  {
-    key: "lead.assigned",
-    category: "leads",
-    title: "Lead assigned to me",
-    description: "Only leads where you are set as the owner.",
-    channels: BOTH,
-    defaultChannels: IN_APP,
-    source: "lib/customer-fixtures — lead ownerId",
-  },
-
-  /* -- WhatsApp ---------------------------------------------------------- */
-  {
-    key: "whatsapp.conversation_assigned",
-    category: "whatsapp",
-    title: "Conversation assigned to me",
-    description: "From the shared inbox, or a workflow that routes to an owner.",
-    channels: BOTH,
-    defaultChannels: IN_APP,
-    source: "types/whatsapp — conversation assignee",
-  },
-  {
-    key: "whatsapp.message_received",
-    category: "whatsapp",
-    title: "New message in a conversation I own",
-    description: "Inbound replies on threads assigned to you.",
-    channels: IN_APP,
-    defaultChannels: IN_APP,
-    source: "types/whatsapp — inbound message on an assigned conversation",
-  },
-
-  /* -- Email ------------------------------------------------------------- */
-  {
-    key: "email.sender_verified",
-    category: "email",
-    title: "Sender identity verified or rejected",
-    description: "The result of verifying a from-address you added.",
-    channels: BOTH,
-    defaultChannels: BOTH,
-    source: "types/email — SenderStatus reaches verified or failed",
-  },
-
-  /* -- SMS --------------------------------------------------------------- */
-  {
-    key: "sms.sender_status",
-    category: "sms",
-    title: "Sender ID approved or blocked",
-    description: "Operators can block a sender ID after it is in use.",
-    channels: BOTH,
-    defaultChannels: BOTH,
-    source: "types/sms — SmsSenderStatus reaches active or blocked",
-  },
-  {
-    key: "sms.opt_out",
-    category: "sms",
-    title: "Contact opts out of SMS",
-    description: "Opt-outs are applied immediately and cannot be reversed by you.",
-    channels: IN_APP,
-    defaultChannels: IN_APP,
-    source: "types/sms — SmsContactStatus reaches opted-out",
-  },
-
   /* -- Orders ------------------------------------------------------------ */
   {
-    key: "order.placed",
+    key: "order.created",
     category: "orders",
-    title: "New order placed",
+    title: "New order",
     description: "Every order, whatever channel it came from.",
     channels: BOTH,
     defaultChannels: IN_APP,
     source: "types/commerce — order created",
   },
   {
-    key: "order.payment_failed",
+    key: "order.status_changed",
     category: "orders",
-    title: "Payment failed",
-    description: "An order whose payment did not go through.",
+    title: "Order status changed",
+    description: "Paid, shipped, cancelled or refunded — including failed payments.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "types/commerce — PaymentStatus reaches failed",
-  },
-  {
-    key: "order.refunded",
-    category: "orders",
-    title: "Order refunded",
-    description: "Money returned to a customer, and by whom.",
-    channels: BOTH,
-    defaultChannels: IN_APP,
-    source: "types/commerce — PaymentStatus reaches refunded",
-  },
-  {
-    key: "inventory.low_stock",
-    category: "orders",
-    title: "Stock runs low",
-    description: "A product fell below its own low-stock threshold.",
-    channels: BOTH,
-    defaultChannels: IN_APP,
-    source: "types/commerce — StockStatus reaches low-stock",
+    source: "types/commerce — OrderStatus and PaymentStatus transitions",
   },
 
   /* -- Security ---------------------------------------------------------- */
   {
     key: "security.new_login",
     category: "security",
-    title: "New sign-in to your account",
+    title: "New login",
     description: "A sign-in from a browser or device you have not used before.",
     channels: BOTH,
     defaultChannels: BOTH,
@@ -386,46 +379,15 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
   {
     key: "security.two_factor_changed",
     category: "security",
-    title: "Two-factor authentication changed",
+    title: "2FA changed",
     description: "Sent when two-factor is enabled, disabled or re-enrolled.",
     channels: BOTH,
     defaultChannels: BOTH,
     mandatory: true,
     source: "account service — two-factor state changed",
   },
-
-  /* -- System ------------------------------------------------------------ */
-  {
-    key: "system.integration_disconnected",
-    category: "system",
-    title: "Integration disconnected",
-    description: "A revoked connection stops every journey that uses it.",
-    channels: BOTH,
-    defaultChannels: BOTH,
-    source: "lib/integration-fixtures — connection status",
-  },
-  {
-    key: "system.api_key_revoked",
-    category: "system",
-    title: "API key created or revoked",
-    description: "Any change to the keys that can reach your data.",
-    channels: BOTH,
-    defaultChannels: IN_APP,
-    source: "types/integration — ApiKeyStatus",
-  },
-  {
-    key: "system.webhook_failing",
-    category: "system",
-    title: "Webhook endpoint failing",
-    description: "Deliveries have been failing long enough to need attention.",
-    channels: BOTH,
-    defaultChannels: BOTH,
-    source: "types/integration — WebhookStatus reaches failing",
-  },
 ];
 
-export const NOTIFICATION_EVENT_BY_KEY: Record<string, NotificationEventDef> =
-  Object.fromEntries(NOTIFICATION_EVENTS.map((event) => [event.key, event]));
 
 /** The catalogue grouped for rendering, skipping categories with no events. */
 export function notificationEventsByCategory(

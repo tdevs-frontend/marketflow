@@ -72,6 +72,53 @@ export function SettingsSection({
 }
 
 /* -------------------------------------------------------------------------- */
+/* Row                                                                        */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * One setting inside a divided section: what it is on the left, its controls on
+ * the right.
+ *
+ * The shape the long lists repeat — every notification row, in both the member
+ * and the administrator view. It exists because those two were the same eight
+ * utility classes written twice, and a row that drifts by a few pixels between
+ * two lists of the same thing is the kind of difference everybody sees and
+ * nobody can name.
+ *
+ * Stacks below `sm`, where there is no room for two columns and the controls
+ * belong under the label they apply to rather than squeezed beside it.
+ *
+ * `px-5` matches `CardBody`'s padding, so a section using this passes
+ * `bodyClassName="divide-y divide-border p-0"` and the dividing rules run the
+ * full width of the card while the text still lines up with every other card.
+ */
+export function SettingsRow({
+  children,
+  actions,
+  className,
+}: {
+  /** The label and its description. */
+  children: ReactNode;
+  /** Checkboxes, badges — whatever the row is set with. */
+  actions: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex flex-col gap-2.5 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-6",
+        className,
+      )}
+    >
+      <div className="min-w-0">{children}</div>
+      <div className="flex shrink-0 flex-wrap items-center gap-x-5 gap-y-2">
+        {actions}
+      </div>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
 /* Read-only detail                                                           */
 /* -------------------------------------------------------------------------- */
 

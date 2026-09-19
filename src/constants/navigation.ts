@@ -228,28 +228,26 @@ export const dashboardNav: NavSection[] = [
     title: "Settings",
     items: [
       /*
-       * Six rows, one per section, matching `constants/settings.SETTINGS_PAGES`
-       * exactly — the same six the in-module strip renders, in the same order.
+       * One row for the whole module — the same split Integrations follows.
        *
-       * They were four tabs on one page, and the tabs cost more than the rows
-       * they saved: no deep link to Security, no back button between Profile
-       * and Notifications, and every panel unmounted the moment you left it,
-       * so a half-finished form was gone on the way to check something. The
-       * sections are also not four readings of one thing — General is the
-       * workspace, Profile is the person, Security is the account's locks —
-       * and tabs are for readings of one thing.
+       * Settings now carries its own navigation rail (see
+       * `components/settings/settings-nav`, built from
+       * `constants/settings.SETTINGS_NAV`), which lists Overview, Profile,
+       * Notifications, Security, Billing and API grouped by what they are
+       * about. Repeating those six here would be the sidebar doing the rail's
+       * job: twelve entries for six destinations, in a sidebar that is already
+       * the longest thing on the screen.
        *
-       * Change Password and Two-Factor deliberately do not appear here. They
-       * are the two halves of "is my account safe", they are read together,
-       * and a sidebar row per card is how a settings menu becomes a table of
-       * contents nobody scans.
+       * This is the strategy the sidebar was designed around and that
+       * Marketing, Commerce and Integrations all follow — the sidebar carries
+       * business areas, the module carries its own pages.
+       *
+       * Note the row deliberately has no `items`: as the only href under
+       * `/dashboard/settings` it drops out of the sidebar's `EXACT_HREFS` set
+       * and so stays lit on every page in the module rather than only on the
+       * hub.
        */
-      { title: "General", href: "/dashboard/settings", icon: "settings" },
-      { title: "Profile", href: "/dashboard/settings/profile", icon: "user" },
-      { title: "Notifications", href: "/dashboard/settings/notifications", icon: "bell" },
-      { title: "Security", href: "/dashboard/settings/security", icon: "shield-check" },
-      { title: "Billing & Subscription", href: "/dashboard/settings/billing", icon: "credit-card" },
-      { title: "API & Developer", href: "/dashboard/settings/api", icon: "terminal" },
+      { title: "Settings", href: "/dashboard/settings", icon: "settings" },
     ],
   },
 ];

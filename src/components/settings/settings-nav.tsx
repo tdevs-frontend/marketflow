@@ -1,29 +1,156 @@
-import { ModuleNav } from "@/components/layout/module-nav";
-import { SETTINGS_PAGES } from "@/constants/settings";
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+import { SETTINGS_NAV, SETTINGS_PAGES } from "@/constants/settings";
+import { cn, isActiveRoute } from "@/lib/utils";
 
 /**
- * The six Settings sections, as a strip of links.
+ * The Settings module's own navigation.
  *
- * Links rather than `Tabs`, and that is the substantive change. These were tab
- * panels swapped in place, which meant the URL never moved: no deep link to
- * Security, no back button between Profile and Notifications, nothing to paste
- * into a message when somebody asks where two-factor lives, and every panel
- * destroyed the moment you left it — so a half-finished form was gone on the
- * way to check something on another tab.
+ * One component, two shapes, because the two viewports are answering different
+ * questions. On desktop there is room for a rail that shows the whole module at
+ * once — all six destinations, grouped, with the current one lit — and that
+ * standing map is what makes Settings feel like a place rather than a series of
+ * pages. On a phone there is no such room, so it collapses to a scrolling strip
+ * of the same links in the same order: fewer things visible, nothing hidden
+ * behind a control you have to think to open.
  *
- * `ModuleNav` is the component Integrations, WhatsApp and Email already use for
- * exactly this, down to `aria-current="page"` and the middle-clickable anchors
- * a tab cannot offer. It looks like the tab strip on purpose, so the two read as
- * one system; the difference is in what it promises.
+ * Links, not tabs. These are routes, so they belong in a `<nav>`, they are
+ * middle-clickable, and the current one is announced with `aria-current="page"`
+ * rather than `aria-selected`. The tab strip this replaced could not be deep
+ * linked at all — there was no URL for Security to paste to anybody.
  *
- * One array feeds this and the sidebar — `constants/settings.SETTINGS_PAGES` —
- * so the two lists cannot drift.
+ * `SETTINGS_NAV` is the single list. The groups are the mental model: you,
+ * then what the workspace pays for, then how other systems reach it.
  */
+
+/**
+ * Longest match wins, so `/settings/profile` lights Profile rather than Profile
+ * *and* Overview at `/settings`.
+ */
+function useActiveHref(): string | null {
+  const pathname = usePathname();
+
+  return SETTINGS_PAGES.reduce<string | null>((best, page) => {
+    if (!isActiveRoute(pathname, page.href)) return best;
+    return !best || page.href.length > best.length ? page.href : best;
+  }, null);
+}
+
 export function SettingsNav() {
+  const active = useActiveHref();
+
   return (
-    <ModuleNav
-      items={SETTINGS_PAGES.map(({ title, href }) => ({ title, href }))}
-      label="Settings sections"
-    />
+    <>
+      <DesktopNav active={active} />
+      <MobileNav active={active} />
+    </>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Desktop                                                                    */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Sticky, because Billing and Notifications are long pages and a rail that
+ * scrolls away is a rail you have to go back for. `top-22` clears the dashboard
+ * header, which is `h-18` and sticky itself.
+ */
+function DesktopNav({ active }: { active: string | null }) {
+  return (
+    <nav
+      aria-label="Settings sections"
+      className="sticky top-22 hidden self-start lg:block"
+    >
+      <div className="space-y-6">
+        {SETTINGS_NAV.map((group) => (
+          <div key={group.title}>
+            <p className="px-3 text-meta font-semibold tracking-wide text-text-muted uppercase">
+              {group.title}
+            </p>
+
+            <ul className="mt-2 space-y-0.5">
+              {group.items.map((page) => {
+                const current = page.href === active;
+                const Icon = page.icon;
+
+                return (
+                  <li key={page.href}>
+                    <Link
+                      href={page.href}
+                      aria-current={current ? "page" : undefined}
+                      className={cn(
+                        "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                        /* The colour lives on each branch rather than in a
+                           shared base: `cn()` is a plain join, so a base-level
+                           colour would race the active one in the stylesheet
+                           instead of losing to it cleanly. */
+                        current
+                          ? "bg-primary-soft font-semibold text-primary-dark"
+                          : "text-text-secondary hover:bg-surface-secondary hover:text-text-primary",
+                      )}
+                    >
+                      <Icon className="size-4 shrink-0" aria-hidden />
+                      {page.title}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Mobile                                                                     */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The same links as a horizontally scrolling strip.
+ *
+ * Not a `<select>`. A dropdown hides every destination behind a tap and gives
+ * no sense of how much there is; the strip shows three at a time and the cut-off
+ * fourth is what tells the reader to swipe. The group headings are dropped
+ * rather than squeezed in — six items do not need sub-headings when they are on
+ * one line, and the order still carries the grouping.
+ *
+ * `-mx-4` and the matching padding let it bleed to the screen edge inside the
+ * dashboard's `p-4` main, so the last item scrolls fully into view instead of
+ * stopping against a gutter.
+ */
+function MobileNav({ active }: { active: string | null }) {
+  return (
+    <nav
+      aria-label="Settings sections"
+      className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6 md:-mx-7 md:px-7 lg:hidden"
+    >
+      {SETTINGS_PAGES.map((page) => {
+        const current = page.href === active;
+        const Icon = page.icon;
+
+        return (
+          <Link
+            key={page.href}
+            href={page.href}
+            aria-current={current ? "page" : undefined}
+            className={cn(
+              "inline-flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-medium whitespace-nowrap transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+              current
+                ? "border-primary bg-primary-soft font-semibold text-primary-dark"
+                : "border-border bg-surface text-text-secondary hover:border-border-strong hover:text-text-primary",
+            )}
+          >
+            <Icon className="size-4 shrink-0" aria-hidden />
+            {page.title}
+          </Link>
+        );
+      })}
+    </nav>
   );
 }

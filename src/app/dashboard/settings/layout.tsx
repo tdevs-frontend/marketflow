@@ -1,29 +1,32 @@
 import { SettingsNav } from "@/components/settings";
 
 /**
- * The Settings module, and its own navigation.
+ * The Settings shell: navigation rail beside the section.
  *
- * The strip above the page is the same pattern Integrations, WhatsApp and Email
- * already use: the sidebar carries the module, and the module carries its own
- * pages. Somebody who arrives on Security from a link needs to see the section
- * they are inside and be able to move sideways within it without going back to
- * the sidebar.
+ * `lg:grid-cols-[13.5rem_minmax(0,1fr)]` — a fixed rail and a content column
+ * that is allowed to be narrower than its contents. The `minmax(0,1fr)` is
+ * load-bearing: a grid track defaults to `min-content`, so one wide element
+ * inside a section (the API key table, the webhook endpoints) would push the
+ * column out and scroll the whole page sideways instead of scrolling itself.
  *
- * One list feeds both — `constants/settings.SETTINGS_PAGES` — so the six rows
- * in the sidebar and the six links here cannot drift apart.
+ * Below `lg` it is one column and the rail becomes a scrolling strip above the
+ * content — see `SettingsNav`.
  *
- * Each page renders its own `PageHeader`. The strip has to sit above it for the
- * heading to belong to the page rather than to the module, which is also why
- * there is no "Settings" title in this layout: six sections with six different
- * answers are not one page with a subtitle.
+ * The page heading stays in the content column rather than spanning the shell.
+ * Each route says what *it* is ("Profile — manage your personal account
+ * information"), and a module-level title above the rail would make those read
+ * as subtitles of a page nobody is on.
+ *
+ * The dashboard layout gives `main` a `space-y-6`, which is what separates the
+ * rail row from nothing else here — the grid supplies its own gap.
  */
 export default function SettingsLayout({
   children,
 }: LayoutProps<"/dashboard/settings">) {
   return (
-    <>
+    <div className="grid gap-6 lg:grid-cols-[13.5rem_minmax(0,1fr)] lg:gap-8">
       <SettingsNav />
-      {children}
-    </>
+      <div className="min-w-0 space-y-6">{children}</div>
+    </div>
   );
 }

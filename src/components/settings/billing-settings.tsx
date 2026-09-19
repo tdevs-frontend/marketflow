@@ -72,7 +72,7 @@ export function BillingSettings() {
       <>
         <PageHeader
           title="Billing & Subscription"
-          description="What this workspace subscribes to."
+          description="Manage your MarketFlow plan, usage and billing."
         />
         <Card>
           <EmptyState
@@ -88,7 +88,7 @@ export function BillingSettings() {
     <>
       <PageHeader
         title="Billing & Subscription"
-        description="Your plan, what it costs and what this workspace is using."
+        description="Manage your MarketFlow plan, usage and billing."
         action={
           <Link
             href={APP_ROUTES.pricing}

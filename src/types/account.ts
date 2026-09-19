@@ -99,17 +99,21 @@ export function displayName(user: AccountUser): string {
  */
 export type NotificationChannel = "in_app" | "email";
 
-/** The nine areas the notification catalogue is grouped under. */
+/**
+ * The six areas the notification catalogue is grouped under.
+ *
+ * `messaging` covers WhatsApp, email and SMS as one group rather than three.
+ * The question a merchant is answering is "do I want to hear about WhatsApp",
+ * not "do I want inbound messages but not sender verification", and the split
+ * version produced nine rows that were always set identically.
+ */
 export type NotificationCategory =
   | "campaigns"
-  | "automations"
   | "leads"
-  | "whatsapp"
-  | "email"
-  | "sms"
+  | "messaging"
+  | "automations"
   | "orders"
-  | "security"
-  | "system";
+  | "security";
 
 /**
  * One thing the product can tell you about.
