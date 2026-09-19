@@ -17,7 +17,10 @@ import {
 import { ButtonLink } from "@/components/ui/button";
 import { ChartCard, PanelCard } from "@/components/ui/chart-card";
 import { StatsGrid, type StatItem } from "@/components/ui/stats-card";
-import { CHANNEL_SERIES } from "@/components/dashboard/charts/chart-theme";
+import {
+  CHANNEL_SERIES,
+  CHART_COLORS,
+} from "@/components/dashboard/charts/chart-theme";
 import { TrendChart } from "@/components/dashboard/charts/trend-chart";
 import { CHANNEL_THEME } from "@/constants/channels";
 import { APP_ROUTES } from "@/constants";
@@ -175,16 +178,22 @@ export function SmsOverview() {
             },
             {
               label: "Delivered",
-              swatch: "bg-accent",
+              swatch: "bg-success",
               value: formatNumber(SMS_SERIES.delivered.at(-1) ?? 0),
             },
             {
               label: "Replies",
-              swatch: "bg-border-strong",
+              swatch: "bg-accent",
               value: formatNumber(SMS_SERIES.replies.at(-1) ?? 0),
             },
           ]}
         >
+          {/* The channel ramp — purple, light purple, grey — drew delivered
+              and replies as two shades of the same idea, and it put this chart
+              at odds with the panel beside it, where delivered is green. One
+              vocabulary across the module instead: the channel's own hue for
+              the raw send, green for the carrier accepting it, cyan for a
+              human answering. The same three colours Analytics uses. */}
           <TrendChart
             categories={SMS_DAY_LABELS}
             series={[
@@ -192,7 +201,11 @@ export function SmsOverview() {
               { name: "Delivered", data: SMS_SERIES.delivered },
               { name: "Replies", data: SMS_SERIES.replies },
             ]}
-            colors={CHANNEL_SERIES.sms}
+            colors={[
+              CHANNEL_SERIES.sms[0],
+              CHART_COLORS.success,
+              CHART_COLORS.accent,
+            ]}
             unit="messages"
           />
         </ChartCard>

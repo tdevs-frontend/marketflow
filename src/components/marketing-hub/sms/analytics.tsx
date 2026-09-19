@@ -129,11 +129,33 @@ const STATS: StatItem[] = [
 ];
 
 /* -------------------------------------------------------------------------- */
+/* Shared row set                                                             */
+/* -------------------------------------------------------------------------- */
+
+/** Campaigns with a delivery receipt — a draft has no rate to compare. */
+const SENT = SMS_CAMPAIGNS.filter((campaign) => campaign.sent > 0);
+
+/* -------------------------------------------------------------------------- */
 /* C. Cost efficiency                                                         */
 /* -------------------------------------------------------------------------- */
 
 /** What the failures cost, since the gateway bills a send it could not land. */
 const WASTED = TOTALS.cost * (1 - TOTALS.delivered / Math.max(TOTALS.sent, 1));
+
+/**
+ * Spend on sends that earned nothing back.
+ *
+ * Almost all of it is the verification code, which is transactional and was
+ * never going to be answered — and it is 40% of the channel's bill, which is
+ * why the headline cost-per-reply lands near $2.40 while the best campaign in
+ * the table below is under fifty cents. The denominator is not wrong; the tile
+ * just has to say what is in the numerator, or the two panels look like they
+ * disagree.
+ */
+const ONE_WAY_SPEND = SENT.filter((campaign) => campaign.replies === 0).reduce(
+  (total, campaign) => total + campaign.cost,
+  0,
+);
 
 /**
  * The four cost readings, in the order they narrow.
@@ -158,7 +180,9 @@ const COST = [
   {
     label: "Cost / reply",
     value: formatCurrency(TOTALS.cost / Math.max(TOTALS.replies, 1)),
-    hint: `${formatNumber(TOTALS.replies)} replies earned`,
+    hint: `${formatNumber(TOTALS.replies)} replies · ${formatCurrency(
+      ONE_WAY_SPEND,
+    )} of spend earned none`,
   },
   {
     label: "Total spend",
@@ -170,9 +194,6 @@ const COST = [
 /* -------------------------------------------------------------------------- */
 /* D–F. Table sources                                                         */
 /* -------------------------------------------------------------------------- */
-
-/** Campaigns with a delivery receipt — a draft has no rate to compare. */
-const SENT = SMS_CAMPAIGNS.filter((campaign) => campaign.sent > 0);
 
 const CAMPAIGN_SORTS = [
   { value: "replyRate", label: "Best reply rate" },
@@ -368,7 +389,7 @@ export function SmsAnalytics({ range = DEFAULT_RANGE }: SmsAnalyticsProps) {
             breakdown behind the first tile — rows, not bars: the comparison is
             between two money columns, and a length would only redraw one. */}
         <div className="mt-5 border-t border-border pt-4">
-          <p className="text-sm font-medium text-text-muted uppercase">
+          <p className="text-sm font-medium text-text-muted capitalize">
             By destination
           </p>
 

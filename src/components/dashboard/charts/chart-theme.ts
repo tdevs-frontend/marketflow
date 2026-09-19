@@ -147,18 +147,6 @@ export const RATE_COLORS = {
 } as const;
 
 /**
- * The two-series pair for a channel: its own hue and a lighter step of it.
- *
- * Used wherever a chart compares exactly two measures of the same thing — a
- * read rate against a reply rate, an open against a click. Same hue because
- * they *are* the same population measured twice; two unrelated colours would
- * imply two unrelated things. Taken from `CHANNEL_SERIES` rather than
- * restated, so the pair can never disagree with the trio above it.
- */
-export const channelPair = (channel: keyof typeof CHANNEL_SERIES) =>
-  [CHANNEL_SERIES[channel][0], CHANNEL_SERIES[channel][1]] as const;
-
-/**
  * The default trio for a chart that is not about a single channel — lead
  * sources, for instance. Brand green, the shared blue, then neutral: three
  * hues far enough apart to read at a 2px stroke without implying that any of
@@ -176,15 +164,3 @@ export const OUTCOME_COLORS = {
   failed: "#dc2626",
   neutral: "#cbd5e1",
 } as const;
-
-/**
- * Five steps of one violet hue, for the SMS spend donut. A cost breakdown is
- * one quantity split by destination, so it takes a ramp rather than five hues.
- */
-export const SPEND_RAMP = [
-  "#9333ea",
-  "#c084fc",
-  "#e9d5ff",
-  "#cbd5e1",
-  "#e2e8f0",
-] as const;

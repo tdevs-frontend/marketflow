@@ -641,6 +641,30 @@ body.mobile-menu-show {
 .animate-scaleIn {
   animation: scaleIn 0.3s ease-out;
 }
+
+/*
+ * The tooltip's entrance.
+ *
+ * Opacity and a two-pixel lift, and nothing else: the bubble is positioned
+ * with `left`/`top` on a fixed layer, so animating anything that resolves to
+ * a layout value would put the browser back into reflow on every hover — which
+ * is the whole reason the tooltip is on an overlay in the first place.
+ */
+@keyframes tooltipIn {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-tooltip-in {
+  animation: tooltipIn 0.12s ease-out;
+}
 .animate-shimmer {
   animation: shimmer 2s infinite;
 }
@@ -776,6 +800,7 @@ body.mobile-menu-show {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .animate-tooltip-in,
   .animate-float,
   .animate-float-slow,
   .animate-flow,

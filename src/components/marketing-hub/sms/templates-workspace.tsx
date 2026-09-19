@@ -20,7 +20,6 @@ import {
   SMS_SUBSTITUTIONS,
 } from "@/lib/sms-fixtures";
 import { formatNumber, formatPercent, formatRelativeTime } from "@/lib/format";
-import { cn } from "@/lib/utils";
 import { SMS_CONCAT_LIMIT, SMS_SINGLE_LIMIT, countSmsSegments } from "@/types/sms";
 import type { SmsTemplate, SmsTemplateCategory } from "@/types/sms";
 import { SmsComposer, SmsPreview } from "./composer";
@@ -46,6 +45,15 @@ import { SmsComposer, SmsPreview } from "./composer";
  * verification code above everything in the library and the feedback request
  * near the bottom, which is exactly backwards for a template you are choosing
  * because you want an answer.
+ *
+ * The card is two zones and the gap between them is elastic. Everything above
+ * the rule is the template — name, badges, body, length, placeholders — and
+ * everything below it is how the template has performed. `mt-auto` on the
+ * footer pins the second zone to the bottom so a row of cards has its figures
+ * on one line however long the bodies above them run, and the `pt-5` beside
+ * it is the part that was missing: with `mt-auto` alone a card whose content
+ * exactly filled the space put the placeholder chips hard against the rule.
+ * The padding is a floor, the auto margin is the slack.
  */
 
 const ALL = "all";
@@ -199,7 +207,7 @@ export function SmsTemplatesWorkspace() {
             }
           />
         ) : (
-          <ul className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <ul className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {rows.map((template) => {
               const { characters, segments } = countSmsSegments(
                 template.body,
@@ -212,13 +220,17 @@ export function SmsTemplatesWorkspace() {
 
               return (
                 <li key={template.id}>
-                  <Card className="flex h-full flex-col p-4">
+                  <Card className="flex h-full flex-col p-5">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <h3 className="truncate text-sm font-semibold text-text-primary">
+                        {/* One step up from the `text-sm` the rest of the
+                            card sits on. The name is what the eye lands on
+                            first and it was the same size as its own
+                            metadata. */}
+                        <h3 className="truncate text-base font-semibold text-text-primary">
                           {template.name}
                         </h3>
-                        <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                        <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
                           <Badge tone={CATEGORY_TONES[template.category]} size="sm">
                             {categoryLabel(template.category)}
                           </Badge>
@@ -259,17 +271,21 @@ export function SmsTemplatesWorkspace() {
                       />
                     </div>
 
-                    {/* Body in full — an SMS template is its body. */}
-                    <p className="mt-3 rounded-panel bg-surface-secondary px-3 py-2.5 font-mono text-sm leading-relaxed text-text-secondary">
+                    {/* Body in full — an SMS template is its body. The
+                        24px leading is what makes this read as a message
+                        rather than a paragraph of code: at `leading-relaxed`
+                        the mono face packed three lines into the height two
+                        should take. */}
+                    <p className="mt-4 rounded-panel bg-surface-secondary px-3.5 py-3 font-mono text-sm leading-6 text-text-secondary">
                       {template.body}
                     </p>
 
                     {/* The length, as a sentence. The number that decides
                         anything is the capacity it is measured against, and
                         that only changes at the threshold the badge names. */}
-                    <p className="mt-2 text-sm text-text-muted tabular-nums">
-                      {characters} of {segments * capacity} characters
-                      <span className="text-text-muted"> when personalised</span>
+                    <p className="mt-3.5 text-sm text-text-muted tabular-nums">
+                      {characters} of {segments * capacity} characters when
+                      personalised
                       {multipart ? (
                         <span className="font-medium text-warning-text">
                           {" "}
@@ -278,8 +294,12 @@ export function SmsTemplatesWorkspace() {
                       ) : null}
                     </p>
 
+                    {/* The chips get their own band. They were sharing the
+                        length line's margin on one side and the rule's on the
+                        other, which put a run of eight placeholders in contact
+                        with both. */}
                     {template.variables.length > 0 ? (
-                      <ul className="mt-2.5 flex flex-wrap gap-1.5">
+                      <ul className="mt-3 flex flex-wrap gap-2">
                         {template.variables.map((variable) => (
                           <li
                             key={variable}
@@ -291,61 +311,64 @@ export function SmsTemplatesWorkspace() {
                       </ul>
                     ) : null}
 
-                    {/* `mt-auto` pins the footer to the bottom of the card, so
-                        a row of these has its figures on one line however long
-                        the bodies above them run. */}
-                    <dl className="mt-auto grid grid-cols-3 gap-2 border-t border-border pt-3.5 text-sm">
-                      {[
-                        {
-                          label: "Used",
-                          value: formatNumber(template.usageCount),
-                          tone: "text-text-primary",
-                        },
-                        {
-                          label: "Delivery",
-                          value: formatPercent(template.deliveryRate),
-                          tone: "text-text-primary",
-                        },
-                        {
-                          label: "Reply",
-                          value: formatPercent(template.replyRate),
-                          tone: "text-sms",
-                        },
-                      ].map((cell) => (
-                        <div key={cell.label}>
-                          <dt className="text-text-muted">{cell.label}</dt>
-                          <dd
-                            className={cn("font-bold tabular-nums", cell.tone)}
-                          >
-                            {cell.value}
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
+                    {/* The performance zone. `mt-auto` takes the slack, the
+                        `pt-5` guarantees the clearance. */}
+                    <div className="mt-auto pt-5">
+                      <dl className="grid grid-cols-3 gap-3 border-t border-border pt-4">
+                        {[
+                          {
+                            label: "Used",
+                            value: formatNumber(template.usageCount),
+                          },
+                          {
+                            label: "Delivery",
+                            value: formatPercent(template.deliveryRate),
+                          },
+                          {
+                            label: "Reply",
+                            value: formatPercent(template.replyRate),
+                          },
+                        ].map((cell) => (
+                          <div key={cell.label} className="min-w-0">
+                            <dt className="truncate text-sm text-text-muted">
+                              {cell.label}
+                            </dt>
+                            {/* One step up from the label and all three on the
+                                same ink. Reply used to be the channel purple,
+                                which made one of three equivalent readings
+                                look like the one that counted. */}
+                            <dd className="mt-1 text-base font-bold text-text-primary tabular-nums">
+                              {cell.value}
+                            </dd>
+                          </div>
+                        ))}
+                      </dl>
 
-                    <p className="mt-2 text-sm text-text-muted">
-                      Updated {formatRelativeTime(template.updatedAt)}
-                    </p>
+                      <p className="mt-3 text-sm text-text-muted">
+                        Updated {formatRelativeTime(template.updatedAt)}
+                      </p>
 
-                    <div className="mt-3 flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex-1"
-                        onClick={() => setPreviewing(template)}
-                      >
-                        <Eye aria-hidden />
-                        Preview
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        className="flex-1"
-                        onClick={() => openEditor(template)}
-                      >
-                        <Pencil aria-hidden />
-                        Edit
-                      </Button>
+                      {/* A two-column grid rather than two flexed children:
+                          `flex-1` splits the free space, not the row, so
+                          "Preview" and "Edit" came out different widths. */}
+                      <div className="mt-4 grid grid-cols-2 gap-2.5">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setPreviewing(template)}
+                        >
+                          <Eye aria-hidden />
+                          Preview
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => openEditor(template)}
+                        >
+                          <Pencil aria-hidden />
+                          Edit
+                        </Button>
+                      </div>
                     </div>
                   </Card>
                 </li>
@@ -445,7 +468,7 @@ export function SmsTemplatesWorkspace() {
             <SmsPreview message={previewing.body} />
 
             <div className="rounded-panel border border-border px-3.5 py-3">
-              <p className="text-sm font-medium  text-text-muted capitalize">
+              <p className="text-sm font-semibold  text-text-primary capitalize">
                 Raw template
               </p>
               <p className="mt-1.5 font-mono text-sm leading-relaxed text-text-secondary">

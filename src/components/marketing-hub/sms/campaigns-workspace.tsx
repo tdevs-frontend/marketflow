@@ -725,7 +725,7 @@ export function SmsCampaignsWorkspace() {
             />
 
             <div className="mt-4">
-              <p className="text-sm font-medium text-text-muted uppercase">
+              <p className="text-sm font-medium text-text-muted capitalize">
                 Preview
               </p>
               <SmsPreview
@@ -808,7 +808,7 @@ export function SmsCampaignsWorkspace() {
               theme.soft,
             )}
           >
-            <p className="text-sm font-medium text-text-muted uppercase">Review</p>
+            <p className="text-sm font-medium text-text-muted capitalize">Review</p>
 
             <dl className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
               {[
