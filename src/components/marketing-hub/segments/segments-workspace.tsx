@@ -245,7 +245,11 @@ export function SegmentsWorkspace() {
                   <Card className="flex h-full flex-col p-5">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <h3 className="flex items-center gap-1.5 text-sm font-semibold text-text-primary">
+                        {/* One step up from the `text-sm` the body sits on. The
+                            name was the same size as its own description, so
+                            the card opened on two lines of equal weight and
+                            nothing told the eye where to start. */}
+                        <h3 className="flex items-center gap-1.5 text-base font-semibold text-text-primary">
                           <span className="truncate">{segment.name}</span>
                           {segment.system ? (
                             <Lock
@@ -254,7 +258,11 @@ export function SegmentsWorkspace() {
                             />
                           ) : null}
                         </h3>
-                        <p className="mt-1 line-clamp-2 text-sm text-text-muted">
+                        {/* Clamped at two lines on purpose: descriptions run
+                            from six words to twenty, and letting them push the
+                            metric down would stagger the numbers across a row
+                            of three. */}
+                        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-text-muted">
                           {segment.description}
                         </p>
                       </div>
@@ -289,10 +297,15 @@ export function SegmentsWorkspace() {
                       />
                     </div>
 
-                    <div className="mt-4 flex items-baseline gap-2">
-                      <p className="text-[1.5rem] leading-none font-bold text-text-primary tabular-nums">
+                    {/* The card's headline. Everything above it says which
+                        segment this is; everything below says why. */}
+                    <div className="mt-4 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                      <p className="text-[1.75rem] leading-none font-bold text-text-primary tabular-nums">
                         {formatNumber(segment.contacts)}
                       </p>
+                      {/* Kept as inline type rather than a filled pill: a badge
+                          at this size competes with the number it is annotating,
+                          and the arrow plus the colour already carry direction. */}
                       <p
                         className={cn(
                           "inline-flex items-center gap-0.5 text-sm font-medium",
@@ -303,59 +316,83 @@ export function SegmentsWorkspace() {
                         {Math.abs(segment.growth).toFixed(1)}%
                       </p>
                     </div>
-                    <p className="mt-1 text-sm text-text-muted">
+                    <p className="mt-1.5 text-sm text-text-muted tabular-nums">
                       {formatPercent(share)} of all contacts
                     </p>
 
                     {/* Rules, spelled out. A segment you cannot read is a
-                        segment nobody trusts enough to send to. */}
-                    <ul className="mt-3.5 space-y-1.5">
+                        segment nobody trusts enough to send to.
+
+                        The operator sits in a fixed-width column so every
+                        condition starts at the same x. "If" and "And" are
+                        different widths, so the rule text used to step right on
+                        the second row and a four-rule segment read as a ragged
+                        block rather than a list. */}
+                    <ul className="mt-4 space-y-2">
                       {segment.rules.map((rule, index) => (
                         <li
                           key={rule.id}
-                          className="flex items-start gap-2 rounded-panel bg-surface-secondary px-2.5 py-1.5"
+                          className="flex items-start gap-2 rounded-btn bg-surface-secondary px-3 py-2"
                         >
-                          <span className="mt-px shrink-0 text-sm font-bold tracking-[0.06em] text-text-muted uppercase">
+                          <span className="w-8 shrink-0 text-xs leading-5 font-bold tracking-[0.06em] text-text-secondary uppercase">
                             {index === 0 ? "If" : "And"}
                           </span>
-                          <span className="min-w-0 text-sm leading-snug text-text-secondary">
+                          <span className="min-w-0 text-sm leading-5 text-text-secondary">
                             {ruleText(rule)}
                           </span>
                         </li>
                       ))}
                     </ul>
 
-                    <div className="mt-auto pt-4">
-                      <p className="text-sm font-medium text-text-muted">
-                        Usable on
-                      </p>
-                      <div className="mt-2 flex items-center gap-2">
-                        {CHANNELS.map((key) => {
-                          const usable = segment.channels.includes(key);
+                    {/*
+                      The capability row.
 
-                          return (
-                            <span
-                              key={key}
-                              /* Greyed rather than hidden — "why can I not text
-                                 this list" deserves an answer on the card. */
-                              className={cn(
-                                "inline-flex",
-                                !usable && "opacity-30 grayscale",
-                              )}
-                              title={
-                                usable
-                                  ? `Usable on ${CHANNEL_THEME[key].label}`
-                                  : `Not enough ${CHANNEL_THEME[key].label} data on this segment`
-                              }
-                            >
-                              <ChannelMark channel={key} size="sm" />
-                            </span>
-                          );
-                        })}
+                      `mt-auto` takes the slack and the `pt-5` guarantees the
+                      clearance, so a one-rule segment and a four-rule one put
+                      their footers on the same line without the short card
+                      pressing its rule against the conditions above it.
 
-                        <span className="ml-auto text-sm text-text-muted">
-                          {formatRelativeTime(segment.updatedAt)}
-                        </span>
+                      The timestamp moved up beside the "Usable on" label. It
+                      used to sit at the end of the icon row, which put it at a
+                      different height on every card — two channels or three
+                      changed nothing about the date, but the date moved anyway.
+                    */}
+                    <div className="mt-auto pt-5">
+                      <div className="border-t border-border pt-4">
+                        <div className="flex items-baseline justify-between gap-3">
+                          <p className="text-sm font-medium text-text-muted">
+                            Usable on
+                          </p>
+                          <p className="shrink-0 text-sm text-text-muted">
+                            {formatRelativeTime(segment.updatedAt)}
+                          </p>
+                        </div>
+
+                        <div className="mt-2.5 flex items-center gap-2">
+                          {CHANNELS.map((key) => {
+                            const usable = segment.channels.includes(key);
+
+                            return (
+                              <span
+                                key={key}
+                                /* Greyed rather than hidden — "why can I not
+                                   text this list" deserves an answer on the
+                                   card. */
+                                className={cn(
+                                  "inline-flex",
+                                  !usable && "opacity-30 grayscale",
+                                )}
+                                title={
+                                  usable
+                                    ? `Usable on ${CHANNEL_THEME[key].label}`
+                                    : `Not enough ${CHANNEL_THEME[key].label} data on this segment`
+                                }
+                              >
+                                <ChannelMark channel={key} size="sm" />
+                              </span>
+                            );
+                          })}
+                        </div>
                       </div>
                     </div>
                   </Card>
