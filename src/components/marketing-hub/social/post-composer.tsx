@@ -1,7 +1,16 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Check, Hash, ImagePlus, Send, Upload, X } from "lucide-react";
+import {
+  AlertCircle,
+  Check,
+  Hash,
+  ImagePlus,
+  Loader2,
+  Send,
+  Upload,
+  X,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
@@ -12,9 +21,15 @@ import { useToast } from "@/components/ui/toast";
 import { PLATFORM_THEME } from "@/constants/channels";
 import { publishableAccounts } from "@/lib/social-fixtures";
 import { useMediaAssets } from "@/lib/media-store";
+import {
+  canReschedule,
+  createSocialPost,
+  updateSocialPost,
+  type PostDraft,
+} from "@/lib/social-post-store";
 import { SocialAccountSelector } from "@/components/integrations/social/social-account-selector";
 import { cn } from "@/lib/utils";
-import type { SocialPlatform } from "@/types/social";
+import type { SocialPlatform, SocialPost } from "@/types/social";
 import { PlatformMark } from "../shared/channel-badge";
 import { AssetThumb, VideoOverlay } from "../shared/asset-thumb";
 
@@ -58,14 +73,43 @@ const SUGGESTED_HASHTAGS = [
   "#emailmarketing",
 ];
 
+/** Splits a naive `YYYY-MM-DDTHH:mm:ss` into the two inputs that edit it. */
+const splitSchedule = (iso: string) => ({
+  date: iso.slice(0, 10),
+  time: iso.slice(11, 16),
+});
+
+/** The default slot for a new post: tomorrow morning, in local-naive form. */
+function defaultSchedule() {
+  const date = new Date();
+  date.setDate(date.getDate() + 1);
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return {
+    date: `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`,
+    time: "09:00",
+  };
+}
+
 export function PostComposer({
   open,
   onClose,
+  post,
 }: {
   open: boolean;
   onClose: () => void;
+  /**
+   * The post being edited. Omit it and the dialog composes a new one.
+   *
+   * One component for both, rather than a second editor: the fields, the
+   * counters and the per-platform preview are identical, and the only thing
+   * that differs is whether Save writes a new record or patches an existing
+   * one. A separate edit dialog would be the same six sections drifting out of
+   * step with these.
+   */
+  post?: SocialPost | null;
 }) {
   const toast = useToast();
+  const editing = post ?? null;
 
   /*
    * The composer selects *accounts*, not platforms.
@@ -87,6 +131,44 @@ export function PostComposer({
   const [hashtagDraft, setHashtagDraft] = useState("");
   const [previewPlatform, setPreviewPlatform] = useState<SocialPlatform>("instagram");
   const [mediaOpen, setMediaOpen] = useState(false);
+  /* The schedule was two uncontrolled inputs and a `defaultValue`, so whatever
+     was typed into it never reached the submit handler — a post could not
+     carry the time it was given even when one was picked. */
+  const [schedule, setSchedule] = useState(defaultSchedule);
+  /* `saving` blocks a second submit and drives the button's own label; the
+     writes here are synchronous, so without it the three states would flash
+     past unreadably. */
+  const [saving, setSaving] = useState<"idle" | "saving" | "saved">("idle");
+  const [error, setError] = useState<string | null>(null);
+  const [hydrated, setHydrated] = useState(false);
+
+  /*
+   * Load the post being edited, once per open.
+   *
+   * Adjusted during render rather than in an effect, the way the media picker
+   * already does it, so the first paint is already correct and there is no
+   * setState-in-effect. Reopening on a different post re-seeds, because
+   * `hydrated` is cleared when the dialog closes.
+   */
+  if (open && !hydrated) {
+    setHydrated(true);
+    setError(null);
+    setSaving("idle");
+
+    if (editing) {
+      setAccountIds(
+        publishable
+          .filter((account) => editing.platforms.includes(account.platform))
+          .map((account) => account.id),
+      );
+      setMediaIds(editing.mediaIds);
+      setTitle(editing.title);
+      setCaption(editing.caption);
+      setHashtags(editing.hashtags);
+      setSchedule(splitSchedule(editing.scheduledAt));
+    }
+  }
+  if (!open && hydrated) setHydrated(false);
 
   const selectedAccounts = publishable.filter((account) =>
     accountIds.includes(account.id),
@@ -145,16 +227,95 @@ export function PostComposer({
     setCaption("");
     setHashtags([]);
     setHashtagDraft("");
+    setSchedule(defaultSchedule());
+    setSaving("idle");
+    setError(null);
   }
 
-  function submit(action: "draft" | "schedule") {
-    onClose();
-    toast(
-      action === "draft"
-        ? `${title || "Untitled post"} saved as a draft`
-        : `${title || "Post"} scheduled to ${accountIds.length} account${accountIds.length === 1 ? "" : "s"}`,
-    );
-    reset();
+  /** The two inputs, back in the naive ISO shape the post records use. */
+  const scheduledAt = `${schedule.date || splitSchedule(editing?.scheduledAt ?? "").date || defaultSchedule().date}T${schedule.time || "09:00"}:00`;
+
+  const draft: PostDraft = {
+    title: title.trim() || "Untitled post",
+    caption,
+    hashtags,
+    platforms,
+    mediaIds,
+    scheduledAt,
+    status: "draft",
+  };
+
+  /**
+   * Write the post, then close.
+   *
+   * `saving` gates the whole thing so a double click cannot produce two
+   * records, and the short pause is what makes Saving → Saved legible rather
+   * than a flicker between two synchronous states. A failed write leaves the
+   * dialog open with the reason on it — the one outcome worse than an error is
+   * an error nobody sees.
+   */
+  async function submit(action: "draft" | "schedule" | "save") {
+    if (saving !== "idle") return;
+
+    setSaving("saving");
+    setError(null);
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 260));
+
+      if (editing) {
+        /* Patch, never insert. The id is deliberately not in the patch. */
+        const result = updateSocialPost(editing.id, {
+          ...draft,
+          /* A published post keeps the status and the moment it went out; a
+             failed one that is being saved again is going back in the queue. */
+          status:
+            editing.status === "published"
+              ? "published"
+              : editing.status === "failed"
+                ? "scheduled"
+                : editing.status,
+          scheduledAt: canReschedule(editing.status)
+            ? scheduledAt
+            : editing.scheduledAt,
+          /* Re-queuing clears the last failure; leaving it would have the card
+             reporting an error about a send that has not happened yet. */
+          failureReason:
+            editing.status === "failed" ? undefined : editing.failureReason,
+        });
+
+        if (!result) {
+          setError("Could not save changes. This post no longer exists.");
+          setSaving("idle");
+          return;
+        }
+
+        setSaving("saved");
+        toast(
+          editing.status === "failed"
+            ? `${result.title} re-queued`
+            : `${result.title} updated`,
+        );
+      } else {
+        const created = createSocialPost(
+          { ...draft, status: action === "draft" ? "draft" : "scheduled" },
+          "Nadia Karim",
+        );
+
+        setSaving("saved");
+        toast(
+          action === "draft"
+            ? `${created.title} saved as a draft`
+            : `${created.title} scheduled to ${accountIds.length} account${accountIds.length === 1 ? "" : "s"}`,
+        );
+      }
+
+      onClose();
+      reset();
+    } catch {
+      setError("Could not save changes. Please try again.");
+      setSaving("idle");
+    }
   }
 
   return (
@@ -162,33 +323,98 @@ export function PostComposer({
       <Dialog
         open={open}
         onClose={onClose}
-        title="Create post"
-        description="One caption, published to every platform you pick."
+        title={editing ? `Edit ${editing.title}` : "Create post"}
+        description={
+          editing
+            ? "Changes replace the existing post — the schedule and the media move with it."
+            : "One caption, published to every platform you pick."
+        }
         size="lg"
         footer={
           <>
-            <Button variant="outline" size="compact" onClick={onClose}>
+            <Button
+              variant="outline"
+              size="compact"
+              onClick={onClose}
+              disabled={saving === "saving"}
+            >
               Cancel
             </Button>
-            <Button
-              variant="secondary"
-              size="compact"
-              onClick={() => submit("draft")}
-            >
-              Save draft
-            </Button>
-            <Button
-              size="compact"
-              onClick={() => submit("schedule")}
-              disabled={accountIds.length === 0 || composed.length === 0}
-            >
-              <Send aria-hidden />
-              Schedule
-            </Button>
+
+            {editing ? (
+              /* One primary action in edit mode. "Save draft" alongside it
+                 would offer to demote a scheduled post to a draft as a
+                 side-effect of saving a typo, which is not what the button
+                 says. */
+              <Button
+                size="compact"
+                onClick={() => submit("save")}
+                disabled={saving !== "idle" || composed.length === 0}
+              >
+                {saving === "saving" ? (
+                  <>
+                    <Loader2 className="animate-spin" aria-hidden />
+                    Saving…
+                  </>
+                ) : saving === "saved" ? (
+                  <>
+                    <Check aria-hidden />
+                    Saved
+                  </>
+                ) : (
+                  <>
+                    <Send aria-hidden />
+                    {editing.status === "failed" ? "Save & retry" : "Save changes"}
+                  </>
+                )}
+              </Button>
+            ) : (
+              <>
+                <Button
+                  variant="secondary"
+                  size="compact"
+                  onClick={() => submit("draft")}
+                  disabled={saving !== "idle"}
+                >
+                  Save draft
+                </Button>
+                <Button
+                  size="compact"
+                  onClick={() => submit("schedule")}
+                  disabled={
+                    saving !== "idle" ||
+                    accountIds.length === 0 ||
+                    composed.length === 0
+                  }
+                >
+                  {saving === "saving" ? (
+                    <>
+                      <Loader2 className="animate-spin" aria-hidden />
+                      Scheduling…
+                    </>
+                  ) : (
+                    <>
+                      <Send aria-hidden />
+                      Schedule
+                    </>
+                  )}
+                </Button>
+              </>
+            )}
           </>
         }
       >
         <div className="space-y-6">
+          {error ? (
+            <p
+              role="alert"
+              className="flex items-start gap-2 rounded-panel border border-error/25 bg-error-soft px-3.5 py-3 text-sm text-error-text"
+            >
+              <AlertCircle className="mt-px size-4 shrink-0" aria-hidden />
+              {error}
+            </p>
+          ) : null}
+
           {/* --------------------------------------------------- 1. Platform */}
           <section>
             <h3 className="text-sm font-medium  text-text-muted capitalize">
@@ -518,18 +744,48 @@ export function PostComposer({
               6 · Schedule
             </h3>
 
+            {editing && !canReschedule(editing.status) ? (
+              /* Published posts keep their timestamp. It is a record of when
+                 the post went out, not a plan, and an editable field here
+                 would offer to rewrite history. */
+              <p className="mt-2.5 rounded-panel border border-border bg-surface-secondary px-3.5 py-3 text-sm text-text-secondary">
+                Published {editing.scheduledAt.replace("T", " at ").slice(0, 16)}.
+                The caption and media can still be edited; the time cannot.
+              </p>
+            ) : (
             <div className="mt-2.5 grid gap-4 sm:grid-cols-2">
               <Field label="Date" htmlFor="post-date">
-                <Input id="post-date" type="date" />
+                <Input
+                  id="post-date"
+                  type="date"
+                  value={schedule.date}
+                  onChange={(event) =>
+                    setSchedule((current) => ({
+                      ...current,
+                      date: event.target.value,
+                    }))
+                  }
+                />
               </Field>
               <Field
                 label="Time"
                 htmlFor="post-time"
                 hint="15:00–18:00 is this account's best-performing window."
               >
-                <Input id="post-time" type="time" defaultValue="15:30" />
+                <Input
+                  id="post-time"
+                  type="time"
+                  value={schedule.time}
+                  onChange={(event) =>
+                    setSchedule((current) => ({
+                      ...current,
+                      time: event.target.value,
+                    }))
+                  }
+                />
               </Field>
             </div>
+            )}
           </section>
         </div>
       </Dialog>

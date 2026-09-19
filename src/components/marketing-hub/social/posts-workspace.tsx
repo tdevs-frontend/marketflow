@@ -30,7 +30,13 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
 import { useToast } from "@/components/ui/toast";
 import { PLATFORM_ORDER, PLATFORM_THEME } from "@/constants/channels";
-import { POST_STATUSES, SOCIAL_POSTS } from "@/lib/social-fixtures";
+import { POST_STATUSES } from "@/lib/social-fixtures";
+import {
+  deleteSocialPost,
+  duplicateSocialPost,
+  updateSocialPost,
+  useSocialPosts,
+} from "@/lib/social-post-store";
 import { formatDateTime, formatNumber, formatRelativeTime } from "@/lib/format";
 import { truncate } from "@/lib/utils";
 import type { PostStatus, SocialPlatform, SocialPost } from "@/types/social";
@@ -71,9 +77,21 @@ export function SocialPostsWorkspace() {
   const [page, setPage] = useState(1);
 
   const [selected, setSelected] = useState<string[]>([]);
-  const [detail, setDetail] = useState<SocialPost | null>(null);
+  /* Ids rather than records: a held copy goes stale the moment the post is
+     edited, and the detail dialog would keep showing the caption it opened
+     with. Re-read from the store on every render instead. */
+  const [detailId, setDetailId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [composeOpen, setComposeOpen] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const allPosts = useSocialPosts();
+  const detail = detailId
+    ? (allPosts.find((post) => post.id === detailId) ?? null)
+    : null;
+  const editing = editingId
+    ? (allPosts.find((post) => post.id === editingId) ?? null)
+    : null;
 
   const activeFilters =
     (platform === ALL ? 0 : 1) + (status === ALL ? 0 : 1) + (from ? 1 : 0);
@@ -81,7 +99,7 @@ export function SocialPostsWorkspace() {
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
 
-    return SOCIAL_POSTS.filter((post) => {
+    return allPosts.filter((post) => {
       if (
         term &&
         !post.title.toLowerCase().includes(term) &&
@@ -101,7 +119,7 @@ export function SocialPostsWorkspace() {
       /* Newest scheduled slot first, so upcoming work is at the top. */
       return b.scheduledAt.localeCompare(a.scheduledAt);
     });
-  }, [from, platform, search, sort, status]);
+  }, [allPosts, from, platform, search, sort, status]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const current = Math.min(page, totalPages);
@@ -123,24 +141,55 @@ export function SocialPostsWorkspace() {
       prev.includes(id) ? prev.filter((value) => value !== id) : [...prev, id],
     );
 
+  /*
+   * Every row action, and every one of them writes.
+   *
+   * Edit was `() => {}` — a menu item that opened nothing — while Duplicate
+   * and Retry raised a toast claiming work that never happened. A control that
+   * reports success without doing anything is worse than a missing one.
+   */
   const menuFor = (post: SocialPost) => [
     {
       label: "View post",
       icon: <Eye className="size-4" />,
-      onSelect: () => setDetail(post),
+      onSelect: () => setDetailId(post.id),
     },
-    { label: "Edit", icon: <Pencil className="size-4" />, onSelect: () => {} },
+    {
+      label: "Edit",
+      icon: <Pencil className="size-4" />,
+      onSelect: () => {
+        setDetailId(null);
+        setEditingId(post.id);
+      },
+    },
     {
       label: "Duplicate",
       icon: <Copy className="size-4" />,
-      onSelect: () => toast(`${post.title} duplicated`),
+      onSelect: () => {
+        const copy = duplicateSocialPost(post.id);
+        toast(
+          copy
+            ? `${copy.title} created as a draft`
+            : "Could not duplicate this post. Please try again.",
+        );
+      },
     },
     ...(post.status === "failed"
       ? [
           {
             label: "Retry publish",
             icon: <RefreshCw className="size-4" />,
-            onSelect: () => toast(`Retrying ${post.title}…`),
+            onSelect: () => {
+              const retried = updateSocialPost(post.id, {
+                status: "scheduled",
+                failureReason: undefined,
+              });
+              toast(
+                retried
+                  ? `${post.title} re-queued for publishing`
+                  : "Could not retry this post. Please try again.",
+              );
+            },
           },
         ]
       : []),
@@ -256,24 +305,26 @@ export function SocialPostsWorkspace() {
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  toast(`${selected.length} posts duplicated`);
+                  const made = selected
+                    .map((id) => duplicateSocialPost(id))
+                    .filter((post) => post !== null);
+                  toast(`${made.length} posts duplicated as drafts`);
                   setSelected([]);
                 }}
               >
                 <Copy aria-hidden />
                 Duplicate
               </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  toast(`${selected.length} posts rescheduled`);
-                  setSelected([]);
-                }}
-              >
-                <RefreshCw aria-hidden />
-                Reschedule
-              </Button>
+              {/*
+                No bulk Reschedule.
+
+                It reported that N posts had been rescheduled without ever
+                asking when — there is no date on this bar and no defensible
+                default for one. Rescheduling is a per-post decision and Edit
+                now does it properly, so the honest move is to drop the
+                control rather than keep a button that announces work it
+                cannot do.
+              */}
               <Button variant="danger" size="sm" onClick={() => setConfirmDelete(true)}>
                 <Trash2 aria-hidden />
                 Delete
@@ -518,7 +569,7 @@ export function SocialPostsWorkspace() {
                         <TD>
                           <button
                             type="button"
-                            onClick={() => setDetail(post)}
+                            onClick={() => setDetailId(post.id)}
                             className="flex items-center gap-2.5 text-left focus-visible:shadow-focus focus-visible:outline-none"
                           >
                             <PostThumb post={post} />
@@ -633,7 +684,7 @@ export function SocialPostsWorkspace() {
       {/* -------------------------------------------------------- Detail */}
       <Dialog
         open={Boolean(detail)}
-        onClose={() => setDetail(null)}
+        onClose={() => setDetailId(null)}
         title={detail?.title ?? "Post"}
         description={
           detail
@@ -643,10 +694,17 @@ export function SocialPostsWorkspace() {
         size="lg"
         footer={
           <>
-            <Button variant="outline" size="compact" onClick={() => setDetail(null)}>
+            <Button variant="outline" size="compact" onClick={() => setDetailId(null)}>
               Close
             </Button>
-            <Button size="compact" onClick={() => setDetail(null)}>
+            <Button
+              size="compact"
+              onClick={() => {
+                if (!detail) return;
+                setDetailId(null);
+                setEditingId(detail.id);
+              }}
+            >
               <Pencil aria-hidden />
               Edit post
             </Button>
@@ -715,12 +773,23 @@ export function SocialPostsWorkspace() {
 
       <PostComposer open={composeOpen} onClose={() => setComposeOpen(false)} />
 
+      {/* Keyed by id so opening a second post re-seeds the fields rather than
+          reusing the first one's state. */}
+      <PostComposer
+        key={editingId ?? "none"}
+        open={Boolean(editing)}
+        post={editing}
+        onClose={() => setEditingId(null)}
+      />
+
       <ConfirmDialog
         open={confirmDelete}
         onClose={() => setConfirmDelete(false)}
         onConfirm={() => {
           const count = selected.length;
-          toast(`${count} post${count === 1 ? "" : "s"} deleted`);
+          const removed = selected.filter((id) => deleteSocialPost(id)).length;
+          toast(`${removed} post${removed === 1 ? "" : "s"} deleted`);
+          void count;
           setSelected([]);
         }}
         title={`Delete ${selected.length} post${selected.length === 1 ? "" : "s"}?`}

@@ -11,10 +11,11 @@ import { Select } from "@/components/ui/select";
 import { useToast } from "@/components/ui/toast";
 import {
   ACCEPTED_MEDIA,
+  defaultUploadFolder,
   uploadMedia,
   useMediaAssets,
+  useMediaFolders,
 } from "@/lib/media-store";
-import { MEDIA_FOLDERS } from "@/lib/social-fixtures";
 import { cn } from "@/lib/utils";
 import type { MediaAsset } from "@/types/social";
 
@@ -147,6 +148,9 @@ function MediaDialog({
 }) {
   const toast = useToast();
   const assets = useMediaAssets();
+  /* The store's list, so a folder created in the Media Library is a
+     destination here too rather than only there. */
+  const folders = useMediaFolders();
   const fileInput = useRef<HTMLInputElement>(null);
   const [folder, setFolder] = useState("all");
   const [search, setSearch] = useState("");
@@ -213,7 +217,7 @@ function MediaDialog({
       const { added, rejected } = await uploadMedia(
         files,
         /* "All folders" is a view, not a destination. */
-        folder === "all" ? MEDIA_FOLDERS[1].id : folder,
+        folder === "all" ? defaultUploadFolder() : folder,
       );
 
       setFailures(rejected);
@@ -276,12 +280,15 @@ function MediaDialog({
             label="Folder"
             value={folder}
             onChange={setFolder}
+            /* The store's list already carries an "All Media" entry whose id
+               is "all", so mapping it straight in put two options with the
+               same value in the dropdown. The explicit row wins and the rest
+               of the list follows it. */
             options={[
               { value: "all", label: "All folders" },
-              ...MEDIA_FOLDERS.map((item) => ({
-                value: item.id,
-                label: item.name,
-              })),
+              ...folders
+                .filter((item) => item.id !== "all")
+                .map((item) => ({ value: item.id, label: item.name })),
             ]}
           />
           <Button

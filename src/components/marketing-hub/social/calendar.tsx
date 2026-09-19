@@ -1,17 +1,24 @@
 "use client";
 
 import { useMemo, useState, useSyncExternalStore } from "react";
-import { CalendarDays, Plus } from "lucide-react";
+import { CalendarDays, Copy, Pencil, Plus, Trash2 } from "lucide-react";
 
+import { useToast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Dialog } from "@/components/ui/dialog";
 import { EmptyState } from "@/components/ui/empty-state";
 import { MonthStepper } from "@/components/ui/date-range";
 import { Select } from "@/components/ui/select";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { PLATFORM_ORDER, PLATFORM_THEME } from "@/constants/channels";
-import { CALENDAR_MONTH, POST_STATUSES, SOCIAL_POSTS } from "@/lib/social-fixtures";
+import { CALENDAR_MONTH, POST_STATUSES } from "@/lib/social-fixtures";
+import {
+  deleteSocialPost,
+  duplicateSocialPost,
+  useSocialPosts,
+} from "@/lib/social-post-store";
 import { formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { PostStatus, SocialPlatform, SocialPost } from "@/types/social";
@@ -244,18 +251,47 @@ export function SocialCalendar() {
 
   const [platform, setPlatform] = useState<SocialPlatform | typeof ALL>(ALL);
   const [status, setStatus] = useState<PostStatus | typeof ALL>(ALL);
-  const [selected, setSelected] = useState<SocialPost | null>(null);
+  /*
+   * Selection and editing hold an *id*, not a record.
+   *
+   * A held record is a snapshot: save an edit and the detail dialog behind it
+   * would still be showing the caption from before, because its copy was taken
+   * when the dialog opened. The id is re-read from the store on every render,
+   * so every surface shows the post as it is now.
+   */
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<SocialPost | null>(null);
   const [composeOpen, setComposeOpen] = useState(false);
+
+  const toast = useToast();
+
+  /* The shared store, so an edit made here shows on the Posts page and in the
+     analytics leaderboard without a reload. */
+  const allPosts = useSocialPosts();
 
   const posts = useMemo(
     () =>
-      SOCIAL_POSTS.filter((post) => {
+      allPosts.filter((post) => {
         if (platform !== ALL && !post.platforms.includes(platform)) return false;
         if (status !== ALL && post.status !== status) return false;
         return true;
       }),
-    [platform, status],
+    [allPosts, platform, status],
   );
+
+  const selected = selectedId
+    ? (allPosts.find((post) => post.id === selectedId) ?? null)
+    : null;
+  const editing = editingId
+    ? (allPosts.find((post) => post.id === editingId) ?? null)
+    : null;
+
+  /** Open the editor on a post, closing the detail dialog behind it. */
+  function edit(post: SocialPost) {
+    setSelectedId(null);
+    setEditingId(post.id);
+  }
 
   /* Indexed by day so a cell is a lookup rather than a scan of every post. */
   const byDay = useMemo(() => {
@@ -476,7 +512,7 @@ export function SocialCalendar() {
                     <MonthCard
                       key={post.id}
                       post={post}
-                      onSelect={() => setSelected(post)}
+                      onSelect={() => setSelectedId(post.id)}
                     />
                   ))}
 
@@ -554,7 +590,7 @@ export function SocialCalendar() {
                         <DetailCard
                           key={post.id}
                           post={post}
-                          onSelect={() => setSelected(post)}
+                          onSelect={() => setSelectedId(post.id)}
                         />
                       ))}
                     </div>
@@ -604,7 +640,7 @@ export function SocialCalendar() {
                     </p>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <DetailCard post={post} onSelect={() => setSelected(post)} />
+                    <DetailCard post={post} onSelect={() => setSelectedId(post.id)} />
                   </div>
                 </li>
               ))}
@@ -616,7 +652,7 @@ export function SocialCalendar() {
       {/* -------------------------------------------------------- Post detail */}
       <Dialog
         open={Boolean(selected)}
-        onClose={() => setSelected(null)}
+        onClose={() => setSelectedId(null)}
         title={selected?.title ?? "Post"}
         description={
           selected
@@ -624,14 +660,51 @@ export function SocialCalendar() {
             : undefined
         }
         footer={
-          <>
-            <Button variant="outline" size="compact" onClick={() => setSelected(null)}>
-              Close
-            </Button>
-            <Button size="compact" onClick={() => setSelected(null)}>
-              Edit post
-            </Button>
-          </>
+          selected ? (
+            <>
+              {/* Every control here now does what it says. "Edit post" used to
+                  close the dialog and nothing else — the one action the card
+                  exists to offer was the one that did not work. */}
+              <Button
+                variant="outline"
+                size="compact"
+                onClick={() => setSelectedId(null)}
+              >
+                Close
+              </Button>
+
+              <Button
+                variant="outline"
+                size="compact"
+                onClick={() => {
+                  const copy = duplicateSocialPost(selected.id);
+                  setSelectedId(null);
+                  toast(
+                    copy
+                      ? `${copy.title} created as a draft`
+                      : "Could not duplicate this post. Please try again.",
+                  );
+                }}
+              >
+                <Copy aria-hidden />
+                Duplicate
+              </Button>
+
+              <Button
+                variant="danger"
+                size="compact"
+                onClick={() => setPendingDelete(selected)}
+              >
+                <Trash2 aria-hidden />
+                Delete
+              </Button>
+
+              <Button size="compact" onClick={() => edit(selected)}>
+                <Pencil aria-hidden />
+                Edit post
+              </Button>
+            </>
+          ) : null
         }
       >
         {selected ? (
@@ -698,6 +771,43 @@ export function SocialCalendar() {
       </Dialog>
 
       <PostComposer open={composeOpen} onClose={() => setComposeOpen(false)} />
+
+      {/*
+        A second instance for editing, keyed by post id.
+
+        The key is what makes the dialog re-seed when you edit one post, close
+        it, and open another: without it React reuses the component and the
+        second post opens showing the first one's caption.
+      */}
+      <PostComposer
+        key={editingId ?? "none"}
+        open={Boolean(editing)}
+        post={editing}
+        onClose={() => setEditingId(null)}
+      />
+
+      <ConfirmDialog
+        open={Boolean(pendingDelete)}
+        onClose={() => setPendingDelete(null)}
+        onConfirm={() => {
+          if (!pendingDelete) return;
+          const removed = deleteSocialPost(pendingDelete.id);
+          setSelectedId(null);
+          toast(
+            removed
+              ? `${pendingDelete.title} deleted`
+              : "Could not delete this post. Please try again.",
+          );
+        }}
+        title={`Delete ${pendingDelete?.title}?`}
+        confirmLabel="Delete post"
+      >
+        <p className="text-sm text-text-secondary">
+          {pendingDelete?.status === "published"
+            ? "The post stays live on the platform — this removes it from the calendar and from MarketFlow's reporting only."
+            : "It disappears from the calendar and will not be published."}
+        </p>
+      </ConfirmDialog>
     </>
   );
 }

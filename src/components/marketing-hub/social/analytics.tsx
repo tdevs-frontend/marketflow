@@ -21,11 +21,11 @@ import { INTEGRATION_ROUTES } from "@/constants/integrations";
 import {
   BEST_POSTING_TIMES,
   SOCIAL_ACCOUNTS,
-  SOCIAL_POSTS,
   SOCIAL_REACH_TRENDS,
   SOCIAL_TREND_PERIODS,
   analyticsAccounts,
 } from "@/lib/social-fixtures";
+import { useSocialPosts } from "@/lib/social-post-store";
 import { formatCount, formatNumber, formatPercent, rate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type {
@@ -77,8 +77,6 @@ import { PostThumb } from "./post-status";
  * order of magnitude between LinkedIn and Instagram — 964 interactions on
  * 18,640 reach is a better post than 1,284 on 32,480.
  */
-
-const PUBLISHED = SOCIAL_POSTS.filter((post) => post.status === "published");
 
 const interactions = (post: SocialPost) =>
   post.engagement.likes + post.engagement.comments + post.engagement.shares;
@@ -143,6 +141,14 @@ export interface SocialAnalyticsProps {
 export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps) {
   const [period, setPeriod] = useState<SocialTrendPeriod>(() => periodFor(range));
   const [platform, setPlatform] = useState<SocialPlatform | "all">("all");
+
+  /* The shared store, so a post retitled in the calendar is retitled in the
+     leaderboard below without a reload. */
+  const allPosts = useSocialPosts();
+  const published = useMemo(
+    () => allPosts.filter((post) => post.status === "published"),
+    [allPosts],
+  );
 
   /*
    * Only accounts that actually granted analytics.
@@ -259,19 +265,19 @@ export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps)
 
   const topPosts = useMemo(
     () =>
-      [...withinRange(PUBLISHED, range)]
+      [...withinRange(published, range)]
         .sort(
           (a, b) =>
             rate(interactions(b), b.engagement.reach) -
             rate(interactions(a), a.engagement.reach),
         )
         .slice(0, 5),
-    [range],
+    [published, range],
   );
 
   const engagementRows = useMemo(() => {
     const rows = PLATFORM_ORDER.map((key) => {
-      const posts = PUBLISHED.filter((post) => post.platforms.includes(key));
+      const posts = published.filter((post) => post.platforms.includes(key));
       const likes = posts.reduce((sum, post) => sum + post.engagement.likes, 0);
       const comments = posts.reduce((sum, post) => sum + post.engagement.comments, 0);
       const shares = posts.reduce((sum, post) => sum + post.engagement.shares, 0);
@@ -280,7 +286,7 @@ export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps)
     }).sort((a, b) => b.total - a.total);
 
     return { rows, grand: rows.reduce((sum, row) => sum + row.total, 0) };
-  }, []);
+  }, [published]);
 
   const rising = summary.change >= 0;
   const TrendIcon = rising ? ArrowUpRight : ArrowDownRight;

@@ -2,8 +2,8 @@
 
 import { useSyncExternalStore } from "react";
 
-import { MEDIA_ASSETS } from "@/lib/social-fixtures";
-import type { MediaAsset } from "@/types/social";
+import { MEDIA_ASSETS, MEDIA_FOLDERS } from "@/lib/social-fixtures";
+import type { MediaAsset, MediaFolder } from "@/types/social";
 
 /**
  * The Media Library, plus whatever has been uploaded this session.
@@ -15,12 +15,11 @@ import type { MediaAsset } from "@/types/social";
  * `useSyncExternalStore` subscription so every surface reading it re-renders
  * together.
  *
- * It is not a second library. The campaign picker and the composer preview both
- * read `useMediaAssets()` and get one list in one order, which is the whole
- * reason the wizard never held its own uploads. Marketing → Social → Media
- * still reads `MEDIA_ASSETS` directly and so does not list session uploads yet;
- * pointing it at this hook is the change that finishes the job, and it needs
- * `MEDIA_USAGE` lookups defaulted — an uploaded asset has no usage row.
+ * It is not a second library. Every media surface in the product — the
+ * Media Library page, the campaign picker, the post composer, the calendar's
+ * thumbnails — reads `useMediaAssets()` and gets one list in one order. That
+ * is what makes a file uploaded in the composer appear in the library a frame
+ * later, and it is why the wizard never grew an upload shelf of its own.
  *
  * Session-scoped, and honestly so. An upload here is an object URL over a file
  * in this tab's memory — there is no service behind it, and a `blob:` URL dies
@@ -32,7 +31,7 @@ import type { MediaAsset } from "@/types/social";
 
 /** What the library takes, as the `accept` attribute and as the guard. */
 export const ACCEPTED_MEDIA =
-  "image/jpeg,image/png,image/webp,image/gif,video/mp4";
+  "image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm";
 
 const ACCEPTED_TYPES = new Set(ACCEPTED_MEDIA.split(","));
 
@@ -42,6 +41,18 @@ export const MAX_UPLOAD_BYTES = 100 * 1024 * 1024;
 /* Newest first: someone who has just uploaded is looking for what they
    uploaded, not for the fixture that has been there all along. */
 let uploads: MediaAsset[] = [];
+
+/*
+ * Edits and removals applied to the *fixture* rows.
+ *
+ * `MEDIA_ASSETS` is a frozen module import that the server render also reads,
+ * so renaming or deleting one cannot mean touching that array. These two hold
+ * the difference instead, and `publish` folds them over the fixtures on every
+ * write — which keeps the server snapshot honest and the client's view current.
+ */
+const overrides = new Map<string, MediaAsset>();
+const deleted = new Set<string>();
+
 let snapshot: MediaAsset[] = MEDIA_ASSETS;
 
 const listeners = new Set<() => void>();
@@ -54,7 +65,11 @@ function subscribe(listener: () => void) {
 }
 
 function publish() {
-  snapshot = [...uploads, ...MEDIA_ASSETS];
+  const library = MEDIA_ASSETS.filter((asset) => !deleted.has(asset.id)).map(
+    (asset) => overrides.get(asset.id) ?? asset,
+  );
+
+  snapshot = [...uploads, ...library];
   for (const listener of listeners) listener();
 }
 
@@ -73,6 +88,143 @@ export function useMediaAssets(): MediaAsset[] {
   );
 }
 
+/**
+ * Rename an asset in place.
+ *
+ * Only the label changes — the id and the URL are untouched, so every post
+ * already pointing at this file keeps pointing at it. A rename that broke
+ * references would be a delete with a friendly name.
+ */
+export function renameMedia(id: string, name: string): MediaAsset | null {
+  const trimmed = name.trim();
+  if (!trimmed) return null;
+
+  const index = snapshot.findIndex((asset) => asset.id === id);
+  if (index === -1) return null;
+
+  const renamed = { ...snapshot[index], name: trimmed };
+
+  /* The shelf is uploads in front of fixtures, so a rename has to land in
+     whichever of the two actually holds the record. */
+  uploads = uploads.map((asset) => (asset.id === id ? renamed : asset));
+  overrides.set(id, renamed);
+  publish();
+
+  return renamed;
+}
+
+/**
+ * Remove assets from the library.
+ *
+ * Fixture entries are tombstoned rather than spliced: `MEDIA_ASSETS` is a
+ * frozen import shared with the server render, and mutating it would desync
+ * the two. An uploaded file also has its object URL revoked — that is a real
+ * handle on a real file in this tab's memory, and dropping the record without
+ * releasing it leaks the blob for the life of the document.
+ */
+export function removeMedia(ids: string[]): number {
+  const doomed = new Set(ids);
+  let removed = 0;
+
+  for (const asset of snapshot) {
+    if (!doomed.has(asset.id)) continue;
+    removed += 1;
+    if (asset.url?.startsWith("blob:")) URL.revokeObjectURL(asset.url);
+  }
+
+  if (removed === 0) return 0;
+
+  uploads = uploads.filter((asset) => !doomed.has(asset.id));
+  for (const id of doomed) {
+    overrides.delete(id);
+    deleted.add(id);
+  }
+
+  publish();
+  return removed;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Folders                                                                    */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * The folder list, and whatever has been added this session.
+ *
+ * Same shape as the assets above and for the same reason: `MEDIA_FOLDERS` is a
+ * frozen fixture the server render reads, so a new folder is held alongside it
+ * rather than pushed into it. Keeping folders in the store — instead of every
+ * surface importing the fixture — is what makes a folder created in the
+ * sidebar immediately selectable as an upload destination, which is the whole
+ * point of being able to create one.
+ */
+let folders: MediaFolder[] = [];
+let folderSnapshot: MediaFolder[] = MEDIA_FOLDERS;
+
+const folderListeners = new Set<() => void>();
+
+function subscribeFolders(listener: () => void) {
+  folderListeners.add(listener);
+  return () => {
+    folderListeners.delete(listener);
+  };
+}
+
+function publishFolders() {
+  /* Appended, not prepended: "All Media" has to stay first, and the fixture
+     folders are the ones people already know where to find. */
+  folderSnapshot = [...MEDIA_FOLDERS, ...folders];
+  for (const listener of folderListeners) listener();
+}
+
+/** Every folder, the session's additions last. */
+export function useMediaFolders(): MediaFolder[] {
+  return useSyncExternalStore(
+    subscribeFolders,
+    () => folderSnapshot,
+    () => MEDIA_FOLDERS,
+  );
+}
+
+/**
+ * The folder a new upload defaults to when the browser is on "All Media".
+ *
+ * Derived rather than `MEDIA_FOLDERS[1]` written out at each call site: "all"
+ * is a view rather than a destination, so something has to choose, and three
+ * copies of that choice is three places to fix when the list changes.
+ */
+export const defaultUploadFolder = () =>
+  folderSnapshot.find((folder) => folder.id !== "all")?.id ?? "all";
+
+/**
+ * Create a folder.
+ *
+ * Returns `null` on a blank name or one that already exists — the caller shows
+ * the reason rather than quietly creating a second "Autumn 2026" that splits
+ * the same campaign's assets across two identical-looking shelves.
+ */
+export function createMediaFolder(name: string): MediaFolder | null {
+  const trimmed = name.trim();
+  if (!trimmed) return null;
+
+  const taken = folderSnapshot.some(
+    (folder) => folder.name.toLowerCase() === trimmed.toLowerCase(),
+  );
+  if (taken) return null;
+
+  const folder: MediaFolder = {
+    id: `mf-${Date.now().toString(36)}-${folders.length}`,
+    name: trimmed,
+  };
+
+  folders = [...folders, folder];
+  publishFolders();
+
+  return folder;
+}
+
+/* -------------------------------------------------------------------------- */
+
 /** Bytes as the unit a person would say out loud. */
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -83,10 +235,15 @@ function formatBytes(bytes: number): string {
 /** Why this file cannot be uploaded, or `null` if it can. */
 export function rejectionFor(file: File): string | null {
   if (!ACCEPTED_TYPES.has(file.type)) {
-    return `${file.name} — JPG, PNG, WebP, GIF and MP4 only.`;
+    return `${file.name} — JPG, PNG, WebP, GIF, MP4 and WebM only.`;
+  }
+  if (file.size === 0) {
+    return `${file.name} — the file is empty.`;
   }
   if (file.size > MAX_UPLOAD_BYTES) {
-    return `${file.name} — ${formatBytes(file.size)}, over the 100 MB limit.`;
+    return `${file.name} — ${formatBytes(file.size)}, over the ${formatBytes(
+      MAX_UPLOAD_BYTES,
+    )} limit.`;
   }
   return null;
 }
