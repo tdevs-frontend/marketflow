@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
 
-import { SettingsWorkspace } from "@/components/settings";
+import { GeneralSettings } from "@/components/settings";
 
-export const metadata: Metadata = { title: "Settings" };
+export const metadata: Metadata = {
+  title: "Settings",
+  description: "Workspace name, locale, business details and default senders.",
+};
 
 /**
- * Workspace settings, plus the three account panels that used to be their own
- * sidebar rows.
+ * General — the workspace, as opposed to the person.
  *
- * The workspace renders its own `PageHeader` because the tab strip has to sit
- * directly under it — the same shape `ContactsWorkspace` and the workflow
- * detail screen already use.
+ * The module's landing page, and deliberately the workspace one: somebody who
+ * clicks "Settings" is usually after the workspace name, the timezone or the
+ * currency. Anything personal is one link away under Profile.
  */
 export default function SettingsPage() {
-  return <SettingsWorkspace />;
+  return <GeneralSettings />;
 }

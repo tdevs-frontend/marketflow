@@ -228,19 +228,26 @@ export const dashboardNav: NavSection[] = [
     title: "Settings",
     items: [
       /*
-       * One row, four tabs.
+       * Six rows, one per section, matching `constants/settings.SETTINGS_PAGES`
+       * exactly — the same six the in-module strip renders, in the same order.
        *
-       * Profile, Notifications and Security are all *the person* rather than
-       * the workspace, and they are panels on the General Settings page now —
-       * see `components/settings/settings-workspace`. Three sidebar rows for
-       * three readings of one screen is what made this the longest section in
-       * the product.
+       * They were four tabs on one page, and the tabs cost more than the rows
+       * they saved: no deep link to Security, no back button between Profile
+       * and Notifications, and every panel unmounted the moment you left it,
+       * so a half-finished form was gone on the way to check something. The
+       * sections are also not four readings of one thing — General is the
+       * workspace, Profile is the person, Security is the account's locks —
+       * and tabs are for readings of one thing.
        *
-       * Billing and API & Developer stay out of it deliberately: one is the
-       * company's money and the other is workspace configuration, and neither
-       * is a preference belonging to whoever happens to be signed in.
+       * Change Password and Two-Factor deliberately do not appear here. They
+       * are the two halves of "is my account safe", they are read together,
+       * and a sidebar row per card is how a settings menu becomes a table of
+       * contents nobody scans.
        */
       { title: "General", href: "/dashboard/settings", icon: "settings" },
+      { title: "Profile", href: "/dashboard/settings/profile", icon: "user" },
+      { title: "Notifications", href: "/dashboard/settings/notifications", icon: "bell" },
+      { title: "Security", href: "/dashboard/settings/security", icon: "shield-check" },
       { title: "Billing & Subscription", href: "/dashboard/settings/billing", icon: "credit-card" },
       { title: "API & Developer", href: "/dashboard/settings/api", icon: "terminal" },
     ],

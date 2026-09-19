@@ -12,8 +12,9 @@ import { KpiStrip, type Kpi } from "@/components/ui/kpi-strip";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { useToast } from "@/components/ui/toast";
 import { INTEGRATION_DOCS_URL, scopeSummary } from "@/constants/integrations";
+import { addApiKey, revokeApiKey, useApiKeys } from "@/lib/api-key-store";
 import { formatCount, formatPercent } from "@/lib/format";
-import { API_KEYS, API_LOGS, API_USAGE } from "@/lib/integration-fixtures";
+import { API_LOGS, API_USAGE } from "@/lib/integration-fixtures";
 import type { ApiKey } from "@/types/integration";
 import { ApiKeyTable } from "./api-key-table";
 import { ApiLogs } from "./api-logs";
@@ -31,6 +32,12 @@ import { CreateApiKeyDialog } from "./create-key-dialog";
  *
  * Nothing here ever shows a key in full. Creation is the one moment the secret
  * exists in the browser, and it exists inside a dialog that says so.
+ *
+ * The rows come from `lib/api-key-store` rather than from this component's own
+ * state. Settings → API & Developer lists the same register, and a credential
+ * is the last thing that may differ between two screens — revoking here has to
+ * be revoked there, or a developer has two pages and no way to know which one
+ * is telling the truth.
  */
 
 type KeyFilter = "all" | "active" | "revoked";
@@ -44,7 +51,7 @@ const FILTERS: { value: KeyFilter; label: string }[] = [
 export function ApiWorkspace() {
   const toast = useToast();
 
-  const [keys, setKeys] = useState<ApiKey[]>(API_KEYS);
+  const keys = useApiKeys();
   const [filter, setFilter] = useState<KeyFilter>("all");
   const [creating, setCreating] = useState(false);
   const [revoking, setRevoking] = useState<ApiKey | null>(null);
@@ -87,11 +94,7 @@ export function ApiWorkspace() {
 
   function revoke() {
     if (!revoking) return;
-    setKeys((current) =>
-      current.map((key) =>
-        key.id === revoking.id ? { ...key, status: "revoked" as const } : key,
-      ),
-    );
+    revokeApiKey(revoking.id);
     toast(`${revoking.name} revoked`, "info");
     setRevoking(null);
   }
@@ -194,7 +197,7 @@ export function ApiWorkspace() {
         <CreateApiKeyDialog
           open
           onClose={() => setCreating(false)}
-          onCreate={(key) => setKeys((current) => [key, ...current])}
+          onCreate={addApiKey}
         />
       ) : null}
 

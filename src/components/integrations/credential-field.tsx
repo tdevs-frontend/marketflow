@@ -32,7 +32,16 @@ import type { CredentialSpec, CredentialValue } from "@/types/integration";
 /** How long a revealed secret stays on screen before it hides itself again. */
 const REVEAL_MS = 15_000;
 
-function useClipboard() {
+/**
+ * Copy, with the receipt.
+ *
+ * Exported because Settings needs it for the two-factor setup key and the
+ * recovery codes, and a second clipboard helper would be a second place for the
+ * "browser blocked it" branch to be forgotten. The `copied` flag is what lets a
+ * caller swap the icon for a tick; the toast is what tells somebody who was
+ * looking at the keyboard rather than the button.
+ */
+export function useClipboard() {
   const toast = useToast();
   const [copied, setCopied] = useState(false);
   const timer = useRef(0);

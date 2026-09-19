@@ -1,0 +1,296 @@
+import type { MerchantRole } from "@/constants/roles";
+import type { MemberStatus } from "@/types/workspace";
+
+/**
+ * The Settings module's contract with the account service.
+ *
+ * Everything Settings reads or writes about *a person* is described here, and
+ * nothing else describes it. That matters more than usual in this module: the
+ * six Settings pages are the product's only surface where a wrong answer is
+ * silently acted on — a merchant who reads "Two-factor: Enabled" stops worrying
+ * about their password, and a merchant who reads "Saved" stops re-checking.
+ *
+ * These are deliberately *service* shapes rather than component props. When an
+ * account API is stood up, `lib/account-service` is the only file that changes;
+ * these types are what it must satisfy, and every panel is already written
+ * against them.
+ *
+ * Read `types/workspace` alongside this. The split is the whole information
+ * architecture of the module:
+ *
+ *   AccountUser / UserNotificationPreferences / SecurityState
+ *       → belong to whoever is signed in, and follow them between workspaces
+ *
+ *   WorkspaceSettings / WorkspaceNotificationPolicy / Subscription
+ *       → belong to the workspace, and are the same for everybody in it
+ *
+ * Anything that cannot be placed on one side of that line is usually two
+ * settings wearing one name.
+ */
+
+/* -------------------------------------------------------------------------- */
+/* The person                                                                 */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The signed-in person, as the account service returns them.
+ *
+ * Split into what the person may change and what the workspace decides about
+ * them, because the Profile page renders the two differently and needs to know
+ * which is which without carrying a list of field names in the component.
+ */
+export interface AccountUser {
+  id: string;
+
+  /* -- editable by the person -------------------------------------------- */
+  firstName: string;
+  lastName: string;
+  phone: string;
+  jobTitle: string;
+  /** Object URL or remote URL. `null` means "render initials". */
+  avatarUrl: string | null;
+
+  /* -- identity, changed only through a verified flow --------------------- */
+  /**
+   * The sign-in address.
+   *
+   * Read-only to this module on purpose: changing it needs a round trip that
+   * proves the new address can receive mail, and a field that accepts a new
+   * one without that changes who the dashboard says you are on the strength of
+   * a keystroke.
+   */
+  readonly email: string;
+
+  /* -- granted by the workspace, read-only here --------------------------- */
+  readonly roleId: string;
+  readonly role: MerchantRole;
+  readonly roleName: string;
+  readonly workspaceId: string;
+  readonly workspaceName: string;
+  readonly status: MemberStatus;
+  /** ISO. `null` for an invitation that has never been accepted. */
+  readonly joinedAt: string | null;
+  /** ISO. `null` for someone who has never signed in. */
+  readonly lastActiveAt: string | null;
+}
+
+/** Exactly the fields Profile is allowed to submit. */
+export type ProfilePatch = Pick<
+  AccountUser,
+  "firstName" | "lastName" | "phone" | "jobTitle"
+>;
+
+/** The person's display name, or their email when they have set no name. */
+export function displayName(user: AccountUser): string {
+  return `${user.firstName} ${user.lastName}`.trim() || user.email;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Notifications                                                              */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Where a notification can land.
+ *
+ * Two, not five. SMS and WhatsApp are things this product *sends to customers*;
+ * routing an operational alert down a billed channel is a different feature
+ * with a different cost model, and listing it here as an unchecked box is a
+ * promise of something nothing implements.
+ */
+export type NotificationChannel = "in_app" | "email";
+
+/** The nine areas the notification catalogue is grouped under. */
+export type NotificationCategory =
+  | "campaigns"
+  | "automations"
+  | "leads"
+  | "whatsapp"
+  | "email"
+  | "sms"
+  | "orders"
+  | "security"
+  | "system";
+
+/**
+ * One thing the product can tell you about.
+ *
+ * `source` names the module that raises it and is never rendered. It exists so
+ * the catalogue can be *checked* rather than trusted: a preference for an event
+ * nothing emits is a switch that silently does nothing, and the merchant only
+ * discovers it by not being told something.
+ */
+export interface NotificationEventDef {
+  key: string;
+  category: NotificationCategory;
+  title: string;
+  description: string;
+  /** Every channel this event could ever use. */
+  channels: NotificationChannel[];
+  /** What a new member gets before they touch anything. */
+  defaultChannels: NotificationChannel[];
+  /**
+   * Security notices the person may not switch off.
+   *
+   * "Your password changed" is how someone finds out it was not them. A
+   * product that lets that be muted has built the attacker a quiet room.
+   */
+  mandatory?: boolean;
+  /** The module that raises it. For auditing the catalogue, not for display. */
+  source: string;
+}
+
+/**
+ * What the workspace allows — the administrator's half of the split.
+ *
+ * An event absent from `enabled`, or present as `false`, is off for everybody
+ * and does not appear in a normal member's list at all. `channels` narrows what
+ * an event may use: a workspace that has not connected an email sender can
+ * leave every event in-app only, and no member can opt into mail that would
+ * never arrive.
+ */
+export interface WorkspaceNotificationPolicy {
+  /** Event key → available to members of this workspace. */
+  enabled: Record<string, boolean>;
+  /** Event key → the channels this workspace permits for it. */
+  channels: Record<string, NotificationChannel[]>;
+}
+
+/** The member's half: what they personally want, within what the policy allows. */
+export interface UserNotificationPreferences {
+  /** Event key → the channels this person wants it on. Empty means muted. */
+  channels: Record<string, NotificationChannel[]>;
+  /** Optional override for where mail goes. Empty means "my account address". */
+  emailAddress: string;
+  quietHours: QuietHours;
+}
+
+export type QuietHours = "off" | "night" | "night_weekend";
+
+/* -------------------------------------------------------------------------- */
+/* Security                                                                   */
+/* -------------------------------------------------------------------------- */
+
+export type TwoFactorStatus = "disabled" | "enabled";
+
+export interface SecurityState {
+  twoFactor: TwoFactorStatus;
+  /** ISO, or `null` while disabled. */
+  twoFactorEnabledAt: string | null;
+  /** How many unused recovery codes remain. `null` when 2FA is off. */
+  recoveryCodesRemaining: number | null;
+  /** ISO of the last password change, or `null` if it has never been changed. */
+  passwordChangedAt: string | null;
+}
+
+/**
+ * An enrolment in flight.
+ *
+ * Handed out by `startTwoFactorEnrollment` and valid until it is verified or
+ * abandoned. The secret is in it because the QR code and the manual setup key
+ * are both renderings of that one value — there is no second, "displayable"
+ * form of a TOTP secret.
+ */
+export interface TwoFactorEnrollment {
+  /** Base32, unpadded — what an authenticator app expects. */
+  secret: string;
+  /** `otpauth://totp/...`, the string the QR code encodes. */
+  otpauthUri: string;
+  issuer: string;
+  /** The label shown inside the authenticator app. */
+  account: string;
+}
+
+/** Returned once, at the moment 2FA is switched on. Never retrievable after. */
+export interface TwoFactorActivation {
+  security: SecurityState;
+  recoveryCodes: string[];
+}
+
+/* -------------------------------------------------------------------------- */
+/* Billing                                                                    */
+/* -------------------------------------------------------------------------- */
+
+export type SubscriptionStatus =
+  | "active"
+  | "trialing"
+  | "past_due"
+  | "cancelled";
+
+export type BillingPeriod = "monthly" | "yearly";
+
+export interface Subscription {
+  planId: string;
+  status: SubscriptionStatus;
+  period: BillingPeriod;
+  /** Whole currency units, for the period above. */
+  amount: number;
+  currency: string;
+  /** ISO. When the current period ends and the next charge is due. */
+  renewsAt: string;
+  startedAt: string;
+  /** Set only while `status` is `trialing`. */
+  trialEndsAt: string | null;
+  /**
+   * What the workspace will be charged against.
+   *
+   * `null` is the honest value here and it is load-bearing: no payment
+   * provider is integrated, so inventing a card ending in 4242 would tell a
+   * merchant their service cannot lapse.
+   */
+  paymentMethod: PaymentMethod | null;
+}
+
+export interface PaymentMethod {
+  brand: string;
+  last4: string;
+  expiryMonth: number;
+  expiryYear: number;
+}
+
+/** One metered allowance on the plan. */
+export interface UsageMetric {
+  key: string;
+  label: string;
+  /** What this workspace has used in the current period. */
+  used: number;
+  /** The plan's allowance, or `null` for an unmetered entitlement. */
+  limit: number | null;
+  /** The noun, already plural: "contacts", "messages". */
+  unit: string;
+  hint: string;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Service results                                                            */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Why an operation could not be performed.
+ *
+ * `service_unavailable` is the one that matters and the reason this is a union
+ * rather than a thrown string: it means "nothing was attempted, because there
+ * is nothing to attempt it against", and the UI must render it as plainly as
+ * that. It is not a network blip and it must never be retried into a success.
+ */
+export type ServiceErrorCode =
+  | "service_unavailable"
+  | "invalid_credentials"
+  | "invalid_code"
+  | "validation"
+  | "forbidden";
+
+export interface ServiceError {
+  code: ServiceErrorCode;
+  message: string;
+}
+
+export type ServiceResult<T> =
+  | { ok: true; data: T }
+  | { ok: false; error: ServiceError };
+
+export const ok = <T,>(data: T): ServiceResult<T> => ({ ok: true, data });
+
+export const fail = <T,>(
+  code: ServiceErrorCode,
+  message: string,
+): ServiceResult<T> => ({ ok: false, error: { code, message } });

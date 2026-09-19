@@ -78,12 +78,27 @@ export const APP_ROUTES = {
   analytics: "/dashboard/analytics",
   templates: "/dashboard/templates",
   integrations: "/dashboard/integrations",
+  /*
+   * Settings, as six routes.
+   *
+   * It used to be one page with four tabs, which meant the browser could not
+   * tell anyone where they were: no deep link to Security, no back button
+   * between Profile and Notifications, and nothing to point somebody at when
+   * they ask where two-factor lives. Six sections that each answer a different
+   * question are six pages.
+   */
   settings: "/dashboard/settings",
+  settingsProfile: "/dashboard/settings/profile",
+  settingsNotifications: "/dashboard/settings/notifications",
+  settingsSecurity: "/dashboard/settings/security",
   settingsBilling: "/dashboard/settings/billing",
+  settingsApi: "/dashboard/settings/api",
 
-  /* The developer surface. Under Integrations rather than Settings, because
-     that is where it is already built — Settings links across to it. */
+  /* The Integrations module's own developer pages. Settings → API & Developer
+     is the summary and these are the full surfaces; both render the same
+     components over the same store, so there is one set of keys. */
   integrationsApi: "/dashboard/integrations/api",
+  integrationsWebhooks: "/dashboard/integrations/webhooks",
 
   /* Workspace configuration. Named here because Settings links across to it:
      workspace name, timezone, currency and sender identity are owned by that

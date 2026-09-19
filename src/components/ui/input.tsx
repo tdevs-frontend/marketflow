@@ -105,7 +105,13 @@ export function Field({
 }: {
   label: string;
   htmlFor: string;
-  hint?: string;
+  /**
+   * `ReactNode` rather than `string` so a hint can carry the link that answers
+   * it — "Must be a verified address. Manage sender identities" is one
+   * sentence, and splitting the link out below the field turns a hint into a
+   * second paragraph competing with it.
+   */
+  hint?: ReactNode;
   error?: string;
   children: ReactNode;
 }) {

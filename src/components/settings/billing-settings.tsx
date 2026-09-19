@@ -1,242 +1,287 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Check,
-  CreditCard,
-  FileText,
-  Megaphone,
-  UserCog,
-  Users,
-  Workflow,
-} from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 import { PageHeader } from "@/components/layout/page-header";
-import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
-import { Card, CardBody, CardHeader } from "@/components/ui/card";
+import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
-import { KpiStrip, type Kpi } from "@/components/ui/kpi-strip";
+import { MeterRow } from "@/components/ui/progress";
+import { Tooltip } from "@/components/ui/tooltip";
 import { APP_ROUTES } from "@/constants/app";
-import { PLANS, YEARLY_DISCOUNT, yearlyMonthly } from "@/constants/pricing";
-import { CAMPAIGNS } from "@/lib/marketing-fixtures";
-import { CONTACTS } from "@/lib/customer-fixtures";
-import { formatNumber } from "@/lib/format";
-import { WORKFLOWS } from "@/lib/workflow-fixtures";
-import { WORKSPACE_MEMBERS } from "@/lib/workspace-fixtures";
+import { PLANS } from "@/constants/pricing";
+import { UNAVAILABLE_REASON } from "@/lib/account-service";
+import { usageMetrics } from "@/lib/account-fixtures";
+import { useSubscription } from "@/lib/account-store";
+import { formatCount, formatCurrency, formatDate } from "@/lib/format";
+import {
+  permissionHint,
+  useWorkspacePermissions,
+} from "@/components/workspace/use-workspace-permissions";
+import type { SubscriptionStatus, UsageMetric } from "@/types/account";
 
 import { ServiceNotice } from "./service-notice";
+import { DetailList, SettingsSection } from "./settings-section";
 
 /**
- * Billing — real plans, honest subscription.
+ * Billing & Subscription — what this workspace pays for, and what it is using.
  *
- * This route did not exist. The sidebar has linked "Billing & Subscription" at
- * `/dashboard/settings/billing` for as long as the Settings section has been
- * there, and `next build` never emitted a page for it, so the link 404'd.
+ * The page divides on one line, and it is the line that decides what is honest
+ * to draw:
  *
- * What it shows is split down one line: the *plans* are real — they come from
- * `constants/pricing`, the same tiers and prices the public pricing page
- * renders, so there is one answer to what MarketFlow costs — and the
- * *subscription* is not, because there is no payment provider integrated.
+ *   **Real.** The plan, its price and the usage. The tiers come from
+ *   `constants/pricing` — the same ones the public pricing page renders, so
+ *   there is one answer to what MarketFlow costs — and every usage figure is
+ *   counted from this workspace: contacts are the rows in the CRM, message
+ *   counts are summed from what the campaigns actually sent. A merchant checks
+ *   a usage meter against their own knowledge of their business, and a
+ *   hand-written number is the one they catch.
  *
- * So there is no current plan badge, no card ending in 4242, no PDF invoices
- * and no "Cancel subscription". Inventing a payment method is the one fake
- * state on this page that could cost a merchant actual money: somebody who
- * believes a card is on file believes their service will not lapse.
+ *   **Not real, and shown as such.** The payment method and the invoices. No
+ *   payment provider is integrated, and a card ending in 4242 would be the most
+ *   expensive fiction in the product: somebody who believes a card is on file
+ *   believes their service cannot lapse. Those two blocks are empty states that
+ *   say why, not placeholders waiting to be swapped.
  *
- * Usage is real. Those are counts of what is in this workspace right now, and
- * they are worth showing on their own — a merchant deciding between Starter
- * and Growth needs to know they already hold 27 contacts, not a bar chart of a
- * limit nothing is enforcing.
+ * No charts. Five allowances against five limits is a list of bars, and a
+ * donut of "plan usage" would be decoration standing where a number belongs.
  */
 
-const usage: Kpi[] = [
-  {
-    label: "Contacts",
-    value: formatNumber(CONTACTS.length),
-    icon: Users,
-    tone: "brand",
-    hint: "People in the CRM",
-  },
-  {
-    label: "Campaigns",
-    value: formatNumber(CAMPAIGNS.length),
-    icon: Megaphone,
-    tone: "info",
-    hint: "Across every channel",
-  },
-  {
-    label: "Automations",
-    value: formatNumber(WORKFLOWS.length),
-    icon: Workflow,
-    tone: "success",
-    hint: "Built in the workflow canvas",
-  },
-  {
-    label: "Team members",
-    value: formatNumber(
-      WORKSPACE_MEMBERS.filter((member) => member.status !== "invited").length,
-    ),
-    icon: UserCog,
-    tone: "neutral",
-    hint: "Excluding open invitations",
-  },
-];
-
-function PlanCard({ plan }: { plan: (typeof PLANS)[number] }) {
-  const featured = Boolean(plan.featured);
-
-  return (
-    <Card
-      className="flex flex-col p-5"
-      selected={featured}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <h3 className="text-base sm:text-lg">{plan.name}</h3>
-        {featured ? <Badge tone="brand">Most popular</Badge> : null}
-      </div>
-
-      <p className="mt-1 text-sm font-medium text-text-secondary">
-        {plan.audience}
-      </p>
-
-      <p className="mt-4 flex items-baseline gap-1.5">
-        {plan.monthly === null ? (
-          <span className="text-2xl font-bold text-text-primary">
-            Custom
-          </span>
-        ) : (
-          <>
-            <span className="text-2xl font-bold text-text-primary tabular-nums">
-              ${plan.monthly}
-            </span>
-            <span className="text-sm font-medium text-text-muted">/ month</span>
-          </>
-        )}
-      </p>
-
-      {plan.monthly === null ? (
-        <p className="mt-1 text-sm text-text-muted">Quoted per organisation.</p>
-      ) : (
-        <p className="mt-1 text-sm text-text-muted tabular-nums">
-          ${yearlyMonthly(plan.monthly)} / month billed yearly
-        </p>
-      )}
-
-      {/* Five, not all ten. A plan card is for choosing between tiers, and the
-          pricing page is where the full list already lives. */}
-      <ul className="mt-4 flex-1 space-y-2">
-        {plan.features.slice(0, 5).map((feature) => (
-          <li key={feature} className="flex items-start gap-2 text-sm text-text-secondary">
-            <Check className="mt-0.5 size-4 shrink-0 text-success" aria-hidden />
-            {feature}
-          </li>
-        ))}
-      </ul>
-
-      <Link
-        href={APP_ROUTES.pricing}
-        className={buttonVariants({
-          variant: featured ? "primary" : "outline",
-          size: "compact",
-          className: "mt-5 w-full",
-        })}
-      >
-        Compare on pricing
-      </Link>
-    </Card>
-  );
-}
+const STATUS: Record<SubscriptionStatus, { label: string; tone: BadgeTone }> = {
+  active: { label: "Active", tone: "success" },
+  trialing: { label: "Trial", tone: "info" },
+  past_due: { label: "Past due", tone: "danger" },
+  cancelled: { label: "Cancelled", tone: "neutral" },
+};
 
 export function BillingSettings() {
+  const subscription = useSubscription();
+  const permissions = useWorkspacePermissions();
+
+  const canView = permissions.can("billing", "view");
+  const canManage = permissions.can("billing", "manage");
+
+  const plan = PLANS.find((item) => item.id === subscription.planId);
+  const status = STATUS[subscription.status];
+  const metrics = usageMetrics(subscription.planId);
+
+  if (!canView) {
+    return (
+      <>
+        <PageHeader
+          title="Billing & Subscription"
+          description="What this workspace subscribes to."
+        />
+        <Card>
+          <EmptyState
+            title="Billing is not visible to your role"
+            description={permissionHint("access to billing", permissions.roleName)}
+          />
+        </Card>
+      </>
+    );
+  }
+
   return (
     <>
       <PageHeader
         title="Billing & Subscription"
-        description="What this workspace uses, what MarketFlow costs, and where payment will be set up."
+        description="Your plan, what it costs and what this workspace is using."
+        action={
+          <Link
+            href={APP_ROUTES.pricing}
+            className={buttonVariants({ variant: "outline" })}
+          >
+            Compare plans
+            <ArrowUpRight aria-hidden />
+          </Link>
+        }
       />
 
-      <div className="mt-6 space-y-6">
-        <ServiceNotice
-          tone="unavailable"
-          title="No payment provider is connected"
-          action={
-            <Link
-              href={APP_ROUTES.pricing}
-              className={buttonVariants({ variant: "outline", size: "sm" })}
-            >
-              See pricing
-            </Link>
-          }
-        >
-          This workspace has no subscription, no payment method and no invoice
-          history, because nothing has been integrated to hold them. The plans
-          below are MarketFlow&rsquo;s real tiers; the usage figures are this
-          workspace&rsquo;s real counts. Everything a provider would own is
-          shown as the empty state it actually is.
+      <div className="space-y-6">
+        <ServiceNotice tone="unavailable" title="No payment provider is connected">
+          The plan and the usage below are this workspace&rsquo;s own. Nothing
+          is integrated to hold a card or issue an invoice, so those two
+          sections show what is actually there — nothing — rather than a
+          placeholder card that would suggest your subscription is paid for.
         </ServiceNotice>
 
-        <Card className="p-5">
-          <h2 className="text-base sm:text-lg">Current usage</h2>
-          <p className="mt-1 text-sm font-medium text-text-secondary">
-            What this workspace holds today. No plan limits are being enforced.
-          </p>
-          <KpiStrip className="mt-4" items={usage} />
-        </Card>
-
-        <section>
-          <div className="flex flex-wrap items-baseline justify-between gap-3">
-            <h2 className="text-base sm:text-lg">Plans</h2>
-            <p className="text-sm font-medium text-text-secondary">
-              Save {Math.round(YEARLY_DISCOUNT * 100)}% billed yearly
+        {/* -- Current plan -------------------------------------------------- */}
+        <SettingsSection
+          title="Current plan"
+          description="What this workspace subscribes to today."
+          action={<Badge tone={status.tone}>{status.label}</Badge>}
+          bodyClassName="space-y-5"
+        >
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <h3 className="text-2xl font-bold tracking-tight">
+              {plan?.name ?? subscription.planId}
+            </h3>
+            <p className="text-base font-semibold text-text-secondary tabular-nums">
+              {formatCurrency(subscription.amount, subscription.currency)}
+              <span className="font-medium text-text-muted">
+                {" "}
+                / {subscription.period === "yearly" ? "year" : "month"}
+              </span>
             </p>
           </div>
 
-          <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {PLANS.map((plan) => (
-              <PlanCard key={plan.id} plan={plan} />
-            ))}
+          {plan ? (
+            <p className="max-w-2xl text-sm text-text-secondary">
+              {plan.audience}
+            </p>
+          ) : null}
+
+          <DetailList
+            columns={3}
+            items={[
+              {
+                label: "Billing period",
+                value: subscription.period === "yearly" ? "Yearly" : "Monthly",
+              },
+              {
+                label: subscription.status === "cancelled" ? "Ends" : "Renews",
+                value: formatDate(subscription.renewsAt),
+              },
+              {
+                label: "Subscribed since",
+                value: formatDate(subscription.startedAt),
+              },
+            ]}
+          />
+
+          <div className="flex flex-wrap gap-2.5">
+            <Link
+              href={APP_ROUTES.pricing}
+              className={buttonVariants({ variant: "outline", size: "compact" })}
+            >
+              Change plan
+            </Link>
+
+            {/*
+              Disabled with the reason attached, rather than hidden or wired to
+              a toast. Hiding it makes a merchant hunt for where cancellation
+              lives; a toast would claim something happened. The tooltip is on
+              a wrapper because a disabled button fires no pointer events of
+              its own.
+            */}
+            <Tooltip content={UNAVAILABLE_REASON.payment}>
+              <span className="inline-flex">
+                <Button
+                  variant="ghost"
+                  size="compact"
+                  disabled
+                  aria-describedby={undefined}
+                >
+                  Cancel subscription
+                </Button>
+              </span>
+            </Tooltip>
           </div>
-        </section>
+        </SettingsSection>
 
+        {/* -- Usage --------------------------------------------------------- */}
+        <SettingsSection
+          title="Usage"
+          description="Counted from this workspace. No limits are being enforced yet."
+          bodyClassName="space-y-5"
+        >
+          {metrics.map((metric) => (
+            <UsageMeter key={metric.key} metric={metric} />
+          ))}
+        </SettingsSection>
+
+        {/* -- Provider-owned ------------------------------------------------ */}
         <div className="grid gap-6 lg:grid-cols-2">
-          <Card>
-            <CardHeader
-              title="Payment method"
-              description="Charged when a subscription starts."
+          <SettingsSection
+            title="Payment method"
+            description="Charged when the subscription renews."
+          >
+            <EmptyState
+              compact
+              title="No payment method"
+              description={UNAVAILABLE_REASON.payment}
+              action={
+                canManage ? (
+                  <Tooltip content={UNAVAILABLE_REASON.payment}>
+                    <span className="inline-flex">
+                      <Button variant="outline" size="compact" disabled>
+                        Add payment method
+                      </Button>
+                    </span>
+                  </Tooltip>
+                ) : undefined
+              }
             />
-            <CardBody>
-              <EmptyState
-                compact
-                title="No payment method"
-                description="A card can be added once a payment provider is connected. Nothing is stored in the dashboard."
-              />
-            </CardBody>
-          </Card>
+          </SettingsSection>
 
-          <Card>
-            <CardHeader
-              title="Invoices"
-              description="Receipts for every charge, once there are charges."
+          <SettingsSection
+            title="Invoices"
+            description="Receipts for every charge, once there are charges."
+          >
+            <EmptyState
+              compact
+              title="No invoices yet"
+              description={UNAVAILABLE_REASON.invoices}
             />
-            <CardBody>
-              <EmptyState
-                compact
-                title="No invoices yet"
-                description="Invoices are issued by the payment provider. None exist for this workspace."
-              />
-            </CardBody>
-          </Card>
+          </SettingsSection>
         </div>
-
-        {/* Two glyphs, purely so the empty pair above reads as a section that
-            will fill rather than two things that failed to load. */}
-        <p className="flex items-center justify-center gap-2 text-sm text-text-muted">
-          <CreditCard className="size-4" aria-hidden />
-          <FileText className="size-4" aria-hidden />
-          Billing records appear here once a provider is connected.
-        </p>
       </div>
     </>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Usage meter                                                                */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * One allowance, as a bar with the numbers beside it.
+ *
+ * The bar is the comparison and the digits are the fact; a percentage alone
+ * cannot answer "how many more can I send this month". Colour changes only at
+ * the two thresholds that mean something — approaching the limit, and over it —
+ * because a bar that is amber at 40% has taught the reader to ignore its
+ * colour by the time it matters.
+ *
+ * An unmetered entitlement gets no bar at all. A full-width bar for "unlimited"
+ * reads as "you are at capacity", which is the opposite of what it means.
+ */
+function UsageMeter({ metric }: { metric: UsageMetric }) {
+  if (metric.limit === null) {
+    return (
+      <div>
+        <div className="flex items-baseline justify-between gap-3">
+          <p className="truncate text-sm font-medium text-text-secondary">
+            {metric.label}
+          </p>
+          <p className="shrink-0 text-sm font-bold text-text-primary tabular-nums">
+            {formatCount(metric.used)}{" "}
+            <span className="font-medium text-text-muted">/ unlimited</span>
+          </p>
+        </div>
+        <p className="mt-1.5 text-sm text-text-muted">{metric.hint}</p>
+      </div>
+    );
+  }
+
+  const percent = (metric.used / metric.limit) * 100;
+  const tone =
+    percent >= 100 ? "bg-error" : percent >= 80 ? "bg-warning" : "bg-primary";
+
+  return (
+    <MeterRow
+      label={metric.label}
+      value={percent}
+      display={`${formatCount(metric.used)} / ${formatCount(metric.limit)}`}
+      tone={tone}
+      hint={
+        percent >= 100
+          ? `Over the plan allowance for ${metric.unit}. ${metric.hint}`
+          : metric.hint
+      }
+    />
   );
 }

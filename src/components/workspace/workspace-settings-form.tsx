@@ -27,7 +27,11 @@ import {
 import { formatRelativeTime } from "@/lib/format";
 import { WORKSPACE_NOW, WORKSPACE_NOW_MS } from "@/lib/workspace-clock";
 import { isValidEmail, isValidPhone } from "@/lib/validation";
-import { WORKSPACE_MEMBERS, WORKSPACE_SETTINGS } from "@/lib/workspace-fixtures";
+import { WORKSPACE_MEMBERS } from "@/lib/workspace-fixtures";
+import {
+  saveWorkspaceSection,
+  useWorkspaceSettings,
+} from "@/lib/workspace-settings-store";
 import { slugify } from "@/lib/utils";
 import type { SettingsSection, WorkspaceSettings } from "@/types/workspace";
 import {
@@ -81,8 +85,19 @@ export function WorkspaceSettingsForm() {
   const editable = permissions.canEditSettings;
 
   const [tab, setTab] = useState<TabValue>("general");
-  const [saved, setSaved] = useState<WorkspaceSettings>(WORKSPACE_SETTINGS);
-  const [draft, setDraft] = useState<WorkspaceSettings>(WORKSPACE_SETTINGS);
+  /*
+   * `saved` is the shared record, not a second copy of it.
+   *
+   * Settings → General edits the same workspace name, timezone, currency,
+   * business details and default senders that this form does. While each screen
+   * held its own `useState(WORKSPACE_SETTINGS)`, the same field could give two
+   * different answers depending on which route you arrived by — and nothing on
+   * either screen told you which one to believe. `draft` stays local, because
+   * that is what Discard rewinds to and what the unsaved-changes guard is
+   * guarding.
+   */
+  const saved = useWorkspaceSettings();
+  const [draft, setDraft] = useState<WorkspaceSettings>(saved);
   const [pendingTab, setPendingTab] = useState<TabValue | null>(null);
   /*
    * Per-section save receipts.
@@ -145,7 +160,7 @@ export function WorkspaceSettingsForm() {
       return;
     }
 
-    setSaved((current) => ({ ...current, [tab]: draft[tab] }));
+    saveWorkspaceSection(tab, draft[tab]);
     setSavedAt((current) => ({ ...current, [tab]: WORKSPACE_NOW }));
     setSaveError((current) => ({ ...current, [tab]: undefined }));
     toast(`${SECTION_LABEL[tab]} settings saved`, "success");

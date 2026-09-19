@@ -1,110 +1,220 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useMemo, useState } from "react";
+import { Lock } from "lucide-react";
 
+import { PageHeader } from "@/components/layout/page-header";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardBody, CardHeader } from "@/components/ui/card";
-import { CheckboxField } from "@/components/ui/checkbox";
+import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Field, Input } from "@/components/ui/input";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Select } from "@/components/ui/select";
-import { useToast } from "@/components/ui/toast";
+import { Tooltip } from "@/components/ui/tooltip";
 import {
-  ALL_NOTIFICATION_EVENTS,
-  NOTIFICATION_CHANNELS,
-  NOTIFICATION_GROUPS,
-  QUIET_HOURS,
+  NOTIFICATION_CHANNEL_LABEL,
+  NOTIFICATION_EVENTS,
+  QUIET_HOURS_OPTIONS,
+  notificationEventsByCategory,
 } from "@/constants/settings";
-import { isValidEmail } from "@/lib/validation";
 import {
-  defaultNotificationPrefs,
-  updateNotificationPrefs,
-  useNotificationPrefs,
-} from "@/lib/settings-store";
+  updateNotificationPolicy,
+  updateNotificationPreferences,
+} from "@/lib/account-service";
+import {
+  useAccount,
+  useNotificationPolicy,
+  useNotificationPreferences,
+} from "@/lib/account-store";
+import { defaultNotificationPreferences } from "@/lib/account-fixtures";
+import { isValidEmail } from "@/lib/validation";
+import { cn } from "@/lib/utils";
+import type {
+  NotificationChannel,
+  NotificationEventDef,
+  QuietHours,
+  UserNotificationPreferences,
+  WorkspaceNotificationPolicy,
+} from "@/types/account";
+import { useWorkspacePermissions } from "@/components/workspace/use-workspace-permissions";
 
 import { ServiceNotice } from "./service-notice";
+import { SaveBar, SettingsSection, useSaveState } from "./settings-section";
 
 /**
- * What the product is allowed to interrupt you about.
+ * Notifications — two settings with one name, told apart.
  *
- * Grouped by *why* rather than by channel — what is happening to your work,
- * and who needs you — because that is how somebody decides what to turn off. A
- * flat list of twelve toggles gets switched off wholesale the first time one
- * of them is noisy.
+ * This is the distinction the module is built around, and it is a governance
+ * boundary rather than a layout choice:
  *
- * The catalogue lives in `constants/settings` and each entry names the module
- * that raises it, so the list can be checked rather than trusted. One row did
- * not survive that check: "Somebody mentions me in a note" promised a
- * notification for a feature the product does not have — notes are a
- * `string[]` on a record, with no author and no mention parsing — so nothing
- * could ever have raised it. "A new lead arrives" became "A lead is assigned
- * to me", which is the event the lead model actually carries.
+ *   The **workspace** decides which events exist for its members and which
+ *   channels they may use. That is an administrator's call, because muting
+ *   "Automation failed" for everybody is a decision with a blast radius.
+ *
+ *   The **member** decides, within that, what reaches them personally.
+ *
+ * Collapsing the two is how a support agent ends up able to switch off the
+ * whole workspace's failure alerts from their own preferences page. So they are
+ * different records (`WorkspaceNotificationPolicy` against
+ * `UserNotificationPreferences`), different service calls with different
+ * authorisation, and — for anyone who can do both — two views that you have to
+ * deliberately switch between. A member without the permission never sees the
+ * workspace view at all, and their list is *derived* from the policy: an event
+ * an administrator turns off simply is not there.
+ *
+ * The rows are compact and grouped by category rather than being a card each.
+ * There are twenty-odd of these; as cards it is a page nobody reads to the
+ * bottom, and a notification list that is not scannable gets dealt with by
+ * switching everything off once.
  */
 
+type View = "me" | "workspace";
+
 export function NotificationSettings() {
+  const permissions = useWorkspacePermissions();
+  const canConfigure = permissions.can("workspace_settings", "edit");
+
+  const [view, setView] = useState<View>("me");
+
+  return (
+    <>
+      <PageHeader
+        title="Notifications"
+        description="Choose how you receive important workspace notifications."
+      />
+
+      <div className="space-y-6">
+        <ServiceNotice tone="session" title="Preferences are saved, delivery is not connected">
+          These choices are kept for this session and are the events the product
+          genuinely models — nothing here is a placeholder switch. What does not
+          exist yet is the service that sends them, so turning something on
+          records the preference rather than starting a mail.
+        </ServiceNotice>
+
+        {canConfigure ? (
+          <div className="flex flex-wrap items-center gap-3">
+            <SegmentedControl
+              label="Notification settings view"
+              value={view}
+              onChange={setView}
+              options={[
+                { value: "me", label: "My preferences" },
+                { value: "workspace", label: "Workspace configuration" },
+              ]}
+            />
+            <p className="text-sm font-medium text-text-muted">
+              {view === "me"
+                ? "What reaches you personally."
+                : `What every member of this workspace can be notified about. Visible to you because you are ${permissions.roleName}.`}
+            </p>
+          </div>
+        ) : null}
+
+        {view === "me" ? <MyPreferences /> : <WorkspacePolicy />}
+      </div>
+    </>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Member preferences                                                         */
+/* -------------------------------------------------------------------------- */
+
+function MyPreferences() {
   const id = useId();
-  const toast = useToast();
+  const user = useAccount();
+  const policy = useNotificationPolicy();
+  const saved = useNotificationPreferences();
+  const { state, run, setError } = useSaveState();
 
-  const saved = useNotificationPrefs();
+  const [draft, setDraft] = useState<UserNotificationPreferences>(saved);
 
-  const [draft, setDraft] = useState(saved);
-  const [touched, setTouched] = useState(false);
+  /**
+   * The member's list, derived from the policy rather than from the catalogue.
+   *
+   * An event the workspace has switched off does not appear, and a channel the
+   * workspace has not permitted is not offered — which is what makes the split
+   * real. A UI that shows every event and quietly ignores half of them has an
+   * administrator's setting that does nothing visible.
+   */
+  const groups = useMemo(() => {
+    const available = NOTIFICATION_EVENTS.filter(
+      (event) => policy.enabled[event.key] !== false,
+    );
+    return notificationEventsByCategory(available);
+  }, [policy]);
 
-  const addressError =
-    draft.address.trim() && !isValidEmail(draft.address)
+  const emailError =
+    draft.emailAddress.trim() && !isValidEmail(draft.emailAddress)
       ? "Enter a valid email address, or leave it empty."
       : undefined;
 
-  const dirty =
-    draft.channel !== saved.channel ||
-    draft.quiet !== saved.quiet ||
-    draft.address !== saved.address ||
-    ALL_NOTIFICATION_EVENTS.some(
-      (event) => draft.events[event.key] !== saved.events[event.key],
-    );
+  const dirty = JSON.stringify(draft) !== JSON.stringify(saved);
 
-  /* Email-only delivery with no address is the one combination that silently
-     sends nothing, so it is worth saying out loud rather than validating. */
-  const emailOnly = draft.channel === "email";
+  /** Channels the workspace permits for this event, in catalogue order. */
+  const allowed = (event: NotificationEventDef): NotificationChannel[] => {
+    const permitted = policy.channels[event.key] ?? event.channels;
+    return event.channels.filter((channel) => permitted.includes(channel));
+  };
+
+  function toggle(
+    event: NotificationEventDef,
+    channel: NotificationChannel,
+    on: boolean,
+  ) {
+    setDraft((current) => {
+      const existing = current.channels[event.key] ?? [];
+      const next = on
+        ? [...new Set([...existing, channel])]
+        : existing.filter((item) => item !== channel);
+
+      return { ...current, channels: { ...current.channels, [event.key]: next } };
+    });
+  }
+
+  function save() {
+    if (emailError) {
+      setError(emailError);
+      return;
+    }
+
+    void run(async () => {
+      const result = await updateNotificationPreferences(draft);
+      if (result.ok) setDraft(result.data);
+      return result;
+    });
+  }
+
+  /* Email delivery with no verified route is the one combination that silently
+     sends nothing, so it is said out loud rather than validated. */
+  const usesEmail = Object.values(draft.channels).some((list) =>
+    list.includes("email"),
+  );
 
   return (
     <div className="space-y-6">
-      <ServiceNotice tone="session" title="Preferences are not delivered yet">
-        Nothing sends these notifications today — there is no notification
-        service behind the dashboard. The choices below are kept for this
-        session so the shape of them is real, and they are the events the
-        product actually models.
-      </ServiceNotice>
-
-      <Card>
-        <CardHeader
-          title="How to reach you"
-          description="Applies to everything below."
-        />
-        <CardBody className="max-w-lg space-y-4">
-          <Field label="Send notifications by" htmlFor={`${id}-channel`}>
-            <Select
-              id={`${id}-channel`}
-              hideLabel={false}
-              label="Send notifications by"
-              value={draft.channel}
-              onChange={(channel) => setDraft({ ...draft, channel })}
-              options={NOTIFICATION_CHANNELS}
-            />
-          </Field>
-
+      <SettingsSection
+        title="How to reach you"
+        description="Applies to everything you have chosen to receive by email."
+        bodyClassName="max-w-2xl space-y-4"
+      >
+        <div className="grid gap-4 sm:grid-cols-2">
           <Field
-            label="Send to a different address"
+            label="Send email to"
             htmlFor={`${id}-address`}
-            hint="Optional. Leave blank to use the email on your profile."
-            error={touched ? addressError : undefined}
+            error={emailError}
+            hint={`Leave blank to use ${user.email}.`}
           >
             <Input
               id={`${id}-address`}
               type="email"
-              value={draft.address}
-              error={Boolean(touched && addressError)}
+              placeholder={user.email}
+              value={draft.emailAddress}
+              error={Boolean(emailError)}
               onChange={(event) =>
-                setDraft({ ...draft, address: event.target.value })
+                setDraft({ ...draft, emailAddress: event.target.value })
               }
             />
           </Field>
@@ -116,94 +226,277 @@ export function NotificationSettings() {
           >
             <Select
               id={`${id}-quiet`}
-              hideLabel={false}
               label="Quiet hours"
-              value={draft.quiet}
-              onChange={(quiet) => setDraft({ ...draft, quiet })}
-              options={QUIET_HOURS}
+              value={draft.quietHours}
+              onChange={(quietHours: QuietHours) =>
+                setDraft({ ...draft, quietHours })
+              }
+              options={QUIET_HOURS_OPTIONS}
             />
           </Field>
-        </CardBody>
-      </Card>
+        </div>
 
-      {NOTIFICATION_GROUPS.map((group) => (
-        <Card key={group.id}>
-          <CardHeader title={group.title} description={group.description} />
-          <CardBody className="space-y-4">
-            {group.events.map((event) => {
-              const Icon = event.icon;
+        {!usesEmail ? (
+          <p className="text-sm font-medium text-text-muted">
+            Nothing is set to arrive by email at the moment, so the address
+            above is unused.
+          </p>
+        ) : null}
+      </SettingsSection>
 
-              return (
-                <div key={event.key} className="flex items-start gap-3.5">
-                  <span className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-btn bg-surface-secondary text-text-muted">
-                    <Icon className="size-4" aria-hidden />
-                  </span>
-
-                  <CheckboxField
-                    className="flex-1"
-                    id={`${id}-${event.key}`}
-                    checked={draft.events[event.key] ?? event.defaultOn}
-                    onCheckedChange={(next) =>
-                      setDraft({
-                        ...draft,
-                        events: { ...draft.events, [event.key]: next },
-                      })
-                    }
-                    label={event.label}
-                    hint={
-                      emailOnly && event.defaultOn
-                        ? `${event.hint} Sent by email only.`
-                        : event.hint
-                    }
-                  />
-                </div>
-              );
-            })}
-          </CardBody>
+      {groups.length === 0 ? (
+        <Card>
+          <EmptyState
+            title="No notifications are available"
+            description="An administrator has switched off every notification for this workspace. Ask them to enable the ones you need."
+          />
         </Card>
+      ) : (
+        groups.map((group) => (
+          <SettingsSection
+            key={group.category.key}
+            title={group.category.label}
+            description={group.category.description}
+            bodyClassName="divide-y divide-border p-0"
+          >
+            {group.events.map((event) => (
+              <EventRow
+                key={event.key}
+                event={event}
+                channels={allowed(event)}
+                selected={draft.channels[event.key] ?? []}
+                onToggle={(channel, on) => toggle(event, channel, on)}
+                idBase={id}
+              />
+            ))}
+          </SettingsSection>
+        ))
+      )}
+
+      {/* Sticky, because the list is long enough that a bar at the bottom is a
+          bar you have to remember to scroll back to. */}
+      <Card className="sticky bottom-4 z-10 flex flex-wrap items-center gap-3 px-5 py-4 shadow-card-hover">
+        <SaveBar
+          state={state}
+          dirty={dirty}
+          onSave={save}
+          onCancel={() => setDraft(saved)}
+          label="Save preferences"
+        >
+          <Button
+            variant="outline"
+            className="max-sm:w-full sm:ms-auto"
+            onClick={() => setDraft(defaultNotificationPreferences())}
+          >
+            Reset to defaults
+          </Button>
+        </SaveBar>
+      </Card>
+    </div>
+  );
+}
+
+/**
+ * One notification, as a row.
+ *
+ * Title, one line of what raises it, and a checkbox per permitted channel — the
+ * four things the reader needs and nothing else. The channels are checkboxes
+ * rather than a switch because an event can legitimately go to both, to one, or
+ * to neither, and "neither" is a normal answer that a single on/off control
+ * cannot express without a second control beside it.
+ */
+function EventRow({
+  event,
+  channels,
+  selected,
+  onToggle,
+  idBase,
+}: {
+  event: NotificationEventDef;
+  channels: NotificationChannel[];
+  selected: NotificationChannel[];
+  onToggle: (channel: NotificationChannel, on: boolean) => void;
+  idBase: string;
+}) {
+  const titleId = `${idBase}-${event.key}-title`;
+
+  return (
+    <div className="flex flex-col gap-2.5 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+      <div className="min-w-0">
+        <p id={titleId} className="text-sm font-semibold text-text-primary">
+          {event.title}
+        </p>
+        <p className="mt-0.5 text-sm text-text-muted">{event.description}</p>
+      </div>
+
+      <div className="flex shrink-0 flex-wrap items-center gap-x-5 gap-y-2">
+        {event.mandatory ? (
+          /*
+           * Not a disabled checkbox. "Your password changed" is how somebody
+           * finds out it was not them, and a product that lets that be muted
+           * has built the attacker a quiet room. A greyed-out box invites the
+           * reader to look for the way to un-grey it; a badge that states the
+           * rule ends the question.
+           */
+          <Tooltip content="Security notices cannot be switched off.">
+            <span className="inline-flex items-center gap-1.5">
+              <Badge tone="neutral">
+                <Lock className="size-3" aria-hidden />
+                Always on
+              </Badge>
+              <span className="text-sm text-text-muted">
+                {channels
+                  .map((channel) => NOTIFICATION_CHANNEL_LABEL[channel])
+                  .join(" · ")}
+              </span>
+            </span>
+          </Tooltip>
+        ) : (
+          channels.map((channel) => (
+            <Checkbox
+              key={channel}
+              id={`${idBase}-${event.key}-${channel}`}
+              checked={selected.includes(channel)}
+              onCheckedChange={(on) => onToggle(channel, on)}
+              /* Names the event as well as the channel, so a screen reader
+                 announces "Campaign completed, Email" rather than the tenth
+                 unlabelled "Email" on the page. */
+              label={`${NOTIFICATION_CHANNEL_LABEL[channel]} — ${event.title}`}
+            />
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Workspace policy                                                           */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The administrator's view: what members are allowed to be notified about.
+ *
+ * Deliberately coarse. An administrator decides whether an event exists for
+ * this workspace and which channels it may use; they do not set individual
+ * people's preferences, because doing that from here would silently overwrite
+ * choices those people made and give them no way to see it had happened.
+ */
+function WorkspacePolicy() {
+  const id = useId();
+  const saved = useNotificationPolicy();
+  const { state, run } = useSaveState();
+
+  const [draft, setDraft] = useState<WorkspaceNotificationPolicy>(saved);
+
+  const dirty = JSON.stringify(draft) !== JSON.stringify(saved);
+  const groups = useMemo(() => notificationEventsByCategory(), []);
+
+  const enabledCount = NOTIFICATION_EVENTS.filter(
+    (event) => draft.enabled[event.key] !== false,
+  ).length;
+
+  function setEnabled(event: NotificationEventDef, on: boolean) {
+    setDraft((current) => ({
+      ...current,
+      enabled: { ...current.enabled, [event.key]: on },
+    }));
+  }
+
+  function setChannel(
+    event: NotificationEventDef,
+    channel: NotificationChannel,
+    on: boolean,
+  ) {
+    setDraft((current) => {
+      const existing = current.channels[event.key] ?? event.channels;
+      const next = on
+        ? event.channels.filter(
+            (item) => existing.includes(item) || item === channel,
+          )
+        : existing.filter((item) => item !== channel);
+
+      return { ...current, channels: { ...current.channels, [event.key]: next } };
+    });
+  }
+
+  return (
+    <div className="space-y-6">
+      <ServiceNotice
+        tone="unavailable"
+        title="This changes what every member can receive"
+        action={<Badge tone="brand">{enabledCount} of {NOTIFICATION_EVENTS.length} enabled</Badge>}
+      >
+        Switching an event off removes it from every member&rsquo;s
+        Notifications page, including people who had chosen to receive it.
+        Restricting a channel does the same for that channel. Members keep
+        control of their own delivery within whatever is left available.
+      </ServiceNotice>
+
+      {groups.map((group) => (
+        <SettingsSection
+          key={group.category.key}
+          title={group.category.label}
+          description={group.category.description}
+          bodyClassName="divide-y divide-border p-0"
+        >
+          {group.events.map((event) => {
+            const on = draft.enabled[event.key] !== false;
+            const permitted = draft.channels[event.key] ?? event.channels;
+
+            return (
+              <div
+                key={event.key}
+                className="flex flex-col gap-2.5 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
+              >
+                <Checkbox
+                  id={`${id}-${event.key}-enabled`}
+                  checked={on}
+                  disabled={event.mandatory}
+                  onCheckedChange={(next) => setEnabled(event, next)}
+                  label={event.title}
+                  className="min-w-0"
+                />
+
+                <div
+                  className={cn(
+                    "flex shrink-0 flex-wrap items-center gap-x-5 gap-y-2",
+                    !on && "opacity-50",
+                  )}
+                >
+                  {event.mandatory ? (
+                    <Badge tone="neutral">
+                      <Lock className="size-3" aria-hidden />
+                      Required
+                    </Badge>
+                  ) : (
+                    event.channels.map((channel) => (
+                      <Checkbox
+                        key={channel}
+                        id={`${id}-policy-${event.key}-${channel}`}
+                        checked={permitted.includes(channel)}
+                        disabled={!on}
+                        onCheckedChange={(next) => setChannel(event, channel, next)}
+                        label={`Allow ${NOTIFICATION_CHANNEL_LABEL[channel]} — ${event.title}`}
+                      />
+                    ))
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </SettingsSection>
       ))}
 
-      <div className="flex flex-wrap items-center gap-2.5">
-        <Button
-          disabled={!dirty}
-          onClick={() => {
-            setTouched(true);
-            if (addressError) return;
-
-            updateNotificationPrefs({
-              ...draft,
-              address: draft.address.trim(),
-            });
-            setTouched(false);
-            toast("Notification preferences updated", "success");
-          }}
-        >
-          Save preferences
-        </Button>
-
-        {dirty ? (
-          <Button
-            variant="ghost"
-            onClick={() => {
-              setDraft(saved);
-              setTouched(false);
-            }}
-          >
-            Cancel
-          </Button>
-        ) : null}
-
-        <Button
-          variant="outline"
-          className="max-sm:w-full sm:ms-auto"
-          onClick={() => {
-            setDraft(defaultNotificationPrefs());
-            setTouched(false);
-          }}
-        >
-          Reset to defaults
-        </Button>
-      </div>
+      <Card className="sticky bottom-4 z-10 flex flex-wrap items-center gap-3 px-5 py-4 shadow-card-hover">
+        <SaveBar
+          state={state}
+          dirty={dirty}
+          onSave={() => void run(() => updateNotificationPolicy(draft))}
+          onCancel={() => setDraft(saved)}
+          label="Save configuration"
+        />
+      </Card>
     </div>
   );
 }

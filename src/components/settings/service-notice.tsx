@@ -4,24 +4,32 @@ import { Info, Lock, ShieldAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * "This part needs a server, and there isn't one yet."
+ * "Here is exactly how far this goes."
  *
  * One component rather than a sentence written eight different ways, because
  * the honesty has to be uniform to be believed. A merchant who reads a clear
- * notice on the Billing page and then meets a Security panel that cheerfully
- * toasts "Two-factor authentication turned on" learns that the first notice
- * was decoration.
+ * notice on Billing and then meets a Security panel cheerfully announcing that
+ * two-factor is protecting their sign-in learns that the first notice was
+ * decoration — and stops reading the rest.
  *
- * That toast was real, by the way — `SecuritySettings` flipped a boolean and
- * announced 2FA was on, offered a "Recovery codes" button that downloaded
- * nothing, and listed three invented devices in Dubai and London with a Sign
- * out button behind each. None of it touched a service, because there is no
- * service: no `.env`, no route handlers under `app/`, and nothing in the
- * product dispatches `setCredentials`.
+ * The three tones map onto the three genuinely different situations in
+ * Settings, and `lib/account-service.CAPABILITIES` is what decides which one a
+ * panel is in:
  *
- * `session` is the softest tone — the thing works, it just lives in this tab.
- * `unavailable` means the control is inert and says why. `security` is for the
- * two places where believing a false state has a real cost.
+ *   `session`      The thing works and persists, for this tab. Profile and
+ *                  notification preferences.
+ *   `unavailable`  The control is inert because a service it needs does not
+ *                  exist, and it says which. Payment method, invoices.
+ *   `security`     The two places where believing a false state has a real
+ *                  cost: the password form, which cannot verify your current
+ *                  password, and two-factor, which verifies an authenticator
+ *                  for real but does not yet gate sign-in.
+ *
+ * The distinction the `security` tone exists to hold is narrow and matters: a
+ * TOTP code entered during setup is genuinely checked against the secret — see
+ * `lib/totp` — so a mistyped setup key fails here rather than at a sign-in
+ * three weeks later. What it does not do is stand between an attacker and the
+ * account. Both halves have to be said, or the screen claims the second.
  */
 
 type NoticeTone = "session" | "unavailable" | "security";
