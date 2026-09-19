@@ -55,6 +55,17 @@ export function Card({
   );
 }
 
+/**
+ * A card's bordered header band.
+ *
+ * The dense one: a 14px semibold line over a muted note, inside a rule, for a
+ * dialog panel or a settings block whose card is `p-0` and whose body is a
+ * `CardBody`. It is *not* the heading the dashboard's section cards use —
+ * those are `PanelCard`, which sets the title at `text-base sm:text-lg` and
+ * pads the whole card once rather than padding a band inside it. Putting this
+ * inside a `p-5` card double-pads the header, which is how a title ends up
+ * inset forty pixels from an edge its own content sits twenty from.
+ */
 export function CardHeader({
   title,
   description,

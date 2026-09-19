@@ -16,7 +16,8 @@ import {
 import { PageHeader } from "@/components/layout/page-header";
 import { Avatar, AvatarLabel } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import { PanelCard } from "@/components/ui/chart-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { KpiStrip, type Kpi } from "@/components/ui/kpi-strip";
@@ -400,7 +401,10 @@ export function JourneyWorkspace() {
 
   return (
     <>
+      {/* The dashboard's scale, so this page's header sits at the same
+          weight as the one at `/dashboard`. */}
       <PageHeader
+        size="overview"
         title="Customer Journey"
         description="Follow one customer from first touch through every message, campaign and order."
         action={
@@ -426,13 +430,13 @@ export function JourneyWorkspace() {
                 <Avatar name={contactName(selected)} size="lg" />
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h2 className="text-base font-semibold text-text-primary">
+                    <h2 className="text-base sm:text-lg">
                       {contactName(selected)}
                     </h2>
                     <LifecycleBadge lifecycle={selected.lifecycle} />
                     <SourceBadge source={selected.source} />
                   </div>
-                  <p className="mt-1 text-sm text-text-muted">
+                  <p className="mt-1 text-sm font-medium text-text-secondary">
                     {[selected.company, selected.email, selected.phone]
                       .filter(Boolean)
                       .join(" · ")}
@@ -466,13 +470,22 @@ export function JourneyWorkspace() {
 
           <KpiStrip items={kpis(selected)} className="mt-4" />
 
-          <Card className="mt-4 p-5">
-            <CardHeader
-              title="Journey timeline"
-              description="Oldest first, so the story reads forwards."
-            />
+          {/* `PanelCard`, not `Card` + `CardHeader`.
 
-            <div className="mt-4 flex flex-wrap items-center gap-2">
+              The pair double-padded the header: the card contributed `p-5`
+              and the header band another `px-5 py-4` inside it, so the title
+              sat 40px from the card's edge while the content under it sat at
+              20px, and the rule beneath ran inset rather than edge to edge.
+              `PanelCard` is the component the dashboard's own cards are built
+              from — same `p-5`, same heading, same 4px to the description —
+              so this is the reference implementation rather than a copy of
+              its measurements. */}
+          <PanelCard
+            className="mt-4"
+            title="Journey timeline"
+            description="Oldest first, so the story reads forwards."
+          >
+            <div className="flex flex-wrap items-center gap-2">
               {/* Multi-select pills rather than a single-choice segmented
                   control: "messages and orders" is a question people actually
                   ask, and a one-of-seven switch cannot answer it. */}
@@ -554,28 +567,25 @@ export function JourneyWorkspace() {
                 emptyDescription="No events of these kinds in the selected period. Widen the range or clear the event filters."
               />
             </div>
-          </Card>
+          </PanelCard>
         </>
       ) : (
         <>
-          <Card className="p-5">
-            <CardHeader
-              title="Choose a customer"
-              description="Every journey belongs to one person, so start by finding them."
-            />
+          <PanelCard
+            title="Choose a customer"
+            description="Every journey belongs to one person, so start by finding them."
+          >
             <CustomerPicker
-              className="mt-4"
               onSelect={(contact) => table.setFilter("contact", contact.id)}
             />
-          </Card>
+          </PanelCard>
 
-          <Card className="mt-4 p-5">
-            <CardHeader
-              title="Recent journeys"
-              description="The customers who moved most recently. Open one to read it in order."
-            />
-
-            <div className="mt-4 max-lg:hidden">
+          <PanelCard
+            className="mt-4"
+            title="Recent journeys"
+            description="The customers who moved most recently. Open one to read it in order."
+          >
+            <div className="max-lg:hidden">
               <Table minWidth="44rem">
                 <THead>
                   <TH>Customer</TH>
@@ -667,7 +677,7 @@ export function JourneyWorkspace() {
                 );
               })}
             </ul>
-          </Card>
+          </PanelCard>
         </>
       )}
     </>
