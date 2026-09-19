@@ -175,7 +175,7 @@ export function ContactDetailsSheet({
           ) : null}
 
           <section>
-            <h3 className="text-sm font-medium  text-text-muted uppercase">
+            <h3 className="text-sm font-medium  text-text-muted capitalize">
               Tags
             </h3>
             <ul className="mt-2 flex flex-wrap gap-1.5">
@@ -217,7 +217,7 @@ export function ContactDetailsSheet({
           </section>
 
           <section>
-            <h3 className="text-sm font-medium  text-text-muted uppercase">
+            <h3 className="text-sm font-medium  text-text-muted capitalize">
               Assigned agent
             </h3>
             <Select
@@ -237,7 +237,7 @@ export function ContactDetailsSheet({
 
           {contact.notes ? (
             <section>
-              <h3 className="text-sm font-medium  text-text-muted uppercase">
+              <h3 className="text-sm font-medium  text-text-muted capitalize">
                 Notes
               </h3>
               <p className="mt-2 rounded-panel bg-surface-secondary px-3 py-2.5 text-sm text-text-secondary">

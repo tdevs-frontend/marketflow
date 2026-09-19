@@ -180,7 +180,7 @@ export function PostComposer({
         <div className="space-y-6">
           {/* --------------------------------------------------- 1. Platform */}
           <section>
-            <h3 className="text-sm font-medium  text-text-muted uppercase">
+            <h3 className="text-sm font-medium  text-text-muted capitalize">
               1 · Publish to
             </h3>
 
@@ -194,7 +194,7 @@ export function PostComposer({
           {/* ------------------------------------------------------ 2. Media */}
           <section>
             <div className="flex items-center justify-between gap-3">
-              <h3 className="text-sm font-medium  text-text-muted uppercase">
+              <h3 className="text-sm font-medium  text-text-muted capitalize">
                 2 · Media
               </h3>
               <Button variant="ghost" size="sm" onClick={() => setMediaOpen(true)}>
@@ -267,7 +267,7 @@ export function PostComposer({
 
           {/* ---------------------------------------------------- 3. Caption */}
           <section className="space-y-4">
-            <h3 className="text-sm font-medium  text-text-muted uppercase">
+            <h3 className="text-sm font-medium  text-text-muted capitalize">
               3 · Caption
             </h3>
 
@@ -338,7 +338,7 @@ export function PostComposer({
 
           {/* --------------------------------------------------- 4. Hashtags */}
           <section>
-            <h3 className="text-sm font-medium  text-text-muted uppercase">
+            <h3 className="text-sm font-medium  text-text-muted capitalize">
               4 · Hashtags
             </h3>
 
@@ -409,7 +409,7 @@ export function PostComposer({
           {/* ---------------------------------------------------- 5. Preview */}
           <section>
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h3 className="text-sm font-medium  text-text-muted uppercase">
+              <h3 className="text-sm font-medium  text-text-muted capitalize">
                 5 · Preview
               </h3>
 
@@ -487,7 +487,7 @@ export function PostComposer({
 
           {/* --------------------------------------------------- 6. Schedule */}
           <section>
-            <h3 className="text-sm font-medium  text-text-muted uppercase">
+            <h3 className="text-sm font-medium  text-text-muted capitalize">
               6 · Schedule
             </h3>
 

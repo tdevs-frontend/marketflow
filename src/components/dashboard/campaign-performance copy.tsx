@@ -147,7 +147,7 @@ export function CampaignPerformance({ className }: { className?: string }) {
           { label: "Revenue", value: formatCurrency(TOTALS.revenue) },
         ].map((total) => (
           <div key={total.label}>
-            <dt className="text-sm font-medium  text-text-muted uppercase">
+            <dt className="text-sm font-medium  text-text-muted capitalize">
               {total.label}
             </dt>
             <dd className="mt-1 text-sm font-bold text-text-primary tabular-nums">

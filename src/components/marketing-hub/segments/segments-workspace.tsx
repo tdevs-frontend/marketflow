@@ -426,7 +426,7 @@ export function SegmentsWorkspace() {
 
           <section>
             <div className="flex items-center justify-between gap-3">
-              <h3 className="text-sm font-medium  text-text-muted uppercase">
+              <h3 className="text-sm font-medium  text-text-muted capitalize">
                 Rules
               </h3>
               {editing?.system ? null : (

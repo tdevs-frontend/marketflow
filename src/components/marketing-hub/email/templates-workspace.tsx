@@ -461,7 +461,7 @@ export function EmailTemplatesWorkspace() {
         {previewing ? (
           <div className="space-y-4">
             <div className="rounded-panel border border-border bg-surface-secondary px-3.5 py-3">
-              <p className="flex items-center gap-1.5 text-sm font-medium  text-text-muted uppercase">
+              <p className="flex items-center gap-1.5 text-sm font-medium  text-text-muted capitalize">
                 <MailOpen className="size-3" aria-hidden />
                 Inbox preview
               </p>

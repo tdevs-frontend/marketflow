@@ -218,7 +218,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
     <div className="grid gap-4 xl:grid-cols-[16rem_minmax(0,1fr)_18rem]">
       {/* ------------------------------------------------------- Block list */}
       <Card className="h-max p-4 xl:sticky xl:top-22">
-        <p className="text-sm font-medium  text-text-muted uppercase">
+        <p className="text-sm font-medium  text-text-muted capitalize">
           Blocks
         </p>
 
@@ -283,7 +283,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
         </ol>
 
         <div className="mt-4 border-t border-border pt-3">
-          <p className="text-sm font-medium  text-text-muted uppercase">
+          <p className="text-sm font-medium  text-text-muted capitalize">
             Add block
           </p>
           <div className="mt-2 grid grid-cols-2 gap-1.5">
@@ -344,7 +344,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
 
         {/* The inbox line — subject and preheader, as a client shows them. */}
         <div className="mt-4 rounded-panel border border-border bg-surface-secondary px-3.5 py-2.5">
-          <p className="text-sm font-medium  text-text-muted uppercase">
+          <p className="text-sm font-medium  text-text-muted capitalize">
             Inbox preview
           </p>
           <p className="mt-1 truncate text-sm font-bold text-text-primary">
@@ -395,7 +395,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
         {selected ? (
           <Card className="p-4">
             <div className="flex items-start justify-between gap-3">
-              <p className="text-sm font-medium  text-text-muted uppercase">
+              <p className="text-sm font-medium  text-text-muted capitalize">
                 Block settings
               </p>
               <Badge tone="info">{BLOCK_META[selected.type].label}</Badge>
@@ -457,7 +457,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
         ) : null}
 
         <Card className="p-4">
-          <p className="text-sm font-medium  text-text-muted uppercase">
+          <p className="text-sm font-medium  text-text-muted capitalize">
             Template
           </p>
 

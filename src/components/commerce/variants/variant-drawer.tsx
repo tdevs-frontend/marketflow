@@ -90,7 +90,7 @@ function Stat({
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section>
-      <h3 className="text-sm font-medium  text-text-muted uppercase">
+      <h3 className="text-sm font-medium  text-text-muted capitalize">
         {title}
       </h3>
       <div className="mt-2.5 space-y-5">{children}</div>

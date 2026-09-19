@@ -305,7 +305,7 @@ export function SmsOverview() {
         </PanelCard>
 
         <PanelCard
-          title="Top Templates"
+          title="Popular SMS Templates"
           description="The messages this workspace reaches for most."
           action={
             <ButtonLink href={APP_ROUTES.smsTemplates} variant="ghost" size="sm">

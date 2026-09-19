@@ -402,7 +402,7 @@ export function SmsTemplatesWorkspace() {
           <SmsComposer value={draftBody} onChange={setDraftBody} id="tpl-body" />
 
           <div>
-            <p className="text-sm font-medium  text-text-muted uppercase">
+            <p className="text-sm font-medium  text-text-muted capitalize">
               Preview
             </p>
             <SmsPreview message={draftBody} className="mt-2" />
@@ -445,7 +445,7 @@ export function SmsTemplatesWorkspace() {
             <SmsPreview message={previewing.body} />
 
             <div className="rounded-panel border border-border px-3.5 py-3">
-              <p className="text-sm font-medium  text-text-muted uppercase">
+              <p className="text-sm font-medium  text-text-muted capitalize">
                 Raw template
               </p>
               <p className="mt-1.5 font-mono text-sm leading-relaxed text-text-secondary">

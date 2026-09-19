@@ -88,7 +88,7 @@ export function NodeLibrary({
                           : [...list, group.category],
                       )
                     }
-                    className="flex w-full items-center gap-1.5 rounded-btn px-1 py-2 text-sm font-medium  text-text-muted uppercase transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
+                    className="flex w-full items-center gap-1.5 rounded-btn px-1 py-2 text-sm font-medium  text-text-muted capitalize transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
                   >
                     <ChevronDown
                       className={cn(
