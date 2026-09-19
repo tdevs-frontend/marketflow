@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
-  Eye,
+  ArrowDownRight,
+  ArrowUpRight,
   Heart,
   Send,
   Info,
@@ -10,51 +11,74 @@ import {
   Users,
 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { ChartCard, PanelCard } from "@/components/ui/chart-card";
 import { DEFAULT_RANGE, type DateRangeValue } from "@/components/ui/date-range";
 import { Select } from "@/components/ui/select";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import { MiniStat, StatsGrid, type StatItem } from "@/components/ui/stats-card";
+import { StatsGrid, type StatItem } from "@/components/ui/stats-card";
+import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
 import { InfoHint } from "@/components/ui/tooltip";
-import { CHANNEL_SERIES } from "@/components/dashboard/charts/chart-theme";
-import { BarsChart } from "@/components/dashboard/charts/bars-chart";
+import { CHART_COLORS } from "@/components/dashboard/charts/chart-theme";
 import { DonutChart } from "@/components/dashboard/charts/donut-chart";
 import { TrendChart } from "@/components/dashboard/charts/trend-chart";
-import {
-  PLATFORM_HEXES,
-  PLATFORM_ORDER,
-  PLATFORM_THEME,
-} from "@/constants/channels";
+import { PLATFORM_ORDER, PLATFORM_THEME } from "@/constants/channels";
 import { INTEGRATION_ROUTES } from "@/constants/integrations";
 import {
   BEST_POSTING_TIMES,
-  PLATFORM_REACH,
   SOCIAL_ACCOUNTS,
-  analyticsAccounts,
   SOCIAL_POSTS,
-  SOCIAL_SERIES,
+  SOCIAL_REACH_TRENDS,
   SOCIAL_TOTALS,
-  SOCIAL_WEEK_LABELS,
+  SOCIAL_TREND_PERIODS,
+  analyticsAccounts,
 } from "@/lib/social-fixtures";
 import { formatCount, formatNumber, formatPercent, rate } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import type { SocialPlatform, SocialPost } from "@/types/social";
+import type {
+  SocialPlatform,
+  SocialPost,
+  SocialTrendPeriod,
+} from "@/types/social";
 import { PlatformMark } from "../shared/channel-badge";
-import { RankedList } from "../shared/ranked-list";
 import { PostThumb } from "./post-status";
 
 /**
  * Social analytics.
  *
- * The one place in the app that uses four brand colours at once, and it earns
- * them: the whole point of this page is comparing platforms, and a legend of
- * four greys would defeat it. Everywhere else the four-hue palette would just
- * be noise.
+ * Seven panels, and the discipline is that each answers a question the others
+ * cannot: how reach moves, which platform generates it, where the audience
+ * lives, which platform converts it, which posts worked, when to post, and how
+ * people actually interacted. Anything that could not claim its own question
+ * has gone.
+ *
+ * Three things went. The headline chart carried a four-way metric toggle —
+ * Reach, Impressions, Engagement, Followers — and every position duplicated a
+ * panel further down: Followers restated Follower Share, Engagement restated
+ * Engagement by Platform, Reach restated Platform Comparison. A control whose
+ * every setting repeats something else on the page is not a control, it is
+ * four charts stacked in one slot. Reach owns the chart outright now, with the
+ * previous period behind it, which is the comparison the toggle never offered.
+ *
+ * Platform Comparison was a second four-line reach chart sitting directly under
+ * the first. It is a ranked list now: the question it answers — which platform
+ * generates the reach — is an ordering, and an ordering does not need an axis.
+ * Engagement by Platform lost its grouped bars for the same reason. Three
+ * numbers across four platforms is a table, and drawing it as a chart made it
+ * read as a third pass over the same trend.
+ *
+ * Reach also left the KPI strip. It is the page's main metric and it lives in
+ * the card that plots it, so the figure and its chart cannot disagree — and
+ * they genuinely cannot: both come from `SOCIAL_REACH_TRENDS`, and the totals
+ * in the strip are derived from the same daily record.
+ *
+ * This is the one page in the app that uses four brand colours at once, and it
+ * earns them: comparing platforms is the whole point, and a legend of four
+ * greys would defeat it. Everywhere else the four-hue palette is noise.
  *
  * Engagement *rate* leads over raw engagement, because reach differs by an
- * order of magnitude between LinkedIn and Instagram here — 964 interactions on
+ * order of magnitude between LinkedIn and Instagram — 964 interactions on
  * 18,640 reach is a better post than 1,284 on 32,480.
  */
 
@@ -63,20 +87,21 @@ const PUBLISHED = SOCIAL_POSTS.filter((post) => post.status === "published");
 const interactions = (post: SocialPost) =>
   post.engagement.likes + post.engagement.comments + post.engagement.shares;
 
+/**
+ * The KPI strip, without Reach.
+ *
+ * Reach is the Reach card's headline. Leaving a copy up here would be the
+ * page's oldest duplication in its most literal form — the same number twice,
+ * eighty pixels apart, free to drift the moment one of them is computed
+ * differently.
+ */
 const STATS: StatItem[] = [
-  {
-    label: "Reach",
-    value: formatCount(SOCIAL_TOTALS.reach),
-    changePercent: SOCIAL_TOTALS.reachChange,
-    icon: Eye,
-    hint: "unique accounts",
-  },
   {
     label: "Impressions",
     value: formatCount(SOCIAL_TOTALS.impressions),
     changePercent: SOCIAL_TOTALS.impressionsChange,
     icon: TrendingUp,
-    hint: `${(SOCIAL_TOTALS.impressions / SOCIAL_TOTALS.reach).toFixed(1)}× per account`,
+    hint: `${(SOCIAL_TOTALS.impressions / SOCIAL_TOTALS.reach).toFixed(1)}× per account reached`,
   },
   {
     label: "Engagement",
@@ -101,36 +126,19 @@ const STATS: StatItem[] = [
   },
 ];
 
-type Metric = "reach" | "impressions" | "engagement" | "followers";
-
-const METRIC_META: Record<Metric, { label: string; description: string }> = {
-  reach: {
-    label: "Reach",
-    description: "Unique accounts that saw a post, per week.",
-  },
-  impressions: {
-    label: "Impressions",
-    description: "Total views, including repeat views by the same account.",
-  },
-  engagement: {
-    label: "Engagement",
-    description: "Likes, comments and shares combined, per week.",
-  },
-  followers: {
-    label: "Follower growth",
-    description: "Total followers across all four accounts.",
-  },
-};
+/** The chart's own window, seeded from the page range where the two agree. */
+function periodFor(range: DateRangeValue): SocialTrendPeriod {
+  return range.preset === "7d" || range.preset === "90d" ? range.preset : "30d";
+}
 
 /**
  * The seam the dashboard's date filter plugs into.
  *
- * Nothing narrows on the range yet, and this says so rather than pretending:
- * a post carries a `scheduledAt` but the per-week series the charts are drawn
- * from are not dated records. Filtering here today would either do nothing or
- * empty the page. It exists so the range arrives as data on a real code path
- * instead of as a prop nobody reads — the same seam Email and SMS analytics
- * use, and the one function that changes when dated fixtures land.
+ * The reach chart genuinely narrows now — it slices a daily record. The post
+ * leaderboard still cannot, because a post's engagement is a lifetime total
+ * rather than a dated series, so filtering it here would either do nothing or
+ * empty the panel. This is the one function that changes when dated engagement
+ * lands.
  */
 function withinRange<T>(rows: T[], range: DateRangeValue): T[] {
   void range;
@@ -141,19 +149,19 @@ export interface SocialAnalyticsProps {
   /**
    * The period this page reports on.
    *
-   * Supplied by the dashboard's filter rather than chosen here. This page was
-   * the last of the four analytics surfaces still opening on a range picker of
-   * its own, which made it the only one whose answer to "which 30 days" could
-   * disagree with the others. Export moved to the page header, where it is a
-   * page action rather than a filter. The platform selector stays: that one is
-   * social's own question and exists nowhere else.
+   * Supplied by the dashboard's filter rather than chosen here, and Export
+   * lives in the page header where it is an action rather than a filter. The
+   * period control inside the Reach card is that chart's own window, seeded
+   * from this one: reading ninety days of reach is a thing you do *to* the
+   * chart, and making it reset every table on the page would be heavier than
+   * the question deserves.
    */
   range?: DateRangeValue;
 }
 
 export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps) {
+  const [period, setPeriod] = useState<SocialTrendPeriod>(() => periodFor(range));
   const [platform, setPlatform] = useState<SocialPlatform | "all">("all");
-  const [metric, setMetric] = useState<Metric>("reach");
 
   /*
    * Only accounts that actually granted analytics.
@@ -168,19 +176,53 @@ export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps)
     (account) => !reportable.includes(account),
   );
 
-  const meta = METRIC_META[metric];
-  const bestTime = [...BEST_POSTING_TIMES].sort((a, b) => b.rate - a.rate)[0];
-  const bestPlatform = [...reportable].sort(
-    (a, b) => b.engagementRate - a.engagementRate,
-  )[0];
+  const trend = SOCIAL_REACH_TRENDS[period];
+  /* The 90-day window is bucketed weekly already, so its points are weeks and
+     the short windows' points are days. */
+  const daysPerPoint = period === "90d" ? 7 : 1;
 
-  /* Posts filtered by the platform selector, so the leaderboard obeys the
-     toolbar rather than ignoring it. */
-  const scoped = withinRange(
-    platform === "all"
-      ? PUBLISHED
-      : PUBLISHED.filter((post) => post.platforms.includes(platform)),
-    range,
+  /* The selector swaps the series the chart plots; it does not add a second
+     line. Four platforms at once is the comparison the ranked list below
+     already makes, and making it the chart's default would put the page back
+     where it started. */
+  const current = platform === "all" ? trend.total : trend.byPlatform[platform];
+  const previous =
+    platform === "all" ? trend.previousTotal : trend.previousByPlatform[platform];
+
+  const summary = useMemo(() => {
+    const total = current.reduce((sum, value) => sum + value, 0);
+    const before = previous.reduce((sum, value) => sum + value, 0);
+    const days = current.length * daysPerPoint;
+
+    return {
+      total,
+      change: before === 0 ? 0 : ((total - before) / before) * 100,
+      /* Per week regardless of bucket, so the figure means the same thing on
+         all three windows. */
+      perWeek: Math.round((total / Math.max(days, 1)) * 7),
+    };
+  }, [current, previous, daysPerPoint]);
+
+  /** Reach per platform over the chosen window, biggest first. */
+  const platformReach = useMemo(() => {
+    const days = trend.labels.length * daysPerPoint;
+
+    return PLATFORM_ORDER.map((key) => {
+      const total = trend.byPlatform[key].reduce((sum, value) => sum + value, 0);
+      return {
+        platform: key,
+        total,
+        perWeek: Math.round((total / Math.max(days, 1)) * 7),
+      };
+    }).sort((a, b) => b.total - a.total);
+  }, [trend, daysPerPoint]);
+
+  const leader = platformReach[0];
+  /* Every platform's reach, so the share column adds to 100 even when the
+     chart above is scoped to one of them. */
+  const reachAcrossPlatforms = platformReach.reduce(
+    (sum, row) => sum + row.total,
+    0,
   );
 
   const followerTotal = reportable.reduce(
@@ -188,86 +230,148 @@ export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps)
     0,
   );
 
+  const bestTime = [...BEST_POSTING_TIMES].sort((a, b) => b.rate - a.rate)[0];
+  const bestPlatform = [...reportable].sort(
+    (a, b) => b.engagementRate - a.engagementRate,
+  )[0];
+
+  const topPosts = useMemo(
+    () =>
+      [...withinRange(PUBLISHED, range)]
+        .sort(
+          (a, b) =>
+            rate(interactions(b), b.engagement.reach) -
+            rate(interactions(a), a.engagement.reach),
+        )
+        .slice(0, 5),
+    [range],
+  );
+
+  const engagementRows = useMemo(() => {
+    const rows = PLATFORM_ORDER.map((key) => {
+      const posts = PUBLISHED.filter((post) => post.platforms.includes(key));
+      const likes = posts.reduce((sum, post) => sum + post.engagement.likes, 0);
+      const comments = posts.reduce((sum, post) => sum + post.engagement.comments, 0);
+      const shares = posts.reduce((sum, post) => sum + post.engagement.shares, 0);
+
+      return { key, likes, comments, shares, total: likes + comments + shares };
+    }).sort((a, b) => b.total - a.total);
+
+    return { rows, grand: rows.reduce((sum, row) => sum + row.total, 0) };
+  }, []);
+
+  const rising = summary.change >= 0;
+  const TrendIcon = rising ? ArrowUpRight : ArrowDownRight;
+  const periodLabel =
+    SOCIAL_TREND_PERIODS.find((item) => item.value === period)?.label ?? "30 days";
+
   return (
     <>
-      <Card className="p-4">
-        <div className="flex flex-wrap items-center gap-2.5">
-          <Select
-            label="Filter by platform"
-            size="sm"
-            value={platform}
-            onChange={(next) => setPlatform(next as SocialPlatform | "all")}
-            options={[
-              { value: "all", label: "All platforms" },
-              ...PLATFORM_ORDER.map((key) => ({
-                value: key,
-                label: PLATFORM_THEME[key].label,
-              })),
-            ]}
-            className="w-full lg:w-44"
-          />
-
-          <p className="text-sm text-text-muted lg:ml-auto">
-            {formatNumber(scoped.length)} published posts in this view
+      {/* ------------------------------------------------- 1–3. Reach anchor */}
+      <ChartCard
+        title="Reach"
+        description="Unique accounts that saw your content over time."
+        action={
+          /* Both controls belong to this card: the window it plots and the
+             platform it plots. They wrap rather than overflow, which is where
+             a two-control card header usually breaks on a phone. */
+          <div className="flex flex-wrap items-center gap-2">
+            <SegmentedControl
+              label="Reach period"
+              value={period}
+              onChange={setPeriod}
+              options={SOCIAL_TREND_PERIODS}
+            />
+            <Select
+              label="Filter by platform"
+              size="sm"
+              value={platform}
+              onChange={(next) => setPlatform(next as SocialPlatform | "all")}
+              options={[
+                { value: "all", label: "All platforms" },
+                ...PLATFORM_ORDER.map((key) => ({
+                  value: key,
+                  label: PLATFORM_THEME[key].label,
+                })),
+              ]}
+              className="w-full sm:w-40"
+            />
+          </div>
+        }
+      >
+        {/* The headline sits above the plot rather than in the KPI strip, so
+            the number and the shape that produced it are one object. */}
+        <div className="mb-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <p className="text-3xl leading-none font-bold text-text-primary tabular-nums">
+            {formatCount(summary.total)}
+          </p>
+          <p
+            className={cn(
+              "inline-flex items-center gap-0.5 text-sm font-medium",
+              rising ? "text-success-text" : "text-error",
+            )}
+          >
+            <TrendIcon className="size-3.5" aria-hidden />
+            {Math.abs(summary.change).toFixed(1)}%
+          </p>
+          <p className="text-sm text-text-muted">
+            vs previous {periodLabel.toLowerCase()}
+            {platform === "all" ? "" : ` · ${PLATFORM_THEME[platform].label}`}
           </p>
         </div>
-      </Card>
 
-      <StatsGrid items={STATS} columns={5} />
-
-      <ChartCard
-        title={meta.label}
-        description={meta.description}
-        action={
-          <SegmentedControl
-            label="Metric"
-            value={metric}
-            onChange={setMetric}
-            options={[
-              { value: "reach", label: "Reach" },
-              { value: "impressions", label: "Impressions" },
-              { value: "engagement", label: "Engagement" },
-              { value: "followers", label: "Followers" },
-            ]}
-            className="max-lg:-mx-1 max-lg:overflow-x-auto"
-          />
-        }
-        legend={[
-          {
-            label: meta.label,
-            swatch: "bg-social",
-            value: formatNumber(SOCIAL_SERIES[metric].at(-1) ?? 0),
-          },
-        ]}
-      >
         <TrendChart
-          categories={SOCIAL_WEEK_LABELS}
-          series={[{ name: meta.label, data: SOCIAL_SERIES[metric] }]}
-          colors={[CHANNEL_SERIES.social[0]]}
+          categories={trend.labels}
+          series={[
+            { name: "Reach", data: current },
+            { name: "Previous period", data: previous },
+          ]}
+          colors={[
+            platform === "all" ? CHART_COLORS.primary : PLATFORM_THEME[platform].hex,
+            CHART_COLORS.neutralStrong,
+          ]}
+          comparisonIndex={1}
+          unit="accounts"
+          height={280}
         />
+
+        {/* The insight row. Four readings on one line, no cards — these are
+            context for the chart above, not metrics in their own right. */}
+        <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-border pt-4 sm:grid-cols-4">
+          {[
+            {
+              label: "Total reach",
+              value: formatCount(summary.total),
+              hint: periodLabel.toLowerCase(),
+            },
+            {
+              label: "Average reach",
+              value: `${formatNumber(summary.perWeek)} / week`,
+              hint: `over ${trend.labels.length} points`,
+            },
+            {
+              label: "Growth",
+              value: `${rising ? "+" : "−"}${Math.abs(summary.change).toFixed(1)}%`,
+              hint: "vs previous period",
+            },
+            {
+              label: "Best reach platform",
+              value: PLATFORM_THEME[leader.platform].label,
+              hint: `${formatNumber(leader.perWeek)} / week`,
+            },
+          ].map((cell) => (
+            <div key={cell.label} className="min-w-0">
+              <dt className="truncate text-sm text-text-muted">{cell.label}</dt>
+              <dd className="mt-0.5 truncate text-base font-bold text-text-primary tabular-nums">
+                {cell.value}
+              </dd>
+              <dd className="truncate text-sm text-text-muted">{cell.hint}</dd>
+            </div>
+          ))}
+        </dl>
       </ChartCard>
 
-      <ChartCard
-        title="Platform Comparison"
-        description="Reach per week, per platform. Instagram carries the volume; LinkedIn converts."
-        legend={PLATFORM_ORDER.map((key) => ({
-          label: PLATFORM_THEME[key].label,
-          /* The platforms' own brand hues, from the theme table. */
-          swatch: PLATFORM_THEME[key].swatch,
-          value: formatNumber(PLATFORM_REACH[key].at(-1) ?? 0),
-        }))}
-      >
-        <TrendChart
-          categories={SOCIAL_WEEK_LABELS}
-          series={PLATFORM_ORDER.map((key) => ({
-            name: PLATFORM_THEME[key].label,
-            data: PLATFORM_REACH[key],
-          }))}
-          colors={PLATFORM_HEXES}
-          variant="line"
-          unit="reach"
-        />
-      </ChartCard>
+      <StatsGrid items={STATS} columns={4} />
 
       {unreportable.length > 0 ? (
         /*
@@ -295,6 +399,42 @@ export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps)
       ) : null}
 
       <div className="grid gap-4 xl:grid-cols-3">
+        {/* ----------------------------------------- 4. Platform comparison */}
+        <PanelCard
+          title="Platform Comparison"
+          description="Which platform generates the reach, over the window above."
+        >
+          <ol className="divide-y divide-border">
+            {platformReach.map((row, index) => (
+              <li
+                key={row.platform}
+                className="flex items-center gap-3 py-3 first:pt-0 last:pb-0"
+              >
+                <span className="w-3 shrink-0 text-xs font-bold text-text-muted tabular-nums">
+                  {index + 1}
+                </span>
+                <PlatformMark platform={row.platform} size="sm" />
+                <span className="min-w-0 flex-1 truncate text-sm font-medium text-text-primary">
+                  {PLATFORM_THEME[row.platform].label}
+                </span>
+                {/* The figure and the share it represents. No bar: the list is
+                    already ordered, and a length would say a third time what
+                    the position and the number have said twice. */}
+                <span className="shrink-0 text-right">
+                  <span className="block text-sm font-bold text-text-primary tabular-nums">
+                    {formatNumber(row.perWeek)} / week
+                  </span>
+                  <span className="block text-sm text-text-muted tabular-nums">
+                    {formatPercent(rate(row.total, reachAcrossPlatforms || 1))} of
+                    reach
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ol>
+        </PanelCard>
+
+        {/* ---------------------------------------------- 5. Follower share */}
         <ChartCard
           title="Follower Share"
           description="Where the audience actually is."
@@ -302,10 +442,7 @@ export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps)
           footer={
             <ul className="space-y-1.5">
               {reportable.map((account) => (
-                <li
-                  key={account.id}
-                  className="flex items-center gap-2 text-sm"
-                >
+                <li key={account.id} className="flex items-center gap-2 text-sm">
                   <PlatformMark platform={account.platform} size="sm" />
                   <span className="min-w-0 flex-1 truncate text-text-secondary">
                     {PLATFORM_THEME[account.platform].label}
@@ -332,234 +469,209 @@ export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps)
           />
         </ChartCard>
 
+        {/* ----------------------------------------------- 6. Best platform */}
         <PanelCard
           title="Best Platform"
-          description="Ranked by engagement rate, not follower count."
-          className="xl:col-span-2"
+          description="Engagement relative to audience size, not audience size."
           action={
             <InfoHint content="Engagement rate is likes, comments and shares as a share of reach — so a small audience that interacts beats a large one that scrolls past." />
           }
         >
           <div className="flex flex-wrap items-center gap-3 rounded-panel border border-primary-border bg-primary-subtle px-3.5 py-3">
-            <PlatformMark platform={bestPlatform.platform} size="lg" />
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-bold text-text-primary">
+            <PlatformMark platform={bestPlatform.platform} size="md" />
+            <p className="min-w-0 flex-1 text-sm text-text-secondary">
+              <span className="font-bold text-text-primary">
                 {PLATFORM_THEME[bestPlatform.platform].label}
-              </p>
-              <p className="text-sm text-text-secondary">
-                {formatPercent(bestPlatform.engagementRate)} engagement on{" "}
-                {formatNumber(bestPlatform.followers)} followers — the smallest
-                audience doing the most work.
-              </p>
-            </div>
+              </span>{" "}
+              earns {formatPercent(bestPlatform.engagementRate)} on the smallest
+              audience of the four.
+            </p>
           </div>
 
-          <div className="mt-4">
-            <RankedList
-              tone="bg-social"
-              numbered={false}
-              renderMark={(item) => (
-                <PlatformMark
-                  platform={item.id as SocialPlatform}
-                  size="sm"
-                />
-              )}
-              items={[...reportable]
-                .sort((a, b) => b.engagementRate - a.engagementRate)
-                .map((account) => ({
-                  id: account.platform,
-                  label: PLATFORM_THEME[account.platform].label,
-                  secondary: `${formatNumber(account.followers)} followers · ${formatNumber(account.posts)} posts`,
-                  display: formatPercent(account.engagementRate),
-                  share: account.engagementRate,
-                }))}
-            />
-          </div>
+          <ol className="mt-3 divide-y divide-border">
+            {[...reportable]
+              .sort((a, b) => b.engagementRate - a.engagementRate)
+              .map((account) => (
+                <li
+                  key={account.id}
+                  className="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0"
+                >
+                  <PlatformMark platform={account.platform} size="sm" />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-medium text-text-primary">
+                      {PLATFORM_THEME[account.platform].label}
+                    </span>
+                    <span className="block text-sm text-text-muted tabular-nums">
+                      {formatNumber(account.followers)} followers ·{" "}
+                      {formatNumber(account.posts)} posts
+                    </span>
+                  </span>
+                  <span className="shrink-0 text-sm font-bold text-text-primary tabular-nums">
+                    {formatPercent(account.engagementRate)}
+                  </span>
+                </li>
+              ))}
+          </ol>
         </PanelCard>
       </div>
 
       <div className="grid gap-4 xl:grid-cols-3">
+        {/* -------------------------------------------------- 7. Top posts */}
         <PanelCard
           title="Top Performing Posts"
-          description={
-            platform === "all"
-              ? "By engagement rate — interactions as a share of reach."
-              : `${PLATFORM_THEME[platform].label} only, by engagement rate.`
-          }
+          description="By engagement rate — interactions as a share of reach."
           className="xl:col-span-2"
         >
-          {scoped.length === 0 ? (
+          {topPosts.length === 0 ? (
             <p className="rounded-panel border border-dashed border-border px-3 py-6 text-center text-sm text-text-muted">
-              No published posts on this platform in the selected period.
+              No published posts in the selected period.
             </p>
           ) : (
             <ol className="space-y-2.5">
-              {[...scoped]
-                .sort(
-                  (a, b) =>
-                    rate(interactions(b), b.engagement.reach) -
-                    rate(interactions(a), a.engagement.reach),
-                )
-                .slice(0, 5)
-                .map((post, index) => {
-                  const engagementRate = rate(
-                    interactions(post),
-                    post.engagement.reach,
-                  );
+              {topPosts.map((post, index) => (
+                <li
+                  key={post.id}
+                  className="flex items-center gap-3 rounded-panel border border-border p-2.5"
+                >
+                  <span className="w-3 shrink-0 text-xs font-bold text-text-muted tabular-nums">
+                    {index + 1}
+                  </span>
 
-                  return (
-                    <li
-                      key={post.id}
-                      className="flex items-center gap-3 rounded-panel border border-border px-3 py-2.5"
-                    >
-                      <span className="w-4 shrink-0 text-xs font-bold text-text-muted tabular-nums">
-                        {index + 1}
-                      </span>
+                  {/* The post's real asset — the same record the calendar, the
+                      post grid and the Media Library draw. */}
+                  <PostThumb post={post} size="lg" />
 
-                      <PostThumb post={post} />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-text-primary">
+                      {post.title}
+                    </p>
+                    <p className="mt-1 flex flex-wrap items-center gap-1">
+                      {post.platforms.map((key) => (
+                        <PlatformMark key={key} platform={key} size="sm" />
+                      ))}
+                    </p>
+                    <p className="mt-1 flex flex-wrap gap-x-2 text-sm text-text-muted tabular-nums">
+                      <span>{formatNumber(post.engagement.reach)} reach</span>
+                      <span aria-hidden>·</span>
+                      <span>{formatNumber(interactions(post))} interactions</span>
+                    </p>
+                  </div>
 
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium text-text-primary">
-                          {post.title}
-                        </p>
-                        <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-sm text-text-muted">
-                          <span className="flex items-center gap-1">
-                            {post.platforms.map((key) => (
-                              <PlatformMark key={key} platform={key} size="sm" />
-                            ))}
-                          </span>
-                          <span className="tabular-nums">
-                            {formatNumber(post.engagement.reach)} reach
-                          </span>
-                          <span aria-hidden>·</span>
-                          <span className="tabular-nums">
-                            {formatNumber(interactions(post))} interactions
-                          </span>
-                        </p>
-                      </div>
-
-                      <div className="shrink-0 text-right">
-                        <p className="text-sm font-bold text-text-primary tabular-nums">
-                          {formatPercent(engagementRate)}
-                        </p>
-                        <p className="text-sm text-text-muted">engagement</p>
-                      </div>
-                    </li>
-                  );
-                })}
+                  <div className="shrink-0 text-right">
+                    <p className="text-base font-bold text-text-primary tabular-nums">
+                      {formatPercent(
+                        rate(interactions(post), post.engagement.reach),
+                      )}
+                    </p>
+                    <p className="text-sm text-text-muted">engagement</p>
+                  </div>
+                </li>
+              ))}
             </ol>
           )}
         </PanelCard>
 
+        {/* ------------------------------------------ 8. Best posting time */}
         <PanelCard
           title="Best Posting Time"
           description={`Engagement peaks between ${bestTime.label.replace("–", " and ")}.`}
         >
-          <ul className="space-y-3">
+          {/* Rate and reach side by side, because they disagree and the
+              disagreement is the point: the slot that reaches the most accounts
+              is not the slot that earns the most from them. A badge marks the
+              winner rather than five bars racing each other. */}
+          <ul className="divide-y divide-border">
             {BEST_POSTING_TIMES.map((slot) => {
               const best = slot.label === bestTime.label;
 
               return (
-                <li key={slot.label}>
-                  <div className="flex items-baseline justify-between gap-3">
-                    <p
+                <li
+                  key={slot.label}
+                  className="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0"
+                >
+                  <span className="min-w-0 flex-1">
+                    <span
                       className={cn(
-                        "text-sm",
+                        "block text-sm tabular-nums",
                         best
-                          ? "font-bold text-primary"
+                          ? "font-bold text-text-primary"
                           : "font-medium text-text-secondary",
                       )}
                     >
                       {slot.label}
-                    </p>
-                    <p className="text-sm font-bold text-text-primary tabular-nums">
-                      {formatPercent(slot.rate)}
-                    </p>
-                  </div>
-                  <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface-secondary">
-                    <div
-                      className={cn(
-                        "h-full rounded-full",
-                        best ? "bg-primary" : "bg-border-strong",
-                      )}
-                      style={{ width: `${(slot.rate / bestTime.rate) * 100}%` }}
-                    />
-                  </div>
+                    </span>
+                    <span className="block text-sm text-text-muted tabular-nums">
+                      {formatNumber(slot.reach)} avg reach
+                    </span>
+                  </span>
+
+                  {best ? (
+                    <Badge tone="brand" size="sm">
+                      Best
+                    </Badge>
+                  ) : null}
+
+                  <span
+                    className={cn(
+                      "w-12 shrink-0 text-right text-sm font-bold tabular-nums",
+                      best ? "text-primary" : "text-text-primary",
+                    )}
+                  >
+                    {formatPercent(slot.rate)}
+                  </span>
                 </li>
               );
             })}
           </ul>
-
-          <div className="mt-4 grid grid-cols-2 gap-2 border-t border-border pt-4">
-            <MiniStat
-              label="Avg reach"
-              value={formatNumber(
-                Math.round(
-                  PUBLISHED.reduce((sum, post) => sum + post.engagement.reach, 0) /
-                    Math.max(PUBLISHED.length, 1),
-                ),
-              )}
-              hint="per post"
-            />
-            <MiniStat
-              label="Avg engagement"
-              value={formatPercent(
-                PUBLISHED.reduce(
-                  (sum, post) => sum + rate(interactions(post), post.engagement.reach),
-                  0,
-                ) / Math.max(PUBLISHED.length, 1),
-              )}
-              hint="per post"
-            />
-          </div>
         </PanelCard>
       </div>
 
-      <ChartCard
+      {/* --------------------------------------- 9. Engagement by platform */}
+      <PanelCard
         title="Engagement by Platform"
-        description="Likes, comments and shares across the period."
-        legend={[
-          { label: "Likes", swatch: "bg-social" },
-          { label: "Comments", swatch: "bg-accent" },
-          { label: "Shares", swatch: "bg-border-strong" },
-        ]}
+        description="How people interacted, as opposed to how many of them saw it."
       >
-        <BarsChart
-          categories={PLATFORM_ORDER.map((key) => PLATFORM_THEME[key].label)}
-          series={[
-            {
-              name: "Likes",
-              data: PLATFORM_ORDER.map((key) =>
-                PUBLISHED.filter((post) => post.platforms.includes(key)).reduce(
-                  (sum, post) => sum + post.engagement.likes,
-                  0,
-                ),
-              ),
-            },
-            {
-              name: "Comments",
-              data: PLATFORM_ORDER.map((key) =>
-                PUBLISHED.filter((post) => post.platforms.includes(key)).reduce(
-                  (sum, post) => sum + post.engagement.comments,
-                  0,
-                ),
-              ),
-            },
-            {
-              name: "Shares",
-              data: PLATFORM_ORDER.map((key) =>
-                PUBLISHED.filter((post) => post.platforms.includes(key)).reduce(
-                  (sum, post) => sum + post.engagement.shares,
-                  0,
-                ),
-              ),
-            },
-          ]}
-          colors={CHANNEL_SERIES.social}
-          height={280}
-          unit="interactions"
-        />
-      </ChartCard>
+        <Table minWidth="46rem">
+          <THead>
+            <TH>Platform</TH>
+            <TH align="right">Likes</TH>
+            <TH align="right">Comments</TH>
+            <TH align="right">Shares</TH>
+            <TH align="right">Total</TH>
+            <TH align="right">Share</TH>
+          </THead>
+
+          <TBody>
+            {engagementRows.rows.map((row) => (
+              <TR key={row.key}>
+                <TD>
+                  <span className="flex items-center gap-2.5">
+                    <PlatformMark platform={row.key} size="sm" />
+                    <span className="font-bold text-text-primary">
+                      {PLATFORM_THEME[row.key].label}
+                    </span>
+                  </span>
+                </TD>
+                <TD align="right" className="text-text-secondary tabular-nums">
+                  {formatNumber(row.likes)}
+                </TD>
+                <TD align="right" className="text-text-secondary tabular-nums">
+                  {formatNumber(row.comments)}
+                </TD>
+                <TD align="right" className="text-text-secondary tabular-nums">
+                  {formatNumber(row.shares)}
+                </TD>
+                <TD align="right" className="font-bold text-text-primary tabular-nums">
+                  {formatNumber(row.total)}
+                </TD>
+                <TD align="right" className="text-text-secondary tabular-nums">
+                  {formatPercent(rate(row.total, engagementRows.grand || 1))}
+                </TD>
+              </TR>
+            ))}
+          </TBody>
+        </Table>
+      </PanelCard>
     </>
   );
 }

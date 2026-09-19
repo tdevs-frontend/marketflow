@@ -181,4 +181,3 @@ export const PLATFORM_ORDER: SocialPlatform[] = [
   "x",
 ];
 
-export const PLATFORM_HEXES = PLATFORM_ORDER.map((key) => PLATFORM_THEME[key].hex);

@@ -44,6 +44,7 @@ export function TrendChart({
   unit,
   height = 300,
   yAxisMax,
+  comparisonIndex,
 }: {
   categories: string[];
   series: TrendSeries[];
@@ -54,6 +55,16 @@ export function TrendChart({
   height?: number;
   /** Pins the scale — needed on rate charts so 96% and 98% are not a cliff. */
   yAxisMax?: number;
+  /**
+   * The index of the series holding the *previous* period.
+   *
+   * Set it and that series is drawn as a thin dotted line rather than a second
+   * solid one, and the tooltip gains a change row comparing the two. A
+   * period-over-period comparison is a different kind of series from a peer —
+   * it is the same measure shifted in time — and drawing it identically
+   * invites the reader to add the two lines together.
+   */
+  comparisonIndex?: number;
 }) {
   const options = useMemo<ApexOptions>(() => {
     const formatValue = (value: number) => {
@@ -70,7 +81,11 @@ export function TrendChart({
       chart: { ...BASE_CHART, type: variant },
       colors: [...colors],
       dataLabels: { enabled: false },
-      stroke: { curve: "smooth", width: 2.5 },
+      stroke: {
+        curve: "smooth",
+        width: series.map((_, index) => (index === comparisonIndex ? 1.5 : 2.5)),
+        dashArray: series.map((_, index) => (index === comparisonIndex ? 5 : 0)),
+      },
       fill:
         variant === "line"
           ? { type: "solid", opacity: 0 }
@@ -114,14 +129,49 @@ export function TrendChart({
                 : compactAxisNumber,
         },
       },
-      tooltip: {
-        ...BASE_TOOLTIP,
-        shared: true,
-        intersect: false,
-        y: { formatter: formatValue },
-      },
+      tooltip:
+        comparisonIndex === undefined
+          ? { ...BASE_TOOLTIP, shared: true, intersect: false, y: { formatter: formatValue } }
+          : {
+              ...BASE_TOOLTIP,
+              shared: true,
+              intersect: false,
+              /*
+               * Hand-built, because the reading people actually want here is
+               * the one Apex cannot produce: the difference between the two
+               * series. A default shared tooltip lists both numbers and leaves
+               * the subtraction to the reader, on hover, in their head.
+               */
+              custom: ({ series: values, dataPointIndex }) => {
+                const rows = values.map(
+                  (points: number[]) => points?.[dataPointIndex] ?? 0,
+                );
+                const current = rows[comparisonIndex === 0 ? 1 : 0] ?? 0;
+                const previous = rows[comparisonIndex] ?? 0;
+                const change =
+                  previous === 0 ? 0 : ((current - previous) / previous) * 100;
+                const up = change >= 0;
+
+                return `
+                  <div class="mf-chart-tooltip rounded-btn border border-border bg-surface px-3 py-2 shadow-float">
+                    <p class="text-meta font-medium text-text-muted">${
+                      categories[dataPointIndex] ?? ""
+                    }</p>
+                    <p class="mt-1 text-sm font-bold text-text-primary tabular-nums">${formatValue(
+                      current,
+                    )}</p>
+                    <p class="mt-0.5 text-meta text-text-muted tabular-nums">Previous ${formatValue(
+                      previous,
+                    )}</p>
+                    <p class="mt-1 text-meta font-medium tabular-nums ${
+                      up ? "text-success-text" : "text-error"
+                    }">${up ? "+" : ""}${change.toFixed(1)}% vs previous period</p>
+                  </div>
+                `;
+              },
+            },
     };
-  }, [categories, colors, format, series, unit, variant, yAxisMax]);
+  }, [categories, colors, comparisonIndex, format, series, unit, variant, yAxisMax]);
 
   return <ApexChart type={variant} height={height} options={options} series={series} />;
 }

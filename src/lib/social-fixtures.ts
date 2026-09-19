@@ -7,6 +7,9 @@ import {
 } from "@/lib/workspace-clock";
 import type {
   MediaAsset,
+  ReachWindow,
+  SocialPlatform,
+  SocialTrendPeriod,
   MediaFolder,
   PostStatus,
   CapabilityState,
@@ -815,10 +818,174 @@ export const SOCIAL_ACCOUNTS: SocialAccount[] = [
 /* Analytics series                                                           */
 /* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
+/* Reach                                                                      */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Reach, as one daily record per platform.
+ *
+ * This replaces two arrays that never agreed with each other: a ten-point
+ * weekly `SOCIAL_SERIES.reach` and a ten-point weekly `PLATFORM_REACH`, whose
+ * platform sums came to 1.12M against a headline KPI of 1.28M. Reporting two
+ * different reach figures on one page is the duplication this module was
+ * carrying, and the fix is structural rather than arithmetic: there is now one
+ * record, every window is a slice of it, the previous period is the slice
+ * before, and the KPI is its sum. None of them can drift.
+ *
+ * Generated rather than hand-typed. Three windows times four platforms times
+ * two periods is over seven hundred numbers, and the one certainty about
+ * seven hundred hand-typed numbers is that a few of them will contradict the
+ * totals printed above them. The shape is what carries meaning here and the
+ * shape is deliberate: a weekday rhythm with quiet weekends and a midweek
+ * peak, over steady compound growth. It is a pure function of the constants
+ * below, so it is identical on the server and the client.
+ */
+const REACH_DAYS = 200;
+
+/** The module's "today" — the same September 2026 the calendar is anchored to. */
+const REACH_ANCHOR = new Date(2026, 8, 8);
+
+/** Monday-first multipliers. Nobody reaches anyone on a Saturday. */
+const WEEKDAY_SHAPE = [0.94, 1.14, 1.02, 1.16, 1.0, 0.8, 0.74];
+
+/** Daily reach per platform at the start of the record, before growth. */
+const REACH_START: Record<SocialPlatform, number> = {
+  instagram: 7_614,
+  facebook: 4_941,
+  linkedin: 2_951,
+  x: 1_073,
+};
+
+/** Compounded daily. 0.54% works out at roughly +18% over a 30-day window. */
+const REACH_GROWTH = 0.0054;
+
+const reachDateAt = (index: number) => {
+  const date = new Date(REACH_ANCHOR);
+  date.setDate(REACH_ANCHOR.getDate() - (REACH_DAYS - 1 - index));
+  return date;
+};
+
+const reachLabel = (date: Date) =>
+  new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(date);
+
+function dailyReach(start: number): number[] {
+  return Array.from({ length: REACH_DAYS }, (_, index) => {
+    const weekday = (reachDateAt(index).getDay() + 6) % 7;
+    /* A fixed sine rather than a random walk: the series has to be the same
+       on every render, and a seeded PRNG would be more machinery for the
+       same wobble. */
+    const wobble = 1 + 0.035 * Math.sin(index * 1.3);
+    return Math.round(
+      start * Math.pow(1 + REACH_GROWTH, index) * WEEKDAY_SHAPE[weekday] * wobble,
+    );
+  });
+}
+
+const REACH_DAILY: Record<SocialPlatform, number[]> = {
+  instagram: dailyReach(REACH_START.instagram),
+  facebook: dailyReach(REACH_START.facebook),
+  linkedin: dailyReach(REACH_START.linkedin),
+  x: dailyReach(REACH_START.x),
+};
+
+const REACH_PLATFORMS: SocialPlatform[] = [
+  "instagram",
+  "facebook",
+  "linkedin",
+  "x",
+];
+
+const sumOf = (values: number[]) => values.reduce((total, value) => total + value, 0);
+
+/** Sums each consecutive run of `size`, for the windows drawn weekly. */
+const bucket = (values: number[], size: number) =>
+  Array.from({ length: Math.ceil(values.length / size) }, (_, index) =>
+    sumOf(values.slice(index * size, index * size + size)),
+  );
+
+/**
+ * One window and the window before it.
+ *
+ * `bucketSize` is 1 for the windows drawn daily and 7 for ninety days, where
+ * ninety-one points would be a smear rather than a line.
+ */
+function reachWindow(days: number, bucketSize: number): ReachWindow {
+  const end = REACH_DAYS;
+  const start = end - days;
+  const previousStart = start - days;
+
+  const slice = (from: number, to: number) =>
+    Object.fromEntries(
+      REACH_PLATFORMS.map((platform) => [
+        platform,
+        bucket(REACH_DAILY[platform].slice(from, to), bucketSize),
+      ]),
+    ) as Record<SocialPlatform, number[]>;
+
+  const byPlatform = slice(start, end);
+  const previousByPlatform = slice(previousStart, start);
+
+  const combine = (source: Record<SocialPlatform, number[]>) =>
+    source.instagram.map((_, index) =>
+      sumOf(REACH_PLATFORMS.map((platform) => source[platform][index])),
+    );
+
+  const labels = bucket(
+    Array.from({ length: days }, (_, index) => index),
+    bucketSize,
+  ).map((_, index) => reachLabel(reachDateAt(start + index * bucketSize)));
+
+  return {
+    labels,
+    byPlatform,
+    total: combine(byPlatform),
+    previousByPlatform,
+    previousTotal: combine(previousByPlatform),
+  };
+}
+
+export const SOCIAL_REACH_TRENDS: Record<SocialTrendPeriod, ReachWindow> = {
+  "7d": reachWindow(7, 1),
+  "30d": reachWindow(30, 1),
+  "90d": reachWindow(91, 7),
+};
+
+export const SOCIAL_TREND_PERIODS: { value: SocialTrendPeriod; label: string }[] = [
+  { value: "7d", label: "7 days" },
+  { value: "30d", label: "30 days" },
+  { value: "90d", label: "90 days" },
+];
+
+/** Total reach in a window, and how it compares with the one before it. */
+export function reachSummary(window: ReachWindow) {
+  const total = sumOf(window.total);
+  const previous = sumOf(window.previousTotal);
+
+  return {
+    total,
+    previous,
+    change: previous === 0 ? 0 : ((total - previous) / previous) * 100,
+    /** Per bucket — a day on the short windows, a week on the long one. */
+    average: Math.round(total / Math.max(window.total.length, 1)),
+  };
+}
+
+/**
+ * The period's headline figures.
+ *
+ * Reach is computed from the 30-day window rather than stated, so the KPI and
+ * the chart below it are the same number by construction. Impressions follow
+ * it at the ratio the account data has always carried — 1.4 views per account
+ * reached — for the same reason: two independent literals is how a page ends
+ * up claiming more unique accounts than views.
+ */
+const REACH_30D = reachSummary(SOCIAL_REACH_TRENDS["30d"]);
+
 export const SOCIAL_TOTALS = {
-  reach: 1_284_600,
-  reachChange: 18.4,
-  impressions: 1_842_180,
+  reach: REACH_30D.total,
+  reachChange: Number(REACH_30D.change.toFixed(1)),
+  impressions: Math.round(REACH_30D.total * 1.434),
   impressionsChange: 22.1,
   engagement: 96_420,
   engagementChange: 14.2,
@@ -828,59 +995,19 @@ export const SOCIAL_TOTALS = {
   publishedChange: 9.6,
 } as const;
 
-export const SOCIAL_WEEK_LABELS = [
-  "Jun 29",
-  "Jul 6",
-  "Jul 13",
-  "Jul 20",
-  "Jul 27",
-  "Aug 3",
-  "Aug 10",
-  "Aug 17",
-  "Aug 24",
-  "Aug 31",
-];
-
-export const SOCIAL_SERIES = {
-  reach: [
-    82_400, 91_200, 96_800, 104_600, 98_400, 112_800, 121_400, 128_600, 136_200,
-    148_400,
-  ],
-  impressions: [
-    118_600, 131_400, 139_200, 148_800, 142_600, 162_400, 174_800, 186_200,
-    198_400, 214_600,
-  ],
-  engagement: [6_180, 6_840, 7_120, 7_680, 7_240, 8_320, 8_940, 9_480, 10_120, 11_040],
-  followers: [
-    98_400, 100_200, 101_800, 103_600, 104_800, 106_400, 108_100, 109_400,
-    110_600, 111_820,
-  ],
-};
-
-/** Reach per platform, for the comparison chart. */
-export const PLATFORM_REACH = {
-  instagram: [
-    38_200, 42_400, 45_100, 48_600, 45_800, 52_400, 56_200, 59_800, 63_400,
-    68_200,
-  ],
-  facebook: [
-    24_600, 27_200, 28_800, 31_200, 29_400, 33_600, 36_100, 38_200, 40_600,
-    44_200,
-  ],
-  linkedin: [
-    14_200, 15_800, 16_900, 18_200, 17_400, 19_800, 21_400, 22_800, 24_200,
-    26_400,
-  ],
-  x: [5_400, 5_800, 6_000, 6_600, 5_800, 6_400, 7_700, 7_800, 8_000, 9_600],
-};
-
-/** Engagement rate by hour bucket, for the "best posting time" panel. */
+/**
+ * Engagement rate and reach by hour bucket, for the "best posting time" panel.
+ *
+ * Reach sits beside the rate because they disagree, and the disagreement is
+ * the insight: the lunchtime slot reaches the most accounts and converts the
+ * worst, while late afternoon reaches fewer and earns more from them.
+ */
 export const BEST_POSTING_TIMES = [
-  { label: "06:00–09:00", rate: 2.8 },
-  { label: "09:00–12:00", rate: 5.4 },
-  { label: "12:00–15:00", rate: 4.1 },
-  { label: "15:00–18:00", rate: 6.2 },
-  { label: "18:00–21:00", rate: 4.6 },
+  { label: "06:00–09:00", rate: 2.8, reach: 9_240 },
+  { label: "09:00–12:00", rate: 5.4, reach: 18_620 },
+  { label: "12:00–15:00", rate: 4.1, reach: 21_480 },
+  { label: "15:00–18:00", rate: 6.2, reach: 16_840 },
+  { label: "18:00–21:00", rate: 4.6, reach: 12_360 },
 ];
 
 /* -------------------------------------------------------------------------- */

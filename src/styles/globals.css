@@ -665,6 +665,23 @@ body.mobile-menu-show {
 .animate-tooltip-in {
   animation: tooltipIn 0.12s ease-out;
 }
+
+/*
+ * A chart tooltip that brings its own box.
+ *
+ * ApexCharts wraps a `custom` tooltip in `.apexcharts-tooltip`, which already
+ * carries a white ground, a grey border and a shadow — so a custom body styled
+ * to match the design system lands inside a second, slightly different card.
+ * Stripping the wrapper's chrome where ours is present is narrower than
+ * restyling Apex's tooltip globally, which would also hit every default
+ * tooltip in the product.
+ */
+.apexcharts-tooltip:has(.mf-chart-tooltip) {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  overflow: visible;
+}
 .animate-shimmer {
   animation: shimmer 2s infinite;
 }

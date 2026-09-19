@@ -99,6 +99,30 @@ export interface MediaFolder {
 export type AccountStatus = "connected" | "expired" | "disconnected";
 
 /* -------------------------------------------------------------------------- */
+/* Reach reporting                                                            */
+/* -------------------------------------------------------------------------- */
+
+/** The windows the reach trend can be read over. */
+export type SocialTrendPeriod = "7d" | "30d" | "90d";
+
+/**
+ * One window of the reach trend, and the window immediately before it.
+ *
+ * `previous` is a real slice of the same daily record rather than a separate
+ * dataset — that is what lets the chart draw an honest comparison line and the
+ * header state a change percentage that cannot drift from the series under it.
+ */
+export interface ReachWindow {
+  labels: string[];
+  /** Reach per platform, aligned to `labels`. */
+  byPlatform: Record<SocialPlatform, number[]>;
+  /** Every platform combined. */
+  total: number[];
+  previousByPlatform: Record<SocialPlatform, number[]>;
+  previousTotal: number[];
+}
+
+/* -------------------------------------------------------------------------- */
 /* Connection layer                                                           */
 /* -------------------------------------------------------------------------- */
 
