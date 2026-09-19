@@ -749,7 +749,7 @@ export const ORDERS: Order[] = [
     id: "ord-10255",
     reference: "#MF-10255",
     customer: {
-      id: "cus-maria",
+      id: "con-2",
       name: "Maria Gomez",
       email: "maria@casaverde.mx",
       whatsappNumber: "+5215512345678",
@@ -784,7 +784,7 @@ export const ORDERS: Order[] = [
     id: "ord-10254",
     reference: "#MF-10254",
     customer: {
-      id: "cus-tomas",
+      id: "con-7",
       name: "Tomás Silva",
       email: "tomas@silvamoveis.br",
       whatsappNumber: "+5511987654321",
@@ -828,7 +828,7 @@ export const ORDERS: Order[] = [
     id: "ord-10253",
     reference: "#MF-10253",
     customer: {
-      id: "cus-sarah",
+      id: "con-1",
       name: "Sarah Ahmed",
       email: "sarah@brightretail.co",
       whatsappNumber: "+8801711223344",
@@ -854,7 +854,7 @@ export const ORDERS: Order[] = [
     id: "ord-10252",
     reference: "#MF-10252",
     customer: {
-      id: "cus-john",
+      id: "con-6",
       name: "John Smith",
       email: "john@smithagency.io",
       whatsappNumber: "+447700900123",
@@ -891,7 +891,7 @@ export const ORDERS: Order[] = [
     id: "ord-10251",
     reference: "#MF-10251",
     customer: {
-      id: "cus-maria",
+      id: "con-2",
       name: "Maria Gomez",
       email: "maria@casaverde.mx",
       whatsappNumber: "+5215512345678",
@@ -918,7 +918,7 @@ export const ORDERS: Order[] = [
     id: "ord-10250",
     reference: "#MF-10250",
     customer: {
-      id: "cus-hannah",
+      id: "con-25",
       name: "Hannah Park",
       email: "hannah@parkbeauty.kr",
       whatsappNumber: "+821012345678",
@@ -944,7 +944,7 @@ export const ORDERS: Order[] = [
     id: "ord-10249",
     reference: "#MF-10249",
     customer: {
-      id: "cus-omar",
+      id: "con-8",
       name: "Omar Haddad",
       email: "omar@haddadtrading.ae",
       whatsappNumber: "+971501234567",
@@ -979,7 +979,7 @@ export const ORDERS: Order[] = [
     id: "ord-10248",
     reference: "#MF-10248",
     customer: {
-      id: "cus-sarah",
+      id: "con-1",
       name: "Sarah Ahmed",
       email: "sarah@brightretail.co",
       whatsappNumber: "+8801711223344",
@@ -996,7 +996,7 @@ export const ORDERS: Order[] = [
     id: "ord-10247",
     reference: "#MF-10247",
     customer: {
-      id: "cus-john",
+      id: "con-6",
       name: "John Smith",
       email: "john@smithagency.io",
       whatsappNumber: "+447700900123",
@@ -1013,7 +1013,7 @@ export const ORDERS: Order[] = [
     id: "ord-10246",
     reference: "#MF-10246",
     customer: {
-      id: "cus-maria",
+      id: "con-2",
       name: "Maria Gomez",
       email: "maria@casaverde.mx",
       whatsappNumber: "+5215512345678",
@@ -1034,7 +1034,7 @@ export const ORDERS: Order[] = [
     id: "ord-10245",
     reference: "#MF-10245",
     customer: {
-      id: "cus-david",
+      id: "con-3",
       name: "David Chen",
       email: "david@chenstudio.com",
       whatsappNumber: "+6591234567",
@@ -1050,7 +1050,7 @@ export const ORDERS: Order[] = [
     id: "ord-10244",
     reference: "#MF-10244",
     customer: {
-      id: "cus-amina",
+      id: "con-26",
       name: "Amina Rahman",
       email: "amina@rahmanfoods.bd",
       whatsappNumber: "+8801812345678",
@@ -1066,8 +1066,8 @@ export const ORDERS: Order[] = [
     id: "ord-10243",
     reference: "#MF-10243",
     customer: {
-      id: "cus-lucas",
-      name: "Lucas Meyer",
+      id: "con-11",
+      name: "Lukas Meyer",
       email: "lucas@meyerbau.de",
       whatsappNumber: "+4915112345678",
     },
@@ -1087,7 +1087,7 @@ export const ORDERS: Order[] = [
     id: "ord-10242",
     reference: "#MF-10242",
     customer: {
-      id: "cus-priya",
+      id: "con-27",
       name: "Priya Nair",
       email: "priya@nairclinics.in",
       whatsappNumber: "+919812345678",
@@ -1104,7 +1104,7 @@ export const ORDERS: Order[] = [
     id: "ord-10241",
     reference: "#MF-10241",
     customer: {
-      id: "cus-omar",
+      id: "con-8",
       name: "Omar Haddad",
       email: "omar@haddadtrading.ae",
       whatsappNumber: "+971501234567",
@@ -1120,7 +1120,7 @@ export const ORDERS: Order[] = [
     id: "ord-10240",
     reference: "#MF-10240",
     customer: {
-      id: "cus-hannah",
+      id: "con-25",
       name: "Hannah Park",
       email: "hannah@parkbeauty.kr",
       whatsappNumber: "+821012345678",
@@ -1137,7 +1137,7 @@ export const ORDERS: Order[] = [
     id: "ord-10239",
     reference: "#MF-10239",
     customer: {
-      id: "cus-tomas",
+      id: "con-7",
       name: "Tomás Silva",
       email: "tomas@silvamoveis.br",
       whatsappNumber: "+5511987654321",
@@ -2120,6 +2120,13 @@ export function topSellers(type: ProductType, limit = 3) {
  *
  * A contact appears here the moment they have an order, and disappears from
  * nowhere: not buying is not a state this list needs to represent.
+ *
+ * `order.customer.id` is a CRM contact id, and that is load-bearing. It used
+ * to be a `cus-*` key of its own, which meant Sarah Ahmed was `con-1` in the
+ * CRM and `cus-sarah` here — two records, one person, and
+ * `commerceCustomerFor(contactId)` returning `undefined` for every contact in
+ * the product. One namespace is the whole reason a contact can show what it
+ * bought.
  */
 export const COMMERCE_CUSTOMERS: CommerceCustomer[] = (() => {
   const byCustomer = new Map<string, Order[]>();

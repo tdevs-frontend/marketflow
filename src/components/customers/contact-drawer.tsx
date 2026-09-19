@@ -31,6 +31,10 @@ import {
   stageLabel,
   type CustomerContact,
 } from "@/lib/customer-fixtures";
+import { ButtonLink } from "@/components/ui/button";
+import { OrderStatusBadge } from "@/components/commerce/commerce-badges";
+import { APP_ROUTES } from "@/constants/app";
+import { ORDERS } from "@/lib/commerce-fixtures";
 import { formatCurrency, formatDate, formatRelativeTime } from "@/lib/format";
 import type { ContactChannel } from "@/types/contact";
 import { cn } from "@/lib/utils";
@@ -160,7 +164,20 @@ export function ContactDrawer({
       )
     : [];
 
-  const orders = activity.filter((entry) => entry.kind === "order");
+  /*
+   * The contact's actual orders, not the activity entries that mention them.
+   *
+   * The tab used to render the "order" slice of the activity feed, which is a
+   * log of things that happened rather than a list of what was bought — no
+   * reference, no line items, no payment state, and nothing to click through
+   * to. These are the order records themselves, joined on the contact id that
+   * the order book now uses.
+   */
+  const orders = contact
+    ? ORDERS.filter((order) => order.customer.id === contact.id)
+        .slice()
+        .sort((a, b) => b.placedAt.localeCompare(a.placedAt))
+    : [];
   const campaigns = activity.filter(
     (entry) => entry.kind === "campaign" || entry.kind === "email",
   );
@@ -450,25 +467,74 @@ export function ContactDrawer({
           {tab === "orders" ? (
             <TabPanel idBase="contact-drawer" value="orders">
               {orders.length ? (
-                <ActivityTimeline entries={orders} />
+                <>
+                  {/* Compact rows, not the Orders page in miniature: the
+                      reference, what it was, what it cost and where it got to.
+                      Anything more belongs behind the link at the bottom. */}
+                  <ul className="divide-y divide-border">
+                    {orders.slice(0, 4).map((order) => {
+                      const [first, ...rest] = order.lines;
+
+                      return (
+                        <li
+                          key={order.id}
+                          className="flex items-start gap-3 py-3 first:pt-0"
+                        >
+                          <div className="min-w-0 flex-1">
+                            <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                              <span className="font-mono text-sm font-medium text-text-primary">
+                                {order.reference}
+                              </span>
+                              <OrderStatusBadge status={order.status} />
+                            </p>
+                            <p className="mt-1 truncate text-sm text-text-secondary">
+                              {first?.productName ?? "—"}
+                              {rest.length > 0
+                                ? ` + ${rest.length} more`
+                                : ""}
+                            </p>
+                            <p className="mt-0.5 text-sm text-text-muted">
+                              {formatDate(order.placedAt)}
+                            </p>
+                          </div>
+
+                          <p className="shrink-0 text-sm font-bold text-text-primary tabular-nums">
+                            {formatCurrency(order.total)}
+                          </p>
+                        </li>
+                      );
+                    })}
+                  </ul>
+
+                  {/* The lifetime figures and the way out. Both read the same
+                      order book the rows above come from, so the summary can
+                      never disagree with the list it is summarising. */}
+                  <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-panel bg-surface-secondary px-3.5 py-3">
+                    <span className="flex items-center gap-2 text-sm text-text-secondary">
+                      <ShoppingBag className="size-4 text-success" aria-hidden />
+                      {contact.orders} order{contact.orders === 1 ? "" : "s"}{" "}
+                      lifetime
+                    </span>
+                    <span className="text-sm font-bold text-text-primary tabular-nums">
+                      {formatCurrency(contact.lifetimeValue)}
+                    </span>
+                  </div>
+
+                  <ButtonLink
+                    href={APP_ROUTES.orders}
+                    variant="outline"
+                    size="sm"
+                    className="mt-3 w-full"
+                  >
+                    View all orders
+                  </ButtonLink>
+                </>
               ) : (
                 <EmptyState
                   title="No orders yet"
-                  description="Completed orders will appear here with their value and date."
+                  description="Completed orders will appear here with their reference, value and status."
                 />
               )}
-              {contact.orders > 0 ? (
-                <div className="mt-4 flex items-center justify-between rounded-panel bg-surface-secondary px-3.5 py-3">
-                  <span className="flex items-center gap-2 text-sm text-text-secondary">
-                    <ShoppingBag className="size-4 text-success" aria-hidden />
-                    {contact.orders} order{contact.orders === 1 ? "" : "s"}{" "}
-                    lifetime
-                  </span>
-                  <span className="text-sm font-bold text-text-primary tabular-nums">
-                    {formatCurrency(contact.lifetimeValue)}
-                  </span>
-                </div>
-              ) : null}
             </TabPanel>
           ) : null}
 

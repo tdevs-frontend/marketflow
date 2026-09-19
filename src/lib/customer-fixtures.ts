@@ -1,3 +1,4 @@
+import { ORDERS } from "@/lib/commerce-fixtures";
 import type { Contact, ContactChannel, ContactStatus } from "@/types/contact";
 import type { Lead, LeadSource, LeadStage } from "@/types/lead";
 
@@ -254,19 +255,64 @@ export const LIFECYCLES: { value: Lifecycle; label: string }[] = [
 export interface CustomerContact extends Contact {
   lifecycle: Lifecycle;
   source: ContactSource;
-  /** Lifetime spend in minor-unit-free dollars, matching `formatCurrency`. */
-  lifetimeValue: number;
-  orders: number;
-  lastOrderAt?: string;
+  /**
+   * Lifetime spend, order count and last purchase.
+   *
+   * Read-only, and computed from `ORDERS` rather than written on the record.
+   * They used to be literals typed alongside the email address, which made the
+   * contact list a second opinion about revenue: a drawer could say "3 orders ·
+   * $4,820" while the Orders page held two orders totalling something else, and
+   * nothing in the product preferred one over the other. Commerce owns what
+   * someone bought; the CRM reports it.
+   */
+  readonly lifetimeValue: number;
+  readonly orders: number;
+  readonly lastOrderAt?: string;
   segmentIds: string[];
   ownerId?: string;
 }
+
+/**
+ * What each contact has bought, folded out of the order book once.
+ *
+ * A failed payment is not a purchase, which is the same rule
+ * `COMMERCE_CUSTOMERS` applies — the two have to agree or the contact drawer
+ * and the customers page would report different revenue for the same person.
+ */
+const PURCHASES = (() => {
+  const byContact = new Map<
+    string,
+    { orders: number; lifetimeValue: number; lastOrderAt: string }
+  >();
+
+  for (const order of ORDERS) {
+    if (order.paymentStatus === "failed") continue;
+
+    const current = byContact.get(order.customer.id);
+    byContact.set(order.customer.id, {
+      orders: (current?.orders ?? 0) + 1,
+      lifetimeValue: (current?.lifetimeValue ?? 0) + order.total,
+      lastOrderAt:
+        current && current.lastOrderAt > order.placedAt
+          ? current.lastOrderAt
+          : order.placedAt,
+    });
+  }
+
+  return byContact;
+})();
 
 const contact = (
   id: string,
   firstName: string,
   lastName: string,
-  extra: Partial<CustomerContact> &
+  /* `lifetimeValue`, `orders` and `lastOrderAt` are deliberately not
+     accepted — they are looked up, so a fixture cannot assert a revenue the
+     order book does not back. */
+  extra: Omit<
+    Partial<CustomerContact>,
+    "lifetimeValue" | "orders" | "lastOrderAt"
+  > &
     Pick<CustomerContact, "lifecycle" | "source">,
 ): CustomerContact => ({
   id,
@@ -278,10 +324,12 @@ const contact = (
   customFields: {},
   createdAt: "2026-01-01T00:00:00Z",
   updatedAt: "2026-09-01T00:00:00Z",
-  lifetimeValue: 0,
-  orders: 0,
   segmentIds: [],
   ...extra,
+  /* After the spread: the order book is the authority, not the caller. */
+  lifetimeValue: PURCHASES.get(id)?.lifetimeValue ?? 0,
+  orders: PURCHASES.get(id)?.orders ?? 0,
+  lastOrderAt: PURCHASES.get(id)?.lastOrderAt,
 });
 
 /**
@@ -300,9 +348,6 @@ export const CONTACTS: CustomerContact[] = [
     source: "whatsapp",
     tags: ["VIP", "Hot Lead"],
     optedInChannels: ["whatsapp", "email"],
-    lifetimeValue: 4820,
-    orders: 3,
-    lastOrderAt: "2026-08-28T10:00:00Z",
     segmentIds: ["seg-vip"],
     ownerId: "own-1",
     lastContactedAt: "2026-09-10T08:12:00Z",
@@ -318,9 +363,6 @@ export const CONTACTS: CustomerContact[] = [
     source: "website",
     tags: ["Returning Customer", "Newsletter"],
     optedInChannels: ["whatsapp", "email", "sms"],
-    lifetimeValue: 9240,
-    orders: 7,
-    lastOrderAt: "2026-09-05T14:30:00Z",
     segmentIds: ["seg-vip", "seg-high-engagement"],
     ownerId: "own-2",
     lastContactedAt: "2026-09-09T16:05:00Z",
@@ -350,9 +392,6 @@ export const CONTACTS: CustomerContact[] = [
     source: "referral",
     tags: ["VIP", "Enterprise"],
     optedInChannels: ["whatsapp", "email"],
-    lifetimeValue: 6410,
-    orders: 4,
-    lastOrderAt: "2026-08-14T09:00:00Z",
     segmentIds: ["seg-vip"],
     ownerId: "own-3",
     lastContactedAt: "2026-09-07T11:20:00Z",
@@ -380,8 +419,6 @@ export const CONTACTS: CustomerContact[] = [
     source: "campaign",
     tags: ["Enterprise", "Hot Lead"],
     optedInChannels: ["email"],
-    lifetimeValue: 1200,
-    orders: 1,
     segmentIds: [],
     ownerId: "own-2",
     lastContactedAt: "2026-09-09T10:00:00Z",
@@ -396,9 +433,6 @@ export const CONTACTS: CustomerContact[] = [
     source: "whatsapp",
     tags: ["Returning Customer", "Wholesale"],
     optedInChannels: ["whatsapp"],
-    lifetimeValue: 12480,
-    orders: 11,
-    lastOrderAt: "2026-09-02T10:30:00Z",
     segmentIds: ["seg-vip", "seg-wholesale"],
     ownerId: "own-4",
     lastContactedAt: "2026-09-08T14:10:00Z",
@@ -413,9 +447,6 @@ export const CONTACTS: CustomerContact[] = [
     source: "referral",
     tags: ["VIP", "Wholesale"],
     optedInChannels: ["whatsapp", "sms"],
-    lifetimeValue: 7860,
-    orders: 5,
-    lastOrderAt: "2026-08-19T16:00:00Z",
     segmentIds: ["seg-vip", "seg-wholesale"],
     ownerId: "own-1",
     lastContactedAt: "2026-09-05T08:40:00Z",
@@ -464,9 +495,6 @@ export const CONTACTS: CustomerContact[] = [
     source: "campaign",
     tags: ["Returning Customer"],
     optedInChannels: ["email"],
-    lifetimeValue: 2340,
-    orders: 2,
-    lastOrderAt: "2026-07-22T09:00:00Z",
     segmentIds: [],
     ownerId: "own-4",
     createdAt: "2026-01-30T08:00:00Z",
@@ -490,9 +518,6 @@ export const CONTACTS: CustomerContact[] = [
     status: "unsubscribed",
     tags: ["Churn Risk"],
     optedInChannels: [],
-    lifetimeValue: 1840,
-    orders: 2,
-    lastOrderAt: "2026-02-11T10:00:00Z",
     segmentIds: [],
     createdAt: "2025-10-09T09:30:00Z",
   }),
@@ -505,9 +530,6 @@ export const CONTACTS: CustomerContact[] = [
     source: "referral",
     tags: ["VIP", "Returning Customer"],
     optedInChannels: ["whatsapp", "email", "sms"],
-    lifetimeValue: 5620,
-    orders: 6,
-    lastOrderAt: "2026-08-31T12:00:00Z",
     segmentIds: ["seg-vip"],
     ownerId: "own-3",
     lastContactedAt: "2026-09-04T09:00:00Z",
@@ -533,9 +555,6 @@ export const CONTACTS: CustomerContact[] = [
     source: "website",
     tags: ["Newsletter"],
     optedInChannels: ["email", "sms"],
-    lifetimeValue: 980,
-    orders: 1,
-    lastOrderAt: "2026-06-18T11:00:00Z",
     segmentIds: ["seg-high-engagement"],
     ownerId: "own-2",
     createdAt: "2026-05-02T08:20:00Z",
@@ -573,9 +592,6 @@ export const CONTACTS: CustomerContact[] = [
     source: "whatsapp",
     tags: ["Wholesale"],
     optedInChannels: ["whatsapp"],
-    lifetimeValue: 3210,
-    orders: 3,
-    lastOrderAt: "2026-08-08T14:00:00Z",
     segmentIds: ["seg-wholesale"],
     ownerId: "own-1",
     createdAt: "2026-02-08T12:10:00Z",
@@ -600,9 +616,6 @@ export const CONTACTS: CustomerContact[] = [
     source: "campaign",
     tags: ["Churn Risk"],
     optedInChannels: ["email"],
-    lifetimeValue: 640,
-    orders: 1,
-    lastOrderAt: "2026-01-19T09:00:00Z",
     segmentIds: [],
     createdAt: "2025-12-22T14:00:00Z",
   }),
@@ -615,9 +628,6 @@ export const CONTACTS: CustomerContact[] = [
     source: "whatsapp",
     tags: ["VIP", "Returning Customer", "Newsletter"],
     optedInChannels: ["whatsapp", "email"],
-    lifetimeValue: 8140,
-    orders: 8,
-    lastOrderAt: "2026-09-07T15:30:00Z",
     segmentIds: ["seg-vip", "seg-high-engagement"],
     ownerId: "own-2",
     lastContactedAt: "2026-09-08T10:15:00Z",
@@ -633,6 +643,46 @@ export const CONTACTS: CustomerContact[] = [
     optedInChannels: ["email"],
     segmentIds: [],
     createdAt: "2026-08-27T09:00:00Z",
+  }),
+
+  /*
+   * Three people who were buying from the store and did not exist in the CRM.
+   *
+   * They were only ever `order.customer` records, so the contact list — the
+   * thing this module calls the master record — was missing three paying
+   * customers, and no amount of filtering on it would have found them. Their
+   * details are the ones the orders already carry; their lifecycle and their
+   * value are derived from those orders below rather than typed here.
+   */
+  contact("con-25", "Hannah", "Park", {
+    email: "hannah@parkbeauty.kr",
+    phone: "+82 10 1234 5678",
+    whatsappNumber: "+82 10 1234 5678",
+    company: "Park Beauty",
+    lifecycle: "customer",
+    source: "website",
+    optedInChannels: ["email", "whatsapp"],
+    createdAt: "2026-04-18T09:00:00Z",
+  }),
+  contact("con-26", "Amina", "Rahman", {
+    email: "amina@rahmanfoods.bd",
+    phone: "+880 1812 345678",
+    whatsappNumber: "+880 1812 345678",
+    company: "Rahman Foods",
+    lifecycle: "customer",
+    source: "whatsapp",
+    optedInChannels: ["email", "whatsapp", "sms"],
+    createdAt: "2026-05-06T09:00:00Z",
+  }),
+  contact("con-27", "Priya", "Nair", {
+    email: "priya@nairclinics.in",
+    phone: "+91 98123 45678",
+    whatsappNumber: "+91 98123 45678",
+    company: "Nair Clinics",
+    lifecycle: "customer",
+    source: "referral",
+    optedInChannels: ["email", "whatsapp"],
+    createdAt: "2026-03-22T09:00:00Z",
   }),
 ];
 
