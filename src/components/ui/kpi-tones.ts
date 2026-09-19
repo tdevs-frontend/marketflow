@@ -21,6 +21,10 @@ export type KpiTone =
   | "email"
   | "sms"
   | "whatsapp"
+  | "instagram"
+  | "facebook"
+  | "linkedin"
+  | "x"
   | "info"
   | "success"
   | "warning"
@@ -53,6 +57,16 @@ export type KpiTone =
  * Email channel, `info` when it is a state, and never put both side by side.
  * `whatsapp` and `success` are likewise two different greens, and the same rule
  * applies — the channel green names the channel, the state green means good.
+ *
+ * The four social platforms are identity tones of the same kind, and they are
+ * the reason this map exists rather than four bespoke tiles: a row of platform
+ * KPIs has to be told apart at a glance, and the mark alone does not do it at
+ * 20px. Their fills come straight from `PLATFORM_THEME.soft` — an 8% wash of
+ * the brand hue — so a KPI tile and the same platform's mark in a table row
+ * are the same colour. Facebook and LinkedIn are two different blues sitting
+ * next to each other by necessity; the marks inside them are what separate
+ * them, which is exactly why the icon carries the brand colour rather than the
+ * tile carrying all of it.
  */
 export const KPI_TONES: Record<KpiTone, string> = {
   neutral: "border-border bg-surface-secondary text-text-muted",
@@ -61,6 +75,12 @@ export const KPI_TONES: Record<KpiTone, string> = {
   email: "border-email-border bg-email-soft text-email",
   sms: "border-sms-border bg-sms-soft text-sms",
   whatsapp: "border-whatsapp-border bg-whatsapp-soft text-whatsapp",
+  /* No `-border` token behind these four, so the edge is the platform's own
+     hue at the ~1.30 weight the tokened families sit at against an 8% fill. */
+  instagram: "border-instagram/25 bg-instagram/8 text-instagram",
+  facebook: "border-facebook/25 bg-facebook/8 text-facebook",
+  linkedin: "border-linkedin/25 bg-linkedin/8 text-linkedin",
+  x: "border-x/20 bg-x/6 text-x",
   info: "border-info/20 bg-info-soft text-info-text",
   success: "border-success/25 bg-success-soft text-success-text",
   warning: "border-warning/40 bg-warning-soft text-warning-text",

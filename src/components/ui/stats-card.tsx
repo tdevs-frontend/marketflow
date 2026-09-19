@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowDownRight, ArrowUpRight, type LucideIcon } from "lucide-react";
+import type { ComponentType } from "react";
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 
 import { Card } from "./card";
 import { KPI_TILE, KPI_TONES, type KpiTone } from "@/components/ui/kpi-tones";
@@ -12,7 +13,16 @@ export interface StatItem {
   value: string;
   /** Signed. Positive is the accent colour, negative is red. Nothing else. */
   changePercent: number;
-  icon: LucideIcon;
+  /**
+   * The tile's glyph.
+   *
+   * Widened from `LucideIcon` so a brand mark can sit here too — the Social
+   * Analytics strip is one card per platform, and a row of platform KPIs
+   * wearing Lucide's generic `users` and `heart` says nothing about which
+   * platform it is. Every Lucide icon still satisfies this, since their props
+   * are optional.
+   */
+  icon: ComponentType<{ className?: string }>;
   /** The comparison the change is against, e.g. "vs last 30 days". */
   hint: string;
   /**

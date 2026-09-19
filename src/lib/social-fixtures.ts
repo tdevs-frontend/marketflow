@@ -849,16 +849,23 @@ const REACH_ANCHOR = new Date(2026, 8, 8);
 /** Monday-first multipliers. Nobody reaches anyone on a Saturday. */
 const WEEKDAY_SHAPE = [0.94, 1.14, 1.02, 1.16, 1.0, 0.8, 0.74];
 
-/** Daily reach per platform at the start of the record, before growth. */
-const REACH_START: Record<SocialPlatform, number> = {
-  instagram: 7_614,
-  facebook: 4_941,
-  linkedin: 2_951,
-  x: 1_073,
+/**
+ * Where each platform started and how fast it compounds.
+ *
+ * A rate per platform rather than one shared figure. With a single growth
+ * constant every platform posted an identical change — four KPI cards side by
+ * side all reading +19.8%, which is both obviously synthetic and useless: the
+ * column exists to say which platform is pulling ahead, and it could not. The
+ * spread here is about fourteen points, with LinkedIn compounding fastest off
+ * the smallest base and X drifting, which is the shape the ranked list and the
+ * KPI row are there to expose.
+ */
+const REACH_PROFILE: Record<SocialPlatform, { start: number; growth: number }> = {
+  instagram: { start: 8_190, growth: 0.005 },
+  facebook: { start: 4_590, growth: 0.0058 },
+  linkedin: { start: 2_160, growth: 0.0071 },
+  x: { start: 1_610, growth: 0.0032 },
 };
-
-/** Compounded daily. 0.54% works out at roughly +18% over a 30-day window. */
-const REACH_GROWTH = 0.0054;
 
 const reachDateAt = (index: number) => {
   const date = new Date(REACH_ANCHOR);
@@ -869,7 +876,9 @@ const reachDateAt = (index: number) => {
 const reachLabel = (date: Date) =>
   new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(date);
 
-function dailyReach(start: number): number[] {
+function dailyReach(platform: SocialPlatform): number[] {
+  const { start, growth } = REACH_PROFILE[platform];
+
   return Array.from({ length: REACH_DAYS }, (_, index) => {
     const weekday = (reachDateAt(index).getDay() + 6) % 7;
     /* A fixed sine rather than a random walk: the series has to be the same
@@ -877,16 +886,16 @@ function dailyReach(start: number): number[] {
        same wobble. */
     const wobble = 1 + 0.035 * Math.sin(index * 1.3);
     return Math.round(
-      start * Math.pow(1 + REACH_GROWTH, index) * WEEKDAY_SHAPE[weekday] * wobble,
+      start * Math.pow(1 + growth, index) * WEEKDAY_SHAPE[weekday] * wobble,
     );
   });
 }
 
 const REACH_DAILY: Record<SocialPlatform, number[]> = {
-  instagram: dailyReach(REACH_START.instagram),
-  facebook: dailyReach(REACH_START.facebook),
-  linkedin: dailyReach(REACH_START.linkedin),
-  x: dailyReach(REACH_START.x),
+  instagram: dailyReach("instagram"),
+  facebook: dailyReach("facebook"),
+  linkedin: dailyReach("linkedin"),
+  x: dailyReach("x"),
 };
 
 const REACH_PLATFORMS: SocialPlatform[] = [
