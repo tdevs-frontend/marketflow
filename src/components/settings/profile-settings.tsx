@@ -7,21 +7,17 @@ import { Loader2, Trash2, Upload } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/input";
 import { APP_ROUTES } from "@/constants/app";
 import { AVATAR_RULES } from "@/constants/settings";
-import { MEMBER_STATUS_LABEL } from "@/constants/workspace";
 import { CAPABILITIES, SESSION_MODE, removeAvatar, updateProfile, uploadAvatar } from "@/lib/account-service";
 import { useAccount } from "@/lib/account-store";
-import { formatDate, formatRelativeTime } from "@/lib/format";
 import { isValidPhone } from "@/lib/validation";
-import { WORKSPACE_NOW_MS } from "@/lib/workspace-clock";
 import { displayName } from "@/types/account";
 
 import { ServiceNotice } from "./service-notice";
 import {
-  DetailList,
   SaveBar,
   SettingsSection,
   useSaveState,
@@ -44,16 +40,18 @@ import {
  * `setCredentials`. Five screens agreed on who was signed in and one did not,
  * so the one changed.
  *
- * The page divides three ways, and the division is the design:
+ * Two blocks: the photo, and the details. Both are things you can change.
  *
- *   Photo     — one thing, one action, its own block
- *   Details   — what you may change about yourself
- *   Account   — what the workspace has decided about you, as facts, not fields
- *
- * The third is a description list rather than a row of disabled inputs. A
- * disabled field says "you could edit this, but not now" and sends somebody
- * hunting for the unlock; a role granted by an owner and a joined date are not
- * things anybody edits, and they should not be dressed as though they were.
+ * There was a third — an "Account information" panel listing workspace, role,
+ * account status, joined date, last active and user id as read-only facts — and
+ * it is gone. Every one of those either already appears where it is actually
+ * used or answers a question nobody asks on this page: role is on the details
+ * form beside Job title, where the contrast between the two is the point;
+ * workspace and status are the same for the whole team and belong to Workspace
+ * Settings; a joined date and a last-active time are somebody else's view of
+ * you, which is the Team directory's job. A settings page earns its length by
+ * being editable, and a panel of facts at the bottom of it is where the eye
+ * stops going.
  */
 
 export function ProfileSettings() {
@@ -78,7 +76,6 @@ export function ProfileSettings() {
 
         <ProfilePhoto />
         <YourDetails />
-        <AccountInformation />
       </div>
     </>
   );
@@ -402,54 +399,3 @@ function YourDetails() {
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/* Read-only account facts                                                    */
-/* -------------------------------------------------------------------------- */
-
-function AccountInformation() {
-  const user = useAccount();
-
-  return (
-    <SettingsSection
-      title="Account information"
-      description="Decided by the workspace. Shown here so you can quote it to support."
-      action={
-        <Link
-          href={APP_ROUTES.settingsSecurity}
-          className={buttonVariants({ variant: "outline", size: "sm" })}
-        >
-          Security
-        </Link>
-      }
-    >
-      <DetailList
-        columns={3}
-        items={[
-          { label: "Full name", value: displayName(user) },
-          { label: "Email address", value: user.email },
-          { label: "Workspace", value: user.workspaceName },
-          { label: "Role", value: user.roleName },
-          {
-            label: "Account status",
-            value: (
-              <Badge tone={user.status === "active" ? "success" : "warning"}>
-                {MEMBER_STATUS_LABEL[user.status]}
-              </Badge>
-            ),
-          },
-          {
-            label: "Joined",
-            value: user.joinedAt ? formatDate(user.joinedAt) : "Not yet accepted",
-          },
-          {
-            label: "Last active",
-            value: user.lastActiveAt
-              ? formatRelativeTime(user.lastActiveAt, WORKSPACE_NOW_MS)
-              : "Never signed in",
-          },
-          { label: "User ID", value: <span className="font-mono">{user.id}</span> },
-        ]}
-      />
-    </SettingsSection>
-  );
-}
