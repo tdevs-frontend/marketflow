@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import {
-  Download,
   Eye,
   Heart,
   Send,
@@ -11,19 +10,14 @@ import {
   Users,
 } from "lucide-react";
 
-import { Button, ButtonLink } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ChartCard, PanelCard } from "@/components/ui/chart-card";
-import {
-  DateRangePicker,
-  DEFAULT_RANGE,
-  type DateRangeValue,
-} from "@/components/ui/date-range";
+import { DEFAULT_RANGE, type DateRangeValue } from "@/components/ui/date-range";
 import { Select } from "@/components/ui/select";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { MiniStat, StatsGrid, type StatItem } from "@/components/ui/stats-card";
 import { InfoHint } from "@/components/ui/tooltip";
-import { useToast } from "@/components/ui/toast";
 import { CHANNEL_SERIES } from "@/components/dashboard/charts/chart-theme";
 import { BarsChart } from "@/components/dashboard/charts/bars-chart";
 import { DonutChart } from "@/components/dashboard/charts/donut-chart";
@@ -128,9 +122,36 @@ const METRIC_META: Record<Metric, { label: string; description: string }> = {
   },
 };
 
-export function SocialAnalytics() {
-  const toast = useToast();
-  const [range, setRange] = useState<DateRangeValue>(DEFAULT_RANGE);
+/**
+ * The seam the dashboard's date filter plugs into.
+ *
+ * Nothing narrows on the range yet, and this says so rather than pretending:
+ * a post carries a `scheduledAt` but the per-week series the charts are drawn
+ * from are not dated records. Filtering here today would either do nothing or
+ * empty the page. It exists so the range arrives as data on a real code path
+ * instead of as a prop nobody reads — the same seam Email and SMS analytics
+ * use, and the one function that changes when dated fixtures land.
+ */
+function withinRange<T>(rows: T[], range: DateRangeValue): T[] {
+  void range;
+  return rows;
+}
+
+export interface SocialAnalyticsProps {
+  /**
+   * The period this page reports on.
+   *
+   * Supplied by the dashboard's filter rather than chosen here. This page was
+   * the last of the four analytics surfaces still opening on a range picker of
+   * its own, which made it the only one whose answer to "which 30 days" could
+   * disagree with the others. Export moved to the page header, where it is a
+   * page action rather than a filter. The platform selector stays: that one is
+   * social's own question and exists nowhere else.
+   */
+  range?: DateRangeValue;
+}
+
+export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps) {
   const [platform, setPlatform] = useState<SocialPlatform | "all">("all");
   const [metric, setMetric] = useState<Metric>("reach");
 
@@ -155,10 +176,12 @@ export function SocialAnalytics() {
 
   /* Posts filtered by the platform selector, so the leaderboard obeys the
      toolbar rather than ignoring it. */
-  const scoped =
+  const scoped = withinRange(
     platform === "all"
       ? PUBLISHED
-      : PUBLISHED.filter((post) => post.platforms.includes(platform));
+      : PUBLISHED.filter((post) => post.platforms.includes(platform)),
+    range,
+  );
 
   const followerTotal = reportable.reduce(
     (sum, account) => sum + account.followers,
@@ -169,8 +192,6 @@ export function SocialAnalytics() {
     <>
       <Card className="p-4">
         <div className="flex flex-wrap items-center gap-2.5">
-          <DateRangePicker value={range} onChange={setRange} />
-
           <Select
             label="Filter by platform"
             size="sm"
@@ -183,18 +204,12 @@ export function SocialAnalytics() {
                 label: PLATFORM_THEME[key].label,
               })),
             ]}
-            className="w-full lg:w-40"
+            className="w-full lg:w-44"
           />
 
-          <Button
-            variant="outline"
-            size="compact"
-            onClick={() => toast("Report queued — we will email the CSV when it is ready")}
-            className="lg:ml-auto"
-          >
-            <Download aria-hidden />
-            Export
-          </Button>
+          <p className="text-sm text-text-muted lg:ml-auto">
+            {formatNumber(scoped.length)} published posts in this view
+          </p>
         </div>
       </Card>
 

@@ -21,11 +21,11 @@ import type { MediaAsset } from "@/types/social";
 /**
  * Attach assets to a campaign, from the Media Library that already exists.
  *
- * It reads `MEDIA_ASSETS` — the same list Marketing → Social → Media renders —
- * rather than holding a campaign-local upload. That is the whole point: an
- * image uploaded for a campaign is an asset of the workspace, and a second
- * store would mean the same hero image existing twice with two names, two sizes
- * and no idea which the Planner is using.
+ * It reads `useMediaAssets()` — the same store Marketing → Social → Media and
+ * the post composer render — rather than holding a campaign-local upload. That
+ * is the whole point: an image uploaded for a campaign is an asset of the
+ * workspace, and a second store would mean the same hero image existing twice
+ * with two names, two sizes and no idea which the Planner is using.
  *
  * "Upload New" keeps that rule rather than bypassing it: the file goes into the
  * library through `lib/media-store` and is then selected here, so it is
@@ -35,50 +35,16 @@ import type { MediaAsset } from "@/types/social";
 const GRID_TILE =
   "group relative aspect-square overflow-hidden rounded-panel border transition-colors focus-visible:shadow-focus focus-visible:outline-none";
 
-/**
- * An asset's picture, at whatever size the caller gives it.
- *
- * Fixtures have no thumbnail and uploads do, so this is the one place that
- * decides between them — every surface showing an asset uses it and none of
- * them repeats the fallback. A video shows its own first frame rather than a
- * film icon: the point of a preview is recognising the clip.
+/*
+ * `AssetThumb` used to live here, which made the campaign wizard the owner of
+ * how a media asset looks everywhere else. It has moved to
+ * `marketing-hub/shared` alongside the other cross-module pieces and is
+ * re-exported so the wizard's own call sites, and anything importing it from
+ * here, are unchanged.
  */
-export function AssetThumb({
-  asset,
-  className,
-}: {
-  asset: MediaAsset;
-  className?: string;
-}) {
-  if (!asset.url) {
-    return <span aria-hidden className={cn("block", asset.tone, className)} />;
-  }
+import { AssetThumb } from "../shared/asset-thumb";
 
-  if (asset.type === "video") {
-    return (
-      <video
-        aria-hidden
-        src={asset.url}
-        muted
-        playsInline
-        preload="metadata"
-        className={cn("block object-cover", asset.tone, className)}
-      />
-    );
-  }
-
-  return (
-    /* A `blob:` URL has nothing for the image optimiser to fetch, so this stays
-       a plain `img` — `next/image` would route it through `/_next/image` and
-       404 on every upload. */
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={asset.url}
-      alt=""
-      className={cn("block object-cover", asset.tone, className)}
-    />
-  );
-}
+export { AssetThumb };
 
 export function MediaPicker({
   selected,

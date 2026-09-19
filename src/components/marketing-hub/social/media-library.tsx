@@ -4,10 +4,8 @@ import { useMemo, useState } from "react";
 import {
   Check,
   Download,
-  Film,
   FolderOpen,
   HardDrive,
-  Image as ImageIcon,
   Pencil,
   Plus,
   Trash2,
@@ -28,10 +26,22 @@ import { ProgressBar } from "@/components/ui/progress";
 import { Select } from "@/components/ui/select";
 import { TagList } from "@/components/ui/tag";
 import { useToast } from "@/components/ui/toast";
-import { MEDIA_ASSETS, MEDIA_FOLDERS, MEDIA_USAGE } from "@/lib/social-fixtures";
+import { MEDIA_FOLDERS, MEDIA_USAGE } from "@/lib/social-fixtures";
+import { useMediaAssets } from "@/lib/media-store";
 import { formatNumber, formatRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { MediaAsset, MediaType } from "@/types/social";
+import { AssetThumb, VideoOverlay } from "../shared/asset-thumb";
+
+/**
+ * Usage count, defaulted.
+ *
+ * `MEDIA_USAGE` is keyed off the fixture posts, so an asset uploaded this
+ * session has no row in it — and `undefined` in a sort comparator sends every
+ * uploaded asset to a random position. A file nothing references yet is used
+ * zero times, which is a fact rather than a gap.
+ */
+const usageOf = (id: string) => MEDIA_USAGE[id] ?? 0;
 
 /**
  * The media library.
@@ -79,10 +89,16 @@ export function MediaLibrary() {
 
   const activeFilters = type === ALL ? 0 : 1;
 
+  /* The store, not the fixture array. This page was the last media surface
+     still reading the fixture array directly, which meant a file uploaded in the
+     campaign wizard or the post composer appeared everywhere except in the
+     library it had supposedly been uploaded to. */
+  const assets = useMediaAssets();
+
   const rows = useMemo(() => {
     const term = search.trim().toLowerCase();
 
-    return MEDIA_ASSETS.filter((asset) => {
+    return assets.filter((asset) => {
       if (folder !== "all" && asset.folderId !== folder) return false;
       if (
         term &&
@@ -96,20 +112,20 @@ export function MediaLibrary() {
     }).sort((a, b) => {
       if (sort === "name") return a.name.localeCompare(b.name);
       if (sort === "size") return b.size - a.size;
-      if (sort === "usage") return MEDIA_USAGE[b.id] - MEDIA_USAGE[a.id];
+      if (sort === "usage") return usageOf(b.id) - usageOf(a.id);
       return new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime();
     });
-  }, [folder, search, sort, type]);
+  }, [assets, folder, search, sort, type]);
 
-  const used = MEDIA_ASSETS.reduce((sum, asset) => sum + asset.size, 0);
-  const images = MEDIA_ASSETS.filter((asset) => asset.type === "image").length;
-  const videos = MEDIA_ASSETS.filter((asset) => asset.type === "video").length;
+  const used = assets.reduce((sum, asset) => sum + asset.size, 0);
+  const images = assets.filter((asset) => asset.type === "image").length;
+  const videos = assets.filter((asset) => asset.type === "video").length;
 
   /** Files in a folder, for the sidebar counts. */
   const folderCount = (id: string) =>
     id === "all"
-      ? MEDIA_ASSETS.length
-      : MEDIA_ASSETS.filter((asset) => asset.folderId === id).length;
+      ? assets.length
+      : assets.filter((asset) => asset.folderId === id).length;
 
   const toggle = (id: string) =>
     setSelected((prev) =>
@@ -304,7 +320,7 @@ export function MediaLibrary() {
                   size="sm"
                   onClick={() =>
                     setPendingDelete(
-                      MEDIA_ASSETS.filter((asset) => selected.includes(asset.id)),
+                      assets.filter((asset) => selected.includes(asset.id)),
                     )
                   }
                 >
@@ -371,24 +387,15 @@ export function MediaLibrary() {
                           asset.tone,
                         )}
                       >
+                        <AssetThumb asset={asset} className="size-full" />
+
                         {asset.type === "video" ? (
-                          <span
-                            aria-hidden
-                            className="absolute top-1/2 left-1/2 grid size-9 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-surface/80"
-                          >
-                            <span className="ml-0.5 block size-0 border-y-[6px] border-l-[10px] border-y-transparent border-l-text-primary" />
-                          </span>
+                          <VideoOverlay duration={asset.duration} />
                         ) : null}
 
-                        {asset.type === "video" && asset.duration ? (
-                          <span className="absolute bottom-1.5 left-1.5 rounded bg-text-primary/70 px-1 py-0.5 text-sm font-medium text-white tabular-nums">
-                            {asset.duration}s
-                          </span>
-                        ) : null}
-
-                        {MEDIA_USAGE[asset.id] > 0 ? (
-                          <span className="absolute bottom-1.5 right-1.5 rounded bg-surface/90 px-1 py-0.5 text-sm font-medium text-text-secondary tabular-nums">
-                            {MEDIA_USAGE[asset.id]} uses
+                        {usageOf(asset.id) > 0 ? (
+                          <span className="absolute right-1.5 bottom-1.5 rounded bg-text-primary/65 px-1.5 py-0.5 text-xs font-medium text-white tabular-nums backdrop-blur-[2px]">
+                            {usageOf(asset.id)} uses
                           </span>
                         ) : null}
                       </span>
@@ -482,18 +489,19 @@ export function MediaLibrary() {
       >
         {detail ? (
           <div className="space-y-4">
+            {/* The asset itself, not an icon standing for its type — the
+                badge below already says which it is, and the one thing this
+                panel is for is looking at the thing. */}
             <div
-              aria-hidden
               className={cn(
-                "grid aspect-video place-items-center rounded-panel",
+                "relative grid aspect-video place-items-center overflow-hidden rounded-panel",
                 detail.tone,
               )}
             >
+              <AssetThumb asset={detail} className="size-full" />
               {detail.type === "video" ? (
-                <Film className="size-8 text-text-muted" />
-              ) : (
-                <ImageIcon className="size-8 text-text-muted" />
-              )}
+                <VideoOverlay duration={detail.duration} />
+              ) : null}
             </div>
 
             <div className="flex flex-wrap items-center gap-1.5">
@@ -504,10 +512,10 @@ export function MediaLibrary() {
                 {MEDIA_FOLDERS.find((item) => item.id === detail.folderId)?.name ??
                   "Uncategorised"}
               </Badge>
-              {MEDIA_USAGE[detail.id] === 0 ? (
+              {usageOf(detail.id) === 0 ? (
                 <Badge tone="warning">Unused</Badge>
               ) : (
-                <Badge tone="success">{MEDIA_USAGE[detail.id]} posts</Badge>
+                <Badge tone="success">{usageOf(detail.id)} posts</Badge>
               )}
             </div>
 
@@ -645,7 +653,7 @@ export function MediaLibrary() {
       >
         {(() => {
           const inUse = (pendingDelete ?? []).filter(
-            (asset) => MEDIA_USAGE[asset.id] > 0,
+            (asset) => usageOf(asset.id) > 0,
           );
 
           return (

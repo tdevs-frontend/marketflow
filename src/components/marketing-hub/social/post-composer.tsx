@@ -10,11 +10,13 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Tag } from "@/components/ui/tag";
 import { useToast } from "@/components/ui/toast";
 import { PLATFORM_THEME } from "@/constants/channels";
-import { MEDIA_ASSETS, publishableAccounts } from "@/lib/social-fixtures";
+import { publishableAccounts } from "@/lib/social-fixtures";
+import { useMediaAssets } from "@/lib/media-store";
 import { SocialAccountSelector } from "@/components/integrations/social/social-account-selector";
 import { cn } from "@/lib/utils";
 import type { SocialPlatform } from "@/types/social";
 import { PlatformMark } from "../shared/channel-badge";
+import { AssetThumb, VideoOverlay } from "../shared/asset-thumb";
 
 /**
  * Create Post.
@@ -111,7 +113,16 @@ export function PostComposer({
     ? previewPlatform
     : (platforms[0] ?? "instagram");
 
-  const selectedMedia = MEDIA_ASSETS.filter((asset) => mediaIds.includes(asset.id));
+  /* The shared store rather than the fixture list: the library, the campaign
+     picker and this dialog are meant to be looking at one shelf, and until now
+     this one could not see anything uploaded during the session. */
+  const library = useMediaAssets();
+  /* Ordered by the selection, not by the library — the first item is the one
+     the preview shows and the one a carousel leads with, so the order the
+     person picked in is the order that has to survive. */
+  const selectedMedia = mediaIds
+    .map((id) => library.find((asset) => asset.id === id))
+    .filter((asset) => asset !== undefined);
 
   const overLimit = platforms.filter(
     (platform) => composed.length > PLATFORM_LIMITS[platform],
@@ -223,14 +234,14 @@ export function PostComposer({
                 {selectedMedia.map((asset) => (
                   <li key={asset.id} className="relative">
                     <span
-                      aria-hidden
                       className={cn(
-                        "grid size-20 place-items-center rounded-panel",
+                        "relative block size-20 overflow-hidden rounded-panel border border-border",
                         asset.tone,
                       )}
                     >
+                      <AssetThumb asset={asset} className="size-full" />
                       {asset.type === "video" ? (
-                        <span className="ml-1 block size-0 border-y-[7px] border-l-[11px] border-y-transparent border-l-text-muted" />
+                        <VideoOverlay duration={asset.duration} size="sm" />
                       ) : null}
                     </span>
                     <button
@@ -449,17 +460,33 @@ export function PostComposer({
                   </div>
 
                   {selectedMedia[0] ? (
+                    /* The real asset, cropped the way the platform will crop
+                       it. A preview whose whole job is "what will this look
+                       like" cannot show a coloured rectangle where the picture
+                       goes. */
                     <span
-                      aria-hidden
                       className={cn(
-                        "block w-full",
+                        "relative block w-full overflow-hidden",
                         /* Instagram crops to square, the rest keep 16:9. */
                         activePreview === "instagram"
                           ? "aspect-square"
                           : "aspect-video",
                         selectedMedia[0].tone,
                       )}
-                    />
+                    >
+                      <AssetThumb
+                        asset={selectedMedia[0]}
+                        className="size-full"
+                      />
+                      {selectedMedia[0].type === "video" ? (
+                        <VideoOverlay duration={selectedMedia[0].duration} />
+                      ) : null}
+                      {selectedMedia.length > 1 ? (
+                        <span className="absolute top-2 right-2 rounded bg-text-primary/65 px-1.5 py-0.5 text-xs font-medium text-white tabular-nums backdrop-blur-[2px]">
+                          1 / {selectedMedia.length}
+                        </span>
+                      ) : null}
+                    </span>
                   ) : null}
 
                   <div className="px-3.5 py-3">
@@ -530,7 +557,7 @@ export function PostComposer({
         }
       >
         <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4">
-          {MEDIA_ASSETS.map((asset) => {
+          {library.map((asset) => {
             const active = mediaIds.includes(asset.id);
 
             return (
@@ -554,22 +581,15 @@ export function PostComposer({
                       asset.tone,
                     )}
                   >
+                    <AssetThumb asset={asset} className="size-full" />
+
                     {asset.type === "video" ? (
-                      <span
-                        aria-hidden
-                        className="absolute top-1/2 left-1/2 size-0 -translate-x-1/2 -translate-y-1/2 border-y-[7px] border-l-[11px] border-y-transparent border-l-text-muted"
-                      />
+                      <VideoOverlay duration={asset.duration} />
                     ) : null}
 
                     {active ? (
-                      <span className="absolute top-1.5 right-1.5 grid size-5 place-items-center rounded-full bg-primary text-white">
+                      <span className="absolute top-1.5 right-1.5 grid size-5 place-items-center rounded-full bg-primary text-white shadow-btn">
                         <Check className="size-3" strokeWidth={3} aria-hidden />
-                      </span>
-                    ) : null}
-
-                    {asset.type === "video" && asset.duration ? (
-                      <span className="absolute bottom-1.5 left-1.5 rounded bg-text-primary/70 px-1 text-sm font-medium text-white tabular-nums">
-                        {asset.duration}s
                       </span>
                     ) : null}
                   </span>

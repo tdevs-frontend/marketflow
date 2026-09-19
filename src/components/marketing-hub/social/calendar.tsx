@@ -143,7 +143,16 @@ function useTodayKey(): string {
 /* Cards                                                                      */
 /* -------------------------------------------------------------------------- */
 
-/** A post inside a month cell — the tightest form the card takes. */
+/**
+ * A post inside a month cell — the tightest form the card takes.
+ *
+ * Everything a planning glance needs, in about 90px of width: what it looks
+ * like, where it goes, what it is called, when, and how far along it is. The
+ * thumbnail earns its 24px because a month grid is scanned, not read — the
+ * picture is what tells two Instagram posts apart before either title is
+ * legible. Status stays on the left rule rather than taking a badge, which is
+ * the only part of the card there is genuinely no room for.
+ */
 function MonthCard({ post, onSelect }: { post: SocialPost; onSelect: () => void }) {
   return (
     <button
@@ -154,13 +163,20 @@ function MonthCard({ post, onSelect }: { post: SocialPost; onSelect: () => void 
         STATUS_RULE[post.status],
       )}
     >
-      <PlatformStack platforms={post.platforms} size="sm" />
+      <PostThumb post={post} size="sm" />
+
       <span className="min-w-0 flex-1">
         <span className="block truncate text-xs leading-tight font-medium text-text-primary">
           {post.title}
         </span>
-        <span className="block text-xs text-text-muted tabular-nums">
-          {postTime(post)}
+        {/* Time and platforms share the second line rather than taking a
+            column each — a month cell is about 110px wide and a third column
+            is what pushes the title down to two characters. */}
+        <span className="mt-0.5 flex items-center gap-1">
+          <span className="text-xs text-text-muted tabular-nums">
+            {postTime(post)}
+          </span>
+          <PlatformStack platforms={post.platforms} size="sm" className="ml-auto" />
         </span>
       </span>
     </button>
@@ -178,7 +194,7 @@ function DetailCard({ post, onSelect }: { post: SocialPost; onSelect: () => void
         STATUS_RULE[post.status],
       )}
     >
-      <PostThumb post={post} />
+      <PostThumb post={post} size="lg" />
 
       <span className="min-w-0 flex-1">
         <span className="flex items-baseline justify-between gap-2">
@@ -192,10 +208,19 @@ function DetailCard({ post, onSelect }: { post: SocialPost; onSelect: () => void
         <span className="mt-0.5 line-clamp-2 block text-sm leading-snug text-text-muted">
           {post.caption}
         </span>
-        <span className="mt-1.5 flex items-center gap-1.5">
+        <span className="mt-1.5 flex flex-wrap items-center gap-1.5">
           <PlatformStack platforms={post.platforms} size="sm" />
           <PostStatusBadge status={post.status} />
         </span>
+
+        {/* The one thing a planner has to act on from the calendar. A failed
+            post that only says "failed" sends you to another page to find out
+            why; the reason is already on the record. */}
+        {post.failureReason ? (
+          <span className="mt-1.5 block truncate text-xs text-error-text">
+            {post.failureReason}
+          </span>
+        ) : null}
       </span>
     </button>
   );
@@ -381,24 +406,34 @@ export function SocialCalendar() {
         </ul>
       </Card>
 
-      {/* ------------------------------------------------------------- Month */}
+      {/*
+        ------------------------------------------------------------- Month
+
+        The month is seven columns wide whatever the screen is, so below about
+        800px it scrolls sideways inside the card rather than crushing each day
+        to 50px. A cell has to hold a card with a thumbnail, a title and a
+        time; at a seventh of a phone it holds none of them, and a calendar you
+        cannot read is worse than one you have to nudge. The scroll belongs to
+        the card, so the page itself never moves.
+      */}
       {view === "month" ? (
         <Card className="overflow-hidden p-0">
-          <div className="grid grid-cols-7 border-b border-border bg-surface-secondary">
-            {WEEKDAYS.map((day) => (
-              <div
-                key={day}
-                className="px-2 py-2 text-center text-sm font-medium text-text-muted"
-              >
-                <span className="hidden sm:inline">{day}</span>
-                <span className="sm:hidden">{day.charAt(0)}</span>
+          <div className="overflow-x-auto">
+            <div className="min-w-[52rem]">
+              <div className="grid grid-cols-7 border-b border-border bg-surface-secondary">
+                {WEEKDAYS.map((day) => (
+                  <div
+                    key={day}
+                    className="px-2 py-2 text-center text-sm font-medium text-text-muted"
+                  >
+                    {day}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
 
-          {/* Six rows of seven. `auto-rows-fr` keeps cells even when one day
-              holds three posts and its neighbours hold none. */}
-          <div className="grid grid-cols-7 auto-rows-fr">
+              {/* Six rows of seven. `auto-rows-fr` keeps cells even when one
+                  day holds three posts and its neighbours hold none. */}
+              <div className="grid grid-cols-7 auto-rows-fr">
             {grid.map((date, index) => {
               const key = dayKey(date);
               const inMonth = date.getMonth() === month;
@@ -460,6 +495,8 @@ export function SocialCalendar() {
                 </div>
               );
             })}
+              </div>
+            </div>
           </div>
         </Card>
       ) : null}

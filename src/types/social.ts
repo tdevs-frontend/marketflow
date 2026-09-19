@@ -28,6 +28,14 @@ export interface SocialPost {
   platforms: SocialPlatform[];
   status: PostStatus;
   mediaIds: string[];
+  /**
+   * ISO, local-naive. When the post record was made.
+   *
+   * Distinct from `scheduledAt` and worth its own field: a draft written three
+   * weeks ago and still unscheduled is the thing a content team loses track
+   * of, and "created" is the only column that surfaces it.
+   */
+  createdAt: string;
   /** ISO. The scheduled slot, or the publish time once it has gone out. */
   scheduledAt: string;
   publishedAt?: string;
@@ -59,15 +67,28 @@ export interface MediaAsset {
   tone: string;
   uploadedAt: string;
   /**
-   * The thumbnail, where there is one.
+   * The asset itself.
    *
-   * Optional because the fixtures have none — they are swatches, and inventing
-   * stock photography for them would make an empty library look finished. A
-   * file uploaded through `lib/media-store` does have one, so anything
-   * rendering an asset shows the real thing when it can and the `tone` swatch
-   * when it cannot.
+   * A path under `/media` for a library asset, or a `blob:` URL for a file
+   * uploaded through `lib/media-store` this session. Still optional: an
+   * asset can exist before its file does, and everything rendering one falls
+   * back to the `tone` swatch rather than to a broken image.
    */
   url?: string;
+  /**
+   * The frame to show instead of the asset.
+   *
+   * Videos need one — a grid must not fetch and decode an MP4 to draw a
+   * 200px tile, and it must certainly not autoplay one. It is also the escape
+   * hatch for any asset whose own file is the wrong thing to paint.
+   */
+  poster?: string;
+  /**
+   * How the picture sits in its tile. `cover` everywhere except the assets
+   * that are artwork rather than photography: a 1200×300 logo cropped to a
+   * square shows the middle third of a wordmark.
+   */
+  fit?: "cover" | "contain";
 }
 
 export interface MediaFolder {

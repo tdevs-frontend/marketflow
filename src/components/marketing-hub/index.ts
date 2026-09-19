@@ -13,6 +13,7 @@ export * from "./campaign/campaign-wizard";
 
 /* Cross-channel pieces. Every channel module composes from these. */
 export * from "./shared/channel-badge";
+export * from "./shared/asset-thumb";
 export * from "./shared/conversion-funnel";
 export * from "./shared/activity-feed";
 export * from "./shared/channel-performance";
@@ -66,6 +67,7 @@ export * from "./social/posts-workspace";
 export * from "./social/media-library";
 export * from "./social/accounts";
 export * from "./social/analytics";
+export * from "./social/analytics-export";
 
 /* Audience segmentation, shared across the channels. */
 export * from "./segments/segments-workspace";

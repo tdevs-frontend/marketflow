@@ -27,7 +27,6 @@ import { Menu } from "@/components/ui/menu";
 import { Pagination } from "@/components/ui/pagination";
 import { Select } from "@/components/ui/select";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import { TagList } from "@/components/ui/tag";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
 import { useToast } from "@/components/ui/toast";
 import { PLATFORM_ORDER, PLATFORM_THEME } from "@/constants/channels";
@@ -327,18 +326,26 @@ export function SocialPostsWorkspace() {
                       )}
                     >
                       {/* Media band. 16:9 rather than square, so the card
-                          height stays predictable across mixed assets. */}
-                      <div className="relative">
-                        <PostThumb
-                          post={post}
-                          className="!size-auto aspect-video w-full !rounded-none"
+                          height stays predictable across mixed assets — a
+                          1080×1920 reel and a 2400×1600 hero crop to the same
+                          box and the row keeps one baseline. */}
+                      <div className="relative aspect-video w-full overflow-hidden bg-surface-secondary">
+                        <PostThumb post={post} size="fill" />
+                        {/* A scrim behind the controls. White-on-photo is a
+                            coin toss once the media is a real picture, and a
+                            checkbox that vanishes on a pale hero is worse than
+                            one sitting on a gradient. */}
+                        <div
+                          aria-hidden
+                          className="pointer-events-none absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-text-primary/35 to-transparent"
                         />
+
                         <div className="absolute top-2 left-2">
                           <Checkbox
                             checked={isSelected}
                             onCheckedChange={() => toggle(post.id)}
                             label={`Select ${post.title}`}
-                            className="bg-surface/90"
+                            className="bg-surface/90 shadow-btn"
                           />
                         </div>
                         <div className="absolute top-1 right-1">
@@ -474,11 +481,11 @@ export function SocialPostsWorkspace() {
                   </TH>
                   <TH>Post</TH>
                   <TH>Platform</TH>
-                  <TH>Content</TH>
-                  <TH>Scheduled</TH>
                   <TH>Status</TH>
+                  <TH>Scheduled</TH>
                   <TH align="right">Reach</TH>
                   <TH align="right">Engagement</TH>
+                  <TH>Created</TH>
                   <TH align="right">Actions</TH>
                 </THead>
 
@@ -504,11 +511,16 @@ export function SocialPostsWorkspace() {
                           >
                             <PostThumb post={post} />
                             <span className="min-w-0">
-                              <span className="block max-w-40 truncate font-bold text-text-primary">
+                              <span className="block max-w-52 truncate font-bold text-text-primary">
                                 {post.title}
                               </span>
-                              <span className="block text-sm text-text-muted">
-                                {post.author}
+                              {/* The caption moves up here from the column it
+                                  used to have. It is what the post *is*, not a
+                                  measure of it, so it belongs under the title
+                                  rather than competing with Reach and
+                                  Engagement for a column of its own. */}
+                              <span className="block max-w-52 truncate text-sm text-text-muted">
+                                {truncate(post.caption, 64)}
                               </span>
                             </span>
                           </button>
@@ -519,28 +531,29 @@ export function SocialPostsWorkspace() {
                         </TD>
 
                         <TD>
-                          <p className="max-w-56 text-sm text-text-secondary">
-                            {truncate(post.caption, 72)}
-                          </p>
-                          {post.hashtags.length > 0 ? (
-                            <div className="mt-1">
-                              <TagList
-                                tags={post.hashtags}
-                                tone="bg-primary-soft text-primary-dark"
-                              />
-                            </div>
+                          <PostStatusBadge status={post.status} />
+                          {post.failureReason ? (
+                            <span className="mt-0.5 block max-w-40 truncate text-sm text-error-text">
+                              {post.failureReason}
+                            </span>
                           ) : null}
                         </TD>
 
+                        {/* One column for the moment that matters: when it
+                            went out if it did, when it is due if it has not,
+                            and an honest dash for a draft with no slot. */}
                         <TD className="text-sm whitespace-nowrap text-text-secondary">
-                          {post.scheduledAt.slice(0, 10)}
-                          <span className="block text-sm text-text-muted tabular-nums">
-                            {post.scheduledAt.slice(11, 16)}
-                          </span>
-                        </TD>
-
-                        <TD>
-                          <PostStatusBadge status={post.status} />
+                          {post.status === "draft" ? (
+                            <span className="text-text-muted">Not scheduled</span>
+                          ) : (
+                            <>
+                              {(post.publishedAt ?? post.scheduledAt).slice(0, 10)}
+                              <span className="block text-sm text-text-muted tabular-nums">
+                                {(post.publishedAt ?? post.scheduledAt).slice(11, 16)}
+                                {post.status === "published" ? " · published" : ""}
+                              </span>
+                            </>
+                          )}
                         </TD>
 
                         <TD align="right" className="tabular-nums">
@@ -566,6 +579,16 @@ export function SocialPostsWorkspace() {
                           ) : (
                             <span className="text-text-muted">—</span>
                           )}
+                        </TD>
+
+                        {/* Author rides along under the date rather than
+                            taking an eighth column — "who wrote this and
+                            when" is one question. */}
+                        <TD className="text-sm whitespace-nowrap text-text-secondary">
+                          {post.createdAt.slice(0, 10)}
+                          <span className="block max-w-32 truncate text-sm text-text-muted">
+                            {post.author}
+                          </span>
                         </TD>
 
                         <TD align="right">
@@ -620,10 +643,9 @@ export function SocialPostsWorkspace() {
       >
         {detail ? (
           <div className="space-y-4">
-            <PostThumb
-              post={detail}
-              className="!size-auto aspect-video w-full !rounded-panel"
-            />
+            <div className="relative aspect-video w-full overflow-hidden rounded-panel bg-surface-secondary">
+              <PostThumb post={detail} size="fill" />
+            </div>
 
             <div className="flex flex-wrap items-center gap-2">
               <PlatformStack platforms={detail.platforms} />

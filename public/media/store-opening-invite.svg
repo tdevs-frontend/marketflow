@@ -1,0 +1,70 @@
+<svg width="1080" height="1080" viewBox="0 0 1080 1080" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Store opening invitation graphic">
+  <title>Store opening invite</title>
+  <defs>
+    <linearGradient id="card" x1="0" y1="0" x2="1080" y2="1080" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1e1b4b" />
+      <stop offset="0.5" stop-color="#4f46e5" />
+      <stop offset="1" stop-color="#0891b2" />
+    </linearGradient>
+    <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.16" />
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1080" height="1080" fill="url(#card)" />
+  <rect width="1080" height="420" fill="url(#sheen)" />
+
+  <!-- Confetti, placed rather than randomised so the file is deterministic. -->
+  <g fill="#ffffff">
+    <circle cx="140" cy="150" r="7" fill-opacity="0.45" />
+    <circle cx="905" cy="210" r="9" fill-opacity="0.35" />
+    <circle cx="255" cy="905" r="8" fill-opacity="0.30" />
+    <circle cx="820" cy="880" r="6" fill-opacity="0.40" />
+    <circle cx="960" cy="560" r="5" fill-opacity="0.30" />
+    <circle cx="105" cy="600" r="6" fill-opacity="0.28" />
+  </g>
+  <g stroke="#f59e0b" stroke-width="8" stroke-linecap="round" stroke-opacity="0.75">
+    <path d="M190 260l40-40" />
+    <path d="M880 760l40-40" />
+    <path d="M150 470l34 12" />
+    <path d="M930 380l-34 12" />
+  </g>
+
+  <!-- Storefront mark: an awning over a doorway, which reads at thumbnail size
+       where a photograph of a shop would not. -->
+  <g transform="translate(400 250)">
+    <rect x="0" y="86" width="280" height="200" rx="16" fill="#ffffff" fill-opacity="0.12" />
+    <path d="M-14 86 30 14h220l44 72Z" fill="#ffffff" fill-opacity="0.9" />
+    <path d="M30 14h55l-14 72H-14Z" fill="#f59e0b" fill-opacity="0.85" />
+    <path d="M140 14h55l30 72h-85Z" fill="#f59e0b" fill-opacity="0.85" />
+    <rect x="96" y="150" width="88" height="136" rx="10" fill="#ffffff" fill-opacity="0.92" />
+    <circle cx="168" cy="220" r="7" fill="#1e1b4b" />
+  </g>
+
+  <text
+    x="540" y="640"
+    text-anchor="middle"
+    font-family="'Google Sans', 'Segoe UI', system-ui, sans-serif"
+    font-size="42" font-weight="500" letter-spacing="10"
+    fill="#ffffff" fill-opacity="0.75"
+  >YOU ARE INVITED</text>
+
+  <text
+    x="540" y="756"
+    text-anchor="middle"
+    font-family="'Google Sans', 'Segoe UI', system-ui, sans-serif"
+    font-size="86" font-weight="700"
+    fill="#ffffff"
+  >Store Opening</text>
+
+  <rect x="390" y="820" width="300" height="4" rx="2" fill="#f59e0b" />
+
+  <text
+    x="540" y="906"
+    text-anchor="middle"
+    font-family="'Google Sans', 'Segoe UI', system-ui, sans-serif"
+    font-size="44" font-weight="500"
+    fill="#ffffff" fill-opacity="0.88"
+  >Gulshan · Saturday 10am</text>
+</svg>

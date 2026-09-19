@@ -1,7 +1,12 @@
+"use client";
+
+import { FileText } from "lucide-react";
+
 import { Badge, type BadgeTone } from "@/components/ui/badge";
-import { MEDIA_ASSETS } from "@/lib/social-fixtures";
+import { useMediaAssets } from "@/lib/media-store";
 import { cn } from "@/lib/utils";
 import type { PostStatus, SocialPost } from "@/types/social";
+import { AssetThumb, VideoOverlay } from "../shared/asset-thumb";
 
 /** Post status, shared by the calendar, the list and the composer. */
 const STATUS_TONES: Record<PostStatus, BadgeTone> = {
@@ -27,13 +32,28 @@ export const STATUS_RULE: Record<PostStatus, string> = {
   failed: "border-l-error",
 };
 
+const THUMB_SIZES = {
+  sm: "size-6 rounded",
+  md: "size-9 rounded-btn",
+  lg: "size-14 rounded-panel",
+  fill: "size-full rounded-none",
+} as const;
+
 /**
- * A post's first asset as a small tinted tile.
+ * A post's first asset, as its picture.
  *
- * Real thumbnails come from the asset URL; until then the media's own `tone`
- * gives each post a stable, distinguishable swatch — which is enough for the
- * calendar, where the job is telling two cards apart rather than judging the
- * image.
+ * Three cases and each one has to be recognisable at 24px in a month cell:
+ *
+ * - An image shows the image.
+ * - A video shows its poster frame with a play badge over it, so a reel is
+ *   identifiable as a reel without the grid loading any video.
+ * - A post with no media shows a document glyph rather than an empty tile —
+ *   a text-only update is a real kind of post, and a blank square reads as a
+ *   picture that failed to load.
+ *
+ * Assets come from `useMediaAssets`, the same store the Media Library and the
+ * campaign picker read, so a file uploaded in the composer is the picture the
+ * calendar draws a second later.
  */
 export function PostThumb({
   post,
@@ -41,33 +61,45 @@ export function PostThumb({
   className,
 }: {
   post: SocialPost;
-  size?: "sm" | "md" | "lg";
+  /** `fill` hands sizing to the caller — the grid's 16:9 media band. */
+  size?: "sm" | "md" | "lg" | "fill";
   className?: string;
 }) {
-  const asset = MEDIA_ASSETS.find((item) => item.id === post.mediaIds[0]);
-
-  const sizes = {
-    sm: "size-6 rounded",
-    md: "size-9 rounded-btn",
-    lg: "size-14 rounded-panel",
-  } as const;
+  const assets = useMediaAssets();
+  const asset = assets.find((item) => item.id === post.mediaIds[0]);
+  const small = size === "sm";
 
   return (
     <span
-      aria-hidden
       className={cn(
-        "grid shrink-0 place-items-center overflow-hidden",
-        sizes[size],
-        asset?.tone ?? "bg-surface-secondary",
+        "relative grid shrink-0 place-items-center overflow-hidden",
+        THUMB_SIZES[size],
+        asset ? asset.tone : "bg-surface-secondary",
         className,
       )}
     >
-      {asset?.type === "video" ? (
-        /* A play triangle rather than a film icon — it reads at 24px. */
-        <span className="ml-0.5 block size-0 border-y-[4px] border-l-[7px] border-y-transparent border-l-text-muted" />
-      ) : asset ? null : (
-        <span className="text-xs font-bold text-text-muted">TXT</span>
+      {asset ? (
+        <>
+          <AssetThumb asset={asset} className="size-full" />
+          {asset.type === "video" ? (
+            <VideoOverlay
+              duration={asset.duration}
+              size={small || size === "md" ? "sm" : "md"}
+            />
+          ) : null}
+        </>
+      ) : (
+        <FileText
+          aria-hidden
+          className={cn("text-text-muted", small ? "size-3" : "size-4")}
+        />
       )}
+
+      <span className="sr-only">
+        {asset
+          ? `${asset.type === "video" ? "Video" : "Image"}: ${asset.name}`
+          : "Text-only post"}
+      </span>
     </span>
   );
 }

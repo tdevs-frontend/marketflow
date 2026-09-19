@@ -54,9 +54,14 @@ export const MEDIA_FOLDERS: MediaFolder[] = [
 ];
 
 /**
- * Placeholder swatches. Flat brand-adjacent tints rather than stock imagery —
- * a tile that pretends to be a photograph makes the library look finished when
- * it is empty, and the eye stops treating it as a placeholder.
+ * The ground behind each asset.
+ *
+ * These were the library's *content* when it had no files: flat tints standing
+ * in for pictures. Every asset now has a real one, so they have dropped back
+ * to what a tone should be — the colour a tile holds while its image decodes,
+ * and the colour it keeps if the file ever goes missing. Still per-asset
+ * rather than one grey, because a library mid-load should read as a set of
+ * distinct things rather than as a wall of skeletons.
  */
 const TONES = [
   "bg-primary-soft",
@@ -79,6 +84,7 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["autumn", "hero", "lifestyle"],
     tone: TONES[0],
     uploadedAt: "2026-09-01T09:20:00Z",
+    url: "/media/autumn-hero-01.jpg",
   },
   {
     id: "md-02",
@@ -91,6 +97,7 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["autumn", "hero"],
     tone: TONES[1],
     uploadedAt: "2026-09-01T09:22:00Z",
+    url: "/media/autumn-hero-02.jpg",
   },
   {
     id: "md-03",
@@ -103,6 +110,7 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["product", "flatlay", "business"],
     tone: TONES[2],
     uploadedAt: "2026-08-28T14:10:00Z",
+    url: "/media/business-package-flatlay.jpg",
   },
   {
     id: "md-04",
@@ -115,6 +123,7 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["product", "detail"],
     tone: TONES[3],
     uploadedAt: "2026-08-28T14:12:00Z",
+    url: "/media/starter-package-detail.jpg",
   },
   {
     id: "md-05",
@@ -128,6 +137,7 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["product", "demo", "automation"],
     tone: TONES[4],
     uploadedAt: "2026-08-18T10:40:00Z",
+    poster: "/media/automation-builder-demo-poster.png",
   },
   {
     id: "md-06",
@@ -141,6 +151,7 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["team", "reel", "vertical"],
     tone: TONES[5],
     uploadedAt: "2026-08-24T16:00:00Z",
+    poster: "/media/team-behind-the-scenes-poster.jpg",
   },
   {
     id: "md-07",
@@ -153,6 +164,8 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["logo", "brand"],
     tone: TONES[0],
     uploadedAt: "2026-05-02T08:00:00Z",
+    url: "/media/marketflow-logo-light.svg",
+    fit: "contain",
   },
   {
     id: "md-08",
@@ -165,6 +178,8 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["logo", "brand"],
     tone: TONES[4],
     uploadedAt: "2026-05-02T08:00:00Z",
+    url: "/media/marketflow-logo-dark.svg",
+    fit: "contain",
   },
   {
     id: "md-09",
@@ -177,6 +192,7 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["customer", "ugc", "retail"],
     tone: TONES[1],
     uploadedAt: "2026-09-03T11:30:00Z",
+    url: "/media/customer-sarah-store.jpg",
   },
   {
     id: "md-10",
@@ -189,6 +205,7 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["customer", "ugc", "wholesale"],
     tone: TONES[2],
     uploadedAt: "2026-09-03T11:34:00Z",
+    url: "/media/customer-omar-warehouse.jpg",
   },
   {
     id: "md-11",
@@ -201,6 +218,7 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["graphic", "pricing", "square"],
     tone: TONES[3],
     uploadedAt: "2026-09-04T09:15:00Z",
+    url: "/media/pricing-graphic-square.jpg",
   },
   {
     id: "md-12",
@@ -213,6 +231,7 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["graphic", "webinar", "landscape"],
     tone: TONES[5],
     uploadedAt: "2026-09-06T13:00:00Z",
+    url: "/media/webinar-announcement.jpg",
   },
   {
     id: "md-13",
@@ -225,6 +244,7 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["office", "team", "brand"],
     tone: TONES[0],
     uploadedAt: "2026-07-18T15:20:00Z",
+    url: "/media/office-dhaka-wide.jpg",
   },
   {
     id: "md-14",
@@ -237,6 +257,7 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["carousel", "product"],
     tone: TONES[1],
     uploadedAt: "2026-08-30T10:05:00Z",
+    url: "/media/feature-carousel-01.jpg",
   },
   {
     id: "md-15",
@@ -249,6 +270,7 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["carousel", "product"],
     tone: TONES[2],
     uploadedAt: "2026-08-30T10:06:00Z",
+    url: "/media/feature-carousel-02.jpg",
   },
   {
     id: "md-16",
@@ -262,6 +284,7 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["testimonial", "reel", "vertical"],
     tone: TONES[3],
     uploadedAt: "2026-09-02T12:40:00Z",
+    poster: "/media/testimonial-reel-poster.jpg",
   },
   {
     id: "md-17",
@@ -274,6 +297,7 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["pattern", "brand"],
     tone: TONES[4],
     uploadedAt: "2026-06-14T09:00:00Z",
+    url: "/media/seasonal-pattern-tile.svg",
   },
   {
     id: "md-18",
@@ -286,6 +310,7 @@ export const MEDIA_ASSETS: MediaAsset[] = [
     tags: ["event", "graphic", "square"],
     tone: TONES[5],
     uploadedAt: "2026-09-06T13:05:00Z",
+    url: "/media/store-opening-invite.svg",
   },
 ];
 
@@ -303,6 +328,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
     platforms: ["instagram", "facebook"],
     status: "published",
     mediaIds: ["md-01", "md-02"],
+    createdAt: "2026-08-20T09:00:00",
     scheduledAt: "2026-09-01T09:00:00",
     publishedAt: "2026-09-01T09:00:00",
     author: "Nadia Karim",
@@ -324,6 +350,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
     platforms: ["linkedin", "x"],
     status: "published",
     mediaIds: ["md-05"],
+    createdAt: "2026-08-27T14:00:00",
     scheduledAt: "2026-09-02T14:00:00",
     publishedAt: "2026-09-02T14:00:00",
     author: "Imran Hossain",
@@ -345,6 +372,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
     platforms: ["instagram", "facebook", "linkedin"],
     status: "published",
     mediaIds: ["md-09"],
+    createdAt: "2026-08-25T11:30:00",
     scheduledAt: "2026-09-03T11:30:00",
     publishedAt: "2026-09-03T11:30:00",
     author: "Nadia Karim",
@@ -366,6 +394,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
     platforms: ["x", "linkedin"],
     status: "published",
     mediaIds: ["md-11"],
+    createdAt: "2026-09-01T10:00:00",
     scheduledAt: "2026-09-04T10:00:00",
     publishedAt: "2026-09-04T10:00:00",
     author: "Tanvir Alam",
@@ -387,6 +416,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
     platforms: ["instagram"],
     status: "published",
     mediaIds: ["md-06"],
+    createdAt: "2026-08-31T16:30:00",
     scheduledAt: "2026-09-05T16:30:00",
     publishedAt: "2026-09-05T16:30:00",
     author: "Nadia Karim",
@@ -408,6 +438,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
     platforms: ["linkedin", "facebook", "x"],
     status: "published",
     mediaIds: ["md-12"],
+    createdAt: "2026-08-23T13:00:00",
     scheduledAt: "2026-09-06T13:00:00",
     publishedAt: "2026-09-06T13:00:00",
     author: "Imran Hossain",
@@ -429,6 +460,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
     platforms: ["instagram", "linkedin"],
     status: "failed",
     mediaIds: ["md-14", "md-15"],
+    createdAt: "2026-08-30T09:00:00",
     scheduledAt: "2026-09-07T09:00:00",
     author: "Tanvir Alam",
     engagement: {
@@ -450,6 +482,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
     platforms: ["instagram", "facebook"],
     status: "scheduled",
     mediaIds: ["md-16"],
+    createdAt: "2026-08-29T10:00:00",
     scheduledAt: "2026-09-09T10:00:00",
     author: "Nadia Karim",
     engagement: {
@@ -470,6 +503,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
     platforms: ["instagram", "facebook"],
     status: "scheduled",
     mediaIds: ["md-18"],
+    createdAt: "2026-08-26T09:00:00",
     scheduledAt: "2026-09-11T09:00:00",
     author: "Nadia Karim",
     engagement: {
@@ -490,6 +524,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
     platforms: ["linkedin"],
     status: "scheduled",
     mediaIds: ["md-10"],
+    createdAt: "2026-09-08T14:00:00",
     scheduledAt: "2026-09-15T14:00:00",
     author: "Imran Hossain",
     engagement: {
@@ -509,6 +544,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
     platforms: ["instagram", "facebook", "x"],
     status: "scheduled",
     mediaIds: ["md-11"],
+    createdAt: "2026-09-08T11:00:00",
     scheduledAt: "2026-09-18T11:00:00",
     author: "Tanvir Alam",
     engagement: {
@@ -528,6 +564,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
     platforms: ["instagram"],
     status: "scheduled",
     mediaIds: ["md-03"],
+    createdAt: "2026-09-18T15:30:00",
     scheduledAt: "2026-09-22T15:30:00",
     author: "Nadia Karim",
     engagement: {
@@ -548,6 +585,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
     platforms: ["linkedin", "x"],
     status: "draft",
     mediaIds: [],
+    createdAt: "2026-09-04T10:00:00",
     scheduledAt: "2026-09-25T10:00:00",
     author: "Imran Hossain",
     engagement: {
@@ -567,6 +605,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
     platforms: ["linkedin"],
     status: "draft",
     mediaIds: ["md-13"],
+    createdAt: "2026-09-10T09:00:00",
     scheduledAt: "2026-09-28T09:00:00",
     author: "Tanvir Alam",
     engagement: {
@@ -586,6 +625,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
     platforms: ["x"],
     status: "published",
     mediaIds: [],
+    createdAt: "2026-08-30T17:00:00",
     scheduledAt: "2026-08-31T17:00:00",
     publishedAt: "2026-08-31T17:00:00",
     author: "Imran Hossain",
@@ -607,6 +647,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
     platforms: ["facebook", "linkedin"],
     status: "published",
     mediaIds: ["md-14"],
+    createdAt: "2026-08-21T12:00:00",
     scheduledAt: "2026-08-27T12:00:00",
     publishedAt: "2026-08-27T12:00:00",
     author: "Nadia Karim",

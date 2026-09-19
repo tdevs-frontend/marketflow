@@ -195,6 +195,18 @@ export function SocialAccounts() {
                 />
               </div>
 
+              {/* The consequence, on the card. The alert bar at the top of the
+                  page counts the problems; this says what this one costs. */}
+              {broken ? (
+                <p className="mt-4 flex items-start gap-1.5 rounded-panel bg-warning-soft px-3 py-2.5 text-sm text-warning-text">
+                  <AlertTriangle className="mt-px size-3.5 shrink-0" aria-hidden />
+                  <span>
+                    Scheduled posts to this account will fail until the token is
+                    renewed.
+                  </span>
+                </p>
+              ) : null}
+
               <div className="mt-4">
                 <p className="text-sm font-medium  text-text-muted capitalize">
                   Capabilities
