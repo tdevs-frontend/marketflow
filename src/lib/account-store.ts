@@ -172,6 +172,17 @@ export function writeSecurity(patch: Partial<SecurityState>) {
   commit({ ...snapshot, security: { ...snapshot.security, ...patch } });
 }
 
+/**
+ * The subscription, after the billing service has accepted a change.
+ *
+ * A patch rather than a whole record: a plan change alters `planId` and the
+ * amount, a cancellation alters `status`, and neither of them knows anything
+ * about the payment method — so neither should be able to clear it.
+ */
+export function writeSubscription(patch: Partial<Subscription>) {
+  commit({ ...snapshot, subscription: { ...snapshot.subscription, ...patch } });
+}
+
 export function writeEnrollment(enrollment: TwoFactorEnrollment | null) {
   commit({ ...snapshot, enrollment });
 }

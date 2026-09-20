@@ -1,6 +1,7 @@
 "use client";
 
 import { env } from "@/config";
+import { PLANS, yearlyMonthly } from "@/constants/pricing";
 import { TOTP_CONFIG } from "@/constants/settings";
 import {
   readSnapshot,
@@ -10,6 +11,7 @@ import {
   writePreferences,
   writeRecoveryCodes,
   writeSecurity,
+  writeSubscription,
   writeTwoFactorActive,
   writeTwoFactorOff,
   writeUser,
@@ -24,10 +26,13 @@ import { describeThisDevice, deviceTimeZone } from "@/lib/user-agent";
 import type {
   AccountSession,
   AccountUser,
+  BillingPeriod,
+  Invoice,
   ProfilePatch,
   SecurityState,
   ServiceResult,
   SignInEvent,
+  Subscription,
   TwoFactorActivation,
   TwoFactorEnrollment,
   UserNotificationPreferences,
@@ -121,6 +126,14 @@ export interface AccountCapabilities {
   signInActivity: boolean;
   /** Adding or changing a card. Needs a payment provider. */
   payment: boolean;
+  /**
+   * Moving the workspace between plans, and cancelling.
+   *
+   * Separate from `payment` although both wait on the same integration: one
+   * is about the instrument, the other about the agreement, and a workspace
+   * could plausibly have a card on file before self-serve plan changes exist.
+   */
+  planChange: boolean;
   /** Downloadable invoices. Issued by the payment provider, so: no. */
   invoices: boolean;
   /** Creating and revoking API keys. */
@@ -138,6 +151,7 @@ export const CAPABILITIES: AccountCapabilities = {
   remoteSessions: !SESSION_MODE,
   signInActivity: !SESSION_MODE,
   payment: !SESSION_MODE,
+  planChange: !SESSION_MODE,
   invoices: !SESSION_MODE,
   apiKeys: true,
 };
@@ -166,6 +180,8 @@ export const UNAVAILABLE_REASON: Record<keyof AccountCapabilities, string> = {
     "Sign-in attempts are recorded by the account service. None is connected, so there is no history to show.",
   payment:
     "No payment provider is connected, so no card can be stored against this workspace.",
+  planChange:
+    "Changing or cancelling a plan changes what is charged. No payment provider is connected, so nothing can be.",
   invoices:
     "Invoices are issued by the payment provider. None is connected, so there are none to list.",
   apiKeys: "",
@@ -585,4 +601,84 @@ export async function listSignInActivity(): Promise<
   }
 
   return ok([]);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Billing                                                                    */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * `GET /billing/invoices`
+ *
+ * Fails with `service_unavailable`, for the same reason the payment method is
+ * an empty state: invoices are issued by a payment provider against charges
+ * that have been made, and no provider is connected, so none exist. The
+ * distinction the failure carries — over an empty list — is the one that
+ * matters to somebody looking for a receipt: "nothing has billed you yet" and
+ * "this cannot tell you what has billed you" are different answers, and only
+ * the second is true.
+ *
+ * The panel renders a real table the moment this returns rows.
+ */
+export async function listInvoices(): Promise<ServiceResult<Invoice[]>> {
+  await settle();
+
+  if (!CAPABILITIES.invoices) {
+    return fail("service_unavailable", UNAVAILABLE_REASON.invoices);
+  }
+
+  return ok([]);
+}
+
+/**
+ * `POST /billing/subscription`
+ *
+ * Moving between tiers. Gated on `planChange` and refused outright without it:
+ * a plan change that updates a label without changing what is charged is the
+ * worst possible half-success, because the merchant believes the new
+ * allowances apply and the provider goes on billing the old ones.
+ */
+export async function changePlan(
+  planId: string,
+  period: BillingPeriod,
+): Promise<ServiceResult<Subscription>> {
+  await settle();
+
+  if (!CAPABILITIES.planChange) {
+    return fail("service_unavailable", UNAVAILABLE_REASON.planChange);
+  }
+
+  const plan = PLANS.find((item) => item.id === planId);
+  if (!plan || plan.monthly === null) {
+    return fail("validation", "That plan is not available to switch to here.");
+  }
+
+  /* Derived from the tier rather than passed in by the caller. The price a
+     merchant was shown and the price they are charged have to come from one
+     place, or a stale card in a tab quietly buys last quarter's rate. */
+  const amount =
+    period === "yearly" ? yearlyMonthly(plan.monthly) * 12 : plan.monthly;
+
+  writeSubscription({ planId, period, amount });
+  return ok(readSnapshot().subscription);
+}
+
+/**
+ * `DELETE /billing/subscription`
+ *
+ * Cancels at the end of the paid period rather than immediately — the
+ * workspace has been charged for it — which is why this sets `cancelled` and
+ * leaves `renewsAt` standing as the date access ends.
+ */
+export async function cancelSubscription(): Promise<
+  ServiceResult<Subscription>
+> {
+  await settle();
+
+  if (!CAPABILITIES.planChange) {
+    return fail("service_unavailable", UNAVAILABLE_REASON.planChange);
+  }
+
+  writeSubscription({ status: "cancelled" });
+  return ok(readSnapshot().subscription);
 }

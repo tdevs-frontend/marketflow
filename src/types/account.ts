@@ -325,6 +325,31 @@ export interface PaymentMethod {
   expiryYear: number;
 }
 
+export type InvoiceStatus = "paid" | "open" | "uncollectible" | "void";
+
+/**
+ * One issued invoice.
+ *
+ * Issued by the payment provider, never by this application, which is why
+ * every field here is read-only and why `documentUrl` is nullable rather than
+ * a route this app could serve. A "Download" that points at a PDF nothing
+ * generates is the billing page's version of a dead link, and the one place a
+ * merchant is most likely to need the file is an audit.
+ */
+export interface Invoice {
+  id: string;
+  /** The provider's human-readable number, e.g. `INV-1024`. */
+  number: string;
+  /** ISO. */
+  issuedAt: string;
+  /** Whole currency units. */
+  amount: number;
+  currency: string;
+  status: InvoiceStatus;
+  /** The provider-hosted PDF. `null` when none has been issued. */
+  documentUrl: string | null;
+}
+
 /** One metered allowance on the plan. */
 export interface UsageMetric {
   key: string;

@@ -2,15 +2,35 @@
 
 import { useState } from "react";
 import { ArrowRight, Check } from "lucide-react";
-import { ButtonLink } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { APP_ROUTES } from "@/constants";
 import {
   PLANS,
   YEARLY_DISCOUNT,
   yearlyMonthly,
   type Plan,
+  type PlanTier,
 } from "@/constants/pricing";
 import { cn } from "@/lib/utils";
+
+/**
+ * The tiers, the billing toggle and the cards — the part of the pricing page
+ * that is *the pricing*, with none of the marketing page around it.
+ *
+ * Shared, deliberately and in one direction. `/pricing` and the homepage
+ * compose it under `PricingSection`'s heading; the dashboard's Billing
+ * settings render it on its own inside a tab. There is no second set of cards
+ * and no second copy of the prices, because two pricing designs is how a
+ * product ends up quoting one number to a visitor and another to the customer
+ * who already pays it.
+ *
+ * `currentPlanId` is what makes the signed-in rendering different, and it is
+ * the *only* thing that does. Given it, the tier the workspace is on says so
+ * and offers nothing to buy, and every other tier's call to action becomes a
+ * plan change rather than a sign-up. The card design does not change: same
+ * border, same radius, same price type, same Most popular treatment, same
+ * responsive behaviour.
+ */
 
 type Billing = "monthly" | "yearly";
 
@@ -79,7 +99,22 @@ function BillingToggle({
   );
 }
 
-function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
+function PlanCard({
+  plan,
+  billing,
+  account,
+  current,
+  onChangePlan,
+  changeDisabledReason,
+}: {
+  plan: Plan;
+  billing: Billing;
+  /** Rendered for a signed-in account rather than for a visitor. */
+  account: boolean;
+  current: boolean;
+  onChangePlan?: (plan: Plan) => void;
+  changeDisabledReason?: string;
+}) {
   const featured = Boolean(plan.featured);
   const priced = plan.monthly !== null;
   const amount = priced
@@ -122,9 +157,24 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
       <div className="relative flex flex-1 flex-col p-6 sm:p-7">
         <div className="flex items-start justify-between gap-3">
           <h3 className="text-base font-bold text-text-primary">{plan.name}</h3>
+
+          {/*
+            One badge, never two stacked.
+
+            The workspace is quite likely on the featured tier, and a second
+            badge below the first makes that one card's header a row taller —
+            which pushes its price, its button and its whole feature list out
+            of line with the three beside it. Most popular keeps the slot when
+            both apply, because the card is not left ambiguous: its call to
+            action reads "Current plan" in place of a button.
+          */}
           {featured ? (
-            <span className="shrink-0 rounded-full brand-gradient px-2.5 py-1 text-xs font-bold  text-white uppercase shadow-btn">
+            <span className="shrink-0 rounded-full brand-gradient px-2.5 py-1 text-xs font-bold text-white uppercase shadow-btn">
               Most popular
+            </span>
+          ) : current ? (
+            <span className="shrink-0 rounded-full bg-primary-soft px-2.5 py-1 text-xs font-bold text-primary-dark uppercase">
+              Current
             </span>
           ) : null}
         </div>
@@ -156,20 +206,54 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
               : "Annual agreement · billed by invoice"}
         </p>
 
-        <ButtonLink
-          href={priced ? APP_ROUTES.register : APP_ROUTES.pricing}
-          variant={featured ? "primary" : "dark"}
-          size="md"
-          className="mt-6 w-full"
-        >
-          {plan.cta}
-          {featured ? (
-            <ArrowRight
-              className="transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none"
-              aria-hidden
-            />
-          ) : null}
-        </ButtonLink>
+        {current ? (
+          /*
+           * Not a disabled button. There is no action here to be temporarily
+           * unavailable — this is a statement about the account — and a greyed
+           * "Current plan" button invites somebody to hunt for why they cannot
+           * press it. Set at the button's exact height so every card's feature
+           * list still starts on the same line.
+           */
+          <p className="mt-6 flex h-11 w-full items-center justify-center gap-2 rounded-btn border border-primary/45 bg-primary-soft text-sm font-semibold text-primary-dark">
+            <Check className="size-4" strokeWidth={3} aria-hidden />
+            Current plan
+          </p>
+        ) : account ? (
+          <Button
+            /*
+             * The tier's own variant while the control can act, and `outline`
+             * while it cannot. A disabled `dark` button is a solid slab at 50%
+             * opacity — three of them across a grid pull more attention than
+             * the tier the workspace is actually on, which is the one thing
+             * this view is supposed to make obvious.
+             */
+            variant={
+              onChangePlan ? (featured ? "primary" : "dark") : "outline"
+            }
+            size="md"
+            className="mt-6 w-full"
+            disabled={!onChangePlan}
+            title={onChangePlan ? undefined : changeDisabledReason}
+            onClick={onChangePlan ? () => onChangePlan(plan) : undefined}
+          >
+            {priced ? "Change plan" : "Talk to sales"}
+          </Button>
+        ) : (
+          <ButtonLink
+            href={priced ? APP_ROUTES.register : APP_ROUTES.pricing}
+            variant={featured ? "primary" : "dark"}
+            size="md"
+            className="mt-6 w-full"
+          >
+            {plan.cta}
+            {featured ? (
+              <ArrowRight
+                className="transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none"
+                aria-hidden
+              />
+            ) : null}
+          </ButtonLink>
+        )}
         <ul
           className={cn(
             "mt-7 flex-1 space-y-3",
@@ -201,20 +285,57 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
   );
 }
 
-export function PricingPlans() {
-  const [billing, setBilling] = useState<Billing>("monthly");
+export function PricingPlans({
+  /**
+   * The tier the signed-in workspace is on. `null` is a visitor, which is
+   * what the marketing pages pass by leaving it out.
+   */
+  currentPlanId = null,
+  /** Where the toggle starts — an account opens on the cycle it is billed on. */
+  defaultBilling = "monthly",
+  /** Called for a tier the account is not on. Absent means the control is off. */
+  onChangePlan,
+  /** Why it is off, for the disabled control's own tooltip. */
+  changeDisabledReason,
+  className,
+}: {
+  currentPlanId?: PlanTier | null;
+  defaultBilling?: Billing;
+  onChangePlan?: (plan: Plan) => void;
+  changeDisabledReason?: string;
+  className?: string;
+} = {}) {
+  const [billing, setBilling] = useState<Billing>(defaultBilling);
 
   return (
-    <>
+    /*
+     * A container, so the grid answers to the width it is actually given.
+     *
+     * The two breakpoints are the pixel widths `custom-container` reaches at
+     * `sm` and `xl` — 540 and 1140 — so /pricing and the homepage fold at
+     * exactly the viewport sizes they always have. What changes is that the
+     * same cards, rendered inside the Settings content column, fold on that
+     * column's width instead of the window's. Four 270px cards crushed into an
+     * 850px panel was the one way this component could be reused badly.
+     */
+    <div className={cn("@container", className)}>
       {/*Toggle */}
       <div className="mt-10 flex justify-center sm:mt-12">
         <BillingToggle value={billing} onChange={setBilling} />
       </div>
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:mt-14 xl:grid-cols-4">
+      <div className="mt-10 grid gap-6 @min-[540px]:grid-cols-2 @min-[1140px]:mt-14 @min-[1140px]:grid-cols-4">
         {PLANS.map((plan) => (
-          <PlanCard key={plan.id} plan={plan} billing={billing} />
+          <PlanCard
+            key={plan.id}
+            plan={plan}
+            billing={billing}
+            account={currentPlanId !== null}
+            current={plan.id === currentPlanId}
+            onChangePlan={onChangePlan}
+            changeDisabledReason={changeDisabledReason}
+          />
         ))}
       </div>
-    </>
+    </div>
   );
 }
