@@ -50,6 +50,16 @@ const role = roleById(CURRENT_MEMBER.roleId);
  * The field is offered, starts empty, and saves — rather than being seeded with
  * a plausible-looking "Head of Growth" that the merchant would have to notice
  * was invented before correcting it.
+ *
+ * `avatarUrl` points at `public/user/`, this person's own file, rather than at
+ * one of the `customer-avatar-*.jpg` images — those are each already a named
+ * contact in the WhatsApp inbox and four of the faces in the landing hero, and
+ * borrowing one would put the same face on a customer and on the person signed
+ * in.
+ *
+ * The file is not load-bearing. Every surface that renders this photo uses
+ * `AvatarPhoto`, which falls back to the initials when the image does not
+ * resolve — so a moved or missing file shows "NR" rather than a broken glyph.
  */
 export const CURRENT_ACCOUNT: AccountUser = (() => {
   const [firstName, ...rest] = CURRENT_MEMBER.name.split(" ");
@@ -60,7 +70,7 @@ export const CURRENT_ACCOUNT: AccountUser = (() => {
     lastName: rest.join(" "),
     phone: "",
     jobTitle: "",
-    avatarUrl: null,
+    avatarUrl: "/user/user-image.jpg",
     email: CURRENT_MEMBER.email,
     roleId: CURRENT_MEMBER.roleId,
     role: (role?.merchantRole ?? "viewer") as MerchantRole,

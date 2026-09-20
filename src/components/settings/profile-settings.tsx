@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Loader2, Trash2, Upload } from "lucide-react";
 
 import { PageHeader } from "@/components/layout/page-header";
-import { Avatar } from "@/components/ui/avatar";
+import { AvatarPhoto } from "@/components/ui/avatar-photo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/input";
@@ -139,11 +139,12 @@ function ProfilePhoto() {
       description="Shown beside your name in the dashboard header and on your overview."
       bodyClassName="flex flex-wrap items-center gap-5"
     >
-      <Avatar
-        name={displayName(user)}
-        src={user.avatarUrl ?? undefined}
-        size="lg"
-      />
+      {/* `AvatarPhoto`, like the header chip and the account menu: this is the
+          one photo in the product that is *supplied* rather than fixtured — an
+          upload, or a path the account service last returned — so it is the one
+          that can stop resolving. Plain `Avatar` would render the broken-image
+          glyph; this falls back to the initials it would have shown anyway. */}
+      <AvatarPhoto name={displayName(user)} src={user.avatarUrl} size="lg" />
 
       <div className="min-w-0 flex-1 space-y-2">
         <div className="flex flex-wrap gap-2.5">

@@ -15,7 +15,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { Avatar } from "@/components/ui/avatar";
+import { AvatarPhoto } from "@/components/ui/avatar-photo";
+import { Badge } from "@/components/ui/badge";
 import { useDismissable } from "@/components/ui/menu";
 import { Tooltip } from "@/components/ui/tooltip";
 import { APP_ROUTES } from "@/constants/app";
@@ -139,9 +140,18 @@ export function UserMenu() {
 
   return (
     <div ref={wrapperRef} className="relative inline-flex">
-      {/* The header's own chip. Classes unchanged from the `<Link>` it
-          replaced, so the avatar sits exactly where it did and the name keeps
-          the same hover. */}
+      {/*
+       * The header chip: photo, name, plan.
+       *
+       * `h-10` is gone. It was right when the chip was one line of text beside
+       * a 40px avatar; with the name stacked over the plan the content is
+       * taller than 40px and a fixed height clips it. `py-1` lets the chip take
+       * the height its contents need, inside a 72px header that has the room.
+       *
+       * `items-center` aligns the stack against the middle of the photo, and
+       * the stack itself is `items-start` so the name and the badge share a
+       * left edge rather than centring on each other.
+       */}
       <button
         ref={triggerRef}
         type="button"
@@ -150,10 +160,33 @@ export function UserMenu() {
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
         onClick={() => setOpen((value) => !value)}
-        className="flex h-10 items-center gap-2 rounded-btn pe-1 transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
+        className="flex items-center gap-2.5 rounded-btn py-1 pe-1 transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
       >
-        <Avatar name={name} src={user.avatarUrl ?? undefined} size="md" />
-        <span className="hidden text-sm font-medium sm:block">{name}</span>
+        <AvatarPhoto name={name} src={user.avatarUrl} size="md" />
+
+        {/* Name and plan hide together below `sm`. The badge on its own beside
+            a photo reads as a status *on the person* — a role, or whether they
+            are online — rather than as the account's tier. */}
+        <span className="hidden flex-col items-start gap-1.5 sm:flex">
+          <span className="text-sm leading-none font-semibold text-text-primary">
+            {name}
+          </span>
+          {/* A bordered chip rather than a bare tint: at 13px on a soft indigo
+              ground the label and its background sit close enough in value
+              that the pill's edge disappears against the header. The border is
+              what makes it read as a chip rather than as a highlighted word. */}
+          <Badge
+            tone="brand"
+            size="sm"
+            /* Only what `Badge` does not already set. `py-0` and a line-height
+               were here and did nothing: `cn()` is a plain join, so they raced
+               the component's own `py-0.5` and `text-meta` in the stylesheet
+               instead of beating them. The badge keeps its designed height. */
+            className="border border-primary-border font-medium"
+          >
+            {plan?.name ?? subscription.planId} Plan
+          </Badge>
+        </span>
       </button>
 
       {open ? (
@@ -176,7 +209,6 @@ export function UserMenu() {
             name={name}
             email={user.email}
             avatarUrl={user.avatarUrl}
-            planName={plan?.name ?? null}
             onNavigate={() => setOpen(false)}
           />
 
@@ -205,14 +237,38 @@ export function UserMenu() {
           </Group>
 
           <div className="border-t border-border p-1.5">
+            {/*
+             * One muted line closing the menu before the only destructive
+             * action in it.
+             *
+             * It carries the plan *and its state*, which is the one piece of
+             * account context neither the header block nor any row above
+             * states — and it is why the tier is not also printed beside the
+             * email. Saying "Growth plan" twice in a 320px panel reads as a
+             * rendering fault; saying it once, with the status attached,
+             * answers a question. Managing any of it is Billing's job, three
+             * rows up.
+             */}
+            {/*
+             * The plan as a chip, at the foot of the menu rather than under
+             * the email.
+             *
+             * It sat in the identity block and said the same thing this line
+             * already said, 250px apart — the tier twice in a 320px panel. One
+             * of them had to go, and the bottom is where it earns its place:
+             * the identity block stays avatar, name and address, and the badge
+             * closes the menu with the one piece of account context nothing
+             * else states.
+             *
+             * The status keeps its muted line beside the chip. The badge says
+             * which plan; only this says whether it is running.
+             */}
+
             <button
               type="button"
               role="menuitem"
               onClick={signOut}
-              className={cn(
-                ROW,
-                "text-error-text hover:bg-error-soft",
-              )}
+              className={cn(ROW, "text-error-text hover:bg-error-soft")}
             >
               <LogOut className="size-4 shrink-0" aria-hidden />
               Log out
@@ -244,13 +300,11 @@ function ProfileHeader({
   name,
   email,
   avatarUrl,
-  planName,
   onNavigate,
 }: {
   name: string;
   email: string;
   avatarUrl: string | null;
-  planName: string | null;
   onNavigate: () => void;
 }) {
   return (
@@ -260,20 +314,29 @@ function ProfileHeader({
       onClick={onNavigate}
       className="flex items-center gap-3 border-b border-border px-4 py-3.5 transition-colors hover:bg-surface-secondary focus-visible:shadow-focus focus-visible:outline-none"
     >
-      {/* Initials when there is no photo — `Avatar` does that itself, from the
-          first and last name rather than the first two words. */}
-      <Avatar name={name} src={avatarUrl ?? undefined} size="lg" />
+      {/* 40px. `AvatarPhoto` renders the photo when there is one and the
+          initials when there is not — or when the photo fails to load, which a
+          plain `Avatar` would show as a broken glyph. */}
+      <AvatarPhoto name={name} src={avatarUrl} size="md" />
 
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-sm font-semibold text-text-primary">
+        {/* The heading of the block: 16px bold on primary ink, against the
+            email's 14px regular on muted. The name is the thing being
+            identified and the address qualifies it; at the same weight they
+            read as two equal lines and the reader has to work out which is
+            which. */}
+        {/* `leading-tight` on both lines, so the pair stacks to roughly the
+            avatar's own height. At the default leading the two lines run 44px
+            against a 40px circle, and centring that difference leaves the name
+            sitting a couple of pixels above the photo's midline — close enough
+            to look accidental rather than deliberate. Tightened, the block and
+            the circle read as one unit. */}
+        <span className="block truncate text-base leading-tight font-bold text-text-primary">
           {name}
         </span>
-        <span className="block truncate text-sm text-text-muted">{email}</span>
-        {planName ? (
-          <span className="mt-0.5 block text-xs font-semibold text-primary-dark">
-            {planName} plan
-          </span>
-        ) : null}
+        <span className="mt-0.5 block truncate text-sm leading-tight font-normal text-text-muted">
+          {email}
+        </span>
       </span>
 
       <ArrowUpRight className="size-4 shrink-0 text-text-muted" aria-hidden />
@@ -294,10 +357,16 @@ function Group({
 }) {
   return (
     <div className="border-b border-border p-1.5">
-      <p className="px-2.5 pt-1.5 pb-1 text-meta font-semibold tracking-wide text-text-muted uppercase">
+      {/* `text-meta` is the product's 13px step. `tracking-normal` rather than
+          the wide tracking a label like this usually takes: at 13px semibold
+          the extra letter-spacing pulls a six-letter word wider than the row
+          beneath it and the heading starts competing with what it heads. */}
+      <p className="px-2.5 pt-1.5 pb-1.5 text-meta font-semibold tracking-normal text-text-muted uppercase">
         {label}
       </p>
-      {children}
+      {/* 3px between rows — enough that each is its own target, not enough to
+          break the group into separate objects. */}
+      <div className="space-y-[3px]">{children}</div>
     </div>
   );
 }
@@ -306,8 +375,20 @@ function Group({
    point — the six navigation rows and the log-out row below them are the same
    height whether they are links or a button, which is what stops the divider
    above Log out reading as a change of rhythm. */
+/*
+ * `min-h-11` is 44px — a floor, not a fixed height.
+ *
+ * The padding around it is deliberate and stays; what the floor adds is a
+ * guarantee the row is big enough to hit on a touch screen even though its
+ * content is a 16px icon and a 20px line. Setting the height instead of the
+ * minimum would fight the padding the moment a label wrapped, which
+ * "Billing & Subscription" does at the narrow end of this menu's width.
+ *
+ * Shared with the log-out button below, so the two are the same height and the
+ * divider between them reads as a separator rather than a change of rhythm.
+ */
 const ROW =
-  "flex w-full items-center gap-2.5 rounded-btn px-3 py-2.5 text-left text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none";
+  "flex min-h-10 w-full items-center gap-2.5 rounded-btn px-3 py-2.5 text-left text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none";
 
 function Row({
   item,

@@ -702,7 +702,7 @@ export const SOCIAL_ACCOUNTS: SocialAccount[] = [
     auth: {
       status: "healthy",
       expiresAt: null,
-      connectedBy: "Nabila Rahman",
+      connectedBy: "Sagor Khan",
       connectedAt: daysAgo(142),
     },
     capabilities: [
@@ -730,7 +730,7 @@ export const SOCIAL_ACCOUNTS: SocialAccount[] = [
     auth: {
       status: "expiring_soon",
       expiresAt: daysAhead(18),
-      connectedBy: "Nabila Rahman",
+      connectedBy: "Sagor Khan",
       connectedAt: daysAgo(142),
     },
     capabilities: [
