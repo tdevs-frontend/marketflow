@@ -1,6 +1,7 @@
 export * from "./active-sessions-card";
 export * from "./billing/billing-settings";
 export * from "./change-password-card";
+export * from "./change-password-settings";
 export * from "./developer-settings";
 export * from "./login-activity-card";
 export * from "./notification-settings";

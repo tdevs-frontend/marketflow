@@ -1,6 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import {
   Bell,
+  KeyRound,
   Building2,
   CreditCard,
   Mail,
@@ -105,6 +106,13 @@ export const SETTINGS_NAV: SettingsNavGroup[] = [
         icon: Bell,
         description: "Choose which notifications you receive and how they reach you.",
         summary: "What reaches you, and on which channel.",
+      },
+      {
+        title: "Change Password",
+        href: APP_ROUTES.settingsChangePassword,
+        icon: KeyRound,
+        description: "Rotate the credential you sign in with.",
+        summary: "Set a new password for your account.",
       },
       {
         title: "Security",

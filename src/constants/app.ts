@@ -90,6 +90,7 @@ export const APP_ROUTES = {
   settings: "/dashboard/settings",
   settingsProfile: "/dashboard/settings/profile",
   settingsNotifications: "/dashboard/settings/notifications",
+  settingsChangePassword: "/dashboard/settings/change-password",
   settingsSecurity: "/dashboard/settings/security",
   settingsBilling: "/dashboard/settings/billing",
   settingsApi: "/dashboard/settings/api",
