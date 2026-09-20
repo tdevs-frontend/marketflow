@@ -178,11 +178,12 @@ export function UserMenu() {
               what makes it read as a chip rather than as a highlighted word. */}
           <Badge
             tone="brand"
-            size="sm"
-            /* Only what `Badge` does not already set. `py-0` and a line-height
-               were here and did nothing: `cn()` is a plain join, so they raced
-               the component's own `py-0.5` and `text-meta` in the stylesheet
-               instead of beating them. The badge keeps its designed height. */
+            size="xs"
+            /* Only what `Badge` does not already set. The size is a rung on its
+               scale rather than utilities passed in here: `cn()` is a plain
+               join, so a `text-xs` and a tighter padding would race the
+               component's own `text-meta` and `py-0.5` on stylesheet order
+               instead of beating them. */
             className="border border-primary-border font-medium"
           >
             {plan?.name ?? subscription.planId} Plan

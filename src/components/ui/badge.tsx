@@ -20,7 +20,7 @@ export type BadgeTone =
    * workspace rather than as a generic pass.
    */
   | "whatsapp";
-export type BadgeSize = "sm" | "md";
+export type BadgeSize = "xs" | "sm" | "md";
 
 const TONES: Record<BadgeTone, string> = {
   neutral: "bg-surface-secondary text-text-secondary",
@@ -37,8 +37,21 @@ const TONES: Record<BadgeTone, string> = {
  * dense list or a table, a status set at the same 14px as the amount beside it
  * competes with the figure instead of annotating it, so it drops to the 13px
  * metadata step and the row regains an order to read in.
+ *
+ * `xs` is the chrome one — a badge riding on a control rather than annotating
+ * content, like the plan chip under the name in the dashboard header. There
+ * the badge sits *beneath* the thing it qualifies instead of beside it, and at
+ * 13px it reads as a second line of equal weight rather than as a tag on the
+ * first. 12px with the padding pulled in gives it the 16px height that keeps
+ * the whole chip inside the header's rhythm.
+ *
+ * It is a rung on the scale rather than a `className` at the call site on
+ * purpose: `cn()` is a plain join, so a `text-xs` passed in would race
+ * `text-meta` on stylesheet order instead of beating it, and the same for any
+ * padding. Sizes belong to the component that owns the scale.
  */
 const SIZES: Record<BadgeSize, string> = {
+  xs: "px-1.5 py-[1px] text-xs",
   sm: "px-2 py-0.5 text-meta",
   md: "px-2.5 py-0.5 text-sm",
 };
