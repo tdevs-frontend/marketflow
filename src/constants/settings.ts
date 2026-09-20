@@ -1,13 +1,19 @@
 import type { LucideIcon } from "lucide-react";
 import {
   Bell,
+  Building2,
+  CreditCard,
   LayoutGrid,
+  Mail,
   Megaphone,
-  MessagesSquare,
-  Package,
+  MessageCircle,
+  MessageSquare,
+  Plug,
+  Share2,
   ShieldCheck,
-  UserPlus,
+  ShoppingBag,
   UserRound,
+  Users,
   Workflow,
 } from "lucide-react";
 
@@ -143,231 +149,627 @@ export interface NotificationCategoryDef {
   icon: LucideIcon;
 }
 
+/**
+ * The modules a merchant can be notified about, in sidebar order.
+ *
+ * One category per product area rather than six invented buckets, so the page
+ * has the same shape as the rest of the dashboard and a reader can find
+ * "WhatsApp" where they expect it. The icons are the modules' own, from the
+ * same set the sidebar draws.
+ */
 export const NOTIFICATION_CATEGORIES: NotificationCategoryDef[] = [
   {
-    key: "campaigns",
-    label: "Campaigns",
-    description: "Sends that finish, fail or are queued up.",
+    key: "commerce",
+    label: "Commerce",
+    description: "Orders, payments, stock and the catalogue.",
+    icon: ShoppingBag,
+  },
+  {
+    key: "customers",
+    label: "Customers",
+    description: "People entering the CRM and moving through the pipeline.",
+    icon: Users,
+  },
+  {
+    key: "marketing",
+    label: "Marketing",
+    description: "Cross-channel campaigns and the audiences they send to.",
     icon: Megaphone,
   },
   {
-    key: "leads",
-    label: "Leads",
-    description: "People entering and moving through the pipeline.",
-    icon: UserPlus,
+    key: "whatsapp",
+    label: "WhatsApp",
+    description: "Conversations, sends and template approvals.",
+    icon: MessageCircle,
   },
   {
-    key: "messaging",
-    label: "Messaging",
-    description: "Channel activity across WhatsApp, email and SMS.",
-    icon: MessagesSquare,
+    key: "email",
+    label: "Email",
+    description: "Sends, deliverability and bounces.",
+    icon: Mail,
   },
   {
-    key: "automations",
-    label: "Automations",
-    description: "Workflow runs and the steps inside them.",
+    key: "sms",
+    label: "SMS",
+    description: "Sends and operator delivery problems.",
+    icon: MessageSquare,
+  },
+  {
+    key: "social",
+    label: "Social",
+    description: "Scheduled posts and connected accounts.",
+    icon: Share2,
+  },
+  {
+    key: "automation",
+    label: "Automation",
+    description: "Workflow runs and the triggers that start them.",
     icon: Workflow,
   },
   {
-    key: "orders",
-    label: "Orders",
-    description: "Sales and how they progress.",
-    icon: Package,
+    key: "integrations",
+    label: "Integrations",
+    description: "Connected services and webhook delivery.",
+    icon: Plug,
   },
   {
-    key: "security",
-    label: "Security",
-    description: "Changes to how your account is protected.",
-    icon: ShieldCheck,
+    key: "workspace",
+    label: "Workspace",
+    description: "Members, roles and activity that needs an owner.",
+    icon: Building2,
+  },
+  {
+    key: "billing",
+    label: "Billing",
+    description: "Subscription, payments and renewals.",
+    icon: CreditCard,
   },
 ];
 
 const BOTH: NotificationChannel[] = ["in_app", "email"];
 const IN_APP: NotificationChannel[] = ["in_app"];
+/** Available, but off until somebody asks for it. See `workflow.started`. */
+const MUTED: NotificationChannel[] = [];
 
 /**
- * Every notification the product can actually raise.
+ * Every notification the product can actually raise, across every module.
  *
- * `defaultChannels` is the editorial part. The rule applied throughout: mail is
- * the default only where *not* knowing costs money or leaves a customer waiting
- * — a campaign that failed, an automation that threw, an order whose payment did
- * not go through. Everything else starts in-app, because an inbox that fills
- * with routine dashboard activity is an inbox somebody builds a filter for, and
- * the filter catches the important one too.
+ * Three rules govern what is in this list, and they are worth stating because
+ * "notify me about everything" is how a preference centre becomes a page whose
+ * only realistic use is switching all of it off.
  *
- * The security rows are `mandatory`. "Your password changed" and "Two-factor was
- * turned off" are how a person finds out it was not them; a product that lets
- * those be muted has built the attacker a quiet room. They render as a fixed
- * state with a reason rather than as a disabled checkbox nobody can explain.
+ * **It has to be an event, not a state.** Analytics figures, activity logs and
+ * campaign reports are things a merchant goes and looks at; this file is for
+ * moments the product should interrupt them about. Automation Activity answers
+ * *what happened*; a row here answers *should I be told when it does*. Nothing
+ * below duplicates a page that already exists.
  *
- * The three Messaging rows are deliberately one row per channel rather than one
- * per event. A merchant's question is "do I want to hear about WhatsApp", not
- * "do I want to hear about inbound messages on conversations assigned to me but
- * not about sender verification"; splitting them produced nine rows that were
- * always set the same way. `source` still names every underlying trigger, so
- * the row can be checked against the code.
+ * **Somebody has to act on it.** Every row is something a merchant would
+ * change their afternoon for — an order to pack, a card that declined, a
+ * workflow that threw, a template Meta rejected. Rows for "a tag was created"
+ * or "a segment recalculated" are not here, because nobody does anything
+ * differently on hearing them, and a list padded with those teaches the reader
+ * to skim past the one that mattered.
+ *
+ * **`source` has to name real code.** It is never rendered; it exists so the
+ * catalogue can be *checked* rather than trusted. A preference for an event
+ * nothing emits is a switch that silently does nothing, and the merchant only
+ * discovers it by not being told something. Every entry below names the type
+ * or fixture that models the transition it fires on, and the module it names
+ * is the module its category is named after.
+ *
+ * `defaultChannels` is the editorial part, and the rule is unchanged: mail is
+ * the default only where *not* knowing costs money or leaves a customer
+ * waiting — a failed payment, a campaign that stopped, a webhook that stopped
+ * delivering. Everything else starts in-app, because an inbox that fills with
+ * routine dashboard activity is an inbox somebody builds a filter for, and the
+ * filter catches the important one too.
  */
 export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
-  /* -- Campaigns --------------------------------------------------------- */
-  {
-    key: "campaign.completed",
-    category: "campaigns",
-    title: "Campaign completed",
-    description: "Get notified when a campaign finishes sending.",
-    channels: BOTH,
-    defaultChannels: IN_APP,
-    source: "lib/marketing-fixtures — campaign status reaches completed",
-  },
-  {
-    key: "campaign.failed",
-    category: "campaigns",
-    title: "Campaign failed",
-    description: "A send that stopped part way, with what it reached first.",
-    channels: BOTH,
-    defaultChannels: BOTH,
-    source: "lib/marketing-fixtures — campaign status reaches failed",
-  },
-  {
-    key: "campaign.scheduled",
-    category: "campaigns",
-    title: "Campaign scheduled",
-    description: "Confirmation that a campaign is queued, and for when.",
-    channels: IN_APP,
-    defaultChannels: IN_APP,
-    source: "lib/marketing-fixtures — campaign status reaches scheduled",
-  },
-
-  /* -- Leads ------------------------------------------------------------- */
-  {
-    key: "lead.captured",
-    category: "leads",
-    title: "New lead captured",
-    description: "Receive an alert when a new lead enters the workspace.",
-    channels: BOTH,
-    defaultChannels: IN_APP,
-    source: "lib/customer-fixtures — lead created",
-  },
-  {
-    key: "lead.assigned",
-    category: "leads",
-    title: "Lead assigned",
-    description: "Only leads where you are set as the owner.",
-    channels: BOTH,
-    defaultChannels: IN_APP,
-    source: "lib/customer-fixtures — lead ownerId set to you",
-  },
-  {
-    key: "lead.qualified",
-    category: "leads",
-    title: "Lead qualified",
-    description: "A lead you own moved into the qualified stage.",
-    channels: IN_APP,
-    defaultChannels: IN_APP,
-    source: "types/lead — stage reaches qualified",
-  },
-
-  /* -- Messaging --------------------------------------------------------- */
-  {
-    key: "messaging.whatsapp",
-    category: "messaging",
-    title: "WhatsApp activity",
-    description: "Conversations assigned to you, and replies on the ones you own.",
-    channels: BOTH,
-    defaultChannels: IN_APP,
-    source: "types/whatsapp — conversation assignee, inbound message",
-  },
-  {
-    key: "messaging.email",
-    category: "messaging",
-    title: "Email activity",
-    description: "Sender verification results and deliverability problems.",
-    channels: BOTH,
-    defaultChannels: BOTH,
-    source: "types/email — SenderStatus, EmailProviderStatus",
-  },
-  {
-    key: "messaging.sms",
-    category: "messaging",
-    title: "SMS activity",
-    description: "Sender ID approvals, operator blocks and opt-outs.",
-    channels: BOTH,
-    defaultChannels: BOTH,
-    source: "types/sms — SmsSenderStatus, SmsContactStatus",
-  },
-
-  /* -- Automations ------------------------------------------------------- */
-  {
-    key: "automation.completed",
-    category: "automations",
-    title: "Automation completed",
-    description: "A workflow run reached its last step.",
-    channels: IN_APP,
-    defaultChannels: IN_APP,
-    source: "lib/workflow-fixtures — run status completed",
-  },
-  {
-    key: "automation.failed",
-    category: "automations",
-    title: "Automation failed",
-    description: "Get notified when an automation encounters an error.",
-    channels: BOTH,
-    defaultChannels: BOTH,
-    source: "lib/workflow-fixtures — run status failed",
-  },
-
-  /* -- Orders ------------------------------------------------------------ */
+  /* -- Commerce ---------------------------------------------------------- */
   {
     key: "order.created",
-    category: "orders",
+    category: "commerce",
     title: "New order",
-    description: "Every order, whatever channel it came from.",
+    description: "A new order has been placed, whatever channel it came from.",
     channels: BOTH,
     defaultChannels: IN_APP,
     source: "types/commerce — order created",
   },
   {
     key: "order.status_changed",
-    category: "orders",
+    category: "commerce",
     title: "Order status changed",
-    description: "Paid, shipped, cancelled or refunded — including failed payments.",
+    description: "Paid, shipped, cancelled or refunded.",
+    channels: BOTH,
+    defaultChannels: IN_APP,
+    source: "types/commerce — OrderStatus / FulfillmentStatus transitions",
+  },
+  {
+    key: "order.payment_failed",
+    category: "commerce",
+    title: "Order payment failed",
+    description: "A customer's payment did not go through and the order is unpaid.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "types/commerce — OrderStatus and PaymentStatus transitions",
+    source: "types/commerce — PaymentStatus reaches failed",
+  },
+  {
+    key: "inventory.low_stock",
+    category: "commerce",
+    title: "Low stock",
+    description: "A product has fallen to its low-stock threshold.",
+    channels: BOTH,
+    defaultChannels: IN_APP,
+    source: "types/commerce — StockStatus reaches low-stock, per lowStockThreshold",
+  },
+  {
+    key: "inventory.out_of_stock",
+    category: "commerce",
+    title: "Out of stock",
+    description: "A product can no longer be sold until it is restocked.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "types/commerce — StockStatus reaches out-of-stock",
+  },
+  {
+    key: "product.published",
+    category: "commerce",
+    title: "Product published",
+    description: "A product moved out of draft and is now on sale.",
+    channels: IN_APP,
+    defaultChannels: IN_APP,
+    source: "types/commerce — ProductStatus reaches published",
+  },
+  {
+    key: "discount.status_changed",
+    category: "commerce",
+    title: "Discount started or expired",
+    description: "A discount or coupon became active, or stopped being redeemable.",
+    channels: IN_APP,
+    defaultChannels: IN_APP,
+    source: "types/commerce — DiscountStatus reaches active or expired",
   },
 
-  /* -- Security ---------------------------------------------------------- */
+  /* -- Customers --------------------------------------------------------- */
   {
-    key: "security.new_login",
-    category: "security",
-    title: "New login",
-    description: "A sign-in from a browser or device you have not used before.",
+    key: "contact.created",
+    category: "customers",
+    title: "New contact",
+    description: "Someone new was added to the CRM, from any source.",
     channels: BOTH,
-    defaultChannels: BOTH,
-    mandatory: true,
-    source: "account service — session created",
+    defaultChannels: IN_APP,
+    source: "lib/customer-fixtures — contact created",
   },
   {
-    key: "security.password_changed",
-    category: "security",
-    title: "Password changed",
-    description: "Sent whenever your password is changed or reset.",
+    key: "lead.captured",
+    category: "customers",
+    title: "New lead",
+    description: "A new lead entered the workspace.",
     channels: BOTH,
-    defaultChannels: BOTH,
-    mandatory: true,
-    source: "account service — password updated",
+    defaultChannels: IN_APP,
+    source: "lib/customer-fixtures — lead created",
   },
   {
-    key: "security.two_factor_changed",
-    category: "security",
-    title: "2FA changed",
-    description: "Sent when two-factor is enabled, disabled or re-enrolled.",
+    key: "lead.assigned",
+    category: "customers",
+    title: "Lead assigned to you",
+    description: "Only leads where you are set as the owner.",
     channels: BOTH,
     defaultChannels: BOTH,
+    source: "lib/customer-fixtures — lead ownerId set to you",
+  },
+  {
+    key: "lead.qualified",
+    category: "customers",
+    title: "Lead qualified",
+    description: "A lead you own moved into the qualified stage.",
+    channels: IN_APP,
+    defaultChannels: IN_APP,
+    source: "types/lead — stage reaches qualified",
+  },
+  {
+    key: "journey.stage_changed",
+    category: "customers",
+    title: "Customer journey update",
+    description: "A contact you follow moved to a new stage of their journey.",
+    channels: IN_APP,
+    defaultChannels: IN_APP,
+    source: "lib/customer-fixtures — journey stage transition",
+  },
+
+  /* -- Marketing --------------------------------------------------------- */
+  {
+    key: "campaign.scheduled",
+    category: "marketing",
+    title: "Campaign scheduled",
+    description: "Confirmation that a campaign is queued, and for when.",
+    channels: IN_APP,
+    defaultChannels: IN_APP,
+    source: "lib/marketing-fixtures — campaign status reaches scheduled",
+  },
+  {
+    key: "campaign.completed",
+    category: "marketing",
+    title: "Campaign completed",
+    description: "A campaign finished sending, with what it reached.",
+    channels: BOTH,
+    defaultChannels: IN_APP,
+    source: "lib/marketing-fixtures — campaign status reaches completed",
+  },
+  {
+    key: "campaign.failed",
+    category: "marketing",
+    title: "Campaign failed",
+    description: "A send stopped part way, with how far it got first.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "lib/marketing-fixtures — campaign status reaches failed",
+  },
+  {
+    key: "campaign.performance_alert",
+    category: "marketing",
+    title: "Campaign performance alert",
+    description: "A live campaign's open or click rate fell well below its channel's norm.",
+    channels: BOTH,
+    defaultChannels: IN_APP,
+    source: "lib/marketing-fixtures — campaign metrics against channel baseline",
+  },
+  {
+    key: "audience.updated",
+    category: "marketing",
+    title: "Audience updated",
+    description: "A segment's membership changed enough to affect who a campaign would reach.",
+    channels: IN_APP,
+    defaultChannels: IN_APP,
+    source: "types/segment — SegmentRule evaluation changes membership",
+  },
+
+  /* -- WhatsApp ---------------------------------------------------------- */
+  {
+    key: "whatsapp.conversation_started",
+    category: "whatsapp",
+    title: "New conversation",
+    description: "Someone messaged the business number for the first time.",
+    channels: BOTH,
+    defaultChannels: IN_APP,
+    source: "types/whatsapp — conversation created",
+  },
+  {
+    key: "whatsapp.message_received",
+    category: "whatsapp",
+    title: "New message",
+    description: "A reply on a conversation assigned to you.",
+    channels: BOTH,
+    defaultChannels: IN_APP,
+    source: "types/whatsapp — inbound message on assigned conversation",
+  },
+  {
+    key: "whatsapp.campaign_completed",
+    category: "whatsapp",
+    title: "WhatsApp campaign completed",
+    description: "A WhatsApp send finished, with delivery and read counts.",
+    channels: BOTH,
+    defaultChannels: IN_APP,
+    source: "lib/whatsapp-fixtures — campaign status reaches completed",
+  },
+  {
+    key: "whatsapp.campaign_failed",
+    category: "whatsapp",
+    title: "WhatsApp campaign failed",
+    description: "A WhatsApp send stopped, usually on a template or window problem.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "lib/whatsapp-fixtures — campaign status reaches failed",
+  },
+  {
+    key: "whatsapp.template_status",
+    category: "whatsapp",
+    title: "Template approved or rejected",
+    description: "Meta reviewed a message template. Rejections say why.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "types/marketing — TemplateStatus reaches approved or rejected",
+  },
+
+  /* -- Email ------------------------------------------------------------- */
+  {
+    key: "email.campaign_sent",
+    category: "email",
+    title: "Email campaign sent",
+    description: "A send has been handed to the provider and is going out.",
+    channels: IN_APP,
+    defaultChannels: IN_APP,
+    source: "lib/email-fixtures — campaign status reaches sending",
+  },
+  {
+    key: "email.campaign_completed",
+    category: "email",
+    title: "Email campaign completed",
+    description: "A send finished, with opens, clicks and bounces.",
+    channels: BOTH,
+    defaultChannels: IN_APP,
+    source: "lib/email-fixtures — campaign status reaches completed",
+  },
+  {
+    key: "email.campaign_failed",
+    category: "email",
+    title: "Email campaign failed",
+    description: "A send stopped part way and the rest was not delivered.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "lib/email-fixtures — campaign status reaches failed",
+  },
+  {
+    key: "email.delivery_issue",
+    category: "email",
+    title: "Delivery issue",
+    description: "Sender verification failed, or the provider is refusing mail.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "types/email — SenderStatus, provider health",
+  },
+  {
+    key: "email.bounce_alert",
+    category: "email",
+    title: "Bounce rate alert",
+    description: "Hard bounces on a send crossed the level that puts your domain at risk.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "types/email — EmailContactStatus bounced, rate against send volume",
+  },
+
+  /* -- SMS --------------------------------------------------------------- */
+  {
+    key: "sms.campaign_sent",
+    category: "sms",
+    title: "SMS campaign sent",
+    description: "A send has been handed to the operator and is going out.",
+    channels: IN_APP,
+    defaultChannels: IN_APP,
+    source: "lib/sms-fixtures — campaign status reaches sending",
+  },
+  {
+    key: "sms.campaign_completed",
+    category: "sms",
+    title: "SMS campaign completed",
+    description: "A send finished, with delivered and failed counts.",
+    channels: BOTH,
+    defaultChannels: IN_APP,
+    source: "lib/sms-fixtures — campaign status reaches completed",
+  },
+  {
+    key: "sms.campaign_failed",
+    category: "sms",
+    title: "SMS campaign failed",
+    description: "A send stopped part way and the rest was not delivered.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "lib/sms-fixtures — campaign status reaches failed",
+  },
+  {
+    key: "sms.delivery_issue",
+    category: "sms",
+    title: "Delivery issue",
+    description: "A sender ID was rejected, or an operator is blocking your traffic.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "types/sms — SmsSenderStatus, SmsContactStatus",
+  },
+
+  /* -- Social ------------------------------------------------------------ */
+  {
+    key: "social.post_scheduled",
+    category: "social",
+    title: "Post scheduled",
+    description: "Confirmation that a post is queued, and for when.",
+    channels: IN_APP,
+    defaultChannels: IN_APP,
+    source: "types/social — PostStatus reaches scheduled",
+  },
+  {
+    key: "social.post_published",
+    category: "social",
+    title: "Post published",
+    description: "A scheduled post went live on its account.",
+    channels: IN_APP,
+    defaultChannels: IN_APP,
+    source: "types/social — PostStatus reaches published",
+  },
+  {
+    key: "social.post_failed",
+    category: "social",
+    title: "Post failed",
+    description: "A scheduled post did not publish, with the platform's reason.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "types/social — PostStatus reaches failed",
+  },
+  {
+    key: "social.account_disconnected",
+    category: "social",
+    title: "Account disconnected",
+    description: "A social account's authorisation expired, so nothing will publish to it.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "types/social — AccountStatus / AuthStatus loses authorisation",
+  },
+
+  /* -- Automation -------------------------------------------------------- */
+  {
+    key: "workflow.started",
+    category: "automation",
+    title: "Workflow started",
+    description: "Every run, as it begins. Off by default — busy workflows fire constantly.",
+    channels: IN_APP,
+    /* Muted rather than absent. It is a real event and somebody debugging a
+       trigger genuinely wants it for an afternoon; defaulting it on would bury
+       every other row in this list on the first busy day. */
+    defaultChannels: MUTED,
+    source: "lib/workflow-fixtures — run created",
+  },
+  {
+    key: "workflow.completed",
+    category: "automation",
+    title: "Workflow completed",
+    description: "A run reached its last step.",
+    channels: IN_APP,
+    defaultChannels: IN_APP,
+    source: "lib/workflow-fixtures — run status reaches completed",
+  },
+  {
+    key: "workflow.failed",
+    category: "automation",
+    title: "Workflow failed",
+    description: "A run stopped on an error, with the step that threw.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "lib/workflow-fixtures — run status reaches failed",
+  },
+  {
+    key: "trigger.error",
+    category: "automation",
+    title: "Trigger error",
+    description: "A trigger could not start its workflow — a bad payload or a disabled source.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "types/workflow — TriggerEvent rejected, TriggerStatus disabled",
+  },
+
+  /* -- Integrations ------------------------------------------------------ */
+  {
+    key: "integration.connected",
+    category: "integrations",
+    title: "Integration connected",
+    description: "A service was linked to this workspace, and by whom.",
+    channels: IN_APP,
+    defaultChannels: IN_APP,
+    source: "types/integration — IntegrationStatus reaches connected",
+  },
+  {
+    key: "integration.disconnected",
+    category: "integrations",
+    title: "Integration disconnected",
+    description: "A service was unlinked, or its authorisation expired.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "types/integration — IntegrationStatus leaves connected",
+  },
+  {
+    key: "integration.error",
+    category: "integrations",
+    title: "Integration error",
+    description: "A connected service started failing its health checks.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "types/integration — HealthStatus reaches failing",
+  },
+  {
+    key: "webhook.failed",
+    category: "integrations",
+    title: "Webhook delivery failed",
+    description: "An endpoint stopped accepting events, so deliveries are being dropped.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "lib/webhook-store — WebhookStatus reaches failing",
+  },
+
+  /* -- Workspace --------------------------------------------------------- */
+  {
+    key: "workspace.member_added",
+    category: "workspace",
+    title: "Team member added",
+    description: "Someone accepted an invitation and joined the workspace.",
+    channels: IN_APP,
+    defaultChannels: IN_APP,
+    source: "types/workspace — MemberStatus reaches active",
+  },
+  {
+    key: "workspace.role_changed",
+    category: "workspace",
+    title: "Member's role changed",
+    description: "A member was moved to a different role.",
+    channels: BOTH,
+    defaultChannels: IN_APP,
+    source: "lib/workspace-fixtures — member roleId changed",
+  },
+  {
+    key: "workspace.permissions_changed",
+    category: "workspace",
+    title: "Role permissions changed",
+    description: "What a role can do was edited, which changes it for everyone holding it.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "types/workspace — role permission set edited",
+  },
+
+  /* -- Billing ----------------------------------------------------------- */
+  {
+    key: "billing.subscription_started",
+    category: "billing",
+    title: "Subscription started",
+    description: "A plan became active on this workspace.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "types/account — Subscription created",
+  },
+  {
+    key: "billing.plan_changed",
+    category: "billing",
+    title: "Plan changed",
+    description: "The workspace moved to a different tier or billing cycle.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "lib/account-store — PlanPeriod opened by changePlan",
+  },
+  {
+    key: "billing.payment_succeeded",
+    category: "billing",
+    title: "Payment successful",
+    description: "A charge went through, with the invoice reference.",
+    channels: BOTH,
+    defaultChannels: IN_APP,
+    source: "types/account — Purchase paymentState reaches paid",
+  },
+  {
+    key: "billing.payment_failed",
+    category: "billing",
+    title: "Payment failed",
+    description: "A charge was declined. The workspace is suspended if it is not settled.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    /*
+     * The one row nobody may mute, and the only one in the catalogue.
+     *
+     * Every other notification here is a convenience: miss it and you find out
+     * on the dashboard. Miss this one and the workspace stops sending, with
+     * campaigns mid-flight and customers waiting — and the person who muted it
+     * is exactly the person who needed telling. The security notices that used
+     * to carry this flag now live in Settings › Security, where the state they
+     * report on is owned.
+     */
     mandatory: true,
-    source: "account service — two-factor state changed",
+    source: "types/account — Purchase paymentState reaches failed",
+  },
+  {
+    key: "billing.renewal_upcoming",
+    category: "billing",
+    title: "Renewal coming up",
+    description: "A reminder before the subscription renews and is charged again.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "types/account — Subscription renewsAt approaching",
+  },
+  {
+    key: "billing.subscription_cancelled",
+    category: "billing",
+    title: "Subscription cancelled",
+    description: "The subscription was ended, with the date access stops.",
+    channels: BOTH,
+    defaultChannels: BOTH,
+    source: "types/account — SubscriptionStatus reaches cancelled",
   },
 ];
-
 
 /** The catalogue grouped for rendering, skipping categories with no events. */
 export function notificationEventsByCategory(

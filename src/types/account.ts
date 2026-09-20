@@ -100,20 +100,40 @@ export function displayName(user: AccountUser): string {
 export type NotificationChannel = "in_app" | "email";
 
 /**
- * The six areas the notification catalogue is grouped under.
+ * The areas the notification catalogue is grouped under — one per product
+ * module, in the order the sidebar lists them.
  *
- * `messaging` covers WhatsApp, email and SMS as one group rather than three.
- * The question a merchant is answering is "do I want to hear about WhatsApp",
- * not "do I want inbound messages but not sender verification", and the split
- * version produced nine rows that were always set identically.
+ * These used to be six invented buckets (`campaigns`, `leads`, `messaging`,
+ * `automations`, `orders`, `security`) that matched nothing else in the
+ * product. `messaging` in particular folded WhatsApp, email and SMS into one
+ * row each, on the argument that a merchant asks "do I want to hear about
+ * WhatsApp" rather than about each underlying trigger — which was true of the
+ * three-row version and stopped being true the moment the page was asked to
+ * cover the whole product. A merchant who runs WhatsApp campaigns and no SMS
+ * needs those separable, and "Messaging" gave them one switch for both.
+ *
+ * Mirroring the modules instead means a reader already knows the shape of this
+ * page before they open it, and a new module arrives with an obvious home. It
+ * also makes the catalogue auditable against the code: every event's `source`
+ * should name something inside the module its category is named after.
+ *
+ * `security` is deliberately absent. Password changes, two-factor and new
+ * sign-ins are not preferences — they are how a person finds out an account
+ * was taken, and they belong to `/dashboard/settings/security`, which owns the
+ * state they report on. A category here implied they could be switched off.
  */
 export type NotificationCategory =
-  | "campaigns"
-  | "leads"
-  | "messaging"
-  | "automations"
-  | "orders"
-  | "security";
+  | "commerce"
+  | "customers"
+  | "marketing"
+  | "whatsapp"
+  | "email"
+  | "sms"
+  | "social"
+  | "automation"
+  | "integrations"
+  | "workspace"
+  | "billing";
 
 /**
  * One thing the product can tell you about.
@@ -133,10 +153,15 @@ export interface NotificationEventDef {
   /** What a new member gets before they touch anything. */
   defaultChannels: NotificationChannel[];
   /**
-   * Security notices the person may not switch off.
+   * A notice the person may not switch off.
    *
-   * "Your password changed" is how someone finds out it was not them. A
-   * product that lets that be muted has built the attacker a quiet room.
+   * Reserved for the events where not knowing costs more than the interruption
+   * — today that is a failed payment, which ends in a suspended workspace if
+   * nobody acts on it. It renders as a fixed state with a reason rather than
+   * as a disabled checkbox nobody can explain.
+   *
+   * The account-security notices that used to carry this flag are not in the
+   * catalogue at all any more; see `NotificationCategory`.
    */
   mandatory?: boolean;
   /** The module that raises it. For auditing the catalogue, not for display. */

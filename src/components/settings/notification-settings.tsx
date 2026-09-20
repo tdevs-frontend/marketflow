@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useMemo, useState } from "react";
-import { Lock } from "lucide-react";
+import { Lock, Search } from "lucide-react";
 
 import { PageHeader } from "@/components/layout/page-header";
 import { Badge } from "@/components/ui/badge";
@@ -32,6 +32,7 @@ import { defaultNotificationPreferences } from "@/lib/account-fixtures";
 import { isValidEmail } from "@/lib/validation";
 import { cn } from "@/lib/utils";
 import type {
+  NotificationCategory,
   NotificationChannel,
   NotificationEventDef,
   QuietHours,
@@ -77,6 +78,9 @@ import {
 
 type View = "me" | "workspace";
 
+/** One category and the events under it, as `notificationEventsByCategory` returns. */
+type EventGroup = ReturnType<typeof notificationEventsByCategory>[number];
+
 export function NotificationSettings() {
   const permissions = useWorkspacePermissions();
   const canConfigure = permissions.can("workspace_settings", "edit");
@@ -87,7 +91,7 @@ export function NotificationSettings() {
     <>
       <PageHeader
         title="Notifications"
-        description="Choose which notifications you receive and how they reach you."
+        description="Stay informed about important activity across your workspace."
       />
 
       <div className="space-y-6">
@@ -150,6 +154,9 @@ function MyPreferences() {
     );
     return notificationEventsByCategory(available);
   }, [policy]);
+
+  const { query, setQuery, category, setCategory, filtered } =
+    useEventFilter(groups);
 
   const emailError =
     draft.emailAddress.trim() && !isValidEmail(draft.emailAddress)
@@ -252,30 +259,70 @@ function MyPreferences() {
       {groups.length === 0 ? (
         <Card>
           <EmptyState
-            title="No notifications are available"
-            description="An administrator has switched off every notification for this workspace. Ask them to enable the ones you need."
+            title="No notification preferences are available yet"
+            description="Once notification events are enabled for your workspace, they will appear here."
           />
         </Card>
       ) : (
-        groups.map((group) => (
-          <SettingsSection
-            key={group.category.key}
-            title={group.category.label}
-            description={group.category.description}
-            bodyClassName="-mx-5 divide-y divide-border"
-          >
-            {group.events.map((event) => (
-              <EventRow
-                key={event.key}
-                event={event}
-                channels={allowed(event)}
-                selected={draft.channels[event.key] ?? []}
-                onToggle={(channel, on) => toggle(event, channel, on)}
-                idBase={id}
+        <>
+          {/* The browser and the count sit above the sections rather than
+              inside a card of their own — they are controls over the list,
+              not a section of it. */}
+          <div className="space-y-3">
+            <EventFilterBar
+              groups={groups}
+              query={query}
+              onQuery={setQuery}
+              category={category}
+              onCategory={setCategory}
+              matches={filtered.reduce((n, g) => n + g.events.length, 0)}
+              idBase={id}
+            />
+            <PreferenceSummary groups={groups} selected={draft.channels} />
+          </div>
+
+          {filtered.length === 0 ? (
+            <Card>
+              <EmptyState
+                compact
+                title="No notifications match"
+                description="Try a different search, or choose another module."
               />
-            ))}
-          </SettingsSection>
-        ))
+            </Card>
+          ) : (
+            filtered.map((group) => (
+              <SettingsSection
+                key={group.category.key}
+                title={group.category.label}
+                description={group.category.description}
+                action={
+                  <CategoryToggle
+                    group={group}
+                    selected={draft.channels}
+                    onChange={(next) =>
+                      setDraft((current) => ({
+                        ...current,
+                        channels: { ...current.channels, ...next },
+                      }))
+                    }
+                  />
+                }
+                bodyClassName="-mx-5 divide-y divide-border"
+              >
+                {group.events.map((event) => (
+                  <EventRow
+                    key={event.key}
+                    event={event}
+                    channels={allowed(event)}
+                    selected={draft.channels[event.key] ?? []}
+                    onToggle={(channel, on) => toggle(event, channel, on)}
+                    idBase={id}
+                  />
+                ))}
+              </SettingsSection>
+            ))
+          )}
+        </>
       )}
 
       {/* Sticky, because the list is long enough that a bar at the bottom is a
@@ -298,6 +345,213 @@ function MyPreferences() {
         </SaveBar>
       </Card>
     </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Finding a notification                                                     */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Search and a category filter, over a catalogue of fifty-odd rows.
+ *
+ * Neither would earn its place at a dozen events — and neither was here when
+ * there were sixteen. The page now covers every module in the product, which
+ * is what makes it useful and also what makes "turn off the bounce alert" a
+ * scrolling problem. Two controls, both compact, both operating on the same
+ * filtered list the sections below render.
+ *
+ * Search matches the title and the description rather than the key. A merchant
+ * looking for the low-stock row types "stock", not `inventory.low_stock`, and
+ * matching the description is what finds "Out of stock" from the word
+ * "restocked".
+ *
+ * The category filter is a `<select>` rather than eleven chips. Eleven chips
+ * wrap to three lines on a laptop and push the first section below the fold,
+ * which costs more than the click it saves.
+ */
+function useEventFilter(groups: EventGroup[]) {
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState<NotificationCategory | "all">("all");
+
+  const filtered = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+
+    return groups
+      .filter((group) => category === "all" || group.category.key === category)
+      .map((group) => ({
+        ...group,
+        events: needle
+          ? group.events.filter(
+              (event) =>
+                event.title.toLowerCase().includes(needle) ||
+                event.description.toLowerCase().includes(needle),
+            )
+          : group.events,
+      }))
+      .filter((group) => group.events.length > 0);
+  }, [groups, query, category]);
+
+  return { query, setQuery, category, setCategory, filtered };
+}
+
+function EventFilterBar({
+  groups,
+  query,
+  onQuery,
+  category,
+  onCategory,
+  matches,
+  idBase,
+}: {
+  groups: EventGroup[];
+  query: string;
+  onQuery: (value: string) => void;
+  category: NotificationCategory | "all";
+  onCategory: (value: NotificationCategory | "all") => void;
+  matches: number;
+  idBase: string;
+}) {
+  return (
+    <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center">
+      <div className="relative min-w-0 flex-1">
+        <Search
+          aria-hidden
+          className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-text-muted"
+        />
+        <Input
+          id={`${idBase}-search`}
+          size="sm"
+          className="pl-9"
+          placeholder="Search notifications…"
+          aria-label="Search notifications"
+          value={query}
+          onChange={(event) => onQuery(event.target.value)}
+        />
+      </div>
+
+      <Select
+        size="sm"
+        label="Filter by module"
+        value={category}
+        onChange={onCategory}
+        className="sm:w-56"
+        options={[
+          { value: "all", label: "All modules" },
+          ...groups.map((group) => ({
+            value: group.category.key,
+            label: group.category.label,
+          })),
+        ]}
+      />
+
+      {/* Announced, because filtering a list by typing gives a sighted reader
+          instant feedback and everybody else nothing at all. */}
+      <p role="status" aria-live="polite" className="sr-only">
+        {matches} {matches === 1 ? "notification" : "notifications"} shown.
+      </p>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Summary                                                                    */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * How many of the available notifications are switched on.
+ *
+ * One line, not a card. The number a merchant wants from this page at a glance
+ * is "am I going to hear about anything", and with fifty rows that is no longer
+ * answerable by looking. It counts the *available* events — an event an
+ * administrator has switched off is not the member's to be on or off about.
+ */
+function PreferenceSummary({
+  groups,
+  selected,
+}: {
+  groups: EventGroup[];
+  selected: Record<string, NotificationChannel[]>;
+}) {
+  const events = groups.flatMap((group) => group.events);
+  const on = events.filter(
+    (event) => event.mandatory || (selected[event.key] ?? []).length > 0,
+  ).length;
+
+  return (
+    <p className="text-sm font-medium text-text-muted">
+      <span className="font-bold text-text-primary tabular-nums">{on}</span> of{" "}
+      <span className="tabular-nums">{events.length}</span> notifications on
+      {on < events.length ? (
+        <>
+          {" · "}
+          <span className="tabular-nums">{events.length - on}</span> muted
+        </>
+      ) : null}
+    </p>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Category master control                                                    */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Turn a whole module on or off in one move.
+ *
+ * Eleven modules and fifty rows is a page somebody arrives at wanting to mute
+ * Social entirely, and doing that a checkbox at a time is the interaction that
+ * makes them mute everything instead.
+ *
+ * "On" restores each event's *own* default rather than ticking every box:
+ * switching Commerce back on should not start mailing you about every product
+ * that gets published, which is the setting nobody chose and everybody would
+ * have to undo. `defaultChannels` is the editorial answer to "what does this
+ * event deserve", and it is the right answer here too.
+ *
+ * It only ever writes the member's own preferences. The workspace policy is an
+ * administrator's record and is not reachable from this control — a master
+ * switch that quietly widened its blast radius would be the exact collapse the
+ * two-record split exists to prevent.
+ */
+function CategoryToggle({
+  group,
+  selected,
+  onChange,
+}: {
+  group: EventGroup;
+  selected: Record<string, NotificationChannel[]>;
+  /** Event key → the channels it should now use. */
+  onChange: (next: Record<string, NotificationChannel[]>) => void;
+}) {
+  /* Mandatory rows are not the member's to switch, so they are excluded from
+     both the reading and the writing — otherwise the control could never show
+     "off" for a category holding one. */
+  const optional = group.events.filter((event) => !event.mandatory);
+  const anyOn = optional.some(
+    (event) => (selected[event.key] ?? []).length > 0,
+  );
+
+  if (optional.length === 0) return null;
+
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={() =>
+        onChange(
+          Object.fromEntries(
+            optional.map((event) => [
+              event.key,
+              anyOn ? [] : [...event.defaultChannels],
+            ]),
+          ),
+        )
+      }
+    >
+      {anyOn ? "Mute all" : "Restore defaults"}
+      <span className="sr-only"> in {group.category.label}</span>
+    </Button>
   );
 }
 
@@ -328,13 +582,13 @@ function EventRow({
       actions={
         event.mandatory ? (
           /*
-           * Not a disabled checkbox. "Your password changed" is how somebody
-           * finds out it was not them, and a product that lets that be muted
-           * has built the attacker a quiet room. A greyed-out box invites the
-           * reader to look for the way to un-grey it; a badge that states the
-           * rule ends the question.
+           * Not a disabled checkbox. The one mandatory row left is a declined
+           * charge, which ends in a suspended workspace if nobody acts on it —
+           * and the person who muted it is exactly the person who needed
+           * telling. A greyed-out box invites the reader to look for the way
+           * to un-grey it; a badge that states the rule ends the question.
            */
-          <Tooltip content="Security notices cannot be switched off.">
+          <Tooltip content="A failed payment suspends the workspace, so this one cannot be switched off.">
             <span className="inline-flex items-center gap-1.5">
               <Badge tone="neutral">
                 <Lock className="size-3" aria-hidden />
