@@ -23,6 +23,7 @@ import { APP_ROUTES } from "@/constants/app";
 import { PLANS } from "@/constants/pricing";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { useAccount, useSubscription } from "@/lib/account-store";
+
 import { cn, isActiveRoute } from "@/lib/utils";
 import { logout } from "@/redux/features/auth/authSlice";
 import { displayName } from "@/types/account";
@@ -201,7 +202,7 @@ export function UserMenu() {
              dashboard rather than anything visibly wrong here. */
           className={cn(
             "absolute top-full right-0 z-40 mt-2 overflow-hidden",
-            "w-[min(20rem,calc(100vw-1.5rem))]",
+            "w-[min(18rem,calc(100vw-1.5rem))]",
             "rounded-panel border border-border bg-surface shadow-float",
           )}
         >
@@ -361,12 +362,12 @@ function Group({
           the wide tracking a label like this usually takes: at 13px semibold
           the extra letter-spacing pulls a six-letter word wider than the row
           beneath it and the heading starts competing with what it heads. */}
-      <p className="px-2.5 pt-1.5 pb-1.5 text-meta font-semibold tracking-normal text-text-muted uppercase">
+      <p className="px-2.5 pt-1.5 pb-1.5 text-sm font-semibold tracking-normal text-text-primary">
         {label}
       </p>
       {/* 3px between rows — enough that each is its own target, not enough to
           break the group into separate objects. */}
-      <div className="space-y-[3px]">{children}</div>
+      <div className="space-y-[2px]">{children}</div>
     </div>
   );
 }
@@ -388,7 +389,7 @@ function Group({
  * divider between them reads as a separator rather than a change of rhythm.
  */
 const ROW =
-  "flex min-h-10 w-full items-center gap-2.5 rounded-btn px-3 py-2.5 text-left text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none";
+  "flex min-h-9.5 w-full items-center gap-2.5 rounded-btn px-3 py-2 text-left text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none";
 
 function Row({
   item,
