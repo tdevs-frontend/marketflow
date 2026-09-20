@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
-import type { ReactNode } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
+import type { ReactNode, RefObject } from "react";
 import { MoreHorizontal } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -19,6 +19,48 @@ export interface MenuItem {
    * reopening once per column.
    */
   closeOnSelect?: boolean;
+}
+
+/**
+ * Close on an outside pointer-down or on Escape, and hand focus back.
+ *
+ * Extracted from `Menu` so anything else anchored to a trigger — the header's
+ * notification panel — behaves identically rather than reimplementing three
+ * listeners slightly differently. The bugs in this shape are always the same
+ * ones: a listener left attached after close, Escape swallowed by the panel,
+ * or focus dropped at the top of the document when the panel disappears.
+ * Solving them twice is how two dropdowns in one product end up disagreeing
+ * about what Escape does.
+ *
+ * `pointerdown` rather than `click`: a click that starts inside the panel and
+ * ends outside it is not an outside click, and pointerdown is also what makes
+ * the panel close *before* the thing underneath receives the press.
+ */
+export function useDismissable(
+  open: boolean,
+  close: () => void,
+  wrapperRef: RefObject<HTMLElement | null>,
+  triggerRef: RefObject<HTMLElement | null>,
+) {
+  useEffect(() => {
+    if (!open) return;
+
+    function onPointerDown(event: PointerEvent) {
+      if (!wrapperRef.current?.contains(event.target as Node)) close();
+    }
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+      close();
+      triggerRef.current?.focus();
+    }
+
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open, close, wrapperRef, triggerRef]);
 }
 
 /**
@@ -51,25 +93,12 @@ export function Menu({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuId = useId();
 
-  useEffect(() => {
-    if (!open) return;
-
-    function onPointerDown(event: PointerEvent) {
-      if (!wrapperRef.current?.contains(event.target as Node)) setOpen(false);
-    }
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key !== "Escape") return;
-      setOpen(false);
-      triggerRef.current?.focus();
-    }
-
-    document.addEventListener("pointerdown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [open]);
+  useDismissable(
+    open,
+    useCallback(() => setOpen(false), []),
+    wrapperRef,
+    triggerRef,
+  );
 
   return (
     <div ref={wrapperRef} className="relative inline-flex">

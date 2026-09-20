@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Menu, Search } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 
 import Link from "next/link";
 
@@ -8,7 +8,8 @@ import { Avatar } from "@/components/ui/avatar";
 import { IconButton } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { APP_ROUTES } from "@/constants/app";
-import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
+import { NotificationPopover } from "@/components/layout/notification-popover";
+import { useAppDispatch } from "@/hooks/useRedux";
 import { setMobileNavOpen } from "@/redux/features/ui/uiSlice";
 import { useAccount } from "@/lib/account-store";
 import { displayName } from "@/types/account";
@@ -26,9 +27,6 @@ import { displayName } from "@/types/account";
 export function DashboardHeader() {
   const dispatch = useAppDispatch();
   const user = useAccount();
-  const unread = useAppSelector(
-    (state) => state.notification.items.filter((item) => !item.read).length,
-  );
 
   const name = displayName(user);
 
@@ -48,17 +46,11 @@ export function DashboardHeader() {
       </div>
 
       <div className="ml-auto flex items-center gap-2">
-        <IconButton
-          label={`Notifications${unread ? ` (${unread} unread)` : ""}`}
-          className="relative"
-        >
-          <Bell className="h-4.5 w-4.5" />
-          {unread > 0 ? (
-            /* Ringed in the button's own grey, so the dot reads as a badge on
-               the control rather than a white hole punched through it. */
-            <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-secondary ring-2 ring-gray-soft" />
-          ) : null}
-        </IconButton>
+        {/* The bell and its panel, together — the button owns the open state,
+            so the trigger and the thing it opens cannot drift apart. The
+            unread count moved with it, since the badge and the panel's header
+            count the same list. */}
+        <NotificationPopover />
 
         {/* A link to Profile, because that is the one thing everybody tries to
             click on a name in a header. No pill behind the whole chip — only

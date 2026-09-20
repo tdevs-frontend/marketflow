@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type {
   ButtonHTMLAttributes,
+  ComponentPropsWithRef,
   ComponentPropsWithoutRef,
   ReactNode,
 } from "react";
@@ -257,7 +258,16 @@ export type IconButtonProps = {
   variant?: ButtonVariant;
   className?: string;
   children: ReactNode;
-} & Omit<ButtonHTMLAttributes<HTMLButtonElement>, "aria-label">;
+  /**
+   * Forwarded to the button.
+   *
+   * `ComponentPropsWithRef` rather than `ButtonHTMLAttributes`, which carries
+   * no `ref`. A trigger that opens a panel needs one — to hand focus back when
+   * Escape closes it — and without this the only way to get a focusable
+   * reference was to copy this component's classes onto a bare `<button>`,
+   * which is how two bells in one product end up a pixel apart.
+   */
+} & Omit<ComponentPropsWithRef<"button">, "aria-label">;
 
 export function IconButton({
   label,
