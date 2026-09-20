@@ -6,6 +6,10 @@ export const APP_ROUTES = {
   register: "/register",
   forgotPassword: "/forgot-password",
   dashboard: "/dashboard",
+  /* The notification archive. Distinct from `settingsNotifications`, which is
+     the preference centre: this one answers "what happened", that one answers
+     "what do I want to be told about". */
+  notifications: "/dashboard/notifications",
   products: "/dashboard/products",
   categories: "/dashboard/categories",
   orders: "/dashboard/orders",

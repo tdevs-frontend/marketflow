@@ -27,14 +27,22 @@ import { APP_ROUTES } from "@/constants/app";
 /**
  * The module a notification came from.
  *
- * Mirrors `NotificationCategory` with two additions the feed needs and the
+ * Mirrors `NotificationCategory` with three additions the feed needs and the
  * preference catalogue does not. `inventory` and `order` are separate rows here
  * although both are Commerce preferences: a merchant scanning the bell is
  * sorting "something to pack" from "something to reorder" at a glance, and one
  * shopping-bag icon for both loses that. The settings page has no such problem
  * — there the rows carry their own titles.
+ *
+ * `security` is the more interesting addition. There is deliberately no
+ * security *preference* category, because "your password changed" is not
+ * something a person should be able to mute. A security *occurrence* is the
+ * opposite — it is exactly what a feed exists to carry, and the bell is where
+ * somebody finds out a sign-in was not theirs. Reporting an event and offering
+ * a switch for it are different acts.
  */
 export type NotificationModule =
+  | "security"
   | "order"
   | "inventory"
   | "customer"
@@ -68,6 +76,17 @@ export interface FeedNotification {
   title: string;
   /** One line of what happened, naming the entity. */
   message: string;
+  /**
+   * The entity or module the event belongs to — an order's product, a
+   * conversation's subject, the workflow step that threw.
+   *
+   * A third line, and only the full page renders it. The bell is scanned
+   * standing up and wants title, sentence, time; the page is read sitting
+   * down, and the line that says *which* Premium Package or *which* step is
+   * the one that saves opening the record. `null` where the message already
+   * carries it and a third line would just be a shorter second one.
+   */
+  context?: string | null;
   /** ISO. Rendered relative to the workspace clock. */
   createdAt: string;
   read: boolean;
@@ -105,4 +124,7 @@ export const NOTIFICATION_ROUTES = {
   integrations: APP_ROUTES.integrations,
   team: APP_ROUTES.workspaceTeam,
   billing: APP_ROUTES.settingsBilling,
+  /* Security events point at the page that owns the state they report on, so
+     "a new device signed in" lands where sessions can actually be ended. */
+  security: APP_ROUTES.settingsSecurity,
 } as const;

@@ -3,38 +3,19 @@
 import { useCallback, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  Bell,
-  BellOff,
-  CreditCard,
-  Mail,
-  MessageCircle,
-  MessageSquare,
-  Package,
-  Plug,
-  Megaphone,
-  Share2,
-  ShoppingCart,
-  Users,
-  Workflow,
-  type LucideIcon,
-} from "lucide-react";
+import { Bell, BellOff } from "lucide-react";
 
+import { NotificationItem } from "@/components/notifications/notification-item";
 import { IconButton } from "@/components/ui/button";
 import { useDismissable } from "@/components/ui/menu";
 import { APP_ROUTES } from "@/constants/app";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
-import { formatRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { WORKSPACE_NOW_MS } from "@/lib/workspace-clock";
 import {
   markAllRead,
   markRead,
 } from "@/redux/features/notification/notificationSlice";
-import type {
-  FeedNotification,
-  NotificationModule,
-} from "@/types/notification";
+import type { FeedNotification } from "@/types/notification";
 
 /**
  * The header bell, and what happened while you were elsewhere.
@@ -49,56 +30,19 @@ import type {
  * No tabs and no search. A panel you open to check whether anything needs you
  * is a panel that has to be readable in one glance; a tab strip makes the
  * reader choose a filter before they have seen anything, and a search box in a
- * 400px panel is answering a question that belongs to a full archive. Fourteen
- * items scroll faster than either control resolves.
+ * 368px panel is answering a question that belongs to a full archive. That
+ * archive now exists at `/dashboard/notifications`, which is where the footer
+ * link goes and where the search and the paging live.
+ *
+ * The rows are `NotificationItem`, the same component the archive renders — at
+ * its `compact` density rather than `full`. Two implementations of a
+ * notification row is how one surface ends up bolding unread titles while the
+ * other tints them.
  *
  * The button itself is unchanged from the header it replaced — same
  * `IconButton` geometry, same bell, same badge — because this is an interaction
  * being added, not a header being redesigned.
  */
-
-/* -------------------------------------------------------------------------- */
-/* Module vocabulary                                                          */
-/* -------------------------------------------------------------------------- */
-
-/**
- * One icon per module, from the set the sidebar and the settings page already
- * use.
- *
- * The icon is the only thing a reader uses to triage a feed before reading it,
- * so it has to mean *where this came from* rather than *how bad it is* — Orders
- * is always a cart whether the order arrived or its payment failed. Severity is
- * carried by colour, on one axis, in `TONES`.
- */
-const MODULE_ICON: Record<NotificationModule, LucideIcon> = {
-  order: ShoppingCart,
-  inventory: Package,
-  customer: Users,
-  marketing: Megaphone,
-  whatsapp: MessageCircle,
-  email: Mail,
-  sms: MessageSquare,
-  social: Share2,
-  automation: Workflow,
-  integration: Plug,
-  workspace: Users,
-  billing: CreditCard,
-};
-
-/**
- * Three tones, and only one of them is warm.
- *
- * A palette a reader has to learn is a palette they ignore. `alert` is the only
- * state that changes what somebody does next, so it is the only one that
- * carries the error ramp; `success` marks the things that went right, and
- * everything else sits on the neutral surface so the two that matter stand out
- * against it.
- */
-const TONES = {
-  info: "bg-surface-secondary text-text-secondary",
-  success: "bg-success-soft text-success-text",
-  alert: "bg-error-soft text-error-text",
-} as const;
 
 /* -------------------------------------------------------------------------- */
 /* Panel                                                                      */
@@ -215,7 +159,7 @@ export function NotificationPopover() {
               <ul>
                 {items.map((item) => (
                   <li key={item.id}>
-                    <NotificationRow item={item} onOpen={() => open_(item)} />
+                    <NotificationItem item={item} onOpen={() => open_(item)} />
                   </li>
                 ))}
               </ul>
@@ -223,7 +167,11 @@ export function NotificationPopover() {
           </div>
 
           <Link
-            href={APP_ROUTES.settingsNotifications}
+            /* The archive, not the preference centre. This link pointed at
+               `/settings/notifications` because there was nowhere else for it
+               to go — a "View all" that opened a page of switches would have
+               promised a list and delivered settings. Now there is a list. */
+            href={APP_ROUTES.notifications}
             onClick={() => setOpen(false)}
             /* Same hover as the header's action: an underline, no tint. The
                full-width wash it replaced made the footer light up as a band
@@ -231,7 +179,7 @@ export function NotificationPopover() {
                than as the link it is. */
             className="border-t border-border px-4 py-4 text-center text-sm font-semibold text-primary underline-offset-2 hover:underline focus-visible:shadow-focus focus-visible:outline-none"
           >
-            View All Notification
+            View all notifications
           </Link>
         </div>
       ) : null}
@@ -278,108 +226,6 @@ function Header({
         </button>
       ) : null}
     </div>
-  );
-}
-
-function NotificationRow({
-  item,
-  onOpen,
-}: {
-  item: FeedNotification;
-  onOpen: () => void;
-}) {
-  const Icon = MODULE_ICON[item.module];
-
-  return (
-    <button
-      type="button"
-      onClick={onOpen}
-      className={cn(
-        "flex w-full gap-3 px-4 py-3 text-left transition-colors",
-        /* The only rule between rows, and none after the last one — a border
-           under the final row would sit directly on the footer's own divider
-           and read as a double line. */
-        "border-b border-border last:border-b-0",
-        "focus-visible:shadow-focus focus-visible:outline-none",
-        /*
-         * Unread is `primary` at 5%, mixed from the brand colour itself
-         * rather than taken from `primary-subtle`. Two reasons. The tint is
-         * meant to be *felt* and not seen — at 5% it separates the unread
-         * block from the read one without turning half the panel into a
-         * coloured surface, and the dot is what actually announces the state.
-         * And an alpha of the real token stays on the brand hue: the named
-         * tints are their own colours, which is why the old row read as a
-         * violet band rather than as a wash of the indigo beside it.
-         *
-         * Read rows take no background at all, so they are the panel.
-         */
-        item.read
-          ? "hover:bg-surface-secondary"
-          : "bg-primary/5 hover:bg-primary/10",
-      )}
-    >
-      {/* 32px, down from 36. The tile identifies the module at a glance and
-          then gets out of the way; at the larger size it was the heaviest
-          thing in a row whose point is the sentence beside it. */}
-      <span
-        aria-hidden
-        className={cn(
-          "mt-0.5 grid size-8 shrink-0 place-items-center rounded-btn",
-          TONES[item.tone],
-        )}
-      >
-        <Icon className="size-4" />
-      </span>
-
-      <span className="min-w-0 flex-1">
-        {/*
-         * Title, time and dot on one line, with the dot at the row's right
-         * edge — it shares a line with the timestamp rather than floating
-         * beside the whole row, so it lines up without being nudged into
-         * place with a hand-picked margin.
-         *
-         * `flex-wrap` is what §10's narrow case needs: on a phone the title
-         * takes the width it needs and the time drops to its own line rather
-         * than squeezing the title into a two-word column.
-         */}
-        <span className="flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5">
-          <span
-            className={cn(
-              "text-[15px] text-text-primary",
-              item.read ? "font-semibold" : "font-semibold",
-            )}
-          >
-            {item.title}
-          </span>
-
-          <span className="flex shrink-0 items-center gap-1.5">
-            {/* Measured against the workspace's frozen clock, not `Date.now()`.
-                A relative time computed on the server and again on the client
-                is a hydration mismatch waiting for a slow response. */}
-            <span className="text-xs font-medium whitespace-nowrap text-text-muted">
-              {formatRelativeTime(item.createdAt, WORKSPACE_NOW_MS)}
-            </span>
-
-            {/* 6px, and the real signal for unread now that the row's tint is
-                down at 5%. Sized to sit under the timestamp's cap height
-                rather than to be noticed on its own. */}
-            {item.read ? null : (
-              <>
-                <span
-                  aria-hidden
-                  className="size-1.5 shrink-0 rounded-full bg-primary"
-                />
-                <span className="sr-only">Unread</span>
-              </>
-            )}
-          </span>
-        </span>
-
-        <span className="mt-0.5 block text-sm leading-relaxed text-text-secondary">
-          {item.message}
-        </span>
-      </span>
-    </button>
   );
 }
 
