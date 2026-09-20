@@ -7,6 +7,7 @@ import {
   GrowthOverview,
   KpiCards,
   OverviewHeader,
+  PlansSection,
   RecentOrders,
   SalesFunnel,
   WhatsAppInbox,
@@ -55,6 +56,21 @@ export default function DashboardPage() {
         <RecentOrders className="md:col-span-12 lg:col-span-7" />
         <SalesFunnel className="md:col-span-12 lg:col-span-5" />
       </div>
+
+      {/*
+        Outside the grid, and last.
+
+        The six widgets above are one reading — campaigns to leads to
+        conversations to orders — and the plans are not part of it. Dropping
+        them into the grid as a seventh item would put a price list between a
+        merchant and their revenue; below it, the page they open every morning
+        is unchanged until they have finished reading it.
+
+        `pt-2` on top of the layout's `space-y-6`, which is the one gap on
+        this page that separates two different kinds of thing rather than two
+        widgets.
+      */}
+      <PlansSection className="pt-2" />
     </DashboardRangeProvider>
   );
 }

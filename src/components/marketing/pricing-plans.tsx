@@ -297,12 +297,22 @@ export function PricingPlans({
   onChangePlan,
   /** Why it is off, for the disabled control's own tooltip. */
   changeDisabledReason,
+  /**
+   * The gap above the billing toggle.
+   *
+   * On by default, because `PricingSection` sets a heading, an eyebrow and a
+   * paragraph above it and the toggle has to clear them. An app surface brings
+   * its own heading and its own rhythm, and inherits that 40px as dead space
+   * between two things it has already spaced — so it turns this off.
+   */
+  topSpacing = true,
   className,
 }: {
   currentPlanId?: PlanTier | null;
   defaultBilling?: Billing;
   onChangePlan?: (plan: Plan) => void;
   changeDisabledReason?: string;
+  topSpacing?: boolean;
   className?: string;
 } = {}) {
   const [billing, setBilling] = useState<Billing>(defaultBilling);
@@ -320,7 +330,12 @@ export function PricingPlans({
      */
     <div className={cn("@container", className)}>
       {/*Toggle */}
-      <div className="mt-10 flex justify-center sm:mt-12">
+      <div
+        className={cn(
+          "flex justify-center",
+          topSpacing && "mt-10 sm:mt-12",
+        )}
+      >
         <BillingToggle value={billing} onChange={setBilling} />
       </div>
       <div className="mt-10 grid gap-6 @min-[540px]:grid-cols-2 @min-[1140px]:mt-14 @min-[1140px]:grid-cols-4">

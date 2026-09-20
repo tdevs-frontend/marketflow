@@ -59,10 +59,11 @@ import {
  *
  *   **Plans & Pricing** answers what else is available, and renders the
  *   *actual pricing page component* — `PricingPlans`, the same module
- *   `/pricing` and the homepage compose. Not a copy of it: the same file. Two
- *   pricing designs is how a product ends up quoting one price to a visitor
- *   and another to the customer who already pays it, and a second set of cards
- *   would drift on the first day somebody edited a tier.
+ *   `/pricing`, the homepage and the merchant overview compose. Not a copy of
+ *   it: the same file. Two pricing designs is how a product ends up quoting
+ *   one price to a visitor and another to the customer who already pays it,
+ *   and a second set of cards would drift on the first day somebody edited a
+ *   tier.
  *
  * Which is why the two halves deliberately do *not* share a card style. The
  * pricing tab is supposed to feel like the pricing page opened inside the
@@ -645,14 +646,19 @@ function SubscriptionActions({ canManage }: { canManage: boolean }) {
  * The pricing page's own cards, inside the dashboard.
  *
  * `PricingPlans` and nothing else: no marketing header, no navbar, no footer,
- * no sign-up call to action, no second grid. The section heading, the eyebrow
- * and the page background belong to `PricingSection`, which is the marketing
- * wrapper, and the dashboard supplies its own heading already.
+ * no sign-up call to action, no second grid, and no heading of its own — the
+ * tab above is already labelled "Plans & Pricing", and a matching `<h2>` under
+ * it would be the same words twice. The eyebrow and the big title belong to
+ * `PricingSection`, which is the marketing wrapper.
  *
- * One notice above it, because the tiers are buttons and the buttons cannot do
- * anything yet. Stated once here rather than as a tooltip on each of three
- * disabled controls — a merchant who meets the same sentence three times reads
- * it as a fault rather than as a boundary.
+ * `topSpacing={false}` for the same reason. That 40px above the billing toggle
+ * exists to clear the marketing heading; with the tab strip directly above it
+ * here, it is a gap between two things this page has already spaced.
+ *
+ * One notice above the grid, because the tiers carry buttons and the buttons
+ * cannot do anything yet. Stated once here rather than as a tooltip on each of
+ * three disabled controls — a merchant who meets the same sentence three times
+ * reads it as a fault rather than as a boundary.
  */
 function PlansAndPricing() {
   const subscription = useSubscription();
@@ -673,6 +679,7 @@ function PlansAndPricing() {
         }
         defaultBilling={subscription.period}
         changeDisabledReason={UNAVAILABLE_REASON.planChange}
+        topSpacing={false}
       />
     </>
   );

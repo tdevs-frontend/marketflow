@@ -8,6 +8,7 @@ export * from "./campaign-performance";
 export * from "./whatsapp-inbox";
 export * from "./recent-orders";
 export * from "./automation-activity";
+export * from "./plans-section";
 
 /*
  * Not on the merchant overview any more, kept as library components:
