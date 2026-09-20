@@ -76,7 +76,7 @@ export function PurchasedHistory() {
     <SettingsSection
       title="Purchased History"
       description="Every plan this workspace has bought, and the billing record behind each one."
-      bodyClassName={filled ? "p-0" : undefined}
+      bodyClassName={filled ? "-mx-5" : undefined}
     >
       {state.status === "loading" ? <PurchasedHistorySkeleton /> : null}
 

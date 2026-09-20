@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { AlertCircle, Check, Loader2 } from "lucide-react";
 
 import { Button, type ButtonProps } from "@/components/ui/button";
-import { Card, CardBody, CardHeader } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { ServiceError, ServiceResult } from "@/types/account";
 
@@ -27,6 +27,45 @@ import type { ServiceError, ServiceResult } from "@/types/account";
 /* Section                                                                    */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * One settings card, built to the dashboard's card standard.
+ *
+ * It used to be `Card` + `CardHeader` + `CardBody`: a 14px semibold title in a
+ * bordered band, a muted note under it, and a separately padded body below the
+ * rule. Every other card in the product — the overview's widgets, the charts,
+ * the order table — is a single `p-5` box with a 16/18px heading, a
+ * secondary-ink description and the content sixteen pixels under it. Settings
+ * was the one module drawing a second kind of card, and it read as a different
+ * application the moment somebody moved between Billing and the dashboard.
+ *
+ * So this now renders exactly what `PanelCard` renders. The geometry is copied
+ * rather than the component imported for one reason: a settings card is a
+ * `<section>` with an anchor id and `scroll-mt`, because Security links between
+ * its own blocks from the page header, and a card cannot be a landmark. Every
+ * class below is `PanelCard`'s, in `PanelCard`'s order — if that component's
+ * padding or type scale changes, this is the file that has to change with it.
+ *
+ * Three consequences worth naming, because call sites depend on them:
+ *
+ *   **The padding moved onto the card.** `p-5` is on the `Card` now, not on the
+ *   body. A body that wants to run edge to edge asks for `-mx-5` rather than
+ *   `p-0` — same result, opposite direction, and the children keep whatever
+ *   padding they already had.
+ *
+ *   **There is no rule under the heading.** The 16px gap does that work, the
+ *   way it does on every dashboard card. A divided list no longer gets a free
+ *   top border from the header band.
+ *
+ *   **The title is an `<h2>`.** Settings pages set their `<h1>` in
+ *   `PageHeader`, so the section headings below it are the second level; they
+ *   were `<h3>` and skipped one.
+ *
+ * `description` is `string`, deliberately narrowed from `ReactNode`. It renders
+ * inside a `<p>`, which accepts phrasing content only, and the last time this
+ * prop took elements a `Skeleton` — a `<div>` — was passed into one and every
+ * Settings page logged a hydration error. The type is the fix that cannot be
+ * forgotten.
+ */
 export function SettingsSection({
   id,
   title,
@@ -43,11 +82,12 @@ export function SettingsSection({
    */
   id?: string;
   title: string;
-  description?: ReactNode;
+  description?: string;
   /** A control that belongs beside the heading rather than below the content. */
   action?: ReactNode;
   /** The commit band. Usually a `SaveBar`. */
   footer?: ReactNode;
+  /** Extra classes on the content block. `-mx-5` makes it edge to edge. */
   bodyClassName?: string;
   className?: string;
   children: ReactNode;
@@ -58,11 +98,27 @@ export function SettingsSection({
        should be able to jump between, and `scroll-mt` keeps the heading clear
        of the sticky dashboard header when it does. */
     <section id={id} className={cn("scroll-mt-24", className)}>
-      <Card>
-        <CardHeader title={title} description={description} action={action} />
-        <CardBody className={bodyClassName}>{children}</CardBody>
+      <Card className="flex flex-col p-5">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="min-w-0">
+            {/* No weight or colour utility: the base layer sets every heading
+                to `font-heading`, 700, primary ink, and a `font-semibold` here
+                would quietly make Settings a step lighter than the dashboard
+                cards it is being matched to. */}
+            <h2 className="text-base sm:text-lg">{title}</h2>
+            {description ? (
+              <p className="mt-1 text-sm font-medium text-text-secondary">
+                {description}
+              </p>
+            ) : null}
+          </div>
+          {action ? <div className="shrink-0">{action}</div> : null}
+        </div>
+
+        <div className={cn("mt-4 flex-1", bodyClassName)}>{children}</div>
+
         {footer ? (
-          <div className="flex flex-wrap items-center gap-3 border-t border-border px-5 py-4">
+          <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-border pt-4">
             {footer}
           </div>
         ) : null}
@@ -88,9 +144,10 @@ export function SettingsSection({
  * Stacks below `sm`, where there is no room for two columns and the controls
  * belong under the label they apply to rather than squeezed beside it.
  *
- * `px-5` matches `CardBody`'s padding, so a section using this passes
- * `bodyClassName="divide-y divide-border p-0"` and the dividing rules run the
- * full width of the card while the text still lines up with every other card.
+ * `px-5` matches the card's own padding, so a section using this passes
+ * `bodyClassName="-mx-5 divide-y divide-border"` — the body reaches the card's
+ * edges, the rules run its full width, and the text still lines up with every
+ * other card in the module.
  */
 export function SettingsRow({
   children,

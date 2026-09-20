@@ -102,7 +102,7 @@ export function LoginActivityCard() {
           </Badge>
         ) : null
       }
-      bodyClassName="p-0"
+      bodyClassName="-mx-5"
     >
       {recentFailures > 0 ? (
         <div className="p-5 pb-0">

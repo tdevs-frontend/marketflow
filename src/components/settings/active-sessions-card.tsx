@@ -115,7 +115,7 @@ export function ActiveSessionsCard() {
           </Badge>
         ) : null
       }
-      bodyClassName="p-0"
+      bodyClassName="-mx-5"
       footer={
         <>
           <Button

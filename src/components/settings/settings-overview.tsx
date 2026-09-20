@@ -16,6 +16,8 @@ import {
   useNotificationPreferences,
   useSecurityState,
 } from "@/lib/account-store";
+import { useApiKeys } from "@/lib/api-key-store";
+import { useWebhooks } from "@/lib/webhook-store";
 import { useWorkspaceSettings } from "@/lib/workspace-settings-store";
 import { displayName } from "@/types/account";
 
@@ -153,17 +155,19 @@ interface Status {
  * fall behind them: turn two-factor on and this card says Enabled before the
  * dialog has closed.
  *
- * Three cases, not five. Billing and API & Developer used to be sections of
- * this hub and are dashboard modules of their own now, so their branches — and
- * the subscription, key and webhook stores they read — went with them. A status
- * line for a card this page no longer renders is a store subscription that
- * re-renders the hub for a change nobody can see.
+ * One case per section this hub renders, and no more. Billing used to have one
+ * too and is a dashboard module of its own now, so its branch — and the
+ * subscription store it read — went with it. A status line for a card this page
+ * does not render is a store subscription that re-renders the hub for a change
+ * nobody can see.
  */
 function useSectionStatus(href: string): Status | null {
   const user = useAccount();
   const security = useSecurityState();
   const preferences = useNotificationPreferences();
   const policy = useNotificationPolicy();
+  const keys = useApiKeys();
+  const webhooks = useWebhooks();
 
   switch (href) {
     case APP_ROUTES.settingsProfile:
@@ -199,6 +203,15 @@ function useSectionStatus(href: string): Status | null {
         detail: enabled
           ? "Your account is protected with an authenticator app."
           : "Add an authenticator app so a stolen password is not enough.",
+      };
+    }
+
+    case APP_ROUTES.settingsApi: {
+      const active = keys.filter((key) => key.status === "active").length;
+      return {
+        label: `${active} active ${active === 1 ? "key" : "keys"}`,
+        tone: "neutral",
+        detail: `${webhooks.length} webhook ${webhooks.length === 1 ? "endpoint" : "endpoints"} configured.`,
       };
     }
 

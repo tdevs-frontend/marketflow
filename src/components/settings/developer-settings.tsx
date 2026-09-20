@@ -196,7 +196,7 @@ export function DeveloperSettings() {
               <ArrowUpRight aria-hidden />
             </Link>
           }
-          bodyClassName={keys.length > 0 ? "p-0" : undefined}
+          bodyClassName={keys.length > 0 ? "-mx-5" : undefined}
         >
           {keys.length === 0 ? (
             <EmptyState
@@ -279,7 +279,7 @@ export function DeveloperSettings() {
               </Link>
             </div>
           }
-          bodyClassName={webhooks.length > 0 ? "p-0" : undefined}
+          bodyClassName={webhooks.length > 0 ? "-mx-5" : undefined}
         >
           {webhooks.length === 0 ? (
             <EmptyState

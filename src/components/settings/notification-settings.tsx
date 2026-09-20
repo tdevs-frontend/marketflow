@@ -262,7 +262,7 @@ function MyPreferences() {
             key={group.category.key}
             title={group.category.label}
             description={group.category.description}
-            bodyClassName="divide-y divide-border p-0"
+            bodyClassName="-mx-5 divide-y divide-border"
           >
             {group.events.map((event) => (
               <EventRow
@@ -437,7 +437,7 @@ function WorkspacePolicy() {
           key={group.category.key}
           title={group.category.label}
           description={group.category.description}
-          bodyClassName="divide-y divide-border p-0"
+          bodyClassName="-mx-5 divide-y divide-border"
         >
           {group.events.map((event) => {
             const on = draft.enabled[event.key] !== false;
