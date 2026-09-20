@@ -211,6 +211,80 @@ export interface TwoFactorActivation {
 }
 
 /* -------------------------------------------------------------------------- */
+/* Sessions and sign-in history                                               */
+/* -------------------------------------------------------------------------- */
+
+export type DeviceKind = "desktop" | "mobile" | "tablet" | "unknown";
+
+/**
+ * A device, as far as a user-agent string can describe one.
+ *
+ * Parsed in `lib/user-agent` and never stored: it is what makes a row
+ * recognisable to the person reading it, not what identifies the session. Two
+ * identical laptops produce identical descriptions, and a user-agent is
+ * trivially forged, so the session id is the only thing either half of the
+ * system keys on.
+ */
+export interface DeviceInfo {
+  browser: string;
+  /** Major version only. `null` when the string does not carry one. */
+  browserVersion: string | null;
+  /** "Windows", "macOS", "iOS" — no release number. See `lib/user-agent`. */
+  os: string;
+  kind: DeviceKind;
+}
+
+/**
+ * One place the account is signed in.
+ *
+ * `current` is the session doing the reading, and it is the field the whole
+ * panel turns on: it is what earns the "Current session" badge, and it is what
+ * stops a Sign out button from quietly ending the session somebody is using to
+ * press it.
+ *
+ * Location is two fields on purpose, and neither is a city.
+ *
+ * `timeZone` is what the browser itself knows — `Europe/Lisbon` — and is
+ * available for the current session without asking anybody anything.
+ * `location` is the coarse region a service derives from the request address,
+ * and stays `null` until one does. Keeping them apart is what stops the panel
+ * presenting a browser setting as though the server had observed where the
+ * device was.
+ */
+export interface AccountSession {
+  id: string;
+  device: DeviceInfo;
+  /** IANA zone reported by that device, e.g. `Europe/Lisbon`. */
+  timeZone: string | null;
+  /** Coarse region, from the service. Never finer than a city. */
+  location: string | null;
+  /** ISO. When this session began. */
+  startedAt: string;
+  /** ISO. */
+  lastActiveAt: string;
+  current: boolean;
+}
+
+export type SignInOutcome = "success" | "failed";
+
+/**
+ * One sign-in attempt, successful or not.
+ *
+ * The failures are the point. A list of successes tells a person what they
+ * already know; an attempt from a device they do not recognise is the thing
+ * this section exists to put in front of them, and it is why `outcome` is on
+ * every row rather than the list being filtered to the ones that worked.
+ */
+export interface SignInEvent {
+  id: string;
+  /** ISO. */
+  at: string;
+  device: DeviceInfo;
+  location: string | null;
+  outcome: SignInOutcome;
+}
+
+/* -------------------------------------------------------------------------- */
 /* Billing                                                                    */
 /* -------------------------------------------------------------------------- */
 

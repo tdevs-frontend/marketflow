@@ -131,7 +131,12 @@ function ProfilePhoto() {
   return (
     <SettingsSection
       title="Profile photo"
-      description="Shown beside your name in the inbox, on assignments and in activity logs."
+      /* Named precisely rather than generously. The dashboard header and the
+         overview greeting are the two places that read this record, and both
+         re-render from it the moment it changes. Promising the inbox and
+         assignment lists as well would be a promise about other people's rows,
+         which carry contacts and agents rather than you. */
+      description="Shown beside your name in the dashboard header and on your overview."
       bodyClassName="flex flex-wrap items-center gap-5"
     >
       <Avatar

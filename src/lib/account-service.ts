@@ -20,11 +20,14 @@ import {
   generateTotpSecret,
   verifyTotp,
 } from "@/lib/totp";
+import { describeThisDevice, deviceTimeZone } from "@/lib/user-agent";
 import type {
+  AccountSession,
   AccountUser,
   ProfilePatch,
   SecurityState,
   ServiceResult,
+  SignInEvent,
   TwoFactorActivation,
   TwoFactorEnrollment,
   UserNotificationPreferences,
@@ -66,6 +69,15 @@ import { fail, ok } from "@/types/account";
  * password requires something that knows the old hash. Nothing in the browser
  * does, or should, so the form validates everything it legitimately can and the
  * submit reports `service_unavailable` — a real outcome, not a failed success.
+ *
+ * Sessions split down the same line, and the split is worth stating because it
+ * is not obvious from the section headings. `listSessions` returns one genuine
+ * row — this browser, described from its own user-agent and clock — because
+ * that much a client can observe. `remoteSessions` is `false` because the
+ * other devices holding a token are known only to whatever issued the tokens,
+ * and `signInActivity` is `false` because a sign-in log is a record of things
+ * that happened while this browser was not running. One is answerable here and
+ * two are not, so one is answered and two say so.
  */
 
 /* -------------------------------------------------------------------------- */
@@ -97,6 +109,16 @@ export interface AccountCapabilities {
   twoFactor: boolean;
   /** Whether enabling two-factor actually gates sign-in. */
   twoFactorEnforced: boolean;
+  /**
+   * Listing sessions on this account's *other* devices, and ending them.
+   *
+   * Separate from describing the current one, which this browser can do by
+   * itself and always can. Knowing that a phone in another country holds a
+   * valid token is knowledge only the thing that issued the token has.
+   */
+  remoteSessions: boolean;
+  /** Recent sign-in attempts, successful and failed. Recorded server-side. */
+  signInActivity: boolean;
   /** Adding or changing a card. Needs a payment provider. */
   payment: boolean;
   /** Downloadable invoices. Issued by the payment provider, so: no. */
@@ -113,6 +135,8 @@ export const CAPABILITIES: AccountCapabilities = {
   password: !SESSION_MODE,
   twoFactor: true,
   twoFactorEnforced: !SESSION_MODE,
+  remoteSessions: !SESSION_MODE,
+  signInActivity: !SESSION_MODE,
   payment: !SESSION_MODE,
   invoices: !SESSION_MODE,
   apiKeys: true,
@@ -136,6 +160,10 @@ export const UNAVAILABLE_REASON: Record<keyof AccountCapabilities, string> = {
   twoFactor: "",
   twoFactorEnforced:
     "Enrolment is verified here, but sign-in is not yet gated by it — that needs the account service.",
+  remoteSessions:
+    "Sessions on your other devices are held by the account service. None is connected, so only this browser can be listed.",
+  signInActivity:
+    "Sign-in attempts are recorded by the account service. None is connected, so there is no history to show.",
   payment:
     "No payment provider is connected, so no card can be stored against this workspace.",
   invoices:
@@ -414,4 +442,147 @@ export async function regenerateRecoveryCodes(
   const codes = generateRecoveryCodes();
   writeRecoveryCodes(codes);
   return ok(codes);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Sessions                                                                   */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The id the current session answers to.
+ *
+ * A constant rather than something minted per call, because the panel compares
+ * ids to decide which row may not be signed out — and a row whose identity
+ * changes between a render and a click is a row that eventually ends the wrong
+ * session.
+ */
+export const CURRENT_SESSION_ID = "session_current";
+
+/**
+ * This browser, described from what this browser genuinely knows.
+ *
+ * Everything on it is observed rather than chosen. The device comes from the
+ * user-agent, the time zone from `Intl`, and `startedAt` from
+ * `performance.timeOrigin` — the instant this document began, which with no
+ * sign-in flow in the product is the honest answer to "since when has this
+ * browser been holding a session". `location` stays `null`: the coarse region
+ * is derived from the request address by whatever receives it, and there is
+ * nothing here that receives anything.
+ */
+function currentSession(): AccountSession {
+  const now = Date.now();
+
+  const startedAt =
+    typeof performance !== "undefined" && performance.timeOrigin
+      ? new Date(performance.timeOrigin).toISOString()
+      : new Date(now).toISOString();
+
+  return {
+    id: CURRENT_SESSION_ID,
+    device: describeThisDevice(),
+    timeZone: deviceTimeZone(),
+    location: null,
+    startedAt,
+    lastActiveAt: new Date(now).toISOString(),
+    current: true,
+  };
+}
+
+/**
+ * `GET /account/sessions`
+ *
+ * Returns one session today, and it is a real one: the browser reading the
+ * page. That is the part of "where am I signed in" a client can answer on its
+ * own, and answering it is worth more than it sounds — somebody checking this
+ * page after a scare wants to confirm the device in front of them is the
+ * device the list describes.
+ *
+ * The other devices are the part that needs a service, and the panel says so
+ * rather than padding the list out. Inventing a Safari on an iPhone in a city
+ * the merchant has never visited, each row carrying a Sign out button that
+ * ends nothing, would turn the one screen whose job is to be trusted into the
+ * one screen that cannot be. When `remoteSessions` opens, the body of this
+ * function becomes a `fetch` and the panel renders whatever comes back — it
+ * already renders a list.
+ */
+export async function listSessions(): Promise<ServiceResult<AccountSession[]>> {
+  await settle();
+  return ok([currentSession()]);
+}
+
+/**
+ * `DELETE /account/sessions/{id}`
+ *
+ * Refuses the current session before it checks anything else. Signing yourself
+ * out is a legitimate thing to want and it is what the header's Sign out is
+ * for; reaching it by accident from a list of devices, because your own row
+ * looked like the others, is not. The guard is here rather than only in the UI
+ * because it is the kind of rule that has to survive the second caller.
+ */
+export async function revokeSession(
+  sessionId: string,
+): Promise<ServiceResult<null>> {
+  if (sessionId === CURRENT_SESSION_ID) {
+    return fail(
+      "forbidden",
+      "This is the session you are using. Sign out from the account menu instead.",
+    );
+  }
+
+  await settle();
+
+  if (!CAPABILITIES.remoteSessions) {
+    return fail("service_unavailable", UNAVAILABLE_REASON.remoteSessions);
+  }
+
+  return ok(null);
+}
+
+/**
+ * `DELETE /account/sessions`
+ *
+ * Ends every session except this one and reports how many it ended, which is
+ * the only receipt worth giving: "signed out 3 other devices" is checkable
+ * against what the person expected, and a bare success is not.
+ */
+export async function revokeOtherSessions(): Promise<ServiceResult<number>> {
+  await settle();
+
+  if (!CAPABILITIES.remoteSessions) {
+    return fail("service_unavailable", UNAVAILABLE_REASON.remoteSessions);
+  }
+
+  return ok(0);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Sign-in activity                                                           */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * `GET /account/sign-in-activity`
+ *
+ * Fails with `service_unavailable`, and that is the entire honest answer: a
+ * sign-in log is a record of events that happened somewhere else, at times
+ * this browser was not running, and nothing in it can be reconstructed from
+ * the client. There is no version of this list the front end could produce
+ * that would not be fiction.
+ *
+ * It is written as a failing call rather than left out because the failure is
+ * the useful artefact. The panel renders it as a stated boundary — no retry
+ * button, because there is nothing to retry — and the same panel renders real
+ * rows, with real failed attempts and the alert they raise, the moment the
+ * capability opens. The alternative, an empty list, would say something
+ * different and false: that the account has never been signed into.
+ */
+export async function listSignInActivity(): Promise<
+  ServiceResult<SignInEvent[]>
+> {
+  await settle();
+
+  if (!CAPABILITIES.signInActivity) {
+    return fail("service_unavailable", UNAVAILABLE_REASON.signInActivity);
+  }
+
+  return ok([]);
 }

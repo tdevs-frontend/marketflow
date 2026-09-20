@@ -107,7 +107,7 @@ export const SETTINGS_NAV: SettingsNavGroup[] = [
         href: APP_ROUTES.settingsSecurity,
         icon: ShieldCheck,
         description: "Protect your account and manage authentication.",
-        summary: "Password and two-factor authentication.",
+        summary: "Password, two-factor, sessions and sign-in activity.",
       },
     ],
   },

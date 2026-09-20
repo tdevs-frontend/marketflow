@@ -6,7 +6,7 @@ import { AlertCircle, Check, Loader2 } from "lucide-react";
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import type { ServiceResult } from "@/types/account";
+import type { ServiceError, ServiceResult } from "@/types/account";
 
 /**
  * The four shapes every Settings page is built from.
@@ -349,4 +349,107 @@ export function SaveStatusMessage({
       ) : null}
     </p>
   );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Loading a section                                                          */
+/* -------------------------------------------------------------------------- */
+
+export type QueryStatus = "loading" | "ready" | "error";
+
+export type QueryState<T> =
+  | { status: "loading"; data: null; error: null }
+  | { status: "ready"; data: T; error: null }
+  | { status: "error"; data: null; error: ServiceError };
+
+/**
+ * The read side of `useSaveState`: fetch once, and be honest about where it
+ * got to.
+ *
+ * `useSaveState` covers a panel that *writes* — a form with a save button.
+ * Active Sessions and Sign-in activity are the first panels that *read*, and
+ * reading has a state the writing machine does not: the moment before there is
+ * anything to show. A section that renders nothing then is a section that looks
+ * broken on a slow connection and looks empty on a failed one, which are two
+ * different facts wearing the same blank space.
+ *
+ * Three states, all of them rendered. `loading` is a skeleton shaped like the
+ * rows that will replace it. `ready` may still be empty, and empty is a
+ * legitimate answer that the caller renders as such. `error` carries the
+ * service's own `ServiceError`, code included — which is what lets a caller
+ * tell "this failed, try again" apart from `service_unavailable`, where there
+ * is nothing to retry and a Try again button would be a loop with a button on
+ * it.
+ *
+ * `load` is expected to be a module-level function, not a closure rebuilt each
+ * render; it is held in a ref so that a caller who passes an inline arrow does
+ * not re-fetch on every keystroke somewhere else in the tree.
+ */
+export function useServiceQuery<T>(load: () => Promise<ServiceResult<T>>) {
+  const [state, setState] = useState<QueryState<T>>({
+    status: "loading",
+    data: null,
+    error: null,
+  });
+
+  const loader = useRef(load);
+  const alive = useRef(true);
+
+  useEffect(() => {
+    loader.current = load;
+  }, [load]);
+
+  /**
+   * The fetch itself, which never touches state before it has an answer.
+   *
+   * That is what keeps the mount path out of a cascading render: the initial
+   * state is already `loading`, so setting it again on the way in would be a
+   * synchronous setState inside an effect for no change in what is drawn.
+   */
+  const fetch = useCallback(async () => {
+    const result = await loader.current();
+    if (!alive.current) return;
+
+    setState(
+      result.ok
+        ? { status: "ready", data: result.data, error: null }
+        : { status: "error", data: null, error: result.error },
+    );
+  }, []);
+
+  /**
+   * A retry, from a button. This one *does* return to `loading` first — a Try
+   * again that leaves the error on screen until the second answer arrives
+   * looks like a button that did nothing.
+   */
+  const reload = useCallback(() => {
+    setState({ status: "loading", data: null, error: null });
+    return fetch();
+  }, [fetch]);
+
+  useEffect(() => {
+    alive.current = true;
+    void fetch();
+
+    return () => {
+      alive.current = false;
+    };
+  }, [fetch]);
+
+  /**
+   * Amends what is already loaded, without a round trip.
+   *
+   * For the one case that needs it: a session signed out of should leave the
+   * list immediately, and re-fetching to learn that a row the service just
+   * removed is gone is a request whose answer is already known.
+   */
+  const update = useCallback((next: (data: T) => T) => {
+    setState((current) =>
+      current.status === "ready"
+        ? { status: "ready", data: next(current.data), error: null }
+        : current,
+    );
+  }, []);
+
+  return { state, reload, update };
 }
