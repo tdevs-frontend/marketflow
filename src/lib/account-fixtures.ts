@@ -13,7 +13,6 @@ import {
 } from "@/lib/workspace-fixtures";
 import type {
   AccountUser,
-  Invoice,
   NotificationChannel,
   PlanPeriod,
   Subscription,
@@ -209,31 +208,24 @@ export const PLAN_HISTORY: PlanPeriod[] = PLAN_PERIODS.map(
 );
 
 /* -------------------------------------------------------------------------- */
-/* Invoices                                                                   */
+/* Charges                                                                    */
 /* -------------------------------------------------------------------------- */
 
 /**
- * One receipt per month the workspace has been subscribed, derived from the
- * history above rather than written beside it.
+ * Every time a period would have been billed, from the periods themselves.
  *
- * Derived, because the two lists answer the same question at different
- * resolutions — Plan History says "Business, April to July, $99"; Recent
- * Invoices says "here are the three charges that made up". A hand-written
- * invoice list drifts from the history the first time either is edited, and
- * the merchant who catches it is the one reconciling a statement, which is the
- * worst moment for two screens in the same product to disagree.
+ * Derived rather than written beside them, and that is the whole reason the
+ * billing module now has one history instead of two. A hand-written invoice
+ * list drifts from the plan history the first time either is edited, and the
+ * merchant who catches it is the one reconciling a bank statement — the worst
+ * moment for two screens in the same product to disagree. Here there is nothing
+ * to drift: a period says Business ran April to July at $99, and these are the
+ * three charges that made it up.
  *
- * `documentUrl` is `null` on every one of them, and that is not an oversight.
- * A PDF is *issued by a payment provider*; none is connected, so there is no
- * file to link. The row says so in its action column rather than offering a
- * download that resolves to nothing — the one place a dead link costs most is
- * somebody assembling records for an accountant.
- *
- * Newest first, and capped: "Recent invoices" is a section on a settings page,
- * not the archive. Fourteen months of rows would bury the four sections under
- * it for no gain over the six that answer "what was I last charged".
+ * The month a period is still running is not billed yet. Its next charge is
+ * `renewsAt`, which Current subscription already states, and listing it here
+ * would put a payment in the history that has not been taken.
  */
-const INVOICE_LIMIT = 6;
 
 /** Adds whole months to an ISO instant, clamping a 31st into a short month. */
 function addMonths(iso: string, months: number): Date {
@@ -252,37 +244,36 @@ function addMonths(iso: string, months: number): Date {
   return shifted;
 }
 
-export const INVOICES: Invoice[] = (() => {
-  const issued: { at: Date; amount: number }[] = [];
+/** One charge, before it is dressed as a `Purchase`. */
+export interface PlanCharge {
+  at: string;
+  period: PlanPeriod;
+}
 
-  for (const period of PLAN_HISTORY) {
-    const end = period.endedAt ? new Date(period.endedAt) : new Date(WORKSPACE_NOW);
+/**
+ * The charges a set of periods implies, newest first.
+ *
+ * Exported as a function over periods rather than as a constant, because the
+ * periods are held in the account store and grow: a plan change during the
+ * session closes one and opens another, and the history has to gain its charge
+ * rather than go on describing the workspace as it was at page load.
+ */
+export function chargesFor(periods: PlanPeriod[], now = WORKSPACE_NOW): PlanCharge[] {
+  const charges: PlanCharge[] = [];
 
-    /* One charge on the day the period opened, then on that date each month
-       until it closed. The final month of an open period has not been billed
-       yet — its charge is `renewsAt`, which Current plan already shows. */
-    for (let month = 0; ; month += 1) {
-      const at = addMonths(period.startedAt, month);
+  for (const period of periods) {
+    const end = period.endedAt ? new Date(period.endedAt) : new Date(now);
+    const step = period.period === "yearly" ? 12 : 1;
+
+    for (let index = 0; ; index += 1) {
+      const at = addMonths(period.startedAt, index * step);
       if (at >= end) break;
-      issued.push({ at, amount: period.amount });
+      charges.push({ at: at.toISOString(), period });
     }
   }
 
-  return issued
-    .sort((a, b) => b.at.getTime() - a.at.getTime())
-    .slice(0, INVOICE_LIMIT)
-    .map((charge, index) => ({
-      id: `inv_${charge.at.getTime()}`,
-      /* Counting down from a fixed base so the newest carries the highest
-         number, the way a provider's sequence reads. */
-      number: `INV-${1024 - index}`,
-      issuedAt: charge.at.toISOString(),
-      amount: charge.amount,
-      currency: SUBSCRIPTION.currency,
-      status: "paid" as const,
-      documentUrl: null,
-    }));
-})();
+  return charges.sort((a, b) => b.at.localeCompare(a.at));
+}
 
 /**
  * Plan allowances, per tier.

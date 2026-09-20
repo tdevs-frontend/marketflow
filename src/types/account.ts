@@ -325,36 +325,71 @@ export interface PaymentMethod {
   expiryYear: number;
 }
 
-export type InvoiceStatus = "paid" | "open" | "uncollectible" | "void";
-
 /**
- * One issued invoice.
+ * One charge, and everything a merchant needs to recognise it.
  *
- * Issued by the payment provider, never by this application, which is why
- * every field here is read-only and why `documentUrl` is nullable rather than
- * a route this app could serve. A "Download" that points at a PDF nothing
- * generates is the billing page's version of a dead link, and the one place a
- * merchant is most likely to need the file is an audit.
+ * The billing module used to keep two histories — a list of plan periods and a
+ * list of invoices — and they were the same events described twice. A merchant
+ * reconciling a statement had to hold both open and match them by date, which
+ * is work the product was in a better position to do. This is the merged
+ * record: one row per time money was taken, carrying the tier it bought.
+ *
+ * `PlanPeriod` is still the thing that is *stored*, because a period is what a
+ * plan change creates and what a cancellation ends. A `Purchase` is derived
+ * from it — see `listPurchaseHistory` — which is what keeps the two from ever
+ * disagreeing. There is one history, viewed at the resolution a merchant reads
+ * it: charges.
+ *
+ * Two statuses, because there are genuinely two facts and merging them loses
+ * one. `planState` is what became of the subscription this charge bought —
+ * still running, superseded by an upgrade, cancelled. `paymentState` is what
+ * became of the money. A row can be `ended` and `paid` (an old period, settled)
+ * or `active` and `pending` (a manual payment for the tier being moved to,
+ * awaiting verification), and collapsing those into one word would make the
+ * second indistinguishable from a plan the merchant already has.
  */
-export interface Invoice {
+export interface Purchase {
   id: string;
-  /** The provider's human-readable number, e.g. `INV-1024`. */
-  number: string;
-  /** ISO. */
-  issuedAt: string;
-  /** Whole currency units. */
+  planId: string;
+  planName: string;
+  period: BillingPeriod;
+  /** Whole currency units, for the one charge. */
   amount: number;
   currency: string;
-  status: InvoiceStatus;
-  /** The provider-hosted PDF. `null` when none has been issued. */
-  documentUrl: string | null;
+  /** ISO. When the charge was taken, or the payment submitted. */
+  purchasedAt: string;
+  planState: PurchasePlanState;
+  paymentState: PurchasePaymentState;
+  /**
+   * The provider's human-readable number, e.g. `INV-1024`.
+   *
+   * `null` for a payment nothing has invoiced yet — a manual transfer waiting
+   * on verification is a claim, and an invoice number against it would imply a
+   * document somebody could ask for.
+   */
+  invoiceNumber: string | null;
+  /**
+   * The provider-hosted PDF. `null` when none has been issued.
+   *
+   * Nullable rather than a route this app could serve: a "View invoice" that
+   * points at a PDF nothing generates is the billing page's version of a dead
+   * link, and the one place a merchant is most likely to need the file is an
+   * audit.
+   */
+  invoiceUrl: string | null;
 }
+
+/** What the plan a charge bought is doing now. */
+export type PurchasePlanState = "active" | "ended" | "cancelled" | "pending";
+
+/** What became of the money. */
+export type PurchasePaymentState = "paid" | "pending" | "failed" | "refunded";
 
 /**
  * One period the workspace has spent on a plan.
  *
- * The record behind Plan History, and it is a *history* rather than a list of
- * tiers: a workspace that moved Starter → Growth → Growth billed yearly has
+ * What the store holds, and what every row of Purchased History is derived
+ * from. It is a *history* rather than a list of tiers: a workspace that moved Starter → Growth → Growth billed yearly has
  * three entries, because each one was charged separately and each one is a
  * separate answer to "what was I paying in March".
  *

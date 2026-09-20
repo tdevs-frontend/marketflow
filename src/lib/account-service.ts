@@ -4,7 +4,7 @@ import { env } from "@/config";
 import { PAYMENT_GATEWAYS } from "@/constants/billing";
 import { PLANS, yearlyMonthly } from "@/constants/pricing";
 import { TOTP_CONFIG } from "@/constants/settings";
-import { INVOICES } from "@/lib/account-fixtures";
+import { chargesFor } from "@/lib/account-fixtures";
 import {
   readSnapshot,
   writeAvatar,
@@ -31,12 +31,11 @@ import type {
   AccountSession,
   AccountUser,
   BillingPeriod,
-  Invoice,
   ManualPaymentInput,
   PaymentGateway,
   PaymentRequest,
-  PlanPeriod,
   ProfilePatch,
+  Purchase,
   SecurityState,
   ServiceResult,
   SignInEvent,
@@ -632,52 +631,92 @@ export async function listSignInActivity(): Promise<
 /* -------------------------------------------------------------------------- */
 
 /**
- * `GET /billing/invoices`
+ * `GET /billing/purchases`
  *
- * The charges, newest first, capped at what a settings section should show.
+ * Purchased history: one row per charge, newest first.
  *
- * Seeded from the plan history rather than written separately — see
- * `lib/account-fixtures`. The two lists answer one question at two
- * resolutions, and a hand-written invoice table drifts from the history the
- * first time either is edited.
+ * The module's single history, and it replaced two. There used to be
+ * `listPlanHistory` and `listInvoices`, and they described the same events at
+ * different resolutions — a period said "Business, April to July, $99", three
+ * invoices said what that meant month by month. Keeping both meant a merchant
+ * matching a bank statement had to hold two tables open and join them by date,
+ * and meant this file had two places for the same fact to be wrong in.
  *
- * Ungated. What `CAPABILITIES.invoices` still governs is the *document* behind
- * each row, which a payment provider issues and this build cannot produce; the
- * rows themselves are the workspace's own record of what it was charged.
+ * So periods remain what is *stored* — a plan change creates one, a
+ * cancellation ends one — and charges are derived from them here. Nothing can
+ * disagree, because there is only one record and one reading of it.
+ *
+ * Three things are merged in:
+ *
+ *   **The charges**, from the periods in the store. `chargesFor` walks each
+ *   period's billing dates up to the day it closed, so a plan change made in
+ *   this session gains its own row rather than leaving the history describing
+ *   the workspace as it was at page load.
+ *
+ *   **The invoice reference**, numbered newest-first from a fixed base so the
+ *   most recent charge carries the highest number, the way a provider's
+ *   sequence reads. `invoiceUrl` is `null` on every one: a PDF is a document a
+ *   payment provider issues, none is connected, and a link to a file nothing
+ *   generates is worst exactly where it matters most.
+ *
+ *   **The pending payment**, if one is outstanding. It is a purchase in
+ *   progress and belongs at the top of the list the merchant checks — but it
+ *   carries no invoice number, because an unverified transfer is a claim and a
+ *   number against it would imply a document somebody could ask for.
+ *
+ * `planState` for the open period follows the *subscription* rather than the
+ * period, which is the one place the two can differ: cancelling does not end
+ * the period — the workspace keeps what it paid for until `renewsAt` — so its
+ * charges read `cancelled` while the period itself is still the running one.
  */
-export async function listInvoices(): Promise<ServiceResult<Invoice[]>> {
+export async function listPurchaseHistory(): Promise<ServiceResult<Purchase[]>> {
   await settle();
 
-  return ok(INVOICES);
-}
+  const { planHistory, paymentRequest, subscription } = readSnapshot();
 
-/**
- * `GET /billing/plan-history`
- *
- * Every period this workspace has been billed for, newest first.
- *
- * Ungated, unlike `listInvoices` beside it, and the difference is worth being
- * explicit about. An invoice is a *document a payment provider issued*; with no
- * provider connected there is nothing to hand over, and a PDF this app made up
- * would be the wrong file in front of an auditor. A plan period is the
- * workspace's own subscription record — which tier, which cycle, which dates —
- * seeded by `lib/account-fixtures` from the same tiers, prices and start date
- * every other billing surface reads, and extended by `changePlan` as the
- * session goes on. It is the demo workspace's history in exactly the way
- * `CONTACTS` is the demo workspace's CRM.
- *
- * Ordered here rather than in the panel. Newest first is a property of the
- * collection, and a component that sorts what it renders is a second place for
- * the order to be decided differently.
- */
-export async function listPlanHistory(): Promise<ServiceResult<PlanPeriod[]>> {
-  await settle();
+  const charges = chargesFor(planHistory);
 
-  return ok(
-    [...readSnapshot().planHistory].sort((a, b) =>
-      b.startedAt.localeCompare(a.startedAt),
-    ),
-  );
+  const purchases: Purchase[] = charges.map((charge, index) => {
+    const open = charge.period.endedAt === null;
+
+    return {
+      id: `pur_${charge.period.id}_${charge.at}`,
+      planId: charge.period.planId,
+      planName: charge.period.planName,
+      period: charge.period.period,
+      amount: charge.period.amount,
+      currency: charge.period.currency,
+      purchasedAt: charge.at,
+      planState: open
+        ? subscription.status === "cancelled"
+          ? "cancelled"
+          : "active"
+        : "ended",
+      paymentState: "paid",
+      /* Counting down from a fixed base, so adding a charge at the top does
+         not renumber every receipt below it. */
+      invoiceNumber: `INV-${1024 - index}`,
+      invoiceUrl: null,
+    };
+  });
+
+  if (paymentRequest && paymentRequest.status === "pending") {
+    purchases.unshift({
+      id: paymentRequest.id,
+      planId: paymentRequest.planId,
+      planName: paymentRequest.planName,
+      period: paymentRequest.period,
+      amount: paymentRequest.amount,
+      currency: paymentRequest.currency,
+      purchasedAt: paymentRequest.paidAt,
+      planState: "pending",
+      paymentState: "pending",
+      invoiceNumber: null,
+      invoiceUrl: null,
+    });
+  }
+
+  return ok(purchases);
 }
 
 /**

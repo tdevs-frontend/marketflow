@@ -61,9 +61,10 @@ interface Snapshot {
    *
    * In the snapshot rather than read straight from the fixtures, because a
    * plan change has to *land* somewhere. Switching tiers closes the open
-   * period and opens a new one, so Plan History goes on agreeing with the
-   * Current plan card a tab away — a history that still calls the old tier
-   * active is the same defect as a stale toast, arrived at more slowly.
+   * period and opens a new one, so Purchased History goes on agreeing with
+   * the Current subscription card a tab away — a history that still calls the
+   * old tier active is the same defect as a stale toast, arrived at more
+   * slowly.
    */
   planHistory: PlanPeriod[];
   /**

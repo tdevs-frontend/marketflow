@@ -15,17 +15,16 @@ import {
 
 import { BillingContact } from "./billing-contact";
 import { CurrentSubscription, PlanUsage } from "./current-subscription";
-import { InvoiceList } from "./invoice-list";
 import { PaymentMethod } from "./payment-method";
-import { PlanHistory } from "./plan-history";
 import { PlansAndPricing } from "./plans-pricing";
+import { PurchasedHistory } from "./purchased-history";
 
 /**
  * Billing & Subscription — three tabs, and the split between them is the point.
  *
  *   **Billing Information** is the standing record: what this workspace is on,
- *   what it is used against, what would be charged, who the invoice is
- *   addressed to and what has been charged before. Dashboard design throughout
+ *   what it is used against, what would be charged and who the invoice is
+ *   addressed to. What has already been charged is the third tab's job. Dashboard design throughout
  *   — the same cards, rules and spacing as every other Settings page.
  *
  *   **Plans & Pricing** is what else is available, and renders the *actual
@@ -34,23 +33,27 @@ import { PlansAndPricing } from "./plans-pricing";
  *   file. Choosing a tier there starts the checkout rather than switching the
  *   plan, because a change of tier is a change of what is charged.
  *
- *   **Plan History** is the ledger: one row per billed period, newest first. A
- *   tab rather than a card beside the pricing grid, because "what could I move
- *   to" and "what have I been paying" are opposite questions, and a history
- *   panel wedged next to four pricing cards competes with the decision those
- *   cards exist to support.
+ *   **Purchased History** is the ledger: one row per charge, newest first,
+ *   each carrying the tier it bought and the invoice reference behind it. It
+ *   is one table because the two it replaced — plan periods and recent
+ *   invoices — were the same events at two resolutions, and a merchant
+ *   reconciling a statement should not have to join them by date. A tab rather
+ *   than a card beside the pricing grid, because "what could I move to" and
+ *   "what have I been paying" are opposite questions, and a history panel
+ *   wedged next to four pricing cards competes with the decision those cards
+ *   exist to support.
  *
  * Which is why the pricing tab deliberately does *not* share a card style with
  * the other two. It is supposed to feel like the pricing page opened inside the
  * dashboard — featured tier, gradient rule, Most popular badge, the same
- * billing toggle, the same buttons — while Billing Information and Plan History
- * are supposed to feel like settings. Flattening the tiers into dashboard cards
+ * billing toggle, the same buttons — while Billing Information and Purchased
+ * History are supposed to feel like settings. Flattening the tiers into dashboard cards
  * would have been the easy mistake.
  *
  * What is honest here, and what is not, is the module's organising rule:
  *
- *   **Real.** The plan, its price, the renewal date, the usage, the plan
- *   history and the invoice records. The tiers come from `constants/pricing`,
+ *   **Real.** The plan, its price, the renewal date, the usage and the
+ *   purchase records. The tiers come from `constants/pricing`,
  *   so there is one answer to what MarketFlow costs; every usage figure is
  *   counted from this workspace — contacts are rows in the CRM, message counts
  *   are summed from what campaigns sent. A merchant checks a usage meter
@@ -85,7 +88,7 @@ type BillingTab = "billing" | "plans" | "history";
 const TABS: TabItem<BillingTab>[] = [
   { value: "billing", label: "Billing Information" },
   { value: "plans", label: "Plans & Pricing" },
-  { value: "history", label: "Plan History" },
+  { value: "history", label: "Purchased History" },
 ];
 
 /** `?tab=` is anybody's to type, so it is checked against the strip itself. */
@@ -177,7 +180,6 @@ export function BillingSettings() {
           <PlanUsage />
           <PaymentMethod canManage={canManage} />
           <BillingContact />
-          <InvoiceList />
         </TabPanel>
       ) : tab === "plans" ? (
         <TabPanel idBase={idBase} value="plans" className="space-y-6">
@@ -188,7 +190,7 @@ export function BillingSettings() {
         </TabPanel>
       ) : (
         <TabPanel idBase={idBase} value="history" className="space-y-6">
-          <PlanHistory />
+          <PurchasedHistory />
         </TabPanel>
       )}
     </>
