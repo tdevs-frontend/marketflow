@@ -5,11 +5,13 @@ import { useSyncExternalStore } from "react";
 import {
   CURRENT_ACCOUNT,
   DEFAULT_NOTIFICATION_POLICY,
+  PLAN_HISTORY,
   SUBSCRIPTION,
   defaultNotificationPreferences,
 } from "@/lib/account-fixtures";
 import type {
   AccountUser,
+  PlanPeriod,
   SecurityState,
   Subscription,
   TwoFactorEnrollment,
@@ -54,6 +56,16 @@ interface Snapshot {
   security: SecurityState;
   subscription: Subscription;
   /**
+   * Every period the workspace has been billed for, newest first.
+   *
+   * In the snapshot rather than read straight from the fixtures, because a
+   * plan change has to *land* somewhere. Switching tiers closes the open
+   * period and opens a new one, so Plan History goes on agreeing with the
+   * Current plan card a tab away — a history that still calls the old tier
+   * active is the same defect as a stale toast, arrived at more slowly.
+   */
+  planHistory: PlanPeriod[];
+  /**
    * The enrolment in flight, held here rather than in the dialog's state so
    * that closing the dialog and reopening it does not mint a second secret
    * while the first is already half-entered on somebody's phone.
@@ -76,6 +88,7 @@ const INITIAL: Snapshot = {
     passwordChangedAt: null,
   },
   subscription: SUBSCRIPTION,
+  planHistory: PLAN_HISTORY,
   enrollment: null,
   totpSecret: null,
   recoveryCodes: [],
@@ -181,6 +194,29 @@ export function writeSecurity(patch: Partial<SecurityState>) {
  */
 export function writeSubscription(patch: Partial<Subscription>) {
   commit({ ...snapshot, subscription: { ...snapshot.subscription, ...patch } });
+}
+
+/**
+ * Closes the period that was running and opens the one that replaces it.
+ *
+ * Called by `changePlan` alongside `writeSubscription`, and deliberately not
+ * folded into it: cancelling also writes the subscription, and a cancellation
+ * does *not* end the period — the workspace keeps the plan it paid for until
+ * `renewsAt`. One mutator for "the agreement changed" and another for "a period
+ * ended" is what keeps those two apart.
+ *
+ * `at` is the boundary, and the same instant is written to both rows. A close
+ * date that is a millisecond before the next open date leaves a gap a reader
+ * can see; two timestamps taken separately eventually produce one.
+ */
+export function writePlanPeriod(opened: PlanPeriod, at: string) {
+  const closed = snapshot.planHistory.map((period) =>
+    period.endedAt === null
+      ? ({ ...period, endedAt: at, status: "ended" } as PlanPeriod)
+      : period,
+  );
+
+  commit({ ...snapshot, planHistory: [{ ...opened, startedAt: at }, ...closed] });
 }
 
 export function writeEnrollment(enrollment: TwoFactorEnrollment | null) {

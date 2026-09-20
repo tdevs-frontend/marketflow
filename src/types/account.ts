@@ -359,9 +359,9 @@ export interface Invoice {
  * separate answer to "what was I paying in March".
  *
  * `endedAt` is `null` for exactly one entry — the period running now, which is
- * also the one carrying `current`. An open period has no end date, and filling
- * it with the next renewal date would state as settled something that has not
- * been charged yet.
+ * also the only one whose `status` is `active`. An open period has no end date,
+ * and filling it with the next renewal date would state as settled something
+ * that has not been charged yet.
  *
  * `planName` is carried on the entry rather than looked up from
  * `constants/pricing`. A tier that is renamed or retired must not silently
@@ -380,10 +380,19 @@ export interface PlanPeriod {
   startedAt: string;
   /** ISO. `null` while this is the period currently running. */
   endedAt: string | null;
-  status: SubscriptionStatus;
-  /** The period the workspace is on right now. Exactly one entry, or none. */
-  current: boolean;
+  status: PlanPeriodStatus;
 }
+
+/**
+ * A *period's* state, which is not a subscription's.
+ *
+ * Two values, because a closed period only ever answers one question — is this
+ * the one running, or is it over. `SubscriptionStatus` describes the agreement
+ * as it stands today (trialing, past due, cancelled); a period that ended
+ * fourteen months ago when the workspace moved up a tier was none of those, and
+ * labelling it `cancelled` would tell a merchant they once quit.
+ */
+export type PlanPeriodStatus = "active" | "ended";
 
 /** One metered allowance on the plan. */
 export interface UsageMetric {

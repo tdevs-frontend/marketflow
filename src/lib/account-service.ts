@@ -10,6 +10,7 @@ import {
   writePolicy,
   writePreferences,
   writeRecoveryCodes,
+  writePlanPeriod,
   writeSecurity,
   writeSubscription,
   writeTwoFactorActive,
@@ -130,22 +131,21 @@ export interface AccountCapabilities {
   /**
    * Moving the workspace between plans, and cancelling.
    *
-   * Separate from `payment` although both wait on the same integration: one
-   * is about the instrument, the other about the agreement, and a workspace
-   * could plausibly have a card on file before self-serve plan changes exist.
+   * Separate from `payment`, and no longer tied to it. One is about the
+   * *instrument* and one about the *agreement*: which tier a workspace is on
+   * decides its allowances, and this build genuinely records that — the store
+   * holds the new tier, the usage meters re-measure against its limits and
+   * every surface reading the subscription agrees. What it does not do is move
+   * money, which is `payment`'s question and still answered no.
+   *
+   * So the plan buttons work, for the session, and the notice above them says
+   * exactly that. A disabled control here would have been the stricter choice
+   * and the less honest one: it implies the product cannot model a plan
+   * change, when what it cannot do is bill for one.
    */
   planChange: boolean;
   /** Downloadable invoices. Issued by the payment provider, so: no. */
   invoices: boolean;
-  /**
-   * The plans this workspace was on before the one it is on now.
-   *
-   * Separate from `invoices`, although both wait on the same integration, and
-   * separate from what the store already knows. The period running *now* is a
-   * local record and is always listed; every period before it was closed by a
-   * billing system, and nothing in this browser kept it.
-   */
-  planHistory: boolean;
   /** Creating and revoking API keys. */
   apiKeys: boolean;
 }
@@ -161,9 +161,8 @@ export const CAPABILITIES: AccountCapabilities = {
   remoteSessions: !SESSION_MODE,
   signInActivity: !SESSION_MODE,
   payment: !SESSION_MODE,
-  planChange: !SESSION_MODE,
+  planChange: true,
   invoices: !SESSION_MODE,
-  planHistory: !SESSION_MODE,
   apiKeys: true,
 };
 
@@ -192,11 +191,9 @@ export const UNAVAILABLE_REASON: Record<keyof AccountCapabilities, string> = {
   payment:
     "No payment provider is connected, so no card can be stored against this workspace.",
   planChange:
-    "Changing or cancelling a plan changes what is charged. No payment provider is connected, so nothing can be.",
+    "Changing a plan is recorded for this session only. No payment provider is connected, so nothing is charged.",
   invoices:
     "Invoices are issued by the payment provider. None is connected, so there are none to list.",
-  planHistory:
-    "Earlier billing periods are closed and kept by the payment provider. None is connected, so only the period running now can be listed.",
   apiKeys: "",
 };
 
@@ -646,28 +643,30 @@ export async function listInvoices(): Promise<ServiceResult<Invoice[]>> {
 /**
  * `GET /billing/plan-history`
  *
- * The closed periods — every plan this workspace was on and has since left.
+ * Every period this workspace has been billed for, newest first.
  *
- * Fails with `service_unavailable` for the reason the invoice list does: a
- * period ends when a billing system decides it has ended, and none is
- * connected, so nothing here witnessed the ones that came before. The panel
- * reads that failure as "there is no *archive*", not as "there is no history",
- * and still lists the period running now — that one is the workspace's own
- * record, held in the store, and it is the row a merchant actually came to
- * check.
+ * Ungated, unlike `listInvoices` beside it, and the difference is worth being
+ * explicit about. An invoice is a *document a payment provider issued*; with no
+ * provider connected there is nothing to hand over, and a PDF this app made up
+ * would be the wrong file in front of an auditor. A plan period is the
+ * workspace's own subscription record — which tier, which cycle, which dates —
+ * seeded by `lib/account-fixtures` from the same tiers, prices and start date
+ * every other billing surface reads, and extended by `changePlan` as the
+ * session goes on. It is the demo workspace's history in exactly the way
+ * `CONTACTS` is the demo workspace's CRM.
  *
- * Inventing two earlier rows would be the cheapest lie on the page and the
- * most expensive to discover: a merchant reconciling a bank statement against
- * a plan they never bought.
+ * Ordered here rather than in the panel. Newest first is a property of the
+ * collection, and a component that sorts what it renders is a second place for
+ * the order to be decided differently.
  */
 export async function listPlanHistory(): Promise<ServiceResult<PlanPeriod[]>> {
   await settle();
 
-  if (!CAPABILITIES.planHistory) {
-    return fail("service_unavailable", UNAVAILABLE_REASON.planHistory);
-  }
-
-  return ok([]);
+  return ok(
+    [...readSnapshot().planHistory].sort((a, b) =>
+      b.startedAt.localeCompare(a.startedAt),
+    ),
+  );
 }
 
 /**
@@ -699,7 +698,37 @@ export async function changePlan(
   const amount =
     period === "yearly" ? yearlyMonthly(plan.monthly) * 12 : plan.monthly;
 
+  const { subscription } = readSnapshot();
+  const changed =
+    subscription.planId !== planId || subscription.period !== period;
+
   writeSubscription({ planId, period, amount });
+
+  /*
+   * The history gains a period only when something about the agreement
+   * actually moved. Pressing "Change plan" on the tier you are already on, or
+   * re-selecting the cycle you are already billed on, is a no-op — and a
+   * ledger that grows a zero-length row every time somebody clicks is a ledger
+   * nobody trusts to be a record of anything.
+   */
+  if (changed) {
+    const now = new Date().toISOString();
+    writePlanPeriod(
+      {
+        id: `per_${now}`,
+        planId,
+        planName: plan.name,
+        period,
+        amount,
+        currency: subscription.currency,
+        startedAt: now,
+        endedAt: null,
+        status: "active",
+      },
+      now,
+    );
+  }
+
   return ok(readSnapshot().subscription);
 }
 

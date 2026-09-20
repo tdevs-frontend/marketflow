@@ -1,4 +1,4 @@
-import { PLANS } from "@/constants/pricing";
+import { PLANS, type Plan, type PlanTier } from "@/constants/pricing";
 import { ROLE_LABEL, type MerchantRole } from "@/constants/roles";
 import { NOTIFICATION_EVENTS } from "@/constants/settings";
 import { CONTACTS } from "@/lib/customer-fixtures";
@@ -14,6 +14,7 @@ import {
 import type {
   AccountUser,
   NotificationChannel,
+  PlanPeriod,
   Subscription,
   UsageMetric,
   UserNotificationPreferences,
@@ -139,6 +140,72 @@ export const SUBSCRIPTION: Subscription = {
   trialEndsAt: null,
   paymentMethod: null,
 };
+
+/* -------------------------------------------------------------------------- */
+/* Plan history                                                               */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The periods this workspace has been billed for, oldest last.
+ *
+ * Demo records, in the same sense as `SUBSCRIPTION` above and the contacts and
+ * campaigns every other module is seeded from: this is what the account service
+ * *would* return, shaped exactly as `PlanPeriod`, so standing up a real
+ * endpoint replaces `listPlanHistory`'s body and nothing else in Settings
+ * notices.
+ *
+ * Three rules keep it from contradicting the rest of the product, which is the
+ * only way seeded data is worth more than an empty table:
+ *
+ *   **Prices are looked up, never typed.** `$49` appears nowhere below; the
+ *   amount comes from the tier in `constants/pricing`, the same place the
+ *   pricing page and the Current plan card read. Editing a tier's price cannot
+ *   leave the history quoting a number the product never charged.
+ *
+ *   **The chain is continuous.** Each period opens the day the one before it
+ *   closed, so there is no month the workspace was apparently on nothing.
+ *
+ *   **It agrees with the subscription.** The open period *is* `SUBSCRIPTION` —
+ *   same tier, same cycle, same amount — and the oldest period opens on
+ *   `SUBSCRIPTION.startedAt`, which is the date Billing Information shows as
+ *   "Subscribed since". The two tabs cannot be caught disagreeing.
+ *
+ * The arc is an ordinary one: started small, grew into the featured tier, tried
+ * the one above it for a quarter, came back down.
+ */
+const PLAN_PERIODS: {
+  id: string;
+  plan: PlanTier;
+  /** Days before `WORKSPACE_NOW` the period opened. */
+  from: number;
+  /** Days before it closed, or `null` while it is the one running. */
+  to: number | null;
+}[] = [
+  { id: "per_0004", plan: "growth", from: 60, to: null },
+  { id: "per_0003", plan: "business", from: 150, to: 60 },
+  { id: "per_0002", plan: "growth", from: 300, to: 150 },
+  { id: "per_0001", plan: "starter", from: 420, to: 300 },
+];
+
+const tier = (id: PlanTier): Plan | undefined =>
+  PLANS.find((plan) => plan.id === id);
+
+export const PLAN_HISTORY: PlanPeriod[] = PLAN_PERIODS.map(
+  ({ id, plan, from, to }) => ({
+    id,
+    planId: plan,
+    planName: tier(plan)?.name ?? plan,
+    period: "monthly",
+    amount: tier(plan)?.monthly ?? 0,
+    currency: SUBSCRIPTION.currency,
+    startedAt: daysAgo(from),
+    endedAt: to === null ? null : daysAgo(to),
+    /* Derived from the dates rather than set beside them: a row that says
+       "Ended" with no end date, or "Active" with one, is a table nobody can
+       read twice the same way. */
+    status: to === null ? "active" : "ended",
+  }),
+);
 
 /**
  * Plan allowances, per tier.

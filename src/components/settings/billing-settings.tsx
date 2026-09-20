@@ -23,6 +23,7 @@ import {
   CAPABILITIES,
   UNAVAILABLE_REASON,
   cancelSubscription,
+  changePlan,
   listInvoices,
   listPlanHistory,
 } from "@/lib/account-service";
@@ -38,6 +39,7 @@ import type {
   Invoice,
   InvoiceStatus,
   PlanPeriod,
+  PlanPeriodStatus,
   SubscriptionStatus,
   UsageMetric,
 } from "@/types/account";
@@ -46,6 +48,7 @@ import { SectionError } from "./active-sessions-card";
 import { ServiceNotice } from "./service-notice";
 import {
   DetailList,
+  SaveStatusMessage,
   SettingsSection,
   useSaveState,
   useServiceQuery,
@@ -84,19 +87,25 @@ import {
  * What is honest here, and what is not, is unchanged and still the page's
  * organising rule:
  *
- *   **Real.** The plan, its price, the renewal date and the usage. The tiers
- *   come from `constants/pricing`, so there is one answer to what MarketFlow
- *   costs; every usage figure is counted from this workspace — contacts are
- *   rows in the CRM, message counts are summed from what campaigns sent. A
- *   merchant checks a usage meter against their own knowledge of the business,
- *   and a hand-written number is the one they catch.
+ *   **Real.** The plan, its price, the renewal date, the usage and the plan
+ *   history. The tiers come from `constants/pricing`, so there is one answer
+ *   to what MarketFlow costs; every usage figure is counted from this
+ *   workspace — contacts are rows in the CRM, message counts are summed from
+ *   what campaigns sent. A merchant checks a usage meter against their own
+ *   knowledge of the business, and a hand-written number is the one they
+ *   catch.
  *
- *   **Not real, and shown as such.** The payment method, the invoices, and any
- *   change to the subscription. No payment provider is integrated. A card
- *   ending in 4242 would be the most expensive fiction in the product —
- *   somebody who believes a card is on file believes their service cannot
- *   lapse — and a "plan changed" confirmation that changes no charge is its
- *   equal. Those are empty states and disabled controls that say why.
+ *   **Real for the session, and shown as such.** Moving between tiers. The
+ *   store records the new plan, the meters re-measure against its allowances
+ *   and every surface reading the subscription agrees — what does not happen
+ *   is a charge, and the notice on the pricing tab says so. Modelling a plan
+ *   change is not the same claim as billing for one.
+ *
+ *   **Not real, and shown as such.** The payment method and the invoices. No
+ *   payment provider is integrated. A card ending in 4242 would be the most
+ *   expensive fiction in the product — somebody who believes a card is on file
+ *   believes their service cannot lapse. Those are empty states and disabled
+ *   controls that say why.
  *
  * The billing contact is neither: it is the workspace's own business record,
  * which Workspace Settings owns. It is shown here read-only with a link,
@@ -203,7 +212,7 @@ export function BillingSettings() {
         </TabPanel>
       ) : tab === "plans" ? (
         <TabPanel idBase={idBase} value="plans" className="space-y-6">
-          <PlansAndPricing />
+          <PlansAndPricing canManage={canManage} />
         </TabPanel>
       ) : (
         <TabPanel idBase={idBase} value="history" className="space-y-6">
@@ -584,6 +593,13 @@ function SubscriptionActions({ canManage }: { canManage: boolean }) {
   const cancelled = subscription.status === "cancelled";
   const allowed = canManage && CAPABILITIES.planChange;
 
+  /* Two different refusals behind one disabled button, and the reader is owed
+     the one that applies to them. A viewer who is told "no payment provider is
+     connected" goes looking for the integration rather than for an admin. */
+  const reason = canManage
+    ? UNAVAILABLE_REASON.planChange
+    : "Cancelling a subscription is not available to your role.";
+
   return (
     <SettingsSection
       title="Subscription"
@@ -619,15 +635,7 @@ function SubscriptionActions({ canManage }: { canManage: boolean }) {
             Cancel subscription
           </Button>
         ) : (
-          <UnavailableAction
-            reason={
-              canManage
-                ? UNAVAILABLE_REASON.planChange
-                : "Cancelling a subscription is not available to your role."
-            }
-          >
-            Cancel subscription
-          </UnavailableAction>
+          <UnavailableAction reason={reason}>Cancel subscription</UnavailableAction>
         )}
       </div>
 
@@ -639,7 +647,7 @@ function SubscriptionActions({ canManage }: { canManage: boolean }) {
         {state.status === "error" ? (
           <span className="font-medium text-error-text">{state.message}</span>
         ) : allowed || cancelled ? null : (
-          UNAVAILABLE_REASON.planChange
+          reason
         )}
       </p>
 
@@ -679,20 +687,37 @@ function SubscriptionActions({ canManage }: { canManage: boolean }) {
  * exists to clear the marketing heading; with the tab strip directly above it
  * here, it is a gap between two things this page has already spaced.
  *
- * One notice above the grid, because the tiers carry buttons and the buttons
- * cannot do anything yet. Stated once here rather than as a tooltip on each of
- * three disabled controls — a merchant who meets the same sentence three times
- * reads it as a fault rather than as a boundary.
+ * The buttons are live, and they are the landing page's buttons — same
+ * component, same `primary`/`dark` variants, same hover and active states.
+ * Pressing one calls `changePlan`, which moves the workspace onto that tier in
+ * the account store: the Current marker moves here, the Current plan card on
+ * the first tab changes, and the usage meters re-measure against the new
+ * allowances. Nothing is charged, because no payment provider is connected,
+ * and the notice above the grid says so once rather than three disabled
+ * buttons implying the product cannot model a plan change at all.
  */
-function PlansAndPricing() {
+function PlansAndPricing({ canManage }: { canManage: boolean }) {
   const subscription = useSubscription();
+  const permissions = useWorkspacePermissions();
+  const { state, run } = useSaveState();
+
+  const allowed = canManage && CAPABILITIES.planChange;
 
   return (
     <>
-      <ServiceNotice tone="unavailable" title="Plan changes are not live yet">
-        {UNAVAILABLE_REASON.planChange} The plans and prices below are the same
-        ones the public pricing page shows, and your current tier is marked.
+      <ServiceNotice
+        tone="session"
+        title="Plan changes are kept for this session"
+      >
+        Switching tiers here moves this workspace onto the new plan and its
+        allowances straight away. No payment provider is connected, so nothing
+        is charged and the change starts fresh on reload.
       </ServiceNotice>
+
+      {/* The outcome, announced rather than merely drawn. Success needs no
+          sentence — the Current marker moves to the tier that was pressed,
+          which is the same fact said where the reader is already looking. */}
+      <SaveStatusMessage state={state} />
 
       <PricingPlans
         /* Looked up rather than cast: the subscription carries a plan id as a
@@ -702,7 +727,20 @@ function PlansAndPricing() {
           PLANS.find((plan) => plan.id === subscription.planId)?.id ?? null
         }
         defaultBilling={subscription.period}
-        changeDisabledReason={UNAVAILABLE_REASON.planChange}
+        onChangePlan={
+          allowed
+            ? (plan, billing) => void run(() => changePlan(plan.id, billing))
+            : undefined
+        }
+        /* Two different refusals, and they must not be worded as one. A
+           viewer is told about their role; a manager on a build with the
+           capability closed is told about the provider. */
+        changeDisabledReason={
+          canManage
+            ? UNAVAILABLE_REASON.planChange
+            : permissionHint("changing the plan", permissions.roleName)
+        }
+        changeBusy={state.status === "saving"}
         topSpacing={false}
       />
     </>
@@ -713,155 +751,100 @@ function PlansAndPricing() {
 /* Tab 3 — Plan History                                                       */
 /* -------------------------------------------------------------------------- */
 
+/** Two states a period can be in, and the badge each one wears. */
+const PERIOD_STATUS: Record<
+  PlanPeriodStatus,
+  { label: string; tone: BadgeTone }
+> = {
+  active: { label: "Active", tone: "success" },
+  ended: { label: "Ended", tone: "neutral" },
+};
+
 /**
  * What this workspace has been billed for, one row per period.
  *
- * Two sources, and the panel is built so a reader can tell which row came from
- * where without being told twice:
+ * A table, not cards. The pricing tab one along is four tiers laid out to be
+ * *compared*, which is why it gets the full landing-page treatment; this is a
+ * ledger, read down a column — was I on Growth in March, what did it cost, when
+ * did it end. Repeating the pricing card design here would make a record of the
+ * past look like an offer, and the two tabs would stop being distinguishable at
+ * a glance.
  *
- *   The period running **now** is the workspace's own record. Its plan, cycle,
- *   price and start date are the same facts the Billing Information tab shows
- *   in a card, arranged the way a history wants them. Nothing about it is
- *   guessed, so it is listed whether or not a provider is connected.
+ * Six columns and no more, because they are the six a merchant reconciles a
+ * bank statement against. No invoice number: that belongs to the receipt, and
+ * Recent invoices on the first tab is where a receipt is looked up.
  *
- *   Every period **before** it was closed by a billing system. None is
- *   connected, so `listPlanHistory` refuses rather than returning `[]` —
- *   "nothing earlier exists" and "nothing here can tell you what came earlier"
- *   are different answers, and only the second is true. The notice above the
- *   table says that once.
- *
- * What is deliberately absent is invented rows. A plausible three-line history
- * of plans a merchant never bought is the one fiction on this page that would
- * survive being read, believed, and carried as far as their accountant.
- *
- * The columns are the six a merchant reconciles a bank statement against, and
- * no more: plan, cycle, amount, start, end, status. No invoice number — that
- * belongs to the receipt, and Recent invoices on the first tab is where a
- * receipt is looked up.
+ * The rows come from `listPlanHistory`, already ordered newest first — the
+ * panel renders what the service hands it and sorts nothing, so there is one
+ * place the order is decided. In this build they are the demo workspace's own
+ * records from `lib/account-fixtures`, derived from the same tiers and prices
+ * the pricing page reads; a real endpoint replaces that one function body.
  */
 function PlanHistory() {
-  const subscription = useSubscription();
-
   const load = useCallback(() => listPlanHistory(), []);
   const { state, reload } = useServiceQuery(load);
 
-  /* Looked up rather than assumed: a tier retired from `constants/pricing`
-     still has to render as the id it was bought under, not as nothing. */
-  const plan = PLANS.find((item) => item.id === subscription.planId);
-
-  /*
-   * `null` for a workspace that has never started a subscription — the one
-   * case where this tab genuinely has nothing to list, and what the empty
-   * state below is for.
-   */
-  const current: PlanPeriod | null = subscription.startedAt
-    ? {
-        id: "current",
-        planId: subscription.planId,
-        planName: plan?.name ?? subscription.planId,
-        period: subscription.period,
-        amount: subscription.amount,
-        currency: subscription.currency,
-        startedAt: subscription.startedAt,
-        /* A cancelled subscription has an end date and it is already decided.
-           A running one does not, and its next renewal is not that date. */
-        endedAt:
-          subscription.status === "cancelled" ? subscription.renewsAt : null,
-        status: subscription.status,
-        current: true,
-      }
-    : null;
-
-  const unavailable =
-    state.status === "error" && state.error.code === "service_unavailable";
-
-  /* The archive being unreachable is not a reason to withhold the period this
-     workspace knows about for certain. */
-  const showTable = state.status === "ready" || unavailable;
-
-  /* Newest first: the open period, then the closed ones in the order the
-     service returned them. */
-  const periods = [...(current ? [current] : []), ...(state.data ?? [])];
+  const periods = state.data ?? [];
 
   return (
-    <>
-      {unavailable ? (
-        <ServiceNotice
-          tone="unavailable"
-          title="Only the current period is on record"
-        >
-          {state.status === "error" ? state.error.message : null} The period
-          below is read from this workspace itself; earlier ones will appear
-          above it once a provider is connected.
-        </ServiceNotice>
+    <SettingsSection
+      title="Plan History"
+      description="View your previous plans and subscription changes."
+      bodyClassName={
+        state.status === "ready" && periods.length > 0 ? "p-0" : undefined
+      }
+    >
+      {state.status === "loading" ? <PlanHistorySkeleton /> : null}
+
+      {state.status === "error" ? (
+        <SectionError message={state.error.message} onRetry={() => void reload()} />
       ) : null}
 
-      <SettingsSection
-        title="Plan history"
-        description="Every period this workspace has been billed for, newest first."
-        bodyClassName={showTable && periods.length > 0 ? "p-0" : undefined}
-      >
-        {state.status === "loading" ? <PlanHistorySkeleton /> : null}
-
-        {state.status === "error" && !unavailable ? (
-          <SectionError message={state.error.message} onRetry={() => void reload()} />
-        ) : null}
-
-        {showTable ? (
-          periods.length === 0 ? (
-            <EmptyState
-              compact
-              title="No plan history yet"
-              description="Each period this workspace is billed for will be listed here, from the day it subscribes."
-            />
-          ) : (
-            <div className="px-5 py-1">
-              <Table minWidth="48rem">
-                <THead>
-                  <TH>Plan</TH>
-                  <TH>Billing cycle</TH>
-                  <TH>Amount</TH>
-                  <TH>Start date</TH>
-                  <TH>End date</TH>
-                  <TH>Status</TH>
-                </THead>
-                <TBody>
-                  {periods.map((period) => (
-                    <PlanPeriodRow key={period.id} period={period} />
-                  ))}
-                </TBody>
-              </Table>
-            </div>
-          )
-        ) : null}
-      </SettingsSection>
-    </>
+      {state.status === "ready" ? (
+        periods.length === 0 ? (
+          <EmptyState
+            compact
+            title="No plan history yet"
+            description="Each period this workspace is billed for will be listed here, from the day it subscribes."
+          />
+        ) : (
+          <div className="px-5 py-1">
+            <Table minWidth="48rem">
+              <THead>
+                <TH>Plan</TH>
+                <TH>Billing Cycle</TH>
+                <TH>Amount</TH>
+                <TH>Start Date</TH>
+                <TH>End Date</TH>
+                <TH>Status</TH>
+              </THead>
+              <TBody>
+                {periods.map((period) => (
+                  <PlanPeriodRow key={period.id} period={period} />
+                ))}
+              </TBody>
+            </Table>
+          </div>
+        )
+      ) : null}
+    </SettingsSection>
   );
 }
 
 function PlanPeriodRow({ period }: { period: PlanPeriod }) {
-  const status = STATUS[period.status];
+  const status = PERIOD_STATUS[period.status];
 
   return (
     <TR>
-      <TD className="font-semibold text-text-primary">
-        {/* A span rather than a second column: the badge qualifies the plan
-            name and belongs beside it, and a "Current" column would be five
-            empty cells for one filled one. */}
-        <span className="flex flex-wrap items-center gap-2">
-          {period.planName}
-          {period.current ? (
-            <Badge tone="info" size="sm">
-              Current
-            </Badge>
-          ) : null}
-        </span>
-      </TD>
+      <TD className="font-semibold text-text-primary">{period.planName}</TD>
       <TD className="text-text-secondary">
         {period.period === "yearly" ? "Yearly" : "Monthly"}
       </TD>
       <TD className="text-text-secondary tabular-nums">
         {formatCurrency(period.amount, period.currency)}
+        <span className="text-text-muted">
+          {period.period === "yearly" ? " / year" : " / month"}
+        </span>
       </TD>
       <TD className="text-text-secondary tabular-nums">
         {formatDate(period.startedAt)}
@@ -895,7 +878,7 @@ function PlanHistorySkeleton() {
   return (
     <>
       <div aria-hidden>
-        <SkeletonTable rows={3} columns={6} />
+        <SkeletonTable rows={4} columns={6} />
       </div>
       <span className="sr-only">Loading your plan history…</span>
     </>

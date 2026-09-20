@@ -106,14 +106,16 @@ function PlanCard({
   current,
   onChangePlan,
   changeDisabledReason,
+  changeBusy = false,
 }: {
   plan: Plan;
   billing: Billing;
   /** Rendered for a signed-in account rather than for a visitor. */
   account: boolean;
   current: boolean;
-  onChangePlan?: (plan: Plan) => void;
+  onChangePlan?: (plan: Plan, billing: Billing) => void;
   changeDisabledReason?: string;
+  changeBusy?: boolean;
 }) {
   const featured = Boolean(plan.featured);
   const priced = plan.monthly !== null;
@@ -218,29 +220,48 @@ function PlanCard({
             <Check className="size-4" strokeWidth={3} aria-hidden />
             Current plan
           </p>
-        ) : account ? (
+        ) : account && priced ? (
           <Button
             /*
-             * The tier's own variant, whether or not the control can act — the
-             * same `primary` on the featured card and `dark` on the rest that
-             * a visitor sees on the pricing page. One set of cards has to look
-             * like one set of cards; a grid that swaps to `outline` buttons
-             * once you sign in is a second pricing design arriving through the
-             * back door, which is the thing sharing this component prevents.
+             * The tier's own variant — the same `primary` on the featured card
+             * and `dark` on the rest that a visitor sees on the pricing page.
+             * One set of cards has to look like one set of cards; a grid that
+             * swaps to `outline` buttons once you sign in is a second pricing
+             * design arriving through the back door, which is the thing
+             * sharing this component prevents.
              *
-             * Disabled is still disabled, and still carries its reason: the
-             * button dims to 50% and says why on hover, rather than changing
-             * colour to announce it.
+             * The label is the one thing that does change. A merchant already
+             * paying for Growth is not "Starting Free" — they are moving
+             * between tiers, and the button has to name the act it performs.
              */
             variant={featured ? "primary" : "dark"}
             size="md"
             className="mt-6 w-full"
-            disabled={!onChangePlan}
+            /* Off for a role that may not change the plan, and for the moment
+               a change is in flight — four live buttons during one round trip
+               is how a merchant ends up on the tier they clicked second. */
+            disabled={!onChangePlan || changeBusy}
             title={onChangePlan ? undefined : changeDisabledReason}
-            onClick={onChangePlan ? () => onChangePlan(plan) : undefined}
+            onClick={
+              onChangePlan ? () => onChangePlan(plan, billing) : undefined
+            }
           >
-            {priced ? "Change plan" : "Talk to sales"}
+            Change plan
           </Button>
+        ) : account ? (
+          /*
+           * A quoted tier has nothing to self-serve — there is no price for
+           * `changePlan` to move the workspace onto — so it stays a link, as
+           * it is for a visitor, rather than a button that would refuse.
+           */
+          <ButtonLink
+            href={APP_ROUTES.pricing}
+            variant="dark"
+            size="md"
+            className="mt-6 w-full"
+          >
+            Talk to sales
+          </ButtonLink>
         ) : (
           <ButtonLink
             href={priced ? APP_ROUTES.register : APP_ROUTES.pricing}
@@ -296,10 +317,16 @@ export function PricingPlans({
   currentPlanId = null,
   /** Where the toggle starts — an account opens on the cycle it is billed on. */
   defaultBilling = "monthly",
-  /** Called for a tier the account is not on. Absent means the control is off. */
+  /**
+   * Called for a priced tier the account is not on, with the period the
+   * billing toggle is currently showing — the caller needs both to know what
+   * it is being asked to switch to. Absent means the control is off.
+   */
   onChangePlan,
   /** Why it is off, for the disabled control's own tooltip. */
   changeDisabledReason,
+  /** A change is in flight; hold every tier's control until it settles. */
+  changeBusy,
   /**
    * The gap above the billing toggle.
    *
@@ -313,8 +340,9 @@ export function PricingPlans({
 }: {
   currentPlanId?: PlanTier | null;
   defaultBilling?: Billing;
-  onChangePlan?: (plan: Plan) => void;
+  onChangePlan?: (plan: Plan, billing: Billing) => void;
   changeDisabledReason?: string;
+  changeBusy?: boolean;
   topSpacing?: boolean;
   className?: string;
 } = {}) {
@@ -351,6 +379,7 @@ export function PricingPlans({
             current={plan.id === currentPlanId}
             onChangePlan={onChangePlan}
             changeDisabledReason={changeDisabledReason}
+            changeBusy={changeBusy}
           />
         ))}
       </div>
