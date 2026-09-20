@@ -61,7 +61,9 @@ export const marketingNav: NavItem[] = [
 export const dashboardNav: NavSection[] = [
   {
     title: "Overview",
-    items: [{ title: "Dashboard", href: "/dashboard", icon: "layout-dashboard" }],
+    items: [
+      { title: "Dashboard", href: "/dashboard", icon: "layout-dashboard" },
+    ],
   },
   {
     /* Ahead of Marketing: the catalogue is what everything downstream sells.
@@ -85,10 +87,18 @@ export const dashboardNav: NavSection[] = [
       /* Paying customers, derived from orders — the CRM contact database is
          the Customers group below, and this links into it rather than copying
          it. The route nests under Sales because that is where the data is. */
-      { title: "Customers", href: "/dashboard/sales/customers", icon: "user-check" },
+      {
+        title: "Customers",
+        href: "/dashboard/sales/customers",
+        icon: "user-check",
+      },
       { title: "Inventory", href: "/dashboard/inventory", icon: "warehouse" },
       /* Moved out of Growth, where it was "Offers & Coupons" — same feature. */
-      { title: "Discounts & Coupons", href: "/dashboard/discounts", icon: "badge-percent" },
+      {
+        title: "Discounts & Coupons",
+        href: "/dashboard/discounts",
+        icon: "badge-percent",
+      },
     ],
   },
   {
@@ -102,7 +112,11 @@ export const dashboardNav: NavSection[] = [
     title: "Marketing",
     items: [
       { title: "Overview", href: "/dashboard/marketing", icon: "megaphone" },
-      { title: "Campaigns", href: "/dashboard/marketing/campaigns", icon: "target" },
+      {
+        title: "Campaigns",
+        href: "/dashboard/marketing/campaigns",
+        icon: "target",
+      },
       {
         title: "WhatsApp",
         icon: "message-circle",
@@ -113,11 +127,23 @@ export const dashboardNav: NavSection[] = [
              left the sidebar out of step with the module's own strip, which
              has always read Overview then Inbox. One order, stated twice. */
           { title: "Inbox", href: "/dashboard/marketing/whatsapp/inbox" },
-          { title: "Campaigns", href: "/dashboard/marketing/whatsapp/campaigns" },
-          { title: "Templates", href: "/dashboard/marketing/whatsapp/templates" },
+          {
+            title: "Campaigns",
+            href: "/dashboard/marketing/whatsapp/campaigns",
+          },
+          {
+            title: "Templates",
+            href: "/dashboard/marketing/whatsapp/templates",
+          },
           { title: "Contacts", href: "/dashboard/marketing/whatsapp/contacts" },
-          { title: "Automations", href: "/dashboard/marketing/whatsapp/automations" },
-          { title: "Analytics", href: "/dashboard/marketing/whatsapp/analytics" },
+          {
+            title: "Automations",
+            href: "/dashboard/marketing/whatsapp/automations",
+          },
+          {
+            title: "Analytics",
+            href: "/dashboard/marketing/whatsapp/analytics",
+          },
         ],
       },
       {
@@ -128,7 +154,10 @@ export const dashboardNav: NavSection[] = [
           { title: "Campaigns", href: "/dashboard/marketing/email/campaigns" },
           { title: "Templates", href: "/dashboard/marketing/email/templates" },
           { title: "Contacts", href: "/dashboard/marketing/email/contacts" },
-          { title: "Automations", href: "/dashboard/marketing/email/automations" },
+          {
+            title: "Automations",
+            href: "/dashboard/marketing/email/automations",
+          },
           { title: "Analytics", href: "/dashboard/marketing/email/analytics" },
           { title: "Senders", href: "/dashboard/marketing/email/senders" },
         ],
@@ -141,7 +170,10 @@ export const dashboardNav: NavSection[] = [
           { title: "Campaigns", href: "/dashboard/marketing/sms/campaigns" },
           { title: "Templates", href: "/dashboard/marketing/sms/templates" },
           { title: "Contacts", href: "/dashboard/marketing/sms/contacts" },
-          { title: "Automations", href: "/dashboard/marketing/sms/automations" },
+          {
+            title: "Automations",
+            href: "/dashboard/marketing/sms/automations",
+          },
           { title: "Analytics", href: "/dashboard/marketing/sms/analytics" },
         ],
       },
@@ -157,8 +189,16 @@ export const dashboardNav: NavSection[] = [
       },
       /* Promoted out of the old Content group: every channel draws on it, so
          it belongs beside the channels rather than inside Social Planner. */
-      { title: "Media Library", href: "/dashboard/marketing/social/media", icon: "image" },
-      { title: "Audience Segments", href: "/dashboard/marketing/segments", icon: "layers" },
+      {
+        title: "Media Library",
+        href: "/dashboard/marketing/social/media",
+        icon: "image",
+      },
+      {
+        title: "Audience Segments",
+        href: "/dashboard/marketing/segments",
+        icon: "layers",
+      },
     ],
   },
   {
@@ -168,16 +208,32 @@ export const dashboardNav: NavSection[] = [
       { title: "Leads", href: "/dashboard/leads", icon: "target" },
       { title: "Segments", href: "/dashboard/segments", icon: "layers" },
       { title: "Tags", href: "/dashboard/tags", icon: "tag" },
-      { title: "Customer Journey", href: "/dashboard/customer-journey", icon: "git-branch" },
+      {
+        title: "Customer Journey",
+        href: "/dashboard/customer-journey",
+        icon: "git-branch",
+      },
     ],
   },
   {
     title: "Automation",
     items: [
       { title: "Workflows", href: "/dashboard/automation", icon: "workflow" },
-      { title: "Templates", href: "/dashboard/automation/templates", icon: "layout-template" },
-      { title: "Triggers", href: "/dashboard/automation/triggers", icon: "zap" },
-      { title: "Activity Logs", href: "/dashboard/automation/activity", icon: "scroll-text" },
+      {
+        title: "Templates",
+        href: "/dashboard/automation/templates",
+        icon: "layout-template",
+      },
+      {
+        title: "Triggers",
+        href: "/dashboard/automation/triggers",
+        icon: "zap",
+      },
+      {
+        title: "Activity Logs",
+        href: "/dashboard/automation/activity",
+        icon: "scroll-text",
+      },
     ],
   },
   {
@@ -185,59 +241,16 @@ export const dashboardNav: NavSection[] = [
     items: [
       { title: "Analytics", href: "/dashboard/analytics", icon: "bar-chart" },
       { title: "Reports", href: "/dashboard/reports", icon: "clipboard-list" },
-      { title: "Conversion Funnel", href: "/dashboard/conversion-funnel", icon: "funnel" },
-      { title: "Forms", href: "/dashboard/forms", icon: "list-checks" },
-      { title: "Landing Pages", href: "/dashboard/landing-pages", icon: "globe" },
-    ],
-  },
-  {
-    /*
-     * Its own group, out of Settings.
-     *
-     * Billing was a row inside the Settings rail, which put "what does this
-     * workspace pay, and is the card still valid" two navigations deep behind a
-     * heading that otherwise means *your* preferences. They are different
-     * questions asked by different people — an owner checks billing, everybody
-     * changes their own password — and the one with money attached was the one
-     * buried.
-     *
-     * The route does not move: `/dashboard/settings/billing` is where it has
-     * always been, and every bookmark and link into it still resolves. Only its
-     * position in the information architecture changes, which is the whole
-     * point — a URL is an address, not an argument about what a thing is.
-     *
-     * Labelled "Billing" while the page still reads "Billing & Subscription".
-     * A sidebar row is scanned in a column of fifteen others and wants one
-     * word; a page heading is read once and can afford to be precise.
-     */
-    title: "Billing",
-    items: [
       {
-        title: "Billing",
-        href: "/dashboard/settings/billing",
-        icon: "credit-card",
+        title: "Conversion Funnel",
+        href: "/dashboard/conversion-funnel",
+        icon: "funnel",
       },
-    ],
-  },
-  {
-    /*
-     * Also out of Settings, and for the mirror-image reason.
-     *
-     * API keys, webhooks and developer documentation are not account
-     * preferences — they are a surface a developer works in, often the only
-     * part of the dashboard they open. Reaching it through a gear icon made it
-     * look like a setting somebody occasionally toggles.
-     *
-     * `/dashboard/settings/api` is kept for the same reason Billing's route is.
-     * The row deliberately has no `items`: as the only href under that path it
-     * stays lit across the whole module rather than only on its first page.
-     */
-    title: "Developer",
-    items: [
+      { title: "Forms", href: "/dashboard/forms", icon: "list-checks" },
       {
-        title: "API & Developer",
-        href: "/dashboard/settings/api",
-        icon: "terminal",
+        title: "Landing Pages",
+        href: "/dashboard/landing-pages",
+        icon: "globe",
       },
     ],
   },
@@ -263,16 +276,36 @@ export const dashboardNav: NavSection[] = [
      */
     title: "Integrations",
     items: [
-      { title: "All Integrations", href: "/dashboard/integrations", icon: "plug" },
+      {
+        title: "All Integrations",
+        href: "/dashboard/integrations",
+        icon: "plug",
+      },
     ],
   },
   {
     title: "Workspace",
     items: [
-      { title: "Team Members", href: "/dashboard/workspace/team", icon: "user-cog" },
-      { title: "Roles & Permissions", href: "/dashboard/workspace/roles", icon: "shield-check" },
-      { title: "Workspace Activity", href: "/dashboard/workspace/activity", icon: "activity" },
-      { title: "Workspace Settings", href: "/dashboard/workspace/settings", icon: "building" },
+      {
+        title: "Team Members",
+        href: "/dashboard/workspace/team",
+        icon: "user-cog",
+      },
+      {
+        title: "Roles & Permissions",
+        href: "/dashboard/workspace/roles",
+        icon: "shield-check",
+      },
+      {
+        title: "Workspace Activity",
+        href: "/dashboard/workspace/activity",
+        icon: "activity",
+      },
+      {
+        title: "Workspace Settings",
+        href: "/dashboard/workspace/settings",
+        icon: "building",
+      },
     ],
   },
   {
@@ -300,6 +333,16 @@ export const dashboardNav: NavSection[] = [
        * `useActiveHref` in `layout/dashboard-sidebar`.
        */
       { title: "Settings", href: "/dashboard/settings", icon: "settings" },
+      {
+        title: "Billing & Subscription",
+        href: "/dashboard/settings/billing",
+        icon: "credit-card",
+      },
+      {
+        title: "API & Developer",
+        href: "/dashboard/settings/api",
+        icon: "terminal",
+      },
     ],
   },
 ];
