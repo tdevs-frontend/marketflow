@@ -4,17 +4,13 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 
-import { PageHeader } from "@/components/layout/page-header";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { Pagination } from "@/components/ui/pagination";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
-import {
-  markAllRead,
-  markRead,
-} from "@/redux/features/notification/notificationSlice";
+import { markRead } from "@/redux/features/notification/notificationSlice";
 import type { FeedNotification } from "@/types/notification";
 
 import { NotificationItem } from "./notification-item";
@@ -108,25 +104,9 @@ export function NotificationsWorkspace() {
 
   return (
     <>
-      <PageHeader
-        title="Notifications"
-        description="Stay up to date with orders, leads, campaigns, automations, messages, and account activity."
-        action={
-          /* Rendered only when it would do something. A permanently visible
-             "Mark all as read" on an already-read feed is a control that
-             teaches the reader their click did nothing. */
-          unread > 0 ? (
-            <button
-              type="button"
-              onClick={() => dispatch(markAllRead())}
-              className="rounded-btn text-sm font-semibold text-primary underline-offset-2 hover:underline focus-visible:shadow-focus focus-visible:outline-none"
-            >
-              Mark all as read
-            </button>
-          ) : undefined
-        }
-      />
-
+      {/* No heading here. `NotificationCenter` owns the page title and the
+          "Mark all as read" action, so the title does not change when the tab
+          does and the action cannot appear above the Preferences list. */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative min-w-0 flex-1">
           <Search

@@ -3,7 +3,6 @@
 import { useId, useMemo, useState } from "react";
 import { Lock, Search } from "lucide-react";
 
-import { PageHeader } from "@/components/layout/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -89,11 +88,6 @@ export function NotificationSettings() {
 
   return (
     <>
-      <PageHeader
-        title="Notifications"
-        description="Stay informed about important activity across your workspace."
-      />
-
       <div className="space-y-6">
         <ServiceNotice tone="session" title="Preferences are saved, delivery is not connected">
           These choices are kept for this session and are the events the product

@@ -167,11 +167,11 @@ export function NotificationPopover() {
           </div>
 
           <Link
-            /* The archive, not the preference centre. This link pointed at
-               `/settings/notifications` because there was nowhere else for it
-               to go — a "View all" that opened a page of switches would have
-               promised a list and delivered settings. Now there is a list. */
-            href={APP_ROUTES.notifications}
+            /* Settings › Notifications, which opens on its Activity tab — the
+               full feed, beside the preferences that govern it. The label is
+               honest now that the tab exists; it used to promise a list and
+               land on a page of switches. */
+            href={APP_ROUTES.settingsNotifications}
             onClick={() => setOpen(false)}
             /* Same hover as the header's action: an underline, no tint. The
                full-width wash it replaced made the footer light up as a band

@@ -3,7 +3,6 @@ import {
   Bell,
   Building2,
   CreditCard,
-  LayoutGrid,
   Mail,
   Megaphone,
   MessageCircle,
@@ -75,10 +74,12 @@ export interface SettingsNavGroup {
  * What is left is a single coherent subject — the person signed in — which is
  * why the rail no longer needs the grouping to explain itself.
  *
- * **Overview is a destination, not a section.** It is the only link back to
- * `/dashboard/settings`, which is where the workspace summary and the account
- * status lines live; without it the hub is reachable only from the global
- * sidebar, which is a dead end nobody looks for.
+ * **There is no Overview.** A hub page listing three destinations, above a
+ * rail that lists the same three, was a landing screen whose only content was
+ * a second copy of the navigation beside it. `/dashboard/settings` now sends
+ * the reader straight to Profile — the first real page — so the sidebar's
+ * Settings row still lands somewhere, and the rail lights the item it landed
+ * on rather than a fourth entry that exists to be a table of contents.
  *
  * **There is no General.** It used to be a second editor for the workspace name,
  * timezone, currency, business details and default senders — every one of which
@@ -91,13 +92,6 @@ export const SETTINGS_NAV: SettingsNavGroup[] = [
   {
     title: "Settings",
     items: [
-      {
-        title: "Overview",
-        href: APP_ROUTES.settings,
-        icon: LayoutGrid,
-        description: "Manage your account, notifications and security.",
-        summary: "Where everything in Settings lives.",
-      },
       {
         title: "Profile",
         href: APP_ROUTES.settingsProfile,

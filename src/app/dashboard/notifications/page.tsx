@@ -1,24 +1,19 @@
-import type { Metadata } from "next";
+import { permanentRedirect } from "next/navigation";
 
-import { NotificationsWorkspace } from "@/components/notifications/notifications-workspace";
-
-export const metadata: Metadata = {
-  title: "Notifications",
-  description:
-    "Orders, leads, campaigns, automations, messages and account activity.",
-};
+import { APP_ROUTES } from "@/constants/app";
 
 /**
- * The archive behind the header bell.
+ * The feed's old address.
  *
- * A route of its own rather than a taller dropdown: forty-eight rows with
- * search and pages is a page, and a panel anchored to a button is the wrong
- * container for something a merchant reads through. The bell stays what it is
- * — the last handful, at a glance — and links here.
+ * It lived here while it was a page of its own; it is the Activity tab of
+ * Settings › Notifications now, beside the preferences that govern it. The
+ * route stays so nothing that already points at it breaks — the header bell
+ * did, and so may a bookmark.
  *
- * Client all the way down, because the feed lives in the Redux store the header
- * already reads. That is the point: one list, one unread count, two surfaces.
+ * `permanentRedirect` rather than `redirect`: this is a 308, which says the
+ * move is settled rather than temporary, so a browser stops asking and a
+ * crawler updates its index. Nothing will be served here again.
  */
-export default function NotificationsPage() {
-  return <NotificationsWorkspace />;
+export default function LegacyNotificationsPage() {
+  permanentRedirect(APP_ROUTES.settingsNotifications);
 }
