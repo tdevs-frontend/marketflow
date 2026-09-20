@@ -225,9 +225,13 @@ export function NotificationPopover() {
           <Link
             href={APP_ROUTES.settingsNotifications}
             onClick={() => setOpen(false)}
-            className="border-t border-border px-4 py-4 text-center text-sm font-semibold text-primary transition-colors hover:bg-primary-soft focus-visible:shadow-focus focus-visible:outline-none"
+            /* Same hover as the header's action: an underline, no tint. The
+               full-width wash it replaced made the footer light up as a band
+               and read as a button stuck to the bottom of the panel rather
+               than as the link it is. */
+            className="border-t border-border px-4 py-4 text-center text-sm font-semibold text-primary underline-offset-2 hover:underline focus-visible:shadow-focus focus-visible:outline-none"
           >
-            Notification settings
+            View All Notification
           </Link>
         </div>
       ) : null}
@@ -262,7 +266,13 @@ function Header({
         <button
           type="button"
           onClick={onMarkAll}
-          className="rounded-btn text-sm font-semibold text-primary transition-colors hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
+          /* Underline on hover and nothing else — the same treatment every
+             other inline link in the product carries. The colour shift it
+             replaced made this read as a second state of the text rather than
+             as a link answering the pointer, and `transition-colors` went with
+             it: `text-decoration-line` does not animate, so there was nothing
+             left for it to do. */
+          className="rounded-btn text-sm font-semibold text-primary underline-offset-2 hover:underline focus-visible:shadow-focus focus-visible:outline-none"
         >
           Mark all as read
         </button>
@@ -335,8 +345,8 @@ function NotificationRow({
         <span className="flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5">
           <span
             className={cn(
-              "text-sm text-text-primary",
-              item.read ? "font-medium" : "font-semibold",
+              "text-[15px] text-text-primary",
+              item.read ? "font-semibold" : "font-semibold",
             )}
           >
             {item.title}
