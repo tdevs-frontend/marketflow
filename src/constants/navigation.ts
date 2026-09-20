@@ -236,24 +236,28 @@ export const dashboardNav: NavSection[] = [
       },
     ],
   },
-  {
-    title: "Growth",
-    items: [
-      { title: "Analytics", href: "/dashboard/analytics", icon: "bar-chart" },
-      { title: "Reports", href: "/dashboard/reports", icon: "clipboard-list" },
-      {
-        title: "Conversion Funnel",
-        href: "/dashboard/conversion-funnel",
-        icon: "funnel",
-      },
-      { title: "Forms", href: "/dashboard/forms", icon: "list-checks" },
-      {
-        title: "Landing Pages",
-        href: "/dashboard/landing-pages",
-        icon: "globe",
-      },
-    ],
-  },
+  /*
+   * There is no Growth group.
+   *
+   * It held five rows and none of them earned a place in the sidebar. Reports
+   * and Conversion Funnel had no route at all — both answered 404, which is a
+   * navigation entry whose only behaviour is to break the page under it.
+   * Forms and Landing Pages resolved, but only to a `ModulePlaceholder`
+   * explaining that the module does not exist yet; a top-level row for a thing
+   * that is not built is a promise the sidebar cannot keep.
+   *
+   * Analytics is real, and it is the one worth naming. It is not gone — the
+   * route, the page and its charts are untouched — but it is now reached from
+   * exactly one place: the "View analytics" link on the Marketing overview.
+   * That is a contextual door next to the numbers it explains, which is a
+   * better entrance than a sidebar row under a heading nobody could define,
+   * but it is *one* door and worth knowing about before the next person
+   * wonders where the charts went.
+   *
+   * Every route in this group still resolves. What was removed is navigation,
+   * not functionality — see `constants/app.APP_ROUTES`, which still carries
+   * them, and the permissions catalogue, which still governs them.
+   */
   {
     /*
      * One row for the whole module.
