@@ -1,5 +1,5 @@
 export * from "./active-sessions-card";
-export * from "./billing-settings";
+export * from "./billing/billing-settings";
 export * from "./change-password-card";
 export * from "./developer-settings";
 export * from "./login-activity-card";

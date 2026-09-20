@@ -11,6 +11,7 @@ import {
 } from "@/lib/account-fixtures";
 import type {
   AccountUser,
+  PaymentRequest,
   PlanPeriod,
   SecurityState,
   Subscription,
@@ -66,6 +67,20 @@ interface Snapshot {
    */
   planHistory: PlanPeriod[];
   /**
+   * A manual payment submitted and not yet verified, or `null`.
+   *
+   * One slot, not a list. A workspace with two unverified payments against two
+   * different plans is a question nobody can answer — which one did they mean
+   * — so the checkout refuses a second while one is outstanding, and this
+   * shape is what makes that refusal structural rather than a check somebody
+   * has to remember to write.
+   *
+   * It sits beside `subscription` rather than inside it on purpose: a pending
+   * payment is a *claim about a plan*, and the subscription must go on
+   * reporting the tier the workspace actually has until somebody verifies it.
+   */
+  paymentRequest: PaymentRequest | null;
+  /**
    * The enrolment in flight, held here rather than in the dialog's state so
    * that closing the dialog and reopening it does not mint a second secret
    * while the first is already half-entered on somebody's phone.
@@ -89,6 +104,7 @@ const INITIAL: Snapshot = {
   },
   subscription: SUBSCRIPTION,
   planHistory: PLAN_HISTORY,
+  paymentRequest: null,
   enrollment: null,
   totpSecret: null,
   recoveryCodes: [],
@@ -140,6 +156,10 @@ export function useNotificationPreferences(): UserNotificationPreferences {
 
 export function useSecurityState(): SecurityState {
   return useSnapshot().security;
+}
+
+export function usePaymentRequest(): PaymentRequest | null {
+  return useSnapshot().paymentRequest;
 }
 
 export function useSubscription(): Subscription {
@@ -217,6 +237,11 @@ export function writePlanPeriod(opened: PlanPeriod, at: string) {
   );
 
   commit({ ...snapshot, planHistory: [{ ...opened, startedAt: at }, ...closed] });
+}
+
+/** Records a submitted manual payment, or clears one that has been settled. */
+export function writePaymentRequest(request: PaymentRequest | null) {
+  commit({ ...snapshot, paymentRequest: request });
 }
 
 export function writeEnrollment(enrollment: TwoFactorEnrollment | null) {

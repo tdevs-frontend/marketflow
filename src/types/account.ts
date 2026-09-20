@@ -408,6 +408,90 @@ export interface UsageMetric {
 }
 
 /* -------------------------------------------------------------------------- */
+/* Checkout                                                                   */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * A payment method as the checkout offers it.
+ *
+ * `PaymentGatewayDef` from `constants/billing` describes what the product can
+ * do; this is what the *service* says is true right now, which is the same
+ * record plus whatever a backend would add to it. The selector renders this
+ * one, so a gateway list that later arrives over HTTP needs no component
+ * change.
+ */
+export interface PaymentGateway {
+  id: string;
+  kind: "automatic" | "manual";
+  name: string;
+  description: string;
+  /** Usable. `false` still renders — marked, and refused at the point of use. */
+  configured: boolean;
+  /** Shown where the method is chosen and again where it would be charged. */
+  unavailableReason?: string;
+}
+
+/** Exactly what the manual payment form submits. */
+export interface ManualPaymentInput {
+  planId: string;
+  period: BillingPeriod;
+  amount: number;
+  currency: string;
+  /** How it was sent — bank transfer, wire, cheque. See `MANUAL_PAYMENT_METHODS`. */
+  method: string;
+  /** The bank's reference for the transfer. What an administrator matches on. */
+  reference: string;
+  /** `yyyy-mm-dd`, straight from a native date input. */
+  paidAt: string;
+  /** The account or name the money came from. */
+  sender: string;
+  note: string;
+  /**
+   * The receipt's file name, and only its name.
+   *
+   * The bytes are held by the browser until an upload endpoint exists; putting
+   * a base64 receipt in a session store would be a copy of somebody's bank
+   * statement living in a tab with no way to clear it. The record says what was
+   * attached so the merchant can see their own submission is complete.
+   */
+  proofName: string | null;
+}
+
+export type PaymentRequestStatus = "pending" | "verified" | "rejected";
+
+/**
+ * A payment awaiting a human.
+ *
+ * The record a manual submission creates, and the reason manual payment can be
+ * honest where automatic payment cannot: nothing here claims money moved. It
+ * says a merchant *states* they sent it, on which date, under which reference,
+ * and that an administrator has not yet agreed.
+ *
+ * Which is why submitting one does **not** touch `Subscription`. The plan
+ * starts when the payment is verified, and a tier that goes active on the
+ * strength of a typed reference number is a subscription anybody can grant
+ * themselves.
+ */
+export interface PaymentRequest {
+  id: string;
+  reference: string;
+  planId: string;
+  planName: string;
+  period: BillingPeriod;
+  amount: number;
+  currency: string;
+  gatewayId: string;
+  gatewayName: string;
+  /** ISO. When it was submitted here. */
+  submittedAt: string;
+  /** `yyyy-mm-dd`. When the merchant says they sent it. */
+  paidAt: string;
+  status: PaymentRequestStatus;
+  proofName: string | null;
+  note: string;
+}
+
+/* -------------------------------------------------------------------------- */
 /* Service results                                                            */
 /* -------------------------------------------------------------------------- */
 

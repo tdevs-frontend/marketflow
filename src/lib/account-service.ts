@@ -1,8 +1,10 @@
 "use client";
 
 import { env } from "@/config";
+import { PAYMENT_GATEWAYS } from "@/constants/billing";
 import { PLANS, yearlyMonthly } from "@/constants/pricing";
 import { TOTP_CONFIG } from "@/constants/settings";
+import { INVOICES } from "@/lib/account-fixtures";
 import {
   readSnapshot,
   writeAvatar,
@@ -10,6 +12,7 @@ import {
   writePolicy,
   writePreferences,
   writeRecoveryCodes,
+  writePaymentRequest,
   writePlanPeriod,
   writeSecurity,
   writeSubscription,
@@ -29,6 +32,9 @@ import type {
   AccountUser,
   BillingPeriod,
   Invoice,
+  ManualPaymentInput,
+  PaymentGateway,
+  PaymentRequest,
   PlanPeriod,
   ProfilePatch,
   SecurityState,
@@ -144,7 +150,15 @@ export interface AccountCapabilities {
    * change, when what it cannot do is bill for one.
    */
   planChange: boolean;
-  /** Downloadable invoices. Issued by the payment provider, so: no. */
+  /**
+   * Downloadable invoice *documents*.
+   *
+   * Narrower than it used to be, and the distinction is the honest one. The
+   * invoice **records** — number, date, amount, status — are the workspace's
+   * own billing history and are listed. The **PDF** is a document a payment
+   * provider issues against a charge it made; none is connected, so there is
+   * no file, and the rows say so instead of offering a link to nothing.
+   */
   invoices: boolean;
   /** Creating and revoking API keys. */
   apiKeys: boolean;
@@ -191,9 +205,9 @@ export const UNAVAILABLE_REASON: Record<keyof AccountCapabilities, string> = {
   payment:
     "No payment provider is connected, so no card can be stored against this workspace.",
   planChange:
-    "Changing a plan is recorded for this session only. No payment provider is connected, so nothing is charged.",
+    "Changing or cancelling a plan changes what is charged, and that needs a billing backend. None is connected.",
   invoices:
-    "Invoices are issued by the payment provider. None is connected, so there are none to list.",
+    "Invoice documents are issued by the payment provider. None is connected, so there is nothing to open yet.",
   apiKeys: "",
 };
 
@@ -620,24 +634,21 @@ export async function listSignInActivity(): Promise<
 /**
  * `GET /billing/invoices`
  *
- * Fails with `service_unavailable`, for the same reason the payment method is
- * an empty state: invoices are issued by a payment provider against charges
- * that have been made, and no provider is connected, so none exist. The
- * distinction the failure carries — over an empty list — is the one that
- * matters to somebody looking for a receipt: "nothing has billed you yet" and
- * "this cannot tell you what has billed you" are different answers, and only
- * the second is true.
+ * The charges, newest first, capped at what a settings section should show.
  *
- * The panel renders a real table the moment this returns rows.
+ * Seeded from the plan history rather than written separately — see
+ * `lib/account-fixtures`. The two lists answer one question at two
+ * resolutions, and a hand-written invoice table drifts from the history the
+ * first time either is edited.
+ *
+ * Ungated. What `CAPABILITIES.invoices` still governs is the *document* behind
+ * each row, which a payment provider issues and this build cannot produce; the
+ * rows themselves are the workspace's own record of what it was charged.
  */
 export async function listInvoices(): Promise<ServiceResult<Invoice[]>> {
   await settle();
 
-  if (!CAPABILITIES.invoices) {
-    return fail("service_unavailable", UNAVAILABLE_REASON.invoices);
-  }
-
-  return ok([]);
+  return ok(INVOICES);
 }
 
 /**
@@ -750,4 +761,176 @@ export async function cancelSubscription(): Promise<
 
   writeSubscription({ status: "cancelled" });
   return ok(readSnapshot().subscription);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Checkout                                                                   */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * `GET /billing/gateways`
+ *
+ * What this deployment can take money through, and what it cannot.
+ *
+ * Returns every method rather than filtering to the working ones, because the
+ * selector has to be able to say *why* a card is not an option. A list that
+ * quietly omits Stripe leaves a merchant assuming MarketFlow does not take
+ * cards; a list that includes it unmarked lets them walk into a payment step
+ * that cannot charge. Each entry carries `configured` and, when false, the
+ * sentence to show at the point of use.
+ */
+export async function listPaymentGateways(): Promise<
+  ServiceResult<PaymentGateway[]>
+> {
+  await settle();
+
+  return ok(
+    PAYMENT_GATEWAYS.map((gateway) => ({
+      id: gateway.id,
+      kind: gateway.kind,
+      name: gateway.name,
+      description: gateway.description,
+      configured: gateway.configured,
+      unavailableReason: gateway.unavailableReason,
+    })),
+  );
+}
+
+/**
+ * `POST /billing/checkout`
+ *
+ * Take payment for a plan through an automatic gateway, and start it.
+ *
+ * Written against a provider that is not here, and written anyway, because the
+ * shape of the transaction is not in doubt — pick a gateway, charge it, and
+ * start the plan only if the charge succeeded. What is missing is the middle
+ * step, and the guard at the top is what stops the other two running without
+ * it. An unconfigured gateway fails with `service_unavailable` carrying that
+ * gateway's own reason; the checkout renders it and refuses to advance.
+ *
+ * Note what is *not* a parameter: a card number. A publishable key identifies
+ * the account, the provider's own hosted checkout collects the instrument, and
+ * this function would receive a token. Collecting a PAN here to forward it
+ * later is how an application that never wanted card data ends up in scope for
+ * it — see `constants/billing`.
+ */
+export async function payForPlan(
+  planId: string,
+  period: BillingPeriod,
+  gatewayId: string,
+): Promise<ServiceResult<Subscription>> {
+  await settle();
+
+  const gateway = PAYMENT_GATEWAYS.find((item) => item.id === gatewayId);
+  if (!gateway || gateway.kind !== "automatic") {
+    return fail("validation", "That payment method cannot be charged directly.");
+  }
+
+  if (!gateway.configured) {
+    return fail(
+      "service_unavailable",
+      gateway.unavailableReason ??
+        `${gateway.name} is not connected, so no payment can be taken.`,
+    );
+  }
+
+  /* The charge would happen here, against a token the provider's own checkout
+     minted. It either succeeds or this returns — the plan change below is
+     deliberately downstream of it, so a failed charge cannot leave a workspace
+     on a tier nobody paid for. */
+
+  return changePlan(planId, period);
+}
+
+/**
+ * `POST /billing/payments/manual`
+ *
+ * Record a payment the merchant says they have sent.
+ *
+ * The one path through this checkout that completes, and it completes as a
+ * *claim* rather than as a settlement. It writes a `PaymentRequest` with status
+ * `pending` and does not touch the subscription: the plan starts when an
+ * administrator confirms the money arrived, and a tier that activates on a
+ * typed reference number is a tier anybody can grant themselves.
+ *
+ * One outstanding request at a time. A workspace holding two unverified
+ * payments against two different plans is a question the verifier cannot
+ * answer, so the second submission is refused with the reference of the first.
+ */
+export async function submitManualPayment(
+  input: ManualPaymentInput,
+): Promise<ServiceResult<PaymentRequest>> {
+  await settle();
+
+  const existing = readSnapshot().paymentRequest;
+  if (existing && existing.status === "pending") {
+    return fail(
+      "validation",
+      `Payment ${existing.reference} is already awaiting verification. It has to be settled before another is submitted.`,
+    );
+  }
+
+  const plan = PLANS.find((item) => item.id === input.planId);
+  if (!plan || plan.monthly === null) {
+    return fail("validation", "That plan cannot be paid for here.");
+  }
+
+  const reference = input.reference.trim();
+  if (!reference) {
+    return fail("validation", "A transaction reference is required.");
+  }
+  if (!input.paidAt) {
+    return fail("validation", "The payment date is required.");
+  }
+
+  const gateway = PAYMENT_GATEWAYS.find((item) => item.id === "manual");
+
+  const request: PaymentRequest = {
+    id: `pay_${Date.now()}`,
+    reference,
+    planId: plan.id,
+    planName: plan.name,
+    period: input.period,
+    /* Derived from the tier, never from the form. The amount a merchant typed
+       is what they say they sent; what the plan costs is what the product
+       charges, and the verifier needs to be able to see the two differ. */
+    amount:
+      input.period === "yearly"
+        ? yearlyMonthly(plan.monthly) * 12
+        : plan.monthly,
+    currency: input.currency,
+    gatewayId: "manual",
+    gatewayName: gateway?.name ?? "Manual payment",
+    submittedAt: new Date().toISOString(),
+    paidAt: input.paidAt,
+    status: "pending",
+    proofName: input.proofName,
+    note: input.note.trim(),
+  };
+
+  writePaymentRequest(request);
+  return ok(request);
+}
+
+/**
+ * `DELETE /billing/payments/:id`
+ *
+ * Withdraw a submission that has not been verified.
+ *
+ * Here because the alternative is a merchant who mistyped a reference being
+ * stuck behind their own pending payment until somebody else clears it. It
+ * removes the claim and nothing else — no subscription changed when it was
+ * made, so none changes when it is taken back.
+ */
+export async function withdrawPaymentRequest(): Promise<ServiceResult<null>> {
+  await settle();
+
+  const existing = readSnapshot().paymentRequest;
+  if (!existing) return fail("validation", "There is no payment to withdraw.");
+  if (existing.status !== "pending") {
+    return fail("validation", "That payment has already been settled.");
+  }
+
+  writePaymentRequest(null);
+  return ok(null);
 }

@@ -35,6 +35,26 @@ export const YEARLY_DISCOUNT = 0.2;
 export const yearlyMonthly = (monthly: number) =>
   Math.round(monthly * (1 - YEARLY_DISCOUNT));
 
+/**
+ * What one billing period of a tier costs — the number that is charged.
+ *
+ * Distinct from `yearlyMonthly`, which is the *per-month figure a yearly plan
+ * is advertised at*: the card says "$39 / month, billed yearly" and the charge
+ * is $468. Both numbers are true and only one of them is an amount of money
+ * anybody pays, so the two have separate names and the checkout, the service
+ * and the plan history all call this one.
+ *
+ * `null` for a quoted tier. There is no price to charge, which is why
+ * Enterprise is a conversation and not a button.
+ */
+export const planPrice = (
+  plan: Plan,
+  period: "monthly" | "yearly",
+): number | null => {
+  if (plan.monthly === null) return null;
+  return period === "yearly" ? yearlyMonthly(plan.monthly) * 12 : plan.monthly;
+};
+
 export const PLANS: Plan[] = [
   {
     id: "starter",

@@ -4,7 +4,7 @@ import { NOTIFICATION_EVENTS } from "@/constants/settings";
 import { CONTACTS } from "@/lib/customer-fixtures";
 import { CAMPAIGNS } from "@/lib/marketing-fixtures";
 import { WORKFLOWS } from "@/lib/workflow-fixtures";
-import { daysAhead, daysAgo } from "@/lib/workspace-clock";
+import { WORKSPACE_NOW, daysAhead, daysAgo } from "@/lib/workspace-clock";
 import {
   CURRENT_MEMBER,
   WORKSPACE_ID,
@@ -13,6 +13,7 @@ import {
 } from "@/lib/workspace-fixtures";
 import type {
   AccountUser,
+  Invoice,
   NotificationChannel,
   PlanPeriod,
   Subscription,
@@ -206,6 +207,82 @@ export const PLAN_HISTORY: PlanPeriod[] = PLAN_PERIODS.map(
     status: to === null ? "active" : "ended",
   }),
 );
+
+/* -------------------------------------------------------------------------- */
+/* Invoices                                                                   */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * One receipt per month the workspace has been subscribed, derived from the
+ * history above rather than written beside it.
+ *
+ * Derived, because the two lists answer the same question at different
+ * resolutions — Plan History says "Business, April to July, $99"; Recent
+ * Invoices says "here are the three charges that made up". A hand-written
+ * invoice list drifts from the history the first time either is edited, and
+ * the merchant who catches it is the one reconciling a statement, which is the
+ * worst moment for two screens in the same product to disagree.
+ *
+ * `documentUrl` is `null` on every one of them, and that is not an oversight.
+ * A PDF is *issued by a payment provider*; none is connected, so there is no
+ * file to link. The row says so in its action column rather than offering a
+ * download that resolves to nothing — the one place a dead link costs most is
+ * somebody assembling records for an accountant.
+ *
+ * Newest first, and capped: "Recent invoices" is a section on a settings page,
+ * not the archive. Fourteen months of rows would bury the four sections under
+ * it for no gain over the six that answer "what was I last charged".
+ */
+const INVOICE_LIMIT = 6;
+
+/** Adds whole months to an ISO instant, clamping a 31st into a short month. */
+function addMonths(iso: string, months: number): Date {
+  const date = new Date(iso);
+  const day = date.getUTCDate();
+  const shifted = new Date(date);
+
+  shifted.setUTCDate(1);
+  shifted.setUTCMonth(shifted.getUTCMonth() + months);
+
+  const lastDay = new Date(
+    Date.UTC(shifted.getUTCFullYear(), shifted.getUTCMonth() + 1, 0),
+  ).getUTCDate();
+
+  shifted.setUTCDate(Math.min(day, lastDay));
+  return shifted;
+}
+
+export const INVOICES: Invoice[] = (() => {
+  const issued: { at: Date; amount: number }[] = [];
+
+  for (const period of PLAN_HISTORY) {
+    const end = period.endedAt ? new Date(period.endedAt) : new Date(WORKSPACE_NOW);
+
+    /* One charge on the day the period opened, then on that date each month
+       until it closed. The final month of an open period has not been billed
+       yet — its charge is `renewsAt`, which Current plan already shows. */
+    for (let month = 0; ; month += 1) {
+      const at = addMonths(period.startedAt, month);
+      if (at >= end) break;
+      issued.push({ at, amount: period.amount });
+    }
+  }
+
+  return issued
+    .sort((a, b) => b.at.getTime() - a.at.getTime())
+    .slice(0, INVOICE_LIMIT)
+    .map((charge, index) => ({
+      id: `inv_${charge.at.getTime()}`,
+      /* Counting down from a fixed base so the newest carries the highest
+         number, the way a provider's sequence reads. */
+      number: `INV-${1024 - index}`,
+      issuedAt: charge.at.toISOString(),
+      amount: charge.amount,
+      currency: SUBSCRIPTION.currency,
+      status: "paid" as const,
+      documentUrl: null,
+    }));
+})();
 
 /**
  * Plan allowances, per tier.
