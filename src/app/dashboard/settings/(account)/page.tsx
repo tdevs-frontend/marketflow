@@ -4,7 +4,7 @@ import { SettingsOverview } from "@/components/settings";
 
 export const metadata: Metadata = {
   title: "Settings",
-  description: "Manage your account, notifications, security and subscription.",
+  description: "Manage your account, notifications and security.",
 };
 
 /**

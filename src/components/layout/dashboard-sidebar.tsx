@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 import { Icon } from "@/components/ui/icon";
@@ -24,17 +24,47 @@ const ALL_HREFS = dashboardNav.flatMap((section) =>
 );
 
 /**
- * Routes another route extends, so they need an exact match — `/dashboard/settings`
- * is General *and* the parent of Profile, and a prefix match would light both.
+ * The one row the current route belongs to: the longest href that matches it.
+ *
+ * Longest-wins rather than a set of routes forced to match exactly, which is
+ * what this replaced. The exact-match set was derived — any href another href
+ * extended became exact — and that is a blunter rule than the sidebar needs.
+ * `/dashboard/settings` is the parent of five pages, so it went exact, and the
+ * Settings row went dark on Profile, Notifications and Security. It only looked
+ * right because the sidebar happened to list no route under it.
+ *
+ * It stopped looking right the moment Billing and Developer moved out of
+ * Settings into groups of their own. Their routes still live under
+ * `/dashboard/settings/` — deliberately, so no bookmark breaks — so the
+ * Settings row prefix-matches them, and a merchant on the billing page would
+ * have seen two rows lit, one of which is a different module.
+ *
+ * Resolving the longest match answers both at once, with no per-row
+ * configuration and nothing to keep in sync:
+ *
+ *   `/dashboard/settings/profile`  → only `/dashboard/settings` matches, so
+ *                                    Settings lights, which is correct: the
+ *                                    rail inside the module says which page.
+ *   `/dashboard/settings/billing`  → `/dashboard/settings` *and*
+ *                                    `/dashboard/settings/billing` match, and
+ *                                    the longer one wins. Billing lights alone.
+ *   `/dashboard/sales/customers`   → Customers, not Sales.
+ *   `/dashboard/integrations/email`→ nothing deeper is listed, so the module
+ *                                    row stays lit across all seven pages.
+ *
+ * A query string is not part of `pathname`, so `?tab=plans` and `?tab=history`
+ * resolve exactly as the bare route does.
  */
-const EXACT_HREFS = new Set(
-  ALL_HREFS.filter((href) =>
-    ALL_HREFS.some((other) => other !== href && other.startsWith(`${href}/`)),
-  ),
-);
-
-const isActive = (pathname: string, href: string) =>
-  isActiveRoute(pathname, href, EXACT_HREFS.has(href));
+function useActiveHref(pathname: string): string | null {
+  return useMemo(
+    () =>
+      ALL_HREFS.reduce<string | null>((best, href) => {
+        if (!isActiveRoute(pathname, href)) return best;
+        return !best || href.length > best.length ? href : best;
+      }, null),
+    [pathname],
+  );
+}
 
 /* -------------------------------------------------------------------------- */
 /* Row styling                                                                */
@@ -72,15 +102,15 @@ const SUB_IDLE = "text-text-muted hover:bg-primary-soft hover:text-primary-dark"
 /** The parent is a disclosure, not a link — its own page is the first child. */
 function CollapsibleItem({
   item,
-  pathname,
+  activeHref,
   onNavigate,
 }: {
   item: DashboardNavItem;
-  pathname: string;
+  activeHref: string | null;
   onNavigate: () => void;
 }) {
   const children = item.items ?? [];
-  const holdsActive = children.some((child) => isActive(pathname, child.href));
+  const holdsActive = children.some((child) => child.href === activeHref);
 
   const [open, setOpen] = useState(holdsActive);
 
@@ -120,7 +150,7 @@ function CollapsibleItem({
           className="mt-1 ml-5 space-y-0.5 border-l border-border pl-2.5"
         >
           {children.map((child) => {
-            const active = isActive(pathname, child.href);
+            const active = child.href === activeHref;
 
             return (
               <li key={child.href}>
@@ -143,18 +173,18 @@ function CollapsibleItem({
 
 function NavItemRow({
   item,
-  pathname,
+  activeHref,
   onNavigate,
 }: {
   item: DashboardNavItem;
-  pathname: string;
+  activeHref: string | null;
   onNavigate: () => void;
 }) {
   if (item.items?.length) {
     return (
       <CollapsibleItem
         item={item}
-        pathname={pathname}
+        activeHref={activeHref}
         onNavigate={onNavigate}
       />
     );
@@ -163,7 +193,7 @@ function NavItemRow({
   /* Guarded by the type: an item with no children always carries an href. */
   if (!item.href) return null;
 
-  const active = isActive(pathname, item.href);
+  const active = item.href === activeHref;
 
   return (
     <li>
@@ -186,6 +216,7 @@ function NavItemRow({
 
 export function DashboardSidebar() {
   const pathname = usePathname();
+  const activeHref = useActiveHref(pathname);
   const dispatch = useAppDispatch();
   const mobileNavOpen = useAppSelector((state) => state.ui.mobileNavOpen);
 
@@ -228,7 +259,7 @@ export function DashboardSidebar() {
                   <NavItemRow
                     key={item.href ?? item.title}
                     item={item}
-                    pathname={pathname}
+                    activeHref={activeHref}
                     onNavigate={closeMobileNav}
                   />
                 ))}

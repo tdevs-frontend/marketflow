@@ -192,6 +192,57 @@ export const dashboardNav: NavSection[] = [
   },
   {
     /*
+     * Its own group, out of Settings.
+     *
+     * Billing was a row inside the Settings rail, which put "what does this
+     * workspace pay, and is the card still valid" two navigations deep behind a
+     * heading that otherwise means *your* preferences. They are different
+     * questions asked by different people — an owner checks billing, everybody
+     * changes their own password — and the one with money attached was the one
+     * buried.
+     *
+     * The route does not move: `/dashboard/settings/billing` is where it has
+     * always been, and every bookmark and link into it still resolves. Only its
+     * position in the information architecture changes, which is the whole
+     * point — a URL is an address, not an argument about what a thing is.
+     *
+     * Labelled "Billing" while the page still reads "Billing & Subscription".
+     * A sidebar row is scanned in a column of fifteen others and wants one
+     * word; a page heading is read once and can afford to be precise.
+     */
+    title: "Billing",
+    items: [
+      {
+        title: "Billing",
+        href: "/dashboard/settings/billing",
+        icon: "credit-card",
+      },
+    ],
+  },
+  {
+    /*
+     * Also out of Settings, and for the mirror-image reason.
+     *
+     * API keys, webhooks and developer documentation are not account
+     * preferences — they are a surface a developer works in, often the only
+     * part of the dashboard they open. Reaching it through a gear icon made it
+     * look like a setting somebody occasionally toggles.
+     *
+     * `/dashboard/settings/api` is kept for the same reason Billing's route is.
+     * The row deliberately has no `items`: as the only href under that path it
+     * stays lit across the whole module rather than only on its first page.
+     */
+    title: "Developer",
+    items: [
+      {
+        title: "API & Developer",
+        href: "/dashboard/settings/api",
+        icon: "terminal",
+      },
+    ],
+  },
+  {
+    /*
      * One row for the whole module.
      *
      * The seven integration pages are reached from the `ModuleNav` strip inside
@@ -230,22 +281,23 @@ export const dashboardNav: NavSection[] = [
       /*
        * One row for the whole module — the same split Integrations follows.
        *
-       * Settings now carries its own navigation rail (see
+       * Settings carries its own navigation rail (see
        * `components/settings/settings-nav`, built from
        * `constants/settings.SETTINGS_NAV`), which lists Overview, Profile,
-       * Notifications, Security, Billing and API grouped by what they are
-       * about. Repeating those six here would be the sidebar doing the rail's
-       * job: twelve entries for six destinations, in a sidebar that is already
-       * the longest thing on the screen.
+       * Notifications and Security. Repeating those four here would be the
+       * sidebar doing the rail's job: eight entries for four destinations, in a
+       * sidebar that is already the longest thing on the screen.
        *
        * This is the strategy the sidebar was designed around and that
        * Marketing, Commerce and Integrations all follow — the sidebar carries
        * business areas, the module carries its own pages.
        *
-       * Note the row deliberately has no `items`: as the only href under
-       * `/dashboard/settings` it drops out of the sidebar's `EXACT_HREFS` set
-       * and so stays lit on every page in the module rather than only on the
-       * hub.
+       * Billing and Developer used to be in that rail and are now groups of
+       * their own above. Their routes still live under `/dashboard/settings/`,
+       * so this row would prefix-match them; the sidebar resolves the *longest*
+       * matching href instead, which lights Billing on the billing page and
+       * leaves this row lit across the account pages where it belongs. See
+       * `useActiveHref` in `layout/dashboard-sidebar`.
        */
       { title: "Settings", href: "/dashboard/settings", icon: "settings" },
     ],

@@ -1,13 +1,11 @@
 import type { LucideIcon } from "lucide-react";
 import {
   Bell,
-  CreditCard,
   LayoutGrid,
   Megaphone,
   MessagesSquare,
   Package,
   ShieldCheck,
-  Terminal,
   UserPlus,
   UserRound,
   Workflow,
@@ -60,10 +58,16 @@ export interface SettingsNavGroup {
 /**
  * Settings, grouped the way it is navigated.
  *
- * Three groups, and the grouping is the mental model rather than decoration:
- * the first is *you*, the second is *what the workspace pays for*, the third is
- * *how other systems reach it*. A reader who wants the second or third knows it
- * immediately from the heading and never scans the first.
+ * One group now, and what left it is the point. Billing and Developer used to
+ * be the second and third — *what the workspace pays for* and *how other
+ * systems reach it* — and neither is an account preference. They are modules a
+ * different person opens for a different reason: an owner checks the bill,
+ * a developer lives in the API pages, and everybody changes their own
+ * password. Both are groups of their own in the dashboard sidebar now; their
+ * routes are unchanged, so every existing link still resolves.
+ *
+ * What is left is a single coherent subject — the person signed in — which is
+ * why the rail no longer needs the grouping to explain itself.
  *
  * **Overview is a destination, not a section.** It is the only link back to
  * `/dashboard/settings`, which is where the workspace summary and the account
@@ -85,7 +89,7 @@ export const SETTINGS_NAV: SettingsNavGroup[] = [
         title: "Overview",
         href: APP_ROUTES.settings,
         icon: LayoutGrid,
-        description: "Manage your account, notifications, security and subscription.",
+        description: "Manage your account, notifications and security.",
         summary: "Where everything in Settings lives.",
       },
       {
@@ -111,30 +115,6 @@ export const SETTINGS_NAV: SettingsNavGroup[] = [
       },
     ],
   },
-  {
-    title: "Billing",
-    items: [
-      {
-        title: "Billing & Subscription",
-        href: APP_ROUTES.settingsBilling,
-        icon: CreditCard,
-        description: "Manage your MarketFlow plan, usage and billing.",
-        summary: "Your plan, usage and payment.",
-      },
-    ],
-  },
-  {
-    title: "Developer",
-    items: [
-      {
-        title: "API & Developer",
-        href: APP_ROUTES.settingsApi,
-        icon: Terminal,
-        description: "Manage API access, webhooks and developer integrations.",
-        summary: "Keys, webhooks and documentation.",
-      },
-    ],
-  },
 ];
 
 /** Flat, in navigation order. For lookups and for the overview grid. */
@@ -142,7 +122,7 @@ export const SETTINGS_PAGES: SettingsPage[] = SETTINGS_NAV.flatMap(
   (group) => group.items,
 );
 
-/** The five sections the overview links to — everything except itself. */
+/** The sections the overview links to — everything except itself. */
 export const SETTINGS_SECTIONS: SettingsPage[] = SETTINGS_PAGES.filter(
   (page) => page.href !== APP_ROUTES.settings,
 );
