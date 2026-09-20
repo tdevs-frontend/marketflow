@@ -196,7 +196,6 @@ export function DeveloperSettings() {
               <ArrowUpRight aria-hidden />
             </Link>
           }
-          bodyClassName={keys.length > 0 ? "-mx-5" : undefined}
         >
           {keys.length === 0 ? (
             <EmptyState
@@ -217,35 +216,43 @@ export function DeveloperSettings() {
             />
           ) : (
             <>
-              <div className="overflow-x-auto">
-                <ApiKeyTable
-                  keys={keys}
-                  /* A role that cannot revoke gets told so, rather than a menu
-                     item that quietly does nothing. `ApiKeyTable` renders the
-                     action unconditionally — it is shared with the Integrations
-                     screen — so the refusal belongs here, with the reason. */
-                  onRevoke={(key) => {
-                    if (!canManage) {
-                      toast(
-                        permissionHint("revoking API keys", permissions.roleName),
-                        "error",
-                      );
-                      return;
-                    }
-                    setRevoking(key);
-                  }}
-                  onCopyPrefix={(key) => {
-                    void navigator.clipboard
-                      .writeText(key.masked)
-                      .then(() => toast(`${key.name} prefix copied`, "success"))
-                      .catch(() =>
-                        toast("Could not copy — your browser blocked it", "error"),
-                      );
-                  }}
-                />
-              </div>
+              {/* Straight into the body, with no wrapper of its own — the
+                  convention every table on the dashboard follows. `Table`
+                  already pulls to the card's edges and pads its own content
+                  back in (`-mx-5 overflow-x-auto px-5`), so it owns both the
+                  scroll region and the horizontal breathing room. A second
+                  bleed around it cancels the padding and leaves Key Name
+                  against the card border. */}
+              <ApiKeyTable
+                keys={keys}
+                /* A role that cannot revoke gets told so, rather than a menu
+                   item that quietly does nothing. `ApiKeyTable` renders the
+                   action unconditionally — it is shared with the Integrations
+                   screen — so the refusal belongs here, with the reason. */
+                onRevoke={(key) => {
+                  if (!canManage) {
+                    toast(
+                      permissionHint("revoking API keys", permissions.roleName),
+                      "error",
+                    );
+                    return;
+                  }
+                  setRevoking(key);
+                }}
+                onCopyPrefix={(key) => {
+                  void navigator.clipboard
+                    .writeText(key.masked)
+                    .then(() => toast(`${key.name} prefix copied`, "success"))
+                    .catch(() =>
+                      toast("Could not copy — your browser blocked it", "error"),
+                    );
+                }}
+              />
 
-              <p className="border-t border-border px-5 py-3 text-sm text-text-muted">
+              {/* Pulled out to the card's edges so the rule spans its full
+                  width, then padded back in so the sentence lines up with the
+                  table above it — the same two moves `Table` makes. */}
+              <p className="-mx-5 mt-4 border-t border-border px-5 pt-3 text-sm text-text-muted">
                 {active} active {active === 1 ? "key" : "keys"}. A key is shown
                 in full once, when it is created — after that only its prefix
                 exists.
@@ -279,7 +286,6 @@ export function DeveloperSettings() {
               </Link>
             </div>
           }
-          bodyClassName={webhooks.length > 0 ? "-mx-5" : undefined}
         >
           {webhooks.length === 0 ? (
             <EmptyState
@@ -307,15 +313,13 @@ export function DeveloperSettings() {
              * screens with their own copies would disagree about whether it is
              * delivering with no way to tell which is right.
              */
-            <div className="overflow-x-auto">
-              <WebhookTable
-                webhooks={webhooks}
-                onOpen={setSelectedWebhook}
-                onToggle={toggleWebhook}
-                onTest={testWebhook}
-                onDelete={setDeletingWebhook}
-              />
-            </div>
+            <WebhookTable
+              webhooks={webhooks}
+              onOpen={setSelectedWebhook}
+              onToggle={toggleWebhook}
+              onTest={testWebhook}
+              onDelete={setDeletingWebhook}
+            />
           )}
         </SettingsSection>
 
