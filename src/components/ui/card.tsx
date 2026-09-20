@@ -65,6 +65,25 @@ export function Card({
  * pads the whole card once rather than padding a band inside it. Putting this
  * inside a `p-5` card double-pads the header, which is how a title ends up
  * inset forty pixels from an edge its own content sits twenty from.
+ *
+ * ---
+ *
+ * `title` and `description` are `ReactNode`, and both branch on whether what
+ * arrived is actually text. That is not a style choice — it is the HTML
+ * content model.
+ *
+ * `<h3>` and `<p>` both accept *phrasing* content only, so an element child
+ * that renders a `<div>` — a `Skeleton`, a chart, a stacked hint — produces
+ * markup the parser cannot represent. The browser closes the paragraph before
+ * the `<div>` and reopens it after, so the tree it builds is not the tree
+ * React rendered on the server, and hydration reports the mismatch:
+ *
+ *     In HTML, <div> cannot be a descendant of <p>.
+ *
+ * A string gets the semantic element it deserves; anything else gets a plain
+ * box carrying the identical classes, so nothing moves by a pixel either way.
+ * That is also the honest reading of a non-text heading: a loading placeholder
+ * is not an `<h3>`, and announcing a grey bar as one is noise.
  */
 export function CardHeader({
   title,
@@ -78,8 +97,18 @@ export function CardHeader({
   return (
     <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-4">
       <div className="space-y-1">
-        <h3 className="text-sm font-semibold">{title}</h3>
-        {description ? <p className="text-sm text-text-muted">{description}</p> : null}
+        {typeof title === "string" ? (
+          <h3 className="text-sm font-semibold">{title}</h3>
+        ) : (
+          <div className="text-sm font-semibold">{title}</div>
+        )}
+        {description ? (
+          typeof description === "string" ? (
+            <p className="text-sm text-text-muted">{description}</p>
+          ) : (
+            <div className="text-sm text-text-muted">{description}</div>
+          )
+        ) : null}
       </div>
       {action}
     </div>

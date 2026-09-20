@@ -13,7 +13,7 @@ import { Card } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EmptyState } from "@/components/ui/empty-state";
 import { MeterRow } from "@/components/ui/progress";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton, SkeletonTable } from "@/components/ui/skeleton";
 import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
 import { Tabs, TabPanel, type TabItem } from "@/components/ui/tabs";
 import { Tooltip } from "@/components/ui/tooltip";
@@ -24,6 +24,7 @@ import {
   UNAVAILABLE_REASON,
   cancelSubscription,
   listInvoices,
+  listPlanHistory,
 } from "@/lib/account-service";
 import { usageMetrics } from "@/lib/account-fixtures";
 import { useSubscription } from "@/lib/account-store";
@@ -36,6 +37,7 @@ import {
 import type {
   Invoice,
   InvoiceStatus,
+  PlanPeriod,
   SubscriptionStatus,
   UsageMetric,
 } from "@/types/account";
@@ -50,7 +52,7 @@ import {
 } from "./settings-section";
 
 /**
- * Billing & Subscription — two tabs, and the split between them is the point.
+ * Billing & Subscription — three tabs, and the split between them is the point.
  *
  *   **Billing Information** answers what this workspace is on, what it costs,
  *   when it is next charged and what it has been charged before. Dashboard
@@ -65,11 +67,19 @@ import {
  *   and a second set of cards would drift on the first day somebody edited a
  *   tier.
  *
- * Which is why the two halves deliberately do *not* share a card style. The
- * pricing tab is supposed to feel like the pricing page opened inside the
- * dashboard — featured tier, gradient rule, Most popular badge, the same
- * billing toggle — while the billing tab is supposed to feel like settings.
- * Flattening the tiers into dashboard cards would have been the easy mistake.
+ *   **Plan History** answers what this workspace *has been* on: one row per
+ *   billed period, with the cycle, the amount, the dates and how it ended. A
+ *   tab rather than a card beside the pricing grid, because "what could I move
+ *   to" and "what have I been paying" are opposite questions, and a history
+ *   panel wedged next to four pricing cards competes with the decision those
+ *   cards exist to support.
+ *
+ * Which is why the pricing tab deliberately does *not* share a card style with
+ * the other two. It is supposed to feel like the pricing page opened inside
+ * the dashboard — featured tier, gradient rule, Most popular badge, the same
+ * billing toggle, the same buttons — while Billing Information and Plan
+ * History are supposed to feel like settings. Flattening the tiers into
+ * dashboard cards would have been the easy mistake.
  *
  * What is honest here, and what is not, is unchanged and still the page's
  * organising rule:
@@ -98,12 +108,17 @@ import {
 /* Tabs                                                                       */
 /* -------------------------------------------------------------------------- */
 
-type BillingTab = "billing" | "plans";
+type BillingTab = "billing" | "plans" | "history";
 
 const TABS: TabItem<BillingTab>[] = [
   { value: "billing", label: "Billing Information" },
   { value: "plans", label: "Plans & Pricing" },
+  { value: "history", label: "Plan History" },
 ];
+
+/** `?tab=` is anybody's to type, so it is checked against the strip itself. */
+const isBillingTab = (value: string | null): value is BillingTab =>
+  TABS.some((item) => item.value === value);
 
 const STATUS: Record<SubscriptionStatus, { label: string; tone: BadgeTone }> = {
   active: { label: "Active", tone: "success" },
@@ -123,14 +138,19 @@ export function BillingSettings() {
   const canManage = permissions.can("billing", "manage");
 
   /*
-   * The tab lives in the URL, so "here is our billing" and "here are the
-   * plans" are two links somebody can send. `replace` rather than `push`: two
-   * tabs should not fill the history stack, and Back should leave Settings
-   * rather than walk the strip. The default drops the parameter instead of
-   * writing `?tab=billing`, so the clean URL and the explicit one both land on
-   * Billing Information.
+   * The tab lives in the URL, so "here is our billing", "here are the plans"
+   * and "here is what we have paid" are three links somebody can send.
+   * `replace` rather than `push`: a tab strip should not fill the history
+   * stack, and Back should leave Settings rather than walk it.
+   *
+   * Validated against `TABS` rather than compared to one string, so `?tab=`
+   * anything unrecognised falls back to Billing Information instead of
+   * rendering an empty panel. The default drops the parameter rather than
+   * writing `?tab=billing`, so the clean URL and the explicit one land in the
+   * same place.
    */
-  const tab: BillingTab = params.get("tab") === "plans" ? "plans" : "billing";
+  const requested = params.get("tab");
+  const tab: BillingTab = isBillingTab(requested) ? requested : "billing";
 
   const setTab = (value: BillingTab) => {
     const next = new URLSearchParams(params.toString());
@@ -181,9 +201,13 @@ export function BillingSettings() {
         <TabPanel idBase={idBase} value="billing" className="space-y-6">
           <BillingInformation canManage={canManage} />
         </TabPanel>
-      ) : (
+      ) : tab === "plans" ? (
         <TabPanel idBase={idBase} value="plans" className="space-y-6">
           <PlansAndPricing />
+        </TabPanel>
+      ) : (
+        <TabPanel idBase={idBase} value="history" className="space-y-6">
+          <PlanHistory />
         </TabPanel>
       )}
     </>
@@ -681,6 +705,199 @@ function PlansAndPricing() {
         changeDisabledReason={UNAVAILABLE_REASON.planChange}
         topSpacing={false}
       />
+    </>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Tab 3 — Plan History                                                       */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * What this workspace has been billed for, one row per period.
+ *
+ * Two sources, and the panel is built so a reader can tell which row came from
+ * where without being told twice:
+ *
+ *   The period running **now** is the workspace's own record. Its plan, cycle,
+ *   price and start date are the same facts the Billing Information tab shows
+ *   in a card, arranged the way a history wants them. Nothing about it is
+ *   guessed, so it is listed whether or not a provider is connected.
+ *
+ *   Every period **before** it was closed by a billing system. None is
+ *   connected, so `listPlanHistory` refuses rather than returning `[]` —
+ *   "nothing earlier exists" and "nothing here can tell you what came earlier"
+ *   are different answers, and only the second is true. The notice above the
+ *   table says that once.
+ *
+ * What is deliberately absent is invented rows. A plausible three-line history
+ * of plans a merchant never bought is the one fiction on this page that would
+ * survive being read, believed, and carried as far as their accountant.
+ *
+ * The columns are the six a merchant reconciles a bank statement against, and
+ * no more: plan, cycle, amount, start, end, status. No invoice number — that
+ * belongs to the receipt, and Recent invoices on the first tab is where a
+ * receipt is looked up.
+ */
+function PlanHistory() {
+  const subscription = useSubscription();
+
+  const load = useCallback(() => listPlanHistory(), []);
+  const { state, reload } = useServiceQuery(load);
+
+  /* Looked up rather than assumed: a tier retired from `constants/pricing`
+     still has to render as the id it was bought under, not as nothing. */
+  const plan = PLANS.find((item) => item.id === subscription.planId);
+
+  /*
+   * `null` for a workspace that has never started a subscription — the one
+   * case where this tab genuinely has nothing to list, and what the empty
+   * state below is for.
+   */
+  const current: PlanPeriod | null = subscription.startedAt
+    ? {
+        id: "current",
+        planId: subscription.planId,
+        planName: plan?.name ?? subscription.planId,
+        period: subscription.period,
+        amount: subscription.amount,
+        currency: subscription.currency,
+        startedAt: subscription.startedAt,
+        /* A cancelled subscription has an end date and it is already decided.
+           A running one does not, and its next renewal is not that date. */
+        endedAt:
+          subscription.status === "cancelled" ? subscription.renewsAt : null,
+        status: subscription.status,
+        current: true,
+      }
+    : null;
+
+  const unavailable =
+    state.status === "error" && state.error.code === "service_unavailable";
+
+  /* The archive being unreachable is not a reason to withhold the period this
+     workspace knows about for certain. */
+  const showTable = state.status === "ready" || unavailable;
+
+  /* Newest first: the open period, then the closed ones in the order the
+     service returned them. */
+  const periods = [...(current ? [current] : []), ...(state.data ?? [])];
+
+  return (
+    <>
+      {unavailable ? (
+        <ServiceNotice
+          tone="unavailable"
+          title="Only the current period is on record"
+        >
+          {state.status === "error" ? state.error.message : null} The period
+          below is read from this workspace itself; earlier ones will appear
+          above it once a provider is connected.
+        </ServiceNotice>
+      ) : null}
+
+      <SettingsSection
+        title="Plan history"
+        description="Every period this workspace has been billed for, newest first."
+        bodyClassName={showTable && periods.length > 0 ? "p-0" : undefined}
+      >
+        {state.status === "loading" ? <PlanHistorySkeleton /> : null}
+
+        {state.status === "error" && !unavailable ? (
+          <SectionError message={state.error.message} onRetry={() => void reload()} />
+        ) : null}
+
+        {showTable ? (
+          periods.length === 0 ? (
+            <EmptyState
+              compact
+              title="No plan history yet"
+              description="Each period this workspace is billed for will be listed here, from the day it subscribes."
+            />
+          ) : (
+            <div className="px-5 py-1">
+              <Table minWidth="48rem">
+                <THead>
+                  <TH>Plan</TH>
+                  <TH>Billing cycle</TH>
+                  <TH>Amount</TH>
+                  <TH>Start date</TH>
+                  <TH>End date</TH>
+                  <TH>Status</TH>
+                </THead>
+                <TBody>
+                  {periods.map((period) => (
+                    <PlanPeriodRow key={period.id} period={period} />
+                  ))}
+                </TBody>
+              </Table>
+            </div>
+          )
+        ) : null}
+      </SettingsSection>
+    </>
+  );
+}
+
+function PlanPeriodRow({ period }: { period: PlanPeriod }) {
+  const status = STATUS[period.status];
+
+  return (
+    <TR>
+      <TD className="font-semibold text-text-primary">
+        {/* A span rather than a second column: the badge qualifies the plan
+            name and belongs beside it, and a "Current" column would be five
+            empty cells for one filled one. */}
+        <span className="flex flex-wrap items-center gap-2">
+          {period.planName}
+          {period.current ? (
+            <Badge tone="info" size="sm">
+              Current
+            </Badge>
+          ) : null}
+        </span>
+      </TD>
+      <TD className="text-text-secondary">
+        {period.period === "yearly" ? "Yearly" : "Monthly"}
+      </TD>
+      <TD className="text-text-secondary tabular-nums">
+        {formatCurrency(period.amount, period.currency)}
+      </TD>
+      <TD className="text-text-secondary tabular-nums">
+        {formatDate(period.startedAt)}
+      </TD>
+      <TD className="tabular-nums">
+        {period.endedAt ? (
+          <span className="text-text-secondary">
+            {formatDate(period.endedAt)}
+          </span>
+        ) : (
+          /* A dash, not the next renewal date. This period has not ended, and
+             a date sitting in the End column is read as one that has passed.
+             The rule is spoken for a screen reader, which hears nothing at all
+             from an em dash. */
+          <span className="text-text-muted">
+            <span aria-hidden>—</span>
+            <span className="sr-only">Still running</span>
+          </span>
+        )}
+      </TD>
+      <TD>
+        <Badge tone={status.tone} size="sm">
+          {status.label}
+        </Badge>
+      </TD>
+    </TR>
+  );
+}
+
+function PlanHistorySkeleton() {
+  return (
+    <>
+      <div aria-hidden>
+        <SkeletonTable rows={3} columns={6} />
+      </div>
+      <span className="sr-only">Loading your plan history…</span>
     </>
   );
 }

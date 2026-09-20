@@ -350,6 +350,41 @@ export interface Invoice {
   documentUrl: string | null;
 }
 
+/**
+ * One period the workspace has spent on a plan.
+ *
+ * The record behind Plan History, and it is a *history* rather than a list of
+ * tiers: a workspace that moved Starter → Growth → Growth billed yearly has
+ * three entries, because each one was charged separately and each one is a
+ * separate answer to "what was I paying in March".
+ *
+ * `endedAt` is `null` for exactly one entry — the period running now, which is
+ * also the one carrying `current`. An open period has no end date, and filling
+ * it with the next renewal date would state as settled something that has not
+ * been charged yet.
+ *
+ * `planName` is carried on the entry rather than looked up from
+ * `constants/pricing`. A tier that is renamed or retired must not silently
+ * rewrite what a past period was for, and a row that resolves to nothing is
+ * worse than one quoting the name the merchant actually bought.
+ */
+export interface PlanPeriod {
+  id: string;
+  planId: string;
+  planName: string;
+  period: BillingPeriod;
+  /** Whole currency units, for one `period`. */
+  amount: number;
+  currency: string;
+  /** ISO. */
+  startedAt: string;
+  /** ISO. `null` while this is the period currently running. */
+  endedAt: string | null;
+  status: SubscriptionStatus;
+  /** The period the workspace is on right now. Exactly one entry, or none. */
+  current: boolean;
+}
+
 /** One metered allowance on the plan. */
 export interface UsageMetric {
   key: string;

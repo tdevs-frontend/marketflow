@@ -28,6 +28,7 @@ import type {
   AccountUser,
   BillingPeriod,
   Invoice,
+  PlanPeriod,
   ProfilePatch,
   SecurityState,
   ServiceResult,
@@ -136,6 +137,15 @@ export interface AccountCapabilities {
   planChange: boolean;
   /** Downloadable invoices. Issued by the payment provider, so: no. */
   invoices: boolean;
+  /**
+   * The plans this workspace was on before the one it is on now.
+   *
+   * Separate from `invoices`, although both wait on the same integration, and
+   * separate from what the store already knows. The period running *now* is a
+   * local record and is always listed; every period before it was closed by a
+   * billing system, and nothing in this browser kept it.
+   */
+  planHistory: boolean;
   /** Creating and revoking API keys. */
   apiKeys: boolean;
 }
@@ -153,6 +163,7 @@ export const CAPABILITIES: AccountCapabilities = {
   payment: !SESSION_MODE,
   planChange: !SESSION_MODE,
   invoices: !SESSION_MODE,
+  planHistory: !SESSION_MODE,
   apiKeys: true,
 };
 
@@ -184,6 +195,8 @@ export const UNAVAILABLE_REASON: Record<keyof AccountCapabilities, string> = {
     "Changing or cancelling a plan changes what is charged. No payment provider is connected, so nothing can be.",
   invoices:
     "Invoices are issued by the payment provider. None is connected, so there are none to list.",
+  planHistory:
+    "Earlier billing periods are closed and kept by the payment provider. None is connected, so only the period running now can be listed.",
   apiKeys: "",
 };
 
@@ -625,6 +638,33 @@ export async function listInvoices(): Promise<ServiceResult<Invoice[]>> {
 
   if (!CAPABILITIES.invoices) {
     return fail("service_unavailable", UNAVAILABLE_REASON.invoices);
+  }
+
+  return ok([]);
+}
+
+/**
+ * `GET /billing/plan-history`
+ *
+ * The closed periods — every plan this workspace was on and has since left.
+ *
+ * Fails with `service_unavailable` for the reason the invoice list does: a
+ * period ends when a billing system decides it has ended, and none is
+ * connected, so nothing here witnessed the ones that came before. The panel
+ * reads that failure as "there is no *archive*", not as "there is no history",
+ * and still lists the period running now — that one is the workspace's own
+ * record, held in the store, and it is the row a merchant actually came to
+ * check.
+ *
+ * Inventing two earlier rows would be the cheapest lie on the page and the
+ * most expensive to discover: a merchant reconciling a bank statement against
+ * a plan they never bought.
+ */
+export async function listPlanHistory(): Promise<ServiceResult<PlanPeriod[]>> {
+  await settle();
+
+  if (!CAPABILITIES.planHistory) {
+    return fail("service_unavailable", UNAVAILABLE_REASON.planHistory);
   }
 
   return ok([]);

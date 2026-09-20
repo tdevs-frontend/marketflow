@@ -221,15 +221,18 @@ function PlanCard({
         ) : account ? (
           <Button
             /*
-             * The tier's own variant while the control can act, and `outline`
-             * while it cannot. A disabled `dark` button is a solid slab at 50%
-             * opacity — three of them across a grid pull more attention than
-             * the tier the workspace is actually on, which is the one thing
-             * this view is supposed to make obvious.
+             * The tier's own variant, whether or not the control can act — the
+             * same `primary` on the featured card and `dark` on the rest that
+             * a visitor sees on the pricing page. One set of cards has to look
+             * like one set of cards; a grid that swaps to `outline` buttons
+             * once you sign in is a second pricing design arriving through the
+             * back door, which is the thing sharing this component prevents.
+             *
+             * Disabled is still disabled, and still carries its reason: the
+             * button dims to 50% and says why on hover, rather than changing
+             * colour to announce it.
              */
-            variant={
-              onChangePlan ? (featured ? "primary" : "dark") : "outline"
-            }
+            variant={featured ? "primary" : "dark"}
             size="md"
             className="mt-6 w-full"
             disabled={!onChangePlan}
