@@ -1,7 +1,9 @@
+import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { KPI_TILE, KPI_TONES, type KpiTone } from "@/components/ui/kpi-tones";
+import { InfoHint } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 export type { KpiTone };
@@ -13,6 +15,26 @@ export interface Kpi {
   /** Tints the icon tile. Defaults to neutral. */
   tone?: KpiTone;
   hint?: string;
+  /**
+   * What the figure is measured over, behind a `?`.
+   *
+   * For the KPIs whose label is not self-evident — "Events Today" counts what,
+   * exactly. `hint` is the line that always shows; this is the sentence that
+   * does not earn permanent room in the tile.
+   */
+  info?: ReactNode;
+  /**
+   * Makes the whole tile a button.
+   *
+   * For a figure with somewhere to go — an Events Today that opens the events
+   * behind it. Not for filtering a list the page already has a filter row for:
+   * two controls for one question is how a tile and a chip end up disagreeing
+   * about which is pressed. Omit it and the tile stays inert, which is the
+   * right default.
+   */
+  onSelect?: () => void;
+  /** What pressing it does, for assistive tech. Required with `onSelect`. */
+  selectLabel?: string;
 }
 
 /**
@@ -49,11 +71,33 @@ export function KpiStrip({
         return (
           <Card
             key={item.label}
-            className="p-4 hover:border-border-strong hover:shadow-card-hover"
+            className="relative p-4 hover:border-border-strong hover:shadow-card-hover"
           >
+            {/*
+             * The press target, as a stretched sibling rather than a wrapper.
+             *
+             * Wrapping the tile would put the `?` tooltip's own button inside
+             * this one, which is invalid and makes the hint unreachable. The
+             * overlay sits under the hint instead — see the `z-1` on it below.
+             */}
+            {item.onSelect ? (
+              <button
+                type="button"
+                onClick={item.onSelect}
+                className="absolute inset-0 rounded-card focus-visible:shadow-focus focus-visible:outline-none"
+              >
+                <span className="sr-only">{item.selectLabel ?? item.label}</span>
+              </button>
+            ) : null}
+
             <div className="flex items-start justify-between gap-3">
-              <p className="text-sm font-medium text-text-secondary">
+              <p className="flex items-center gap-1.5 text-sm font-medium text-text-secondary">
                 {item.label}
+                {item.info ? (
+                  <span className="relative z-10">
+                    <InfoHint content={item.info} />
+                  </span>
+                ) : null}
               </p>
               <span
                 className={cn(

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { AlertTriangle, CheckCircle2, Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import type { CredentialSpec } from "@/types/integration";
+import type { CredentialSpec, Integration } from "@/types/integration";
 
 /**
  * The test-connection experience, in one place.
@@ -47,20 +47,34 @@ export function useConnectionTest() {
     };
   }, []);
 
-  const run = useCallback((resolve: () => TestOutcome) => {
-    setState({ status: "testing" });
-    window.clearTimeout(timer.current);
+  /**
+   * `onSettled` fires with the verdict once the round-trip lands, and only
+   * while the tree is still mounted.
+   *
+   * It exists for the callers whose test *gates* something — enabling a paused
+   * integration must not flip it to Connected until the check says the saved
+   * credentials still work. Reading `state` from an effect would do the same
+   * job and would also fire again on every unrelated re-render that happened to
+   * land on a success.
+   */
+  const run = useCallback(
+    (resolve: () => TestOutcome, onSettled?: (outcome: TestOutcome) => void) => {
+      setState({ status: "testing" });
+      window.clearTimeout(timer.current);
 
-    timer.current = window.setTimeout(() => {
-      if (!alive.current) return;
-      const outcome = resolve();
-      setState({
-        status: outcome.ok ? "success" : "error",
-        message: outcome.message,
-        detail: outcome.detail,
-      });
-    }, TEST_LATENCY_MS);
-  }, []);
+      timer.current = window.setTimeout(() => {
+        if (!alive.current) return;
+        const outcome = resolve();
+        setState({
+          status: outcome.ok ? "success" : "error",
+          message: outcome.message,
+          detail: outcome.detail,
+        });
+        onSettled?.(outcome);
+      }, TEST_LATENCY_MS);
+    },
+    [],
+  );
 
   const reset = useCallback(() => {
     window.clearTimeout(timer.current);
@@ -121,6 +135,50 @@ export function evaluateCredentials(
     ok: true,
     message: "Connection successful.",
     detail: "Credentials accepted and the provider responded in 214 ms.",
+  };
+}
+
+/**
+ * What testing an already-configured integration reports.
+ *
+ * It repeats what the last real check found rather than inventing a fresh
+ * verdict — "Connection successful" on an integration whose queue is full of
+ * rejected messages is worse than no test at all. A real adapter replaces this
+ * with the round-trip it stands in for, and the shape of the answer does not
+ * change.
+ *
+ * Shared by the detail pages and the hub's manage drawer so that testing
+ * WhatsApp from its own page and testing Meta Pixel from the hub cannot start
+ * disagreeing about what a failing check sounds like.
+ */
+export function defaultConnectionTest(integration: Integration): TestOutcome {
+  const live =
+    integration.status === "connected" || integration.status === "issue";
+
+  if (!live) {
+    return {
+      ok: false,
+      message: "Not connected.",
+      detail: `Connect ${integration.name} before testing.`,
+    };
+  }
+
+  const failing = integration.health.find((check) => check.status === "error");
+  if (failing) {
+    return {
+      ok: false,
+      message: failing.detail,
+      detail: integration.activity.lastError ?? undefined,
+    };
+  }
+
+  const warning = integration.health.find((check) => check.status === "warning");
+  return {
+    ok: true,
+    message: "Connection successful.",
+    detail: warning
+      ? `Authenticated, but one check needs attention: ${warning.label.toLowerCase()}.`
+      : `${integration.provider?.name ?? integration.name} responded and accepted the credentials.`,
   };
 }
 

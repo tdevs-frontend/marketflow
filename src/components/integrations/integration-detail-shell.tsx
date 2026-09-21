@@ -10,17 +10,18 @@ import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { KpiStrip, type Kpi } from "@/components/ui/kpi-strip";
 import { useToast } from "@/components/ui/toast";
+import {
+  connectedRecord,
+  disconnectedRecord,
+} from "@/lib/integration-fixtures";
 import { cn } from "@/lib/utils";
-import type {
-  Integration,
-  IntegrationProvider,
-  IntegrationStatus,
-} from "@/types/integration";
+import type { Integration } from "@/types/integration";
 import { ConnectDrawer } from "./connect-drawer";
 import { ConnectionActivityPanel } from "./connection-activity";
 import { ConnectionHealth } from "./connection-health";
 import {
   ConnectionTestResult,
+  defaultConnectionTest,
   useConnectionTest,
   type TestOutcome,
 } from "./connection-test";
@@ -69,51 +70,23 @@ export function IntegrationDetailShell({
   const toast = useToast();
   const { state: test, run, reset } = useConnectionTest();
 
-  const [status, setStatus] = useState<IntegrationStatus>(integration.status);
-  const [provider, setProvider] = useState<IntegrationProvider | null>(
-    integration.provider,
-  );
+  /*
+   * One record for the whole page, so the summary card, the health rail, the
+   * activity timeline and the disconnect warning can never disagree about what
+   * state this thing is in.
+   *
+   * Every action replaces the record wholesale through the transitions in the
+   * fixtures, which is what keeps a reconnect from leaving the 401 that caused
+   * it sitting in the health rail under a green badge.
+   */
+  const [current, setCurrent] = useState<Integration>(integration);
   const [reconnecting, setReconnecting] = useState(false);
   const [confirmDisconnect, setConfirmDisconnect] = useState(false);
 
-  /* One record for the whole page, so the summary card, the health rail and the
-     disconnect warning can never disagree about what state this thing is in. */
-  const current: Integration = { ...integration, status, provider };
-  const live = status === "connected" || status === "issue";
-
-  /**
-   * The default test.
-   *
-   * It reports what the last real attempt found rather than inventing a fresh
-   * verdict — a "Connection successful" on an integration whose queue is full
-   * of rejected messages is worse than no test at all.
-   */
-  function defaultTest(): TestOutcome {
-    if (!live) {
-      return {
-        ok: false,
-        message: "Not connected.",
-        detail: `Connect ${integration.name} before testing.`,
-      };
-    }
-
-    const failing = current.health.find((check) => check.status === "error");
-    if (failing) {
-      return { ok: false, message: failing.detail, detail: current.activity.lastError ?? undefined };
-    }
-
-    const warning = current.health.find((check) => check.status === "warning");
-    return {
-      ok: true,
-      message: "Connection successful.",
-      detail: warning
-        ? `Authenticated, but one check needs attention: ${warning.label.toLowerCase()}.`
-        : `${provider?.name ?? integration.name} responded and accepted the credentials.`,
-    };
-  }
+  const live = current.status === "connected" || current.status === "issue";
 
   function disconnect() {
-    setStatus("disabled");
+    setCurrent(disconnectedRecord(current));
     reset();
     toast(`${integration.name} disconnected`, "info");
   }
@@ -127,7 +100,7 @@ export function IntegrationDetailShell({
           <>
             <Button
               variant="outline"
-              onClick={() => run(onTest ?? defaultTest)}
+              onClick={() => run(onTest ?? (() => defaultConnectionTest(current)))}
               disabled={test.status === "testing"}
             >
               <Zap aria-hidden />
@@ -210,9 +183,8 @@ export function IntegrationDetailShell({
           integration={current}
           open
           onClose={() => setReconnecting(false)}
-          onConnected={(next) => {
-            setProvider(next);
-            setStatus("connected");
+          onConnected={(next, saved) => {
+            setCurrent((record) => connectedRecord(record, next, saved));
             reset();
           }}
         />

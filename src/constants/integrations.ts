@@ -75,17 +75,27 @@ export const WEBHOOK_STATUS_LABEL: Record<WebhookStatus, string> = {
   failing: "Failing",
 };
 
+/**
+ * The catalogue's five categories, in the order the filter offers them.
+ *
+ * The order is the order a merchant sets a workspace up in: the channels that
+ * reach a customer first, then the store the customers come from, then the
+ * measurement, then the plumbing.
+ *
+ * These are a filter axis, not headings. The hub renders one continuous grid —
+ * nine integrations split across five headings is mostly headings — so a
+ * category is how a merchant narrows the list, and the card names its own in
+ * the row where no provider is configured.
+ */
 export const INTEGRATION_CATEGORIES: {
   value: IntegrationCategory;
   label: string;
 }[] = [
   { value: "messaging", label: "Messaging" },
-  { value: "email", label: "Email" },
-  { value: "sms", label: "SMS" },
   { value: "social", label: "Social" },
-  { value: "developer", label: "Developer" },
-  { value: "analytics", label: "Analytics" },
   { value: "commerce", label: "Commerce" },
+  { value: "analytics", label: "Analytics" },
+  { value: "developer", label: "Developer" },
 ];
 
 export function categoryLabel(value: IntegrationCategory): string {
@@ -93,6 +103,7 @@ export function categoryLabel(value: IntegrationCategory): string {
     INTEGRATION_CATEGORIES.find((item) => item.value === value)?.label ?? value
   );
 }
+
 
 /* -------------------------------------------------------------------------- */
 /* Provider catalogue                                                         */

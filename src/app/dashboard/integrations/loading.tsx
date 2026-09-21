@@ -12,7 +12,7 @@ export default function IntegrationsLoading() {
       <IntegrationHeaderSkeleton />
       <IntegrationKpiSkeleton />
       <IntegrationToolbarSkeleton />
-      <IntegrationCardGridSkeleton count={6} />
+      <IntegrationCardGridSkeleton count={9} />
     </>
   );
 }

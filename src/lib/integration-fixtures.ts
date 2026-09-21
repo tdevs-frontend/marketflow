@@ -16,8 +16,11 @@ import type {
   ApiKey,
   ApiLogEntry,
   ApiUsage,
+  CredentialValue,
   HealthStatus,
   Integration,
+  IntegrationEvent,
+  IntegrationProvider,
   IntegrationStatus,
   Webhook,
   WebhookDelivery,
@@ -57,6 +60,39 @@ export const INTEGRATIONS_NOW_MS = WORKSPACE_NOW_MS;
  * leak could expose. `tail` is what lets a merchant tell two keys apart.
  */
 const masked = (tail: string, dots = 10) => `${"•".repeat(dots)}${tail}`;
+
+/**
+ * An activity feed, written as tuples.
+ *
+ * The object form is six lines per event for three fields that matter, and a
+ * feed written that way stops getting edited the first time it is wrong.
+ * Minutes-ago leads because it is the element that has to stay ordered — the
+ * feed is rendered newest-first with no sort, so a row out of order here is
+ * visible immediately rather than silently re-sorted away.
+ *
+ * Every timestamp below is reconciled with the same integration's
+ * `activity` block: the SMS feed's failure is the minute its `lastErrorAt`
+ * names, and its last success is the one nine hours back. A feed that
+ * disagrees with the timeline above it is how a merchant learns the page is
+ * decoration.
+ */
+function feed(
+  prefix: string,
+  specs: [
+    minutes: number,
+    label: string,
+    outcome: IntegrationEvent["outcome"],
+    detail?: string,
+  ][],
+): IntegrationEvent[] {
+  return specs.map(([minutes, label, outcome, detail], index) => ({
+    id: `${prefix}_evt_${index}`,
+    label,
+    at: minutesAgo(minutes),
+    outcome,
+    detail,
+  }));
+}
 
 /* -------------------------------------------------------------------------- */
 /* Integrations                                                               */
@@ -187,6 +223,17 @@ function socialIntegration(): Integration {
       lastError:
         "X / Twitter returned 401 Unauthorized — the access token expired on 12 Sep.",
     },
+    events: feed("social", [
+      [2, "Post published", "success", "Instagram — MarketFlow Studio."],
+      [24, "Insights synced", "success", "Reach and engagement pulled for 4 accounts."],
+      [47, "Comment received", "success", "Facebook — MarketFlow Bangladesh."],
+      [
+        540,
+        "Authorisation expired",
+        "failure",
+        "X / Twitter stopped accepting the access token.",
+      ],
+    ]),
     metrics: [],
   };
 }
@@ -281,6 +328,13 @@ export const INTEGRATIONS: Integration[] = [
       lastErrorAt: daysAgo(6),
       lastError: "Template 'order_shipped_v2' rejected by Meta: missing sample values.",
     },
+    events: feed("whatsapp", [
+      [2, "Message received", "success", "Inbound message routed to the Inbox."],
+      [8, "Campaign sent", "success", "Eid Collection Launch — 840 recipients."],
+      [14, "Delivery receipts processed", "success", "812 delivered, 6 pending."],
+      [38, "Templates synced", "success", "24 approved templates in sync with Meta."],
+      [186, "Access token verified", "success", "Next rotation due in 69 days."],
+    ]),
     metrics: [
       { label: "Messages Today", value: "1,284", hint: "Sent and received" },
       { label: "Delivery Rate", value: "97.8%", hint: "Last 24 hours", tone: "success" },
@@ -295,7 +349,7 @@ export const INTEGRATIONS: Integration[] = [
     href: INTEGRATION_ROUTES.email,
     name: "Email",
     description: "Send campaign and automation emails from your own domain.",
-    category: "email",
+    category: "messaging",
     icon: "mail",
     status: "connected",
     provider: providerById("smtp") ?? null,
@@ -364,6 +418,17 @@ export const INTEGRATIONS: Integration[] = [
       lastErrorAt: daysAgo(2),
       lastError: "451 Temporary failure from receiving server — 3 messages requeued.",
     },
+    events: feed("email", [
+      [4, "Campaign email sent", "success", "September Newsletter — 1,240 recipients."],
+      [26, "Bounce recorded", "warning", "4 hard bounces suppressed automatically."],
+      [41, "Automation email sent", "success", "Abandoned cart, step 2."],
+      [
+        180,
+        "Sender policy checked",
+        "warning",
+        "DMARC is still p=none on marketflow.app.",
+      ],
+    ]),
     metrics: [
       { label: "Emails Today", value: "2,480", hint: "Campaign and automated" },
       { label: "Delivery Rate", value: "98.4%", hint: "Last 24 hours", tone: "success" },
@@ -378,7 +443,7 @@ export const INTEGRATIONS: Integration[] = [
     href: INTEGRATION_ROUTES.sms,
     name: "SMS",
     description: "Deliver transactional and marketing SMS worldwide.",
-    category: "sms",
+    category: "messaging",
     icon: "smartphone",
     status: "issue",
     provider: providerById("twilio") ?? null,
@@ -446,6 +511,17 @@ export const INTEGRATIONS: Integration[] = [
       lastErrorAt: minutesAgo(9),
       lastError: "Authentication failed. Please verify your API token.",
     },
+    events: feed("sms", [
+      [
+        9,
+        "Authentication failed",
+        "failure",
+        "Twilio returned 401 Unauthorized on the last 14 requests.",
+      ],
+      [12, "Messages held", "warning", "214 messages queued pending a working connection."],
+      [60, "Balance checked", "warning", "$148.20 left — roughly 4 days of sending."],
+      [540, "Message delivered", "success", "The last message to clear the gateway."],
+    ]),
     metrics: [
       { label: "Messages Today", value: "612", hint: "Before the outage" },
       { label: "Delivery Rate", value: "94.2%", hint: "Last 24 hours" },
@@ -497,6 +573,17 @@ export const INTEGRATIONS: Integration[] = [
       lastErrorAt: minutesAgo(12),
       lastError: "POST https://hooks.warehouse.internal/marketflow timed out after 10s.",
     },
+    events: feed("webhooks", [
+      [1, "Webhook delivered", "success", "order.paid → CRM Sync, 200 in 180 ms."],
+      [
+        12,
+        "Delivery timed out",
+        "failure",
+        "contact.created → Warehouse Sync, no response after 10s.",
+      ],
+      [18, "Webhook delivered", "success", "contact.updated → Order Bridge, 200."],
+      [96, "Delivery retried", "warning", "Succeeded on the second attempt."],
+    ]),
     metrics: [
       { label: "Active Endpoints", value: "3" },
       { label: "Events Today", value: "1,842" },
@@ -542,6 +629,17 @@ export const INTEGRATIONS: Integration[] = [
       lastErrorAt: hoursAgo(4),
       lastError: "429 Too Many Requests on /api/v1/contacts — Reporting Sync key throttled.",
     },
+    events: feed("api", [
+      [1, "Contacts read", "success", "GET /v1/contacts — Production Server key."],
+      [6, "Orders read", "success", "GET /v1/orders — Reporting Sync key."],
+      [
+        240,
+        "Rate limit reached",
+        "warning",
+        "Reporting Sync throttled for 40 seconds on /v1/contacts.",
+      ],
+      [12960, "API key created", "success", "Staging Integration, development."],
+    ]),
     metrics: [
       { label: "Requests Today", value: "9,318" },
       { label: "Success Rate", value: "99.1%", tone: "success" },
@@ -572,7 +670,20 @@ export const INTEGRATIONS: Integration[] = [
         checkedAt: INTEGRATIONS_NOW,
       },
     ],
-    usage: [],
+    /*
+     * What it would feed, not what it feeds.
+     *
+     * An unconnected integration still has a place in the workspace, and the
+     * card that cannot say what that place is leaves a merchant to guess why
+     * GA4 is on this page at all. The list is rendered under "Connects to"
+     * rather than "Used by" while the status is not connected — see
+     * `IntegrationManageDrawer` — so it never claims a dependency that does
+     * not exist yet.
+     */
+    usage: [
+      { label: "Marketing Analytics", href: APP_ROUTES.analytics, icon: "bar-chart" },
+      { label: "Campaigns", href: APP_ROUTES.marketingCampaigns, icon: "megaphone" },
+    ],
     activity: {
       connectedAt: null,
       lastSuccessAt: null,
@@ -580,6 +691,7 @@ export const INTEGRATIONS: Integration[] = [
       lastErrorAt: null,
       lastError: null,
     },
+    events: [],
     metrics: [],
   },
 
@@ -605,7 +717,11 @@ export const INTEGRATIONS: Integration[] = [
         checkedAt: INTEGRATIONS_NOW,
       },
     ],
-    usage: [],
+    usage: [
+      { label: "Products", href: APP_ROUTES.products, icon: "package" },
+      { label: "Orders", href: APP_ROUTES.orders, icon: "shopping-cart" },
+      { label: "Contacts", href: APP_ROUTES.contacts, icon: "users" },
+    ],
     activity: {
       connectedAt: null,
       lastSuccessAt: null,
@@ -613,6 +729,7 @@ export const INTEGRATIONS: Integration[] = [
       lastErrorAt: null,
       lastError: null,
     },
+    events: [],
     metrics: [],
   },
 
@@ -648,7 +765,10 @@ export const INTEGRATIONS: Integration[] = [
         checkedAt: daysAgo(94),
       },
     ],
-    usage: [],
+    usage: [
+      { label: "Marketing Analytics", href: APP_ROUTES.analytics, icon: "bar-chart" },
+      { label: "Campaigns", href: APP_ROUTES.marketingCampaigns, icon: "megaphone" },
+    ],
     activity: {
       connectedAt: daysAgo(160),
       lastSuccessAt: daysAgo(94),
@@ -656,6 +776,20 @@ export const INTEGRATIONS: Integration[] = [
       lastErrorAt: null,
       lastError: null,
     },
+    events: feed("meta-pixel", [
+      [
+        94 * 24 * 60,
+        "Integration paused",
+        "warning",
+        "Paused by an admin. Credentials were kept.",
+      ],
+      [
+        94 * 24 * 60 + 12,
+        "Conversion event sent",
+        "success",
+        "Purchase — the last event before it was paused.",
+      ],
+    ]),
     metrics: [],
   },
 ];
@@ -712,6 +846,174 @@ export function worstHealth(checks: { status: HealthStatus }[]): HealthStatus {
       HEALTH_RANK[check.status] > HEALTH_RANK[worst] ? check.status : worst,
     "healthy",
   );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Transitions                                                                */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The record as the API would hand it back after each connection action.
+ *
+ * Status is never the only thing that changes. A page that updates the badge
+ * alone produces a card reading "Connected · Disconnected" over a last activity
+ * of "No activity yet" — which is not a cosmetic bug, it is the page lying
+ * about the thing it exists to report. These three functions are the whole
+ * patch for each action, so a caller cannot apply half of one.
+ *
+ * They live here rather than in a component because they are the response
+ * shape: when `POST /integrations/:id/connection` exists, its body replaces
+ * the return value and every caller stays as it is.
+ */
+
+/** A single healthy check, for a connection that has just proved itself. */
+function verifiedHealth(detail: string) {
+  return [
+    {
+      id: "connection",
+      label: "Connection",
+      status: "healthy" as HealthStatus,
+      detail,
+      checkedAt: INTEGRATIONS_NOW,
+    },
+  ];
+}
+
+export function connectedRecord(
+  integration: Integration,
+  provider: IntegrationProvider,
+  credentials: CredentialValue[],
+): Integration {
+  return {
+    ...integration,
+    status: "connected",
+    provider,
+    credentials,
+    /* The identity line — whatever the merchant recognises this connection by.
+       The first credential that is not a secret is exactly that, by
+       construction: a measurement ID, a shop domain, a sender, a host. */
+    account:
+      integration.account ??
+      credentials.find((value) => value.kind !== "secret" && value.value !== "—")
+        ?.value ??
+      provider.name,
+    health: verifiedHealth(`${provider.name} accepted the credentials.`),
+    activity: {
+      connectedAt: integration.activity.connectedAt ?? INTEGRATIONS_NOW,
+      lastSuccessAt: INTEGRATIONS_NOW,
+      lastSyncAt: INTEGRATIONS_NOW,
+      /* The failure that prompted the reconnect is resolved, not history to
+         keep showing under a healthy badge. */
+      lastErrorAt: null,
+      lastError: null,
+    },
+    events: [
+      {
+        id: `${integration.id}_evt_connected`,
+        label: "Connection established",
+        at: INTEGRATIONS_NOW,
+        outcome: "success",
+        detail: `Connected through ${provider.name}.`,
+      },
+      ...integration.events,
+    ],
+  };
+}
+
+/** A paused integration resumed on its saved credentials. */
+export function enabledRecord(integration: Integration): Integration {
+  return {
+    ...integration,
+    status: "connected",
+    health: verifiedHealth(
+      `${integration.provider?.name ?? integration.name} accepted the saved credentials.`,
+    ),
+    activity: {
+      ...integration.activity,
+      lastSuccessAt: INTEGRATIONS_NOW,
+      lastSyncAt: INTEGRATIONS_NOW,
+    },
+    events: [
+      {
+        id: `${integration.id}_evt_enabled`,
+        label: "Integration enabled",
+        at: INTEGRATIONS_NOW,
+        outcome: "success",
+        detail: "Resumed on the saved credentials.",
+      },
+      ...integration.events,
+    ],
+  };
+}
+
+/**
+ * Disconnected, with the configuration kept.
+ *
+ * `credentials` is deliberately untouched: the disconnect confirmation promises
+ * that reconnecting will not mean typing the token again, and a transition that
+ * quietly cleared them would make that copy false.
+ */
+export function disconnectedRecord(integration: Integration): Integration {
+  return {
+    ...integration,
+    status: "disabled",
+    health: [
+      {
+        id: "connection",
+        label: "Connection",
+        status: "disconnected",
+        detail: "Disconnected from this workspace. Credentials are kept.",
+        checkedAt: INTEGRATIONS_NOW,
+      },
+    ],
+    events: [
+      {
+        id: `${integration.id}_evt_disconnected`,
+        label: "Connection ended",
+        at: INTEGRATIONS_NOW,
+        outcome: "warning",
+        detail: "Disconnected from this workspace.",
+      },
+      ...integration.events,
+    ],
+  };
+}
+
+/**
+ * One integration's event, carrying the integration it came from.
+ *
+ * The merged feed is read across connections, where "Delivery timed out" means
+ * something different depending on whether a webhook or a campaign produced it.
+ * Dropping the source is what turns a useful feed into a wall of verbs.
+ */
+export interface WorkspaceEvent extends IntegrationEvent {
+  integrationId: string;
+  integrationName: string;
+  icon: string;
+}
+
+/**
+ * Every feed, merged newest-first — what the Events Today tile opens onto.
+ *
+ * Sorted on the ISO string rather than a parsed date because the fixtures are
+ * all UTC with the same precision, which makes a lexicographic compare both
+ * correct and free. A real API returns this already ordered.
+ */
+export function recentEvents(
+  list: Integration[] = INTEGRATIONS,
+  limit = 14,
+): WorkspaceEvent[] {
+  return list
+    .flatMap((integration) =>
+      integration.events.map((event) => ({
+        ...event,
+        integrationId: integration.id,
+        integrationName: integration.name,
+        icon: integration.icon,
+      })),
+    )
+    .sort((a, b) => b.at.localeCompare(a.at))
+    .slice(0, limit);
 }
 
 /**

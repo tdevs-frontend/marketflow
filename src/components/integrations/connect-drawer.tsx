@@ -7,8 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Drawer } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/toast";
 import { providersFor } from "@/constants/integrations";
+import { INTEGRATIONS_NOW } from "@/lib/integration-fixtures";
 import { cn } from "@/lib/utils";
-import type { Integration, IntegrationProvider } from "@/types/integration";
+import type {
+  CredentialValue,
+  Integration,
+  IntegrationProvider,
+} from "@/types/integration";
 import {
   ConnectionTestResult,
   evaluateCredentials,
@@ -48,8 +53,15 @@ export function ConnectDrawer({
   integration: Integration;
   open: boolean;
   onClose: () => void;
-  /** Hands back the chosen adapter so the page can update its own state. */
-  onConnected: (provider: IntegrationProvider) => void;
+  /**
+   * Hands back the chosen adapter and the credentials as they will be stored,
+   * so the page can update its own state.
+   *
+   * Already masked: what comes back is what a `GET` after the save would
+   * return, not what was typed. The raw secret never leaves this component,
+   * which is the same promise the rest of the module is built on.
+   */
+  onConnected: (provider: IntegrationProvider, credentials: CredentialValue[]) => void;
 }) {
   const toast = useToast();
   const providers = useMemo(() => providersFor(integration.id), [integration.id]);
@@ -74,6 +86,32 @@ export function ConnectDrawer({
     ? provider.fields.filter((field) => !field.optional && !values[field.key]?.trim())
     : [];
 
+  /*
+   * The credentials as they will be stored — masked at the point of leaving
+   * this component, never after.
+   *
+   * Computed once and used twice: the review step renders it, and saving hands
+   * the same array back. Two separate maskings are how a review screen ends up
+   * showing a different tail from the one that gets saved.
+   */
+  const saved: CredentialValue[] = (provider?.fields ?? []).map((field) => {
+    const raw = (values[field.key] ?? "").trim();
+    const tail = raw.slice(-4);
+
+    return {
+      key: field.key,
+      label: field.label,
+      kind: field.kind,
+      value: field.kind === "secret" ? `${"•".repeat(10)}${tail}` : raw || "—",
+      preview: field.kind === "secret" ? tail : undefined,
+      hint: field.hint,
+      /* The workspace's frozen instant, not the wall clock: every other
+         timestamp in the module is measured against it, and a real `new Date()`
+         here renders as "in 7 days" beside them. */
+      updatedAt: INTEGRATIONS_NOW,
+    };
+  });
+
   function next() {
     if (step === 1 && provider) {
       /* Testing is the point of step three, so entering it starts the test
@@ -87,7 +125,7 @@ export function ConnectDrawer({
 
   function save() {
     if (!provider) return;
-    onConnected(provider);
+    onConnected(provider, saved);
     toast(`${integration.name} connected through ${provider.name}`, "success");
     onClose();
   }
@@ -235,13 +273,14 @@ export function ConnectDrawer({
             </div>
 
             <dl className="space-y-2.5">
-              {provider.fields.map((field) => (
-                <div key={field.key} className="flex items-baseline justify-between gap-3">
-                  <dt className="text-sm text-text-muted">{field.label}</dt>
+              {saved.map((credential) => (
+                <div
+                  key={credential.key}
+                  className="flex items-baseline justify-between gap-3"
+                >
+                  <dt className="text-sm text-text-muted">{credential.label}</dt>
                   <dd className="min-w-0 truncate text-sm font-medium text-text-primary">
-                    {field.kind === "secret"
-                      ? `••••••••${(values[field.key] ?? "").slice(-4)}`
-                      : values[field.key] || "—"}
+                    {credential.value}
                   </dd>
                 </div>
               ))}

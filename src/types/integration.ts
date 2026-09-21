@@ -27,20 +27,25 @@ export type IntegrationSlug =
   | "api";
 
 /**
- * The filter axis on the hub.
+ * The grouping axis on the hub — and, since the catalogue is rendered as
+ * category sections rather than one flat grid, the heading a merchant scans to.
  *
  * Named after what the integration *does* for the merchant rather than after
  * the vendor's own product category — a merchant looking for Twilio is looking
- * for "SMS", not for "CPaaS".
+ * for "Messaging", not for "CPaaS".
+ *
+ * Email and SMS used to be categories of their own, which gave the hub seven
+ * groups for nine integrations: a heading per card is not a grouping. Both are
+ * Messaging, which is the answer to the question a heading is asked — where do
+ * I go to reach a customer — and it leaves five sections that each hold
+ * something.
  */
 export type IntegrationCategory =
   | "messaging"
-  | "email"
-  | "sms"
   | "social"
-  | "developer"
+  | "commerce"
   | "analytics"
-  | "commerce";
+  | "developer";
 
 /**
  * Connection state, as the merchant experiences it.
@@ -151,6 +156,28 @@ export interface IntegrationUsage {
   icon: string;
 }
 
+/**
+ * One thing this connection did.
+ *
+ * The feed answers a different question from `ConnectionActivity` below: that
+ * says *when* the connection last worked, this says *what it has been doing*.
+ * A merchant who sees "Connected · Healthy" and a last activity of two minutes
+ * ago still cannot tell whether those two minutes carried a campaign or a
+ * heartbeat, and the feed is where that becomes legible.
+ *
+ * `outcome` is deliberately not `HealthStatus`: an event either happened, it
+ * happened with a caveat, or it failed. Health is a state; this is a record.
+ */
+export interface IntegrationEvent {
+  id: string;
+  /** In the merchant's words — "Message received", not `message.received`. */
+  label: string;
+  at: string;
+  outcome: "success" | "warning" | "failure";
+  /** One line under the label, where the label alone is not enough. */
+  detail?: string;
+}
+
 /** The debugging strip: four timestamps that between them explain a failure. */
 export interface ConnectionActivity {
   connectedAt: string | null;
@@ -200,6 +227,8 @@ export interface Integration {
   health: HealthCheck[];
   usage: IntegrationUsage[];
   activity: ConnectionActivity;
+  /** Newest first. Empty on an integration that has never been connected. */
+  events: IntegrationEvent[];
   metrics: IntegrationMetric[];
 }
 

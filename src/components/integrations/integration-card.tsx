@@ -8,49 +8,79 @@ import { Icon } from "@/components/ui/icon";
 import { categoryLabel } from "@/constants/integrations";
 import { formatRelativeTime } from "@/lib/format";
 import { INTEGRATIONS_NOW_MS, worstHealth } from "@/lib/integration-fixtures";
-import type { Integration } from "@/types/integration";
+import type { Integration, IntegrationStatus } from "@/types/integration";
 import { HealthDot, IntegrationStatusBadge } from "./integration-badges";
 
 /**
  * One integration on the hub.
  *
  * Deliberately plain: a soft icon tile, a name, a line of description, a status
- * badge and one action. No provider logo at 64px, no coloured card ground, no
- * gradient. A grid of eight of these is something a merchant scans in a couple
- * of seconds, and it only stays scannable while every card looks the same
- * except for the two things that actually differ — the badge and the button.
+ * badge, three metadata rows and one action. No provider logo at 64px, no
+ * coloured card ground, no gradient, and no card nested inside it. A grid of
+ * nine of these is something a merchant scans in a couple of seconds, and it
+ * only stays scannable while every card is the same shape — which means the
+ * broken one too. An Issue card that grows an error panel is a card that breaks
+ * the row it is in, and the explanation it carries is one the merchant cannot
+ * act on from here anyway; it lives on the detail view, where the fix is.
+ *
+ * The three rows are the card's whole argument: who is carrying this
+ * connection, what account it runs as, and when it last did anything. Health
+ * rides on that last row as a coloured dot rather than taking a row of its own
+ * — on a card this size the dot is read at the same glance as the timestamp,
+ * and a fourth row would push the button out of line with its neighbours.
  *
  * The card lifts and links where there is somewhere to go; a hub-only
- * integration does not pretend to.
+ * integration does not pretend to, and opens its drawer from the button.
  */
+
+/**
+ * The action, per state.
+ *
+ * Four labels rather than one "Configure", because they are four different
+ * actions and a single word hides which one is on offer. "Fix connection" is
+ * the one that has to be distinct: a merchant scanning for the broken thing is
+ * looking for the button that admits it.
+ *
+ * `primary` is spent only where something is genuinely waiting on the merchant.
+ * A healthy connection's Manage and a paused integration's Enable are both
+ * outline — nothing is wrong in either case, and nine primary buttons in a grid
+ * is no emphasis at all.
+ */
+const ACTION: Record<
+  IntegrationStatus,
+  { label: string; variant: "primary" | "outline" }
+> = {
+  connected: { label: "Manage", variant: "outline" },
+  issue: { label: "Fix connection", variant: "primary" },
+  needs_setup: { label: "Connect", variant: "primary" },
+  disabled: { label: "Enable", variant: "outline" },
+};
+
 export function IntegrationCard({
   integration,
   onConnect,
+  onManage,
 }: {
   integration: Integration;
-  /** Opens the guided connect flow for an integration with no page of its own. */
+  /** Opens the guided connect flow for an integration that has no connection. */
   onConnect: (integration: Integration) => void;
+  /**
+   * Opens the manage drawer, for an integration with no page of its own. The
+   * six routed ones link to their own page instead and never call this.
+   */
+  onManage: (integration: Integration) => void;
 }) {
-  const connected =
+  const live =
     integration.status === "connected" || integration.status === "issue";
   const health = worstHealth(integration.health);
+  const action = ACTION[integration.status];
 
-  /* The one line under the badge: what this connection *is*, in the merchant's
-     terms. A phone number, a sender address, an endpoint count — whichever the
-     integration recognises itself by. */
+  /* The one line that says what this connection *is*, in the merchant's terms:
+     a phone number, a sender address, an account count, an endpoint count. */
   const account = integration.account;
 
   const timestamp =
     integration.activity.lastSyncAt ?? integration.activity.lastSuccessAt;
-
-  /* Connected connections are managed, a paused one is resumed, and one that
-     was never set up is connected. Three words, because they are three
-     different actions and a single "Configure" hides which. */
-  const actionLabel = connected
-    ? "Manage"
-    : integration.status === "disabled"
-      ? "Enable"
-      : "Connect";
 
   return (
     <Card
@@ -68,16 +98,25 @@ export function IntegrationCard({
         {integration.href ? (
           /* Stretched link: the whole card is the target, while the action
              button below stays a separate, clickable control. */
-          <Link href={integration.href} className="after:absolute after:inset-0 focus-visible:outline-none">
+          <Link
+            href={integration.href}
+            className="after:absolute after:inset-0 focus-visible:outline-none"
+          >
             {integration.name}
           </Link>
         ) : (
           integration.name
         )}
       </h3>
-      <p className="mt-1 text-sm text-text-secondary font-medium">{integration.description}</p>
+      <p className="mt-1 text-sm font-medium text-text-secondary">
+        {integration.description}
+      </p>
 
       <dl className="mt-3.5 space-y-1.5 border-t border-border pt-3.5 text-sm">
+        {/* Provider where one is configured, category where none is. Both
+            answer "what is behind this", which is what the row is for — and
+            the grid is one continuous list, so the category is not a heading
+            the card can lean on. */}
         <div className="flex items-baseline justify-between gap-3">
           <dt className="shrink-0 text-text-muted">
             {integration.provider ? "Provider" : "Category"}
@@ -90,19 +129,27 @@ export function IntegrationCard({
         {account ? (
           <div className="flex items-baseline justify-between gap-3">
             <dt className="shrink-0 text-text-muted">Account</dt>
-            <dd className="min-w-0 truncate font-medium text-text-primary">{account}</dd>
-          </div>
-        ) : null}
-
-        {connected && timestamp ? (
-          <div className="flex items-baseline justify-between gap-3">
-            <dt className="shrink-0 text-text-muted">Last activity</dt>
-            <dd className="flex min-w-0 items-center gap-1.5 truncate font-medium text-text-primary">
-              <HealthDot status={health} />
-              {formatRelativeTime(timestamp, INTEGRATIONS_NOW_MS)}
+            <dd className="min-w-0 truncate font-medium text-text-primary">
+              {account}
             </dd>
           </div>
         ) : null}
+
+        {/* Always present, including its absence: "No activity yet" answers the
+            same question, and a row that disappears makes two cards in a row
+            line up differently for no reason the reader can see. The dot is
+            health, and only where there is a connection to have health. */}
+        <div className="flex items-baseline justify-between gap-3">
+          <dt className="shrink-0 text-text-muted">Last activity</dt>
+          <dd className="flex min-w-0 items-center gap-1.5 truncate font-medium text-text-primary">
+            {live ? <HealthDot status={health} /> : null}
+            {timestamp ? (
+              formatRelativeTime(timestamp, INTEGRATIONS_NOW_MS)
+            ) : (
+              <span className="text-text-muted">No activity yet</span>
+            )}
+          </dd>
+        </div>
       </dl>
 
       {/* `mt-auto` so the buttons line up across a row whose cards have
@@ -112,20 +159,24 @@ export function IntegrationCard({
         {integration.href ? (
           <ButtonLink
             href={integration.href}
-            variant={connected ? "outline" : "primary"}
+            variant={action.variant}
             size="sm"
             className="w-full"
           >
-            {actionLabel}
+            {action.label}
           </ButtonLink>
         ) : (
           <Button
-            variant={connected ? "outline" : "primary"}
+            variant={action.variant}
             size="sm"
             className="w-full"
-            onClick={() => onConnect(integration)}
+            onClick={() =>
+              integration.status === "needs_setup"
+                ? onConnect(integration)
+                : onManage(integration)
+            }
           >
-            {actionLabel}
+            {action.label}
           </Button>
         )}
       </div>

@@ -54,6 +54,7 @@ export function IntegrationKpiSkeleton({ count = 4 }: { count?: number }) {
   );
 }
 
+/** Search, then the status and category selects beside it. */
 export function IntegrationToolbarSkeleton() {
   return (
     <div className="flex flex-wrap items-center gap-2.5">
@@ -90,12 +91,16 @@ export function IntegrationCardSkeleton() {
   );
 }
 
+/** The same container-query grid the real catalogue uses, so neither the
+    column count nor the card width changes when the content lands. */
 export function IntegrationCardGridSkeleton({ count = 6 }: { count?: number }) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-      {Array.from({ length: count }).map((_, index) => (
-        <IntegrationCardSkeleton key={index} />
-      ))}
+    <div className="@container">
+      <div className="grid gap-4 @min-[620px]:grid-cols-2 @min-[940px]:grid-cols-3">
+        {Array.from({ length: count }).map((_, index) => (
+          <IntegrationCardSkeleton key={index} />
+        ))}
+      </div>
     </div>
   );
 }
