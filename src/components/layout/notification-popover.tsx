@@ -126,7 +126,7 @@ export function NotificationPopover() {
            */
           className={cn(
             "absolute top-full right-0 z-40 mt-2 flex flex-col overflow-hidden",
-            "max-h-128 w-[min(23rem,calc(100vw-2rem))]",
+            "max-h-128 w-[min(25rem,calc(100vw-2rem))]",
             /*
              * One border, one shadow, one radius — on the container and
              * nowhere else. The rows inside carry none of the three, which is

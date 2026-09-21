@@ -83,7 +83,7 @@ function Steps({ step }: { step: 1 | 2 }) {
           <li key={label} className="flex items-center gap-2">
             <span
               className={cn(
-                "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm font-medium",
+                "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm font-semibold",
                 active
                   ? "border-primary bg-primary-soft text-primary-dark"
                   : done

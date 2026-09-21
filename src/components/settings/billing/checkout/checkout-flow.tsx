@@ -348,7 +348,7 @@ function Steps({ current }: { current: Step }) {
             <span
               aria-current={active ? "step" : undefined}
               className={cn(
-                "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm font-medium",
+                "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm font-semibold",
                 active
                   ? "border-primary bg-primary-soft text-primary-dark"
                   : done
@@ -358,7 +358,7 @@ function Steps({ current }: { current: Step }) {
             >
               <span
                 className={cn(
-                  "grid size-5 place-items-center rounded-full text-xs font-bold tabular-nums",
+                  "grid size-5 place-items-center rounded-full text-xs font-medium tabular-nums",
                   active || done
                     ? "bg-primary text-white"
                     : "bg-surface-secondary text-text-muted",
@@ -370,7 +370,7 @@ function Steps({ current }: { current: Step }) {
             </span>
 
             {position < STEPS.length - 1 ? (
-              <ChevronRight className="size-4 text-border-strong" aria-hidden />
+              <ChevronRight className="size-5 text-text-muted" aria-hidden />
             ) : null}
           </li>
         );

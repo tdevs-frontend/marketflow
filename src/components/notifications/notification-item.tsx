@@ -76,7 +76,7 @@ export function NotificationItem({
           <span
             className={cn(
               "text-[15px] text-text-primary",
-              item.read ? "font-medium" : "font-semibold",
+              item.read ? "font-medium" : "font-medium",
             )}
           >
             {item.title}
