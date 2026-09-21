@@ -1,4 +1,9 @@
-import { ChevronDown } from "lucide-react";
+"use client";
+
+import { useEffect, useId, useRef, useState } from "react";
+import { Minus, Plus } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 /**
  * The questions a prospect actually types before signing up.
@@ -8,46 +13,199 @@ import { ChevronDown } from "lucide-react";
  * restating the pitch. A FAQ whose answers are marketing copy is a second CTA
  * with a chevron on it.
  *
- * `<details>` rather than a JavaScript accordion. The open and closed state is
- * a browser primitive: it is keyboard-operable, it is in the accessibility tree
- * correctly, it survives hydration failing, and it costs nothing to ship.
- * Nothing here needs to be a client component.
+ * Two columns from `md`: the heading holds the left rail and the list runs down
+ * the right. Eight items centred under a centred heading is a very long, very
+ * narrow ribbon; splitting it gives the list a shorter measure and puts the
+ * section's title in the reader's eye for the whole scroll. Below `md` the
+ * grid collapses to heading, description, list — which is the reading order
+ * already written into the source.
+ *
+ * A client component, which it did not used to be. This was a `<details>` set
+ * until the open and close had to animate: `<details>` toggles its content
+ * between rendered and not, so there is no height to interpolate and no moment
+ * at which both the outgoing and the incoming state exist. `::details-content`
+ * and `interpolate-size` would do it natively, but neither is in Safari yet,
+ * and an accordion whose animation is the whole point cannot be smooth in two
+ * browsers out of three. So: a button, a panel, and a measured height.
+ *
+ * What that costs is the free accessibility `<details>` came with, so it is
+ * paid back by hand — `aria-expanded` and `aria-controls` on the button, the
+ * panel labelled by it, and `inert` on the panel while it is closed so its text
+ * is neither read out nor tabbed into while it sits at zero height.
  *
  * The first one is open, so the pattern is obvious without anyone clicking.
  */
 
 const FAQS = [
   {
-    q: "What channels does MarketFlow support?",
-    a: "WhatsApp, email, SMS and social. Each has its own campaigns, templates and analytics, and all four write back to the same contact record — so a customer you reached on WhatsApp and emailed a week later is one person, not two.",
+    q: "What is MarketFlow?",
+    a: "MarketFlow is a connected workspace for managing customers, conversations, marketing campaigns, automation, commerce and analytics in one place.",
+  },
+  {
+    q: "Which channels can I use with MarketFlow?",
+    a: "MarketFlow supports WhatsApp, Email, SMS and Social channels, so you can manage customer communication and campaigns from one workspace.",
   },
   {
     q: "Can I automate WhatsApp conversations?",
-    a: "Yes. The automation builder triggers on inbound messages, lead events, orders and form submissions, and its steps include WhatsApp messages, waits, conditions, tags and CRM updates. Your team can take over any conversation from the shared inbox at any point.",
+    a: "Yes. MarketFlow lets you create automated workflows using triggers, conditions, delays, messages and follow-up actions.",
   },
   {
-    q: "Can I manage leads and customers in MarketFlow?",
-    a: "Contacts, leads, segments, tags and customer journeys are built in. Leads move through a drag-and-drop pipeline, and every conversation, campaign and order attaches to the contact it belongs to.",
+    q: "Can I manage contacts and leads in MarketFlow?",
+    a: "Yes. Contacts, leads, segments, tags and customer journeys can be managed together, so your team has a complete view of each customer.",
   },
   {
-    q: "Can MarketFlow manage products and orders?",
-    a: "Yes — products, categories, catalog, inventory, orders and discounts. Because commerce and marketing share a workspace, an order can trigger a follow-up and revenue can be attributed back to the campaign that earned it.",
+    q: "Can I create Email and SMS campaigns?",
+    a: "Yes. You can create campaigns, manage reusable templates and monitor delivery and engagement from the Email and SMS modules.",
   },
   {
-    q: "Can I connect external tools?",
-    a: "MarketFlow connects WhatsApp Business, email providers, SMS gateways, social accounts, Shopify and Google Analytics, plus outbound webhooks and a REST API for anything not on that list. The integrations page shows the health of each connection and tells you when one breaks.",
+    q: "Can I manage social media posts from MarketFlow?",
+    a: "Yes. Social Planner lets you plan, create, schedule and review social content across connected social accounts.",
   },
   {
-    q: "Does MarketFlow support team collaboration?",
-    a: "The inbox is shared, and roles and permissions control who can send campaigns, see billing or export data. Workspace activity records who changed what.",
+    q: "Can MarketFlow connect with my store and other tools?",
+    a: "Yes. MarketFlow includes integrations for services such as Shopify, analytics tools, Webhooks and API access.",
   },
   {
-    q: "Can I track campaign performance?",
-    a: "Every campaign reports reach, engagement and conversions, and the analytics module rolls those up into revenue by channel and a conversion funnel across the whole workspace.",
+    q: "Can I track campaign performance and revenue?",
+    a: "Yes. MarketFlow analytics helps you understand campaign activity, customer engagement, conversions, orders and revenue.",
   },
 ];
 
+interface FaqItemProps {
+  question: string;
+  answer: string;
+  isOpen: boolean;
+  onToggle: () => void;
+}
+
+function FaqItem({ question, answer, isOpen, onToggle }: FaqItemProps) {
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  /*
+   * The panel's open height in pixels, or `null` before it has been measured.
+   *
+   * `null` is not zero, and the difference matters for exactly one frame: the
+   * first item renders open and the server has no idea how tall its answer is.
+   * Committing a height of 0 to that first paint and correcting it in an effect
+   * animates the item open on arrival, which reads as a page still loading.
+   * While the height is `null` an open panel is given no maximum at all and
+   * stands at its natural size; the measurement that replaces it is the same
+   * number, so nothing moves.
+   */
+  const [openHeight, setOpenHeight] = useState<number | null>(null);
+
+  const id = useId();
+  const buttonId = `${id}-question`;
+  const panelId = `${id}-answer`;
+
+  /*
+   * Measured from the content, never from the panel — the panel is the element
+   * being clamped, so asking it its height is asking it what we just told it.
+   *
+   * A `ResizeObserver` rather than a measurement per toggle, because the number
+   * goes stale for reasons that have nothing to do with clicking: a narrower
+   * viewport rewraps a two-line answer onto three, and a late webfont reflows
+   * every answer at once. The observer fires on all of those, and on the
+   * initial observe, which is what takes the first measurement.
+   */
+  useEffect(() => {
+    const content = contentRef.current;
+    if (!content) return;
+
+    const observer = new ResizeObserver(() => {
+      setOpenHeight(content.getBoundingClientRect().height);
+    });
+    observer.observe(content);
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      className={cn(
+        "rounded-panel border bg-surface px-5 shadow-card transition-colors sm:px-6",
+        isOpen ? "border-border-strong" : "border-border",
+      )}
+    >
+      <button
+        type="button"
+        id={buttonId}
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        aria-controls={panelId}
+        className="flex w-full cursor-pointer items-center justify-between gap-4 py-5 text-left text-xl leading-relaxed font-semibold text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
+      >
+        {question}
+
+        {/*
+         * Both glyphs sit in the same grid cell and trade places on a rotation.
+         * A plus that merely rotates lands on a cross, and one swapped for a
+         * minus outright is the jump this was meant to remove.
+         *
+         * `transition-transform` would animate nothing here: Tailwind v4 sets
+         * `rotate` as its own property rather than composing a `transform`, so
+         * the property being interpolated has to be named.
+         */}
+        <span
+          aria-hidden
+          className={cn(
+            "grid size-7 shrink-0 place-items-center rounded-full border transition-colors",
+            isOpen
+              ? "border-primary-border bg-primary-soft text-primary"
+              : "border-border bg-background text-text-muted",
+          )}
+        >
+          <Plus
+            className={cn(
+              "col-start-1 row-start-1 size-3.5 transition-[rotate,opacity] duration-300 ease-in-out motion-reduce:transition-none",
+              isOpen ? "rotate-90 opacity-0" : "rotate-0 opacity-100",
+            )}
+          />
+          <Minus
+            className={cn(
+              "col-start-1 row-start-1 size-3.5 transition-[rotate,opacity] duration-300 ease-in-out motion-reduce:transition-none",
+              isOpen ? "rotate-0 opacity-100" : "-rotate-90 opacity-0",
+            )}
+          />
+        </span>
+      </button>
+
+      <div
+        id={panelId}
+        role="region"
+        aria-labelledby={buttonId}
+        inert={!isOpen}
+        style={{
+          maxHeight: isOpen
+            ? openHeight === null
+              ? undefined
+              : openHeight
+            : 0,
+        }}
+        className={cn(
+          "overflow-hidden transition-[max-height,opacity] duration-450 ease-in-out motion-reduce:transition-none",
+          isOpen ? "opacity-100" : "opacity-0",
+        )}
+      >
+        <div ref={contentRef}>
+          <p className="pb-5 text-base leading-[1.7] font-medium text-text-secondary text-pretty">
+            {answer}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function FeaturesFaq() {
+  /*
+   * One index, so one panel. Clicking the open item hands its own index back
+   * and closes it, which is the close half of the toggle; clicking another
+   * swaps the index and the two panels animate past each other on the same
+   * curve, since both stay mounted throughout.
+   */
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
   return (
     <section
       id="faq"
@@ -55,31 +213,48 @@ export function FeaturesFaq() {
       className="section-space-py scroll-mt-32 bg-background"
     >
       <div className="custom-container">
-        <header className="section-title-space mx-auto max-w-2xl text-center">
-          <h2 id="faq-title" className="section-title text-balance">
-            Questions, answered.
-          </h2>
-        </header>
+        {/*
+         * Roughly 35/65 from `lg`, a gentler 40/60 at `md` with a tighter gap —
+         * the heading needs more of a tablet's width than it does a desktop's
+         * before it starts wrapping every second word.
+         */}
+        <div className="grid gap-10 md:grid-cols-[3fr_3fr] md:gap-10 lg:grid-cols-[6fr_13fr] lg:gap-16">
+          <header className="md:pt-1">
+            <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
+              <span
+                aria-hidden
+                className="size-1.5 rounded-full bg-secondary"
+              />
+              FAQ
+            </p>
 
-        <div className="mx-auto max-w-3xl space-y-2.5">
-          {FAQS.map((faq, index) => (
-            <details
-              key={faq.q}
-              open={index === 0}
-              className="group rounded-card border border-border bg-surface px-5 shadow-card transition-colors open:border-border-strong"
-            >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-sm font-semibold text-text-primary focus-visible:shadow-focus focus-visible:outline-none [&::-webkit-details-marker]:hidden">
-                {faq.q}
-                <ChevronDown
-                  className="size-4 shrink-0 text-text-muted transition-transform group-open:rotate-180 motion-reduce:transition-none"
-                  aria-hidden
-                />
-              </summary>
-              <p className="pb-4 text-sm leading-relaxed text-text-secondary text-pretty">
-                {faq.a}
-              </p>
-            </details>
-          ))}
+            <h2 id="faq-title" className="section-title mt-5 text-balance">
+              Frequently
+              {/* Held on two lines only where the rail is wide enough to want
+                  the break; elsewhere it wraps to whatever it is given. */}
+              <br className="max-lg:hidden" /> Asked Questions
+            </h2>
+
+            <p className="mt-3.5 text-base leading-[1.7] text-text-secondary text-pretty">
+              Have questions about MarketFlow? Explore the answers to common
+              questions about campaigns, customers, automation, integrations and
+              more.
+            </p>
+          </header>
+
+          <div className="space-y-3">
+            {FAQS.map((faq, index) => (
+              <FaqItem
+                key={faq.q}
+                question={faq.q}
+                answer={faq.a}
+                isOpen={openIndex === index}
+                onToggle={() =>
+                  setOpenIndex((current) => (current === index ? null : index))
+                }
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

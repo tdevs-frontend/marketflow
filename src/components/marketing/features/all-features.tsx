@@ -191,7 +191,7 @@ export function AllFeatures() {
                 {feature.title}
               </h3>
 
-              <p className="mt-1.5 text-sm leading-[1.65] text-text-muted text-pretty">
+              <p className="mt-2.5 text-base leading-[1.6] text-text-muted text-pretty">
                 {feature.description}
               </p>
             </article>
