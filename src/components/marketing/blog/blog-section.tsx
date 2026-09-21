@@ -48,19 +48,6 @@ export function BlogSection() {
             <BlogCard key={article.slug} article={article} />
           ))}
         </div>
-
-        <div className="mt-10 flex justify-center lg:justify-end">
-          <Link
-            href={APP_ROUTES.blog}
-            className="group inline-flex items-center gap-2 text-[15px] font-semibold text-primary transition-colors hover:text-primary-dark"
-          >
-            View all articles
-            <ArrowRight
-              className="size-4 transition-[translate] duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
-              aria-hidden
-            />
-          </Link>
-        </div>
       </div>
     </section>
   );

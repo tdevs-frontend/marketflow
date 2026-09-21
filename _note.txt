@@ -187,3 +187,10 @@ linear-gradient(135deg, var(--accent), var(--accent2))
 as the main MarketFlow brand gradient.
 
 The result should feel polished, consistent, sophisticated, and production-ready — not overly colorful or AI-generated/template-like.
+
+
+
+added section list:
+1.Testimonial 
+2.How it works
+3.Integrations tools section 
