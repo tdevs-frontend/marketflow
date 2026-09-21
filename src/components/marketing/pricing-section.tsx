@@ -1,9 +1,21 @@
+import type { ReactNode } from "react";
+
 import { PricingPlans } from "./pricing-plans";
 
 export function PricingSection({
   headingLevel = "h2",
+  breadcrumb,
 }: {
   headingLevel?: "h1" | "h2";
+  /**
+   * A trail above the heading, for the routes that have one.
+   *
+   * A slot rather than a flag, because this section is shared with the home
+   * page — where there is nothing to trail from — and the breadcrumb's own
+   * items belong to the route rendering it, not to the pricing copy. Omitted,
+   * nothing renders and the header is exactly what it was.
+   */
+  breadcrumb?: ReactNode;
 }) {
   const Heading = headingLevel;
 
@@ -22,6 +34,8 @@ export function PricingSection({
       />
 
       <div className="custom-container">
+        {breadcrumb ? <div className="mb-8">{breadcrumb}</div> : null}
+
         <header className="mx-auto max-w-3xl text-center">
           <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pl-3 pr-3.5 text-text-secondary shadow-card">
             <span aria-hidden className="size-1.5 rounded-full bg-secondary" />

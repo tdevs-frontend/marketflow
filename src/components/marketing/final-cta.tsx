@@ -27,7 +27,7 @@ export function FinalCta() {
   return (
     <section
       aria-labelledby="final-cta-title"
-      className="cta-surface custom-container relative isolate mb-20 overflow-hidden rounded-3xl border border-primary-border/60 px-6 py-14 shadow-[0_20px_60px_rgba(79,70,229,0.08)] sm:rounded-[28px] sm:px-10 sm:py-20 lg:px-16"
+      className="cta-surface custom-container relative isolate mb-20 mt-20 overflow-hidden rounded-3xl border border-primary-border/60 px-6 py-14 shadow-[0_20px_60px_rgba(79,70,229,0.08)] sm:rounded-[28px] sm:px-10 sm:py-20 lg:px-16"
     >
       {/* The section dots, faded out toward the panel's edges. */}
       <div

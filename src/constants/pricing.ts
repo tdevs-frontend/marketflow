@@ -178,3 +178,42 @@ export const PRICING_ASSURANCES = [
   "Secure & self-hosted",
   "Built for growing businesses",
 ];
+
+/**
+ * The questions a buyer asks between reading the prices and entering a card.
+ *
+ * Billing questions only. "What can MarketFlow do" is answered on `/features`
+ * and by the plan cards above this section, and a pricing FAQ that re-pitches
+ * the product is a second CTA with a chevron on it.
+ *
+ * Every answer is checkable against something on this page: the discount is
+ * `YEARLY_DISCOUNT`, the tiers are `PLANS`, and the quoted tier is quoted
+ * because `monthly` is `null`. Nothing here invents a trial length, a refund
+ * window or a payment processor the product has not committed to.
+ */
+export const PRICING_FAQS = [
+  {
+    q: "Can I change plans later?",
+    a: "Yes. You can move up or down a tier at any point from workspace billing, and the change takes effect on your next invoice — you are never locked into the plan you started on.",
+  },
+  {
+    q: "How much does yearly billing save?",
+    a: "Yearly billing is 20% cheaper than paying monthly. The card shows the discounted per-month figure, and the amount actually charged is that figure for twelve months, in one invoice.",
+  },
+  {
+    q: "What happens if I outgrow my plan?",
+    a: "Nothing stops working. You will see the limit in your workspace before you reach it, and upgrading takes effect immediately — your contacts, conversations, campaigns and history carry across untouched.",
+  },
+  {
+    q: "What is included in every plan?",
+    a: "The workspace itself: contacts and leads, the shared inbox, campaigns, automation, templates and analytics. The tiers differ in volume, team size and the depth of the commerce and integration features, not in whether the product works.",
+  },
+  {
+    q: "Why is Enterprise quoted rather than priced?",
+    a: "Because the things Enterprise customers need — volume commitments, multiple workspaces, security review, onboarding — are not the same for any two of them. A number on this page would be a guess, so it is a conversation instead.",
+  },
+  {
+    q: "Can I cancel at any time?",
+    a: "Yes. Cancelling stops the next renewal and leaves your workspace usable until the end of the period you have already paid for. You can export your contacts and campaign history at any point before or after.",
+  },
+];
