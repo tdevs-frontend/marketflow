@@ -46,6 +46,15 @@ export const marketingNav: NavItem[] = [
     href: "/pricing",
     icon: "tag",
   },
+  /* After Pricing rather than after Features: Blog is the one item here a
+     visitor reaches when they are not ready to buy, so it sits past the ones
+     that are part of the decision. The footer's Resources column has pointed
+     at /blog since before the page existed. */
+  {
+    title: "Blog",
+    href: "/blog",
+    icon: "book-open",
+  },
   {
     title: "Contact",
     href: "/Contact",

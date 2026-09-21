@@ -1,5 +1,6 @@
 import {
   // AnalyticsSection,
+  BlogSection,
   FinalCta,
   HeroSection,
   // MultiChannelCampaign,
@@ -24,6 +25,8 @@ export default function HomePage() {
       <PlatformOverview />
 
       <PricingSection />
+
+      <BlogSection />
 
       <FinalCta />
     </>

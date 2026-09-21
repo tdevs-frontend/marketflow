@@ -2,6 +2,7 @@ export const APP_ROUTES = {
   home: "/",
   features: "/features",
   pricing: "/pricing",
+  blog: "/blog",
   login: "/login",
   register: "/register",
   forgotPassword: "/forgot-password",
