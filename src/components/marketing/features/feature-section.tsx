@@ -21,6 +21,12 @@ import { cn } from "@/lib/utils";
  * consecutive sections separate from each other without a rule between every
  * one — the page never needs a divider it has to style.
  *
+ * `layout="stacked"` is the exception to the two-column rule, for a visual that
+ * cannot live in half a page. The WhatsApp monitor is the case it exists for:
+ * its callout cards are pinned across the frame's own edges, so in a column
+ * they overhang into the copy beside them. Centred header, full-width visual —
+ * which also gives the page a third shape to break up nine alternating splits.
+ *
  * `scroll-mt-32` is the sticky chrome: the site header is 72px and the feature
  * nav below it is another 52, so an anchored section that did not reserve that
  * space would land with its heading underneath both.
@@ -37,6 +43,7 @@ export function FeatureSection({
   visual,
   reverse = false,
   ground = "surface",
+  layout = "split",
   anchors,
 }: {
   id: string;
@@ -53,6 +60,9 @@ export function FeatureSection({
   visual: ReactNode;
   reverse?: boolean;
   ground?: "surface" | "tint";
+  /** `split` is the two-column default; `stacked` centres the copy above a
+      full-width visual. */
+  layout?: "split" | "stacked";
   /**
    * Extra ids this section answers to.
    *
@@ -63,6 +73,8 @@ export function FeatureSection({
    */
   anchors?: string[];
 }) {
+  const stacked = layout === "stacked";
+
   return (
     <section
       id={id}
@@ -77,8 +89,20 @@ export function FeatureSection({
       ))}
 
       <div className="custom-container">
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          <div className={cn("min-w-0", reverse && "lg:order-2")}>
+        <div
+          className={cn(
+            stacked
+              ? "flex flex-col"
+              : "grid items-center gap-12 lg:grid-cols-2 lg:gap-16",
+          )}
+        >
+          <div
+            className={cn(
+              "min-w-0",
+              stacked && "mx-auto max-w-3xl text-center",
+              !stacked && reverse && "lg:order-2",
+            )}
+          >
             <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
               <EyebrowIcon className="size-4 text-primary" aria-hidden />
               {eyebrow}
@@ -88,7 +112,12 @@ export function FeatureSection({
               {title}
             </h2>
 
-            <p className="mt-5 text-base leading-[1.7] text-text-secondary text-pretty">
+            <p
+              className={cn(
+                "mt-5 text-base leading-[1.7] text-text-secondary text-pretty",
+                stacked && "mx-auto max-w-2xl",
+              )}
+            >
               {description}
             </p>
 
@@ -101,8 +130,13 @@ export function FeatureSection({
                 ) : null}
                 <ul
                   className={cn(
-                    "grid gap-x-6 gap-y-2.5 sm:grid-cols-2",
                     capabilityLabel ? "mt-3.5" : "mt-8",
+                    /* Centred and wrapping when stacked — a two-column grid
+                       under a centred heading leaves a ragged gutter down the
+                       middle of the page. */
+                    stacked
+                      ? "flex flex-wrap justify-center gap-x-6 gap-y-2.5"
+                      : "grid gap-x-6 gap-y-2.5 sm:grid-cols-2",
                   )}
                 >
                   {capabilities.map((item) => (
@@ -125,7 +159,15 @@ export function FeatureSection({
             {footer ? <div className="mt-8">{footer}</div> : null}
           </div>
 
-          <div className={cn("min-w-0", reverse && "lg:order-1")}>{visual}</div>
+          <div
+            className={cn(
+              "min-w-0",
+              stacked && "mt-14",
+              !stacked && reverse && "lg:order-1",
+            )}
+          >
+            {visual}
+          </div>
         </div>
       </div>
     </section>

@@ -15,6 +15,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { APP_ROUTES } from "@/constants";
 import { AutomationVisual } from "@/components/marketing/whatsapp";
 import {
+  AllFeatures,
   AnalyticsVisual,
   CampaignVisual,
   ChannelVisual,
@@ -35,7 +36,18 @@ import {
 } from "@/components/marketing/features";
 
 export const metadata: Metadata = {
-  title: "MarketFlow Features — CRM, Marketing Automation & Customer Conversations",
+  /*
+   * `absolute`, so the root layout stops appending "· MarketFlow".
+   *
+   * The template is right for every other page and wrong for this one: the
+   * title already opens with the brand, and the suffix pushed it past the ~60
+   * characters a search result shows, truncating the half that describes the
+   * product.
+   */
+  title: {
+    absolute:
+      "MarketFlow Features — CRM, Marketing Automation & Customer Conversations",
+  },
   description:
     "Explore MarketFlow features for CRM, WhatsApp automation, marketing campaigns, commerce, customer journeys, analytics and integrations.",
 };
@@ -69,11 +81,21 @@ export const metadata: Metadata = {
 export default function FeaturesPage() {
   return (
     <>
-      <FeaturesHero />
-      <FeatureNav />
+      {/* <FeaturesHero />
+      <FeatureNav /> */}
+
+      {/*
+       * The map before the tour.
+       *
+       * A visitor who has just read the hero is still asking how much is in
+       * here, and eleven deep sections answer that slowly. `AllFeatures` lists
+       * every module at once, so the sections below are read as detail on
+       * something already understood rather than as an unbounded scroll.
+       */}
+      <AllFeatures />
 
       <PlatformFlow />
-
+{/* 
       <FeatureSection
         id="whatsapp"
         eyebrow="WhatsApp & Conversations"
@@ -94,12 +116,13 @@ export default function FeaturesPage() {
             Start with WhatsApp
           </ButtonLink>
         }
+        layout="stacked"
         visual={
           <div className="flex justify-center">
             <AutomationVisual />
           </div>
         }
-      />
+      /> */}
 
       <FeatureSection
         id="crm"
@@ -121,7 +144,7 @@ export default function FeaturesPage() {
         ground="tint"
       />
 
-      <FeatureSection
+      {/* <FeatureSection
         id="campaigns"
         eyebrow="Marketing"
         eyebrowIcon={Megaphone}
@@ -157,9 +180,9 @@ export default function FeaturesPage() {
         visual={<WorkflowVisual />}
         reverse
         ground="tint"
-      />
+      /> */}
 
-      <FeatureSection
+      {/* <FeatureSection
         id="commerce"
         eyebrow="Commerce"
         eyebrowIcon={Package}
@@ -252,9 +275,9 @@ export default function FeaturesPage() {
           "REST API",
         ]}
         visual={<IntegrationsVisual />}
-      />
+      /> */}
 
-      <FeatureSection
+      {/* <FeatureSection
         id="workspace"
         eyebrow="Team & Workspace"
         eyebrowIcon={UsersRound}
@@ -263,15 +286,15 @@ export default function FeaturesPage() {
         visual={<WorkspaceVisual />}
         reverse
         ground="tint"
-      />
+      /> */}
 
-      <SupportingStrip />
+      {/* <SupportingStrip /> */}
 
-      <ConnectedJourney />
+      {/* <ConnectedJourney /> */}
 
       <FeaturesFaq />
 
-      <FeaturesCta />
+      {/* <FeaturesCta /> */}
     </>
   );
 }
