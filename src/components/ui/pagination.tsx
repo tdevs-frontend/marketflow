@@ -24,6 +24,51 @@ function pageWindow(page: number, totalPages: number): (number | null)[] {
   return out;
 }
 
+export type PaginationSize = "sm" | "md" | "lg";
+
+/**
+ * The three scales, as whole class strings.
+ *
+ * Whole strings rather than a box size interpolated into a template, because
+ * Tailwind reads the source for literals — `size-${n}` compiles to a control
+ * with no dimensions at all.
+ *
+ * `sm` is the dashboard's, unchanged: a 32px control in a table footer, where
+ * the pagination is a quiet thing under a dense grid. `lg` is for a marketing
+ * page, where it is the only control on the screen and is as likely to be
+ * tapped as clicked — 44px is the size a finger expects.
+ *
+ * The icon is one number per row rather than one per arrow. The two arrows
+ * were previously set at 20px and 16px, which is not a scale, and a size map
+ * has to pick one — see the note on `PaginationSize` in this file's export.
+ */
+const SIZES: Record<
+  PaginationSize,
+  { control: string; text: string; icon: string; gap: string; ellipsis: string }
+> = {
+  sm: {
+    control: "size-8",
+    text: "text-sm",
+    icon: "size-4",
+    gap: "gap-1",
+    ellipsis: "px-1 text-sm",
+  },
+  md: {
+    control: "size-9",
+    text: "text-sm",
+    icon: "size-4",
+    gap: "gap-1.5",
+    ellipsis: "px-1.5 text-sm",
+  },
+  lg: {
+    control: "size-11",
+    text: "text-base",
+    icon: "size-5",
+    gap: "gap-2",
+    ellipsis: "px-2 text-base",
+  },
+};
+
 export function Pagination({
   page,
   totalPages,
@@ -32,6 +77,7 @@ export function Pagination({
   onChange,
   /** Names what is being paged, for the "1–8 of 12" line. */
   noun = "results",
+  size = "sm",
   summary,
 }: {
   page: number;
@@ -40,6 +86,12 @@ export function Pagination({
   perPage: number;
   onChange: (page: number) => void;
   noun?: string;
+  /**
+   * Control scale: 32, 36 or 44px. `sm` is the default, so every existing
+   * caller is untouched. Only the geometry changes — border, radius, colours,
+   * the active page's indigo and the behaviour are the same at all three.
+   */
+  size?: PaginationSize;
   /**
    * A second line under the range, in the same left slot.
    *
@@ -54,6 +106,8 @@ export function Pagination({
   summary?: ReactNode;
 }) {
   if (total === 0) return null;
+
+  const scale = SIZES[size];
 
   const first = (page - 1) * perPage + 1;
   const last = Math.min(page * perPage, total);
@@ -88,15 +142,20 @@ export function Pagination({
    * events — so they are scoped to `enabled:` rather than left to light up a
    * control that cannot be clicked.
    */
-  const arrow =
-    "grid size-8 place-items-center rounded-btn border border-border text-text-secondary transition-colors" +
-    " enabled:hover:border-border-strong enabled:hover:text-text-primary" +
-    " disabled:cursor-not-allowed disabled:bg-surface-secondary disabled:text-text-muted" +
-    " focus-visible:shadow-focus focus-visible:outline-none";
+  const arrow = cn(
+    "grid place-items-center rounded-btn border border-border text-text-secondary transition-colors",
+    "enabled:hover:border-border-strong enabled:hover:text-text-primary",
+    "disabled:cursor-not-allowed disabled:bg-surface-secondary disabled:text-text-muted",
+    "focus-visible:shadow-focus focus-visible:outline-none",
+    scale.control,
+  );
 
   return (
     <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
-      <nav aria-label="Pagination" className="flex items-center gap-1">
+      <nav
+        aria-label="Pagination"
+        className={cn("flex items-center", scale.gap)}
+      >
         <button
           type="button"
           onClick={() => step(-1)}
@@ -104,7 +163,7 @@ export function Pagination({
           aria-label="Previous page"
           className={arrow}
         >
-          <ChevronLeft className="size-5" aria-hidden />
+          <ChevronLeft className={scale.icon} aria-hidden />
         </button>
 
         {pageWindow(page, totalPages).map((value, index) =>
@@ -112,7 +171,7 @@ export function Pagination({
             <span
               key={`gap-${index}`}
               aria-hidden
-              className="px-1 text-sm text-text-muted"
+              className={cn("text-text-muted", scale.ellipsis)}
             >
               …
             </span>
@@ -124,7 +183,9 @@ export function Pagination({
               aria-label={`Page ${value}`}
               aria-current={value === page ? "page" : undefined}
               className={cn(
-                "grid size-8 place-items-center rounded-btn text-sm font-bold transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                "grid place-items-center rounded-btn font-bold transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                scale.control,
+                scale.text,
                 value === page
                   ? "bg-primary text-white"
                   : "border border-border text-text-secondary hover:border-border-strong hover:text-text-primary",
@@ -142,7 +203,7 @@ export function Pagination({
           aria-label="Next page"
           className={arrow}
         >
-          <ChevronRight className="size-4" aria-hidden />
+          <ChevronRight className={scale.icon} aria-hidden />
         </button>
       </nav>
     </div>

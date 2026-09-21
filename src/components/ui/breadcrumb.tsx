@@ -5,7 +5,12 @@ import { cn } from "@/lib/utils";
 
 export interface Crumb {
   label: string;
-  /** Omitted on the last crumb — the current page is not a link to itself. */
+  /**
+   * Omitted on the last crumb — the current page is not a link to itself —
+   * and on any level that groups without being a destination of its own.
+   * Those render as muted text rather than as a link to a route that would
+   * either 404 or land back on the page the reader is already looking at.
+   */
   href?: string;
 }
 
@@ -27,22 +32,42 @@ export interface Crumb {
  */
 export function Breadcrumb({
   items,
+  align = "start",
   className,
 }: {
   items: Crumb[];
+  /**
+   * Where the trail sits in the space it is given.
+   *
+   * `start` is the default and the usual answer — a trail is chrome, and
+   * chrome lines up with the content it labels. `center` is for a trail that
+   * closes a centred hero, where the left edge of the container would leave it
+   * stranded away from everything it sits under.
+   */
+  align?: "start" | "center";
   className?: string;
 }) {
   return (
     <nav aria-label="Breadcrumb" className={className}>
-      <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm">
+      <ol
+        className={cn(
+          "flex flex-wrap items-center gap-x-2 gap-y-1 text-sm",
+          align === "center" && "justify-center",
+        )}
+      >
         {items.map((item, index) => {
           const last = index === items.length - 1;
 
           return (
-            <li key={item.label} className="flex items-center gap-x-1.5">
+            <li key={item.label} className="flex items-center gap-x-2">
+              {/* Punctuation, and `aria-hidden` for that reason — a separator
+                  read out between every level is noise. A step down from the
+                  label's own size and lighter than the muted ink, so the trail
+                  reads as words with marks between them rather than as a row
+                  of equal parts. */}
               {index > 0 ? (
                 <ChevronRight
-                  className="size-3.5 shrink-0 text-text-muted/70"
+                  className="size-3 shrink-0 text-text-muted/60"
                   aria-hidden
                 />
               ) : null}
@@ -50,14 +75,16 @@ export function Breadcrumb({
               {last || !item.href ? (
                 <span
                   aria-current={last ? "page" : undefined}
-                  className={cn(last && "font-medium text-text-primary")}
+                  className={cn(
+                    last ? "font-medium text-text-primary" : "text-text-muted",
+                  )}
                 >
                   {item.label}
                 </span>
               ) : (
                 <Link
                   href={item.href}
-                  className="text-text-muted transition-colors hover:text-primary"
+                  className="rounded-sm text-text-muted transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
                 >
                   {item.label}
                 </Link>

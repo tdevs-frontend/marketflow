@@ -33,15 +33,8 @@ export function BlogHero() {
       />
 
       <div className="custom-container">
-        <div className="pt-6 pb-16 lg:pt-8 lg:pb-20">
-          <Breadcrumb
-            items={[
-              { label: "Home", href: APP_ROUTES.home },
-              { label: "Blog" },
-            ]}
-          />
-
-          <div className="mx-auto mt-10 max-w-3xl text-center lg:mt-12">
+        <div className="py-16 lg:py-20">
+          <div className="mx-auto max-w-4xl text-center">
             <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
               <BookOpen className="size-4 text-primary" aria-hidden />
               MarketFlow Resources
@@ -52,14 +45,33 @@ export function BlogHero() {
               className="mt-7 text-[2.5rem] leading-[1.08] font-bold tracking-tight text-balance sm:text-5xl xl:text-[3.75rem]"
             >
               Insights for better marketing and{" "}
-              <span className="brand-gradient-text">customer growth</span>.
+              <span className="brand-gradient-text">customer growth</span>
             </h1>
-
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-text-secondary text-pretty">
-              Explore practical ideas about customer engagement, automation,
-              campaigns, commerce and analytics.
-            </p>
           </div>
+
+          {/*
+           * The trail closes the hero rather than opening it, and it is
+           * centred on the same axis as the eyebrow, heading and description
+           * above it — so the hero reads as one centred column rather than as
+           * a centred block with a stray line under it.
+           *
+           * The margin matches the block's own bottom padding, so the
+           * breadcrumb carries equal air above and below within the hero.
+           *
+           * Resources carries no `href`. It is the section this page belongs
+           * to rather than a page of its own — there is no `/resources` route,
+           * and pointing it at `/blog` would give the trail two names for the
+           * screen the reader is already on.
+           */}
+          <Breadcrumb
+            align="center"
+            className="mt-6"
+            items={[
+              { label: "Home", href: APP_ROUTES.home },
+              { label: "Resources" },
+              { label: "Blog" },
+            ]}
+          />
         </div>
       </div>
     </section>

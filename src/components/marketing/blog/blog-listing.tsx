@@ -130,6 +130,10 @@ export function BlogListing() {
             perPage={BLOG_PAGE_SIZE}
             onChange={changePage}
             noun="articles"
+            /* The only control on the page, and as likely to be tapped as
+               clicked — the dashboard's 32px footer scale is too small to be
+               the last thing a marketing page asks somebody to hit. */
+            size="lg"
           />
         </div>
       </div>
