@@ -72,6 +72,15 @@ export const metadata: Metadata = {
  * as one long table. The rhythm is set here rather than inside the sections so
  * it can be read in one place and cannot drift.
  *
+ * The ground half of that rhythm is load-bearing for spacing, not just for
+ * looks. Every section spends `section-space-py` on its own padding, so two
+ * neighbours on the same ground put 160px of unbroken canvas between their
+ * content with nothing to say a section ended — which reads as a gap rather
+ * than as a boundary. The live set runs white, tint, white, tint:
+ * `AllFeatures`, `PlatformFlow`, the CRM section, `FeaturesFaq`. Re-enabling a
+ * commented-out section means re-walking `ground` down the page from the top,
+ * since the values below were tuned against the sections that actually render.
+ *
  * Anchor ids are load-bearing: the site footer has linked to `#whatsapp`,
  * `#crm`, `#campaigns`, `#automation`, `#email`, `#sms` and `#integrations`
  * since before this page existed. Email and SMS share a section, so `#sms` is
@@ -141,7 +150,6 @@ export default function FeaturesPage() {
         ]}
         visual={<CrmVisual />}
         reverse
-        ground="tint"
       />
 
       {/* <FeatureSection

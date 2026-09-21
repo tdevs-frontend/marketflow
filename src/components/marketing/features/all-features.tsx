@@ -34,9 +34,11 @@ import { cn } from "@/lib/utils";
  * only surfaces that exist in the dashboard today — no roadmap, nothing the
  * sidebar does not route to.
  *
- * One card holding the whole map, on the page's white surface. That is what
- * makes this read as a product overview rather than as another page section:
- * a single object a visitor takes in at once, lifted off the tinted canvas.
+ * The page's opening section, so it sits on the layout's white surface and the
+ * tinted `PlatformFlow` below it supplies the first ground change. Grounds
+ * alternate down this page — see the note in `features/page.tsx` — and that
+ * alternation is what marks the seam between two sections; without it the
+ * 80px each spends on padding stack into 160px of flat, unbroken canvas.
  */
 
 interface Feature {
@@ -132,10 +134,10 @@ export function AllFeatures() {
     <section
       id="all-features"
       aria-labelledby="all-features-title"
-      className="section-space-py bg-background"
+      className="section-space-py"
     >
       <div className="custom-container">
-        <header className="mx-auto max-w-2xl text-center">
+        <header className="section-title-space mx-auto max-w-2xl text-center">
           <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-primary-border bg-primary-soft py-1.5 pr-4 pl-3 text-primary">
             <Sparkles className="size-3.5" aria-hidden />
             Our features
@@ -164,7 +166,7 @@ export function AllFeatures() {
          * integrations descriptions run a line longer than their neighbours,
          * and stretched cards absorb that instead of leaving a ragged floor.
          */}
-        <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {FEATURES.map((feature) => (
             <article
               key={feature.title}
