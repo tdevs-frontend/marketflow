@@ -11,7 +11,6 @@ export * from "./integration-activity-feed";
 export * from "./integration-badges";
 export * from "./integration-card";
 export * from "./integration-detail-shell";
-export * from "./integration-module-nav";
 export * from "./integration-manage-drawer";
 export * from "./integration-skeletons";
 export * from "./integration-usage-list";
