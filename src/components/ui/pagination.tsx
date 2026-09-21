@@ -95,20 +95,7 @@ export function Pagination({
     " focus-visible:shadow-focus focus-visible:outline-none";
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
-      <div className="min-w-0">
-        <p className="text-sm text-text-muted">
-          Showing{" "}
-          <span className="font-medium text-text-secondary">
-            {first}–{last}
-          </span>{" "}
-          of <span className="font-medium text-text-secondary">{total}</span> {noun}
-        </p>
-        {summary ? (
-          <p className="mt-0.5 text-sm text-text-muted">{summary}</p>
-        ) : null}
-      </div>
-
+    <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
       <nav aria-label="Pagination" className="flex items-center gap-1">
         <button
           type="button"

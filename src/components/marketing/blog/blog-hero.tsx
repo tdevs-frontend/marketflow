@@ -1,5 +1,7 @@
 import { BookOpen } from "lucide-react";
 
+import { Breadcrumb } from "@/components/ui/breadcrumb";
+import { APP_ROUTES } from "@/constants";
 
 /**
  * The Resources hero.
@@ -9,6 +11,11 @@ import { BookOpen } from "lucide-react";
  * same product. What differs is the promise: this page is not selling, so
  * there is no button pair under the heading — the thing to do next is scroll
  * into the library, and a CTA here would compete with it.
+ *
+ * The breadcrumb is left-aligned against the container while the heading block
+ * stays centred. Centring it too would read as part of the heading — a trail
+ * is chrome for the page, not the opening line of it — and left is also where
+ * a reader's eye already is when the page loads.
  */
 export function BlogHero() {
   return (
@@ -18,7 +25,7 @@ export function BlogHero() {
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,var(--color-border-strong)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border-strong)_1px,transparent_1px)] bg-[size:64px_64px] opacity-40 mask-[radial-gradient(ellipse_85%_45%_at_50%_20%,black,transparent_75%)]"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,var(--color-border-strong)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border-strong)_1px,transparent_1px)] bg-size-[64px_64px] opacity-40 mask-[radial-gradient(ellipse_85%_45%_at_50%_20%,black,transparent_75%)]"
       />
       <div
         aria-hidden
@@ -26,8 +33,15 @@ export function BlogHero() {
       />
 
       <div className="custom-container">
-        <div className="py-18 lg:py-22">
-          <div className="mx-auto max-w-3xl text-center">
+        <div className="pt-6 pb-16 lg:pt-8 lg:pb-20">
+          <Breadcrumb
+            items={[
+              { label: "Home", href: APP_ROUTES.home },
+              { label: "Blog" },
+            ]}
+          />
+
+          <div className="mx-auto mt-10 max-w-3xl text-center lg:mt-12">
             <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
               <BookOpen className="size-4 text-primary" aria-hidden />
               MarketFlow Resources

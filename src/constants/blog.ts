@@ -1,17 +1,23 @@
 /**
  * The Resources library.
  *
- * Nine articles, each about something the product actually does — WhatsApp
- * automation, the lead pipeline, segments, campaigns, orders, analytics. A
- * marketing blog that writes about productivity in general is a content farm
- * wearing the brand; every piece here is answerable from a module in the
- * dashboard, which is what makes the "Read article" click worth anything.
+ * Twenty-four articles, each about something the product actually does —
+ * WhatsApp automation, the lead pipeline, segments, campaigns, orders,
+ * analytics. A marketing blog that writes about productivity in general is a
+ * content farm wearing the brand; every piece here is answerable from a module
+ * in the dashboard, which is what makes the "Read article" click worth
+ * anything.
  *
  * The data lives here rather than in the components because three surfaces
- * read it — the landing section takes the first three, `/blog` lists all nine
- * behind filters, and `/blog/[slug]` renders one in full — and a set of cards
- * that disagreed about a publication date depending on which page you were on
- * is the kind of thing nobody notices until a customer does.
+ * read it — the landing section takes the first three, `/blog` pages through
+ * all of them behind filters, and `/blog/[slug]` renders one in full — and a
+ * set of cards that disagreed about a publication date depending on which page
+ * you were on is the kind of thing nobody notices until a customer does.
+ *
+ * Photography is in `public/blog`, one file per article, named for the slot
+ * rather than for the slug so an article can be retitled without orphaning its
+ * image. Every file is 1600×900, cropped at the source, so the grid cannot be
+ * broken by a replacement of the wrong shape.
  *
  * There is no CMS behind this yet. When there is, this file is the shape it
  * has to return.
@@ -28,6 +34,9 @@ export const BLOG_TOPICS = [
 ] as const;
 
 export type BlogTopic = (typeof BLOG_TOPICS)[number]["value"];
+
+/** Articles per page on `/blog`. Three full rows of the three-column grid. */
+export const BLOG_PAGE_SIZE = 9;
 
 /**
  * One piece of article body.
@@ -60,6 +69,7 @@ export interface BlogArticle {
   /** ISO date. Formatted at the render site, never stored pre-formatted. */
   publishedAt: string;
   image: string;
+  /** Describes the photograph, not the article — it is the image's alt text. */
   imageAlt: string;
   body: ArticleBlock[];
 }
@@ -75,9 +85,8 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       "Learn how automated replies, follow-ups and customer journeys can turn conversations into measurable growth.",
     readingMinutes: 6,
     publishedAt: "2026-09-09",
-    image: "/blog/whatsapp-automation.svg",
-    imageAlt:
-      "A WhatsApp conversation beside an automated workflow of connected steps.",
+    image: "/blog/whatsapp-automation.jpg",
+    imageAlt: "A hand holding a phone showing an open messaging conversation.",
     body: [
       {
         type: "p",
@@ -126,9 +135,8 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       "Discover how connected customer data, segmentation and timely communication improve the path from first contact to repeat purchase.",
     readingMinutes: 7,
     publishedAt: "2026-08-27",
-    image: "/blog/customer-journey.svg",
-    imageAlt:
-      "A lead pipeline of four stages, with cards moving from new through to won.",
+    image: "/blog/customer-journey.jpg",
+    imageAlt: "Two people shaking hands at the close of a business meeting.",
     body: [
       {
         type: "p",
@@ -169,9 +177,9 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       "Bring WhatsApp, Email, SMS and Social campaigns together without losing the customer context.",
     readingMinutes: 6,
     publishedAt: "2026-08-14",
-    image: "/blog/multi-channel.svg",
+    image: "/blog/multi-channel.jpg",
     imageAlt:
-      "One audience at the centre, branching out to four connected channels.",
+      "A desk with a monitor, laptop and a printed social media marketing plan.",
     body: [
       {
         type: "p",
@@ -212,8 +220,8 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       "Practical changes that shorten response time and stop qualified leads going quiet, without asking your team to do more.",
     readingMinutes: 5,
     publishedAt: "2026-07-30",
-    image: "/blog/lead-follow-up.svg",
-    imageAlt: "A follow-up checklist beside a timer showing elapsed response time.",
+    image: "/blog/lead-follow-up.jpg",
+    imageAlt: "Someone taking a call on a mobile phone while holding a coffee.",
     body: [
       {
         type: "p",
@@ -248,8 +256,8 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       "How grouping customers by behaviour rather than guesswork makes every campaign smaller, sharper and easier to measure.",
     readingMinutes: 6,
     publishedAt: "2026-07-16",
-    image: "/blog/segmentation.svg",
-    imageAlt: "A contact list resolving into three distinct customer groups.",
+    image: "/blog/segmentation.jpg",
+    imageAlt: "A desk covered with printed charts and analysis notes.",
     body: [
       {
         type: "p",
@@ -285,8 +293,8 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       "Triggers, conditions and delays decide when a message lands — and timing is usually what separates a reply from silence.",
     readingMinutes: 5,
     publishedAt: "2026-06-29",
-    image: "/blog/automation-timing.svg",
-    imageAlt: "A workflow of sequential steps beside a clock marking the delay.",
+    image: "/blog/automation-timing.jpg",
+    imageAlt: "A screen showing a board of work items organised into columns.",
     body: [
       {
         type: "p",
@@ -322,9 +330,8 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       "When orders and conversations share a workspace, revenue can be attributed back to the message that earned it.",
     readingMinutes: 7,
     publishedAt: "2026-06-11",
-    image: "/blog/conversations-revenue.svg",
-    imageAlt:
-      "A conversation on the left, connected to a rising revenue chart on the right.",
+    image: "/blog/conversations-revenue.jpg",
+    imageAlt: "Two colleagues reviewing an online store on a laptop together.",
     body: [
       {
         type: "p",
@@ -361,8 +368,9 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       "A repeatable way to plan, build, send and review a campaign — from the audience through to the number that judges it.",
     readingMinutes: 8,
     publishedAt: "2026-05-28",
-    image: "/blog/campaigns.svg",
-    imageAlt: "A campaign composer beside the audience list it will send to.",
+    image: "/blog/campaigns.jpg",
+    imageAlt:
+      "A marketing team working around a desk of laptops, notes and printed material.",
     body: [
       {
         type: "p",
@@ -408,9 +416,8 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       "A short list of metrics worth watching weekly, and the vanity numbers worth ignoring entirely.",
     readingMinutes: 6,
     publishedAt: "2026-05-14",
-    image: "/blog/analytics.svg",
-    imageAlt:
-      "Four performance tiles above a bar chart of campaign results over time.",
+    image: "/blog/analytics.jpg",
+    imageAlt: "A laptop displaying a dashboard of performance charts.",
     body: [
       {
         type: "p",
@@ -436,6 +443,576 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       {
         type: "p",
         text: "Weekly for campaign activity, monthly for revenue and repeat rate. Checking a slow metric daily produces noise, and reacting to that noise is how teams end up rewriting a strategy that was working.",
+      },
+    ],
+  },
+  {
+    slug: "writing-whatsapp-templates-that-get-approved",
+    category: "WhatsApp Automation",
+    topic: "whatsapp",
+    title: "Writing WhatsApp Templates That Get Approved the First Time",
+    description:
+      "What template review actually checks for, and how to write a message that passes without three rounds of edits.",
+    readingMinutes: 5,
+    publishedAt: "2026-04-30",
+    image: "/blog/whatsapp-templates.jpg",
+    imageAlt: "Hands typing a message on a mobile phone keyboard.",
+    body: [
+      {
+        type: "p",
+        text: "A rejected template is rarely rejected for its wording. It is rejected because it is the wrong category, because a variable is doing something a variable should not, or because it reads as an advert sent to somebody who did not ask for one.",
+      },
+      { type: "h2", text: "Get the category right first" },
+      {
+        type: "p",
+        text: "Utility, marketing and authentication are not labels you pick to suit the approval odds. They describe what the message does, and a marketing message submitted as a utility one is the single most common rejection.",
+      },
+      { type: "h2", text: "Write the variable, not around it" },
+      {
+        type: "list",
+        items: [
+          "Give every placeholder a real example when you submit it.",
+          "Never start or end a message with a variable.",
+          "Do not use a variable to smuggle in the part of the message that would have failed review.",
+          "Keep the fixed text meaningful on its own — if the sentence only makes sense once filled in, it will not pass.",
+        ],
+      },
+      { type: "h2", text: "Say who you are" },
+      {
+        type: "p",
+        text: "The recipient may not have your number saved. A template that opens by naming the business it comes from is both better received and more likely to be approved, and it costs one line.",
+      },
+    ],
+  },
+  {
+    slug: "running-a-shared-inbox-without-stepping-on-each-other",
+    category: "WhatsApp Automation",
+    topic: "whatsapp",
+    title: "Running a Shared Inbox Without Two People Answering the Same Chat",
+    description:
+      "Assignment, ownership and a few small conventions that keep a team inbox from becoming a group chat.",
+    readingMinutes: 5,
+    publishedAt: "2026-04-16",
+    image: "/blog/shared-inbox.jpg",
+    imageAlt: "Two support agents wearing headsets, working at their desks.",
+    body: [
+      {
+        type: "p",
+        text: "The failure mode of a shared inbox is not messages going unanswered. It is two people answering the same one differently, four minutes apart, in front of the customer.",
+      },
+      { type: "h2", text: "Ownership beats etiquette" },
+      {
+        type: "p",
+        text: "Every open conversation should have exactly one name on it. Teams that rely on a convention — whoever saw it first — discover that the convention breaks at precisely the times it matters, which is when the inbox is busy.",
+      },
+      { type: "h2", text: "Three conventions worth writing down" },
+      {
+        type: "list",
+        items: [
+          "Assign before you reply, not after.",
+          "Close a conversation when it is done, so the open count means something.",
+          "Hand over in the thread, not in a side channel — the next person needs the context, not the summary.",
+        ],
+      },
+      { type: "h2", text: "Let the automation take the easy half" },
+      {
+        type: "p",
+        text: "Acknowledgements, opening hours, order status. Anything a workflow can answer correctly every time should not be arriving in a human queue at all, and removing it is usually what makes the rest of the inbox manageable.",
+      },
+    ],
+  },
+  {
+    slug: "email-deliverability-basics",
+    category: "Marketing",
+    topic: "marketing",
+    title: "Email Deliverability Basics Every Marketing Team Should Know",
+    description:
+      "Authentication, list hygiene and sending patterns — the three things that decide whether your campaign reaches an inbox at all.",
+    readingMinutes: 7,
+    publishedAt: "2026-04-02",
+    image: "/blog/email-deliverability.jpg",
+    imageAlt: "A tidy desk with an open laptop, notebook and phone.",
+    body: [
+      {
+        type: "p",
+        text: "Deliverability is the quietest way a campaign fails. The send reports as successful, the numbers look merely disappointing, and nothing tells you that a third of it never reached an inbox.",
+      },
+      { type: "h2", text: "Authenticate the domain" },
+      {
+        type: "p",
+        text: "SPF, DKIM and DMARC are not optional any more — the large inbox providers now require them for bulk senders. They are a one-time DNS job and the single highest-return thing on this list.",
+      },
+      { type: "h2", text: "Send to people who want it" },
+      {
+        type: "list",
+        items: [
+          "Remove hard bounces immediately, not monthly.",
+          "Suppress contacts who have not opened anything in a year — they are lowering the reputation of every send.",
+          "Make unsubscribing easy. A spam complaint costs far more than a lost contact.",
+          "Never send to a purchased list.",
+        ],
+      },
+      { type: "h2", text: "Warm up, then stay steady" },
+      {
+        type: "p",
+        text: "A new sending domain that goes from zero to fifty thousand in a day looks exactly like a compromised one. Build volume gradually, and once you are there, keep the pattern regular — the irregular sender is the suspicious one.",
+      },
+    ],
+  },
+  {
+    slug: "when-sms-marketing-actually-works",
+    category: "Marketing",
+    topic: "marketing",
+    title: "When SMS Marketing Actually Works — and When It Backfires",
+    description:
+      "SMS has the highest read rate of any channel and the shortest patience. Here is where it earns its place.",
+    readingMinutes: 4,
+    publishedAt: "2026-03-19",
+    image: "/blog/sms-marketing.jpg",
+    imageAlt: "A phone screen asking the reader to turn on notifications.",
+    body: [
+      {
+        type: "p",
+        text: "Almost every SMS is read, and read within minutes. That statistic is why teams adopt the channel and also why they misuse it — a channel nobody can ignore is a channel you can very easily wear out.",
+      },
+      { type: "h2", text: "Use it for time and certainty" },
+      {
+        type: "list",
+        items: [
+          "Order and delivery updates.",
+          "Appointment reminders.",
+          "One-time codes.",
+          "A genuinely short window — today only, closing at six.",
+        ],
+      },
+      { type: "h2", text: "Do not use it for anything that needs a paragraph" },
+      {
+        type: "p",
+        text: "If the message needs explaining, it belongs in email. An SMS that arrives as three segments and ends mid-sentence costs you three times the money and some goodwill.",
+      },
+      { type: "h2", text: "Frequency is the whole discipline" },
+      {
+        type: "p",
+        text: "Set a cap — a small number per contact per month — and treat it as a hard limit rather than a target. The cost of one message too many is an opt-out, and on SMS an opt-out is permanent.",
+      },
+    ],
+  },
+  {
+    slug: "building-a-social-content-calendar-that-survives",
+    category: "Marketing",
+    topic: "marketing",
+    title: "Building a Social Content Calendar Your Team Will Actually Keep",
+    description:
+      "Planning further ahead than next week, without building a schedule that collapses the first time something urgent happens.",
+    readingMinutes: 5,
+    publishedAt: "2026-03-05",
+    image: "/blog/social-planner.jpg",
+    imageAlt: "A wall calendar showing a month laid out in a grid.",
+    body: [
+      {
+        type: "p",
+        text: "Most content calendars are abandoned in week three. Not because the team stopped caring, but because the calendar was built for a month in which nothing else happened.",
+      },
+      { type: "h2", text: "Plan themes, schedule posts" },
+      {
+        type: "p",
+        text: "Decide the month's three or four themes in one sitting, then fill individual slots weekly. Planning thirty specific posts in advance guarantees that half of them will be wrong by the time they publish.",
+      },
+      { type: "h2", text: "Leave gaps on purpose" },
+      {
+        type: "p",
+        text: "A calendar with no empty slots has no room for the thing actually worth posting — the customer story, the launch, the answer to a question everybody suddenly has. Book about seventy per cent and defend the rest.",
+      },
+      { type: "h2", text: "Review what happened, not what was planned" },
+      {
+        type: "list",
+        items: [
+          "Which posts earned replies rather than impressions?",
+          "Which theme is carrying the month?",
+          "What did you skip, and did anyone notice?",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "recovering-abandoned-carts-without-being-annoying",
+    category: "Commerce",
+    topic: "commerce",
+    title: "Recovering Abandoned Carts Without Being Annoying About It",
+    description:
+      "A short, well-timed sequence recovers more than a long one — and costs far less goodwill.",
+    readingMinutes: 5,
+    publishedAt: "2026-02-19",
+    image: "/blog/abandoned-cart.jpg",
+    imageAlt: "A small shopping trolley standing on a laptop keyboard.",
+    body: [
+      {
+        type: "p",
+        text: "An abandoned cart is not a lost sale. It is usually an interruption — a phone call, a train stop, a question the page did not answer. The recovery message that works treats it that way.",
+      },
+      { type: "h2", text: "Three messages, and then stop" },
+      {
+        type: "list",
+        items: [
+          "One hour later — a reminder with the items in it, and nothing else.",
+          "A day later — answer the objection. Delivery time, returns, sizing.",
+          "Three days later — the last one, and make it clear it is the last one.",
+        ],
+      },
+      { type: "h2", text: "Hold the discount back" },
+      {
+        type: "p",
+        text: "Leading with a discount teaches customers to abandon deliberately, and the habit is very hard to unlearn. Keep it for the final message, if at all — most recovered carts do not need one.",
+      },
+      { type: "h2", text: "Read the failures" },
+      {
+        type: "p",
+        text: "If one product is abandoned far more than the rest, the sequence is not the problem. Something on the page is, and no amount of follow-up will fix it.",
+      },
+    ],
+  },
+  {
+    slug: "from-product-catalog-to-campaign",
+    category: "Commerce",
+    topic: "commerce",
+    title: "From Product Catalog to Campaign in an Afternoon",
+    description:
+      "Keeping the catalog structured enough that building a campaign around a product range is an afternoon rather than a project.",
+    readingMinutes: 5,
+    publishedAt: "2026-02-05",
+    image: "/blog/product-catalog.jpg",
+    imageAlt: "A styled arrangement of retail product bottles and packaging.",
+    body: [
+      {
+        type: "p",
+        text: "The reason a seasonal campaign takes two weeks is almost never the campaign. It is the hour spent working out which products are actually in the range, and the second hour finding images that match.",
+      },
+      { type: "h2", text: "Structure the catalog for the campaign you will run" },
+      {
+        type: "list",
+        items: [
+          "Categories that match how you sell, not how you warehouse.",
+          "One good image per product, at a consistent crop.",
+          "Stock status that is true, so the campaign cannot promote something unavailable.",
+          "Tags for the groupings you reach for repeatedly — new in, clearance, bestsellers.",
+        ],
+      },
+      { type: "h2", text: "Build the audience from the orders" },
+      {
+        type: "p",
+        text: "The strongest audience for a product range is the people who bought the last one. That segment already exists in the order history, and it outperforms a broad send reliably enough to be the first thing to try.",
+      },
+      { type: "h2", text: "Close the loop" },
+      {
+        type: "p",
+        text: "If the campaign links to the catalog and the orders link back to the campaign, next season's version starts with a number instead of an opinion.",
+      },
+    ],
+  },
+  {
+    slug: "order-confirmations-that-earn-repeat-business",
+    category: "Commerce",
+    topic: "commerce",
+    title: "Order Confirmations That Earn the Next Order",
+    description:
+      "The transactional messages nobody optimises are the ones everybody reads. Here is what to do with that.",
+    readingMinutes: 4,
+    publishedAt: "2026-01-22",
+    image: "/blog/order-confirmation.jpg",
+    imageAlt: "Cardboard parcels stacked and ready for dispatch.",
+    body: [
+      {
+        type: "p",
+        text: "Order confirmations are opened at rates a marketing campaign will never reach. Most businesses use that attention to restate the total and nothing else.",
+      },
+      { type: "h2", text: "Answer the question they were about to ask" },
+      {
+        type: "p",
+        text: "When will it arrive, how do I change it, and who do I ask. A confirmation that answers all three removes a support conversation and reads as competence.",
+      },
+      { type: "h2", text: "Add one thing, not five" },
+      {
+        type: "list",
+        items: [
+          "A genuinely relevant accessory for what they just bought.",
+          "Or the care instructions. Or the setup guide.",
+          "Never a discount on the thing they bought an hour ago.",
+        ],
+      },
+      { type: "h2", text: "Then follow up once, later" },
+      {
+        type: "p",
+        text: "A check-in timed to roughly when the product has been used a few times is the highest-yielding message in most commerce programmes, and almost nobody sends it.",
+      },
+    ],
+  },
+  {
+    slug: "lead-scoring-without-overengineering-it",
+    category: "Customer Management",
+    topic: "customers",
+    title: "Lead Scoring Without Over-Engineering It",
+    description:
+      "A scoring model small enough that the team trusts it, and specific enough to change who gets called first.",
+    readingMinutes: 6,
+    publishedAt: "2026-01-08",
+    image: "/blog/lead-scoring.jpg",
+    imageAlt: "Printed sales charts being examined with a magnifying glass.",
+    body: [
+      {
+        type: "p",
+        text: "Most lead scoring models die of complexity. Twenty weighted signals produce a number nobody can explain, and a number nobody can explain is a number nobody acts on.",
+      },
+      { type: "h2", text: "Score two things" },
+      {
+        type: "p",
+        text: "Fit — are they the kind of customer you serve well. Interest — have they done something recently. Keep them separate; a perfect-fit lead who has gone quiet needs a different action to a poor-fit lead who is very active.",
+      },
+      { type: "h2", text: "Use four or five signals, not twenty" },
+      {
+        type: "list",
+        items: [
+          "Replied to a message.",
+          "Asked about price.",
+          "Visited more than once this week.",
+          "Matches the segment your best customers came from.",
+        ],
+      },
+      { type: "h2", text: "Check it against reality every quarter" },
+      {
+        type: "p",
+        text: "Take the deals you actually won and look at what the model said about them beforehand. If the score had no relationship to the outcome, the model is decoration — and simplifying it is more useful than adding to it.",
+      },
+    ],
+  },
+  {
+    slug: "contact-data-hygiene",
+    category: "Customer Management",
+    topic: "customers",
+    title: "Contact Data Hygiene: The Unglamorous Work That Pays",
+    description:
+      "Duplicates, stale numbers and half-filled records quietly degrade every campaign, segment and report you build on them.",
+    readingMinutes: 5,
+    publishedAt: "2025-12-18",
+    image: "/blog/contact-data.jpg",
+    imageAlt: "Someone working at a desktop computer in an office.",
+    body: [
+      {
+        type: "p",
+        text: "Nobody schedules time for contact hygiene, which is why every database eventually contains the same customer three times under two spellings and a phone number that stopped working in 2023.",
+      },
+      { type: "h2", text: "What it actually costs" },
+      {
+        type: "list",
+        items: [
+          "Segments that are quietly wrong, so campaigns reach the wrong people.",
+          "Customers messaged twice, which reads as carelessness.",
+          "Reports that overstate the audience and understate the repeat rate.",
+          "Money spent sending to addresses and numbers that cannot receive.",
+        ],
+      },
+      { type: "h2", text: "Fix the intake, then the backlog" },
+      {
+        type: "p",
+        text: "Cleaning a database that is still being filled badly is a treadmill. Decide which fields are required at capture, normalise phone numbers on the way in, and merge on a key that cannot be typed two ways.",
+      },
+      { type: "h2", text: "Make it a monthly half hour" },
+      {
+        type: "p",
+        text: "Duplicates, bounces, contacts with no channel at all. Thirty minutes a month keeps a database usable; an annual project never quite finishes.",
+      },
+    ],
+  },
+  {
+    slug: "building-your-first-automation-workflow",
+    category: "Automation",
+    topic: "automation",
+    title: "Building Your First Automation Workflow, Step by Step",
+    description:
+      "Start with one journey you already run manually, and turn it into something that runs whether anyone is watching or not.",
+    readingMinutes: 6,
+    publishedAt: "2025-12-04",
+    image: "/blog/first-workflow.jpg",
+    imageAlt: "A flow diagram being drawn out on a whiteboard.",
+    body: [
+      {
+        type: "p",
+        text: "The best first workflow is not a clever one. It is the thing your team already does by hand, the same way, several times a week — because you already know it works and you already know what it should say.",
+      },
+      { type: "h2", text: "Write it down before you build it" },
+      {
+        type: "p",
+        text: "On paper: what starts it, what happens, how long between each step, and what stops it. Most of the mistakes that are painful to unpick in a builder are obvious in four lines of handwriting.",
+      },
+      { type: "h2", text: "Build the smallest version" },
+      {
+        type: "list",
+        items: [
+          "One trigger.",
+          "One message.",
+          "One wait.",
+          "One exit condition.",
+        ],
+      },
+      { type: "h2", text: "Test it on yourself" },
+      {
+        type: "p",
+        text: "Run it against your own contact record and read the messages as they arrive, at the intervals they arrive. Reading a sequence in a builder tells you nothing about how it feels to receive.",
+      },
+      { type: "h2", text: "Then add one branch" },
+      {
+        type: "p",
+        text: "Once it has run for a week without surprising you, add the condition you knew you would need. Workflows built one branch at a time stay understandable; workflows built all at once get switched off.",
+      },
+    ],
+  },
+  {
+    slug: "webhooks-and-api-connecting-your-stack",
+    category: "Automation",
+    topic: "automation",
+    title: "Webhooks and APIs: Connecting MarketFlow to the Rest of Your Stack",
+    description:
+      "When a built-in integration is not enough, an outbound webhook and a few API calls usually are.",
+    readingMinutes: 7,
+    publishedAt: "2025-11-20",
+    image: "/blog/webhooks-api.jpg",
+    imageAlt: "Two developers looking at code on a laptop screen.",
+    body: [
+      {
+        type: "p",
+        text: "Every business eventually has one tool that nothing integrates with. That is what webhooks are for: a way to tell another system that something happened here, without either side knowing much about the other.",
+      },
+      { type: "h2", text: "Webhooks push, APIs pull" },
+      {
+        type: "p",
+        text: "Use a webhook when something happening should cause something elsewhere — an order placed, a lead qualified. Use the API when you need to ask a question, or write data in on a schedule.",
+      },
+      { type: "h2", text: "Build the receiver defensively" },
+      {
+        type: "list",
+        items: [
+          "Verify the signature before trusting the payload.",
+          "Respond fast and process afterwards — a slow endpoint causes retries.",
+          "Expect duplicates, and make handling one twice harmless.",
+          "Log what you received, not just what you did with it.",
+        ],
+      },
+      { type: "h2", text: "Scope the key to the job" },
+      {
+        type: "p",
+        text: "An API key that can do everything is a key you will be nervous about rotating. Issue one per integration, scoped to what that integration needs, and rotating becomes a five-minute task rather than a change freeze.",
+      },
+    ],
+  },
+  {
+    slug: "conversion-funnel-where-customers-drop-off",
+    category: "Analytics",
+    topic: "analytics",
+    title: "Reading a Conversion Funnel: Where Customers Actually Drop Off",
+    description:
+      "The biggest number in a funnel is rarely the most useful one. How to find the step that is genuinely costing you.",
+    readingMinutes: 6,
+    publishedAt: "2025-11-06",
+    image: "/blog/conversion-funnel.jpg",
+    imageAlt: "A presenter walking a small team through charts on a whiteboard.",
+    body: [
+      {
+        type: "p",
+        text: "Every funnel loses most of its people at the top. That is not a finding, it is arithmetic — and teams that react to it end up optimising the step that was never the problem.",
+      },
+      { type: "h2", text: "Compare a step to itself, not to the one above" },
+      {
+        type: "p",
+        text: "The useful question is whether a step converts worse than it did last month, or worse than the same step does for a similar segment. A step that has always lost sixty per cent and still loses sixty per cent is not where the opportunity is.",
+      },
+      { type: "h2", text: "Segment before you conclude" },
+      {
+        type: "p",
+        text: "An average funnel is several different funnels added together. Split by channel or by segment and the flat overall number usually resolves into one group doing well and one doing badly — which is an action, where the average was not.",
+      },
+      { type: "h2", text: "Look at time, not only at counts" },
+      {
+        type: "list",
+        items: [
+          "How long do people sit at each step before moving?",
+          "Where does the gap grow when volume rises?",
+          "Which step is slowest when your team is busiest?",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "revenue-attribution-across-channels",
+    category: "Analytics",
+    topic: "analytics",
+    title: "Revenue Attribution Across Channels, Without Fooling Yourself",
+    description:
+      "Every attribution model is wrong in a specific, knowable way. Pick one deliberately and know what it hides.",
+    readingMinutes: 7,
+    publishedAt: "2025-10-23",
+    image: "/blog/revenue-attribution.jpg",
+    imageAlt: "Coins scattered across printed financial charts.",
+    body: [
+      {
+        type: "p",
+        text: "Attribution is not a measurement problem, it is an allocation problem. The revenue is real; the question is which of the four things that happened before it gets the credit, and there is no objectively correct answer.",
+      },
+      { type: "h2", text: "What each model quietly assumes" },
+      {
+        type: "list",
+        items: [
+          "Last touch assumes the final click did the persuading. It systematically overvalues whichever channel sits closest to the purchase.",
+          "First touch assumes discovery is everything, and undervalues the follow-up that closed it.",
+          "Even-weight assumes every step mattered equally, which is easy to defend and rarely true.",
+        ],
+      },
+      { type: "h2", text: "Pick one and keep it" },
+      {
+        type: "p",
+        text: "Consistency is worth more than accuracy here. A model held steady for a year shows you direction, which is what budget decisions actually need. Switching models mid-year produces a change in the numbers that looks exactly like a change in performance.",
+      },
+      { type: "h2", text: "Sanity-check against the total" },
+      {
+        type: "p",
+        text: "If the attributed revenue and the actual revenue diverge, trust the bank. The model is a lens on the business, not a second version of it.",
+      },
+    ],
+  },
+  {
+    slug: "weekly-marketing-review-in-twenty-minutes",
+    category: "Analytics",
+    topic: "analytics",
+    title: "A Weekly Marketing Review That Takes Twenty Minutes",
+    description:
+      "Five questions, one page, once a week — a review short enough that it actually happens every week.",
+    readingMinutes: 4,
+    publishedAt: "2025-10-09",
+    image: "/blog/weekly-review.jpg",
+    imageAlt: "A small team reviewing work together around a laptop.",
+    body: [
+      {
+        type: "p",
+        text: "The monthly marketing review is too late to change anything and too long to prepare, which is why it slips. A weekly one only works if it is genuinely short.",
+      },
+      { type: "h2", text: "The five questions" },
+      {
+        type: "list",
+        items: [
+          "What went out this week, and what did it produce?",
+          "Which number moved more than usual, up or down?",
+          "What is stuck — leads with no activity, conversations with no reply?",
+          "What are we sending next week, and to whom?",
+          "What is one thing we are stopping?",
+        ],
+      },
+      { type: "h2", text: "The last question is the important one" },
+      {
+        type: "p",
+        text: "Marketing programmes accumulate. Without a standing prompt to remove something, the weekly send list only ever grows, and the review turns into a status meeting about work nobody has time to do properly.",
+      },
+      { type: "h2", text: "Write down the decision, not the data" },
+      {
+        type: "p",
+        text: "The numbers are already in the dashboard. What is worth keeping is the sentence explaining what you decided because of them — which is the only part you will want in three months.",
       },
     ],
   },
