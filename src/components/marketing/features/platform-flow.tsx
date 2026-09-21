@@ -151,7 +151,7 @@ export function PlatformFlow() {
     <section
       id="platform"
       aria-labelledby="platform-flow-title"
-      className="section-space-py relative isolate overflow-hidden bg-[#ede7e2]"
+      className="section-space-py relative isolate overflow-hidden bg-primary-soft"
     >
       <div
         aria-hidden
@@ -267,7 +267,7 @@ export function PlatformFlow() {
                     {stage.label}
                   </h3>
 
-                  <p className="mt-1.5 text-sm leading-relaxed text-text-secondary text-pretty lg:text-sm">
+                  <p className="mt-1.5 text-sm leading-relaxed text-text-secondary text-pretty lg:text-base">
                     {stage.headline}
                   </p>
 
@@ -279,7 +279,7 @@ export function PlatformFlow() {
                            pointer — nothing here goes anywhere, and a chip that
                            looks clickable and is not is worse than a plain
                            label. */
-                        className="rounded-md border border-border bg-surface px-2 py-0.5 text-[11px] leading-5 font-medium text-text-muted"
+                        className="rounded-md border border-border bg-surface px-2 py-0.5 text-xs leading-5 font-semibold text-text-muted"
                       >
                         {module}
                       </li>

@@ -148,7 +148,7 @@ export function AllFeatures() {
             className="section-title mt-5 text-balance"
           >
             Everything you need to turn conversations into{" "}
-            <span className="brand-gradient-text">growth</span>.
+            <span className="brand-gradient-text">growth</span>
           </h2>
 
           <p className="mt-5 text-base leading-[1.7] text-text-secondary text-pretty">
