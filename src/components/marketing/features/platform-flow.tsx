@@ -78,7 +78,7 @@ export function PlatformFlow() {
     <section
       id="platform"
       aria-labelledby="platform-flow-title"
-      className="section-space-py relative isolate scroll-mt-32 overflow-hidden bg-background"
+      className="section-space-py relative isolate overflow-hidden bg-background"
     >
       <div
         aria-hidden

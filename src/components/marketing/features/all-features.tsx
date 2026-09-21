@@ -1,136 +1,129 @@
-import { Sparkles } from "lucide-react";
+import {
+  BarChart3,
+  Megaphone,
+  MessageCircle,
+  Plug,
+  Send,
+  ShoppingCart,
+  Sparkles,
+  UsersRound,
+  Workflow,
+  type LucideIcon,
+} from "lucide-react";
 
-import { Icon } from "@/components/ui/icon";
+import { cn } from "@/lib/utils";
 
 /**
  * The whole product, on one screen.
  *
- * Every other section on this page argues for one module in depth. This one
- * answers the question those sections cannot: how much is there? A prospect
- * evaluating a platform is counting as much as reading, and eleven deep
- * sections make them scroll for ten minutes to find out that commerce is
- * included. Forty-three named modules in one card answers it in five seconds.
+ * Every other section on this page argues for one module in depth, and a
+ * visitor who has just read the hero is still asking how much is in here —
+ * a question eleven deep sections answer slowly. This one answers it in five
+ * seconds: eight groups, one card each, the shape of the platform before any
+ * of the detail.
  *
- * Names only, no descriptions. The sections above already explain what each
- * area does, and forty-three two-line items would be a second, worse version of
- * the same page — the job here is the map, not the territory. It is also what
- * keeps the section scannable: a reader's eye runs down a column of nouns and
- * stops at the one they came for.
+ * Groups, not modules. An earlier cut of this section listed all forty-three
+ * named modules from `constants/navigation.dashboardNav`, which answered "how
+ * much" and nothing else — forty-three nouns is an inventory, and a prospect
+ * scanning an inventory cannot tell which four of them are the reason to buy.
+ * Eight groups with a line of description each say what the product *does*,
+ * and the sections below are then read as detail on something already
+ * understood.
  *
- * Every entry is a module that ships. The list was built from
- * `constants/navigation.dashboardNav` rather than from the marketing brief, and
- * two entries the brief asked for are deliberately absent — see `ANALYTICS`.
+ * Every group is backed by modules that ship. Each card's description names
+ * only surfaces that exist in the dashboard today — no roadmap, nothing the
+ * sidebar does not route to.
  *
- * Laid out in CSS columns rather than a grid. Groups are four to eight items
- * long, so a grid leaves a ragged floor under the short ones; columns pack them
- * and `break-inside-avoid` keeps a group whole. Four columns, two, then one,
- * which is the responsive shape the brief asks for and what the column count
- * gives for free.
+ * One card holding the whole map, on the page's white surface. That is what
+ * makes this read as a product overview rather than as another page section:
+ * a single object a visitor takes in at once, lifted off the tinted canvas.
  */
 
-interface Group {
-  label: string;
-  items: { name: string; icon: string }[];
+interface Feature {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  /**
+   * The icon tile. Whole class strings rather than a hue assembled from a
+   * name, because Tailwind reads the source for literals and
+   * `bg-tint-${hue}-soft` compiles to a tile with no background at all.
+   */
+  tint: string;
 }
 
 /**
- * Icons are the ones the sidebar already assigns each module, so a visitor who
- * signs up meets the same glyph next to the same word. Where a module has no
- * sidebar row of its own — the analytics panels — the icon is the one its own
- * page draws it with.
+ * The eight groups, each wearing the colour its area already has elsewhere in
+ * the product.
+ *
+ * The tints are the `tint-*` family from `styles/variables.css` — the same set
+ * the integrations hub paints its icon tiles from — so nothing here is a new
+ * palette. The assignment is not decorative: commerce takes Shopify's olive,
+ * analytics takes GA4's orange, campaigns take the email blue, multi-channel
+ * takes the fuchsia social already wears, and WhatsApp draws from the channel
+ * ramp rather than the tint family because there is one WhatsApp green,
+ * defined once. A reader who reaches the integrations page or the sidebar
+ * meets the same hue next to the same idea.
+ *
+ * Identity, never state: every bed is a 50-step, a step lighter than the
+ * 100-step beds the status badges sit on, so no tile here can be misread as a
+ * warning.
  */
-const GROUPS: Group[] = [
+const FEATURES: Feature[] = [
   {
-    label: "Customers",
-    items: [
-      { name: "Contacts", icon: "users" },
-      { name: "Leads", icon: "target" },
-      { name: "Audience Segments", icon: "layers" },
-      { name: "Tags", icon: "tag" },
-      { name: "Customer Journey", icon: "git-branch" },
-    ],
+    icon: UsersRound,
+    title: "Customer Management",
+    description:
+      "Manage contacts, leads, segments, tags and customer journeys in one place.",
+    tint: "bg-tint-cobalt-soft text-tint-cobalt-ink border-tint-cobalt-ink/15",
   },
   {
-    label: "Marketing",
-    items: [
-      { name: "Campaigns", icon: "megaphone" },
-      { name: "WhatsApp", icon: "message-circle" },
-      { name: "Email", icon: "mail" },
-      { name: "SMS", icon: "smartphone" },
-      { name: "Social Planner", icon: "calendar-days" },
-      { name: "Media Library", icon: "image" },
-    ],
+    icon: MessageCircle,
+    title: "WhatsApp Automation",
+    description:
+      "Capture conversations, send personalized messages and automate customer follow-ups.",
+    tint: "bg-whatsapp-soft text-whatsapp-dark border-whatsapp-dark/15",
   },
   {
-    label: "Automation",
-    items: [
-      { name: "Workflows", icon: "workflow" },
-      { name: "Templates", icon: "layout-template" },
-      { name: "Triggers", icon: "zap" },
-      { name: "Activity Logs", icon: "scroll-text" },
-    ],
+    icon: Megaphone,
+    title: "Multi-Channel Marketing",
+    description:
+      "Create and manage WhatsApp, Email, SMS and Social campaigns from one workspace.",
+    tint: "bg-tint-fuchsia-soft text-tint-fuchsia-ink border-tint-fuchsia-ink/15",
   },
   {
-    label: "Commerce",
-    items: [
-      { name: "Products", icon: "package" },
-      { name: "Orders", icon: "shopping-cart" },
-      { name: "Categories", icon: "folder-tree" },
-      { name: "Catalog", icon: "book-open" },
-      { name: "Inventory", icon: "warehouse" },
-      { name: "Discounts & Coupons", icon: "badge-percent" },
-    ],
+    icon: Send,
+    title: "Campaign Management",
+    description:
+      "Build targeted campaigns, manage audiences, templates and campaign activity.",
+    tint: "bg-tint-blue-soft text-tint-blue-ink border-tint-blue-ink/15",
   },
   {
-    /*
-     * Five panels, not the six the brief listed.
-     *
-     * "Reports" is not here because there is no reports module — the sidebar
-     * carried a row for it once and it answered 404, which is why the row was
-     * removed (see the note in `constants/navigation`). Listing it on a
-     * marketing page would re-make a promise the product already withdrew.
-     * What does exist is named instead, panel by panel.
-     */
-    label: "Analytics",
-    items: [
-      { name: "Growth Overview", icon: "trending-up" },
-      { name: "Campaign Performance", icon: "bar-chart" },
-      { name: "Channel Performance", icon: "layers" },
-      { name: "Conversion Funnel", icon: "funnel" },
-      { name: "Social Analytics", icon: "share-2" },
-    ],
+    icon: Workflow,
+    title: "Workflow Automation",
+    description:
+      "Create automated journeys using triggers, conditions, actions, delays and follow-ups.",
+    tint: "bg-tint-indigo-soft text-tint-indigo-ink border-tint-indigo-ink/15",
   },
   {
-    label: "Integrations",
-    items: [
-      { name: "WhatsApp Business", icon: "message-circle" },
-      { name: "Email", icon: "mail" },
-      { name: "SMS", icon: "smartphone" },
-      { name: "Social Media", icon: "share-2" },
-      { name: "Shopify", icon: "shopping-cart" },
-      { name: "Google Analytics 4", icon: "bar-chart" },
-      { name: "Webhooks", icon: "webhook" },
-      { name: "API", icon: "code" },
-    ],
+    icon: ShoppingCart,
+    title: "Commerce Management",
+    description:
+      "Manage products, orders, inventory, catalogs, categories and discounts alongside customer activity.",
+    tint: "bg-tint-lime-soft text-tint-lime-ink border-tint-lime-ink/15",
   },
   {
-    label: "Workspace",
-    items: [
-      { name: "Team Members", icon: "user-cog" },
-      { name: "Roles & Permissions", icon: "shield-check" },
-      { name: "Workspace Activity", icon: "activity" },
-      { name: "Workspace Settings", icon: "building" },
-    ],
+    icon: BarChart3,
+    title: "Analytics & Insights",
+    description:
+      "Track campaigns, conversations, leads, conversions, orders and revenue.",
+    tint: "bg-tint-orange-soft text-tint-orange-ink border-tint-orange-ink/15",
   },
   {
-    label: "Account",
-    items: [
-      { name: "Profile", icon: "user" },
-      { name: "Notifications", icon: "bell" },
-      { name: "Security", icon: "lock" },
-      { name: "Billing & Subscription", icon: "credit-card" },
-      { name: "API & Developer", icon: "terminal" },
-    ],
+    icon: Plug,
+    title: "Integrations",
+    description:
+      "Connect WhatsApp Business, Email, SMS, Social, Shopify, analytics, Webhooks and API services.",
+    tint: "bg-tint-slate-soft text-tint-slate-ink border-tint-slate-ink/15",
   },
 ];
 
@@ -139,83 +132,68 @@ export function AllFeatures() {
     <section
       id="all-features"
       aria-labelledby="all-features-title"
-      className="section-space-py scroll-mt-32 bg-background"
+      className="section-space-py bg-background"
     >
       <div className="custom-container">
-        {/*
-         * One card holding the whole map.
-         *
-         * The card is what makes this read as a product overview rather than as
-         * another page section: it is a single object a visitor can take in at
-         * once, and its white ground lifts forty-three quiet rows off the
-         * tinted canvas without any of them needing a border of their own.
-         */}
-        <div className="overflow-hidden rounded-3xl border border-border bg-surface px-6 py-14 shadow-card sm:rounded-[28px] sm:px-10 sm:py-16 lg:px-14">
-          <header className="mx-auto max-w-2xl text-center">
-            <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-primary-border bg-primary-soft py-1.5 pr-4 pl-3 text-primary">
-              <Sparkles className="size-3.5" aria-hidden />
-              Our features
-            </p>
-
-            <h2
-              id="all-features-title"
-              className="section-title mt-5 text-balance"
-            >
-              One connected platform for customers, conversations and{" "}
-              <span className="brand-gradient-text">growth</span>.
-            </h2>
-
-            <p className="mt-5 text-base leading-[1.7] text-text-secondary text-pretty">
-              Manage your customers, launch campaigns, automate conversations,
-              grow your sales and measure performance — all from one connected
-              workspace.
-            </p>
-          </header>
-
-          {/* The map. `gap-x-10` is the column gutter; the vertical rhythm is
-              each group's own bottom margin, since columns have no row gap. */}
-          <div className="mt-12 columns-1 gap-x-10 sm:columns-2 xl:columns-4">
-            {GROUPS.map((group) => (
-              <section
-                key={group.label}
-                aria-labelledby={`all-features-${group.label.toLowerCase()}`}
-                className="mb-9 break-inside-avoid last:mb-0"
-              >
-                <h3
-                  id={`all-features-${group.label.toLowerCase()}`}
-                  className="border-b border-border pb-2.5 text-xs font-semibold tracking-[0.1em] text-text-muted uppercase"
-                >
-                  {group.label}
-                </h3>
-
-                <ul className="mt-3 space-y-0.5">
-                  {group.items.map((item) => (
-                    <li key={`${group.label}-${item.name}`}>
-                      {/*
-                       * A row, not a card. Forty-three bordered tiles is the
-                       * "wall of cards" this section exists to avoid; the
-                       * ground only appears under the pointer, which keeps the
-                       * resting state quiet and still makes the row feel like
-                       * an object.
-                       */}
-                      <span className="flex items-center gap-2.5 rounded-btn px-2 py-1.5 transition-colors hover:bg-surface-secondary">
-                        <span className="grid size-6 shrink-0 place-items-center rounded-[7px] bg-primary-soft text-primary">
-                          <Icon name={item.icon} className="size-3.5" />
-                        </span>
-                        <span className="min-w-0 text-sm font-medium text-text-primary">
-                          {item.name}
-                        </span>
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            ))}
-          </div>
-
-          <p className="mt-12 border-t border-border pt-8 text-center text-sm text-text-muted">
-            Everything your team needs — connected in one workspace.
+        <header className="mx-auto max-w-2xl text-center">
+          <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-primary-border bg-primary-soft py-1.5 pr-4 pl-3 text-primary">
+            <Sparkles className="size-3.5" aria-hidden />
+            Our features
           </p>
+
+          <h2
+            id="all-features-title"
+            className="section-title mt-5 text-balance"
+          >
+            Everything you need to turn conversations into{" "}
+            <span className="brand-gradient-text">growth</span>.
+          </h2>
+
+          <p className="mt-5 text-base leading-[1.7] text-text-secondary text-pretty">
+            Connect customers, conversations, marketing, automation, commerce
+            and analytics in one powerful workspace.
+          </p>
+        </header>
+
+        {/*
+         * Four across, two down.
+         *
+         * Two columns from `sm` and four from `lg`, which is the desktop /
+         * tablet / mobile shape the grid is drawn for. `items-stretch` is the
+         * grid default and is what keeps a row level: the commerce and
+         * integrations descriptions run a line longer than their neighbours,
+         * and stretched cards absorb that instead of leaving a ragged floor.
+         */}
+        <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {FEATURES.map((feature) => (
+            <article
+              key={feature.title}
+              /*
+               * A card, not a KPI tile. No number, no trend chip, no action —
+               * nothing on it is interactive, so the only hover is the border
+               * warming, which reads as the surface responding rather than as
+               * a control that does not exist.
+               */
+              className="flex flex-col rounded-card border border-border bg-surface p-7 transition-colors hover:border-border-strong"
+            >
+              <span
+                className={cn(
+                  "grid size-10 shrink-0 place-items-center rounded-btn border",
+                  feature.tint,
+                )}
+              >
+                <feature.icon className="size-5" aria-hidden />
+              </span>
+
+              <h3 className="mt-4 text-base sm:text-lg font-bold text-text-primary">
+                {feature.title}
+              </h3>
+
+              <p className="mt-1.5 text-sm leading-[1.65] text-text-muted text-pretty">
+                {feature.description}
+              </p>
+            </article>
+          ))}
         </div>
       </div>
     </section>
