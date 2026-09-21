@@ -310,6 +310,56 @@
    --color-info-text: #1d4ed8;
 
 
+   /* -------------------------------------------------- Integration tints */
+   /*
+   * Identity tints for the integration icon tiles, and nothing else.
+   *
+   * A grid of nine identical grey tiles makes a merchant read nine names to
+   * find the one they came for. A tinted tile is recognised before the label
+   * is, which is the whole job of a mark — so these exist to make Shopify
+   * findable at a glance, not to decorate.
+   *
+   * They are a family of their own rather than borrowed status steps, because
+   * status is reserved: amber has to keep meaning "warning" everywhere in the
+   * product, and an SMS tile painted out of the warning ramp would read as an
+   * alert on a healthy connection. The separation is visual as well as
+   * nominal — every bed here is a 50-step where the status beds are
+   * 100-steps, so a tint stays quieter than any badge sitting beside it.
+   * State is the badge and the health dot; the tile is identity.
+   *
+   * Two values per hue. A tile's border is its own ink at low alpha, set at
+   * the call site, so an edge cannot drift out of its family.
+   *
+   * WhatsApp is absent on purpose: it already has a channel ramp above, and a
+   * second WhatsApp green defined here would be a second WhatsApp green.
+   */
+   --color-tint-blue-soft: #eff6ff;
+   --color-tint-blue-ink: #1d4ed8;
+
+   --color-tint-cobalt-soft: #e8f0fe;
+   --color-tint-cobalt-ink: #1747b8;
+
+   --color-tint-amber-soft: #fffbeb;
+   --color-tint-amber-ink: #b45309;
+
+   --color-tint-orange-soft: #fff7ed;
+   --color-tint-orange-ink: #c2410c;
+
+   --color-tint-fuchsia-soft: #fdf4ff;
+   --color-tint-fuchsia-ink: #a21caf;
+
+   --color-tint-indigo-soft: #eef2ff;
+   --color-tint-indigo-ink: #4338ca;
+
+   /* Olive rather than emerald — Shopify's own green, and what keeps its tile
+     from reading as a second WhatsApp two rows down. */
+   --color-tint-lime-soft: #f4faec;
+   --color-tint-lime-ink: #4d7c0f;
+
+   --color-tint-slate-soft: #f8fafc;
+   --color-tint-slate-ink: #334155;
+
+
    /* ------------------------------------------------------------- Charts */
    /*
    * Four hues from four different families, so an analytics panel reads as a

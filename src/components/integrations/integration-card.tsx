@@ -5,9 +5,10 @@ import Link from "next/link";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Icon } from "@/components/ui/icon";
-import { categoryLabel } from "@/constants/integrations";
+import { categoryLabel, integrationTint } from "@/constants/integrations";
 import { formatRelativeTime } from "@/lib/format";
 import { INTEGRATIONS_NOW_MS, worstHealth } from "@/lib/integration-fixtures";
+import { cn } from "@/lib/utils";
 import type { Integration, IntegrationStatus } from "@/types/integration";
 import { HealthDot, IntegrationStatusBadge } from "./integration-badges";
 
@@ -22,6 +23,11 @@ import { HealthDot, IntegrationStatusBadge } from "./integration-badges";
  * broken one too. An Issue card that grows an error panel is a card that breaks
  * the row it is in, and the explanation it carries is one the merchant cannot
  * act on from here anyway; it lives on the detail view, where the fix is.
+ *
+ * The one thing that is allowed to differ before the label is read is the icon
+ * tile, which wears the service's own colour — see `integrationTint`. Same
+ * size, same radius, same border weight on every card; only the hue changes,
+ * and it says which integration this is, never how it is doing.
  *
  * The three rows are the card's whole argument: who is carrying this
  * connection, what account it runs as, and when it last did anything. Health
@@ -88,7 +94,15 @@ export function IntegrationCard({
       className="relative flex h-full flex-col p-5"
     >
       <div className="flex items-start justify-between gap-3">
-        <span className="grid size-10 shrink-0 place-items-center rounded-btn bg-surface-secondary text-text-secondary">
+        {/* Identity, not state. Geometry is fixed here so a tint can only
+            ever change the colour — the border is the tile's own ink at 15%,
+            which is what stops a 50-step bed reading as a smudge. */}
+        <span
+          className={cn(
+            "grid size-10 shrink-0 place-items-center rounded-btn border",
+            integrationTint(integration.id),
+          )}
+        >
           <Icon name={integration.icon} className="size-5" />
         </span>
         <IntegrationStatusBadge status={integration.status} size="sm" />
@@ -118,7 +132,7 @@ export function IntegrationCard({
             the grid is one continuous list, so the category is not a heading
             the card can lean on. */}
         <div className="flex items-baseline justify-between gap-3">
-          <dt className="shrink-0 text-text-muted">
+          <dt className="shrink-0 font-medium text-text-muted">
             {integration.provider ? "Provider" : "Category"}
           </dt>
           <dd className="min-w-0 truncate font-medium text-text-primary">
@@ -128,7 +142,7 @@ export function IntegrationCard({
 
         {account ? (
           <div className="flex items-baseline justify-between gap-3">
-            <dt className="shrink-0 text-text-muted">Account</dt>
+            <dt className="shrink-0 font-medium text-text-muted">Account</dt>
             <dd className="min-w-0 truncate font-medium text-text-primary">
               {account}
             </dd>
@@ -140,7 +154,7 @@ export function IntegrationCard({
             line up differently for no reason the reader can see. The dot is
             health, and only where there is a connection to have health. */}
         <div className="flex items-baseline justify-between gap-3">
-          <dt className="shrink-0 text-text-muted">Last activity</dt>
+          <dt className="shrink-0 font-medium text-text-muted">Last activity</dt>
           <dd className="flex min-w-0 items-center gap-1.5 truncate font-medium text-text-primary">
             {live ? <HealthDot status={health} /> : null}
             {timestamp ? (

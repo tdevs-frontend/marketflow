@@ -106,6 +106,58 @@ export function categoryLabel(value: IntegrationCategory): string {
 
 
 /* -------------------------------------------------------------------------- */
+/* Identity tints                                                             */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The icon tile's colours, per integration.
+ *
+ * Nine grey tiles in a grid make a merchant read nine names to find the one
+ * they came for. A tinted tile is recognised before the label is — which is
+ * what a mark is for — so each integration wears the colour its service is
+ * already known by: WhatsApp's green, Shopify's olive, Meta's cobalt, amber for
+ * SMS.
+ *
+ * Written as whole class strings rather than assembled from a hue name.
+ * Tailwind reads the source for literals, and `bg-tint-${hue}-soft` compiles
+ * to a tile with no background at all.
+ *
+ * The tints are identity, never state. Every bed is a 50-step from the
+ * `tint-*` family in `styles/variables.css`, deliberately a step lighter than
+ * the 100-step beds the status badges sit on, so the tile stays quieter than
+ * the badge beside it and an amber SMS tile cannot be mistaken for a warning.
+ * What an integration is doing is said by the badge and the health dot.
+ *
+ * WhatsApp draws from the channel ramp the rest of the product already uses for
+ * it rather than from this family: one WhatsApp green, defined once.
+ */
+const INTEGRATION_TINT: Record<string, string> = {
+  whatsapp: "bg-whatsapp-soft text-whatsapp-dark border-whatsapp-dark/15",
+  email: "bg-tint-blue-soft text-tint-blue-ink border-tint-blue-ink/15",
+  sms: "bg-tint-amber-soft text-tint-amber-ink border-tint-amber-ink/15",
+  social: "bg-tint-fuchsia-soft text-tint-fuchsia-ink border-tint-fuchsia-ink/15",
+  webhooks: "bg-tint-indigo-soft text-tint-indigo-ink border-tint-indigo-ink/15",
+  api: "bg-tint-slate-soft text-tint-slate-ink border-tint-slate-ink/15",
+  ga4: "bg-tint-orange-soft text-tint-orange-ink border-tint-orange-ink/15",
+  shopify: "bg-tint-lime-soft text-tint-lime-ink border-tint-lime-ink/15",
+  "meta-pixel": "bg-tint-cobalt-soft text-tint-cobalt-ink border-tint-cobalt-ink/15",
+};
+
+/**
+ * The tile for an integration with no tint of its own.
+ *
+ * The neutral every tile used to wear. A provider added to the catalogue
+ * tomorrow gets a correct, quiet tile rather than a missing background, and
+ * choosing its colour stays a deliberate act rather than something that has to
+ * happen before the card renders.
+ */
+const INTEGRATION_TINT_FALLBACK = "bg-surface-secondary text-text-secondary border-border";
+
+export function integrationTint(id: string): string {
+  return INTEGRATION_TINT[id] ?? INTEGRATION_TINT_FALLBACK;
+}
+
+/* -------------------------------------------------------------------------- */
 /* Provider catalogue                                                         */
 /* -------------------------------------------------------------------------- */
 
