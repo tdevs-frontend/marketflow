@@ -123,7 +123,7 @@ function FaqItem({ question, answer, isOpen, onToggle }: FaqItemProps) {
   return (
     <div
       className={cn(
-        "rounded-panel border bg-surface px-5 shadow-card transition-colors sm:px-6",
+        "rounded-panel border bg-surface px-5 shadow-card transition-colors sm:px-6 lg:px-7",
         isOpen ? "border-border-strong" : "border-border",
       )}
     >
@@ -133,14 +133,27 @@ function FaqItem({ question, answer, isOpen, onToggle }: FaqItemProps) {
         onClick={onToggle}
         aria-expanded={isOpen}
         aria-controls={panelId}
-        className="flex w-full cursor-pointer items-center justify-between gap-4 py-5 text-left text-xl leading-relaxed font-semibold text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
+        className="group flex w-full cursor-pointer items-center justify-between gap-5 py-5 text-left text-xl leading-relaxed font-semibold text-text-primary focus-visible:shadow-focus focus-visible:outline-none sm:gap-6"
       >
-        {question}
+        {/*
+         * The question is its own flex item rather than loose text, so it can
+         * be told to wrap. `min-w-0` is the load-bearing half: a flex item's
+         * floor is its longest word, not zero, and without it a question that
+         * outgrows the row pushes the control off the right edge instead of
+         * breaking onto a second line.
+         */}
+        <span className="min-w-0 flex-1">{question}</span>
 
         {/*
          * Both glyphs sit in the same grid cell and trade places on a rotation.
          * A plus that merely rotates lands on a cross, and one swapped for a
          * minus outright is the jump this was meant to remove.
+         *
+         * 36px, fixed in both states — the border, the bed and the glyph all
+         * change on open and the box does not, which is what keeps the row from
+         * shifting under the cursor mid-click. The icon carries the brand
+         * indigo whether it is open or closed; muting it while closed was what
+         * made the control hard to find in the first place.
          *
          * `transition-transform` would animate nothing here: Tailwind v4 sets
          * `rotate` as its own property rather than composing a `transform`, so
@@ -149,21 +162,21 @@ function FaqItem({ question, answer, isOpen, onToggle }: FaqItemProps) {
         <span
           aria-hidden
           className={cn(
-            "grid size-7 shrink-0 place-items-center rounded-full border transition-colors",
+            "grid size-8 shrink-0 place-items-center rounded-full border text-primary transition-colors",
             isOpen
-              ? "border-primary-border bg-primary-soft text-primary"
-              : "border-border bg-background text-text-muted",
+              ? "border-primary-border bg-primary-soft"
+              : "border-border bg-surface group-hover:border-primary-border group-hover:bg-primary-soft",
           )}
         >
           <Plus
             className={cn(
-              "col-start-1 row-start-1 size-3.5 transition-[rotate,opacity] duration-300 ease-in-out motion-reduce:transition-none",
+              "col-start-1 row-start-1 size-4.5 transition-[rotate,opacity] duration-300 ease-in-out motion-reduce:transition-none",
               isOpen ? "rotate-90 opacity-0" : "rotate-0 opacity-100",
             )}
           />
           <Minus
             className={cn(
-              "col-start-1 row-start-1 size-3.5 transition-[rotate,opacity] duration-300 ease-in-out motion-reduce:transition-none",
+              "col-start-1 row-start-1 size-4.5 transition-[rotate,opacity] duration-300 ease-in-out motion-reduce:transition-none",
               isOpen ? "rotate-0 opacity-100" : "-rotate-90 opacity-0",
             )}
           />
@@ -242,7 +255,9 @@ export function FeaturesFaq() {
             </p>
           </header>
 
-          <div className="space-y-3">
+          {/* 14px between items — enough that each card reads as its own, tight
+              enough that eight of them still read as one list. */}
+          <div className="space-y-3.5">
             {FAQS.map((faq, index) => (
               <FaqItem
                 key={faq.q}
