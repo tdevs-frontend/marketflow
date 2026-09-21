@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import {
   MessagesSquare,
   Target,
@@ -22,12 +25,25 @@ import { cn } from "@/lib/utils";
  * rather than aspirational. Those names are the real sidebar entries; a stage
  * cannot claim a capability the product does not ship.
  *
- * The connector is one absolutely positioned rule behind the row, not five
- * per-stage borders. It runs from the first tile's centre to the last — inset
- * by a tenth of the row at each end, which is half of one five-column cell — so
- * it starts and stops under a tile instead of running off into the gutter. On a
- * phone the row becomes a column and the rule flips to a vertical one down the
- * left, drawn by each stage so it stops at the last.
+ * Deliberately not five cards. Nothing here has a border or a ground of its own
+ * except the icon tile and the module chips — the stages are held together by
+ * the rule running through them and by the grid, which is what makes this read
+ * as one journey rather than as a feature grid with arrows drawn on it.
+ *
+ * ## The connector
+ *
+ * One segment per stage rather than a single rule across the row, each drawn
+ * from its own tile's centre to the next tile's centre: `left-1/2` plus a width
+ * of one column and one gutter. An earlier cut used a single absolutely
+ * positioned rule inset by 10% at each end, on the reasoning that a fifth of a
+ * five-column row is half a cell — true only while the gutters are zero. With
+ * `gap-x-5` the real first centre sits at about 9.2% of the row, so the rule
+ * started in open space to the right of the tile it was supposed to grow out
+ * of. Segments cannot drift that way: each one is measured from the thing it
+ * connects, at every breakpoint, whatever the gutter is.
+ *
+ * Below `md` the row becomes a column and the rule flips to a vertical one down
+ * the left, drawn by every stage but the last so the column ends on a tile.
  */
 
 interface Stage {
@@ -39,54 +55,117 @@ interface Stage {
   accent?: boolean;
 }
 
+/**
+ * Automate is the only stage wearing the brand.
+ *
+ * Not because it is the biggest module, but because it is the hinge the
+ * sentence turns on: Capture and Engage are things a team does, Convert and
+ * Grow are things that come back, and automation is what carries the customer
+ * from one half to the other without anyone touching it. One accent in five
+ * says which; two would say neither.
+ */
 const STAGES: Stage[] = [
   {
     label: "Capture",
     icon: UserPlus,
-    headline: "A lead arrives from a form, a campaign or a WhatsApp message.",
+    headline: "A lead arrives from a form, campaign or WhatsApp message.",
     modules: ["Leads", "Contacts", "Forms"],
   },
   {
     label: "Engage",
     icon: MessagesSquare,
-    headline: "Your team replies in a shared inbox, with the full history open.",
+    headline: "Your team responds with the full customer history in one place.",
     modules: ["WhatsApp Inbox", "Email", "SMS"],
   },
   {
     label: "Automate",
     icon: Zap,
-    headline: "Follow-ups fire on what the customer does, not on a schedule.",
+    headline: "Follow-ups happen automatically based on customer activity.",
     modules: ["Workflows", "Triggers", "Templates"],
     accent: true,
   },
   {
     label: "Convert",
     icon: Target,
-    headline: "The order lands, and the conversation that earned it is attached.",
+    headline: "Orders and customer actions stay connected to the conversation.",
     modules: ["Orders", "Products", "Discounts"],
   },
   {
     label: "Grow",
     icon: TrendingUp,
-    headline: "You see which channel produced the revenue, and do it again.",
+    headline: "See which channels and campaigns are driving revenue.",
     modules: ["Analytics", "Segments", "Campaigns"],
   },
 ];
 
+/**
+ * Reveals the row once it is genuinely on screen, one stage at a time.
+ *
+ * The stagger is the point: five stages arriving together is a fade, five
+ * arriving left to right is the journey drawing itself, which is the one thing
+ * this section is trying to say. 90ms apart and 500ms each, so the whole row
+ * has settled in under a second — long enough to read as a sequence, short
+ * enough that a reader scrolling past never waits for it.
+ *
+ * Fires once. A row that re-animates every time it re-enters the viewport is a
+ * distraction on the second pass, and there is nothing new to learn from it.
+ *
+ * Two escape hatches, both in CSS rather than here. `motion-reduce:` hands
+ * anyone who asked for reduced motion the finished state outright, which is
+ * why this hook has no media query in it — a branch that calls `setState`
+ * straight from an effect body is a cascading render, and the variant does the
+ * same job without one. `<noscript>` does it for a reader with no JavaScript:
+ * the resting state is an opacity, so it has to be defeated rather than merely
+ * left un-animated.
+ */
+function useRevealOnce<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        setRevealed(true);
+        observer.disconnect();
+      },
+      /* A fifth of the way up from the bottom edge, so the row starts drawing
+         as it comes into view rather than after it has already been read. */
+      { rootMargin: "0px 0px -20% 0px" },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  return { ref, revealed };
+}
+
 export function PlatformFlow() {
+  const { ref, revealed } = useRevealOnce<HTMLOListElement>();
+
   return (
     <section
       id="platform"
       aria-labelledby="platform-flow-title"
-      className="section-space-py relative isolate overflow-hidden bg-background"
+      className="section-space-py relative isolate overflow-hidden bg-[#ede7e2]"
     >
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(var(--color-border-strong)_1px,transparent_1px)] bg-size-[22px_22px] opacity-40 mask-[radial-gradient(ellipse_at_center,black,transparent_72%)]"
       />
 
+      <noscript>
+        {/* The reveal's resting state is an opacity, so without JavaScript the
+            row would simply never appear. Defeat it rather than animate it. */}
+        <style>{`.js-reveal{opacity:1!important;translate:none!important;scale:none!important}`}</style>
+      </noscript>
+
       <div className="custom-container">
-        <header className="section-title-space mx-auto max-w-2xl text-center">
+        <header className="mx-auto mb-14 max-w-2xl text-center md:mb-16">
           <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
             <span aria-hidden className="size-1.5 rounded-full bg-secondary" />
             One connected workspace
@@ -99,59 +178,108 @@ export function PlatformFlow() {
             From first interaction to repeat customer.
           </h2>
 
-          <p className="mt-5 text-base leading-[1.7] text-text-secondary text-pretty">
+          <p className="mt-3.5 text-base leading-[1.7] text-text-secondary text-pretty">
             MarketFlow connects every stage of the customer journey in one
             workspace — so a lead captured on Monday and the order it becomes on
             Friday are the same record, not two exports.
           </p>
         </header>
 
-        <div className="relative">
-          {/* The rule the stages sit on, desktop only. Behind the tiles, which
-              paint their own ground over it. */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-[10%] top-6 hidden h-px bg-[linear-gradient(to_right,transparent,var(--color-border-strong)_12%,var(--color-border-strong)_88%,transparent)] lg:block"
-          />
+        {/*
+         * Five across from `md`, a column below it.
+         *
+         * The horizontal row starts at the tablet breakpoint rather than at
+         * `lg`, which is what keeps a tablet reading as one journey: the
+         * alternatives at that width are a 3-then-2 grid or a two-column stack,
+         * and both break the chain into groups that mean nothing. Columns get
+         * tight there, which is what the smaller type and the `md`-only size
+         * step on the tiles are for.
+         */}
+        <ol ref={ref} className="grid gap-x-5 gap-y-0 md:grid-cols-5">
+          {STAGES.map((stage, index) => {
+            const last = index === STAGES.length - 1;
 
-          <ol className="grid gap-x-4 gap-y-0 lg:grid-cols-5">
-            {STAGES.map((stage, index) => (
+            return (
               <li
                 key={stage.label}
-                className="relative flex gap-4 pb-8 last:pb-0 lg:block lg:pb-0"
+                style={{ transitionDelay: `${index * 90}ms` }}
+                className={cn(
+                  "js-reveal relative flex gap-4 pb-8 last:pb-0",
+                  "md:flex-col md:items-center md:gap-0 md:pb-0 md:text-center",
+                  "transition-[opacity,translate] duration-500 ease-out",
+                  revealed
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-3 opacity-0",
+                  "motion-reduce:translate-none motion-reduce:opacity-100 motion-reduce:transition-none",
+                )}
               >
-                {/* The phone's vertical rule, drawn by every stage but the
-                    last so the column ends on a tile rather than a line. */}
-                {index < STAGES.length - 1 ? (
+                {/* The phone's vertical rule. Every stage but the last draws
+                    it, so the column ends on a tile rather than on a line. */}
+                {last ? null : (
                   <span
                     aria-hidden
-                    className="absolute top-12 bottom-0 left-6 w-px -translate-x-1/2 bg-border-strong lg:hidden"
+                    className="absolute top-12 bottom-0 left-6 w-px -translate-x-1/2 bg-border-strong md:hidden"
                   />
-                ) : null}
+                )}
+
+                {/* This tile's centre to the next tile's centre: one column
+                    plus one gutter (`gap-x-5`). Behind the tiles, which paint
+                    their own ground over it. Scaled from the left so the line
+                    draws itself in the direction the journey runs. */}
+                {last ? null : (
+                  <span
+                    aria-hidden
+                    style={{ transitionDelay: `${index * 90 + 160}ms` }}
+                    className={cn(
+                      "js-reveal pointer-events-none absolute top-6 left-1/2 hidden h-px w-[calc(100%+1.25rem)]",
+                      "origin-left bg-[linear-gradient(to_right,var(--color-border-strong),var(--color-border-strong))] md:block",
+                      "transition-[opacity,scale] duration-500 ease-out",
+                      revealed
+                        ? "scale-x-100 opacity-100"
+                        : "scale-x-0 opacity-0",
+                      "motion-reduce:scale-x-100 motion-reduce:opacity-100 motion-reduce:transition-none",
+                    )}
+                  />
+                )}
 
                 <span
                   className={cn(
-                    "relative z-1 grid size-12 shrink-0 place-items-center rounded-2xl border lg:size-12",
+                    "relative z-1 grid size-12 shrink-0 place-items-center rounded-2xl border",
                     stage.accent
-                      ? "brand-gradient border-transparent text-white shadow-[0_10px_24px_-10px_rgba(79,70,229,0.9)]"
+                      ? "brand-gradient border-transparent text-white shadow-[0_10px_24px_-10px_rgba(79,70,229,0.9)] ring-6 ring-primary/10"
                       : "border-border bg-surface text-primary shadow-card",
                   )}
                 >
-                  <stage.icon className="size-5" strokeWidth={1.9} aria-hidden />
+                  <stage.icon
+                    className="size-5"
+                    strokeWidth={1.9}
+                    aria-hidden
+                  />
                 </span>
 
-                <div className="min-w-0 lg:mt-5 lg:pr-4">
+                {/* `flex-1` plus `mt-auto` on the chips: the five headlines run
+                    to different line counts, and without it each chip row
+                    floats at its own height and the floor of the section goes
+                    ragged. Grid stretch gives every column the same height;
+                    this is what spends it. */}
+                <div className="min-w-0 md:mt-5 md:flex md:flex-1 md:flex-col md:items-center">
                   <h3 className="text-base font-bold text-text-primary">
                     {stage.label}
                   </h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-text-secondary text-pretty">
+
+                  <p className="mt-1.5 text-sm leading-relaxed text-text-secondary text-pretty lg:text-sm">
                     {stage.headline}
                   </p>
-                  <ul className="mt-3 flex flex-wrap gap-1.5">
+
+                  <ul className="mt-3 flex flex-wrap gap-1.5 md:mt-auto md:justify-center md:pt-3">
                     {stage.modules.map((module) => (
                       <li
                         key={module}
-                        className="rounded-full border border-border bg-surface px-2.5 py-1 text-xs font-medium text-text-secondary"
+                        /* Metadata, not buttons. No pill radius, no hover, no
+                           pointer — nothing here goes anywhere, and a chip that
+                           looks clickable and is not is worse than a plain
+                           label. */
+                        className="rounded-md border border-border bg-surface px-2 py-0.5 text-[11px] leading-5 font-medium text-text-muted"
                       >
                         {module}
                       </li>
@@ -159,9 +287,9 @@ export function PlatformFlow() {
                   </ul>
                 </div>
               </li>
-            ))}
-          </ol>
-        </div>
+            );
+          })}
+        </ol>
       </div>
     </section>
   );
