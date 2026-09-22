@@ -3,9 +3,12 @@ export const APP_ROUTES = {
   features: "/features",
   pricing: "/pricing",
   blog: "/blog",
-  login: "/login",
-  register: "/register",
-  forgotPassword: "/forgot-password",
+  /* Auth lives under one `/auth` segment, so sign-in, sign-up and password
+     reset read as one flow in the URL and in the app directory — and so
+     anything that guards them can match a single prefix. */
+  login: "/auth/login",
+  register: "/auth/register",
+  forgotPassword: "/auth/forgot-password",
   dashboard: "/dashboard",
   products: "/dashboard/products",
   categories: "/dashboard/categories",
@@ -14,7 +17,7 @@ export const APP_ROUTES = {
   catalog: "/dashboard/catalog",
   discounts: "/dashboard/discounts",
   /* Marketing module. The flat /dashboard/campaigns and /dashboard/whatsapp
-     paths still resolve — they redirect here. */
+     paths still resolve â they redirect here. */
   marketing: "/dashboard/marketing",
   marketingCampaigns: "/dashboard/marketing/campaigns",
   marketingCampaignNew: "/dashboard/marketing/campaigns/new",
@@ -58,7 +61,7 @@ export const APP_ROUTES = {
 
   /*
    * The Customers module. Five sibling routes grouped as `(customers)` in the
-   * app directory so they can share a loading and error boundary — the group
+   * app directory so they can share a loading and error boundary â the group
    * is not part of the URL, so these paths are what they have always been.
    *
    * `customerSegments` is deliberately distinct from `segments` above: the
@@ -96,7 +99,7 @@ export const APP_ROUTES = {
   settingsBilling: "/dashboard/settings/billing",
   settingsApi: "/dashboard/settings/api",
 
-  /* The Integrations module's own developer pages. Settings → API & Developer
+  /* The Integrations module's own developer pages. Settings â API & Developer
      is the summary and these are the full surfaces; both render the same
      components over the same store, so there is one set of keys. */
   integrationsApi: "/dashboard/integrations/api",
@@ -116,7 +119,7 @@ export const AUTH_TOKEN_KEY = "marketflow.token";
  *
  * One number for the whole product rather than a control on each table. The
  * per-table choice it replaces was offered as a Rows dropdown on four tables
- * and hard-coded at 8, 9, 10, 15 or 20 on the rest — so the same list changed
+ * and hard-coded at 8, 9, 10, 15 or 20 on the rest â so the same list changed
  * height depending on which page you reached it from, and the setting a
  * merchant picked on Contacts meant nothing on Orders.
  *
