@@ -360,6 +360,13 @@
    --color-tint-slate-soft: #f8fafc;
    --color-tint-slate-ink: #334155;
 
+   /* Added with the Solutions industry grid, which needs six hues that are
+     told apart at a glance. Teal rather than a second blue: cobalt and blue
+     already sit next to each other in that grid, and a third would make the
+     healthcare card and the agency card read as the same family. */
+   --color-tint-teal-soft: #f0fdfa;
+   --color-tint-teal-ink: #0f766e;
+
 
    /* ------------------------------------------------------------- Charts */
    /*

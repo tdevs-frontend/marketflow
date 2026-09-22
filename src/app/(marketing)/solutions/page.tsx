@@ -4,6 +4,7 @@ import {
   FinalCta,
   IntegrationsSection,
   SolutionsHero,
+  SolutionsSection,
 } from "@/components/marketing";
 
 export const metadata: Metadata = {
@@ -31,6 +32,8 @@ export default function SolutionsPage() {
       <SolutionsHero />
 
       <IntegrationsSection />
+
+      <SolutionsSection />
 
       <FinalCta />
     </>
