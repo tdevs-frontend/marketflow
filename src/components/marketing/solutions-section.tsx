@@ -268,7 +268,7 @@ export function SolutionsSection({
 
           <h2 id="industries-title" className="section-title mt-5 text-balance">
             {headingLead} of{" "}
-            <span className="brand-gradient-text">{headingRest}</span>.
+            <span className="brand-gradient-text">{headingRest}</span>
           </h2>
 
           <p className="mx-auto mt-5 max-w-2xl text-base leading-[1.7] text-text-secondary text-pretty">

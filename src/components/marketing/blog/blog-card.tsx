@@ -66,7 +66,7 @@ export function BlogCard({
             {article.category}
           </p>
 
-          <h3 className="mt-4 text-lg leading-snug font-bold text-text-primary transition-colors group-hover:text-primary text-pretty">
+          <h3 className="mt-4 text-lg sm:text-xl leading-7 font-bold text-text-primary transition-colors group-hover:text-primary text-pretty">
             {article.title}
           </h3>
 

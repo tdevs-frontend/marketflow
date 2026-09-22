@@ -160,7 +160,7 @@ export function IntegrationsSection() {
         <header className="section-title-space mx-auto max-w-2xl text-center">
           <h2 id="integrations-title" className="section-title text-balance">
             Everything you already use,{" "}
-            <span className="brand-gradient-text">connected</span>.
+            <span className="brand-gradient-text">connected</span>
           </h2>
 
           <p className="mt-3.5 text-base leading-[1.7] text-text-secondary text-pretty">

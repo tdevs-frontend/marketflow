@@ -368,7 +368,7 @@ export function MultiChannelCampaign() {
             id="multi-channel-title"
             className="mt-6 text-3xl leading-[1.15] font-bold tracking-tight text-balance sm:text-4xl lg:text-5xl"
           >
-            Reach customers wherever they are.
+            Reach customers wherever they are
           </h2>
 
           <p className="mt-5 text-lg leading-[1.7] text-text-secondary text-pretty">

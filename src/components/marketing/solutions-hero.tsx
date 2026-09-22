@@ -50,7 +50,7 @@ export function SolutionsHero() {
               className="mt-7 text-[2.5rem] leading-[1.08] font-bold tracking-tight text-balance sm:text-5xl xl:text-[3.75rem]"
             >
               Connect everything that powers your{" "}
-              <span className="brand-gradient-text">customer journey</span>.
+              <span className="brand-gradient-text">customer journey</span>
             </h1>
           </div>
 

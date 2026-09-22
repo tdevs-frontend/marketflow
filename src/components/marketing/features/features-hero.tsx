@@ -55,7 +55,7 @@ export function FeaturesHero() {
               className="mt-7 text-[2.5rem] leading-[1.08] font-bold tracking-tight text-balance sm:text-5xl xl:text-[3.75rem]"
             >
               Everything your team needs to turn customer conversations into{" "}
-              <span className="brand-gradient-text">growth</span>.
+              <span className="brand-gradient-text">growth</span>
             </h1>
 
             <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-text-secondary text-pretty">

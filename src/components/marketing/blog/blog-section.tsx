@@ -34,7 +34,7 @@ export function BlogSection() {
 
           <h2 id="blog-section-title" className="section-title mt-5 text-balance">
             Ideas to help you <span className="brand-gradient-text">grow</span>{" "}
-            smarter.
+            smarter
           </h2>
 
           <p className="mt-3.5 text-base leading-[1.7] text-text-secondary text-pretty">

@@ -32,7 +32,7 @@ export function AnalyticsSection() {
             id="analytics-title"
             className="mt-6 text-3xl leading-[1.15] font-bold tracking-tight text-balance sm:text-4xl lg:text-5xl"
           >
-            Know what&rsquo;s working. Grow what matters.
+            Know what&rsquo;s working. Grow what matters
           </h2>
 
           <p className="mt-5 text-lg leading-[1.7] text-text-secondary text-pretty">

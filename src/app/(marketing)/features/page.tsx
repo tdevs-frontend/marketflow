@@ -109,7 +109,7 @@ export default function FeaturesPage() {
         id="whatsapp"
         eyebrow="WhatsApp & Conversations"
         eyebrowIcon={MessageCircle}
-        title="Turn WhatsApp conversations into automated customer journeys."
+        title="Turn WhatsApp conversations into automated customer journeys"
         description="Capture leads, manage conversations, send personalized messages, automate follow-ups, and keep your team aligned from one shared workspace."
         capabilityLabel="In the workspace"
         capabilities={[
@@ -137,7 +137,7 @@ export default function FeaturesPage() {
         id="crm"
         eyebrow="CRM & Customer Management"
         eyebrowIcon={UsersRound}
-        title="Keep every customer relationship in one place."
+        title="Keep every customer relationship in one place"
         description="Organize contacts, leads, segments, tags and customer journeys, and give your team the context they need to convert more conversations."
         capabilityLabel="What you get"
         capabilities={[
@@ -156,7 +156,7 @@ export default function FeaturesPage() {
         id="campaigns"
         eyebrow="Marketing"
         eyebrowIcon={Megaphone}
-        title="Launch campaigns across the channels your customers already use."
+        title="Launch campaigns across the channels your customers already use"
         description="Create, manage and measure targeted campaigns across WhatsApp, Email, SMS and Social — from one audience, with one set of numbers at the end."
         capabilityLabel="Channels"
         capabilities={[
@@ -174,7 +174,7 @@ export default function FeaturesPage() {
         id="automation"
         eyebrow="Automation"
         eyebrowIcon={Workflow}
-        title="Build journeys that keep working after your team logs off."
+        title="Build journeys that keep working after your team logs off"
         description="Create branching workflows triggered by customer activity, lead events, orders, messages and other signals — then watch every run in the activity log."
         capabilityLabel="Steps and triggers"
         capabilities={[
@@ -194,7 +194,7 @@ export default function FeaturesPage() {
         id="commerce"
         eyebrow="Commerce"
         eyebrowIcon={Package}
-        title="Connect marketing with the orders that matter."
+        title="Connect marketing with the orders that matter"
         description="Manage products, orders, inventory, categories, catalogs and discounts alongside customer and marketing activity — so revenue is attached to the conversation that produced it."
         capabilities={[
           "Products",
@@ -211,7 +211,7 @@ export default function FeaturesPage() {
         id="social"
         eyebrow="Social & Multi-channel"
         eyebrowIcon={Share2}
-        title="Plan, publish and measure your social presence."
+        title="Plan, publish and measure your social presence"
         description="Manage social content from planning through publishing and performance analysis, with every connected account in one calendar."
         capabilities={[
           "Social Planner",
@@ -231,7 +231,7 @@ export default function FeaturesPage() {
         anchors={["sms"]}
         eyebrow="Email & SMS"
         eyebrowIcon={Send}
-        title="Reach customers beyond WhatsApp."
+        title="Reach customers beyond WhatsApp"
         description="Email and SMS share the same audiences, templates and reporting as every other channel — so switching between them is a choice about reach, not a second tool to learn."
         capabilityLabel="Both channels"
         capabilities={[
@@ -249,7 +249,7 @@ export default function FeaturesPage() {
         id="analytics"
         eyebrow="Analytics"
         eyebrowIcon={BarChart3}
-        title="See what turns conversations into revenue."
+        title="See what turns conversations into revenue"
         description="Measure leads, conversations, campaigns, conversions, orders and revenue across your marketing channels — attributed back to the campaign that started it."
         capabilityLabel="Reports"
         capabilities={[
@@ -269,7 +269,7 @@ export default function FeaturesPage() {
         id="integrations"
         eyebrow="Integrations"
         eyebrowIcon={Plug}
-        title="Connect the tools already running your business."
+        title="Connect the tools already running your business"
         description="Connect messaging, commerce, analytics and developer services without breaking your existing workflow — and see at a glance when one of them stops working."
         capabilityLabel="Available today"
         capabilities={[
@@ -289,7 +289,7 @@ export default function FeaturesPage() {
         id="workspace"
         eyebrow="Team & Workspace"
         eyebrowIcon={UsersRound}
-        title="Give your team the context and control they need."
+        title="Give your team the context and control they need"
         description="Manage team members, roles, permissions, workspace activity and settings from one place."
         visual={<WorkspaceVisual />}
         reverse

@@ -31,7 +31,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
 
             <h2 className="mt-6 text-xl leading-tight text-balance">
               From first <span className="text-primary">conversation</span> to
-              final sale.
+              final sale
             </h2>
             <p className="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-pretty text-text-muted">
               Leads, conversations, campaigns and products in one workspace.

@@ -175,7 +175,7 @@ export function PlatformFlow() {
             id="platform-flow-title"
             className="section-title mt-5 text-balance"
           >
-            From first interaction to repeat customer.
+            From first interaction to repeat customer
           </h2>
 
           <p className="mt-3.5 text-base leading-[1.7] text-text-secondary text-pretty">

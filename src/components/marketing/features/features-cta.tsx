@@ -44,7 +44,7 @@ export function FeaturesCta() {
 
         <h2 id="features-cta-title" className="section-title mt-6 text-balance">
           Turn every customer interaction into your{" "}
-          <span className="brand-gradient-text">next opportunity</span>.
+          <span className="brand-gradient-text">next opportunity</span>
         </h2>
 
         <p className="mx-auto mt-6 max-w-[42rem] text-base leading-relaxed text-text-secondary text-pretty">

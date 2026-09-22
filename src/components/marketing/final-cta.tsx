@@ -46,7 +46,7 @@ export function FinalCta() {
 
         <h2 id="final-cta-title" className="section-title mt-6 text-balance">
           Turn <span className="brand-gradient-text">every conversation</span>{" "}
-          into an opportunity.
+          into an opportunity
         </h2>
 
         <p className="mx-auto mt-6 max-w-[42rem] text-base leading-relaxed text-text-secondary text-pretty">

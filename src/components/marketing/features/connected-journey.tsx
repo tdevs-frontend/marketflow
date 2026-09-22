@@ -71,7 +71,7 @@ export function ConnectedJourney() {
           </p>
 
           <h2 id="journey-title" className="section-title mt-5 text-balance">
-            One customer journey. One connected system.
+            One customer journey. One connected system
           </h2>
 
           <p className="mt-5 text-base leading-[1.7] text-text-secondary text-pretty">

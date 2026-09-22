@@ -528,7 +528,7 @@ export function VariantManager({
           </p>
         ) : (
           <EmptyState
-            title="This product has no variants."
+            title="This product has no variants"
             description="Turn variants on to sell it in more than one size, tier or package — each with its own code, price and stock."
             action={
               <Button size="sm" onClick={() => onEnabledChange(true)}>
