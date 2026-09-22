@@ -21,9 +21,14 @@ import { cn } from "@/lib/utils";
  * beside the page's other animations, and all three stop under
  * `prefers-reduced-motion`.
  *
- * Both fades are `pointer-events-none` and sit above the columns: a marquee
- * that ends in a hard edge reads as a clipped list rather than as a wall that
- * continues.
+ * A marquee that ends in a hard edge reads as a clipped list rather than as a
+ * wall that continues, so both ends are softened — but by different means. The
+ * bottom is a `pointer-events-none` gradient in the ground colour, painted over
+ * the columns. The top cannot be: the bloom and the corner wedge tint the
+ * ground there, so a panel of flat `#080622` reads as a second, duller purple
+ * with a visible edge where the container ends. Masking the columns instead
+ * fades them to real transparency, and whatever the section is painting behind
+ * them — bloom included — is what shows through.
  */
 
 interface Testimonial {
@@ -209,17 +214,15 @@ export function TestimonialSection() {
         </header>
 
         <div className="relative mx-auto mt-16 overflow-hidden">
-          {/* The wall continues past both edges rather than being cut off. */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 z-20 h-24 bg-gradient-to-b from-[#080622] to-transparent"
-          />
+          {/* The wall continues past the bottom edge rather than being cut
+              off. The top edge is softened by a mask on the columns instead —
+              see the note above. */}
           <div
             aria-hidden
             className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-32 bg-gradient-to-t from-[#080622] to-transparent"
           />
 
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-3 max-h-[80vh] overflow-hidden">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-3 max-h-[80vh] overflow-hidden mask-t-from-[calc(100%_-_6rem)]">
             {COLUMNS.map((column, columnIndex) => (
               <div
                 key={columnIndex}
