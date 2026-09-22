@@ -1,6 +1,14 @@
-import type { ReactNode } from "react";
 import Link from "next/link";
-import { LayoutGrid } from "lucide-react";
+import {
+  GraduationCap,
+  HeartPulse,
+  House,
+  LayoutGrid,
+  ShoppingBag,
+  Store,
+  UsersRound,
+  type LucideIcon,
+} from "lucide-react";
 
 /* ------------------------------------------------------------------ tokens */
 
@@ -45,7 +53,8 @@ export interface SolutionCardData {
   border: string;
   tile: string;
   check: string;
-  icon: ReactNode;
+  Icon: LucideIcon;
+  iconColor: string;
 }
 
 export const SOLUTION_CARDS: SolutionCardData[] = [
@@ -63,18 +72,8 @@ export const SOLUTION_CARDS: SolutionCardData[] = [
     border: "#DDF0E4",
     tile: "#C8EED9",
     check: "#22C55E",
-    icon: (
-      <svg viewBox="0 0 24 24" width="27" height="27" fill="#16A34A">
-        <path d="M6.2 7h11.6a2 2 0 0 1 2 1.8l.9 9.4A2.4 2.4 0 0 1 18.3 21H5.7a2.4 2.4 0 0 1-2.4-2.8l.9-9.4A2 2 0 0 1 6.2 7Z" />
-        <path
-          d="M8.6 8.4V6.6a3.4 3.4 0 0 1 6.8 0v1.8"
-          fill="none"
-          stroke="#16A34A"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-      </svg>
-    ),
+    Icon: ShoppingBag,
+    iconColor: "#16A34A",
   },
   {
     title: "Small & Medium Business",
@@ -90,13 +89,8 @@ export const SOLUTION_CARDS: SolutionCardData[] = [
     border: "#E7E2FB",
     tile: "#DED5FF",
     check: "#6D4AF5",
-    icon: (
-      <svg viewBox="0 0 24 24" width="27" height="27" fill={VIOLET}>
-        <path d="M3.4 4.2h17.2a1 1 0 0 1 .95 1.3l-.8 2.6a1 1 0 0 1-.96.7H4.2a1 1 0 0 1-.96-.7l-.8-2.6a1 1 0 0 1 .96-1.3Z" />
-        <path d="M4.6 10.2h14.8v8.6a1.2 1.2 0 0 1-1.2 1.2H5.8a1.2 1.2 0 0 1-1.2-1.2v-8.6Z" />
-        <rect x="8.2" y="13" width="7.6" height="4.4" rx="1" fill="#fff" />
-      </svg>
-    ),
+    Icon: Store,
+    iconColor: VIOLET,
   },
   {
     title: "Marketing Agencies",
@@ -112,14 +106,8 @@ export const SOLUTION_CARDS: SolutionCardData[] = [
     border: "#DFEAFA",
     tile: "#D2E6FF",
     check: "#2F80ED",
-    icon: (
-      <svg viewBox="0 0 24 24" width="27" height="27" fill="#2F80ED">
-        <circle cx="9" cy="8" r="3.6" />
-        <circle cx="16.8" cy="9.2" r="2.8" />
-        <path d="M2.6 19.4c0-3.4 2.9-5.6 6.4-5.6s6.4 2.2 6.4 5.6a.8.8 0 0 1-.8.8H3.4a.8.8 0 0 1-.8-.8Z" />
-        <path d="M16.6 14c2.8.15 4.8 1.9 4.8 4.5a.8.8 0 0 1-.8.7h-3.3c.1-2-.4-3.7-1.4-5 .2-.1.4-.2.7-.2Z" />
-      </svg>
-    ),
+    Icon: UsersRound,
+    iconColor: "#2F80ED",
   },
   {
     title: "Real Estate",
@@ -135,11 +123,8 @@ export const SOLUTION_CARDS: SolutionCardData[] = [
     border: "#F9EBD9",
     tile: "#FFE1C4",
     check: "#F97316",
-    icon: (
-      <svg viewBox="0 0 24 24" width="27" height="27" fill="#F97316">
-        <path d="M11.3 2.9a1.1 1.1 0 0 1 1.4 0l8.6 7.2c.5.4.2 1.2-.45 1.2H19v8a1.4 1.4 0 0 1-1.4 1.4h-3.1v-5.2h-3v5.2H8.4A1.4 1.4 0 0 1 7 19.3v-8H4.15c-.65 0-.95-.8-.45-1.2l8.6-7.2Z" />
-      </svg>
-    ),
+    Icon: House,
+    iconColor: "#F97316",
   },
   {
     title: "Education",
@@ -155,18 +140,8 @@ export const SOLUTION_CARDS: SolutionCardData[] = [
     border: "#FBE1EC",
     tile: "#FFD5E5",
     check: "#E8386B",
-    icon: (
-      <svg viewBox="0 0 24 24" width="27" height="27" fill="#EC4899">
-        <path d="M11.5 3.2a1.2 1.2 0 0 1 1 0l8.2 3.9c.6.3.6 1.2 0 1.5l-8.2 3.9a1.2 1.2 0 0 1-1 0L3.3 8.6c-.6-.3-.6-1.2 0-1.5l8.2-3.9Z" />
-        <path d="M6 11.4l5.5 2.6c.32.15.68.15 1 0L18 11.4v4.3c0 2-2.7 3.5-6 3.5s-6-1.5-6-3.5v-4.3Z" />
-        <path
-          d="M20.4 10.2v5.2"
-          stroke="#EC4899"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-        />
-      </svg>
-    ),
+    Icon: GraduationCap,
+    iconColor: "#EC4899",
   },
   {
     title: "Healthcare",
@@ -182,11 +157,8 @@ export const SOLUTION_CARDS: SolutionCardData[] = [
     border: "#DAF0EC",
     tile: "#C6EBE4",
     check: "#10B981",
-    icon: (
-      <svg viewBox="0 0 24 24" width="27" height="27" fill="#0D9488">
-        <path d="M9.8 2.6h4.4c.66 0 1.2.54 1.2 1.2v4.6h4.6c.66 0 1.2.54 1.2 1.2v4.4c0 .66-.54 1.2-1.2 1.2h-4.6v4.6c0 .66-.54 1.2-1.2 1.2H9.8c-.66 0-1.2-.54-1.2-1.2v-4.6H4c-.66 0-1.2-.54-1.2-1.2V9.6c0-.66.54-1.2 1.2-1.2h4.6V3.8c0-.66.54-1.2 1.2-1.2Z" />
-      </svg>
-    ),
+    Icon: HeartPulse,
+    iconColor: "#0D9488",
   },
 ];
 
@@ -220,7 +192,12 @@ export function SolutionCard({ card }: { card: SolutionCardData }) {
         className="flex h-[58px] w-[58px] items-center justify-center rounded-[18px]"
         style={{ background: card.tile }}
       >
-        {card.icon}
+        <card.Icon
+          size={28}
+          strokeWidth={1.75}
+          color={card.iconColor}
+          aria-hidden
+        />
       </span>
 
       <div className="flex w-full flex-1 flex-col">

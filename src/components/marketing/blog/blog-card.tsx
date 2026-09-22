@@ -77,7 +77,7 @@ export function BlogCard({
           {/* `mt-auto` pins the footer to the bottom of the tallest card in the
               row, which is what keeps the three read-times on one line. */}
           <div className="mt-auto flex items-center justify-between gap-3 pt-5">
-            <div className="flex min-w-0 items-center gap-2 text-xs text-text-muted">
+            <div className="flex min-w-0 items-center gap-2 text-sm text-text-muted">
               <Clock3 className="size-3.5 shrink-0" aria-hidden />
               <span>{article.readingMinutes} min read</span>
               {showDate ? (
