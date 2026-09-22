@@ -9,6 +9,8 @@ export * from "./analytics-section";
 export * from "./analytics-dashboard";
 export * from "./trust-stats";
 export * from "./blog";
+export * from "./solutions-hero";
+export * from "./integrations-section";
 export * from "./faq-accordion";
 export * from "./final-cta";
 export * from "./pricing-plans";
