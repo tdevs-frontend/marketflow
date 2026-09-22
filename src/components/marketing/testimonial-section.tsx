@@ -208,7 +208,7 @@ export function TestimonialSection() {
             className="section-title mt-7 text-balance text-white"
           >
             Loved by teams{" "}
-            <span className="lavender-gradient-text">
+            <span>
               growing with MarketFlow
             </span>
           </h2>

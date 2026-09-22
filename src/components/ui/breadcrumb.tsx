@@ -51,7 +51,7 @@ export function Breadcrumb({
     <nav aria-label="Breadcrumb" className={className}>
       <ol
         className={cn(
-          "flex flex-wrap items-center gap-x-2 gap-y-1 text-sm",
+          "flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-semibold",
           align === "center" && "justify-center",
         )}
       >
@@ -75,9 +75,7 @@ export function Breadcrumb({
               {last || !item.href ? (
                 <span
                   aria-current={last ? "page" : undefined}
-                  className={cn(
-                    last ? "font-medium text-text-primary" : "text-text-muted",
-                  )}
+                  className={cn(last ? "text-text-primary" : "text-text-muted")}
                 >
                   {item.label}
                 </span>

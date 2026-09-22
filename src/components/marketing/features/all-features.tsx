@@ -180,11 +180,11 @@ export function AllFeatures() {
             >
               <span
                 className={cn(
-                  "grid size-10 shrink-0 place-items-center rounded-btn border",
+                  "grid size-12 shrink-0 place-items-center rounded-btn border",
                   feature.tint,
                 )}
               >
-                <feature.icon className="size-5" aria-hidden />
+                <feature.icon className="size-6" aria-hidden />
               </span>
 
               <h3 className="mt-4 text-base sm:text-lg font-bold text-text-primary">

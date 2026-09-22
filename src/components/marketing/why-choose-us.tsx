@@ -129,13 +129,6 @@ const BENEFITS = [
   "Trusted by growing businesses worldwide",
 ];
 
-/** Reassurances under the CTA. The last one restates `TRUST_STATS[0]`. */
-const REASSURANCES = [
-  "No credit card required",
-  "Setup in minutes",
-  `${TRUST_STATS[0].value} businesses trust us`,
-];
-
 function ReasonCard({ icon: Icon, title, description, tint, href }: Reason) {
   return (
     <article className="group flex h-full flex-col rounded-card border border-border bg-surface p-5 shadow-card transition-[border-color,box-shadow,translate] hover:-translate-y-0.5 hover:border-border-strong hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
@@ -194,7 +187,13 @@ export function WhyChooseUs() {
         preserveAspectRatio="none"
       >
         <defs>
-          <linearGradient id="why-choose-us-swell" x1="0" y1="0" x2="1" y2="0.6">
+          <linearGradient
+            id="why-choose-us-swell"
+            x1="0"
+            y1="0"
+            x2="1"
+            y2="0.6"
+          >
             <stop offset="0%" stopColor="var(--color-primary-soft)" />
             <stop offset="55%" stopColor="var(--color-primary-subtle)" />
             <stop
@@ -217,7 +216,7 @@ export function WhyChooseUs() {
       />
 
       <div className="custom-container-wide">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] lg:gap-10 xl:grid-cols-[minmax(0,0.62fr)_minmax(0,1fr)] xl:gap-14">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[minmax(0,0.62fr)_minmax(0,1fr)] xl:gap-14">
           {/* The argument */}
           <div className="max-w-xl">
             <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-primary-border bg-primary-soft py-1.5 pr-4 pl-2 text-primary">
@@ -225,7 +224,11 @@ export function WhyChooseUs() {
                 aria-hidden
                 className="grid size-5 place-items-center rounded-full bg-primary text-white"
               >
-                <Star className="size-2.5" fill="currentColor" strokeWidth={0} />
+                <Star
+                  className="size-2.5"
+                  fill="currentColor"
+                  strokeWidth={0}
+                />
               </span>
               Why choose us
             </p>
@@ -267,26 +270,6 @@ export function WhyChooseUs() {
               Start Growing
               <ArrowRight aria-hidden />
             </ButtonLink>
-
-            {/*
-              * The separator trails its item rather than leading the next one.
-              * This row wraps at narrow widths, and a leading dot becomes an
-              * orphan bullet at the start of the new line; a trailing one just
-              * ends the line, which is how an inline separator is read anyway.
-              */}
-            <ul className="mt-6 flex flex-wrap items-center gap-x-3.5 gap-y-1.5 text-sm text-text-muted">
-              {REASSURANCES.map((item, index) => (
-                <li key={item} className="flex items-center gap-3.5 whitespace-nowrap">
-                  {item}
-                  {index < REASSURANCES.length - 1 && (
-                    <span
-                      aria-hidden
-                      className="size-1 rounded-full bg-border-strong"
-                    />
-                  )}
-                </li>
-              ))}
-            </ul>
           </div>
 
           {/* The evidence — three across from `xl`, two from `sm`. */}

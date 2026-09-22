@@ -66,32 +66,32 @@ interface Stage {
  */
 const STAGES: Stage[] = [
   {
-    label: "Capture",
+    label: "Capture Leads",
     icon: UserPlus,
     headline: "A lead arrives from a form, campaign or WhatsApp message.",
     modules: ["Leads", "Contacts", "Forms"],
   },
   {
-    label: "Engage",
+    label: "Engage Customers",
     icon: MessagesSquare,
     headline: "Your team responds with the full customer history in one place.",
     modules: ["WhatsApp Inbox", "Email", "SMS"],
   },
   {
-    label: "Automate",
+    label: "Automate Follow-ups",
     icon: Zap,
     headline: "Follow-ups happen automatically based on customer activity.",
     modules: ["Workflows", "Triggers", "Templates"],
     accent: true,
   },
   {
-    label: "Convert",
+    label: "Convert Customers",
     icon: Target,
     headline: "Orders and customer actions stay connected to the conversation.",
     modules: ["Orders", "Products", "Discounts"],
   },
   {
-    label: "Grow",
+    label: "Grow Revenue",
     icon: TrendingUp,
     headline: "See which channels and campaigns are driving revenue.",
     modules: ["Analytics", "Segments", "Campaigns"],
@@ -171,11 +171,19 @@ export function PlatformFlow() {
             One connected workspace
           </p>
 
+          {/*
+           * One rung up the `section-title` ramp — 36 / 48 / 60 rather than
+           * 30 / 36 / 48. The class is in `@layer components`, so the three
+           * utilities below simply outrank its sizes and nothing else about it
+           * changes. Two words need the extra size: the ramp is set for a
+           * sentence, and "Customer Journey" at the shared size reads as a
+           * label floating over the row rather than as the section's title.
+           */}
           <h2
             id="platform-flow-title"
-            className="section-title mt-5 text-balance"
+            className="section-title mt-5 text-balance text-4xl sm:text-5xl lg:text-6xl"
           >
-            From first interaction to repeat customer
+            Customer Journey
           </h2>
 
           <p className="mt-3.5 text-base leading-[1.7] text-text-secondary text-pretty">
@@ -263,7 +271,17 @@ export function PlatformFlow() {
                     ragged. Grid stretch gives every column the same height;
                     this is what spends it. */}
                 <div className="min-w-0 md:mt-5 md:flex md:flex-1 md:flex-col md:items-center">
-                  <h3 className="text-base font-bold text-text-primary">
+                  {/* Two lines reserved between `md` and `lg`, and only
+                      there. Five columns are at their tightest in that band, so
+                      "Engage Customers", "Automate Follow-ups" and "Convert
+                      Customers" wrap while "Capture Leads" and "Grow Revenue"
+                      do not — which starts three of the five descriptions a
+                      line lower than their neighbours. 3.5rem is two of this
+                      element's `sm:text-lg` 1.75rem lines. "Automate Follow-ups" is
+                      still wrapping at exactly `lg`, so the reservation is held
+                      to `xl` and only then dropped, rather than left in place to
+                      add dead space under every title on a desktop. */}
+                  <h3 className="text-base sm:text-lg font-bold text-text-primary md:min-h-14 xl:min-h-0">
                     {stage.label}
                   </h3>
 
