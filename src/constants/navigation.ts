@@ -57,7 +57,7 @@ export const marketingNav: NavItem[] = [
   },
   {
     title: "Contact",
-    href: "/Contact",
+    href: "/contact",
     icon: "book-open",
   },
 ];
