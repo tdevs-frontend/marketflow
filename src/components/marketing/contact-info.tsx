@@ -76,8 +76,8 @@ export function ContactInfo() {
               key={channel.title}
               className="flex min-h-67.5 flex-col items-center justify-center rounded-card border border-primary-border/50 bg-primary-soft px-8 py-10 text-center"
             >
-              <span className="mb-5 grid size-22 place-items-center rounded-full brand-gradient shadow-[0_10px_30px_rgba(79,70,229,0.25)]">
-                <channel.icon className="size-10 text-white" strokeWidth={1.8} aria-hidden />
+              <span className="mb-5 grid size-20 place-items-center rounded-full brand-gradient shadow-[0_10px_30px_rgba(79,70,229,0.25)]">
+                <channel.icon className="size-8 text-white" strokeWidth={1.8} aria-hidden />
               </span>
 
               <h3 className="mb-3 text-xl font-semibold text-text-primary">
