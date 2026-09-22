@@ -58,15 +58,22 @@ export function Input({
   error,
   size = "md",
   ...props
-}: FieldState &
-  { size?: InputSize } &
-  Omit<ComponentPropsWithRef<"input">, "size">) {
+}: FieldState & { size?: InputSize } & Omit<
+    ComponentPropsWithRef<"input">,
+    "size"
+  >) {
   return (
     <input
       aria-invalid={error || undefined}
       /* `leading-none` keeps the text from fighting the fixed height: the box
          is set by `h-*` now, and an input centres its own text inside it. */
-      className={cn(FIELD, "leading-none", SIZES[size], error && INVALID, className)}
+      className={cn(
+        FIELD,
+        "leading-none",
+        SIZES[size],
+        error && INVALID,
+        className,
+      )}
       {...props}
     />
   );
@@ -87,7 +94,7 @@ export function Textarea({
       aria-invalid={error || undefined}
       className={cn(
         FIELD,
-        "min-h-24 resize-y px-3.5 py-3 text-sm leading-relaxed",
+        "min-h-20 resize-y px-3.5 py-3 text-sm leading-relaxed",
         error && INVALID,
         className,
       )}
@@ -117,7 +124,10 @@ export function Field({
 }) {
   return (
     <div className="space-y-1.5">
-      <label htmlFor={htmlFor} className="block text-sm font-bold text-text-secondary">
+      <label
+        htmlFor={htmlFor}
+        className="block text-sm font-bold text-text-secondary"
+      >
         {label}
       </label>
       {children}
@@ -127,7 +137,10 @@ export function Field({
           {error}
         </p>
       ) : hint ? (
-        <p id={`${htmlFor}-hint`} className="text-sm font-medium text-text-muted">
+        <p
+          id={`${htmlFor}-hint`}
+          className="text-sm font-medium text-text-muted"
+        >
           {hint}
         </p>
       ) : null}

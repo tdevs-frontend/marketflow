@@ -48,10 +48,13 @@ function validate(name: string, email: string, message: string): Errors {
   if (!name.trim()) errors.name = "Tell us who you are.";
 
   if (!email.trim()) errors.email = "We need an address to reply to.";
-  else if (!EMAIL.test(email.trim())) errors.email = "That does not look like an email address.";
+  else if (!EMAIL.test(email.trim()))
+    errors.email = "That does not look like an email address.";
 
   if (!message.trim()) errors.message = "Tell us what you need.";
-  else if (message.trim().length < 10) errors.message = "A sentence or two, so we can route it to the right person.";
+  else if (message.trim().length < 10)
+    errors.message =
+      "A sentence or two, so we can route it to the right person.";
 
   return errors;
 }
@@ -75,7 +78,11 @@ export function ContactForm() {
   const emailRef = useRef<HTMLInputElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
 
-  function revalidate(next: { name?: string; email?: string; message?: string }) {
+  function revalidate(next: {
+    name?: string;
+    email?: string;
+    message?: string;
+  }) {
     if (!liveValidation) return;
     setErrors(
       validate(next.name ?? name, next.email ?? email, next.message ?? message),
@@ -94,7 +101,12 @@ export function ContactForm() {
 
     /* Focus the first failed field, so keyboard users land on the problem. */
     if (nextErrors.name || nextErrors.email || nextErrors.message) {
-      (nextErrors.name ? nameRef : nextErrors.email ? emailRef : messageRef).current?.focus();
+      (nextErrors.name
+        ? nameRef
+        : nextErrors.email
+          ? emailRef
+          : messageRef
+      ).current?.focus();
       return;
     }
 
@@ -111,7 +123,9 @@ export function ContactForm() {
       setErrors({});
       setLiveValidation(false);
     } catch {
-      setFormError("We could not send that. Try again, or email support@marketflow.app.");
+      setFormError(
+        "We could not send that. Try again, or email support@marketflow.app.",
+      );
     } finally {
       setPending(false);
     }
@@ -136,14 +150,14 @@ export function ContactForm() {
               className="section-title mt-6 max-w-xl text-balance"
             >
               Feel free to get in touch{" "}
-              <span className="brand-gradient-text">with the team</span>.
+              <span className="brand-gradient-text">with the team</span>
             </h2>
 
             <p className="mt-6 max-w-xl text-base leading-[1.7] text-text-secondary text-pretty">
               Comparing platforms, planning a migration, or stuck halfway
-              through a setup — write to us and a person answers. Support
-              replies within one business day; ask for sales and we will walk
-              you through a live workspace instead.
+              through a setup write to us and a person answers. Support replies
+              within one business day; ask for sales and we will walk you
+              through a live workspace instead.
             </p>
 
             <h3 className="mt-8 text-base font-semibold text-text-primary">
@@ -158,7 +172,7 @@ export function ContactForm() {
                     target="_blank"
                     rel="noreferrer noopener"
                     aria-label={social.label}
-                    className="grid size-10 place-items-center rounded-full bg-surface-secondary text-text-secondary transition-colors hover:bg-primary hover:text-white focus-visible:shadow-focus focus-visible:outline-none"
+                    className="grid size-10 place-items-center rounded-full bg-primary-soft border text-text-secondary transition-colors hover:bg-primary hover:text-white focus-visible:shadow-focus focus-visible:outline-none"
                   >
                     <BrandIcon name={social.icon} className="size-4.5" />
                   </a>
@@ -182,7 +196,10 @@ export function ContactForm() {
                 role="status"
                 className="mt-5 rounded-panel bg-success-soft p-6 text-center"
               >
-                <CheckCircle2 className="mx-auto size-8 text-success" aria-hidden />
+                <CheckCircle2
+                  className="mx-auto size-8 text-success"
+                  aria-hidden
+                />
                 <p className="mt-3 text-base font-semibold text-text-primary">
                   Message received
                 </p>
@@ -212,7 +229,11 @@ export function ContactForm() {
                 {/* `disabled` here reaches every control inside, button
                     included, so nothing is touchable mid-send. */}
                 <fieldset disabled={pending} className="space-y-5">
-                  <Field label="Name" htmlFor="contact-name" error={errors.name}>
+                  <Field
+                    label="Name"
+                    htmlFor="contact-name"
+                    error={errors.name}
+                  >
                     <Input
                       id="contact-name"
                       ref={nameRef}
@@ -222,13 +243,19 @@ export function ContactForm() {
                         revalidate({ name: event.target.value });
                       }}
                       error={Boolean(errors.name)}
-                      aria-describedby={errors.name ? "contact-name-error" : undefined}
+                      aria-describedby={
+                        errors.name ? "contact-name-error" : undefined
+                      }
                       autoComplete="name"
                       placeholder="Your name"
                     />
                   </Field>
 
-                  <Field label="Email" htmlFor="contact-email" error={errors.email}>
+                  <Field
+                    label="Email"
+                    htmlFor="contact-email"
+                    error={errors.email}
+                  >
                     <Input
                       id="contact-email"
                       ref={emailRef}
@@ -239,7 +266,9 @@ export function ContactForm() {
                         revalidate({ email: event.target.value });
                       }}
                       error={Boolean(errors.email)}
-                      aria-describedby={errors.email ? "contact-email-error" : undefined}
+                      aria-describedby={
+                        errors.email ? "contact-email-error" : undefined
+                      }
                       autoComplete="email"
                       placeholder="you@company.com"
                     />
@@ -253,14 +282,16 @@ export function ContactForm() {
                     <Textarea
                       id="contact-message"
                       ref={messageRef}
-                      rows={6}
+                      rows={5}
                       value={message}
                       onChange={(event) => {
                         setMessage(event.target.value);
                         revalidate({ message: event.target.value });
                       }}
                       error={Boolean(errors.message)}
-                      aria-describedby={errors.message ? "contact-message-error" : undefined}
+                      aria-describedby={
+                        errors.message ? "contact-message-error" : undefined
+                      }
                       placeholder="What are you trying to do?"
                     />
                   </Field>
@@ -279,7 +310,11 @@ export function ContactForm() {
                     </p>
                   ) : null}
 
-                  <Button type="submit" size="lg" className="group w-full sm:w-auto">
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="group w-full sm:w-auto"
+                  >
                     {pending ? "Sending…" : "Send message"}
                     <ArrowRight
                       className="size-4 transition-[translate] group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"

@@ -26,7 +26,7 @@ export type ButtonSize = "sm" | "compact" | "md" | "lg" | "icon";
  * to break the scale can override with `!size-5`.
  */
 const BASE = [
-  "inline-flex select-none items-center justify-center whitespace-nowrap rounded-btn font-semibold",
+  "inline-flex select-none items-center justify-center whitespace-nowrap rounded-btn font-medium",
   // `transition-all` on the project's 200ms ease default — the softer curve.
   "transition-all",
   "focus-visible:outline-none focus-visible:shadow-focus",
