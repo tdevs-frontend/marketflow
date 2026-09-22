@@ -177,7 +177,7 @@ export function IntegrationsSection() {
                   href={mark.href}
                   className="group flex h-full flex-col items-center justify-center gap-3 px-3 py-7 text-center transition-colors duration-200 hover:bg-primary-subtle focus-visible:bg-primary-subtle focus-visible:shadow-focus focus-visible:outline-none sm:px-4 sm:py-8"
                 >
-                  <span className="grid size-7 place-items-center transition-[translate] duration-200 group-hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-y-0">
+                  <span className="grid size-8 place-items-center transition-[translate] duration-200 group-hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-y-0">
                     {mark.brand ? (
                       <BrandIcon
                         name={mark.brand}

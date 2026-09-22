@@ -106,17 +106,32 @@ export function HeroDashboard() {
             <TrendingUp className="h-4 w-4" aria-hidden />
           </span>
           <span>
-            <span className="block text-xs font-medium uppercase  text-text-muted">
+            <span className="block text-xs font-medium text-text-primary mb-0.5">
               Reply rate
             </span>
-            <span className="block text-base font-bold leading-tight text-text-primary">+38%</span>
+            <span className="block text-base font-bold leading-tight text-text-primary">
+              +38%
+            </span>
           </span>
         </div>
-        <svg viewBox="0 0 120 36" className="mt-2 h-8 w-28" role="presentation" aria-hidden>
+        <svg
+          viewBox="0 0 120 36"
+          className="mt-2 h-8 w-28"
+          role="presentation"
+          aria-hidden
+        >
           <defs>
             <linearGradient id="mf-hero-spark" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--color-brand-from)" stopOpacity="0.28" />
-              <stop offset="100%" stopColor="var(--color-brand-from)" stopOpacity="0" />
+              <stop
+                offset="0%"
+                stopColor="var(--color-brand-from)"
+                stopOpacity="0.28"
+              />
+              <stop
+                offset="100%"
+                stopColor="var(--color-brand-from)"
+                stopOpacity="0"
+              />
             </linearGradient>
           </defs>
           <path
@@ -131,7 +146,14 @@ export function HeroDashboard() {
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          <circle cx="118" cy="3" r="3.5" fill="var(--color-primary)" stroke="var(--color-surface)" strokeWidth="2" />
+          <circle
+            cx="118"
+            cy="3"
+            r="3.5"
+            fill="var(--color-primary)"
+            stroke="var(--color-surface)"
+            strokeWidth="2"
+          />
         </svg>
       </div>
 
@@ -143,7 +165,7 @@ export function HeroDashboard() {
           <Send className="h-4 w-4" aria-hidden />
         </span>
         <span>
-          <span className="block text-xs font-semibold leading-tight text-text-primary">
+          <span className="block text-xs font-semibold leading-tight text-text-primary mb-0.5">
             New lead captured
           </span>
           <span className="block text-xs leading-tight text-text-muted">
