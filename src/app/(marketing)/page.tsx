@@ -9,6 +9,7 @@ import {
   TestimonialSection,
   // TrustStats,
   WhatsAppAutomation,
+  WhyChooseUs,
 } from "@/components/marketing";
 
 export default function HomePage() {
@@ -17,6 +18,8 @@ export default function HomePage() {
       <HeroSection />
 
       <WhatsAppAutomation />
+
+      <WhyChooseUs />
 
       {/* <MultiChannelCampaign /> */}
 

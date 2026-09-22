@@ -17,7 +17,15 @@ export type TrustLogo = {
   mark: TrustLogoMark;
 };
 
-const STATS: TrustStat[] = [
+/**
+ * The product's numbers, in one place.
+ *
+ * Exported because `WhyChooseUs` quotes the first figure in the trust line
+ * under its CTA. Two hand-kept copies of "how many businesses" is how a page
+ * ends up claiming 10K+ in one section and 1,000+ in the next, so the list is
+ * the source and both sections read from it.
+ */
+export const TRUST_STATS: TrustStat[] = [
   {
     value: "10K+",
     label: "Active Businesses",
@@ -114,7 +122,7 @@ export function TrustStats() {
         </header>
 
         <dl className="grid grid-cols-2 overflow-hidden rounded-card border border-border bg-background lg:grid-cols-4">
-          {STATS.map((stat, index) => (
+          {TRUST_STATS.map((stat, index) => (
             <div
               key={stat.label}
               className={cn(
