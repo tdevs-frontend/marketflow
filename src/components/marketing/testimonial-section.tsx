@@ -22,13 +22,19 @@ import { cn } from "@/lib/utils";
  * `prefers-reduced-motion`.
  *
  * A marquee that ends in a hard edge reads as a clipped list rather than as a
- * wall that continues, so both ends are softened — but by different means. The
- * bottom is a `pointer-events-none` gradient in the ground colour, painted over
- * the columns. The top cannot be: the bloom and the corner wedge tint the
- * ground there, so a panel of flat `#080622` reads as a second, duller purple
- * with a visible edge where the container ends. Masking the columns instead
- * fades them to real transparency, and whatever the section is painting behind
- * them — bloom included — is what shows through.
+ * wall that continues, so both ends are softened — by masking the columns, not
+ * by painting the ground colour over them.
+ *
+ * Both fades were panels of flat `#080622` once. That cannot work at the top,
+ * where the bloom and the corner wedge tint the ground: a flat panel reads as a
+ * second, duller purple with a visible edge where the container ends. It is
+ * merely fragile at the bottom — the panel restates the section's background as
+ * a second literal, and the two drift the moment one of them is edited, which
+ * is exactly what happened when the ground moved to `#0F123A` and the fade
+ * stayed behind. A mask has no colour to keep in step: it fades the columns to
+ * real transparency, and whatever the section paints behind them — ground,
+ * bloom and wedge alike — is what shows through. The ground is now named once,
+ * on the section itself.
  */
 
 interface Testimonial {
@@ -129,7 +135,7 @@ function ReviewCard({ testimonial }: { testimonial: Testimonial }) {
 
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <h3 className="truncate text-sm font-semibold text-white">
+            <h3 className="truncate text-base font-semibold text-white">
               {testimonial.name}
             </h3>
             <BadgeCheck
@@ -139,7 +145,7 @@ function ReviewCard({ testimonial }: { testimonial: Testimonial }) {
             />
           </div>
 
-          <p className="text-xs text-white/50">{testimonial.role}</p>
+          <p className="text-sm text-white/50">{testimonial.role}</p>
         </div>
       </div>
 
@@ -148,7 +154,7 @@ function ReviewCard({ testimonial }: { testimonial: Testimonial }) {
           {[1, 2, 3, 4, 5].map((star) => (
             <Star
               key={star}
-              className="size-3.5 text-amber-400"
+              className="size-4 text-amber-400"
               fill="currentColor"
             />
           ))}
@@ -158,7 +164,7 @@ function ReviewCard({ testimonial }: { testimonial: Testimonial }) {
           {testimonial.rating}
         </span>
 
-        <span className="ml-1 rounded-full bg-emerald-400/10 px-2 py-0.5 text-[10px] font-medium text-emerald-400">
+        <span className="ml-1 rounded-full bg-emerald-400/10 px-2 py-0.5 text-xs font-medium text-emerald-400">
           Verified
         </span>
       </div>
@@ -174,7 +180,7 @@ export function TestimonialSection() {
   return (
     <section
       aria-labelledby="testimonials-title"
-      className="relative isolate overflow-hidden bg-[#080622] py-24 text-white"
+      className="relative isolate overflow-hidden bg-[#0F123A] py-24 text-white"
     >
       {/* Violet bloom behind the heading. */}
       <div
@@ -214,15 +220,8 @@ export function TestimonialSection() {
         </header>
 
         <div className="relative mx-auto mt-16 overflow-hidden">
-          {/* The wall continues past the bottom edge rather than being cut
-              off. The top edge is softened by a mask on the columns instead —
-              see the note above. */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-32 bg-gradient-to-t from-[#080622] to-transparent"
-          />
-
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-3 max-h-[80vh] overflow-hidden mask-t-from-[calc(100%_-_6rem)]">
+          {/* Both edges are softened by the mask below — see the note above. */}
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-3 max-h-[80vh] overflow-hidden mask-t-from-[calc(100%_-_6rem)] mask-b-from-[calc(100%_-_8rem)]">
             {COLUMNS.map((column, columnIndex) => (
               <div
                 key={columnIndex}
