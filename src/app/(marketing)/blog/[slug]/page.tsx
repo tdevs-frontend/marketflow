@@ -1,18 +1,17 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Clock3 } from "lucide-react";
+import { Clock3 } from "lucide-react";
 
 import { LogoMark } from "@/components/ui/logo";
-import { BlogCard } from "@/components/marketing/blog";
-import { APP_ROUTES } from "@/constants";
+import { BlogCard, ShareArticle } from "@/components/marketing/blog";
 import {
   BLOG_ARTICLES,
   formatArticleDate,
   getArticleBySlug,
   type ArticleBlock,
 } from "@/constants/blog";
+import { APP_ROUTES } from "@/constants";
 import { siteConfig } from "@/config/site";
 
 /** Nine known slugs, so every article is prerendered at build time. */
@@ -112,19 +111,8 @@ export default async function ArticlePage({
           />
 
           <div className="custom-container">
-            <div className="mx-auto max-w-3xl py-14 lg:py-18">
-              <Link
-                href={APP_ROUTES.blog}
-                className="group inline-flex items-center gap-2 text-sm font-semibold text-text-muted transition-colors hover:text-primary"
-              >
-                <ArrowLeft
-                  className="size-4 transition-[translate] duration-200 group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
-                  aria-hidden
-                />
-                All articles
-              </Link>
-
-              <p className="mt-7 inline-flex w-fit items-center rounded-full border border-primary-border bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">
+            <div className="mx-auto max-w-3xl py-14 lg:py-16">
+              <p className="inline-flex w-fit items-center rounded-full border border-primary-border bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">
                 {article.category}
               </p>
 
@@ -160,7 +148,7 @@ export default async function ArticlePage({
 
         <div className="custom-container">
           <div className="mx-auto max-w-3xl">
-            <div className="relative -mt-2 aspect-video overflow-hidden rounded-card border border-border bg-background shadow-card">
+            <div className="relative mt-12 aspect-video overflow-hidden rounded-card border border-border bg-background shadow-card">
               <Image
                 src={article.image}
                 alt={article.imageAlt}
@@ -176,6 +164,13 @@ export default async function ArticlePage({
               {article.body.map((block, index) => (
                 <Block key={index} block={block} />
               ))}
+
+              {/* Closing the piece rather than opening it: a reader shares
+                  what they have finished, not what they have not started. */}
+              <ShareArticle
+                url={`${siteConfig.url}${APP_ROUTES.blog}/${article.slug}`}
+                title={article.title}
+              />
             </div>
           </div>
         </div>
