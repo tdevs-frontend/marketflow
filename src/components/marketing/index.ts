@@ -8,6 +8,7 @@ export * from "./multi-channel-campaign";
 export * from "./analytics-section";
 export * from "./analytics-dashboard";
 export * from "./trust-stats";
+export * from "./testimonial-section";
 export * from "./blog";
 export * from "./contact-form";
 export * from "./contact-hero";

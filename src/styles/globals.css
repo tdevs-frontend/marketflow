@@ -826,9 +826,63 @@ body.mobile-menu-show {
   .animate-drift-card-mid,
   .animate-drift-card-late,
   .animate-drift-monitor,
-  .animate-soft-pulse {
+  .animate-soft-pulse,
+  .animate-testimonial-up,
+  .animate-testimonial-down,
+  .animate-testimonial-up-slow {
     animation: none;
   }
+}
+
+/*
+ * The testimonial wall's three columns.
+ *
+ * Each column holds its three reviews twice and travels exactly half its own
+ * height, so the second copy arrives where the first began and the loop closes
+ * on itself with no jump. Three durations that share no common factor keep the
+ * columns from ever falling into step; the middle one runs the other way, which
+ * is what stops the wall reading as one block sliding.
+ */
+@keyframes testimonialUp {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes testimonialDown {
+  0% {
+    transform: translateY(-50%);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes testimonialUpSlow {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-45%);
+  }
+}
+
+.animate-testimonial-up {
+  animation: testimonialUp 28s linear infinite;
+}
+
+.animate-testimonial-down {
+  animation: testimonialDown 32s linear infinite;
+}
+
+.animate-testimonial-up-slow {
+  animation: testimonialUpSlow 35s linear infinite;
 }
 
 /* Animation Delays */

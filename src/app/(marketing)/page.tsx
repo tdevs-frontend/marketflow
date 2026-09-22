@@ -6,6 +6,7 @@ import {
   // MultiChannelCampaign,
   PlatformOverview,
   PricingSection,
+  TestimonialSection,
   // TrustStats,
   WhatsAppAutomation,
 } from "@/components/marketing";
@@ -23,6 +24,8 @@ export default function HomePage() {
 
       {/* <TrustStats /> */}
       <PlatformOverview />
+
+      <TestimonialSection />
 
       <PricingSection />
 
