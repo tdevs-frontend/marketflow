@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   GraduationCap,
   HeartPulse,
@@ -9,6 +8,8 @@ import {
   UsersRound,
   type LucideIcon,
 } from "lucide-react";
+
+import { CommonTextButton } from "@/components/ui/common-text-button";
 
 /* ------------------------------------------------------------------ tokens */
 
@@ -164,24 +165,6 @@ export const SOLUTION_CARDS: SolutionCardData[] = [
 
 /* --------------------------------------------------------------- one card */
 
-function ArrowIcon({ size = 15 }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width={size}
-      height={size}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="transition-transform duration-200 group-hover:translate-x-[3px] motion-reduce:transition-none"
-    >
-      <path d="M4 12h15M13 6l6 6-6 6" />
-    </svg>
-  );
-}
-
 export function SolutionCard({ card }: { card: SolutionCardData }) {
   return (
     <article
@@ -225,14 +208,13 @@ export function SolutionCard({ card }: { card: SolutionCardData }) {
           ))}
         </ul>
 
-        <Link
+        <CommonTextButton
+          label="Learn More"
           href={card.href}
-          className="group mt-auto inline-flex items-center gap-1.5 self-start rounded-sm pt-4.5 text-base font-semibold outline-none focus-visible:ring-2 focus-visible:ring-[#6D3EF0] focus-visible:ring-offset-2"
-          style={{ color: VIOLET }}
-        >
-          Learn More
-          <ArrowIcon />
-        </Link>
+          size="md"
+          color="text-text-primary"
+          className="mt-auto pt-4.5"
+        />
       </div>
     </article>
   );

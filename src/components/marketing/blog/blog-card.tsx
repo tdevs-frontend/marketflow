@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Clock3 } from "lucide-react";
+import { Clock3 } from "lucide-react";
 
+import { CommonTextButton } from "@/components/ui/common-text-button";
 import { cn } from "@/lib/utils";
 import { formatArticleDate, type BlogArticle } from "@/constants/blog";
 
@@ -90,13 +91,8 @@ export function BlogCard({
               ) : null}
             </div>
 
-            <span className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-primary">
-              Read article
-              <ArrowRight
-                className="size-4 transition-[translate] duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
-                aria-hidden
-              />
-            </span>
+            {/* No `href`: the whole card is already the link. */}
+            <CommonTextButton label="Read article" size="md" color="text-text-primary" />
           </div>
         </div>
       </Link>
