@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 
 import {
   FinalCta,
+  HowItWorks,
   SolutionsHero,
   SolutionsSection,
   TestimonialSection,
   WhyChooseUs,
 } from "@/components/marketing";
-import { ConnectedJourney } from "@/components/marketing/features";
 
 export const metadata: Metadata = {
   title: "Solutions",
@@ -32,14 +32,14 @@ export const metadata: Metadata = {
  * that think bigger" — two headings that start with the same three words, one
  * screen apart.
  *
- * `WhyChooseUs` and `ConnectedJourney` are the two reused blocks. The first is
- * the home page's capability grid, and it earns its place here because every
- * card links into the matching `/features` anchor — a reader who has just
- * found their industry gets the capabilities behind it with a way through to
- * the detail. The second is the eight-step walk of one customer through the
- * modules, which used to sit unused on the Features page under a `PlatformFlow`
- * making the same argument; this is the page where nothing else tells that
- * story.
+ * `HowItWorks` walks one customer through the modules in eight steps, from the
+ * campaign click to the revenue it is attributed to — the one place on the
+ * site that tells that story end to end.
+ *
+ * `WhyChooseUs` is the reused block: the home page's capability grid, and it
+ * earns its place here because every card links into the matching `/features`
+ * anchor — a reader who has just found their industry gets the capabilities
+ * behind it with a way through to the detail.
  *
  * The integration wall is no longer here — it moved to
  * `/features#integrations`, where it sits directly under the section that
@@ -66,7 +66,7 @@ export default function SolutionsPage() {
         subheading="Whatever you sell and whoever you sell it to, MarketFlow gives you one workspace to attract, engage and retain customers — arranged around the way your business already works."
       />
 
-      <ConnectedJourney />
+      <HowItWorks />
 
       <WhyChooseUs ground="surface" />
 
