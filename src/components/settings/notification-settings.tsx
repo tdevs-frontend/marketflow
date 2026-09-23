@@ -216,7 +216,6 @@ function MyPreferences() {
             <Input
               id={`${id}-address`}
               type="email"
-              placeholder={user.email}
               value={draft.emailAddress}
               error={Boolean(emailError)}
               onChange={(event) =>

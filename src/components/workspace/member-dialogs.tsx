@@ -430,7 +430,6 @@ export function RemoveMemberDialog({
                 hideLabel={false}
                 value={reassignTo}
                 onChange={setReassignTo}
-                placeholder="Choose a member…"
                 options={candidates.map((candidate) => ({
                   value: candidate.id,
                   label: candidate.name,

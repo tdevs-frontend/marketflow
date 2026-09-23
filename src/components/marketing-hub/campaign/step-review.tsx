@@ -341,7 +341,6 @@ function TrackingSection({ draft, set, derived }: StepProps) {
                 id="utm-content"
                 size="sm"
                 value={tracking.utm.content}
-                placeholder={derived.isSocial ? "e.g. story-link" : "e.g. hero-cta"}
                 onChange={(event) => patchUtm({ content: event.target.value })}
               />
             </Field>

@@ -660,7 +660,6 @@ export function DeleteRoleDialog({
                 hideLabel={false}
                 value={reassignTo}
                 onChange={setReassignTo}
-                placeholder="Choose a role…"
                 options={candidates.map((candidate) => ({
                   value: candidate.id,
                   label: candidate.name,
@@ -903,7 +902,6 @@ export function CopyPermissionsDialog({
             hideLabel={false}
             value={fromId}
             onChange={setFromId}
-            placeholder="Choose a role…"
             options={candidates.map((role) => ({
               value: role.id,
               label: role.name,

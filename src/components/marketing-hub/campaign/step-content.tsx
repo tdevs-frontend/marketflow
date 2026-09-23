@@ -267,7 +267,6 @@ function EmailComposer({ draft, set, errors }: StepProps) {
             <Input
               id="cmp-cta-label"
               value={draft.ctaLabel}
-              placeholder="Shop the sale"
               onChange={(event) => set("ctaLabel", event.target.value)}
             />
           </Field>
@@ -275,7 +274,6 @@ function EmailComposer({ draft, set, errors }: StepProps) {
             <Input
               id="cmp-cta-url"
               value={draft.ctaUrl}
-              placeholder="https://marketflow.io/sale"
               onChange={(event) => set("ctaUrl", event.target.value)}
             />
           </Field>
@@ -405,7 +403,6 @@ function SocialComposer({ draft, set, errors, derived }: StepProps) {
         <Input
           id="cmp-cta-url"
           value={draft.ctaUrl}
-          placeholder="https://marketflow.io/sale"
           onChange={(event) => set("ctaUrl", event.target.value)}
         />
       </Field>

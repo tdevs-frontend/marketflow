@@ -184,27 +184,23 @@ export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
         key: "phoneNumberId",
         label: "Phone Number ID",
         kind: "text",
-        placeholder: "109371892043177",
         hint: "Found under WhatsApp → API Setup in your Meta app.",
       },
       {
         key: "businessAccountId",
         label: "Business Account ID",
         kind: "text",
-        placeholder: "284910337712004",
       },
       {
         key: "accessToken",
         label: "Access Token",
         kind: "secret",
-        placeholder: "EAAG…",
         hint: "Use a permanent System User token, not a temporary one.",
       },
       {
         key: "appSecret",
         label: "App Secret",
         kind: "secret",
-        placeholder: "••••••••••••",
         hint: "Signs inbound webhooks so MarketFlow can verify them.",
       },
     ],
@@ -215,13 +211,12 @@ export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
     name: "Twilio for WhatsApp",
     description: "Route WhatsApp through an existing Twilio account.",
     fields: [
-      { key: "accountSid", label: "Account SID", kind: "text", placeholder: "AC…" },
+      { key: "accountSid", label: "Account SID", kind: "text" },
       { key: "authToken", label: "Auth Token", kind: "secret" },
       {
         key: "sender",
         label: "WhatsApp Sender",
         kind: "text",
-        placeholder: "whatsapp:+8801XXXXXXXXX",
       },
     ],
   },
@@ -244,8 +239,8 @@ export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
     description: "Any standards-compliant mail server.",
     recommended: true,
     fields: [
-      { key: "host", label: "SMTP Host", kind: "text", placeholder: "smtp.company.com" },
-      { key: "port", label: "Port", kind: "number", placeholder: "587" },
+      { key: "host", label: "SMTP Host", kind: "text" },
+      { key: "port", label: "Port", kind: "number" },
       {
         key: "encryption",
         label: "Encryption",
@@ -256,7 +251,7 @@ export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
           { value: "none", label: "None" },
         ],
       },
-      { key: "username", label: "Username", kind: "text", placeholder: "postmaster@company.com" },
+      { key: "username", label: "Username", kind: "text" },
       { key: "password", label: "Password", kind: "secret" },
     ],
   },
@@ -266,7 +261,7 @@ export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
     name: "Amazon SES",
     description: "High-volume sending on AWS, billed per message.",
     fields: [
-      { key: "accessKeyId", label: "Access Key ID", kind: "text", placeholder: "AKIA…" },
+      { key: "accessKeyId", label: "Access Key ID", kind: "text" },
       { key: "secretAccessKey", label: "Secret Access Key", kind: "secret" },
       {
         key: "region",
@@ -287,8 +282,8 @@ export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
     name: "Mailgun",
     description: "Transactional and bulk email with deliverability tooling.",
     fields: [
-      { key: "apiKey", label: "API Key", kind: "secret", placeholder: "key-…" },
-      { key: "domain", label: "Sending Domain", kind: "text", placeholder: "mg.company.com" },
+      { key: "apiKey", label: "API Key", kind: "secret" },
+      { key: "domain", label: "Sending Domain", kind: "text" },
       {
         key: "region",
         label: "Region",
@@ -306,7 +301,7 @@ export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
     name: "SendGrid",
     description: "Twilio SendGrid, with a single API key.",
     fields: [
-      { key: "apiKey", label: "API Key", kind: "secret", placeholder: "SG.…" },
+      { key: "apiKey", label: "API Key", kind: "secret" },
     ],
   },
   {
@@ -320,7 +315,6 @@ export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
         key: "messageStream",
         label: "Message Stream",
         kind: "text",
-        placeholder: "broadcast",
         optional: true,
       },
     ],
@@ -334,9 +328,9 @@ export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
     description: "Global SMS coverage with per-country routing.",
     recommended: true,
     fields: [
-      { key: "accountSid", label: "Account SID", kind: "text", placeholder: "AC…" },
+      { key: "accountSid", label: "Account SID", kind: "text" },
       { key: "authToken", label: "Auth Token", kind: "secret" },
-      { key: "senderId", label: "Sender ID", kind: "text", placeholder: "MRKTFLOW" },
+      { key: "senderId", label: "Sender ID", kind: "text" },
     ],
   },
   {
@@ -347,7 +341,7 @@ export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
     fields: [
       { key: "apiKey", label: "API Key", kind: "text" },
       { key: "apiSecret", label: "API Secret", kind: "secret" },
-      { key: "senderId", label: "Sender ID", kind: "text", placeholder: "MRKTFLOW" },
+      { key: "senderId", label: "Sender ID", kind: "text" },
     ],
   },
   {
@@ -360,7 +354,6 @@ export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
         key: "endpoint",
         label: "Gateway Endpoint",
         kind: "url",
-        placeholder: "https://sms.provider.com/send",
       },
       { key: "apiKey", label: "API Key", kind: "secret" },
       { key: "senderId", label: "Sender ID", kind: "text" },
@@ -380,7 +373,7 @@ export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
     description: "Attribute campaign traffic and conversions in GA4.",
     recommended: true,
     fields: [
-      { key: "measurementId", label: "Measurement ID", kind: "text", placeholder: "G-XXXXXXXXXX" },
+      { key: "measurementId", label: "Measurement ID", kind: "text" },
       {
         key: "apiSecret",
         label: "Measurement Protocol Secret",
@@ -395,7 +388,7 @@ export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
     name: "Meta Pixel",
     description: "Send conversion events to Meta Ads.",
     fields: [
-      { key: "pixelId", label: "Pixel ID", kind: "text", placeholder: "1029384756102938" },
+      { key: "pixelId", label: "Pixel ID", kind: "text" },
       { key: "accessToken", label: "Conversions API Token", kind: "secret" },
     ],
   },
@@ -406,8 +399,8 @@ export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
     description: "Sync orders, products and customers from your store.",
     recommended: true,
     fields: [
-      { key: "shopDomain", label: "Shop Domain", kind: "text", placeholder: "company.myshopify.com" },
-      { key: "adminToken", label: "Admin API Token", kind: "secret", placeholder: "shpat_…" },
+      { key: "shopDomain", label: "Shop Domain", kind: "text" },
+      { key: "adminToken", label: "Admin API Token", kind: "secret" },
     ],
   },
   {
@@ -416,8 +409,8 @@ export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
     name: "WooCommerce",
     description: "Sync a WordPress storefront over the REST API.",
     fields: [
-      { key: "storeUrl", label: "Store URL", kind: "url", placeholder: "https://company.com" },
-      { key: "consumerKey", label: "Consumer Key", kind: "text", placeholder: "ck_…" },
+      { key: "storeUrl", label: "Store URL", kind: "url" },
+      { key: "consumerKey", label: "Consumer Key", kind: "text" },
       { key: "consumerSecret", label: "Consumer Secret", kind: "secret" },
     ],
   },

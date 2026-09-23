@@ -244,7 +244,6 @@ function DisableDialog({
             error={Boolean(error)}
             inputMode="text"
             autoComplete="one-time-code"
-            placeholder="000000"
             className="max-w-56 font-mono tracking-widest"
             onChange={(event) => {
               setCode(event.target.value.trim());
@@ -352,7 +351,6 @@ function RegenerateDialog({
             inputMode="numeric"
             autoComplete="one-time-code"
             maxLength={TOTP_CONFIG.digits}
-            placeholder="000000"
             className="max-w-48 text-center font-mono text-lg tracking-[0.4em]"
             onChange={(event) => {
               setCode(

@@ -120,7 +120,6 @@ export function BulkPricingDialog({
               step="0.01"
               value={price}
               disabled={inherit}
-              placeholder="Leave empty"
               onChange={(event) => setPrice(event.target.value)}
             />
           </Field>
@@ -133,7 +132,6 @@ export function BulkPricingDialog({
               min={0}
               step="0.01"
               value={compareAt}
-              placeholder="Leave empty"
               onChange={(event) => setCompareAt(event.target.value)}
             />
           </Field>
@@ -146,7 +144,6 @@ export function BulkPricingDialog({
               min={0}
               step="0.01"
               value={cost}
-              placeholder="Leave empty"
               onChange={(event) => setCost(event.target.value)}
             />
           </Field>
@@ -258,7 +255,6 @@ export function BulkInventoryDialog({
               inputMode="numeric"
               min={0}
               value={quantity}
-              placeholder="Leave empty"
               onChange={(event) => setQuantity(event.target.value)}
             />
           </Field>
@@ -275,7 +271,6 @@ export function BulkInventoryDialog({
                 inputMode="numeric"
                 min={0}
                 value={threshold}
-                placeholder="Leave empty"
                 onChange={(event) => setThreshold(event.target.value)}
               />
             </Field>

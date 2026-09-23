@@ -66,7 +66,6 @@ type FieldSpec =
       label: string;
       options: SelectOption[];
       hint?: string;
-      placeholder?: string;
       /** Only rendered when this returns true for the current config. */
       when?: (config: Record<string, unknown>) => boolean;
     }
@@ -74,7 +73,6 @@ type FieldSpec =
       type: "text";
       key: string;
       label: string;
-      placeholder?: string;
       hint?: string;
       when?: (config: Record<string, unknown>) => boolean;
     }
@@ -82,7 +80,6 @@ type FieldSpec =
       type: "textarea";
       key: string;
       label: string;
-      placeholder?: string;
       hint?: string;
       when?: (config: Record<string, unknown>) => boolean;
     }
@@ -244,7 +241,6 @@ function fieldsFor(kind: NodeKind): FieldSpec[] {
           type: "text",
           key: "filter",
           label: "Entry filter",
-          placeholder: "Source is website",
           hint: "Optional. Only contacts matching this enter.",
         },
       ];
@@ -286,7 +282,6 @@ function fieldsFor(kind: NodeKind): FieldSpec[] {
           type: "text",
           key: "subject",
           label: "Subject override",
-          placeholder: "Leave blank to use the template subject",
         },
       ];
 
@@ -302,7 +297,6 @@ function fieldsFor(kind: NodeKind): FieldSpec[] {
           type: "textarea",
           key: "body",
           label: "Message",
-          placeholder: "Hi {{first_name}}, your order is on its way.",
           hint: "160 characters per segment. Variables count toward the limit.",
         },
       ];
@@ -383,7 +377,7 @@ function fieldsFor(kind: NodeKind): FieldSpec[] {
       return [
         { type: "select", key: "field", label: "Wait until", options: CONDITION_FIELDS },
         { type: "select", key: "operator", label: "Operator", options: CONDITION_OPERATORS },
-        { type: "text", key: "value", label: "Value", placeholder: "true, VIP, 50" },
+        { type: "text", key: "value", label: "Value" },
         { type: "number", key: "timeout", label: "Give up after (days)", min: 1 },
       ];
 
@@ -394,12 +388,11 @@ function fieldsFor(kind: NodeKind): FieldSpec[] {
       return [
         { type: "select", key: "field", label: "Check", options: CONDITION_FIELDS },
         { type: "select", key: "operator", label: "Operator", options: CONDITION_OPERATORS },
-        { type: "text", key: "value", label: "Value", placeholder: "true, 24 hours, VIP" },
+        { type: "text", key: "value", label: "Value" },
         {
           type: "text",
           key: "outputPath",
           label: "Output path",
-          placeholder: "response.status",
           hint: "Which earlier step's output to read.",
           when: (config) => config.field === "node_output",
         },
@@ -440,13 +433,13 @@ function fieldsFor(kind: NodeKind): FieldSpec[] {
     case "update_contact":
       return [
         { type: "select", key: "field", label: "Field", options: CONTACT_FIELDS },
-        { type: "text", key: "value", label: "New value", placeholder: "Repeat" },
+        { type: "text", key: "value", label: "New value" },
       ];
 
     case "update_lead":
       return [
         { type: "select", key: "field", label: "Field", options: LEAD_FIELDS },
-        { type: "text", key: "value", label: "New value", placeholder: "4200" },
+        { type: "text", key: "value", label: "New value" },
       ];
 
     /* ----------------------------------------------------------- Marketing */
@@ -478,7 +471,6 @@ function fieldsFor(kind: NodeKind): FieldSpec[] {
           type: "text",
           key: "title",
           label: "Task",
-          placeholder: "Call {{first_name}} about their quote",
         },
         { type: "number", key: "dueDays", label: "Due in (days)", min: 0 },
       ];
@@ -499,7 +491,6 @@ function fieldsFor(kind: NodeKind): FieldSpec[] {
           type: "textarea",
           key: "message",
           label: "Message",
-          placeholder: "New hot lead: {{first_name}}",
         },
       ];
 
@@ -517,13 +508,11 @@ function fieldsFor(kind: NodeKind): FieldSpec[] {
           type: "text",
           key: "url",
           label: "Endpoint URL",
-          placeholder: "https://example.com/hooks/marketflow",
         },
         {
           type: "textarea",
           key: "payload",
           label: "Payload",
-          placeholder: '{ "contact_id": "{{contact.id}}" }',
           hint: "JSON. Variables are substituted before the request is sent.",
         },
       ];
@@ -544,18 +533,16 @@ function fieldsFor(kind: NodeKind): FieldSpec[] {
           type: "text",
           key: "action",
           label: "Action",
-          placeholder: "orders.lookup",
         },
       ];
 
     case "custom_event":
       return [
-        { type: "text", key: "eventKey", label: "Event key", placeholder: "demo_requested" },
+        { type: "text", key: "eventKey", label: "Event key" },
         {
           type: "textarea",
           key: "properties",
           label: "Properties",
-          placeholder: '{ "plan": "growth" }',
         },
       ];
 
@@ -932,7 +919,6 @@ export function NodeInspector({
             value={String(value ?? "")}
             onChange={(next) => set(field.key, next)}
             options={field.options}
-            placeholder={field.placeholder ?? "Select…"}
           />
         </Field>
       );

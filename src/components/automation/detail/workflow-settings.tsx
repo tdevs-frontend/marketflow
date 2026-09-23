@@ -419,7 +419,6 @@ export function WorkflowSettings({
                 hideLabel={false}
                 label="Which segment"
                 value={exit.segmentId ?? ""}
-                placeholder="Choose a segment"
                 onChange={(next) => patch("exit", { segmentId: next })}
                 options={CUSTOMER_SEGMENTS.map((segment) => ({
                   value: segment.id,
@@ -443,7 +442,6 @@ export function WorkflowSettings({
                 hideLabel={false}
                 label="Which tag"
                 value={exit.tag ?? ""}
-                placeholder="Choose a tag"
                 onChange={(next) => patch("exit", { tag: next })}
                 options={TAG_NAMES.map((tag) => ({ value: tag, label: tag }))}
               />

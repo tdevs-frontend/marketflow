@@ -195,7 +195,6 @@ function ManualDetails({
             id={id("reference")}
             value={form.reference}
             error={Boolean(errors.reference)}
-            placeholder="e.g. FT26091400412"
             onChange={(event) => onChange({ reference: event.target.value })}
           />
         </Field>
@@ -224,7 +223,6 @@ function ManualDetails({
         <Input
           id={id("sender")}
           value={form.sender}
-          placeholder="e.g. Northwind Trading Ltd"
           onChange={(event) => onChange({ sender: event.target.value })}
         />
       </Field>
@@ -289,7 +287,6 @@ function ManualDetails({
           id={id("note")}
           value={form.note}
           rows={3}
-          placeholder="e.g. Paid from the company account, reference shortened by the bank."
           onChange={(event) => onChange({ note: event.target.value })}
         />
       </Field>

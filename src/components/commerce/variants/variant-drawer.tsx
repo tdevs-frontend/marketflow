@@ -261,7 +261,6 @@ export function VariantDrawer({
                   min={0}
                   step="0.01"
                   value={variant.price ?? ""}
-                  placeholder={String(basePrice)}
                   onChange={(event) => set({ price: number(event.target.value) })}
                 />
               </Field>
@@ -536,7 +535,6 @@ export function VariantDrawer({
                     inputMode="numeric"
                     min={0}
                     value={variant.downloadLimit ?? ""}
-                    placeholder="Unlimited"
                     onChange={(event) => {
                       const raw = event.target.value;
                       set({ downloadLimit: raw === "" ? null : Number(raw) });
@@ -555,7 +553,6 @@ export function VariantDrawer({
                     inputMode="numeric"
                     min={0}
                     value={variant.accessExpiryDays ?? ""}
-                    placeholder="Never"
                     onChange={(event) => {
                       const raw = event.target.value;
                       set({ accessExpiryDays: raw === "" ? null : Number(raw) });
@@ -582,7 +579,6 @@ export function VariantDrawer({
                     inputMode="numeric"
                     min={0}
                     value={variant.licensesAvailable ?? ""}
-                    placeholder="Unlimited"
                     onChange={(event) =>
                       set({ licensesAvailable: number(event.target.value) })
                     }
@@ -628,7 +624,6 @@ export function VariantDrawer({
                     inputMode="numeric"
                     min={0}
                     value={variant.capacityPerSlot ?? ""}
-                    placeholder="Unlimited"
                     onChange={(event) => {
                       const raw = event.target.value;
                       set({ capacityPerSlot: raw === "" ? null : Number(raw) });

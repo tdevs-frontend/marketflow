@@ -262,8 +262,6 @@ function TestDialog({
         ? "Test mobile number"
         : "Test WhatsApp number";
 
-  const placeholder =
-    draft.channel === "email" ? "you@company.com" : "+880 1700 000000";
 
   if (derived.isSocial) {
     return (
@@ -330,7 +328,6 @@ function TestDialog({
           <Input
             id="test-destination"
             value={destination}
-            placeholder={placeholder}
             onChange={(event) => setDestination(event.target.value)}
           />
         </Field>

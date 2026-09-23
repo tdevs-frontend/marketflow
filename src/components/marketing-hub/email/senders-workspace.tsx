@@ -668,7 +668,6 @@ export function EmailSendersWorkspace() {
               <Input
                 id="sender-name"
                 value={editing.name}
-                placeholder="MarketFlow Sales"
                 error={Boolean(errors.name)}
                 onChange={(event) =>
                   setEditing({ ...editing, name: event.target.value })
@@ -686,7 +685,6 @@ export function EmailSendersWorkspace() {
                 id="sender-email"
                 type="email"
                 value={editing.email}
-                placeholder="sales@yourdomain.com"
                 error={Boolean(errors.email)}
                 onChange={(event) =>
                   setEditing({ ...editing, email: event.target.value })
@@ -704,7 +702,6 @@ export function EmailSendersWorkspace() {
                 id="sender-replyto"
                 type="email"
                 value={editing.replyTo}
-                placeholder={editing.email || "support@yourdomain.com"}
                 error={Boolean(errors.replyTo)}
                 onChange={(event) =>
                   setEditing({ ...editing, replyTo: event.target.value })

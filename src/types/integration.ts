@@ -77,7 +77,6 @@ export interface CredentialSpec {
   key: string;
   label: string;
   kind: CredentialKind;
-  placeholder?: string;
   hint?: string;
   /** Options for `select`. */
   options?: { value: string; label: string }[];

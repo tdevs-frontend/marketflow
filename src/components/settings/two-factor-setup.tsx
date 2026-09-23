@@ -300,7 +300,6 @@ function VerifyStep({
             autoComplete="one-time-code"
             autoFocus
             maxLength={TOTP_CONFIG.digits}
-            placeholder="000000"
             className="max-w-48 text-center font-mono text-lg tracking-[0.4em]"
             onChange={(event) => {
               setCode(event.target.value.replace(/\D/g, "").slice(0, TOTP_CONFIG.digits));

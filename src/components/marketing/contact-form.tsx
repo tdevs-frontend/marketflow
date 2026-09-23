@@ -245,7 +245,6 @@ export function ContactForm() {
                         errors.name ? "contact-name-error" : undefined
                       }
                       autoComplete="name"
-                      placeholder="Your name"
                     />
                   </Field>
 
@@ -268,7 +267,6 @@ export function ContactForm() {
                         errors.email ? "contact-email-error" : undefined
                       }
                       autoComplete="email"
-                      placeholder="you@company.com"
                     />
                   </Field>
 
@@ -290,7 +288,6 @@ export function ContactForm() {
                       aria-describedby={
                         errors.message ? "contact-message-error" : undefined
                       }
-                      placeholder="What are you trying to do?"
                     />
                   </Field>
 
