@@ -3,6 +3,8 @@ export const APP_ROUTES = {
   features: "/features",
   pricing: "/pricing",
   blog: "/blog",
+  legalPrivacy: "/legal/privacy",
+  legalTerms: "/legal/terms",
   /* Auth lives under one `/auth` segment, so sign-in, sign-up and password
      reset read as one flow in the URL and in the app directory — and so
      anything that guards them can match a single prefix. */

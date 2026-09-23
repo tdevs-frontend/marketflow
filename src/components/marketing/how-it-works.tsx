@@ -376,7 +376,7 @@ function StepItem({ step, index }: { step: Step; index: number }) {
       <div aria-hidden className="relative h-27 w-38">
         <span
           className={cn(
-            "absolute top-3.25 left-3.25 z-1 grid size-7.5 place-items-center rounded-full text-base leading-none font-extrabold tracking-tight text-white",
+            "absolute top-3.25 left-3.25 z-1 grid size-7.5 place-items-center rounded-full text-sm leading-none font-semibold text-white",
             tone.chip,
           )}
         >
