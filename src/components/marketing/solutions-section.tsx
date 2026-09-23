@@ -257,7 +257,7 @@ export function SolutionsSection({
     <section
       id="industries"
       aria-labelledby="industries-title"
-      className="section-space-py font-sans bg-[#F6F6F6]"
+      className="section-space-py font-sans bg-white"
     >
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-3xl text-center">

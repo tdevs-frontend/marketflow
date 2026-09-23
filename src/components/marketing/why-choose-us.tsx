@@ -278,7 +278,7 @@ export function WhyChooseUs({
 
             <ButtonLink
               href={APP_ROUTES.register}
-              variant="dark"
+              variant="primary"
               size="lg"
               className="mt-10"
             >

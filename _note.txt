@@ -191,7 +191,4 @@ The result should feel polished, consistent, sophisticated, and production-ready
 
 
 added section list:
-1.Testimonial 
 2.How it works
-3.Integrations tools section 
-4.why choose us

@@ -66,9 +66,9 @@ export default function SolutionsPage() {
         subheading="Whatever you sell and whoever you sell it to, MarketFlow gives you one workspace to attract, engage and retain customers — arranged around the way your business already works."
       />
 
-      <WhyChooseUs ground="surface" />
-
       <ConnectedJourney />
+
+      <WhyChooseUs ground="surface" />
 
       <TestimonialSection />
 
