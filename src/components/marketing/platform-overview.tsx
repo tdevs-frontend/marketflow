@@ -56,7 +56,7 @@ export function PlatformOverview() {
 
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <SectionEyebrow icon={Layers}>All-in-one growth platform</SectionEyebrow>
+          <SectionEyebrow text="All-in-one growth platform" icon={Layers} />
 
           <h2
             id="platform-overview-title"

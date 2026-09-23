@@ -234,7 +234,7 @@ export function FeaturesFaq() {
          */}
         <div className="grid gap-10 md:grid-cols-[3fr_3fr] md:gap-10 lg:grid-cols-[6fr_13fr] lg:gap-16">
           <header className="md:pt-1">
-            <SectionEyebrow icon={CircleHelp}>FAQ</SectionEyebrow>
+            <SectionEyebrow text="FAQ" icon={CircleHelp} />
 
             <h2 id="faq-title" className="section-title mt-5 text-balance">
               Frequently

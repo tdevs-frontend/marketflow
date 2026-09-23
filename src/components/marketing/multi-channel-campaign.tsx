@@ -360,7 +360,7 @@ export function MultiChannelCampaign() {
 
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <SectionEyebrow icon={Send}>Multi-channel campaigns</SectionEyebrow>
+          <SectionEyebrow text="Multi-channel campaigns" icon={Send} />
 
           <h2
             id="multi-channel-title"

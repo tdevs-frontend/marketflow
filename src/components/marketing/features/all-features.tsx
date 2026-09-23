@@ -139,7 +139,7 @@ export function AllFeatures() {
     >
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <SectionEyebrow icon={Sparkles}>Our features</SectionEyebrow>
+          <SectionEyebrow text="Our features" icon={Sparkles} />
 
           <h2
             id="all-features-title"

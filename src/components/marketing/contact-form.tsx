@@ -141,7 +141,7 @@ export function ContactForm() {
         <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-16">
           {/* ------------------------------------------------------ left */}
           <div className="pt-2">
-            <SectionEyebrow icon={Send}>Contact us</SectionEyebrow>
+            <SectionEyebrow text="Contact us" icon={Send} />
 
             <h2
               id="contact-form-title"

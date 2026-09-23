@@ -443,7 +443,7 @@ export function HowItWorks() {
         {/* Same header as `SolutionsSection` directly above it - pill, ramp,
             gradient phrase and subheading - so the two read as one page. */}
         <header className="section-title-space mx-auto max-w-3xl text-center">
-          <SectionEyebrow icon={Settings}>How it works</SectionEyebrow>
+          <SectionEyebrow text="How it works" icon={Settings} />
 
           <h2 id="how-it-works-title" className="section-title mt-5 text-balance">
             From first click to{" "}

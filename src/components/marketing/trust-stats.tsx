@@ -106,7 +106,7 @@ export function TrustStats() {
     >
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <SectionEyebrow icon={BadgeCheck}>Trusted by growing businesses</SectionEyebrow>
+          <SectionEyebrow text="Trusted by growing businesses" icon={BadgeCheck} />
 
           <h2
             id="trust-stats-title"

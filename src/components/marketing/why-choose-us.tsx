@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   ArrowRight,
   BadgeCheck,
@@ -13,6 +12,7 @@ import {
 
 import { ButtonLink } from "@/components/ui/button";
 import { BrandIcon } from "@/components/ui/brand-icon";
+import { CommonTextButton } from "@/components/ui/text-button";
 import { APP_ROUTES } from "@/constants";
 import { cn } from "@/lib/utils";
 import { TRUST_STATS } from "./trust-stats";
@@ -159,16 +159,13 @@ function ReasonCard({ icon: Icon, title, description, tint, href }: Reason) {
        * lines, and with the grid stretching every card to its row's height the
        * links would otherwise sit at six different heights across a row.
        */}
-      <Link
+      <CommonTextButton
+        label="Learn more"
         href={href}
-        className="link mt-auto inline-flex w-fit items-center gap-1.5 rounded-sm pt-4 text-sm font-semibold focus-visible:shadow-focus focus-visible:outline-none"
-      >
-        Learn more
-        <ArrowRight
-          className="size-4 transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
-          aria-hidden
-        />
-      </Link>
+        size="sm"
+        color="text-text-primary"
+        className="mt-auto pt-4"
+      />
     </article>
   );
 }
@@ -235,7 +232,7 @@ export function WhyChooseUs({
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[minmax(0,0.62fr)_minmax(0,1fr)] xl:gap-14">
           {/* The argument */}
           <div className="max-w-xl">
-            <SectionEyebrow icon={BadgeCheck}>Why choose us</SectionEyebrow>
+            <SectionEyebrow text="Why choose us" icon={BadgeCheck} />
 
             <h2
               id="why-choose-us-title"

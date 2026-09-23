@@ -244,7 +244,7 @@ export function SolutionsSection({
     >
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-3xl text-center">
-          <SectionEyebrow icon={LayoutGrid}>{eyebrow}</SectionEyebrow>
+          <SectionEyebrow text={eyebrow} icon={LayoutGrid} />
 
           <h2 id="industries-title" className="section-title mt-5 text-balance">
             {headingLead} of{" "}

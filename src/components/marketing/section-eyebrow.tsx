@@ -1,39 +1,59 @@
-import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+export type SectionEyebrowVariant = "default" | "surface" | "dark";
+
 /**
- * The pill above a section heading - "Our features", "FAQ", "How it works".
+ * Only the colour treatment differs between variants; type, padding, radius,
+ * icon size and spacing are shared.
  *
- * Set from the "Our features" section on /features, which is the reference for
- * every section on a white or light-gray ground: the brand-soft fill and
- * border, primary ink, a 14px icon 8px from the label, `.section-eyebrow`
- * type. The heading under it sits at `mt-5`.
+ * - `default` is the "Our features" pill on /features, the reference for every
+ *   white or light-gray ground.
+ * - `surface` is for a brand-tinted ground, where the soft fill would sink
+ *   into the tint: a white pill with secondary ink and a primary icon.
+ * - `dark` is for a navy or brand-gradient ground, where the soft fill would
+ *   glow: a translucent white pill with white ink.
+ */
+const VARIANTS: Record<SectionEyebrowVariant, { pill: string; icon?: string }> = {
+  default: { pill: "border-primary-border bg-primary-soft text-primary" },
+  surface: {
+    pill: "border-border bg-surface text-text-secondary shadow-card",
+    icon: "text-primary",
+  },
+  dark: { pill: "border-white/16 bg-white/8 text-white backdrop-blur-md" },
+};
+
+/**
+ * The pill above a section heading - "Our features", "FAQ", "Ready to grow?".
  *
- * Hero and breadcrumb badges do not use it, and neither do the sections that
- * carry their own ground (the dark testimonials, the brand-gradient WhatsApp
- * band, the tinted platform flow and the CTA panel): their pills are tuned to
- * that ground and keep their own classes.
+ * The one eyebrow on the public site: `.section-eyebrow` type, a 14px icon 8px
+ * from the label, `pl-3 pr-4 py-1.5`. The heading under it sits at `mt-5`.
+ *
+ * Hero and breadcrumb badges do not use it, and neither do the dark
+ * testimonials and the WhatsApp band, which keep their own tuned pills.
  */
 export function SectionEyebrow({
+  text,
   icon: Icon,
-  children,
+  variant = "default",
   className,
 }: {
+  text: string;
   icon: LucideIcon;
-  children: ReactNode;
+  variant?: SectionEyebrowVariant;
   className?: string;
 }) {
   return (
     <p
       className={cn(
-        "section-eyebrow inline-flex items-center gap-2 rounded-full border border-primary-border bg-primary-soft py-1.5 pr-4 pl-3 text-primary",
+        "section-eyebrow inline-flex items-center gap-2 rounded-full border py-1.5 pr-4 pl-3",
+        VARIANTS[variant].pill,
         className,
       )}
     >
-      <Icon className="size-3.5" aria-hidden />
-      {children}
+      <Icon className={cn("size-3.5", VARIANTS[variant].icon)} aria-hidden />
+      {text}
     </p>
   );
 }

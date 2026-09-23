@@ -66,7 +66,7 @@ export function ConnectedJourney() {
 
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <SectionEyebrow icon={Workflow}>How MarketFlow works</SectionEyebrow>
+          <SectionEyebrow text="How MarketFlow works" icon={Workflow} />
 
           <h2 id="journey-title" className="section-title mt-5 text-balance">
             One customer journey. One connected system

@@ -104,7 +104,7 @@ export function FeatureSection({
               !stacked && reverse && "lg:order-2",
             )}
           >
-            <SectionEyebrow icon={EyebrowIcon}>{eyebrow}</SectionEyebrow>
+            <SectionEyebrow text={eyebrow} icon={EyebrowIcon} />
 
             <h2 id={`${id}-title`} className="section-title mt-5 text-balance">
               {title}

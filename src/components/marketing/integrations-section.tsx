@@ -159,7 +159,7 @@ export function IntegrationsSection() {
 
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <SectionEyebrow icon={Plug}>Integrations</SectionEyebrow>
+          <SectionEyebrow text="Integrations" icon={Plug} />
 
           <h2 id="integrations-title" className="section-title mt-5 text-balance">
             Everything you already use,{" "}

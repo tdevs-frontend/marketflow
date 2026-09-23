@@ -40,7 +40,7 @@ export function PricingSection({
         {breadcrumb ? <div className="mb-8">{breadcrumb}</div> : null}
 
         <header className="mx-auto max-w-3xl text-center">
-          <SectionEyebrow icon={Tag}>Simple, scalable pricing</SectionEyebrow>
+          <SectionEyebrow text="Simple, scalable pricing" icon={Tag} />
           <Heading
             id="pricing-title"
             className="section-title mt-5 text-balance"

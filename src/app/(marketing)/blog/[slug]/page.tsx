@@ -183,7 +183,7 @@ export default async function ArticlePage({
         <div className="custom-container">
           <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
             <div className="max-w-2xl">
-              <SectionEyebrow icon={BookOpen}>Keep reading</SectionEyebrow>
+              <SectionEyebrow text="Keep reading" icon={BookOpen} />
 
               <h2
                 id="related-articles-title"

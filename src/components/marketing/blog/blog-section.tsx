@@ -28,7 +28,7 @@ export function BlogSection() {
     >
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <SectionEyebrow icon={BookOpen}>From the blog</SectionEyebrow>
+          <SectionEyebrow text="From the blog" icon={BookOpen} />
 
           <h2 id="blog-section-title" className="section-title mt-5 text-balance">
             Ideas to help you <span className="brand-gradient-text">grow</span>{" "}

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   MessagesSquare,
+  Network,
   Target,
   TrendingUp,
   UserPlus,
@@ -10,6 +11,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 import { cn } from "@/lib/utils";
 
 /**
@@ -166,27 +168,19 @@ export function PlatformFlow() {
 
       <div className="custom-container">
         <header className="mx-auto mb-14 max-w-2xl text-center md:mb-16">
-          <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
-            <span aria-hidden className="size-1.5 rounded-full bg-secondary" />
-            One connected workspace
-          </p>
+          {/* `surface`, not the default: the soft brand fill would sink into
+              this section's `primary-soft` ground. */}
+          <SectionEyebrow
+            text="One connected workspace"
+            icon={Network}
+            variant="surface"
+          />
 
-          {/*
-           * One rung up the `section-title` ramp - 36 / 48 / 60 rather than
-           * 30 / 36 / 48. The class is in `@layer components`, so the three
-           * utilities below simply outrank its sizes and nothing else about it
-           * changes. Two words need the extra size: the ramp is set for a
-           * sentence, and "Customer Journey" at the shared size reads as a
-           * label floating over the row rather than as the section's title.
-           */}
-          <h2
-            id="platform-flow-title"
-            className="section-title mt-5 text-balance text-4xl sm:text-5xl lg:text-6xl"
-          >
-            Customer Journey
+          <h2 id="platform-flow-title" className="section-title mt-5 text-balance">
+            Customer <span className="brand-gradient-text">Journey</span>
           </h2>
 
-          <p className="mt-3.5 text-base leading-[1.7] text-text-secondary text-pretty">
+          <p className="section-subtitle">
             MarketFlow connects every stage of the customer journey in one
             workspace - so a lead captured on Monday and the order it becomes on
             Friday are the same record, not two exports.
