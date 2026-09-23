@@ -1,6 +1,8 @@
 import { ChevronDown, Scale } from "lucide-react";
 
+import { PageBreadcrumb } from "@/components/marketing/page-breadcrumb";
 import { CommonTextButton } from "@/components/ui/text-button";
+import { APP_ROUTES } from "@/constants";
 import {
   LEGAL_PLACEHOLDERS,
   type LegalBlock,
@@ -69,6 +71,14 @@ export function LegalDocument({
             >
               {document.title}
             </h1>
+
+            <PageBreadcrumb
+              className="mt-6"
+              items={[
+                { label: "Home", href: APP_ROUTES.home },
+                { label: document.title },
+              ]}
+            />
           </div>
         </div>
       </section>

@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
+import { Sparkles } from "lucide-react";
+
 import { CtaSection, IntegrationsSection } from "@/components/marketing";
+import { PageHero } from "@/components/marketing/page-hero";
 import {
   AllFeatures,
   FeaturesFaq,
   PlatformFlow,
 } from "@/components/marketing/features";
+import { APP_ROUTES } from "@/constants";
 
 export const metadata: Metadata = {
   /*
@@ -26,6 +30,23 @@ export const metadata: Metadata = {
 export default function FeaturesPage() {
   return (
     <>
+      {/* The page's <h1> and trail, in the band every inner page opens on. */}
+      <PageHero
+        id="features"
+        eyebrow="MarketFlow Features"
+        icon={Sparkles}
+        title={
+          <>
+            CRM, automation and conversations,{" "}
+            <span className="brand-gradient-text">working as one</span>
+          </>
+        }
+        breadcrumb={[
+          { label: "Home", href: APP_ROUTES.home },
+          { label: "Features" },
+        ]}
+      />
+
       {/*
        * The map before the tour.
        *

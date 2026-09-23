@@ -21,6 +21,8 @@ export * from "./how-it-works";
 export * from "./faq-accordion";
 export * from "./cta-section";
 export * from "./section-eyebrow";
+export * from "./page-breadcrumb";
+export * from "./page-hero";
 export * from "./pricing-plans";
 export * from "./pricing-faq";
 export * from "./pricing-section";

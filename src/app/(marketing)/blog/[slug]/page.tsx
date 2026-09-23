@@ -6,6 +6,7 @@ import { ArrowRight, BookOpen, Clock3 } from "lucide-react";
 
 import { LogoMark } from "@/components/ui/logo";
 import { BlogCard, ShareArticle } from "@/components/marketing/blog";
+import { PageBreadcrumb } from "@/components/marketing/page-breadcrumb";
 import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 import {
   BLOG_ARTICLES,
@@ -112,6 +113,18 @@ export default async function ArticlePage({
 
           <div className="custom-container">
             <div className="mx-auto max-w-3xl py-14 lg:py-16">
+              {/* Left-aligned, opening the header: this column reads from
+                  the left edge, unlike the centred heroes that close on it. */}
+              <PageBreadcrumb
+                align="start"
+                className="mb-6"
+                items={[
+                  { label: "Home", href: APP_ROUTES.home },
+                  { label: "Blog", href: APP_ROUTES.blog },
+                  { label: article.title },
+                ]}
+              />
+
               <p className="inline-flex w-fit items-center rounded-full border border-primary-border bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">
                 {article.category}
               </p>

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { Tag } from "lucide-react";
 
-import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { CtaSection, PricingFaq, PricingSection } from "@/components/marketing";
+import { PageHero } from "@/components/marketing/page-hero";
 import { APP_ROUTES } from "@/constants";
 
 export const metadata: Metadata = {
@@ -11,13 +12,13 @@ export const metadata: Metadata = {
 };
 
 /**
- * The pricing route, as four blocks: the plans, the billing questions, the
- * closing panel, and the footer the layout supplies.
+ * The pricing route, as five blocks: the hero every inner page opens on, the
+ * plans, the billing questions, the closing panel, and the footer the layout
+ * supplies.
  *
  * `PricingSection` is shared with the home page and carries the intro, the
- * monthly/yearly toggle and the cards - so the header stays part of the
- * pricing block rather than becoming a hero section of its own. The breadcrumb
- * is passed into it for the same reason.
+ * monthly/yearly toggle and the cards; here it sits under `PageHero`, which
+ * owns the page's <h1> and breadcrumb, so it renders as the home page does.
  *
  * What used to sit between the cards and the bottom of the page - a
  * four-card capability grid and a reassurance strip - is gone. Both said true
@@ -30,18 +31,23 @@ export const metadata: Metadata = {
 export default function PricingPage() {
   return (
     <>
-      <PricingSection
-        headingLevel="h1"
-        breadcrumb={
-          <Breadcrumb
-            align="center"
-            items={[
-              { label: "Home", href: APP_ROUTES.home },
-              { label: "Pricing" },
-            ]}
-          />
+      <PageHero
+        id="pricing"
+        eyebrow="MarketFlow Pricing"
+        icon={Tag}
+        title={
+          <>
+            Plans that scale{" "}
+            <span className="brand-gradient-text">as your business grows</span>
+          </>
         }
+        breadcrumb={[
+          { label: "Home", href: APP_ROUTES.home },
+          { label: "Pricing" },
+        ]}
       />
+
+      <PricingSection />
 
       <PricingFaq />
 
