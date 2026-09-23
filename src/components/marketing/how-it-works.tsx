@@ -8,10 +8,10 @@ import { cn } from "@/lib/utils";
  * How it works — one customer, eight steps, from the campaign click to the
  * revenue line, with the module that owns each step.
  *
- * Four across from `xl`, two from `sm`, one column on a phone. The dashed
- * connector and its arrow only appear in the four-across row, where "next" is
- * always to the right; in two columns it would point into the gutter between a
- * step and the one below it, which is not the order they run in.
+ * Four across from `lg`, two from `sm`, one column on a phone. The dashed
+ * connector and its arrow run from every step to the one on its right — see
+ * `CONNECTOR_VISIBILITY`. A phone's single column has no step to the right,
+ * so it has no connectors.
  *
  * Colour is per step and carries the module's identity, not decoration: green
  * for the lead and the WhatsApp conversation, blue for records and analytics,
@@ -359,13 +359,21 @@ const STEPS: Step[] = [
   },
 ];
 
-/** Steps per row in the four-across layout; the connector skips a row's last. */
-const PER_ROW = 4;
+/**
+ * Where a step's connector shows, by its position in the row.
+ *
+ * A connector is drawn whenever the next step sits to the right, and never on
+ * a row's last step. In two columns that is the left column (1st and 3rd of
+ * every four); in four columns it is every step but the 4th. So the 1st and
+ * 3rd show from `sm` on, the 2nd only once the row is four wide, and the 4th
+ * never.
+ */
+const CONNECTOR_VISIBILITY = ["sm:block", "lg:block", "sm:block", null] as const;
 
 function StepItem({ step, index }: { step: Step; index: number }) {
   const tone = TONES[step.tone];
   const number = String(index + 1).padStart(2, "0");
-  const endsRow = (index + 1) % PER_ROW === 0;
+  const connector = CONNECTOR_VISIBILITY[index % CONNECTOR_VISIBILITY.length];
 
   return (
     <li className="relative">
@@ -410,19 +418,21 @@ function StepItem({ step, index }: { step: Step; index: number }) {
       </div>
 
       {/* The connector to the next step: from the main circle's right edge to
-          the far side of the gutter, at the circle's centre line. Four-across
-          only — see the note at the top. */}
-      {endsRow ? null : (
+          the far side of the gutter, at the circle's centre line. */}
+      {connector ? (
         <div
           aria-hidden
-          className="pointer-events-none absolute top-15.5 left-33 -right-10 hidden xl:block"
+          className={cn(
+            "pointer-events-none absolute top-15.5 left-33 -right-8 hidden xl:-right-10",
+            connector,
+          )}
         >
           <span className="absolute inset-x-0 top-0 h-0.5 -translate-y-1/2 bg-[linear-gradient(to_right,var(--color-primary-border)_0_8px,transparent_8px_14px)] bg-size-[14px_2px] mask-[linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]" />
           <span className="absolute top-0 left-1/2 grid size-8.5 -translate-1/2 place-items-center rounded-full border-[1.5px] border-sms-border bg-primary-subtle text-secondary shadow-[0_0_0_4px_rgba(237,233,254,0.55)]">
             <ArrowRight className="size-4" strokeWidth={2.6} />
           </span>
         </div>
-      )}
+      ) : null}
 
       <div className="pl-6">
         <h3 className="mt-3 text-lg leading-snug font-bold tracking-tight text-text-primary text-balance">
@@ -489,7 +499,7 @@ export function HowItWorks() {
       {/* The steps get the wider container, so four columns have room for
           their titles without crowding the connectors between them. */}
       <div className="custom-container-wide">
-        <ol className="grid gap-y-11 sm:grid-cols-2 sm:gap-x-8 xl:grid-cols-4 xl:gap-x-12 xl:gap-y-12">
+        <ol className="grid gap-y-11 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-4 lg:gap-y-12 xl:gap-x-12">
           {STEPS.map((step, index) => (
             <StepItem key={step.module} step={step} index={index} />
           ))}
