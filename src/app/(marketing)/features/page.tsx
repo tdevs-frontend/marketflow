@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { IntegrationsSection } from "@/components/marketing";
+import { CtaSection, IntegrationsSection } from "@/components/marketing";
 import {
   AllFeatures,
-  FeaturesCta,
   FeaturesFaq,
   PlatformFlow,
 } from "@/components/marketing/features";
@@ -56,13 +55,7 @@ export default function FeaturesPage() {
 
       <FeaturesFaq />
 
-      {/*
-       * `FeaturesCta`, not the shared `FinalCta` the other marketing routes
-       * close on. Same `cta-surface` panel, same type, same pair of buttons -
-       * the difference is the second one. `FinalCta` offers "Explore the
-       * Platform", which on this page is a link back to this page.
-       */}
-      <FeaturesCta />
+      <CtaSection />
     </>
   );
 }

@@ -4,7 +4,7 @@ import {
   ContactForm,
   ContactHero,
   ContactInfo,
-  FinalCta,
+  CtaSection,
 } from "@/components/marketing";
 
 export const metadata: Metadata = {
@@ -32,7 +32,7 @@ export default function ContactPage() {
 
       <ContactForm />
 
-      <FinalCta />
+      <CtaSection />
     </>
   );
 }

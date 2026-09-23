@@ -1,7 +1,7 @@
 import {
   // AnalyticsSection,
   BlogSection,
-  FinalCta,
+  CtaSection,
   HeroSection,
   // MultiChannelCampaign,
   PlatformOverview,
@@ -34,7 +34,7 @@ export default function HomePage() {
 
       <BlogSection />
 
-      <FinalCta />
+      <CtaSection />
     </>
   );
 }

@@ -19,7 +19,7 @@ export * from "./solutions-section";
 export * from "./integrations-section";
 export * from "./how-it-works";
 export * from "./faq-accordion";
-export * from "./final-cta";
+export * from "./cta-section";
 export * from "./pricing-plans";
 export * from "./pricing-faq";
 export * from "./pricing-section";

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import {
-  FinalCta,
+  CtaSection,
   HowItWorks,
   SolutionsHero,
   SolutionsSection,
@@ -72,7 +72,7 @@ export default function SolutionsPage() {
 
       <TestimonialSection />
 
-      <FinalCta />
+      <CtaSection />
     </>
   );
 }

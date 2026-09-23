@@ -1,15 +1,32 @@
+import type { ReactNode } from "react";
 import { ArrowRight, LayoutGrid } from "lucide-react";
 
 import { ButtonLink } from "@/components/ui/button";
 import { APP_ROUTES } from "@/constants";
 
+type CtaSectionProps = {
+  eyebrow?: string;
+  /** A node, so a page can wrap its own phrase in `brand-gradient-text`. */
+  title?: ReactNode;
+  description?: ReactNode;
+  primaryButtonText?: string;
+  primaryButtonHref?: string;
+  secondaryButtonText?: string;
+  secondaryButtonHref?: string;
+  showSecondaryButton?: boolean;
+};
+
 /**
- * The closing block: a light brand-tinted panel, the last thing before the
- * footer.
+ * The closing call to action - the one CTA section on the public site.
+ *
+ * Every marketing page that ends on a call to action renders this component,
+ * and every page shows the same copy - the defaults below - so the section
+ * reads as one consistent close across the site. The props exist for a page
+ * that genuinely needs different wording; none does today.
  *
  * It is a panel rather than a full-bleed section on purpose - it sits in the
  * page's own container with air above and below, so the eye reads it as the
- * final moment of the landing page rather than as a new one.
+ * final moment of the page rather than as a new one.
  *
  * Nothing here is invented. The ground is `cta-surface`, built from the same
  * tokens and the same brand pair as `hero-surface`; the dot texture is the one
@@ -23,10 +40,24 @@ import { APP_ROUTES } from "@/constants";
  * it to `-z-10` instead would put it behind the panel's background, where it is
  * invisible.
  */
-export function FinalCta() {
+export function CtaSection({
+  eyebrow = "Ready to grow?",
+  title = (
+    <>
+      Turn <span className="brand-gradient-text">every conversation</span>{" "}
+      into an opportunity
+    </>
+  ),
+  description = "Connect customer conversations, campaigns, automation, products, and sales in one powerful growth platform.",
+  primaryButtonText = "Get Started Free",
+  primaryButtonHref = APP_ROUTES.register,
+  secondaryButtonText = "Explore the Platform",
+  secondaryButtonHref = APP_ROUTES.features,
+  showSecondaryButton = true,
+}: CtaSectionProps) {
   return (
     <section
-      aria-labelledby="final-cta-title"
+      aria-labelledby="cta-section-title"
       className="cta-surface custom-container relative isolate mb-20 mt-20 overflow-hidden rounded-3xl border border-primary-border/60 px-6 py-14 shadow-[0_20px_60px_rgba(79,70,229,0.08)] sm:rounded-[28px] sm:px-10 sm:py-20 lg:px-16"
     >
       {/* The section dots, faded out toward the panel's edges. */}
@@ -41,22 +72,20 @@ export function FinalCta() {
             aria-hidden
             className="size-1.5 rounded-full brand-gradient-accent"
           />
-          Ready to grow?
+          {eyebrow}
         </p>
 
-        <h2 id="final-cta-title" className="section-title mt-6 text-balance">
-          Turn <span className="brand-gradient-text">every conversation</span>{" "}
-          into an opportunity
+        <h2 id="cta-section-title" className="section-title mt-6 text-balance">
+          {title}
         </h2>
 
         <p className="mx-auto mt-6 max-w-[42rem] text-base leading-relaxed text-text-secondary text-pretty">
-          Connect customer conversations, campaigns, automation, products, and
-          sales in one powerful growth platform.
+          {description}
         </p>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <ButtonLink href={APP_ROUTES.register} size="lg" className="group">
-            Get Started Free
+          <ButtonLink href={primaryButtonHref} size="lg" className="group">
+            {primaryButtonText}
             <ArrowRight
               /* `translate`, not `transform` - Tailwind v4 writes the utility to
                  the former, so a `transition-transform` here animates nothing. */
@@ -64,10 +93,12 @@ export function FinalCta() {
               aria-hidden
             />
           </ButtonLink>
-          <ButtonLink href={APP_ROUTES.features} variant="secondary" size="lg">
-            <LayoutGrid className="h-4 w-4" aria-hidden />
-            Explore the Platform
-          </ButtonLink>
+          {showSecondaryButton ? (
+            <ButtonLink href={secondaryButtonHref} variant="secondary" size="lg">
+              <LayoutGrid className="h-4 w-4" aria-hidden />
+              {secondaryButtonText}
+            </ButtonLink>
+          ) : null}
         </div>
       </div>
     </section>

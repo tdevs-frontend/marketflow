@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { Breadcrumb } from "@/components/ui/breadcrumb";
-import { FinalCta, PricingFaq, PricingSection } from "@/components/marketing";
+import { CtaSection, PricingFaq, PricingSection } from "@/components/marketing";
 import { APP_ROUTES } from "@/constants";
 
 export const metadata: Metadata = {
@@ -45,7 +45,7 @@ export default function PricingPage() {
 
       <PricingFaq />
 
-      <FinalCta />
+      <CtaSection />
     </>
   );
 }

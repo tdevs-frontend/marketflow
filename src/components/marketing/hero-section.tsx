@@ -36,7 +36,7 @@ export function HeroSection() {
               <span className="rounded-full bg-primary-soft px-2 py-0.5 text-xs font-semibold text-primary-dark">
                 New
               </span>
-              WhatsApp Business API · built for merchants
+              WhatsApp Business API built for merchants
             </span>
 
             <h1 className="mx-auto mt-7 max-w-4xl text-[2.75rem] font-bold leading-[1.06] tracking-tight text-balance sm:text-6xl xl:text-[4.25rem]">
