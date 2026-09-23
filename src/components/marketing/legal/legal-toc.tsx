@@ -67,7 +67,7 @@ export function LegalToc({ items }: { items: TocItem[] }) {
                 href={`#${item.id}`}
                 aria-current={current ? "location" : undefined}
                 className={cn(
-                  "-ml-px flex gap-2 border-l-2 py-1.5 pr-2 pl-4 text-sm leading-snug font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none motion-reduce:transition-none",
+                  "-ml-px flex gap-2 border-l-2 py-1.5 pr-2 pl-4 text-[15px] leading-snug font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none motion-reduce:transition-none",
                   current
                     ? "border-primary font-semibold text-primary"
                     : "border-transparent text-text-secondary hover:border-border-strong hover:text-text-primary",

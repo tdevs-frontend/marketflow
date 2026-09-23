@@ -9,7 +9,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { CommonTextButton } from "@/components/ui/common-text-button";
+import { CommonTextButton } from "@/components/ui/text-button";
 
 /* ------------------------------------------------------------------ tokens */
 

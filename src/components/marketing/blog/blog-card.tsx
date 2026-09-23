@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Clock3 } from "lucide-react";
 
-import { CommonTextButton } from "@/components/ui/common-text-button";
+import { CommonTextButton } from "@/components/ui/text-button";
 import { cn } from "@/lib/utils";
 import { formatArticleDate, type BlogArticle } from "@/constants/blog";
 

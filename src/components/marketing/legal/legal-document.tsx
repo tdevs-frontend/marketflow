@@ -1,6 +1,6 @@
-import Link from "next/link";
-import { ArrowRight, ChevronDown, Scale } from "lucide-react";
+import { ChevronDown, Scale } from "lucide-react";
 
+import { CommonTextButton } from "@/components/ui/text-button";
 import {
   LEGAL_PLACEHOLDERS,
   type LegalBlock,
@@ -139,16 +139,12 @@ export function LegalDocument({
                   {LEGAL_PLACEHOLDERS.lastUpdated}
                 </span>
               </p>
-              <Link
+              <CommonTextButton
+                label={related.label}
                 href={related.href}
-                className="group inline-flex w-fit items-center gap-1.5 rounded-sm font-semibold text-primary transition-colors hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
-              >
-                {related.label}
-                <ArrowRight
-                  className="size-4 transition-[translate] duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none"
-                  aria-hidden
-                />
-              </Link>
+                size="sm"
+                color="text-text-primary"
+              />
             </footer>
           </div>
         </div>

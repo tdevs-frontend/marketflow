@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 export type CommonTextButtonSize = "sm" | "md" | "lg";
 
 const SIZES: Record<CommonTextButtonSize, { text: string; icon: string }> = {
-  sm: { text: "gap-1 text-sm", icon: "size-3.5" },
+  sm: { text: "gap-1 text-sm", icon: "size-4.5" },
   md: { text: "gap-1 text-base", icon: "size-4.5" },
   lg: { text: "gap-1.5 text-lg", icon: "size-5" },
 };
