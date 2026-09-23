@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { ArrowRight, Settings } from "lucide-react";
 
-import { BrandIcon } from "@/components/ui/brand-icon";
 import { cn } from "@/lib/utils";
 import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
@@ -14,65 +13,70 @@ import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
  * `CONNECTOR_VISIBILITY`. A phone's single column has no step to the right,
  * so it has no connectors.
  *
- * Colour is per step and carries the module's identity, not decoration: green
- * for the lead and the WhatsApp conversation, blue for records and analytics,
- * violet for campaigns and automation, orange for commerce, pink for
- * templates. Violet, blue and green are the design system's own `secondary`,
- * `email` and `whatsapp-brand`; orange and pink have no ramp of their own, so
- * their two faces are written out here once, in `TONES`.
+ * Colour is per step, and no two steps share one, so the row reads as a
+ * progression rather than as three colours on repeat. Each step names its
+ * `accent` and `ACCENTS` maps it to the badge, the circle and the icon ink;
+ * the title, the description, the connectors and the arrows stay neutral.
+ * Every accent is a design-system token - `secondary`, `success`, `email`,
+ * `whatsapp-brand`, `tint-indigo`, `tint-orange`, `tint-cobalt` - except rose,
+ * which has no ramp of its own and is written out here once.
  *
  * The icons are drawn duotone - a soft fill under the stroke - which Lucide
- * cannot do, so they are inline SVG. They take `currentColor`, so a tone's ink
+ * cannot do, so they are inline SVG. They take `currentColor`, so an accent's ink
  * is the only thing that paints them.
  */
 
 /* -------------------------------------------------------------------------- */
-/* Tones                                                                      */
+/* Accents                                                                    */
 /* -------------------------------------------------------------------------- */
 
-type Tone = "violet" | "green" | "blue" | "orange" | "pink";
+type Accent =
+  | "purple"
+  | "green"
+  | "blue"
+  | "whatsapp"
+  | "indigo"
+  | "orange"
+  | "rose"
+  | "royalBlue";
 
-interface ToneFaces {
-  /** The main circle and the module tag's ground. */
+interface AccentFaces {
+  /** The main circle: a light tint of the accent. */
   soft: string;
   /** Icon ink inside the main circle. */
   ink: string;
-  /** The filled number chip. */
+  /** The filled number badge. */
   chip: string;
-  /** The module tag's label. */
-  tag: string;
 }
 
-const TONES: Record<Tone, ToneFaces> = {
-  violet: {
+const ACCENTS: Record<Accent, AccentFaces> = {
+  purple: {
     soft: "bg-secondary/12",
     ink: "text-secondary",
     chip: "bg-secondary",
-    tag: "text-secondary-dark",
   },
-  green: {
+  green: { soft: "bg-success/12", ink: "text-success", chip: "bg-success" },
+  blue: { soft: "bg-email/12", ink: "text-email", chip: "bg-email" },
+  whatsapp: {
     soft: "bg-whatsapp-brand/14",
     ink: "text-whatsapp-brand",
     chip: "bg-whatsapp-brand",
-    tag: "text-whatsapp-dark",
   },
-  blue: {
-    soft: "bg-email/12",
-    ink: "text-email",
-    chip: "bg-email",
-    tag: "text-email-dark",
+  indigo: {
+    soft: "bg-tint-indigo-ink/12",
+    ink: "text-tint-indigo-ink",
+    chip: "bg-tint-indigo-ink",
   },
   orange: {
-    soft: "bg-[#fef0e1]",
-    ink: "text-[#f59e0b]",
-    chip: "bg-[#f59e0b]",
-    tag: "text-tint-orange-ink",
+    soft: "bg-tint-orange-ink/12",
+    ink: "text-tint-orange-ink",
+    chip: "bg-tint-orange-ink",
   },
-  pink: {
-    soft: "bg-[#fde6ee]",
-    ink: "text-[#ec4899]",
-    chip: "bg-[#e11d48]",
-    tag: "text-[#e11d48]",
+  rose: { soft: "bg-[#fde6ee]", ink: "text-[#ec4899]", chip: "bg-[#e11d48]" },
+  royalBlue: {
+    soft: "bg-tint-cobalt-soft",
+    ink: "text-tint-cobalt-ink",
+    chip: "bg-tint-cobalt-ink",
   },
 };
 
@@ -146,15 +150,6 @@ function PersonIcon(props: IconProps) {
   );
 }
 
-function ChatIcon(props: IconProps) {
-  return (
-    <Stroke {...props}>
-      <path d="M5 4.5h14a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 3.5v-3.5H5A1.5 1.5 0 0 1 3.5 15V6A1.5 1.5 0 0 1 5 4.5z" />
-      <path d="M8 9.5h8M8 12.5h5" />
-    </Stroke>
-  );
-}
-
 function WhatsAppOutlineIcon(props: IconProps) {
   return (
     <Stroke {...props}>
@@ -171,9 +166,33 @@ function WhatsAppOutlineIcon(props: IconProps) {
 function HierarchyIcon(props: IconProps) {
   return (
     <Stroke {...props}>
-      <rect x="9" y="2.5" width="6" height="5" rx="1.2" fill="currentColor" fillOpacity=".22" />
-      <rect x="2.5" y="16.5" width="6" height="5" rx="1.2" fill="currentColor" fillOpacity=".22" />
-      <rect x="15.5" y="16.5" width="6" height="5" rx="1.2" fill="currentColor" fillOpacity=".22" />
+      <rect
+        x="9"
+        y="2.5"
+        width="6"
+        height="5"
+        rx="1.2"
+        fill="currentColor"
+        fillOpacity=".22"
+      />
+      <rect
+        x="2.5"
+        y="16.5"
+        width="6"
+        height="5"
+        rx="1.2"
+        fill="currentColor"
+        fillOpacity=".22"
+      />
+      <rect
+        x="15.5"
+        y="16.5"
+        width="6"
+        height="5"
+        rx="1.2"
+        fill="currentColor"
+        fillOpacity=".22"
+      />
       <path d="M12 7.5V12M5.5 16.5V12h13v4.5" />
     </Stroke>
   );
@@ -195,18 +214,6 @@ function CartIcon(props: IconProps) {
   );
 }
 
-function BoltIcon(props: IconProps) {
-  return (
-    <Stroke {...props}>
-      <path
-        d="M13.5 2L4.5 13.5h7L10.5 22l9-11.5h-7L13.5 2z"
-        fill="currentColor"
-        fillOpacity=".22"
-      />
-    </Stroke>
-  );
-}
-
 function DocumentIcon({ className }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden className={className}>
@@ -214,8 +221,17 @@ function DocumentIcon({ className }: IconProps) {
         d="M6.5 2h7.3L20 8.2V20a2 2 0 0 1-2 2H6.5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"
         fill="currentColor"
       />
-      <path d="M13.8 2v4.7a1.5 1.5 0 0 0 1.5 1.5H20" fill="#fff" fillOpacity=".4" />
-      <path d="M8 12.5h8M8 16.5h8" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" />
+      <path
+        d="M13.8 2v4.7a1.5 1.5 0 0 0 1.5 1.5H20"
+        fill="#fff"
+        fillOpacity=".4"
+      />
+      <path
+        d="M8 12.5h8M8 16.5h8"
+        stroke="#fff"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -224,32 +240,24 @@ function BarsIcon({ className }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden className={className}>
       <rect x="3" y="11" width="4.6" height="11" rx="2" fill="currentColor" />
-      <rect x="9.7" y="2.5" width="4.6" height="19.5" rx="2" fill="currentColor" />
-      <rect x="16.4" y="7" width="4.6" height="15" rx="2" fill="currentColor" fillOpacity=".55" />
+      <rect
+        x="9.7"
+        y="2.5"
+        width="4.6"
+        height="19.5"
+        rx="2"
+        fill="currentColor"
+      />
+      <rect
+        x="16.4"
+        y="7"
+        width="4.6"
+        height="15"
+        rx="2"
+        fill="currentColor"
+        fillOpacity=".55"
+      />
     </svg>
-  );
-}
-
-function BoxIcon({ className }: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden className={className}>
-      <path d="M12 2l9 4.6v10.8L12 22l-9-4.6V6.6L12 2z" fill="currentColor" />
-      <path d="M3 6.6L12 11l9-4.4M12 11v11M7.5 4.3l9 4.5v3" stroke="#fff" strokeOpacity=".75" strokeWidth="1.3" fill="none" />
-    </svg>
-  );
-}
-
-/** The small filled square some module tags carry their icon on. */
-function TagTile({ tone, children }: { tone: Tone; children: ReactNode }) {
-  return (
-    <span
-      className={cn(
-        "grid size-6 place-items-center rounded-[7px] text-white",
-        TONES[tone].chip,
-      )}
-    >
-      {children}
-    </span>
   );
 }
 
@@ -261,96 +269,75 @@ interface Step {
   title: string;
   description: string;
   module: string;
-  tone: Tone;
+  accent: Accent;
   icon: ReactNode;
-  tagIcon: ReactNode;
 }
 
-const STEP_ICON = "size-10.5";
+const STEP_ICON = "size-9";
 
 const STEPS: Step[] = [
   {
     title: "A customer clicks your campaign",
     description: "They see your ad or message and click to learn more.",
     module: "Campaigns",
-    tone: "violet",
+    accent: "purple",
     icon: <MegaphoneIcon className={STEP_ICON} />,
-    tagIcon: <MegaphoneIcon className="size-5.5 text-secondary" />,
   },
   {
     title: "The lead is captured",
     description:
       "Their information is collected from forms, WhatsApp or other channels.",
     module: "Leads",
-    tone: "green",
+    accent: "green",
     icon: <CaptureIcon className={STEP_ICON} />,
-    tagIcon: (
-      <TagTile tone="green">
-        <CaptureIcon className="size-3.75" strokeWidth={2.6} />
-      </TagTile>
-    ),
   },
   {
     title: "A contact record is created",
     description:
       "The lead is added as a contact in your workspace with all details in one place.",
     module: "Contacts",
-    tone: "blue",
+    accent: "blue",
     icon: <PersonIcon className={STEP_ICON} />,
-    tagIcon: (
-      <TagTile tone="blue">
-        <ChatIcon className="size-3.75" strokeWidth={2.4} />
-      </TagTile>
-    ),
   },
   {
     title: "A WhatsApp conversation opens",
     description:
       "You can chat with the customer directly from the unified WhatsApp inbox.",
     module: "WhatsApp Inbox",
-    tone: "green",
+    accent: "whatsapp",
     icon: <WhatsAppOutlineIcon className={STEP_ICON} />,
-    tagIcon: (
-      <TagTile tone="green">
-        <BrandIcon name="whatsapp" className="size-4" />
-      </TagTile>
-    ),
   },
   {
     title: "Automation sends the follow-up",
     description:
       "Workflows automatically send personalized messages via WhatsApp, Email, SMS or Social Media.",
     module: "Workflows",
-    tone: "violet",
+    accent: "indigo",
     icon: <HierarchyIcon className={STEP_ICON} />,
-    tagIcon: <BoltIcon className="size-5.5 text-secondary" />,
   },
   {
     title: "They place an order",
     description:
       "The customer completes a purchase from your store or catalog.",
     module: "Orders",
-    tone: "orange",
+    accent: "orange",
     icon: <CartIcon className={STEP_ICON} />,
-    tagIcon: <BoxIcon className="size-6 text-[#f59e0b]" />,
   },
   {
     title: "A post-purchase message goes out",
     description:
       "A confirmation or follow-up message is sent using your saved templates.",
     module: "Templates",
-    tone: "pink",
+    accent: "rose",
     icon: <DocumentIcon className={STEP_ICON} />,
-    tagIcon: <DocumentIcon className="size-5.5 text-[#ec4899]" />,
   },
   {
     title: "Revenue is attributed to the campaign",
     description:
       "Track the full journey and see which campaigns drive real revenue.",
     module: "Analytics",
-    tone: "blue",
+    accent: "royalBlue",
     icon: <BarsIcon className={STEP_ICON} />,
-    tagIcon: <BarsIcon className="size-5.5 text-email" />,
   },
 ];
 
@@ -363,10 +350,15 @@ const STEPS: Step[] = [
  * 3rd show from `sm` on, the 2nd only once the row is four wide, and the 4th
  * never.
  */
-const CONNECTOR_VISIBILITY = ["sm:block", "lg:block", "sm:block", null] as const;
+const CONNECTOR_VISIBILITY = [
+  "sm:block",
+  "lg:block",
+  "sm:block",
+  null,
+] as const;
 
 function StepItem({ step, index }: { step: Step; index: number }) {
-  const tone = TONES[step.tone];
+  const accent = ACCENTS[step.accent];
   const number = String(index + 1).padStart(2, "0");
   const connector = CONNECTOR_VISIBILITY[index % CONNECTOR_VISIBILITY.length];
 
@@ -374,11 +366,11 @@ function StepItem({ step, index }: { step: Step; index: number }) {
     <li className="relative">
       {/* The icon cluster: the step number, sitting on the main circle's
           top-left edge. `z-1` keeps it above the circle it overlaps. */}
-      <div aria-hidden className="relative h-27 w-38">
+      <div aria-hidden className="relative h-25 w-38">
         <span
           className={cn(
             "absolute top-3.25 left-3.25 z-1 grid size-7.5 place-items-center rounded-full text-sm leading-none font-semibold text-white",
-            tone.chip,
+            accent.chip,
           )}
         >
           {number}
@@ -386,9 +378,9 @@ function StepItem({ step, index }: { step: Step; index: number }) {
 
         <span
           className={cn(
-            "absolute top-3.5 left-7 grid size-24 place-items-center rounded-full",
-            tone.soft,
-            tone.ink,
+            "absolute top-3.5 left-7 grid size-21.5 place-items-center rounded-full",
+            accent.soft,
+            accent.ink,
           )}
         >
           {step.icon}
@@ -401,7 +393,7 @@ function StepItem({ step, index }: { step: Step; index: number }) {
         <div
           aria-hidden
           className={cn(
-            "pointer-events-none absolute top-15.5 left-33 -right-8 hidden xl:-right-10",
+            "pointer-events-none absolute top-14.25 left-30.5 -right-8 hidden xl:-right-10",
             connector,
           )}
         >
@@ -413,7 +405,7 @@ function StepItem({ step, index }: { step: Step; index: number }) {
       ) : null}
 
       <div className="pl-6">
-        <h3 className="mt-3 text-lg leading-snug font-bold tracking-tight text-text-primary text-balance">
+        <h3 className="mt-4 text-lg leading-snug font-bold tracking-tight text-text-primary text-balance">
           <span className="sr-only">Step {number}: </span>
           {step.title}
         </h3>
@@ -435,7 +427,6 @@ export function HowItWorks() {
       {/* Three soft discs in the corners, as in the reference. */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         <span className="absolute -top-75 -left-65 size-155 rounded-full bg-primary-subtle/45" />
-        <span className="absolute -top-82 -right-45 size-160 rounded-full bg-primary-subtle/45" />
         <span className="absolute -right-65 -bottom-95 size-155 rounded-full bg-primary-subtle/45" />
       </div>
 
@@ -445,7 +436,10 @@ export function HowItWorks() {
         <header className="section-title-space mx-auto max-w-3xl text-center">
           <SectionEyebrow text="How it works" icon={Settings} />
 
-          <h2 id="how-it-works-title" className="section-title mt-5 text-balance">
+          <h2
+            id="how-it-works-title"
+            className="section-title mt-5 text-balance"
+          >
             From first click to{" "}
             <span className="brand-gradient-text">real revenue</span>
           </h2>
