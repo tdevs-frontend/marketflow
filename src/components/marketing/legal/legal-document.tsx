@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, ChevronDown, Scale } from "lucide-react";
 
-import { Breadcrumb } from "@/components/ui/breadcrumb";
-import { APP_ROUTES } from "@/constants";
 import {
   LEGAL_PLACEHOLDERS,
   type LegalBlock,
@@ -71,20 +69,6 @@ export function LegalDocument({
             >
               {document.title}
             </h1>
-
-            <p className="mx-auto mt-5 max-w-2xl text-base leading-[1.7] text-text-secondary text-pretty sm:text-lg">
-              {document.description}
-            </p>
-
-            <Breadcrumb
-              align="center"
-              className="mt-6"
-              items={[
-                { label: "Home", href: APP_ROUTES.home },
-                { label: "Legal" },
-                { label: document.title },
-              ]}
-            />
           </div>
         </div>
       </section>

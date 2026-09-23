@@ -9,13 +9,14 @@
  *
  * ## What is deliberately not claimed
  *
- * These documents describe MarketFlow as it is built. They name no legal
- * entity, address, jurisdiction, certification (SOC 2, ISO 27001), regulatory
- * status (GDPR, CCPA), encryption standard, uptime figure, delivery rate or
- * payment processor, because none of those is established anywhere in the
- * product. Where the text needs one, it uses a bracketed placeholder from
- * `LEGAL_PLACEHOLDERS` — replace them there, once, before the pages go live,
- * and have the result reviewed by a lawyer.
+ * These documents describe MarketFlow as it is built. Beyond the dummy company
+ * details in `LEGAL_PLACEHOLDERS`, they name no governing jurisdiction,
+ * certification (SOC 2, ISO 27001), regulatory status (GDPR, CCPA),
+ * encryption standard, uptime figure, delivery rate or payment processor,
+ * because none of those is established anywhere in the product. Governing
+ * law (Terms §28) points at wherever the company is registered rather than
+ * naming a country. Replace the dummy details in `LEGAL_PLACEHOLDERS`, once,
+ * before the pages go live, and have the result reviewed by a lawyer.
  *
  * Free trials and free plans are written conditionally ("if we offer…")
  * because pricing commits to neither: `PLANS` has no free tier and
@@ -25,18 +26,16 @@
 /**
  * Every fact the documents need that the product does not supply.
  *
- * Rendered verbatim, brackets included, until someone replaces them — a page
- * that visibly reads "[Company Legal Name]" is safer than one that invents a
- * company.
+ * All of these are DUMMY values for development and demo work —
+ * `example.com` is a reserved domain, so nothing sent to those addresses goes
+ * anywhere. Replace them with the real details before launch.
  */
 export const LEGAL_PLACEHOLDERS = {
-  companyName: "[Company Legal Name]",
-  companyAddress: "[Company Address]",
-  legalEmail: "[Legal Contact Email]",
-  privacyEmail: "[Privacy Email]",
-  effectiveDate: "[Effective Date]",
-  lastUpdated: "[Date]",
-  governingLaw: "[Governing Jurisdiction]",
+  companyName: "MarketFlow Technologies Ltd.",
+  companyAddress: "123 Innovation Avenue, Dhaka 1212, Bangladesh",
+  legalEmail: "legal@marketflow.example.com",
+  privacyEmail: "privacy@marketflow.example.com",
+  lastUpdated: "September 23, 2026",
 } as const;
 
 const P = LEGAL_PLACEHOLDERS;
@@ -60,8 +59,6 @@ export interface LegalSection {
 
 export interface LegalDocument {
   title: string;
-  /** One or two sentences under the title. */
-  description: string;
   sections: LegalSection[];
 }
 
@@ -71,8 +68,6 @@ export interface LegalDocument {
 
 export const PRIVACY_POLICY: LegalDocument = {
   title: "Privacy Policy",
-  description:
-    "How MarketFlow collects, uses, shares and protects information — both about the people who use MarketFlow and about the customers and leads businesses manage inside it.",
   sections: [
     {
       id: "introduction",
@@ -490,6 +485,7 @@ export const PRIVACY_POLICY: LegalDocument = {
             { term: "Company", text: P.companyName },
             { term: "Address", text: P.companyAddress },
             { term: "Privacy enquiries", text: P.privacyEmail },
+            { term: "Legal enquiries", text: P.legalEmail },
           ],
         },
       ],
@@ -503,8 +499,6 @@ export const PRIVACY_POLICY: LegalDocument = {
 
 export const TERMS_OF_SERVICE: LegalDocument = {
   title: "Terms of Service",
-  description:
-    "The agreement between you and MarketFlow for using the platform — your account and workspace, the messages you send, the data you manage, billing, and what each side is responsible for.",
   sections: [
     {
       id: "acceptance",
@@ -904,7 +898,7 @@ export const TERMS_OF_SERVICE: LegalDocument = {
       blocks: [
         {
           type: "p",
-          text: `These Terms are governed by the laws of ${P.governingLaw}, without regard to its conflict-of-law rules. Any dispute arising from these Terms or the Service will be resolved in the courts of ${P.governingLaw}, unless applicable law requires otherwise.`,
+          text: `These Terms are governed by the laws of the jurisdiction in which ${P.companyName} is registered, without regard to its conflict-of-law rules. Any dispute arising from these Terms or the Service will be resolved in the courts of that jurisdiction, unless applicable law requires otherwise.`,
         },
         {
           type: "p",
@@ -924,6 +918,7 @@ export const TERMS_OF_SERVICE: LegalDocument = {
             { term: "Company", text: P.companyName },
             { term: "Address", text: P.companyAddress },
             { term: "Legal enquiries", text: P.legalEmail },
+            { term: "Privacy enquiries", text: P.privacyEmail },
           ],
         },
       ],

@@ -33,7 +33,7 @@ export function BlogHero() {
       />
 
       <div className="custom-container">
-        <div className="py-16 lg:py-20">
+        <div className="py-16 lg:py-18">
           <div className="mx-auto max-w-4xl text-center">
             <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
               <BookOpen className="size-4 text-primary" aria-hidden />
