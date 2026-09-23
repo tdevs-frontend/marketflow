@@ -27,9 +27,9 @@ import { cn } from "@/lib/utils";
  * they overhang into the copy beside them. Centred header, full-width visual —
  * which also gives the page a third shape to break up nine alternating splits.
  *
- * `scroll-mt-32` is the sticky chrome: the site header is 72px and the feature
- * nav below it is another 52, so an anchored section that did not reserve that
- * space would land with its heading underneath both.
+ * `scroll-mt-32` clears the sticky site header (72px) with room to spare, so
+ * an anchored section does not land with its heading underneath it. It
+ * matches the other anchored marketing sections.
  */
 export function FeatureSection({
   id,

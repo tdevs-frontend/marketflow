@@ -1,4 +1,4 @@
-import { Plug } from "lucide-react";
+import { Briefcase } from "lucide-react";
 
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { APP_ROUTES } from "@/constants";
@@ -11,10 +11,15 @@ import { APP_ROUTES } from "@/constants";
  * centred column — so a visitor crossing from the home page, Features or the
  * blog lands somewhere that is obviously the same site.
  *
- * The copy is what used to head the integration wall, moved up here word for
- * word. The wall below it is now just the wall: a section heading repeating
- * the sentence its own hero has already said is the second place a reader has
- * to notice nothing new was added.
+ * The copy names the page the header's Solutions item points at — the
+ * industries MarketFlow is sold into — rather than the integration wall it
+ * used to head. That wall was the first block on this route and the hero was
+ * written for it; the route now opens on the industry grid, and a hero
+ * promising integrations above a grid of business types is the page
+ * introducing something it does not go on to say.
+ *
+ * `Briefcase` on the eyebrow rather than `Plug`, matching the icon
+ * `marketingNav` already carries for this route.
  *
  * The trail closes the hero rather than opening it, centred on the same axis
  * as the eyebrow and the heading — the arrangement `BlogHero` uses and the
@@ -41,16 +46,18 @@ export function SolutionsHero() {
         <div className="py-16 lg:py-20">
           <div className="mx-auto max-w-4xl text-center">
             <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
-              <Plug className="size-4 text-primary" aria-hidden />
-              Integrations
+              <Briefcase className="size-4 text-primary" aria-hidden />
+              MarketFlow Solutions
             </p>
 
             <h1
               id="solutions-hero-title"
               className="mt-7 text-[2.5rem] leading-[1.08] font-bold tracking-tight text-balance sm:text-5xl xl:text-[3.75rem]"
             >
-              Connect everything that powers your{" "}
-              <span className="brand-gradient-text">customer journey</span>
+              One platform, shaped around{" "}
+              <span className="brand-gradient-text">
+                how your business sells
+              </span>
             </h1>
           </div>
 

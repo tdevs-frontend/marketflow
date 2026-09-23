@@ -172,11 +172,26 @@ function ReasonCard({ icon: Icon, title, description, tint, href }: Reason) {
   );
 }
 
-export function WhyChooseUs() {
+/**
+ * `ground` is the same vocabulary `FeatureSection` uses, and for the same
+ * reason: this section is read on two pages now, and on `/solutions` its
+ * neighbour above is the industry grid, which paints its own light grey. Two
+ * tinted bands meeting put 160px of unbroken canvas between their content with
+ * nothing to say a section ended. The default is the tint, so the home page —
+ * where the neighbours are white — is unchanged.
+ */
+export function WhyChooseUs({
+  ground = "tint",
+}: {
+  ground?: "surface" | "tint";
+} = {}) {
   return (
     <section
       aria-labelledby="why-choose-us-title"
-      className="section-space-py relative isolate overflow-hidden bg-background"
+      className={cn(
+        "section-space-py relative isolate overflow-hidden",
+        ground === "tint" && "bg-background",
+      )}
     >
       {/* Violet swell, bottom left. Two stops off the brand's lightest rungs,
           fading out before the right edge so it never meets the dots. */}
