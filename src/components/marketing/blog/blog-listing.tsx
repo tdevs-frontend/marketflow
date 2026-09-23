@@ -88,7 +88,7 @@ export function BlogListing() {
                 onClick={() => changeTopic(filter.value)}
                 aria-pressed={active}
                 className={cn(
-                  "cursor-pointer rounded-full border px-4 py-2 text-sm font-medium transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                  "cursor-pointer rounded-full border px-4 py-2 text-sm font-semibold transition-colors focus-visible:shadow-focus focus-visible:outline-none",
                   active
                     ? "border-primary bg-primary text-white"
                     : "border-border bg-surface text-text-secondary hover:border-border-strong hover:text-text-primary",

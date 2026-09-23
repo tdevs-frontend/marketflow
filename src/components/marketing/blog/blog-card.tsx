@@ -63,7 +63,7 @@ export function BlogCard({
         </div>
 
         <div className="flex flex-1 flex-col p-5 sm:p-6">
-          <p className="inline-flex w-fit items-center rounded-full border border-primary-border bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">
+          <p className="inline-flex w-fit items-center rounded-full border border-primary-border bg-primary-soft px-3 py-1 text-sm font-semibold text-primary">
             {article.category}
           </p>
 
@@ -71,7 +71,7 @@ export function BlogCard({
             {article.title}
           </h3>
 
-          <p className="mt-2.5 text-sm leading-[1.7] text-text-secondary text-pretty">
+          <p className="mt-3 text-[15px] leading-[1.7] text-text-secondary text-pretty">
             {article.description}
           </p>
 
@@ -92,7 +92,11 @@ export function BlogCard({
             </div>
 
             {/* No `href`: the whole card is already the link. */}
-            <CommonTextButton label="Read article" size="md" color="text-text-primary" />
+            <CommonTextButton
+              label="Read article"
+              size="md"
+              color="text-text-primary"
+            />
           </div>
         </div>
       </Link>

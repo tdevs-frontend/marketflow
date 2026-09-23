@@ -50,7 +50,7 @@ export function PageBreadcrumb({
     <nav aria-label="Breadcrumb" className={cn("min-w-0", className)}>
       <ol
         className={cn(
-          "flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-semibold",
+          "flex flex-wrap items-center gap-x-1 gap-y-1 text-sm font-semibold",
           align === "center" && "justify-center",
         )}
       >
@@ -64,7 +64,7 @@ export function PageBreadcrumb({
                   them rather than as a row of equal parts. */}
               {index > 0 ? (
                 <ChevronRight
-                  className="size-3 shrink-0 text-text-muted/60"
+                  className="size-4.5 shrink-0 text-text-muted/60"
                   aria-hidden
                 />
               ) : null}
@@ -82,7 +82,7 @@ export function PageBreadcrumb({
               ) : (
                 <Link
                   href={item.href}
-                  className="shrink-0 rounded-sm text-text-muted transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
+                  className="shrink-0 rounded-base text-text-muted transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
                 >
                   {item.label}
                 </Link>

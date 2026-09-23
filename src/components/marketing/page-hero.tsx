@@ -1,7 +1,10 @@
 import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 
-import { PageBreadcrumb, type Crumb } from "@/components/marketing/page-breadcrumb";
+import {
+  PageBreadcrumb,
+  type Crumb,
+} from "@/components/marketing/page-breadcrumb";
 
 /**
  * The hero band every inner marketing page opens on - Features, Solutions,
@@ -59,13 +62,13 @@ export function PageHero({
 
             <h1
               id={titleId}
-              className="mt-7 text-[2.5rem] leading-[1.08] font-bold tracking-tight text-balance sm:text-5xl xl:text-[3.75rem]"
+              className="mt-6 text-[2rem] leading-[1.1] font-bold tracking-tight text-balance sm:text-[2.75rem] lg:text-[3.5rem]"
             >
               {title}
             </h1>
           </div>
 
-          <PageBreadcrumb items={breadcrumb} className="mt-6" />
+          <PageBreadcrumb items={breadcrumb} className="mt-5" />
         </div>
       </div>
     </section>

@@ -71,7 +71,7 @@ function BillingToggle({
             onClick={() => onChange(option.value)}
             aria-pressed={selected}
             className={cn(
-              "relative z-1 inline-flex h-9 items-center justify-center gap-2 rounded-full px-5 text-sm font-medium whitespace-nowrap",
+              "relative z-1 inline-flex h-9 items-center justify-center gap-2 rounded-full px-5 text-base font-semibold whitespace-nowrap",
               "transition-colors focus-visible:shadow-focus focus-visible:outline-none",
               selected
                 ? "text-text-primary"

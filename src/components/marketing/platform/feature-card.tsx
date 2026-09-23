@@ -65,7 +65,7 @@ export function FeatureCard({
         <FeatureIcon feature={feature} />
 
         <div className="min-w-0 flex-1">
-          <h3 className="text-sm leading-snug font-bold tracking-tight text-text-primary">
+          <h3 className="text-base leading-snug font-semibold tracking-tight text-text-primary">
             {feature.title}
           </h3>
 
