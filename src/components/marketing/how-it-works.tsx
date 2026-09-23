@@ -3,6 +3,7 @@ import { ArrowRight, Settings } from "lucide-react";
 
 import { BrandIcon } from "@/components/ui/brand-icon";
 import { cn } from "@/lib/utils";
+import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 /**
  * How it works - one customer, eight steps, from the campaign click to the
@@ -442,17 +443,14 @@ export function HowItWorks() {
         {/* Same header as `SolutionsSection` directly above it - pill, ramp,
             gradient phrase and subheading - so the two read as one page. */}
         <header className="section-title-space mx-auto max-w-3xl text-center">
-          <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
-            <Settings className="size-4 text-primary" aria-hidden />
-            How it works
-          </p>
+          <SectionEyebrow icon={Settings}>How it works</SectionEyebrow>
 
           <h2 id="how-it-works-title" className="section-title mt-5 text-balance">
             From first click to{" "}
             <span className="brand-gradient-text">real revenue</span>
           </h2>
 
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-[1.7] text-text-secondary text-pretty">
+          <p className="section-subtitle mx-auto max-w-2xl">
             See how a customer moves through MarketFlow - from a campaign click
             to a completed order and revenue tracked, all in one connected
             workflow.

@@ -150,6 +150,23 @@
   .section-title {
     @apply text-3xl leading-[1.15] font-bold tracking-tight sm:text-4xl lg:text-5xl;
   }
+
+  /*
+   * Section subtitle - the paragraph under a `.section-title`. Set from the
+   * "Our features" section on /features: 16px, 1.7 line-height, the regular
+   * cut, normal tracking, 20px below the heading.
+   *
+   * For sections on the white and light-gray grounds. Hero and breadcrumb copy
+   * do not use it, and neither do sections that carry their own ground - the
+   * dark testimonials, the brand-gradient WhatsApp band, the tinted platform
+   * flow and the CTA panel - whose subtitles are tuned to that ground and keep
+   * their own classes. Width and alignment stay at the call site, since they
+   * follow the header's layout rather than the type.
+   */
+  .section-subtitle {
+    @apply mt-5 text-base leading-[1.7] text-text-secondary text-pretty;
+    letter-spacing: normal;
+  }
 }
 
 @utility link-underline {

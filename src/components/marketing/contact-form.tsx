@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { CheckboxField } from "@/components/ui/checkbox";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { footerSocials } from "@/constants";
+import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 /**
  * The message form, under the three contact cards.
@@ -140,20 +141,17 @@ export function ContactForm() {
         <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-16">
           {/* ------------------------------------------------------ left */}
           <div className="pt-2">
-            <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
-              <Send className="size-4 text-primary" aria-hidden />
-              Contact us
-            </p>
+            <SectionEyebrow icon={Send}>Contact us</SectionEyebrow>
 
             <h2
               id="contact-form-title"
-              className="section-title mt-6 max-w-xl text-balance"
+              className="section-title mt-5 max-w-xl text-balance"
             >
               Feel free to get in touch{" "}
               <span className="brand-gradient-text">with the team</span>
             </h2>
 
-            <p className="mt-6 max-w-xl text-base leading-[1.7] text-text-secondary text-pretty">
+            <p className="section-subtitle max-w-xl">
               Comparing platforms, planning a migration, or stuck halfway
               through a setup write to us and a person answers. Support replies
               within one business day; ask for sales and we will walk you

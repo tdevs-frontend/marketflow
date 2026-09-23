@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import { CommonTextButton } from "@/components/ui/text-button";
+import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 /* ------------------------------------------------------------------ tokens */
 
@@ -243,17 +244,14 @@ export function SolutionsSection({
     >
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-3xl text-center">
-          <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
-            <LayoutGrid className="size-4 text-primary" aria-hidden />
-            {eyebrow}
-          </p>
+          <SectionEyebrow icon={LayoutGrid}>{eyebrow}</SectionEyebrow>
 
           <h2 id="industries-title" className="section-title mt-5 text-balance">
             {headingLead} of{" "}
             <span className="brand-gradient-text">{headingRest}</span>
           </h2>
 
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-[1.7] text-text-secondary text-pretty">
+          <p className="section-subtitle mx-auto max-w-2xl">
             {subheading}
           </p>
         </header>

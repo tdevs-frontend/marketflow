@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { Minus, Plus } from "lucide-react";
+import { CircleHelp, Minus, Plus } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 /**
  * The questions a prospect actually types before signing up.
@@ -233,13 +234,7 @@ export function FeaturesFaq() {
          */}
         <div className="grid gap-10 md:grid-cols-[3fr_3fr] md:gap-10 lg:grid-cols-[6fr_13fr] lg:gap-16">
           <header className="md:pt-1">
-            <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
-              <span
-                aria-hidden
-                className="size-1.5 rounded-full bg-secondary"
-              />
-              FAQ
-            </p>
+            <SectionEyebrow icon={CircleHelp}>FAQ</SectionEyebrow>
 
             <h2 id="faq-title" className="section-title mt-5 text-balance">
               Frequently
@@ -248,7 +243,7 @@ export function FeaturesFaq() {
               <br className="max-lg:hidden" /> Asked Questions
             </h2>
 
-            <p className="mt-3.5 text-base leading-[1.7] text-text-secondary text-pretty">
+            <p className="section-subtitle">
               Have questions about MarketFlow? Explore the answers to common
               questions about campaigns, customers, automation, integrations and
               more.

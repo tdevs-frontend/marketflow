@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, Clock3 } from "lucide-react";
+import { ArrowRight, BookOpen, Clock3 } from "lucide-react";
 
 import { LogoMark } from "@/components/ui/logo";
 import { BlogCard, ShareArticle } from "@/components/marketing/blog";
+import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 import {
   BLOG_ARTICLES,
   formatArticleDate,
@@ -181,12 +182,22 @@ export default async function ArticlePage({
       >
         <div className="custom-container">
           <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
-            <h2
-              id="related-articles-title"
-              className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl"
-            >
-              Related articles
-            </h2>
+            <div className="max-w-2xl">
+              <SectionEyebrow icon={BookOpen}>Keep reading</SectionEyebrow>
+
+              <h2
+                id="related-articles-title"
+                className="mt-5 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl"
+              >
+                Related articles
+              </h2>
+              {/* Matches how `getRelatedArticles` ranks: same category first,
+                  then the same topic. */}
+              <p className="section-subtitle">
+                More practical insights on {article.category} and the topics
+                around it, from the MarketFlow blog.
+              </p>
+            </div>
 
             <Link
               href={APP_ROUTES.blog}

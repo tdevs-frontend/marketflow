@@ -5,6 +5,7 @@ import { APP_ROUTES } from "@/constants";
 import { FEATURED_ARTICLES } from "@/constants/blog";
 
 import { BlogCard } from "./blog-card";
+import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 /**
  * The Resources row on the landing page, immediately before the closing CTA.
@@ -27,17 +28,14 @@ export function BlogSection() {
     >
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
-            <BookOpen className="size-4 text-primary" aria-hidden />
-            From the blog
-          </p>
+          <SectionEyebrow icon={BookOpen}>From the blog</SectionEyebrow>
 
           <h2 id="blog-section-title" className="section-title mt-5 text-balance">
             Ideas to help you <span className="brand-gradient-text">grow</span>{" "}
             smarter
           </h2>
 
-          <p className="mt-3.5 text-base leading-[1.7] text-text-secondary text-pretty">
+          <p className="section-subtitle">
             Practical insights on marketing, customer engagement, automation,
             commerce and growing with MarketFlow.
           </p>

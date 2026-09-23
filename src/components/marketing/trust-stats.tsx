@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
+import { BadgeCheck } from "lucide-react";
 
+import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 import { cn } from "@/lib/utils";
+
 import { StatValue } from "./stat-value";
 
 export type TrustStat = {
@@ -103,10 +106,7 @@ export function TrustStats() {
     >
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <p className="inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pl-3 pr-3.5 text-xs font-medium text-text-secondary shadow-card">
-            <span aria-hidden className="size-1.5 rounded-full bg-primary" />
-            Trusted by growing businesses
-          </p>
+          <SectionEyebrow icon={BadgeCheck}>Trusted by growing businesses</SectionEyebrow>
 
           <h2
             id="trust-stats-title"
@@ -115,7 +115,7 @@ export function TrustStats() {
             Built to help businesses grow with confidence
           </h2>
 
-          <p className="mt-4 text-base leading-relaxed text-text-secondary text-pretty sm:text-lg">
+          <p className="section-subtitle">
             Teams run their customers, leads, campaigns and follow-ups from one workspace - and
             replace the guesswork with numbers they can act on.
           </p>

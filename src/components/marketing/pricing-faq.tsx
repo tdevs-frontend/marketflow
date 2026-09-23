@@ -1,3 +1,6 @@
+import { CircleHelp } from "lucide-react";
+
+import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 import { PRICING_FAQS } from "@/constants/pricing";
 
 import { FaqAccordion } from "./faq-accordion";
@@ -25,13 +28,7 @@ export function PricingFaq() {
       <div className="custom-container">
         <div className="grid gap-10 md:grid-cols-[3fr_3fr] md:gap-10 lg:grid-cols-[6fr_13fr] lg:gap-16">
           <header className="md:pt-1">
-            <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
-              <span
-                aria-hidden
-                className="size-1.5 rounded-full bg-secondary"
-              />
-              FAQ
-            </p>
+            <SectionEyebrow icon={CircleHelp}>FAQ</SectionEyebrow>
 
             <h2
               id="pricing-faq-title"
@@ -40,7 +37,7 @@ export function PricingFaq() {
               Frequently Asked Question
             </h2>
 
-            <p className="mt-3.5 text-base leading-[1.7] text-text-secondary text-pretty">
+            <p className="section-subtitle">
               What you pay, what changes when you grow, and what happens if you
               leave.
             </p>

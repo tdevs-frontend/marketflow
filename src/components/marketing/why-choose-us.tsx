@@ -1,11 +1,11 @@
 import Link from "next/link";
 import {
   ArrowRight,
+  BadgeCheck,
   ChartColumnIncreasing,
   CircleCheck,
   Hexagon,
   ShieldCheck,
-  Star,
   UsersRound,
   Zap,
   type LucideIcon,
@@ -16,6 +16,7 @@ import { BrandIcon } from "@/components/ui/brand-icon";
 import { APP_ROUTES } from "@/constants";
 import { cn } from "@/lib/utils";
 import { TRUST_STATS } from "./trust-stats";
+import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 /**
  * The case for the platform, argued once and then evidenced.
@@ -234,19 +235,7 @@ export function WhyChooseUs({
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[minmax(0,0.62fr)_minmax(0,1fr)] xl:gap-14">
           {/* The argument */}
           <div className="max-w-xl">
-            <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-primary-border bg-primary-soft py-1.5 pr-4 pl-2 text-primary">
-              <span
-                aria-hidden
-                className="grid size-5 place-items-center rounded-full bg-primary text-white"
-              >
-                <Star
-                  className="size-2.5"
-                  fill="currentColor"
-                  strokeWidth={0}
-                />
-              </span>
-              Why choose us
-            </p>
+            <SectionEyebrow icon={BadgeCheck}>Why choose us</SectionEyebrow>
 
             <h2
               id="why-choose-us-title"
@@ -256,7 +245,7 @@ export function WhyChooseUs({
               <span className="brand-gradient-text">think bigger</span>
             </h2>
 
-            <p className="mt-5 text-base leading-[1.7] text-text-secondary text-pretty">
+            <p className="section-subtitle">
               MarketFlow gives you the tools, automation and insights to turn
               conversations into customers - so you can grow faster, work
               smarter and achieve more.

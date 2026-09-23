@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 /**
  * The whole product, on one screen.
@@ -138,10 +139,7 @@ export function AllFeatures() {
     >
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-primary-border bg-primary-soft py-1.5 pr-4 pl-3 text-primary">
-            <Sparkles className="size-3.5" aria-hidden />
-            Our features
-          </p>
+          <SectionEyebrow icon={Sparkles}>Our features</SectionEyebrow>
 
           <h2
             id="all-features-title"
@@ -151,7 +149,7 @@ export function AllFeatures() {
             <span className="brand-gradient-text">growth</span>
           </h2>
 
-          <p className="mt-5 text-base leading-[1.7] text-text-secondary text-pretty">
+          <p className="section-subtitle">
             Connect customers, conversations, marketing, automation, commerce
             and analytics in one powerful workspace.
           </p>

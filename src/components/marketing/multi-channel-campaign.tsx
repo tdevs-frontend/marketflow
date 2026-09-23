@@ -15,6 +15,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 /* -------------------------------------------------------------------------- */
 /* Data                                                                       */
@@ -359,19 +360,16 @@ export function MultiChannelCampaign() {
 
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <p className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3.5 py-1.5 text-xs font-semibold tracking-[0.14em] text-text-secondary uppercase shadow-card">
-            <Send className="size-3.5 text-primary" aria-hidden />
-            Multi-channel campaigns
-          </p>
+          <SectionEyebrow icon={Send}>Multi-channel campaigns</SectionEyebrow>
 
           <h2
             id="multi-channel-title"
-            className="mt-6 text-3xl leading-[1.15] font-bold tracking-tight text-balance sm:text-4xl lg:text-5xl"
+            className="mt-5 text-3xl leading-[1.15] font-bold tracking-tight text-balance sm:text-4xl lg:text-5xl"
           >
             Reach customers wherever they are
           </h2>
 
-          <p className="mt-5 text-lg leading-[1.7] text-text-secondary text-pretty">
+          <p className="section-subtitle">
             Create one campaign and deliver personalized experiences across{" "}
             <span className="font-semibold text-primary">WhatsApp, Email and SMS</span> - from a
             single, unified workspace.

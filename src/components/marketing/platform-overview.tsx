@@ -1,3 +1,7 @@
+import { Layers } from "lucide-react";
+
+import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
+
 import {
   ConnectionLines,
   FeatureRail,
@@ -52,10 +56,7 @@ export function PlatformOverview() {
 
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
-            <span aria-hidden className="size-1.5 rounded-full bg-secondary" />
-            All-in-one growth platform
-          </p>
+          <SectionEyebrow icon={Layers}>All-in-one growth platform</SectionEyebrow>
 
           <h2
             id="platform-overview-title"
@@ -64,7 +65,7 @@ export function PlatformOverview() {
             Everything you need to turn leads into loyal customers
           </h2>
 
-          <p className="mt-5 text-base leading-[1.7] text-text-secondary text-pretty">
+          <p className="section-subtitle">
             Capture leads, manage conversations, launch campaigns, automate
             follow-ups and measure growth all from{" "}
             <span className="font-semibold text-primary">

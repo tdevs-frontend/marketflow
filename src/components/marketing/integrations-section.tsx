@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Code, Mail, Webhook, type LucideIcon } from "lucide-react";
+import { Code, Mail, Plug, Webhook, type LucideIcon } from "lucide-react";
 
+import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 import { BrandIcon } from "@/components/ui/brand-icon";
 import { INTEGRATION_ROUTES } from "@/constants/integrations";
 import { cn } from "@/lib/utils";
@@ -158,12 +159,14 @@ export function IntegrationsSection() {
 
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <h2 id="integrations-title" className="section-title text-balance">
+          <SectionEyebrow icon={Plug}>Integrations</SectionEyebrow>
+
+          <h2 id="integrations-title" className="section-title mt-5 text-balance">
             Everything you already use,{" "}
             <span className="brand-gradient-text">connected</span>
           </h2>
 
-          <p className="mt-3.5 text-base leading-[1.7] text-text-secondary text-pretty">
+          <p className="section-subtitle">
             Connect the channels, commerce tools and developer services that
             power your MarketFlow workspace - all from one place.
           </p>

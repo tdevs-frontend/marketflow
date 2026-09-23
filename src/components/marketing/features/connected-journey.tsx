@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 /**
  * One customer, nine steps, and the module that handles each.
@@ -65,16 +66,13 @@ export function ConnectedJourney() {
 
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
-            <span aria-hidden className="size-1.5 rounded-full bg-secondary" />
-            How MarketFlow works
-          </p>
+          <SectionEyebrow icon={Workflow}>How MarketFlow works</SectionEyebrow>
 
           <h2 id="journey-title" className="section-title mt-5 text-balance">
             One customer journey. One connected system
           </h2>
 
-          <p className="mt-5 text-base leading-[1.7] text-text-secondary text-pretty">
+          <p className="section-subtitle">
             Every step below happens in the same workspace, on the same record.
             Nothing here is an export, a Zap or a nightly sync.
           </p>

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Check, type LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 /**
  * The frame every section on this page is built in.
@@ -103,10 +104,7 @@ export function FeatureSection({
               !stacked && reverse && "lg:order-2",
             )}
           >
-            <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
-              <EyebrowIcon className="size-4 text-primary" aria-hidden />
-              {eyebrow}
-            </p>
+            <SectionEyebrow icon={EyebrowIcon}>{eyebrow}</SectionEyebrow>
 
             <h2 id={`${id}-title`} className="section-title mt-5 text-balance">
               {title}
@@ -114,7 +112,7 @@ export function FeatureSection({
 
             <p
               className={cn(
-                "mt-5 text-base leading-[1.7] text-text-secondary text-pretty",
+                "section-subtitle",
                 stacked && "mx-auto max-w-2xl",
               )}
             >

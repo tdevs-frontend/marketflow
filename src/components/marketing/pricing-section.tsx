@@ -1,4 +1,7 @@
 import type { ReactNode } from "react";
+import { Tag } from "lucide-react";
+
+import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 import { PricingPlans } from "./pricing-plans";
 
@@ -37,17 +40,14 @@ export function PricingSection({
         {breadcrumb ? <div className="mb-8">{breadcrumb}</div> : null}
 
         <header className="mx-auto max-w-3xl text-center">
-          <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pl-3 pr-3.5 text-text-secondary shadow-card">
-            <span aria-hidden className="size-1.5 rounded-full bg-secondary" />
-            Simple, scalable pricing
-          </p>
+          <SectionEyebrow icon={Tag}>Simple, scalable pricing</SectionEyebrow>
           <Heading
             id="pricing-title"
             className="section-title mt-5 text-balance"
           >
             Everything you need to turn customer conversations growth
           </Heading>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-[1.7] text-text-secondary text-pretty">
+          <p className="section-subtitle mx-auto max-w-2xl">
             Choose a plan that fits your business and scale your marketing,
             automation, customers, and sales from one powerful workspace.
           </p>
