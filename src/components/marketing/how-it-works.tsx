@@ -32,11 +32,11 @@ import { cn } from "@/lib/utils";
 type Tone = "violet" | "green" | "blue" | "orange" | "pink";
 
 interface ToneFaces {
-  /** The halo, the main circle and the module tag's ground. */
+  /** The main circle and the module tag's ground. */
   soft: string;
   /** Icon ink inside the main circle. */
   ink: string;
-  /** The filled number chip on solid steps. */
+  /** The filled number chip. */
   chip: string;
   /** The module tag's label. */
   tag: string;
@@ -261,8 +261,6 @@ interface Step {
   description: string;
   module: string;
   tone: Tone;
-  /** A filled number chip inside the halo, rather than a bare numeral. */
-  solid?: boolean;
   icon: ReactNode;
   tagIcon: ReactNode;
 }
@@ -275,7 +273,6 @@ const STEPS: Step[] = [
     description: "They see your ad or message and click to learn more.",
     module: "Campaigns",
     tone: "violet",
-    solid: true,
     icon: <MegaphoneIcon className={STEP_ICON} />,
     tagIcon: <MegaphoneIcon className="size-5.5 text-secondary" />,
   },
@@ -298,7 +295,6 @@ const STEPS: Step[] = [
       "The lead is added as a contact in your workspace with all details in one place.",
     module: "Contacts",
     tone: "blue",
-    solid: true,
     icon: <PersonIcon className={STEP_ICON} />,
     tagIcon: (
       <TagTile tone="blue">
@@ -325,7 +321,6 @@ const STEPS: Step[] = [
       "Workflows automatically send personalized messages via WhatsApp, Email, SMS or Social Media.",
     module: "Workflows",
     tone: "violet",
-    solid: true,
     icon: <HierarchyIcon className={STEP_ICON} />,
     tagIcon: <BoltIcon className="size-5.5 text-secondary" />,
   },
@@ -344,7 +339,6 @@ const STEPS: Step[] = [
       "A confirmation or follow-up message is sent using your saved templates.",
     module: "Templates",
     tone: "pink",
-    solid: true,
     icon: <DocumentIcon className={STEP_ICON} />,
     tagIcon: <DocumentIcon className="size-5.5 text-[#ec4899]" />,
   },
@@ -377,33 +371,16 @@ function StepItem({ step, index }: { step: Step; index: number }) {
 
   return (
     <li className="relative">
-      {/* The icon cluster: the number halo, overlapped by the main circle. */}
+      {/* The icon cluster: the step number, sitting on the main circle's
+          top-left edge. `z-1` keeps it above the circle it overlaps. */}
       <div aria-hidden className="relative h-27 w-38">
         <span
           className={cn(
-            "absolute top-0 left-0 grid size-14 place-items-center rounded-full",
-            tone.soft,
+            "absolute top-3.25 left-3.25 z-1 grid size-7.5 place-items-center rounded-full text-base leading-none font-extrabold tracking-tight text-white",
+            tone.chip,
           )}
         >
-          {step.solid ? (
-            <span
-              className={cn(
-                "grid size-7.5 place-items-center rounded-full text-base leading-none font-extrabold tracking-tight text-white",
-                tone.chip,
-              )}
-            >
-              {number}
-            </span>
-          ) : (
-            <span
-              className={cn(
-                "text-xl leading-none font-extrabold tracking-tight",
-                tone.ink,
-              )}
-            >
-              {number}
-            </span>
-          )}
+          {number}
         </span>
 
         <span
@@ -439,20 +416,8 @@ function StepItem({ step, index }: { step: Step; index: number }) {
           <span className="sr-only">Step {number}: </span>
           {step.title}
         </h3>
-        <p className="mt-1 max-w-72 text-base leading-snug text-text-secondary text-pretty">
+        <p className="mt-2 max-w-72 text-base leading-[1.5] text-text-secondary text-pretty">
           {step.description}
-        </p>
-        <p
-          className={cn(
-            "mt-3 inline-flex h-10.5 items-center gap-3 rounded-[14px] pr-4.5 pl-4 text-[0.95rem] font-semibold tracking-tight",
-            tone.soft,
-            tone.tag,
-          )}
-        >
-          <span aria-hidden className="grid place-items-center">
-            {step.tagIcon}
-          </span>
-          {step.module}
         </p>
       </div>
     </li>
@@ -474,21 +439,20 @@ export function HowItWorks() {
       </div>
 
       <div className="custom-container">
-        <header className="section-title-space mx-auto max-w-4xl text-center">
-          <p className="inline-flex h-9.5 items-center gap-2 rounded-full bg-secondary/12 px-4 text-sm font-bold tracking-wide text-secondary-dark uppercase">
-            <Settings className="size-4.5" strokeWidth={2.2} aria-hidden />
+        {/* Same header as `SolutionsSection` directly above it — pill, ramp,
+            gradient phrase and subheading — so the two read as one page. */}
+        <header className="section-title-space mx-auto max-w-3xl text-center">
+          <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
+            <Settings className="size-4 text-primary" aria-hidden />
             How it works
           </p>
 
-          <h2
-            id="how-it-works-title"
-            className="section-title mt-4 text-balance lg:text-[3.5rem]"
-          >
+          <h2 id="how-it-works-title" className="section-title mt-5 text-balance">
             From first click to{" "}
-            <span className="text-secondary">real revenue</span>
+            <span className="brand-gradient-text">real revenue</span>
           </h2>
 
-          <p className="mx-auto mt-3 max-w-3xl text-base leading-[1.7] font-medium text-text-secondary text-pretty sm:text-lg">
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-[1.7] text-text-secondary text-pretty">
             See how a customer moves through MarketFlow — from a campaign click
             to a completed order and revenue tracked, all in one connected
             workflow.
