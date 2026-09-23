@@ -123,7 +123,7 @@ export function TriggersWorkspace() {
   }, [triggers]);
 
   /* Grouped while the reader is browsing all of them, flat once they have
-     narrowed it down — a single section with its own heading above it is a
+     narrowed it down - a single section with its own heading above it is a
      heading that says nothing. */
   const groups =
     category === ALL
@@ -326,7 +326,7 @@ export function TriggersWorkspace() {
       >
         <p className="text-sm text-text-secondary">
           The event keeps being raised, but no workflow starts from it. Anyone
-          already inside a journey carries on — this only closes the door.
+          already inside a journey carries on - this only closes the door.
         </p>
       </ConfirmDialog>
     </>

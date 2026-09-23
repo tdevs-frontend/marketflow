@@ -13,7 +13,7 @@ import type { SocialPlatform } from "@/types/social";
  *
  * Every one of these reads its colour from `CHANNEL_THEME` / `PLATFORM_THEME`
  * rather than a local class, so adding a channel is one table entry and no
- * component edits — and so a WhatsApp chip is the same green in a table row,
+ * component edits - and so a WhatsApp chip is the same green in a table row,
  * a stat card and a calendar cell.
  */
 
@@ -83,7 +83,7 @@ export function ChannelBadge({
  * A social platform's own mark.
  *
  * Kept apart from `ChannelMark` because these carry the platform's real brand
- * colour — a recoloured Instagram glyph reads as a mock-up rather than a
+ * colour - a recoloured Instagram glyph reads as a mock-up rather than a
  * connected account.
  */
 export function PlatformMark({

@@ -28,7 +28,7 @@ import { SmsComposer, SmsPreview } from "./composer";
  * The SMS template library.
  *
  * Cards show the message body in full rather than truncated, because an SMS
- * template *is* its body — there is no layout, no subject and no imagery to
+ * template *is* its body - there is no layout, no subject and no imagery to
  * summarise. The segment count sits on every card for the same reason it is in
  * the composer: a two-segment template doubles the cost of every campaign that
  * uses it, and that is worth knowing before you pick one.
@@ -37,7 +37,7 @@ import { SmsComposer, SmsPreview } from "./composer";
  * the body showing characters against the segment capacity, which is the one
  * reading here that a length cannot carry: what matters is not that a message
  * fills 62% of its allowance, it is whether it crosses 160 and doubles the
- * bill — a threshold, and the segment badge already names it. The bar is now a
+ * bill - a threshold, and the segment badge already names it. The bar is now a
  * line of type, the card is shorter for it, and three of these fit the screen
  * where two did.
  *
@@ -47,7 +47,7 @@ import { SmsComposer, SmsPreview } from "./composer";
  * because you want an answer.
  *
  * The card is two zones and the gap between them is elastic. Everything above
- * the rule is the template — name, badges, body, length, placeholders — and
+ * the rule is the template - name, badges, body, length, placeholders - and
  * everything below it is how the template has performed. `mt-auto` on the
  * footer pins the second zone to the bottom so a row of cards has its figures
  * on one line however long the bodies above them run, and the `pt-5` beside
@@ -271,7 +271,7 @@ export function SmsTemplatesWorkspace() {
                       />
                     </div>
 
-                    {/* Body in full — an SMS template is its body. The
+                    {/* Body in full - an SMS template is its body. The
                         24px leading is what makes this read as a message
                         rather than a paragraph of code: at `leading-relaxed`
                         the mono face packed three lines into the height two

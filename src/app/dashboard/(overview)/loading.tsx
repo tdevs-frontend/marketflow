@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
  * nothing to read and then move every card on the page when it cleared.
  */
 
-/** The card shell every widget skeleton sits in — one border treatment. */
+/** The card shell every widget skeleton sits in - one border treatment. */
 function CardSkeleton({
   className,
   children,
@@ -79,7 +79,7 @@ export default function DashboardLoading() {
       <SkeletonStats count={4} />
 
       <div className="grid gap-6 md:grid-cols-12">
-        {/* Growth Overview — header, metric chips, headline, plot. */}
+        {/* Growth Overview - header, metric chips, headline, plot. */}
         <CardSkeleton className="md:col-span-6 lg:col-span-8">
           <CardHeadSkeleton action="w-64" />
           <div className="mt-5 flex items-center justify-between gap-3">
@@ -92,7 +92,7 @@ export default function DashboardLoading() {
           </div>
         </CardSkeleton>
 
-        {/* WhatsApp Inbox — queue counts, then four conversations. */}
+        {/* WhatsApp Inbox - queue counts, then four conversations. */}
         <CardSkeleton className="flex flex-col md:col-span-6 lg:col-span-4">
           <CardHeadSkeleton action="w-24" />
           <TileRowSkeleton />
@@ -109,7 +109,7 @@ export default function DashboardLoading() {
           </div>
         </CardSkeleton>
 
-        {/* Campaign Performance — tabs, totals, four ranked bars. */}
+        {/* Campaign Performance - tabs, totals, four ranked bars. */}
         <CardSkeleton className="md:col-span-6 lg:col-span-7">
           <CardHeadSkeleton />
           <Skeleton className="mt-5 h-8 w-64 rounded-btn" />
@@ -128,7 +128,7 @@ export default function DashboardLoading() {
           </div>
         </CardSkeleton>
 
-        {/* Sales Funnel — five tapering stages and the end-to-end rate. */}
+        {/* Sales Funnel - five tapering stages and the end-to-end rate. */}
         <CardSkeleton className="flex flex-col md:col-span-6 lg:col-span-5">
           <div className="space-y-2">
             <Skeleton className="h-3.5 w-32 rounded-full" />
@@ -153,7 +153,7 @@ export default function DashboardLoading() {
           </div>
         </CardSkeleton>
 
-        {/* Recent Orders — a six-column table under its header action. */}
+        {/* Recent Orders - a six-column table under its header action. */}
         <CardSkeleton className="md:col-span-12 lg:col-span-6">
           <CardHeadSkeleton action="w-32" />
           <div className="mt-2.5">
@@ -161,7 +161,7 @@ export default function DashboardLoading() {
           </div>
         </CardSkeleton>
 
-        {/* Automation Activity — eight timeline events, each with a run status. */}
+        {/* Automation Activity - eight timeline events, each with a run status. */}
         <CardSkeleton className="md:col-span-12 lg:col-span-6">
           <CardHeadSkeleton action="w-32" />
           <div className="mt-5 space-y-4">

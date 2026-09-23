@@ -23,7 +23,7 @@ import type { StepProps } from "./types";
 import { blockersIn, warningsIn } from "./validation";
 
 /**
- * Step 6 — the pre-flight check.
+ * Step 6 - the pre-flight check.
  *
  * Review used to restate the form. It now does the two things a review is for:
  * it collects the settings that belong to the campaign as a whole rather than
@@ -62,7 +62,7 @@ export function ReviewStep(props: StepProps) {
                     <SummaryRow label="Subject" value={draft.subject || "Not set"} />
                     <SummaryRow
                       label="Preview text"
-                      value={draft.previewText || "None — the first line of the body shows instead"}
+                      value={draft.previewText || "None - the first line of the body shows instead"}
                     />
                   </>
                 ) : null}
@@ -232,7 +232,7 @@ function TrackingSection({ draft, set, derived }: StepProps) {
 
   const patchUtm = (next: Partial<UtmParams>) =>
     /* Any manual edit stops the channel defaults from writing over this again.
-       The flag is per-campaign, not per-field — someone who set a source meant
+       The flag is per-campaign, not per-field - someone who set a source meant
        to own the whole tagging scheme. */
     patch({ utm: { ...tracking.utm, ...next }, utmTouched: true });
 
@@ -350,7 +350,7 @@ function TrackingSection({ draft, set, derived }: StepProps) {
           {derived.isSocial && derived.platforms.length > 1 ? (
             <p className="mt-2.5 text-sm font-medium text-text-muted">
               Several platforms are selected, so each published post carries its
-              own <code className="font-mono">utm_source</code> —{" "}
+              own <code className="font-mono">utm_source</code> -{" "}
               {derived.platforms.join(", ")}.
             </p>
           ) : null}
@@ -456,7 +456,7 @@ function ScheduleSummary({ draft, derived }: StepProps) {
 
   return (
     <>
-      {draft.date || "—"} at {draft.time} ({zone})
+      {draft.date || "-"} at {draft.time} ({zone})
     </>
   );
 }

@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
  *
  * It is a real scale rather than three loose numbers: `sm` is the filter and
  * toolbar height, `md` is the dashboard form default, and `lg` is for the
- * pages where a form *is* the page — auth, onboarding, landing. Before this
+ * pages where a form *is* the page - auth, onboarding, landing. Before this
  * existed the same three heights were spelled out as `className="h-10"`,
  * `"h-11"` and `"h-12"` at forty-odd call sites, which is how a scale drifts:
  * nothing named it, so nothing kept it honest.
@@ -21,7 +21,7 @@ export type InputSize = "sm" | "md" | "lg";
 /*
  * `sm` carries its own ink as well as its metrics. It is the filter and
  * toolbar tier, where the control annotates a table rather than collecting a
- * value — medium on the secondary ink sits it a step back from the data it
+ * value - medium on the secondary ink sits it a step back from the data it
  * filters, instead of competing with it. `md` and `lg` keep the primary ink
  * from `FIELD`, because there the typed value *is* the content.
  *
@@ -38,7 +38,7 @@ const SIZES: Record<InputSize, string> = {
 /**
  * Everything that is *not* size: the border, ground, focus ring and disabled
  * treatment. Split out so `Textarea` can take the same look without taking a
- * height — a textarea is sized by its rows, and pinning it to 44px would make
+ * height - a textarea is sized by its rows, and pinning it to 44px would make
  * it a single-line input with a drag handle.
  */
 const FIELD =
@@ -80,7 +80,7 @@ export function Input({
 }
 
 /**
- * Deliberately outside the height scale — see `FIELD`. It keeps the padding and
+ * Deliberately outside the height scale - see `FIELD`. It keeps the padding and
  * type size the fields had before the scale existed, so a textarea beside an
  * `md` input still reads as the same family.
  */
@@ -114,7 +114,7 @@ export function Field({
   htmlFor: string;
   /**
    * `ReactNode` rather than `string` so a hint can carry the link that answers
-   * it — "Must be a verified address. Manage sender identities" is one
+   * it - "Must be a verified address. Manage sender identities" is one
    * sentence, and splitting the link out below the field turns a hint into a
    * second paragraph competing with it.
    */

@@ -37,7 +37,7 @@ import { NodeIcon } from "../node-icon";
  *
  * The four cards and three charts are the summary; the node-level figures
  * underneath are the point. A conversion rate tells you the journey is
- * underperforming — the step where the count falls off a cliff tells you
+ * underperforming - the step where the count falls off a cliff tells you
  * where, and that is the only reading that leads to an edit.
  */
 
@@ -45,7 +45,7 @@ type Period = "7" | "14";
 
 /** Milliseconds as the coarse figure a completion time wants. */
 function formatSpan(ms: number): string {
-  if (ms <= 0) return "—";
+  if (ms <= 0) return "-";
   const hours = ms / 3_600_000;
   if (hours < 1) return `${Math.round(ms / 60_000)}m`;
   if (hours < 48) return `${hours.toFixed(1)}h`;
@@ -87,7 +87,7 @@ function kpis(workflow: Workflow): Kpi[] {
  * The second row: the figures you need when the first row looks wrong.
  *
  * Separated rather than crammed into one strip of eight, because these are
- * diagnostic — how many are still inside, how many left early, how many
+ * diagnostic - how many are still inside, how many left early, how many
  * failed, how long it takes. Nobody opens Analytics to read them first, and
  * everybody needs them the moment conversion drops.
  */
@@ -105,7 +105,7 @@ function secondaryKpis(workflow: Workflow): Kpi[] {
       label: "Exited early",
       value: formatCount(exitedEarly),
       icon: LogOut,
-      hint: `${formatPercent(rate(exitedEarly, entered), 1)} — goal met, unsubscribed or stopped`,
+      hint: `${formatPercent(rate(exitedEarly, entered), 1)} - goal met, unsubscribed or stopped`,
     },
     {
       label: "Failed runs",
@@ -204,7 +204,7 @@ function NodeAnalyticsRow({
               {formatCount(drop)}
             </span>
           ) : (
-            <span className="text-sm text-text-muted">—</span>
+            <span className="text-sm text-text-muted">-</span>
           )}
         </div>
       </div>

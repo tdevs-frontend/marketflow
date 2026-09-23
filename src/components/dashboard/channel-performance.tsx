@@ -94,7 +94,7 @@ export function ChannelPerformance({ className }: { className?: string }) {
       </ul>
 
       {/*
-       * The donut answers "which channel dominates". This answers "why" — and
+       * The donut answers "which channel dominates". This answers "why" - and
        * it is a table because four labelled measures across three channels is
        * tabular data, not something a second chart would read better.
        */}

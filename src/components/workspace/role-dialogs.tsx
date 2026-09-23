@@ -54,7 +54,7 @@ type StepIndex = 0 | 1 | 2 | 3;
  * Creating a custom role.
  *
  * A drawer with four steps rather than a dialog with one long form, because
- * step two decides what step three contains — and a merchant who picks
+ * step two decides what step three contains - and a merchant who picks
  * "Marketing" then sees 38 permissions already ticked understands the role they
  * are making far better than one who arrives at an empty grid.
  *
@@ -62,7 +62,7 @@ type StepIndex = 0 | 1 | 2 | 3;
  * permission set from a hundred cleared checkboxes is a job nobody finishes
  * correctly; the result is either too wide or missing a prerequisite.
  *
- * State is mount-scoped — callers render this only while open — so an abandoned
+ * State is mount-scoped - callers render this only while open - so an abandoned
  * role leaves nothing behind for the next one.
  */
 export function CreateRoleDrawer({
@@ -92,7 +92,7 @@ export function CreateRoleDrawer({
       ? "A role with that name already exists."
       : null;
 
-  /** Presets and existing roles offered as one list — both are just grants. */
+  /** Presets and existing roles offered as one list - both are just grants. */
   const sources = [
     ...PERMISSION_PRESETS.map((preset) => ({
       id: preset.id,
@@ -107,7 +107,7 @@ export function CreateRoleDrawer({
       .map((role) => ({
         id: role.id,
         label: role.name,
-        description: `Copy of an existing role — ${grantCount(role.grants)} permissions.`,
+        description: `Copy of an existing role - ${grantCount(role.grants)} permissions.`,
         icon: role.type === "custom" ? "user-cog" : "shield-check",
         kind: "role" as const,
         grants: role.grants,
@@ -117,7 +117,7 @@ export function CreateRoleDrawer({
   function chooseSource(id: string) {
     setSource(id);
     const chosen = sources.find((item) => item.id === id);
-    /* Deep copy — editing the new role must never edit its source. */
+    /* Deep copy - editing the new role must never edit its source. */
     setGrants(
       Object.fromEntries(
         Object.entries(chosen?.grants ?? {}).map(([key, actions]) => [
@@ -352,7 +352,7 @@ export function CreateRoleDrawer({
                   ).length
                 } / ${PERMISSION_GROUPS.length}`}
               />
-              <SummaryTile label="Members" value="0 — assign after creating" />
+              <SummaryTile label="Members" value="0 - assign after creating" />
             </dl>
 
             {sensitive.length > 0 ? (
@@ -368,7 +368,7 @@ export function CreateRoleDrawer({
                       key={`${item.resource}.${item.action}`}
                       className="text-sm text-warning-text"
                     >
-                      • {item.resource.replace(/_/g, " ")} —{" "}
+                      • {item.resource.replace(/_/g, " ")} -{" "}
                       {PERMISSION_ACTION_LABEL[item.action]}
                     </li>
                   ))}
@@ -673,7 +673,7 @@ export function DeleteRoleDialog({
 
         <p className="text-sm text-text-secondary">
           Deleting a role cannot be undone. If you may want it back, archive it
-          instead — archived roles keep their permissions and can be restored.
+          instead - archived roles keep their permissions and can be restored.
         </p>
       </div>
     </Dialog>
@@ -688,7 +688,7 @@ export function DeleteRoleDialog({
  * Two roles, differences only.
  *
  * Showing every permission side by side would be two hundred rows of which a
- * dozen differ, and the dozen is the entire question — "what does Junior
+ * dozen differ, and the dozen is the entire question - "what does Junior
  * Marketer actually lose compared to Marketing Manager". So the matching rows
  * are dropped and the count of them is reported instead.
  */
@@ -935,7 +935,7 @@ export function CopyPermissionsDialog({
 
         <p className="rounded-panel border border-border bg-surface-secondary px-3.5 py-3 text-sm text-text-secondary">
           This replaces the selected permissions rather than merging them. The
-          change is staged like any other edit — you review it before saving.
+          change is staged like any other edit - you review it before saving.
         </p>
       </div>
     </Dialog>

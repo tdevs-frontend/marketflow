@@ -8,9 +8,9 @@ import type { MarketingChannel } from "./marketing";
  * is an authored node graph with its own runs, templates and event registry.
  * Two different products sharing a word.
  *
- * Every entity here is shaped like the API response it will eventually be —
+ * Every entity here is shaped like the API response it will eventually be -
  * ids rather than embedded objects, ISO timestamps, counts pre-aggregated by
- * the server — so swapping `lib/workflow-fixtures` for a fetch is the only
+ * the server - so swapping `lib/workflow-fixtures` for a fetch is the only
  * change the UI should need.
  */
 
@@ -24,7 +24,7 @@ export type WorkflowStatus = "draft" | "active" | "paused" | "archived" | "error
  * A run's state, and a step's.
  *
  * One union rather than two, because the row in Activity Logs is a step and
- * the row in All Runs is a run, and they are read side by side — a `waiting`
+ * the row in All Runs is a run, and they are read side by side - a `waiting`
  * step inside a `waiting` run should not be two different words.
  */
 export type ExecutionStatus =
@@ -60,8 +60,8 @@ export type NodeKind =
   /*
    * Wait, as five kinds rather than one with a mode.
    *
-   * They are five different questions — how long, until when, until what time,
-   * until which event, until which condition — and a single node whose meaning
+   * They are five different questions - how long, until when, until what time,
+   * until which event, until which condition - and a single node whose meaning
    * changes with a dropdown is a node you cannot read on the canvas. Only
    * `wait_until_event` forks, because only it can time out.
    */
@@ -94,7 +94,7 @@ export type NodeKind =
   | "api_action"
   | "end";
 
-/** A branch leaving a forking node. Ordered — the first is the default path. */
+/** A branch leaving a forking node. Ordered - the first is the default path. */
 export interface NodeBranch {
   id: string;
   label: string;
@@ -103,7 +103,7 @@ export interface NodeBranch {
 /**
  * One node on the canvas.
  *
- * `summary` is the single line a node shows under its title — "Wait 1 day",
+ * `summary` is the single line a node shows under its title - "Wait 1 day",
  * "welcome_new_lead". It is stored rather than derived so the canvas never has
  * to know how to render twenty different config shapes; the inspector, which
  * does, writes it back when a node is edited.
@@ -117,7 +117,7 @@ export interface WorkflowNode {
   position: { x: number; y: number };
   /** Present on forking nodes. Edges leaving them carry a `branchId`. */
   branches?: NodeBranch[];
-  /** Contacts that have reached this node — the node-level analytics figure. */
+  /** Contacts that have reached this node - the node-level analytics figure. */
   entered?: number;
   /** Per-branch share of `entered`, keyed by branch id. Sums to 100. */
   branchShare?: Record<string, number>;
@@ -127,7 +127,7 @@ export interface WorkflowEdge {
   id: string;
   from: string;
   to: string;
-  /** Set when `from` forks — names which handle the edge leaves by. */
+  /** Set when `from` forks - names which handle the edge leaves by. */
   branchId?: string;
 }
 
@@ -149,7 +149,7 @@ export type VariableSource =
  * One `{{token}}` in a message, and what fills it.
  *
  * Stored as a binding rather than resolved at authoring time, because the
- * value does not exist yet — the whole point is that it is different for every
+ * value does not exist yet - the whole point is that it is different for every
  * contact. `path` is dotted and belongs to `source`: `first_name` on a
  * contact, `response.order_id` on a node.
  */
@@ -157,7 +157,7 @@ export interface VariableBinding {
   token: string;
   source: VariableSource;
   path: string;
-  /** Human label for the mapping row — "Contact First Name". */
+  /** Human label for the mapping row - "Contact First Name". */
   label: string;
   /** What the preview shows in place of the token. */
   sample?: string;
@@ -201,7 +201,7 @@ export interface EnrollmentRules {
  * Who is kept out, regardless of the trigger.
  *
  * A separate object from the entry rules because it answers a different
- * question — not "how often" but "never" — and because these are the checks a
+ * question - not "how often" but "never" - and because these are the checks a
  * marketing team is held to. Getting them wrong is a compliance problem, not a
  * UX one.
  */
@@ -246,7 +246,7 @@ export type GoalType =
 export interface WorkflowGoal {
   enabled: boolean;
   type: GoalType;
-  /** For `purchase_value` — the threshold that counts as conversion. */
+  /** For `purchase_value` - the threshold that counts as conversion. */
   value?: number;
   /** How long after entry the goal can still be attributed. */
   windowDays: number;
@@ -319,7 +319,7 @@ export interface WorkflowStats {
   /** Contacts sitting inside the workflow right now. */
   running: number;
   failed: number;
-  /** Left before finishing — goal met early, unsubscribed, manually stopped. */
+  /** Left before finishing - goal met early, unsubscribed, manually stopped. */
   exitedEarly: number;
   /** Mean time from entry to completion, in milliseconds. */
   averageCompletionMs: number;
@@ -330,7 +330,7 @@ export interface WorkflowStats {
  *
  * This is the distinction the module turns on, and the one most automation
  * tools blur: "Welcome Series" is a *template*, a recipe for a journey.
- * "Event-based" is a *start type* — the mechanism by which a contact is
+ * "Event-based" is a *start type* - the mechanism by which a contact is
  * enrolled. Confusing the two is what leaves a builder unable to explain why
  * anybody is in the workflow at all.
  */
@@ -355,7 +355,7 @@ export interface CriteriaCondition {
  * Customers module's audience builder already edits.
  *
  * That is what lets the creation wizard reuse `RuleGroupEditor` and its live
- * audience count instead of growing a second rule builder — two of those in
+ * audience count instead of growing a second rule builder - two of those in
  * one product is how "in segment VIP" ends up meaning different things on two
  * screens. Stated in `types/` rather than imported from `lib/` so the data
  * model does not depend on a fixture file.
@@ -392,7 +392,7 @@ export interface Workflow {
   name: string;
   description: string;
   status: WorkflowStatus;
-  /** How contacts enter — see `WorkflowStart`. */
+  /** How contacts enter - see `WorkflowStart`. */
   start: WorkflowStart;
   /** The registry event that starts it, e.g. `lead.created`. */
   triggerKey: string;
@@ -431,7 +431,7 @@ export type TemplateCategory =
 
 export type TemplateComplexity = "starter" | "intermediate" | "advanced";
 
-/** One step of a template's preview — a flat list, not a graph. */
+/** One step of a template's preview - a flat list, not a graph. */
 export interface TemplateStep {
   kind: NodeKind;
   title: string;
@@ -451,7 +451,7 @@ export interface AutomationTemplate {
   /** Who this journey is for, in the user's own words. */
   bestFor: string[];
   triggerKey: string;
-  /** What the journey is trying to achieve — read as the conversion measure. */
+  /** What the journey is trying to achieve - read as the conversion measure. */
   goal: string;
   steps: TemplateStep[];
   requiredIntegrations: string[];
@@ -492,7 +492,7 @@ export interface AutomationTrigger {
   /** The dotted key workflows subscribe to, e.g. `order.paid`. */
   eventKey: string;
   category: TriggerCategory;
-  /** The system that emits it — CRM, WhatsApp, Commerce, Webhook. */
+  /** The system that emits it - CRM, WhatsApp, Commerce, Webhook. */
   source: string;
   description: string;
   status: TriggerStatus;
@@ -527,9 +527,9 @@ export interface WorkflowRunStep {
   finishedAt?: string;
   kind: NodeKind;
   title: string;
-  /** What was acted on — "Welcome message", "24 hours", "Tag: New Lead". */
+  /** What was acted on - "Welcome message", "24 hours", "Tag: New Lead". */
   detail: string;
-  /** The event, as the log reads it — "WhatsApp Sent", "Delay Scheduled". */
+  /** The event, as the log reads it - "WhatsApp Sent", "Delay Scheduled". */
   event: string;
   status: ExecutionStatus;
   durationMs?: number;
@@ -587,8 +587,8 @@ export interface ActivityRow extends WorkflowRunStep {
  * Three levels, because two is not enough.
  *
  * An `error` makes the workflow impossible to run and blocks publishing. A
- * `warning` is something that will probably bite — an unset connection, a
- * branch that goes nowhere — and is allowed through, because sometimes it is
+ * `warning` is something that will probably bite - an unset connection, a
+ * branch that goes nowhere - and is allowed through, because sometimes it is
  * deliberate. A `recommendation` is neither: it is advice about the journey
  * rather than a defect in it, and collapsing it into "warning" is how a
  * validation panel turns into noise nobody reads.

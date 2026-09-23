@@ -25,13 +25,13 @@ import { EmailCampaignStatusBadge } from "./campaign-row";
  * The Email module's landing page.
  *
  * Four numbers, one chart, two lists. Everything on it answers "is the channel
- * working, and what happened today" — a different question from the one
+ * working, and what happened today" - a different question from the one
  * Analytics answers, and the reason this page no longer carries a rate chart, a
  * device donut and a send-time panel that the analytics tab drew a second time.
  * A metric rendered on two tabs is a metric nobody trusts, because the two
  * eventually disagree.
  *
- * Volume here, rates there. The chart below plots counts over time — the shape
+ * Volume here, rates there. The chart below plots counts over time - the shape
  * of the sending programme; the rate trend that diagnoses *why* a number moved
  * lives on Analytics, beside the funnel that explains it.
  *
@@ -210,7 +210,7 @@ export function EmailOverview() {
                     <dt className="text-sm font-medium text-text-muted">Open</dt>
                     <dd className="text-sm font-bold text-text-primary tabular-nums">
                       {campaign.delivered === 0
-                        ? "—"
+                        ? "-"
                         : formatPercent(rate(campaign.opened, campaign.delivered))}
                     </dd>
                   </div>
@@ -218,7 +218,7 @@ export function EmailOverview() {
                     <dt className="text-sm font-medium text-text-muted">Click</dt>
                     <dd className="text-sm font-bold text-text-primary tabular-nums">
                       {campaign.delivered === 0
-                        ? "—"
+                        ? "-"
                         : formatPercent(rate(campaign.clicked, campaign.delivered))}
                     </dd>
                   </div>

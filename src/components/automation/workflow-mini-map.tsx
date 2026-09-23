@@ -8,8 +8,8 @@ import { NodeIcon } from "./node-icon";
 /**
  * The small flow diagram on a workflow or template card.
  *
- * It exists because a list of workflow *names* tells you nothing — "Order
- * Journey" could be one message or nine — and the shape of the journey is the
+ * It exists because a list of workflow *names* tells you nothing - "Order
+ * Journey" could be one message or nine - and the shape of the journey is the
  * single most useful thing a card can carry. Four trunk steps and, where there
  * is one, the fork: past that a card stops being scannable and the reader
  * should open the builder instead.
@@ -85,7 +85,7 @@ export function WorkflowMiniMap({
   if (steps.length === 0) {
     return (
       <p className={cn("text-sm text-text-muted", className)}>
-        No steps yet — open the builder to add the first one.
+        No steps yet - open the builder to add the first one.
       </p>
     );
   }

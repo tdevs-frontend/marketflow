@@ -25,7 +25,7 @@ import type { WorkspaceMember } from "@/types/workspace";
  * Inviting, re-roling and removing a member.
  *
  * Every one of these is a permission change in disguise, so each says what it
- * will actually do before it does it — the role change lists what the member
+ * will actually do before it does it - the role change lists what the member
  * loses, and the removal lists what they own. Both are computed from the data
  * rather than written as copy, which is the only way they stay true.
  */
@@ -48,7 +48,7 @@ const ROLE_OPTIONS = WORKSPACE_ROLES.map((role) => ({
  * person who is already here, an invitation already in flight, or a plan that
  * has run out of seats. Each gets its own sentence.
  *
- * State is mount-scoped — the caller renders this only while it is open — so a
+ * State is mount-scoped - the caller renders this only while it is open - so a
  * cancelled invitation leaves nothing behind for the next one.
  */
 export function InviteMemberDialog({
@@ -249,7 +249,7 @@ export function ChangeRoleDialog({
          *
          * Demoting the only Owner would leave a workspace nobody can administer,
          * and handing ownership to someone else is a different decision with
-         * different consequences — it belongs in its own explicit flow.
+         * different consequences - it belongs in its own explicit flow.
          */}
         {owner ? (
           <p className="flex items-start gap-2.5 rounded-panel border border-warning-soft bg-warning-soft px-3.5 py-3 text-sm text-warning-text">
@@ -328,7 +328,7 @@ export function ChangeRoleDialog({
  * Removing a member, and deciding what happens to their work.
  *
  * The reassignment select is the point of this dialog. A member who owns
- * thirty-four leads cannot simply be deleted — those records would be
+ * thirty-four leads cannot simply be deleted - those records would be
  * ownerless, which in practice means invisible to every list filtered by owner.
  * So the dialog counts what they hold and insists on a destination.
  */
@@ -447,7 +447,7 @@ export function RemoveMemberDialog({
         )}
 
         <p className="text-sm text-text-secondary">
-          Their audit history is kept — removing someone does not erase what they
+          Their audit history is kept - removing someone does not erase what they
           did. You can invite them again later.
         </p>
       </div>
@@ -482,7 +482,7 @@ export function SuspendMemberDialog({
       confirmLabel="Suspend Member"
     >
       <p className="text-sm text-text-secondary">
-        Their role, their owned records and their history are all kept — this is
+        Their role, their owned records and their history are all kept - this is
         a pause, not a removal, and it frees their seat while they are away.
         Anything assigned to them stays assigned.
       </p>
@@ -513,7 +513,7 @@ export function CancelInviteDialog({
       confirmLabel="Cancel Invitation"
     >
       <p className="text-sm text-text-secondary">
-        Nothing is lost — you can invite {member.email} again at any time, and
+        Nothing is lost - you can invite {member.email} again at any time, and
         the seat is freed as soon as the invitation is cancelled.
       </p>
     </ConfirmDialog>

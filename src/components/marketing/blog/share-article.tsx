@@ -8,20 +8,20 @@ import { BrandIcon } from "@/components/ui/brand-icon";
  * The share row, closing an article.
  *
  * Three networks and a copy button. The three are the accounts MarketFlow
- * itself is on — see `footerSocials` — because a share row is a claim about
+ * itself is on - see `footerSocials` - because a share row is a claim about
  * where this piece is worth posting, and offering a network the product does
  * not use is furniture.
  *
  * The marks come from `BrandIcon` rather than Lucide: Lucide dropped its brand
  * icons, so `Facebook`, `Twitter` and `Linkedin` are `undefined` in the
  * version this project ships and would render nothing at all. Lucide draws the
- * one icon that is not a brand — the link.
+ * one icon that is not a brand - the link.
  *
  * `url` arrives from the server as the article's canonical address, which is
  * what the three share links carry. Copy reads `window.location.href` first,
  * so a reader who arrived with a campaign tag copies the address they are
  * actually looking at, and falls back to the canonical one when there is no
- * window — the two agree in every normal case.
+ * window - the two agree in every normal case.
  *
  * Copy is a button and the other three are links, which is the honest shape:
  * one acts on this page, three navigate away.

@@ -45,7 +45,7 @@ function WorkspaceTopBar() {
 /**
  * Everything on the glass: title bar, then four columns of application.
  *
- * The columns are sized against the *screen*, not the viewport — the monitor
+ * The columns are sized against the *screen*, not the viewport - the monitor
  * scales with its column, so a media query would be measuring the wrong box.
  * `@container` is declared on the screen in `WhatsAppWorkspaceMonitor` and
  * every panel drops or tightens off that: the inbox list goes first, then the
@@ -72,7 +72,7 @@ function WorkspaceScreen() {
  *
  * Three parts and no more: a graphite frame with a bezel thin enough that the
  * screen is what you see, an aluminium neck, and a wide flat base. The
- * hardware is meant to be read in half a second and then ignored — every
+ * hardware is meant to be read in half a second and then ignored - every
  * detail beyond that would be competing with the product it is holding.
  *
  * What makes it read as hardware rather than as a rounded card is the ratio of
@@ -88,7 +88,7 @@ function WorkspaceScreen() {
  * depth.
  *
  * Every dimension is a container query on this element rather than a media
- * query, so the whole assembly stays in proportion at any column width — the
+ * query, so the whole assembly stays in proportion at any column width - the
  * monitor is never measuring the viewport it happens to be sitting in.
  */
 export function WhatsAppWorkspaceMonitor({
@@ -128,12 +128,12 @@ export function WhatsAppWorkspaceMonitor({
       {/*
        * Stand: neck, then base.
        *
-       * Matte aluminium, not chrome — the highlight runs down the middle and
+       * Matte aluminium, not chrome - the highlight runs down the middle and
        * stops well short of white, so it reads as brushed metal catching one
        * light source rather than as a mirror.
        *
        * The neck flares, but barely: 2% a side. The obvious move is to flare it
-       * hard, and it is wrong — on a stem this short a strong taper reads as a
+       * hard, and it is wrong - on a stem this short a strong taper reads as a
        * funnel or a lampshade rather than as a machined column, and the whole
        * thing stops looking like a monitor. Real stands are all but vertical.
        *

@@ -49,7 +49,7 @@ function kpis(): CommerceKpi[] {
     {
       /* All four of these used to be two pairs: Active and Revenue Generated
          both indigo, Redemptions and Discount Given both untoned grey. The row
-         now runs violet, blue, amber, green — and the two money figures are
+         now runs violet, blue, amber, green - and the two money figures are
          deliberately the furthest apart, because one is a cost and one is a
          return and reading them as the same thing is the whole risk. */
       label: "Active Discounts",

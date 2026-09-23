@@ -38,13 +38,13 @@ import type {
  * Over a hundred permissions across eight modules is a wall if rendered flat,
  * so four things work together to keep it navigable:
  *
- *   Search        — the only realistic way to reach "Export contacts" when you
+ *   Search        - the only realistic way to reach "Export contacts" when you
  *                   already know its name. Matching groups auto-expand.
- *   Filter        — Granted / Not granted / Sensitive / Changed. "Changed" is
+ *   Filter        - Granted / Not granted / Sensitive / Changed. "Changed" is
  *                   the one that makes reviewing your own edit possible.
- *   Tiers         — the default view shows the handful of actions most roles
+ *   Tiers         - the default view shows the handful of actions most roles
  *                   differ on; destructive and rare ones sit behind Advanced.
- *   Accordions    — one group open at a time, not eight.
+ *   Accordions    - one group open at a time, not eight.
  *
  * Two layouts, one state. Above `lg` it is a real grid with the action names as
  * a header row; below it each resource becomes a card of labelled checkboxes,
@@ -96,7 +96,7 @@ export function PermissionMatrix({
    * Which actions survive the search, filter and tier controls.
    *
    * Returned per resource rather than computed in the row, so a group that ends
-   * up with nothing visible can be dropped entirely — an accordion that opens
+   * up with nothing visible can be dropped entirely - an accordion that opens
    * onto an empty panel is worse than one that is not there.
    */
   function visibleActions(resource: PermissionResource): ResourceAction[] {
@@ -175,7 +175,7 @@ export function PermissionMatrix({
             label="Show advanced permissions"
           />
           Show advanced permissions
-          <Tooltip content="Destructive and rarely-changed actions — delete, publish, export, refund and the manage permissions.">
+          <Tooltip content="Destructive and rarely-changed actions - delete, publish, export, refund and the manage permissions.">
             <span
               tabIndex={0}
               className="grid size-4 place-items-center rounded-full border border-border-strong text-xs font-bold text-text-muted"
@@ -286,7 +286,7 @@ export function PermissionGroup({
   readOnly?: boolean;
   guard?: (resource: string, action: PermissionAction, next: boolean) => string | null;
   defaultOpen?: boolean;
-  /** Search and filters override the accordion — hiding a hit helps nobody. */
+  /** Search and filters override the accordion - hiding a hit helps nobody. */
   forceOpen?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);
@@ -406,7 +406,7 @@ export function PermissionGroup({
                         aria-hidden
                         className="text-center text-sm text-border-strong"
                       >
-                        —
+                        -
                       </span>
                     );
                   }
@@ -496,7 +496,7 @@ function ResourceLabel({ resource }: { resource: PermissionResource }) {
  * The marker on a sensitive permission.
  *
  * Amber and small rather than red and loud. A matrix where thirty cells shout
- * is a matrix where none of them is heard — the badge exists to make a merchant
+ * is a matrix where none of them is heard - the badge exists to make a merchant
  * pause on the six that matter in the role they are editing, and the tooltip
  * carries the actual consequence rather than the word "sensitive" again.
  */
@@ -519,7 +519,7 @@ export function SensitiveMark({ impact }: { impact: string }) {
  * One cell.
  *
  * A refused toggle renders as a padlock with the reason in a tooltip rather
- * than a checkbox that silently does nothing — the guard exists to stop a
+ * than a checkbox that silently does nothing - the guard exists to stop a
  * specific mistake, and a control that ignores a click without explaining reads
  * as a bug.
  */
@@ -541,7 +541,7 @@ function PermissionCell({
   guard?: (resource: string, action: PermissionAction, next: boolean) => string | null;
 }) {
   const refusal = guard?.(resource.key, spec.action, !checked) ?? null;
-  const label = `${resource.label} — ${PERMISSION_ACTION_LABEL[spec.action]}`;
+  const label = `${resource.label} - ${PERMISSION_ACTION_LABEL[spec.action]}`;
 
   if (refusal) {
     return (
@@ -549,7 +549,7 @@ function PermissionCell({
         <span
           className="grid size-4.5 place-items-center rounded-[5px] border border-border-strong bg-surface-secondary text-text-muted"
           role="img"
-          aria-label={`${label} — locked. ${refusal}`}
+          aria-label={`${label} - locked. ${refusal}`}
           tabIndex={0}
         >
           <Lock className="size-2.5" aria-hidden />
@@ -565,7 +565,7 @@ function PermissionCell({
         disabled={readOnly}
         onCheckedChange={(next) => onToggle(resource.key, spec.action, next)}
         label={
-          spec.sensitive ? `${label} — sensitive. ${spec.sensitive}` : label
+          spec.sensitive ? `${label} - sensitive. ${spec.sensitive}` : label
         }
         className={cn(
           /* An unsaved edit gets a ring rather than a colour change, so the
@@ -590,7 +590,7 @@ export function PermissionLegend({ hasChanges }: { hasChanges: boolean }) {
     <p className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-meta text-text-muted">
       <span className="inline-flex items-center gap-1.5">
         <ShieldAlert className="size-3.5 text-warning-text" aria-hidden />
-        Sensitive — hover for what it allows
+        Sensitive - hover for what it allows
       </span>
       {hasChanges ? (
         <span className="inline-flex items-center gap-1.5">
@@ -603,7 +603,7 @@ export function PermissionLegend({ hasChanges }: { hasChanges: boolean }) {
       ) : null}
       <span className="inline-flex items-center gap-1.5">
         <Lock className="size-3.5" aria-hidden />
-        Locked — protected by a workspace rule
+        Locked - protected by a workspace rule
       </span>
     </p>
   );

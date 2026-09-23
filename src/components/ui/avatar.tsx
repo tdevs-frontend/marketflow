@@ -25,12 +25,12 @@ const SIZES: Record<AvatarSize, string> = {
  * The initials are deliberately monochrome rather than hashed to a colour per
  * person: a contact list of forty randomly tinted circles is the fastest way to
  * make a clean table look like a template. `tone` exists for the few places
- * where the avatar carries meaning — a channel, an agent, a platform.
+ * where the avatar carries meaning - a channel, an agent, a platform.
  *
  * `src` follows the same rule `ProductThumb` does: the *absence* of a URL is
  * what selects the fallback, so this stays a server component and 24 call sites
  * stay off the client bundle. A URL that is present but 404s shows the broken
- * image rather than the initials — recovering from that needs an `onError`, and
+ * image rather than the initials - recovering from that needs an `onError`, and
  * an `onError` needs a client boundary.
  */
 export function Avatar({
@@ -77,7 +77,7 @@ export function Avatar({
   );
 }
 
-/** Avatar plus name and a secondary line — the identity cell of a table row. */
+/** Avatar plus name and a secondary line - the identity cell of a table row. */
 export function AvatarLabel({
   name,
   secondary,

@@ -48,11 +48,11 @@ type Scope = "all" | "unread" | "unassigned" | "mine";
  * The list's scope, as tabs rather than a segmented control.
  *
  * Both were available, and they answer different questions. `SegmentedControl`
- * is chrome — the Volume/Rates switch in a chart header, read at a glance and
+ * is chrome - the Volume/Rates switch in a chart header, read at a glance and
  * never aimed at twice. This strip is the first control in the column and it
  * decides *what the list below contains*, which is the job `Tabs` does on
  * every other list in the dashboard: Products, Sales, Customers, Segments,
- * Settings. Stretching a pill track to the panel's full width was the tell —
+ * Settings. Stretching a pill track to the panel's full width was the tell -
  * no other call site does that, because the control was never a tab bar.
  */
 const SCOPE_TABS: TabItem<Scope>[] = [
@@ -62,7 +62,7 @@ const SCOPE_TABS: TabItem<Scope>[] = [
    * Unassigned is here because the Overview counts it.
    *
    * The queue panel reports "9 with no owner" and, until now, the Inbox had no
-   * way to show those nine — a number on a dashboard that the tool underneath
+   * way to show those nine - a number on a dashboard that the tool underneath
    * it could not act on. "Assigned to me" shortens to "Mine" to buy the fourth
    * tab its width in a 320px column.
    */
@@ -79,8 +79,8 @@ const CURRENT_AGENT = "Nadia Karim";
  * Two different readings that both live in the details panel, so they are kept
  * visually apart: lifecycle is who the person *is* and sits under their name,
  * conversation state is what this thread is *doing* and sits in the tile row.
- * Brand green is spent on the two that mean "worth your attention" — a VIP, and
- * a thread still open — rather than on every chip in the sidebar.
+ * Brand green is spent on the two that mean "worth your attention" - a VIP, and
+ * a thread still open - rather than on every chip in the sidebar.
  */
 const LIFECYCLE_TONE: Record<"lead" | "customer" | "vip", BadgeTone> = {
   lead: "info",
@@ -102,7 +102,7 @@ function time(value: string) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Column 1 — conversations                                                   */
+/* Column 1 - conversations                                                   */
 /* -------------------------------------------------------------------------- */
 
 function ConversationList({
@@ -206,7 +206,7 @@ function ConversationList({
                     <span className="min-w-0 flex-1">
                       <span className="flex items-baseline justify-between gap-2">
                         {/* The name is the row's subject, so it takes the body
-                            step while everything under it drops to 14/13 — an
+                            step while everything under it drops to 14/13 - an
                             unread thread then says so by weight rather than by
                             being the only legible thing in the row. */}
                         <span
@@ -240,7 +240,7 @@ function ConversationList({
                           </span>
                         ) : null}
                         {/* A closed window is the row's other actionable fact,
-                            and it never coincides with an unread count — an
+                            and it never coincides with an unread count - an
                             inbound message is what reopens the window. */}
                         {conversation.sessionOpen ? null : (
                           <Clock
@@ -262,7 +262,7 @@ function ConversationList({
 }
 
 /* -------------------------------------------------------------------------- */
-/* Column 2 — chat                                                            */
+/* Column 2 - chat                                                            */
 /* -------------------------------------------------------------------------- */
 
 function MessageState({ state }: { state?: InboxMessage["state"] }) {
@@ -343,7 +343,7 @@ function ChatWindow({
          * The window state, beside the name rather than in the composer alone.
          *
          * An agent picking a thread needs to know before they start typing
-         * whether they can type at all — finding out at the send button is how
+         * whether they can type at all - finding out at the send button is how
          * a reply gets lost.
          */}
         <Badge
@@ -395,7 +395,7 @@ function ChatWindow({
                  * a short message a single line.
                  *
                  * The stamp used to be its own block under the text, so every
-                 * bubble — "Yes please" included — cost two lines and a
+                 * bubble - "Yes please" included - cost two lines and a
                  * thread of short replies read as a column of tall boxes. As a
                  * flex item it sits in the last line's leftover width when
                  * there is any and drops to its own right-aligned row when the
@@ -475,7 +475,7 @@ function ChatWindow({
              * Two of the three buttons here had no handler at all.
              *
              * Attach stays and now behaves like every other stubbed action in
-             * the module — Import, Export, Duplicate all raise a toast: media
+             * the module - Import, Export, Duplicate all raise a toast: media
              * is a real WhatsApp message type and the composer should say so.
              * The emoji button is gone. Every platform WhatsApp runs on has an
              * emoji key on its own keyboard, so the control bought nothing even
@@ -540,7 +540,7 @@ function ChatWindow({
 }
 
 /* -------------------------------------------------------------------------- */
-/* Column 3 — contact                                                         */
+/* Column 3 - contact                                                         */
 /* -------------------------------------------------------------------------- */
 
 /**
@@ -550,7 +550,7 @@ function ChatWindow({
  * Set on the 13px metadata step rather than 14px: these are signposts between
  * blocks of content, and at body size they compete with the values they are
  * labelling. Semibold and `text-secondary` are what buy back the legibility
- * the smaller step costs — the old rule was `font-medium` on `text-muted`,
+ * the smaller step costs - the old rule was `font-medium` on `text-muted`,
  * which is the lightest weight on the palette's lightest ink.
  */
 const SECTION_HEADING =
@@ -589,7 +589,7 @@ function ContactDetails({
         {/*
          * Profile block.
          *
-         * Name, then what this person is — and nothing else. The phone number
+         * Name, then what this person is - and nothing else. The phone number
          * moved down into the contact rows below, where it sits beside the
          * email with a matching tile, because a bare number under a name reads
          * as a subtitle rather than as one of two ways to reach someone.
@@ -729,8 +729,8 @@ function ContactDetails({
           {/*
            * A note is one person writing a sentence about another, so it gets
            * a card with a rule around it rather than a tinted strip. The
-           * fixture carries the text and nothing else — no author, no
-           * timestamp — and inventing either would be worse than leaving the
+           * fixture carries the text and nothing else - no author, no
+           * timestamp - and inventing either would be worse than leaving the
            * card to the words.
            */}
           <ul className="mt-2.5 space-y-2">
@@ -797,7 +797,7 @@ function ContactDetails({
  *
  * Rather than hiding a column, the narrow layouts turn it into a view: the list
  * is the landing view, picking a conversation swaps to the thread, and details
- * open over it. Nothing becomes unreachable — the brief's rule about not
+ * open over it. Nothing becomes unreachable - the brief's rule about not
  * dropping functionality on mobile.
  */
 export function WhatsAppInbox({
@@ -925,14 +925,14 @@ export function WhatsAppInbox({
         )}
       </div>
 
-      {/* Column 3 — inline at xl */}
+      {/* Column 3 - inline at xl */}
       {active ? (
         <div className="hidden w-80 shrink-0 border-l border-border xl:block">
           <ContactDetails conversation={active} onResolve={resolve} />
         </div>
       ) : null}
 
-      {/* Column 3 — overlay below xl, so details are never lost */}
+      {/* Column 3 - overlay below xl, so details are never lost */}
       {active && detailsOpen ? (
         <>
           <button

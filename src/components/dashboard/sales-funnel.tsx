@@ -14,18 +14,18 @@ import { cn } from "@/lib/utils";
  *
  * A hue per stage, which is a deliberate reversal. This card used to draw one
  * indigo deepening downward, on the reasoning that five colours imply five
- * unrelated measures rather than one population thinning — the rule
+ * unrelated measures rather than one population thinning - the rule
  * `FUNNEL_RAMP` still follows on the analytics funnels. It holds where the
  * stages are only a shape; it stops holding here, because each band has to be
  * matched by eye to its row in the key beside it, and a hue does that where
  * five shades of one indigo do not.
  *
- * One flat token per stage — blue, teal, orange, purple, indigo. Gradients
+ * One flat token per stage - blue, teal, orange, purple, indigo. Gradients
  * were tried and taken out again: across a band only 200 units wide the second
  * stop reads as a smudge rather than as light, and five of them put ten
  * colours on a card whose job is to show one shape.
  *
- * The labels are the business phrasing — "Website visitors", not "Visitors" —
+ * The labels are the business phrasing - "Website visitors", not "Visitors" -
  * because the column has the room and a funnel stage named in one word leaves
  * the reader to guess what was counted.
  */
@@ -58,7 +58,7 @@ const CONVERSION_CHANGE = 12;
  *
  * One band per list row rather than one SVG for the whole funnel. The bands
  * and the figures beside them have to line up, and the only way to guarantee
- * that at every width is to put each pair in the same grid row — an SVG sized
+ * that at every width is to put each pair in the same grid row - an SVG sized
  * independently of the list would drift out of step the moment a label wrapped.
  * Each band stretches to its row with `preserveAspectRatio="none"`, which is
  * safe here because a trapezoid's edges stay straight under any scale.
@@ -70,7 +70,7 @@ const BAND_WIDTH = 200;
  *
  * Five of them make the 280px chart the card asks for, and matching the
  * viewBox height to the row height is what keeps `preserveAspectRatio="none"`
- * scaling horizontally only — the leader rule stays a true 1px instead of
+ * scaling horizontally only - the leader rule stays a true 1px instead of
  * thickening with the band.
  *
  * It is also what gives the figures beside the bands their air: the value and
@@ -84,13 +84,13 @@ const BAND_HEIGHT = 56;
  * to `NECK`.
  *
  * Deliberately *not* proportional to the counts, and the reference this card
- * is built from is not either — its stages read 672, 320, 200 and 152, a drop
+ * is built from is not either - its stages read 672, 320, 200 and 152, a drop
  * of more than half at the first step, while its second band is drawn at about
  * three quarters of the mouth. A funnel motif is drawn as an even cone.
  *
  * Proportional widths were tried and are wrong here for a reason worth
  * recording: visitors outnumber leads four to one, so the first band collapsed
- * to a cliff and the remaining four stood as near-parallel walls — a shape
+ * to a cliff and the remaining four stood as near-parallel walls - a shape
  * that reads as a funnel with a long straight stem rather than a taper. The
  * counts are stated beside every band, at full weight, so the silhouette is
  * free to be a motif and the figures carry the reading.
@@ -109,7 +109,7 @@ const BANDS = STAGES.map((stage, index) => {
   const top = edgeAt(index);
   const bottom = edgeAt(index + 1);
   const centre = BAND_WIDTH / 2;
-  /* Where the band's right edge sits at half height — the point the leader
+  /* Where the band's right edge sits at half height - the point the leader
      line has to start from if it is to touch the shape rather than float. */
   const midEdge = centre + (top + bottom) / 4;
 
@@ -149,8 +149,8 @@ const compact = new Intl.NumberFormat("en-US", {
  * The lifecycle as one shape, with the figures beside it rather than inside it.
  *
  * The step-by-step drop-off lines are gone. They stated the same reading three
- * ways — a percentage that continued, a count that did not, and the taper of
- * the band underneath — and four of them stacked between five stages turned a
+ * ways - a percentage that continued, a count that did not, and the taper of
+ * the band underneath - and four of them stacked between five stages turned a
  * shape you take in at a glance into a paragraph.
  *
  * Nothing is written on the bands. Two of the five fills are light enough that
@@ -171,7 +171,7 @@ export function SalesFunnel({ className }: { className?: string }) {
       {/*
         One row per stage, and the pair is centred rather than stretched.
 
-        The tracks were `9fr 11fr`, and an `fr` always fills its container — so
+        The tracks were `9fr 11fr`, and an `fr` always fills its container - so
         the funnel was pinned to the card's left edge and the labels carried
         about 80px of dead space on their right, which is what made the group
         read as top-left rather than centred. Fixed tracks plus `justify-center`
@@ -182,7 +182,7 @@ export function SalesFunnel({ className }: { className?: string }) {
         The funnel track is `minmax`, not a fixed width, because the card is
         not one width. At a 1280px viewport this card's content box is about
         346px, and with the label column at a fixed 9rem that leaves 186px for
-        the funnel — a 14rem band would overflow. At 1440px the box is 413px
+        the funnel - a 14rem band would overflow. At 1440px the box is 413px
         and 14rem fits with room either side. The range lets the shape take the
         full 224px wherever the card affords it and fall back to filling what
         is there when it does not, with no overflow at either end.
@@ -196,7 +196,7 @@ export function SalesFunnel({ className }: { className?: string }) {
         enough that fixed tracks would overflow it, and stretching is the right
         behaviour there.
 
-        No vertical gap between rows — each band's bottom edge is the next
+        No vertical gap between rows - each band's bottom edge is the next
         band's top edge, and any gap would break the silhouette back into
         stacked bars.
 
@@ -242,7 +242,7 @@ export function SalesFunnel({ className }: { className?: string }) {
             {/* Name first, figure under it.
 
                 The figure used to lead, which read as a column of numbers with
-                captions — fine when the labels were one word, wrong now they
+                captions - fine when the labels were one word, wrong now they
                 name what was counted. The stage is the subject and the count
                 is its value, so the stage goes first and the count carries the
                 weight underneath. */}
@@ -262,7 +262,7 @@ export function SalesFunnel({ className }: { className?: string }) {
         A rule and two columns, not a panel.
 
         The tinted container this briefly had made the footer a card inside a
-        card — a second surface on a page where every other conclusion is set
+        card - a second surface on a page where every other conclusion is set
         off by a border alone.
 
         `mt-5`, not `mt-auto`: the list above is `flex-1` and has already taken

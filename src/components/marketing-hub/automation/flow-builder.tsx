@@ -22,7 +22,7 @@ import { AddStepSlot, AutomationNode, FlowBranch } from "./automation-node";
  *
  * Three columns: a palette of steps, the flow itself, and an inspector for the
  * selected node. The flow is the middle column and gets the room, because that
- * is the thing being built — a builder that gives equal thirds to its chrome
+ * is the thing being built - a builder that gives equal thirds to its chrome
  * makes the canvas the smallest part of the screen.
  *
  * Selection is the interaction this stub implements end to end; adding and
@@ -135,7 +135,7 @@ export function FlowBuilder({ flow }: { flow: AutomationFlow }) {
           />
 
           {/* An insertion point immediately after the trigger, which is where a
-              step is most often added — the first message people forget. */}
+              step is most often added - the first message people forget. */}
           <AddStepSlot onAdd={() => toast("Pick a step from the palette")} />
 
           <FlowBranch

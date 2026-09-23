@@ -15,7 +15,7 @@ import type { StepProps } from "./types";
 import { blockersIn } from "./validation";
 
 /**
- * Step 7 — the last screen before something irreversible.
+ * Step 7 - the last screen before something irreversible.
  *
  * It states the consequence in plain numbers rather than restating the form,
  * and it offers a test send first. The test is the only thing on this screen
@@ -66,7 +66,7 @@ export function SendStep({
                 blockers.length === 1 ? "" : "s"
               } must be fixed before this can ${noun}`
             : scheduled
-              ? `Ready to schedule for ${draft.date || "—"}`
+              ? `Ready to schedule for ${draft.date || "-"}`
               : `Ready to ${noun} now`}
         </p>
 
@@ -78,7 +78,7 @@ export function SendStep({
                 {derived.accounts.length} account
                 {derived.accounts.length === 1 ? "" : "s"}
               </span>{" "}
-              across {derived.platforms.join(", ") || "—"}
+              across {derived.platforms.join(", ") || "-"}
               {scheduled ? ` at ${draft.time} ${draft.timezone}.` : " as soon as you launch."}
             </>
           ) : (
@@ -337,7 +337,7 @@ function TestDialog({
 
         <p className="flex items-start gap-2 rounded-panel bg-surface-secondary px-3.5 py-2.5 text-sm font-medium text-text-secondary">
           <Clock className="mt-0.5 size-3.5 shrink-0 text-text-muted" aria-hidden />
-          A test ignores the schedule, quiet hours and the frequency cap — it
+          A test ignores the schedule, quiet hours and the frequency cap - it
           sends immediately to the one address above.
         </p>
       </div>

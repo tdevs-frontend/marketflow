@@ -9,7 +9,7 @@ import type { Webhook } from "@/types/integration";
  * The workspace's webhook endpoints, as one register.
  *
  * The same argument as `lib/api-key-store`, for the same reason. Two screens
- * list these — Integrations → Webhooks, which is the full surface with delivery
+ * list these - Integrations → Webhooks, which is the full surface with delivery
  * history and a detail drawer, and Settings → API & Developer, which is where
  * somebody looks when they are already in Settings. Both render the same
  * `WebhookTable` over these rows, so pausing an endpoint on one pauses it on
@@ -62,7 +62,7 @@ export function updateWebhook(id: string, patch: Partial<Webhook>) {
  * Deletes an endpoint.
  *
  * Unlike an API key, which is kept as a revoked row, a webhook is removed
- * outright — there is no credential here whose history anybody audits, and a
+ * outright - there is no credential here whose history anybody audits, and a
  * permanently listed dead endpoint is just a row that has to be explained to
  * every new developer.
  */

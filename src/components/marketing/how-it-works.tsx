@@ -5,11 +5,11 @@ import { BrandIcon } from "@/components/ui/brand-icon";
 import { cn } from "@/lib/utils";
 
 /**
- * How it works — one customer, eight steps, from the campaign click to the
+ * How it works - one customer, eight steps, from the campaign click to the
  * revenue line, with the module that owns each step.
  *
  * Four across from `lg`, two from `sm`, one column on a phone. The dashed
- * connector and its arrow run from every step to the one on its right — see
+ * connector and its arrow run from every step to the one on its right - see
  * `CONNECTOR_VISIBILITY`. A phone's single column has no step to the right,
  * so it has no connectors.
  *
@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
  * `email` and `whatsapp-brand`; orange and pink have no ramp of their own, so
  * their two faces are written out here once, in `TONES`.
  *
- * The icons are drawn duotone — a soft fill under the stroke — which Lucide
+ * The icons are drawn duotone - a soft fill under the stroke - which Lucide
  * cannot do, so they are inline SVG. They take `currentColor`, so a tone's ink
  * is the only thing that paints them.
  */
@@ -439,8 +439,8 @@ export function HowItWorks() {
       </div>
 
       <div className="custom-container">
-        {/* Same header as `SolutionsSection` directly above it — pill, ramp,
-            gradient phrase and subheading — so the two read as one page. */}
+        {/* Same header as `SolutionsSection` directly above it - pill, ramp,
+            gradient phrase and subheading - so the two read as one page. */}
         <header className="section-title-space mx-auto max-w-3xl text-center">
           <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
             <Settings className="size-4 text-primary" aria-hidden />
@@ -453,7 +453,7 @@ export function HowItWorks() {
           </h2>
 
           <p className="mx-auto mt-5 max-w-2xl text-base leading-[1.7] text-text-secondary text-pretty">
-            See how a customer moves through MarketFlow — from a campaign click
+            See how a customer moves through MarketFlow - from a campaign click
             to a completed order and revenue tracked, all in one connected
             workflow.
           </p>

@@ -26,7 +26,7 @@ export interface CampaignHealth {
  * One number for "is the campaign programme all right".
  *
  * Three weighted parts, because a single rate always flatters something.
- * Delivery carries the most (0.45) — a campaign that does not arrive has
+ * Delivery carries the most (0.45) - a campaign that does not arrive has
  * failed at the only thing it had to do. Engagement is next (0.30) and is the
  * part a marketer can actually move. Reliability (0.25) is the share of
  * campaigns that did not fail outright, which is what stops a programme with a

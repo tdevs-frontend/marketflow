@@ -58,7 +58,7 @@ interface DrawerNote {
  *
  * The stage selector lives on Overview rather than in the footer because
  * moving a lead is the most common thing done here and it is not a commitment
- * — Won, Lost and Delete are, so they sit in the footer.
+ * - Won, Lost and Delete are, so they sit in the footer.
  *
  * The Activity tab shows the contact's history, not the deal's. A deal's
  * history is the history of talking to the person, and splitting them means
@@ -96,7 +96,7 @@ export function LeadDrawer({
     { id: string; title: string; dueAt: string }[]
   >([]);
 
-  /* Reset per lead, during render rather than in an effect — the house
+  /* Reset per lead, during render rather than in an effect - the house
      convention, so the drawer never paints one deal's notes under another's
      name. */
   const [subject, setSubject] = useState(lead?.id ?? null);
@@ -282,7 +282,7 @@ export function LeadDrawer({
                     value={
                       lead.expectedCloseDate
                         ? formatDate(lead.expectedCloseDate)
-                        : "—"
+                        : "-"
                     }
                   />
                 </dl>

@@ -6,7 +6,7 @@ import { INTEGRATION_PAGES } from "@/constants/integrations";
  *
  * The strip renders on every page in the module, the hub included. The sidebar
  * carries one row for all seven, so this is the only thing that says which
- * module you are inside and the only way to move sideways within it — a
+ * module you are inside and the only way to move sideways within it - a
  * merchant who opens WhatsApp from a card needs to reach Email without going
  * back, and the hub needs to stay visible as the place they came from.
  *

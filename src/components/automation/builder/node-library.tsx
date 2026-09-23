@@ -14,7 +14,7 @@ import { NodeIcon } from "../node-icon";
  *
  * Two ways to add a node, because the two input methods want different things:
  * dragging onto the canvas places a node exactly where the reader is looking,
- * and clicking appends it under the selection — which is the only path that
+ * and clicking appends it under the selection - which is the only path that
  * works on a touch screen, and the faster one even with a mouse when the graph
  * is a straight line.
  *

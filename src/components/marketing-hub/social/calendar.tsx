@@ -27,7 +27,7 @@ import { PostStatusBadge, PostThumb, STATUS_RULE } from "./post-status";
 import { PostComposer } from "./post-composer";
 
 /**
- * The content calendar — the Social Planner's landing page.
+ * The content calendar - the Social Planner's landing page.
  *
  * Dates are handled as local-naive strings, matching the fixtures: a content
  * calendar is read in the publisher's own timezone, and running these through
@@ -101,7 +101,7 @@ const dayLabel = (date: Date) =>
  * A week's span, naming the month only where it changes.
  *
  * "29 Sep – 5 Oct" for a week crossing a boundary, "8 – 14 September" for one
- * inside a single month. The naive form — first date, last date, last month —
+ * inside a single month. The naive form - first date, last date, last month -
  * renders a cross-boundary week as "29–5 October", which is simply wrong.
  */
 function weekLabel(from: Date, to: Date): string {
@@ -133,7 +133,7 @@ function weekLabel(from: Date, to: Date): string {
  * real one lights up on hydration.
  *
  * `useSyncExternalStore` rather than an effect because that is exactly what it
- * is for — a value with different server and client snapshots — and it keeps
+ * is for - a value with different server and client snapshots - and it keeps
  * the component free of a state-set in an effect.
  */
 const NEVER_CHANGES = () => () => {};
@@ -151,11 +151,11 @@ function useTodayKey(): string {
 /* -------------------------------------------------------------------------- */
 
 /**
- * A post inside a month cell — the tightest form the card takes.
+ * A post inside a month cell - the tightest form the card takes.
  *
  * Everything a planning glance needs, in about 90px of width: what it looks
  * like, where it goes, what it is called, when, and how far along it is. The
- * thumbnail earns its 24px because a month grid is scanned, not read — the
+ * thumbnail earns its 24px because a month grid is scanned, not read - the
  * picture is what tells two Instagram posts apart before either title is
  * legible. Status stays on the left rule rather than taking a badge, which is
  * the only part of the card there is genuinely no room for.
@@ -177,7 +177,7 @@ function MonthCard({ post, onSelect }: { post: SocialPost; onSelect: () => void 
           {post.title}
         </span>
         {/* Time and platforms share the second line rather than taking a
-            column each — a month cell is about 110px wide and a third column
+            column each - a month cell is about 110px wide and a third column
             is what pushes the title down to two characters. */}
         <span className="mt-0.5 flex items-center gap-1">
           <span className="text-xs text-text-muted tabular-nums">
@@ -338,7 +338,7 @@ export function SocialCalendar() {
   }
 
   /*
-   * The week label has to name both months when the week straddles them —
+   * The week label has to name both months when the week straddles them -
    * "29 Sep – 5 Oct", not "29–5 October". Same for a year boundary.
    */
   const stepperLabel =
@@ -482,7 +482,7 @@ export function SocialCalendar() {
                   className={cn(
                     "min-h-24 space-y-1 border-b border-r border-border p-1.5 sm:min-h-28",
                     /* No right border on the last column, no bottom on the
-                       last row — the card's own border closes the grid. */
+                       last row - the card's own border closes the grid. */
                     (index + 1) % 7 === 0 && "border-r-0",
                     index >= 35 && "border-b-0",
                     !inMonth && "bg-surface-secondary/40",
@@ -621,7 +621,7 @@ export function SocialCalendar() {
           {(byDay.get(dayKey(anchor)) ?? []).length === 0 ? (
             <EmptyState
               title="Nothing scheduled for this day"
-              description="An empty day in a content calendar is a decision, not a gap — but if it was not deliberate, now is the time to fill it."
+              description="An empty day in a content calendar is a decision, not a gap - but if it was not deliberate, now is the time to fill it."
               action={
                 <Button size="sm" onClick={() => setComposeOpen(true)}>
                   <Plus aria-hidden />
@@ -663,7 +663,7 @@ export function SocialCalendar() {
           selected ? (
             <>
               {/* Every control here now does what it says. "Edit post" used to
-                  close the dialog and nothing else — the one action the card
+                  close the dialog and nothing else - the one action the card
                   exists to offer was the one that did not work. */}
               <Button
                 variant="outline"
@@ -804,7 +804,7 @@ export function SocialCalendar() {
       >
         <p className="text-sm text-text-secondary">
           {pendingDelete?.status === "published"
-            ? "The post stays live on the platform — this removes it from the calendar and from MarketFlow's reporting only."
+            ? "The post stays live on the platform - this removes it from the calendar and from MarketFlow's reporting only."
             : "It disappears from the calendar and will not be published."}
         </p>
       </ConfirmDialog>

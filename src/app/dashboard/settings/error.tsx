@@ -13,7 +13,7 @@ import { Card } from "@/components/ui/card";
  * is the honest shape of the failure: if the account record cannot be read,
  * Profile has nothing to show and neither does the status line on the overview.
  * The navigation rail lives in the layout and survives, so the reader is not
- * stranded — they can move to another section while this one is broken.
+ * stranded - they can move to another section while this one is broken.
  *
  * `reset` is a real retry. It re-renders the segment, which re-runs whatever
  * threw; a button that only reloaded the page would throw away the rest of the
@@ -21,7 +21,7 @@ import { Card } from "@/components/ui/card";
  *
  * The message deliberately does not include `error.message`. A thrown string
  * from deep in a render is not a sentence anybody can act on, and the digest is
- * what actually identifies the failure in a log — so that is what is offered,
+ * what actually identifies the failure in a log - so that is what is offered,
  * and only when the server produced one.
  */
 export default function SettingsError({
@@ -49,7 +49,7 @@ export default function SettingsError({
       </h2>
 
       <p className="max-w-sm text-sm text-text-secondary">
-        Something went wrong reading your settings. Nothing has been changed —
+        Something went wrong reading your settings. Nothing has been changed -
         try again, or pick another section from the menu.
       </p>
 

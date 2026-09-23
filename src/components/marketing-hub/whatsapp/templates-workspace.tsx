@@ -36,7 +36,7 @@ export function TemplatesWorkspace() {
   const [category, setCategory] = useState<TemplateCategory | typeof ALL>(ALL);
   const [status, setStatus] = useState<TemplateStatus | typeof ALL>(ALL);
   const [language, setLanguage] = useState<string>(ALL);
-  /* The library shelf, separate from the Meta category — see
+  /* The library shelf, separate from the Meta category - see
      `TEMPLATE_USE_CASES`. */
   const [useCase, setUseCase] = useState<TemplateUseCase | typeof ALL>(ALL);
 

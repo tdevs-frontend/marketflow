@@ -18,11 +18,11 @@ import { EventKeyList, EventPicker } from "./event-picker";
  * things you can do to one.
  *
  * The create dialog is two-phase on purpose: the signing secret is generated
- * server-side and returned exactly once, so the dialog cannot close on save —
+ * server-side and returned exactly once, so the dialog cannot close on save -
  * it has to stay open long enough for the merchant to copy it. Closing before
  * that point is the failure case the second phase exists to prevent.
  *
- * Its state is mount-scoped — the parent renders it only while it is open — so
+ * Its state is mount-scoped - the parent renders it only while it is open - so
  * closing discards both the draft and the secret without an effect that resets
  * six fields one at a time.
  */
@@ -60,7 +60,7 @@ export function CreateWebhookDialog({
 
   const urlError =
     touched && url.trim() && !url.trim().startsWith("https://")
-      ? "The endpoint must be HTTPS — deliveries carry a signature and payload data."
+      ? "The endpoint must be HTTPS - deliveries carry a signature and payload data."
       : undefined;
   const nameError = touched && !name.trim() ? "Give the endpoint a name." : undefined;
   const eventsError =
@@ -117,7 +117,7 @@ export function CreateWebhookDialog({
           <OneTimeSecret
             secret={created.secretReveal}
             label="Signing secret"
-            note="MarketFlow signs every delivery with this. Store it in your application before closing — it can be regenerated later, but doing so invalidates the old one."
+            note="MarketFlow signs every delivery with this. Store it in your application before closing - it can be regenerated later, but doing so invalidates the old one."
           />
 
           <dl className="space-y-2.5">
@@ -255,7 +255,7 @@ export function DeleteWebhookDialog({
   );
 }
 
-/** Regenerating a signing secret — reversible, but it breaks every consumer. */
+/** Regenerating a signing secret - reversible, but it breaks every consumer. */
 export function RegenerateSecretDialog({
   webhook,
   open,

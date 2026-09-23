@@ -34,7 +34,7 @@ import type { SummaryFact } from "./connection-summary";
  * on the repair. A page that only rendered a red badge would be accurate and
  * useless.
  *
- * Like Email, it is written against the provider abstraction — Twilio, Vonage
+ * Like Email, it is written against the provider abstraction - Twilio, Vonage
  * and a custom HTTP gateway all render from the same saved credential list.
  */
 
@@ -80,7 +80,7 @@ export function SmsIntegration() {
    * The test send.
    *
    * It fails for the reason the connection is actually failing rather than
-   * inventing a second one — a merchant who sees "invalid number" while their
+   * inventing a second one - a merchant who sees "invalid number" while their
    * token is expired goes looking in the wrong place.
    */
   function runConnectionTest(): TestOutcome {
@@ -103,7 +103,7 @@ export function SmsIntegration() {
       return {
         ok: false,
         message: "That is not a valid phone number.",
-        detail: "Use international format, including the country code — for example +8801712345678.",
+        detail: "Use international format, including the country code - for example +8801712345678.",
       };
     }
     if (broken) {
@@ -123,7 +123,7 @@ export function SmsIntegration() {
   const facts: SummaryFact[] = [
     { label: "Provider", value: integration.provider?.name ?? "Not selected" },
     { label: "Sender ID", value: senderId },
-    { label: "Default Country", value: COUNTRIES.find((c) => c.value === country)?.label ?? "—" },
+    { label: "Default Country", value: COUNTRIES.find((c) => c.value === country)?.label ?? "-" },
     {
       label: "Balance",
       value: `$${BALANCE.toFixed(2)}`,
@@ -248,7 +248,7 @@ export function SmsIntegration() {
         <Field
           label="Sender ID"
           htmlFor="sms-sender-id"
-          hint="Alphanumeric IDs are not supported in every country — numeric senders are used as a fallback."
+          hint="Alphanumeric IDs are not supported in every country - numeric senders are used as a fallback."
         >
           <Input
             id="sms-sender-id"

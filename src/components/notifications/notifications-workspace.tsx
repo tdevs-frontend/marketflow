@@ -16,7 +16,7 @@ import type { FeedNotification } from "@/types/notification";
 import { NotificationItem } from "./notification-item";
 
 /**
- * Every notification, paged — the archive behind the header bell.
+ * Every notification, paged - the archive behind the header bell.
  *
  * The bell and this page are one system seen at two distances. They read the
  * same slice, render the same `NotificationItem`, and share one unread count:
@@ -24,13 +24,13 @@ import { NotificationItem } from "./notification-item";
  * because there is only ever one list. A second store for "all notifications"
  * is how a product ends up showing 8 in the header and 7 on the page.
  *
- * What this page adds is what a panel 368px wide cannot hold — the third line
+ * What this page adds is what a panel 368px wide cannot hold - the third line
  * of context, room to breathe, search, and pages. What it deliberately does
  * *not* add is a filter rail. Two controls, both of which answer a question a
  * reader actually arrives with: "where is the one about the order" (search) and
  * "what still needs me" (unread). A module filter on top of those would be a
  * third way to narrow a list that is already forty-eight rows long, and the
- * search box covers it — typing "whatsapp" matches the module as surely as a
+ * search box covers it - typing "whatsapp" matches the module as surely as a
  * chip would.
  */
 
@@ -73,7 +73,7 @@ export function NotificationsWorkspace() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   /*
    * Clamped rather than reset. Narrowing the list while on page 5 should land
-   * on the last page that still exists, not throw the reader back to the top —
+   * on the last page that still exists, not throw the reader back to the top -
    * and clamping during render means it never paints an empty page first.
    */
   const current = Math.min(page, totalPages);
@@ -91,7 +91,7 @@ export function NotificationsWorkspace() {
    *
    * Both, and in that order. A reader who lands on the orders page and comes
    * back to find the row still bold learns the count is decorative. `href` is
-   * nullable and checked — a row with nowhere real to go marks itself read and
+   * nullable and checked - a row with nowhere real to go marks itself read and
    * stays put, which is better than navigating somewhere that does not exist.
    *
    * The row keeps its position either way. Re-sorting read items to the bottom

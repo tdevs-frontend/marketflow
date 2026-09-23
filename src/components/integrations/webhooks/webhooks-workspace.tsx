@@ -129,7 +129,7 @@ export function WebhooksWorkspace() {
 
   function toggle(webhook: Webhook) {
     const paused = webhook.status === "paused";
-    /* A previously failing endpoint comes back as failing, not as healthy —
+    /* A previously failing endpoint comes back as failing, not as healthy -
        enabling it does not repair whatever was timing out. */
     const next: WebhookStatus = paused
       ? webhook.failures24h > 0

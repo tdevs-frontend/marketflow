@@ -3,7 +3,7 @@
  *
  * Data lives here rather than in the page so the tiers can be read and edited
  * without touching layout, and so the yearly price is *derived* from the
- * monthly one — a hand-written second number is how a pricing page ends up
+ * monthly one - a hand-written second number is how a pricing page ends up
  * advertising a discount it does not actually give.
  */
 
@@ -16,7 +16,7 @@ export interface Plan {
   audience: string;
   /**
    * Monthly price in whole currency units, or `null` for a quoted plan. The
-   * yearly figure is computed from this — see `yearlyMonthly`.
+   * yearly figure is computed from this - see `yearlyMonthly`.
    */
   monthly: number | null;
   features: string[];
@@ -36,7 +36,7 @@ export const yearlyMonthly = (monthly: number) =>
   Math.round(monthly * (1 - YEARLY_DISCOUNT));
 
 /**
- * What one billing period of a tier costs — the number that is charged.
+ * What one billing period of a tier costs - the number that is charged.
  *
  * Distinct from `yearlyMonthly`, which is the *per-month figure a yearly plan
  * is advertised at*: the card says "$39 / month, billed yearly" and the charge
@@ -133,7 +133,7 @@ export const PLANS: Plan[] = [
 ];
 
 /**
- * The four capability areas every tier draws from — the same four the sidebar
+ * The four capability areas every tier draws from - the same four the sidebar
  * is organised around, so the pricing page and the product agree on what
  * MarketFlow is.
  */
@@ -194,7 +194,7 @@ export const PRICING_ASSURANCES = [
 export const PRICING_FAQS = [
   {
     q: "Can I change plans later?",
-    a: "Yes. You can move up or down a tier at any point from workspace billing, and the change takes effect on your next invoice — you are never locked into the plan you started on.",
+    a: "Yes. You can move up or down a tier at any point from workspace billing, and the change takes effect on your next invoice - you are never locked into the plan you started on.",
   },
   {
     q: "How much does yearly billing save?",
@@ -202,7 +202,7 @@ export const PRICING_FAQS = [
   },
   {
     q: "What happens if I outgrow my plan?",
-    a: "Nothing stops working. You will see the limit in your workspace before you reach it, and upgrading takes effect immediately — your contacts, conversations, campaigns and history carry across untouched.",
+    a: "Nothing stops working. You will see the limit in your workspace before you reach it, and upgrading takes effect immediately - your contacts, conversations, campaigns and history carry across untouched.",
   },
   {
     q: "What is included in every plan?",
@@ -210,7 +210,7 @@ export const PRICING_FAQS = [
   },
   {
     q: "Why is Enterprise quoted rather than priced?",
-    a: "Because the things Enterprise customers need — volume commitments, multiple workspaces, security review, onboarding — are not the same for any two of them. A number on this page would be a guess, so it is a conversation instead.",
+    a: "Because the things Enterprise customers need - volume commitments, multiple workspaces, security review, onboarding - are not the same for any two of them. A number on this page would be a guess, so it is a conversation instead.",
   },
   {
     q: "Can I cancel at any time?",

@@ -5,14 +5,14 @@ import { FaqAccordion } from "./faq-accordion";
 /**
  * The billing questions, under the plans.
  *
- * Laid out exactly like the FAQ on `/features` — heading on a left rail, list
- * on the right — so a visitor who has seen one recognises the other. The copy
+ * Laid out exactly like the FAQ on `/features` - heading on a left rail, list
+ * on the right - so a visitor who has seen one recognises the other. The copy
  * is the only thing that differs, and it is billing rather than product: by
  * the time somebody is reading this they have already decided what the thing
  * does and are working out what it costs them.
  *
  * On the tinted ground, which separates it from the white plans section above
- * and from the closing CTA panel below — the same white/tint alternation the
+ * and from the closing CTA panel below - the same white/tint alternation the
  * rest of the marketing pages use to mark a seam.
  */
 export function PricingFaq() {

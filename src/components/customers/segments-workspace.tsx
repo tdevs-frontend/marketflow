@@ -78,7 +78,7 @@ const USAGE = [
   { value: "unused", label: "Not used" },
 ];
 
-/** Dynamic re-evaluates, static is frozen — a tone difference, not a colour. */
+/** Dynamic re-evaluates, static is frozen - a tone difference, not a colour. */
 function TypeBadge({ type }: { type: CustomerSegment["type"] }) {
   return type === "dynamic" ? (
     <Badge tone="info">
@@ -134,7 +134,7 @@ function kpis(segments: CustomerSegment[]): Kpi[] {
  *
  * The audience count sits directly under the rules and updates as they are
  * edited, because "how many people is this" is the question the whole screen
- * exists to answer — putting it behind a Save button makes the builder a
+ * exists to answer - putting it behind a Save button makes the builder a
  * guessing game.
  */
 function SegmentBuilderDialog({
@@ -155,7 +155,7 @@ function SegmentBuilderDialog({
   const [submitted, setSubmitted] = useState(false);
 
   /* Keyed on the subject so opening a different segment reloads the draft,
-     during render rather than in an effect — the house convention. */
+     during render rather than in an effect - the house convention. */
   const subject = open ? (segment?.id ?? "new") : null;
   const [loaded, setLoaded] = useState<string | null>(null);
   if (subject !== loaded) {
@@ -255,9 +255,9 @@ function SegmentBuilderDialog({
             options={[
               {
                 value: "dynamic",
-                label: "Dynamic — re-evaluated on every send",
+                label: "Dynamic - re-evaluated on every send",
               },
-              { value: "static", label: "Static — a fixed list of contacts" },
+              { value: "static", label: "Static - a fixed list of contacts" },
             ]}
             disabled={readOnly}
           />
@@ -573,8 +573,8 @@ function SegmentDrawer({
  * Segments, under Customers.
  *
  * A table rather than the card grid the Marketing module uses, because the
- * question here is comparative — which segments exist, how big are they, what
- * still uses them — and cards make you read twelve boxes to answer it. Both
+ * question here is comparative - which segments exist, how big are they, what
+ * still uses them - and cards make you read twelve boxes to answer it. Both
  * read the same segments; only the framing differs.
  */
 export function CustomerSegmentsWorkspace() {
@@ -815,7 +815,7 @@ export function CustomerSegmentsWorkspace() {
                         align="right"
                         className="text-sm text-text-secondary tabular-nums"
                       >
-                        {conditions || "—"}
+                        {conditions || "-"}
                       </TD>
                       <TD className="text-sm whitespace-nowrap text-text-muted">
                         {formatRelativeTime(segment.updatedAt)}
@@ -896,7 +896,7 @@ export function CustomerSegmentsWorkspace() {
               </TBody>
             </Table>
 
-            {/* Below `lg` the same rows as cards — a seven-column table on a
+            {/* Below `lg` the same rows as cards - a seven-column table on a
                 phone is a horizontal scroll nobody completes. */}
             <ul className="mt-4 space-y-2.5 lg:hidden">
               {rows.map((segment) => {
@@ -961,8 +961,8 @@ export function CustomerSegmentsWorkspace() {
             {/*
               * Real pagination, not just a count.
               *
-              * The list was already being sliced to a page — `totalPages` was
-              * computed and then never rendered — so anything past the first
+              * The list was already being sliced to a page - `totalPages` was
+              * computed and then never rendered - so anything past the first
               * page was unreachable and the footer reported a total the table
               * was not showing. The shared component fixes both.
               */}
@@ -1010,7 +1010,7 @@ export function CustomerSegmentsWorkspace() {
         confirmLabel="Delete segment"
       >
         <p className="text-sm text-text-secondary">
-          The contacts stay — a segment is a saved filter, not a container.
+          The contacts stay - a segment is a saved filter, not a container.
         </p>
 
         {/* The dependency warning. Deleting a segment two automations target is

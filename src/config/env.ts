@@ -1,5 +1,5 @@
 /**
- * Client-safe environment values. Only `NEXT_PUBLIC_*` variables belong here —
+ * Client-safe environment values. Only `NEXT_PUBLIC_*` variables belong here -
  * server-only secrets must be read directly from `process.env` in server code.
  */
 export const env = {

@@ -15,7 +15,7 @@ import { cn, isActiveRoute } from "@/lib/utils";
  * else here is static, and the two buttons are links, so the cost is one
  * `usePathname` on a bar that is already sticky on every marketing page.
  *
- * The active state is brand ink and nothing else — no rule, no underline. The
+ * The active state is brand ink and nothing else - no rule, no underline. The
  * signal is carried by colour alone, which is why `aria-current` is set:
  * colour is not a cue every reader gets, and the attribute is what tells a
  * screen reader which item is the current page.

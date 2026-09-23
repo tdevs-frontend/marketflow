@@ -40,7 +40,7 @@ import {
 } from "./use-workspace-permissions";
 
 /**
- * Workspace Settings — how this workspace is configured.
+ * Workspace Settings - how this workspace is configured.
  *
  * Five sections as tabs, following the pattern the product's own Settings page
  * already uses. They are tabs rather than sidebar entries because they are all
@@ -50,7 +50,7 @@ import {
  *
  * Nothing personal lives here. Profile, notifications and password belong to
  * whoever is signed in and already have a home. Nothing platform-level lives
- * here either — this configures one merchant's workspace and nothing beyond it.
+ * here either - this configures one merchant's workspace and nothing beyond it.
  *
  * Saving is per section with one shared bar. A merchant editing branding should
  * not be told they have unsaved changes in Defaults, and a single Save for
@@ -91,7 +91,7 @@ export function WorkspaceSettingsForm() {
    * Settings → General edits the same workspace name, timezone, currency,
    * business details and default senders that this form does. While each screen
    * held its own `useState(WORKSPACE_SETTINGS)`, the same field could give two
-   * different answers depending on which route you arrived by — and nothing on
+   * different answers depending on which route you arrived by - and nothing on
    * either screen told you which one to believe. `draft` stays local, because
    * that is what Discard rewinds to and what the unsaved-changes guard is
    * guarding.
@@ -105,7 +105,7 @@ export function WorkspaceSettingsForm() {
    * "Saved" belongs to the section that was saved, not to the page: a merchant
    * who saved Branding an hour ago and is now editing Defaults should not be
    * told Defaults is saved. `savedAt` is the receipt, `saveError` the last
-   * failure — both keyed by section for the same reason.
+   * failure - both keyed by section for the same reason.
    */
   const [savedAt, setSavedAt] = useState<Partial<Record<TabValue, string>>>({});
   const [saveError, setSaveError] = useState<Partial<Record<TabValue, string>>>({});
@@ -146,8 +146,8 @@ export function WorkspaceSettingsForm() {
      * The failure path is real, not decorative.
      *
      * A settings form that can only succeed teaches a merchant to assume the
-     * save worked. A slug collision is the most likely genuine rejection here —
-     * it is the one field another workspace could already be using — so it is
+     * save worked. A slug collision is the most likely genuine rejection here -
+     * it is the one field another workspace could already be using - so it is
      * the one modelled, and it reports against the field rather than as a
      * detached banner.
      */
@@ -276,7 +276,7 @@ export function WorkspaceSettingsForm() {
       {/*
        * The save bar, sticky to the bottom of the viewport while dirty.
        *
-       * It appears only when there is something to save — a permanently pinned
+       * It appears only when there is something to save - a permanently pinned
        * bar eats 64px of every settings screen to say "nothing has changed".
        */}
       {editable && dirty ? (
@@ -340,7 +340,7 @@ export function WorkspaceSettingsForm() {
  * Section-scoped validation.
  *
  * Only the open tab is checked, so a half-finished Business address does not
- * block a Branding save. Each message says what is wrong with *this* field —
+ * block a Branding save. Each message says what is wrong with *this* field -
  * "Use lowercase letters, numbers and hyphens" rather than "Invalid".
  */
 function validate(settings: WorkspaceSettings, section: SettingsSection): Errors {
@@ -652,7 +652,7 @@ function BrandingSection({
       return;
     }
     onChange({ logoName: file.name });
-    toast("Logo ready — save to apply it.", "success");
+    toast("Logo ready - save to apply it.", "success");
   }
 
   return (
@@ -669,7 +669,7 @@ function BrandingSection({
               aria-hidden
               className="grid size-16 shrink-0 place-items-center rounded-panel border border-border bg-surface-secondary text-meta font-bold text-text-muted"
             >
-              {value.logoName ? "LOGO" : "—"}
+              {value.logoName ? "LOGO" : "-"}
             </span>
 
             <div className="min-w-0 flex-1">
@@ -761,7 +761,7 @@ function BrandingSection({
           </Field>
         </div>
 
-        {/* The preview is the point of the sender-name field — a merchant
+        {/* The preview is the point of the sender-name field - a merchant
             cannot picture "From: name" without seeing it assembled. */}
         <div className="rounded-panel border border-border bg-surface-secondary px-3.5 py-3">
           <p className="text-meta font-medium text-text-muted">Inbox preview</p>
@@ -769,7 +769,7 @@ function BrandingSection({
             {value.senderName || "Sender name"}
           </p>
           <p className="text-sm text-text-muted">
-            Your order is on its way — track it here
+            Your order is on its way - track it here
           </p>
         </div>
       </CardBody>
@@ -778,7 +778,7 @@ function BrandingSection({
 }
 
 /**
- * Defaults — the section that saves the most clicks downstream.
+ * Defaults - the section that saves the most clicks downstream.
  *
  * Every option is populated from the modules that own it: the lead owner list
  * is the active members, the senders come from the connected integrations. A

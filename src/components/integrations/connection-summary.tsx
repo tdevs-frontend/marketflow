@@ -9,7 +9,7 @@ import { IntegrationStatusBadge } from "./integration-badges";
 export interface SummaryFact {
   label: string;
   value: ReactNode;
-  /** A second line under the value — what it is measured over, or a caveat. */
+  /** A second line under the value - what it is measured over, or a caveat. */
   hint?: string;
 }
 
@@ -17,7 +17,7 @@ export interface SummaryFact {
  * The card a detail page opens on: who this connection is, and the handful of
  * facts that identify it.
  *
- * Identity only — the numbers live in the KPI row below, because "Business
+ * Identity only - the numbers live in the KPI row below, because "Business
  * Account ID" and "Messages Today" answer different questions and a merchant
  * checking one is not reading the other. Mixing them produced a nine-cell grid
  * where nothing stood out.

@@ -21,7 +21,7 @@ export interface FaqEntry {
  * drifts on the first change to either page.
  *
  * `features-faq` still carries its own copy of this and is deliberately
- * untouched — it is on a different route, and migrating it belongs in a change
+ * untouched - it is on a different route, and migrating it belongs in a change
  * that can be reviewed against `/features`.
  *
  * A client component: this was a `<details>` set until the open and close had
@@ -29,7 +29,7 @@ export interface FaqEntry {
  * there is no height to interpolate; `::details-content` and
  * `interpolate-size` would do it natively but are not in Safari yet. What that
  * costs is the free accessibility `<details>` came with, so it is paid back by
- * hand — `aria-expanded` and `aria-controls` on the button, the panel labelled
+ * hand - `aria-expanded` and `aria-controls` on the button, the panel labelled
  * by it, and `inert` while it is closed so its text is neither read out nor
  * tabbed into at zero height.
  */
@@ -64,7 +64,7 @@ function FaqItem({
   const panelId = `${id}-answer`;
 
   /*
-   * Measured from the content, never from the panel — the panel is the element
+   * Measured from the content, never from the panel - the panel is the element
    * being clamped, so asking it its height is asking it what we just told it.
    *
    * A `ResizeObserver` rather than a measurement per toggle, because the number
@@ -111,7 +111,7 @@ function FaqItem({
          * A plus that merely rotates lands on a cross, and one swapped for a
          * minus outright is the jump this was meant to remove.
          *
-         * Fixed in both states — the border, the bed and the glyph all change
+         * Fixed in both states - the border, the bed and the glyph all change
          * on open and the box does not, which keeps the row from shifting
          * under the cursor mid-click.
          *

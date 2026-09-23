@@ -52,11 +52,11 @@ import { FilterTabs, type FilterTab } from "./filter-tabs";
 import { SaleStatusBadge } from "./commerce-badges";
 
 /**
- * Sales — how much did I sell?
+ * Sales - how much did I sell?
  *
  * Deliberately not Orders. Orders is the operational queue: what needs packing,
  * what needs scheduling, whose access has not been granted. This is the
- * commercial reading of the same data — revenue, channel mix, what sells — and
+ * commercial reading of the same data - revenue, channel mix, what sells - and
  * it carries none of the operational actions. Clicking a row goes to the order,
  * which is the one place those live.
  *
@@ -314,7 +314,7 @@ export function SalesWorkspace() {
                           </span>
                           {/* Which combination earned it. "Premium T-Shirt"
                               alone cannot tell a merchant that it is the black
-                              mediums carrying the product — which is the
+                              mediums carrying the product - which is the
                               question this page exists to answer. */}
                           {sale.variantName ? (
                             <span className="block truncate text-sm text-text-muted">
@@ -365,8 +365,8 @@ export function SalesWorkspace() {
 /**
  * How each of the three cards is dressed.
  *
- * The hues come from the *Brand* block of `variables.css` — primary, accent
- * and secondary — and deliberately not from Channel identity. `--color-email`
+ * The hues come from the *Brand* block of `variables.css` - primary, accent
+ * and secondary - and deliberately not from Channel identity. `--color-email`
  * and `--color-sms` mean "the Email channel" and "the SMS channel" in this
  * product; spending them on a product category makes a violet tile on Top
  * Services read as SMS, which is a claim about a module that has nothing to do
@@ -375,7 +375,7 @@ export function SalesWorkspace() {
  *
  * Two classes per group rather than one, because the tile and the rank badge
  * want different ink. The icon is decorative and takes the hue; the rank is a
- * *number*, so it takes `text-text-primary` — cyan on cyan-soft is 2.33:1,
+ * *number*, so it takes `text-text-primary` - cyan on cyan-soft is 2.33:1,
  * fine behind an icon and far too faint to set a digit in.
  *
  * Where a family has no soft or border step, the tint is mixed from its own
@@ -395,7 +395,7 @@ const GROUP_STYLE: Record<
     icon: LucideIcon;
     /** Header tile: ground, border and the icon's ink. */
     tile: string;
-    /** Rank badge: ground and border only — the digit is set separately. */
+    /** Rank badge: ground and border only - the digit is set separately. */
     badge: string;
     bar: string;
   }
@@ -418,7 +418,7 @@ const GROUP_STYLE: Record<
      * `accent` is the only Brand hue left once indigo and violet are taken,
      * and it cannot be read: #06b6d4 on `accent-soft` is 2.33:1, which is
      * below the 3:1 this file's own tokens hold themselves to. `info` is the
-     * one family with a purpose-built ink step — `--color-info-text` — and it
+     * one family with a purpose-built ink step - `--color-info-text` - and it
      * lands at 5.49:1, between the 5.62 of primary and the 4.91 of secondary,
      * so all three cards read at one weight.
      *
@@ -448,7 +448,7 @@ const GROUP_STYLE: Record<
  * empty.
  *
  * Each card is a small leaderboard: rank, what it is, what it sold, what it
- * made. The bar under each row is the part that makes it readable at a glance —
+ * made. The bar under each row is the part that makes it readable at a glance -
  * it is drawn against the *top seller in that card*, not against some global
  * total, so it answers "how far ahead is first place" rather than restating the
  * revenue figure already printed beside it.
@@ -464,7 +464,7 @@ function TopSellers() {
     <div
       className={cn(
         "grid gap-4",
-        /* Two up on a tablet, three on a desktop — and neither if there is
+        /* Two up on a tablet, three on a desktop - and neither if there is
            only one type with sales, where a third-width card would look
            like two are missing. */
         groups.length > 1 && "sm:grid-cols-2",
@@ -572,7 +572,7 @@ function TopSellers() {
  * The earliest timestamp a range admits, or `null` for everything.
  *
  * Measured against the commerce fixtures' frozen clock rather than the wall
- * clock — the same reason every relative figure in this codebase is: filtering
+ * clock - the same reason every relative figure in this codebase is: filtering
  * a fixed dataset against the real date empties it the month after it is
  * written.
  */

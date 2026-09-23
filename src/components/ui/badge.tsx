@@ -10,7 +10,7 @@ export type BadgeTone =
   | "danger"
   | "info"
   /**
-   * The channel's own green, for a state that is good *on WhatsApp* —
+   * The channel's own green, for a state that is good *on WhatsApp* -
    * an approved template, a connected number.
    *
    * Distinct from `success` on purpose: that is the product's generic green
@@ -38,7 +38,7 @@ const TONES: Record<BadgeTone, string> = {
  * competes with the figure instead of annotating it, so it drops to the 13px
  * metadata step and the row regains an order to read in.
  *
- * `xs` is the chrome one — a badge riding on a control rather than annotating
+ * `xs` is the chrome one - a badge riding on a control rather than annotating
  * content, like the plan chip under the name in the dashboard header. There
  * the badge sits *beneath* the thing it qualifies instead of beside it, and at
  * 13px it reads as a second line of equal weight rather than as a tag on the

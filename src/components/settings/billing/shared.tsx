@@ -45,7 +45,7 @@ export function UnavailableAction({
     <Tooltip content={reason}>
       <span className="inline-flex">
         {/* Always `outline`. It is the one variant whose disabled state the
-            design system actually draws — a muted label inside a firm border.
+            design system actually draws - a muted label inside a firm border.
             `ghost` keeps `text-primary` when disabled, so at 50% opacity it
             reads as a link somebody has not tried clicking yet. */}
         <Button variant="outline" size="compact" disabled>

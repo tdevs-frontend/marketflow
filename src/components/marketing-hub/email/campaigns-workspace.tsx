@@ -47,7 +47,7 @@ import { EMAIL_STATUS_OPTIONS, EmailCampaignStatusBadge } from "./campaign-row";
  * Email campaign management.
  *
  * The table leads with the subject line under the campaign name, because on
- * this channel the subject *is* the campaign as far as results go — two sends
+ * this channel the subject *is* the campaign as far as results go - two sends
  * of the same template with different subjects are the comparison people
  * actually make. Open and click render as rate plus bar rather than raw
  * counts: nobody compares 7,046 against 2,874 in their head, but two bars
@@ -111,7 +111,7 @@ export function EmailCampaignsWorkspace() {
   const [audience, setAudience] = useState<string>(ALL);
   const [from, setFrom] = useState("");
   /* Sending identity. Reputation and deliverability are per-identity, so
-     comparing them is a real question — not just another way to slice. */
+     comparing them is a real question - not just another way to slice. */
   const [sender, setSender] = useState<string>(ALL);
   const [sort, setSort] = useState<SortField>("createdAt");
   const [page, setPage] = useState(1);
@@ -128,7 +128,7 @@ export function EmailCampaignsWorkspace() {
     const term = search.trim().toLowerCase();
 
     const rows = EMAIL_CAMPAIGNS.filter((campaign) => {
-      /* Subject is searched too — half the time that is what someone
+      /* Subject is searched too - half the time that is what someone
          remembers about a campaign, not its internal name. */
       if (
         term &&
@@ -332,7 +332,7 @@ export function EmailCampaignsWorkspace() {
             description={
               activeFilters > 0 || search
                 ? "Try a different search term, or clear the filters."
-                : "Start from a template — the library has nine, from welcome sequences to win-backs."
+                : "Start from a template - the library has nine, from welcome sequences to win-backs."
             }
             action={
               activeFilters > 0 || search ? (
@@ -425,7 +425,7 @@ export function EmailCampaignsWorkspace() {
 
                         <TD className="w-28">
                           {campaign.delivered === 0 ? (
-                            <span className="text-text-muted">—</span>
+                            <span className="text-text-muted">-</span>
                           ) : (
                             <>
                               <p className="text-sm font-bold text-text-primary tabular-nums">
@@ -444,7 +444,7 @@ export function EmailCampaignsWorkspace() {
 
                         <TD className="w-28">
                           {campaign.delivered === 0 ? (
-                            <span className="text-text-muted">—</span>
+                            <span className="text-text-muted">-</span>
                           ) : (
                             <>
                               <p className="text-sm font-bold text-text-primary tabular-nums">
@@ -556,21 +556,21 @@ export function EmailCampaignsWorkspace() {
                         label: "Open",
                         value:
                           campaign.delivered === 0
-                            ? "—"
+                            ? "-"
                             : formatPercent(rate(campaign.opened, campaign.delivered)),
                       },
                       {
                         label: "Click",
                         value:
                           campaign.delivered === 0
-                            ? "—"
+                            ? "-"
                             : formatPercent(rate(campaign.clicked, campaign.delivered)),
                       },
                       {
                         label: "Bounce",
                         value:
                           campaign.sent === 0
-                            ? "—"
+                            ? "-"
                             : formatPercent(rate(campaign.bounced, campaign.sent)),
                       },
                     ].map((cell) => (

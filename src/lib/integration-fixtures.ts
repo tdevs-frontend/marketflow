@@ -33,12 +33,12 @@ import type {
  * card is the number on the WhatsApp page, the SMS provider that is failing
  * there is the reason the hub shows one issue, and the webhook that keeps
  * timing out is the one whose delivery log has the 504s in it. A fixture where
- * those disagree is worse than no fixture — it teaches the reader that the
+ * those disagree is worse than no fixture - it teaches the reader that the
  * numbers are decoration.
  *
  * Replacing this file with `GET /integrations` should be the only change the
  * components need. Nothing below is imported for its shape alone, and every
- * derived figure — the KPI counts, the worst-health rollup, the usage totals —
+ * derived figure - the KPI counts, the worst-health rollup, the usage totals -
  * is computed here rather than in a component.
  */
 
@@ -56,7 +56,7 @@ export const INTEGRATIONS_NOW_MS = WORKSPACE_NOW_MS;
  * A secret as the API hands it back.
  *
  * The raw value is never returned once saved, so the fixture does not hold one
- * either — the mask *is* the stored value, and there is nothing in this file a
+ * either - the mask *is* the stored value, and there is nothing in this file a
  * leak could expose. `tail` is what lets a merchant tell two keys apart.
  */
 const masked = (tail: string, dots = 10) => `${"•".repeat(dots)}${tail}`;
@@ -66,7 +66,7 @@ const masked = (tail: string, dots = 10) => `${"•".repeat(dots)}${tail}`;
  *
  * The object form is six lines per event for three fields that matter, and a
  * feed written that way stops getting edited the first time it is wrong.
- * Minutes-ago leads because it is the element that has to stay ordered — the
+ * Minutes-ago leads because it is the element that has to stay ordered - the
  * feed is rendered newest-first with no sort, so a row out of order here is
  * visible immediately rather than silently re-sorted away.
  *
@@ -114,8 +114,8 @@ function feed(
  * The Social integration's hub record, derived from the connected accounts.
  *
  * Nothing here is typed out. The account list in `social-fixtures` is the single
- * source of truth for who is connected — the Planner's composer reads the same
- * array — so this card's status, its account line and its health checks are all
+ * source of truth for who is connected - the Planner's composer reads the same
+ * array - so this card's status, its account line and its health checks are all
  * computed from it. Hand-writing "3 accounts" here is how a hub card ends up
  * claiming a connection the Planner cannot actually publish through.
  */
@@ -128,7 +128,7 @@ function socialIntegration(): Integration {
   );
   const withAnalytics = analyticsAccounts().length;
 
-  /* The freshest sync across every account — the hub card shows one figure. */
+  /* The freshest sync across every account - the hub card shows one figure. */
   const lastSync = SOCIAL_ACCOUNTS.reduce<string | null>(
     (latest, account) =>
       !latest || account.lastSyncedAt > latest ? account.lastSyncedAt : latest,
@@ -143,7 +143,7 @@ function socialIntegration(): Integration {
     description: "Connect social accounts for publishing, scheduling and analytics.",
     category: "social",
     icon: "share-2",
-    /* One expired token is an issue, not a healthy connection — even while the
+    /* One expired token is an issue, not a healthy connection - even while the
        other three accounts publish perfectly well. */
     status:
       totals.accounts === 0
@@ -221,12 +221,12 @@ function socialIntegration(): Integration {
       lastSyncAt: lastSync,
       lastErrorAt: hoursAgo(9),
       lastError:
-        "X / Twitter returned 401 Unauthorized — the access token expired on 12 Sep.",
+        "X / Twitter returned 401 Unauthorized - the access token expired on 12 Sep.",
     },
     events: feed("social", [
-      [2, "Post published", "success", "Instagram — MarketFlow Studio."],
+      [2, "Post published", "success", "Instagram - MarketFlow Studio."],
       [24, "Insights synced", "success", "Reach and engagement pulled for 4 accounts."],
-      [47, "Comment received", "success", "Facebook — MarketFlow Bangladesh."],
+      [47, "Comment received", "success", "Facebook - MarketFlow Bangladesh."],
       [
         540,
         "Authorisation expired",
@@ -330,7 +330,7 @@ export const INTEGRATIONS: Integration[] = [
     },
     events: feed("whatsapp", [
       [2, "Message received", "success", "Inbound message routed to the Inbox."],
-      [8, "Campaign sent", "success", "Eid Collection Launch — 840 recipients."],
+      [8, "Campaign sent", "success", "Eid Collection Launch - 840 recipients."],
       [14, "Delivery receipts processed", "success", "812 delivered, 6 pending."],
       [38, "Templates synced", "success", "24 approved templates in sync with Meta."],
       [186, "Access token verified", "success", "Next rotation due in 69 days."],
@@ -416,10 +416,10 @@ export const INTEGRATIONS: Integration[] = [
       lastSuccessAt: minutesAgo(4),
       lastSyncAt: minutesAgo(4),
       lastErrorAt: daysAgo(2),
-      lastError: "451 Temporary failure from receiving server — 3 messages requeued.",
+      lastError: "451 Temporary failure from receiving server - 3 messages requeued.",
     },
     events: feed("email", [
-      [4, "Campaign email sent", "success", "September Newsletter — 1,240 recipients."],
+      [4, "Campaign email sent", "success", "September Newsletter - 1,240 recipients."],
       [26, "Bounce recorded", "warning", "4 hard bounces suppressed automatically."],
       [41, "Automation email sent", "success", "Abandoned cart, step 2."],
       [
@@ -488,7 +488,7 @@ export const INTEGRATIONS: Integration[] = [
         id: "balance",
         label: "Account Balance",
         status: "warning",
-        detail: "$148.20 left — roughly 4 days at the current send rate.",
+        detail: "$148.20 left - roughly 4 days at the current send rate.",
         checkedAt: hoursAgo(1),
         fixLabel: "Top up",
       },
@@ -519,7 +519,7 @@ export const INTEGRATIONS: Integration[] = [
         "Twilio returned 401 Unauthorized on the last 14 requests.",
       ],
       [12, "Messages held", "warning", "214 messages queued pending a working connection."],
-      [60, "Balance checked", "warning", "$148.20 left — roughly 4 days of sending."],
+      [60, "Balance checked", "warning", "$148.20 left - roughly 4 days of sending."],
       [540, "Message delivered", "success", "The last message to clear the gateway."],
     ]),
     metrics: [
@@ -627,11 +627,11 @@ export const INTEGRATIONS: Integration[] = [
       lastSuccessAt: minutesAgo(1),
       lastSyncAt: minutesAgo(1),
       lastErrorAt: hoursAgo(4),
-      lastError: "429 Too Many Requests on /api/v1/contacts — Reporting Sync key throttled.",
+      lastError: "429 Too Many Requests on /api/v1/contacts - Reporting Sync key throttled.",
     },
     events: feed("api", [
-      [1, "Contacts read", "success", "GET /v1/contacts — Production Server key."],
-      [6, "Orders read", "success", "GET /v1/orders — Reporting Sync key."],
+      [1, "Contacts read", "success", "GET /v1/contacts - Production Server key."],
+      [6, "Orders read", "success", "GET /v1/orders - Reporting Sync key."],
       [
         240,
         "Rate limit reached",
@@ -676,8 +676,8 @@ export const INTEGRATIONS: Integration[] = [
      * An unconnected integration still has a place in the workspace, and the
      * card that cannot say what that place is leaves a merchant to guess why
      * GA4 is on this page at all. The list is rendered under "Connects to"
-     * rather than "Used by" while the status is not connected — see
-     * `IntegrationManageDrawer` — so it never claims a dependency that does
+     * rather than "Used by" while the status is not connected - see
+     * `IntegrationManageDrawer` - so it never claims a dependency that does
      * not exist yet.
      */
     usage: [
@@ -787,7 +787,7 @@ export const INTEGRATIONS: Integration[] = [
         94 * 24 * 60 + 12,
         "Conversion event sent",
         "success",
-        "Purchase — the last event before it was paused.",
+        "Purchase - the last event before it was paused.",
       ],
     ]),
     metrics: [],
@@ -857,7 +857,7 @@ export function worstHealth(checks: { status: HealthStatus }[]): HealthStatus {
  *
  * Status is never the only thing that changes. A page that updates the badge
  * alone produces a card reading "Connected · Disconnected" over a last activity
- * of "No activity yet" — which is not a cosmetic bug, it is the page lying
+ * of "No activity yet" - which is not a cosmetic bug, it is the page lying
  * about the thing it exists to report. These three functions are the whole
  * patch for each action, so a caller cannot apply half of one.
  *
@@ -889,12 +889,12 @@ export function connectedRecord(
     status: "connected",
     provider,
     credentials,
-    /* The identity line — whatever the merchant recognises this connection by.
+    /* The identity line - whatever the merchant recognises this connection by.
        The first credential that is not a secret is exactly that, by
        construction: a measurement ID, a shop domain, a sender, a host. */
     account:
       integration.account ??
-      credentials.find((value) => value.kind !== "secret" && value.value !== "—")
+      credentials.find((value) => value.kind !== "secret" && value.value !== "-")
         ?.value ??
       provider.name,
     health: verifiedHealth(`${provider.name} accepted the credentials.`),
@@ -993,7 +993,7 @@ export interface WorkspaceEvent extends IntegrationEvent {
 }
 
 /**
- * Every feed, merged newest-first — what the Events Today tile opens onto.
+ * Every feed, merged newest-first - what the Events Today tile opens onto.
  *
  * Sorted on the ISO string rather than a parsed date because the fixtures are
  * all UTC with the same precision, which makes a lexicographic compare both
@@ -1076,7 +1076,7 @@ export const WEBHOOKS: Webhook[] = [
       [2, "contact.created", "success", 200, 124],
       [7, "lead.stage_changed", "success", 200, 98],
       [14, "contact.updated", "success", 201, 143],
-      [26, "lead.created", "retrying", 502, 4120, "Bad gateway — retrying in 60s."],
+      [26, "lead.created", "retrying", 502, 4120, "Bad gateway - retrying in 60s."],
       [27, "lead.created", "failed", 502, 4088, "Bad gateway from upstream proxy."],
       [41, "contact.updated", "success", 200, 111],
       [58, "contact.created", "success", 200, 132],
@@ -1126,7 +1126,7 @@ export const WEBHOOKS: Webhook[] = [
     recentDeliveries: deliveries([
       [12, "order.created", "failed", null, 10_000, "Connection timed out after 10s. No response received."],
       [24, "order.created", "failed", 504, 10_000, "Gateway timeout."],
-      [37, "workflow.failed", "retrying", 504, 10_000, "Gateway timeout — retrying in 5m."],
+      [37, "workflow.failed", "retrying", 504, 10_000, "Gateway timeout - retrying in 5m."],
       [52, "campaign.completed", "success", 200, 862],
       [94, "order.created", "success", 200, 744],
       [131, "order.created", "success", 200, 691],
@@ -1314,7 +1314,7 @@ export const API_LOGS: ApiLogEntry[] = LOG_SPECS.map(
 /**
  * Creates a key and returns the plaintext once.
  *
- * The secret is generated here and handed back exactly once — the caller shows
+ * The secret is generated here and handed back exactly once - the caller shows
  * it, the merchant copies it, and from then on only `key.masked` exists. That
  * is the same contract a real API has, and building the UI against anything
  * looser is how a "reveal key" button ends up shipping.

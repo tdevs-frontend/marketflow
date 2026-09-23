@@ -297,7 +297,7 @@ X-MarketFlow-Signature: <hmac-sha256>
                 {lastError ? (
                   <div className="mt-1.5 rounded-panel border border-error/40 bg-error-soft/40 px-3.5 py-3">
                     <p className="text-sm font-medium text-error-text">
-                      Payload rejected — `contact_id` did not match a contact
+                      Payload rejected - `contact_id` did not match a contact
                     </p>
                     <p className="mt-1 text-sm text-text-muted">
                       {formatDateTime(lastError.at)} ·{" "}
@@ -396,7 +396,7 @@ X-MarketFlow-Signature: <hmac-sha256>
       >
         <p className="text-sm text-text-secondary">
           The event keeps being recorded, but no workflow starts from it. Anyone
-          already inside a journey carries on — this only closes the door.
+          already inside a journey carries on - this only closes the door.
         </p>
       </ConfirmDialog>
     </>

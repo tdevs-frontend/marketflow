@@ -12,7 +12,7 @@ import { LoginActivityCard } from "./login-activity-card";
 import { TwoFactorCard } from "./two-factor-card";
 
 /**
- * Security — three tabs, one question each.
+ * Security - three tabs, one question each.
  *
  *   **Two-factor authentication**  is a stolen password enough on its own
  *   **Active sessions**            what is signed in right now
@@ -26,7 +26,7 @@ import { TwoFactorCard } from "./two-factor-card";
  * contents for a page you could not see the contents of.
  *
  * The same `Tabs` the Notifications and Billing pages use, so the three tabbed
- * Settings screens look and behave identically — same height, weight, active
+ * Settings screens look and behave identically - same height, weight, active
  * rule and keyboard handling. Nothing here draws a tab of its own.
  *
  * Changing a password is deliberately *not* a fourth tab. It has its own rail
@@ -42,8 +42,8 @@ import { TwoFactorCard } from "./two-factor-card";
  * can honour it.
  *
  * The honesty in the bottom two tabs is load-bearing and unchanged. A sessions
- * list is the classic thing to fake — three plausible devices in three cities,
- * each with a Sign out button that ends nothing — and faking it would poison
+ * list is the classic thing to fake - three plausible devices in three cities,
+ * each with a Sign out button that ends nothing - and faking it would poison
  * the two-factor tab, which is real. So Active sessions lists the one session
  * it can genuinely observe, this browser, and says plainly that the others need
  * the account service; Login activity says it has no history rather than
@@ -70,7 +70,7 @@ export function SecuritySettings() {
 
   /*
    * The tab lives in the URL, so "here is my two-factor state" and "here is
-   * what is signed in" are two links somebody can send — which matters more on
+   * what is signed in" are two links somebody can send - which matters more on
    * this page than most, because those are the links a support reply contains.
    *
    * Validated against `TABS` rather than compared to one string, so `?tab=`

@@ -9,7 +9,7 @@ import type { AuditChange } from "@/types/workspace";
  * A two-column diff rather than raw JSON, because the reader of an audit trail
  * is answering "what did this person actually alter" and a serialised object
  * makes them parse it themselves. The raw form is still available under
- * Advanced details for anyone who wants it — this is the default view, not the
+ * Advanced details for anyone who wants it - this is the default view, not the
  * only one.
  *
  * A `null` before is a value being set for the first time and renders as

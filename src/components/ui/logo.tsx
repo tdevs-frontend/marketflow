@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/site";
-// Static import so the intrinsic size follows the artwork — swap the file and
+// Static import so the intrinsic size follows the artwork - swap the file and
 // the aspect ratio updates itself.
 import logo from "../../../public/marketflow-logo.svg";
 import logoLight from "../../../public/marketflow-logo-light.svg";
@@ -20,7 +20,7 @@ export function Logo({
    * Which ground the lockup sits on. `dark` is the default and means dark ink
    * on a light surface; `light` swaps to the white-ink artwork for dark
    * sections, where the navy wordmark would otherwise disappear. Only that ink
-   * differs between the two files — the mark and its greens are identical.
+   * differs between the two files - the mark and its greens are identical.
    */
   tone?: "dark" | "light";
   priority?: boolean;
@@ -43,7 +43,7 @@ export function Logo({
 
 /**
  * The bare mark, for surfaces too tight for the full lockup. Decorative by
- * default — pass `label` where it is the only mention of the product.
+ * default - pass `label` where it is the only mention of the product.
  */
 export function LogoMark({
   size = 36,

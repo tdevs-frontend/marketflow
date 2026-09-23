@@ -12,7 +12,7 @@ import type { DraftDerived } from "./draft";
  * The pre-flight check.
  *
  * Two levels, and the distinction is the whole point. A `blocker` is something
- * that would make the send fail or break a rule — no audience, an unapproved
+ * that would make the send fail or break a rule - no audience, an unapproved
  * template, a sender that is not connected. A `warning` is something a
  * competent marketer might do on purpose: no fallback on a merge tag, no
  * subject preview text, tracking switched off. Blockers stop the send; warnings
@@ -88,7 +88,7 @@ export function preflight(
       "tracking",
       "warning",
       "review",
-      "Click and conversion tracking are both off — this campaign will not report results.",
+      "Click and conversion tracking are both off - this campaign will not report results.",
     );
   }
 
@@ -110,7 +110,7 @@ export function preflight(
    *
    * Compared as text against the workspace clock rather than through `Date`:
    * `WORKSPACE_NOW` is what every other module measures against, and a
-   * `Date.now()` here would make `preflight` impure — the server and the
+   * `Date.now()` here would make `preflight` impure - the server and the
    * client would disagree about whether a draft is late, which is a hydration
    * mismatch in a function that runs during render.
    *
@@ -213,7 +213,7 @@ export function preflight(
         "email-preview",
         "warning",
         "content",
-        "No preview text — most inboxes will show the first line of the body instead.",
+        "No preview text - most inboxes will show the first line of the body instead.",
       );
     }
     if (!draft.sender.emailReplyTo) {
@@ -262,7 +262,7 @@ export function preflight(
     }
 
     /* Selection is filtered to publishable accounts, but a token can expire
-       between choosing and sending — so it is checked again here. */
+       between choosing and sending - so it is checked again here. */
     const publishable = new Set(publishableAccounts().map((item) => item.id));
     const stale = draft.socialAccountIds.filter((id) => !publishable.has(id));
     if (stale.length > 0) {

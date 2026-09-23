@@ -19,7 +19,7 @@ function metricValue(metric: ChannelMetric): string {
  * A bordered panel rather than a bare column. Four channels side by side with
  * nothing but a gutter between them read as one long row of numbers that
  * happens to have names in it; the border is what makes each one a thing being
- * compared. Flat and on the card's own surface — no shadow, no tint — so the
+ * compared. Flat and on the card's own surface - no shadow, no tint - so the
  * card stays the only card.
  */
 function ChannelTile({ row }: { row: ChannelActivityRow }) {
@@ -59,7 +59,7 @@ function ChannelTile({ row }: { row: ChannelActivityRow }) {
         {/*
           A button because the shared `Tooltip` opens on focus as well as
           hover, and only a focusable trigger reaches that path. It does
-          nothing on click by design — the tooltip is all of its behaviour.
+          nothing on click by design - the tooltip is all of its behaviour.
         */}
         <button
           type="button"
@@ -84,8 +84,8 @@ function ChannelTile({ row }: { row: ChannelActivityRow }) {
               </dd>
             </div>
             {/*
-              Only rates get a bar. A count has no denominator on this card —
-              4,200 clicks is not 4,200% of anything — so drawing one would be
+              Only rates get a bar. A count has no denominator on this card -
+              4,200 clicks is not 4,200% of anything - so drawing one would be
               inventing a scale to make the tile look consistent.
             */}
             {metric.kind === "rate" ? (
@@ -112,7 +112,7 @@ function ChannelTile({ row }: { row: ChannelActivityRow }) {
  * against the same measures and revenue is the common denominator; it cannot
  * express three metrics that differ per channel without a column of em dashes
  * per row. The old component is still exported from the module barrel and has
- * no caller left — the Analytics page's `ChannelPerformanceTable` is a
+ * no caller left - the Analytics page's `ChannelPerformanceTable` is a
  * different file under `components/analytics` that happens to share the name.
  */
 export function ChannelActivity({

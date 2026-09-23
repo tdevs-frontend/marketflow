@@ -12,7 +12,7 @@ export const metadata: Metadata = {
  * Paying customers, nested under Sales because that is where the data is.
  *
  * The sidebar lists it as Commerce → Customers. The route says `sales/customers`
- * because these records *are* the sales ledger grouped by buyer — there is no
+ * because these records *are* the sales ledger grouped by buyer - there is no
  * customer table behind it, only the CRM contacts and the orders they placed.
  */
 export default function CommerceCustomersPage() {

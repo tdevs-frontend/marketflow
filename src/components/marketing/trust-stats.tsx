@@ -48,7 +48,7 @@ export const TRUST_STATS: TrustStat[] = [
   },
 ];
 
-/** Placeholder wordmarks — swap for real customer logos when they're cleared. */
+/** Placeholder wordmarks - swap for real customer logos when they're cleared. */
 const LOGOS: TrustLogo[] = [
   { name: "Northwind", mark: "orbit" },
   { name: "Cartwheel", mark: "prism" },
@@ -116,7 +116,7 @@ export function TrustStats() {
           </h2>
 
           <p className="mt-4 text-base leading-relaxed text-text-secondary text-pretty sm:text-lg">
-            Teams run their customers, leads, campaigns and follow-ups from one workspace — and
+            Teams run their customers, leads, campaigns and follow-ups from one workspace - and
             replace the guesswork with numbers they can act on.
           </p>
         </header>

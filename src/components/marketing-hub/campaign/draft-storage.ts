@@ -5,7 +5,7 @@ import { EMPTY_DRAFT } from "./draft";
  * Keeping a half-finished campaign alive across a reload.
  *
  * `sessionStorage`, not `localStorage`, and the difference is deliberate. The
- * problem being solved is a refresh, a crash, or a mis-click on Back — all of
+ * problem being solved is a refresh, a crash, or a mis-click on Back - all of
  * which happen inside one tab, in one sitting. `localStorage` would also
  * resurrect a draft someone abandoned three weeks ago, in a new tab, on top of
  * the campaign they came here to write, which is a worse bug than the one this
@@ -18,7 +18,7 @@ import { EMPTY_DRAFT } from "./draft";
  */
 
 /* Version the key rather than migrating. A draft is minutes of work, not
-   months, so a shape change can safely drop what it cannot read — and a
+   months, so a shape change can safely drop what it cannot read - and a
    half-migrated draft that sends to the wrong audience is not worth it. */
 const KEY = "marketflow:campaign-wizard:v1";
 
@@ -48,7 +48,7 @@ function reviveDraft(value: unknown): CampaignDraft | null {
   }
 
   /* Only the object-valued groups, so the spread below has something to spread
-     — the generic `keyof CampaignDraft` version cannot prove that for a string
+     - the generic `keyof CampaignDraft` version cannot prove that for a string
      field, and would need a cast that hides exactly the mistake it invites. */
   type GroupKey = "sender" | "exclusions" | "quietHours" | "frequencyCap" | "abTest";
 
@@ -84,8 +84,8 @@ function reviveDraft(value: unknown): CampaignDraft | null {
 /**
  * Turn a parsed payload into a wizard state, or refuse it.
  *
- * Split from `loadWizard` so the decisions here — what counts as a draft, how
- * a bad index is clamped, which nested groups get filled in — can be exercised
+ * Split from `loadWizard` so the decisions here - what counts as a draft, how
+ * a bad index is clamped, which nested groups get filled in - can be exercised
  * without a browser. `loadWizard` is then only the I/O around it.
  */
 export function parseStoredWizard(
@@ -142,6 +142,6 @@ export function clearWizard(): void {
   try {
     window.sessionStorage.removeItem(KEY);
   } catch {
-    /* Nothing to do — the draft is submitted either way. */
+    /* Nothing to do - the draft is submitted either way. */
   }
 }

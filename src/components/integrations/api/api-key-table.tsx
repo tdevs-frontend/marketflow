@@ -14,7 +14,7 @@ import type { ApiKey } from "@/types/integration";
 /**
  * The key register.
  *
- * The prefix column is the whole point of the table — it is the only part of a
+ * The prefix column is the whole point of the table - it is the only part of a
  * key that ever exists after creation, and it is how a merchant matches a key
  * in this list to the one in their application's config. Monospace, because
  * that match is character by character.

@@ -33,7 +33,7 @@ import type { SmsSenderId, SmsSenderStatus, SmsSenderType } from "@/types/sms";
  * Sender IDs.
  *
  * Every SMS campaign picks one, and until this page existed the only place to
- * change one was a single text field on the gateway integration — which meant
+ * change one was a single text field on the gateway integration - which meant
  * the workspace could offer three senders in a dropdown and manage none of
  * them. This is the smallest thing that closes that gap: one table, the four
  * facts that decide which sender a campaign should use, and a default.
@@ -43,7 +43,7 @@ import type { SmsSenderId, SmsSenderStatus, SmsSenderType } from "@/types/sms";
  * in one row each: can I use it (status), what will it look like on a handset
  * (the value and its type), can people answer it (a consequence of the type),
  * and is anything going out on it (usage). The credentials underneath stay on
- * Integrations → SMS, where they already live — offering a gateway key here
+ * Integrations → SMS, where they already live - offering a gateway key here
  * too would mean two places to rotate one secret and one of them silently
  * stale.
  *
@@ -313,8 +313,8 @@ export function SmsSendersWorkspace() {
 
           {canReceiveReplies(draftType) ? null : (
             <p className="rounded-panel bg-warning-soft px-3.5 py-3 text-sm text-warning-text">
-              An alphanumeric sender is one-way. Campaigns that ask for a reply —
-              including anything ending &ldquo;reply STOP&rdquo; — need a long or
+              An alphanumeric sender is one-way. Campaigns that ask for a reply -
+              including anything ending &ldquo;reply STOP&rdquo; - need a long or
               short code, or the answers go nowhere.
             </p>
           )}

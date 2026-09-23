@@ -23,12 +23,12 @@ import { cn } from "@/lib/utils";
  * name what does the work at each step.
  *
  * Each step carries the module that owns it, and every one of those modules has
- * a section above with a screenshot in it — so the claim is checkable by
+ * a section above with a screenshot in it - so the claim is checkable by
  * scrolling up rather than taken on trust.
  *
  * The rail is a two-column grid: a fixed 44px gutter holding the dots and the
  * line, and the content beside it. One vertical rule, drawn behind the dots and
- * stopped short of the last one, rather than a border per row — a per-row
+ * stopped short of the last one, rather than a border per row - a per-row
  * border cannot stop before the final step without a special case.
  */
 

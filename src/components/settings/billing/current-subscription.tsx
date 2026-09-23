@@ -24,7 +24,7 @@ import { STATUS, UnavailableAction } from "./shared";
 
 /**
  * What this workspace is on, what it costs, and the two things you can do
- * about it — in one card rather than two.
+ * about it - in one card rather than two.
  *
  * The actions used to live in a "Subscription" section of their own at the
  * bottom of the tab, which meant the plan was stated at the top of the page and
@@ -87,8 +87,8 @@ export function CurrentSubscription({
           The plan name, the price and the status are the headline and the
           badge above; they are not repeated here. A summary list that restates
           what is set in 24px type directly above it reads as a rendering bug,
-          and the three facts that are genuinely only available here — the
-          cycle, the next date, how long this has been running — get lost among
+          and the three facts that are genuinely only available here - the
+          cycle, the next date, how long this has been running - get lost among
           the repeats.
         */}
         <DetailList
@@ -214,7 +214,7 @@ function PendingPayment({
         cancelLabel="Keep waiting"
       >
         <p className="text-sm text-text-secondary">
-          Nothing about the current plan changes — it never did. Withdraw this
+          Nothing about the current plan changes - it never did. Withdraw this
           if the details were wrong, then submit the payment again.
         </p>
       </ConfirmDialog>
@@ -319,8 +319,8 @@ function SubscriptionActions({
  *
  * Kept, in a module the brief otherwise asks to trim, because it is the one
  * section here that answers a question none of the others do: *should* this
- * tier still be the tier. It duplicates nothing — no other screen in the
- * product compares contacts, sends and automations to a plan's allowances —
+ * tier still be the tier. It duplicates nothing - no other screen in the
+ * product compares contacts, sends and automations to a plan's allowances -
  * and it is the reason a merchant arrives at the pricing tab already knowing
  * whether they need it.
  */
@@ -346,7 +346,7 @@ export function PlanUsage() {
  *
  * The bar is the comparison and the digits are the fact; a percentage alone
  * cannot answer "how many more can I send this month". Colour changes only at
- * the two thresholds that mean something — approaching the limit, and over it —
+ * the two thresholds that mean something - approaching the limit, and over it -
  * because a bar that is amber at 40% has taught the reader to ignore its
  * colour by the time it matters.
  *

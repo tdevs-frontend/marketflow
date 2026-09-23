@@ -17,26 +17,26 @@ import { cn } from "@/lib/utils";
  * The whole product, on one screen.
  *
  * Every other section on this page argues for one module in depth, and a
- * visitor who has just read the hero is still asking how much is in here —
+ * visitor who has just read the hero is still asking how much is in here -
  * a question eleven deep sections answer slowly. This one answers it in five
  * seconds: eight groups, one card each, the shape of the platform before any
  * of the detail.
  *
  * Groups, not modules. An earlier cut of this section listed all forty-three
  * named modules from `constants/navigation.dashboardNav`, which answered "how
- * much" and nothing else — forty-three nouns is an inventory, and a prospect
+ * much" and nothing else - forty-three nouns is an inventory, and a prospect
  * scanning an inventory cannot tell which four of them are the reason to buy.
  * Eight groups with a line of description each say what the product *does*,
  * and the sections below are then read as detail on something already
  * understood.
  *
  * Every group is backed by modules that ship. Each card's description names
- * only surfaces that exist in the dashboard today — no roadmap, nothing the
+ * only surfaces that exist in the dashboard today - no roadmap, nothing the
  * sidebar does not route to.
  *
  * The page's opening section, so it sits on the layout's white surface and the
  * tinted `PlatformFlow` below it supplies the first ground change. Grounds
- * alternate down this page — see the note in `features/page.tsx` — and that
+ * alternate down this page - see the note in `features/page.tsx` - and that
  * alternation is what marks the seam between two sections; without it the
  * 80px each spends on padding stack into 160px of flat, unbroken canvas.
  */
@@ -57,8 +57,8 @@ interface Feature {
  * The eight groups, each wearing the colour its area already has elsewhere in
  * the product.
  *
- * The tints are the `tint-*` family from `styles/variables.css` — the same set
- * the integrations hub paints its icon tiles from — so nothing here is a new
+ * The tints are the `tint-*` family from `styles/variables.css` - the same set
+ * the integrations hub paints its icon tiles from - so nothing here is a new
  * palette. The assignment is not decorative: commerce takes Shopify's olive,
  * analytics takes GA4's orange, campaigns take the email blue, multi-channel
  * takes the fuchsia social already wears, and WhatsApp draws from the channel
@@ -171,7 +171,7 @@ export function AllFeatures() {
             <article
               key={feature.title}
               /*
-               * A card, not a KPI tile. No number, no trend chip, no action —
+               * A card, not a KPI tile. No number, no trend chip, no action -
                * nothing on it is interactive, so the only hover is the border
                * warming, which reads as the surface responding rather than as
                * a control that does not exist.

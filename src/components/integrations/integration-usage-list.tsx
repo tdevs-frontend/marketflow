@@ -14,8 +14,8 @@ import type { IntegrationUsage } from "@/types/integration";
  * into the feature, so "12 workflows" is checkable rather than a number to be
  * taken on trust.
  *
- * The same list is rendered inside the disconnect confirmation — see
- * `DisconnectDialog` — which is the only way the warning there can stay true as
+ * The same list is rendered inside the disconnect confirmation - see
+ * `DisconnectDialog` - which is the only way the warning there can stay true as
  * the workspace changes.
  */
 export function IntegrationUsageList({

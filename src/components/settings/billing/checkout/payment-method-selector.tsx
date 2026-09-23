@@ -8,12 +8,12 @@ import { cn } from "@/lib/utils";
 import type { PaymentGateway } from "@/types/account";
 
 /**
- * Step 2 — how this is going to be paid for.
+ * Step 2 - how this is going to be paid for.
  *
  * Radio cards, not a dropdown. Choosing between paying by card and submitting a
  * bank transfer for an administrator to verify is a decision with consequences
- * on both sides — one starts the plan immediately, the other starts it when
- * somebody agrees the money arrived — and a decision made from a collapsed
+ * on both sides - one starts the plan immediately, the other starts it when
+ * somebody agrees the money arrived - and a decision made from a collapsed
  * `<select>` is made without reading the line that explains it.
  *
  * Real radio inputs, visually hidden. Arrow-key movement, the roving tab stop

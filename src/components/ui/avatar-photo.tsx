@@ -16,7 +16,7 @@ import { Avatar, type AvatarSize } from "@/components/ui/avatar";
  * This is that boundary, for the one place the trade does not hold: the signed-
  * in person's own photo. Every other avatar in the product renders a URL the
  * fixtures control; this one renders whatever the account service last said,
- * or whatever a merchant uploaded, and either can stop resolving — a moved
+ * or whatever a merchant uploaded, and either can stop resolving - a moved
  * file, an expired signed URL, a provider that is down. A broken glyph where
  * somebody's face should be is the most conspicuous possible failure, and it
  * sits in the header on every screen.
@@ -24,18 +24,18 @@ import { Avatar, type AvatarSize } from "@/components/ui/avatar";
  * There are **two** ways the image can fail, and catching only the obvious one
  * is why this pattern is so often still broken in production:
  *
- *   *After hydration* — the request is still in flight when React attaches its
+ *   *After hydration* - the request is still in flight when React attaches its
  *   handlers, and `onErrorCapture` fires normally.
  *
- *   *Before hydration* — the markup is server-rendered, so the browser starts
+ *   *Before hydration* - the markup is server-rendered, so the browser starts
  *   the request during parse and can finish failing it before any JavaScript
  *   runs. `error` does not bubble and React was not listening yet, so nothing
  *   catches it and the glyph stays for good. The mount effect below is the
  *   fix: an image that is `complete` with a `naturalWidth` of zero is one that
  *   has already failed, which is how the platform reports it after the fact.
  *
- * The alternative — render initials on the server and swap the photo in after
- * mount — closes the same hole by making every page load flash the initials
+ * The alternative - render initials on the server and swap the photo in after
+ * mount - closes the same hole by making every page load flash the initials
  * first. Checking once on mount costs nothing and shows the right thing
  * immediately in the case that actually matters, which is the photo loading.
  */
@@ -54,7 +54,7 @@ export function AvatarPhoto({
    * *Which* URL failed, not whether one did.
    *
    * A boolean would need resetting whenever `src` changes, and resetting state
-   * from an effect is a cascading render — the component paints the stale
+   * from an effect is a cascading render - the component paints the stale
    * answer, then corrects itself. Storing the URL makes the reset fall out of
    * the comparison: a new photo simply is not the one that failed, so it gets
    * its own attempt with no extra pass. Without that, one broken avatar would
@@ -74,7 +74,7 @@ export function AvatarPhoto({
 
   return (
     /* `display: contents` on the wrapper, so it catches the image's error
-       event without becoming a box of its own — `Avatar` stays the flex item
+       event without becoming a box of its own - `Avatar` stays the flex item
        its parents already lay out, at the size and shrink behaviour they
        expect. */
     <span

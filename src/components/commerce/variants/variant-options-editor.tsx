@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import type { ProductType, VariantOption } from "@/types/commerce";
 
 /**
- * The option builder — the half of the variant system a merchant actually
+ * The option builder - the half of the variant system a merchant actually
  * authors. Everything below it (the grid, the table, the price range) is
  * derived from what is typed here.
  *
@@ -19,12 +19,12 @@ import type { ProductType, VariantOption } from "@/types/commerce";
  *
  * Renames are safe and removals are not. Renaming an *option* ("Colour" to
  * "Color") touches no variant, because a variant stores its values positionally
- * and not the option's name — so it applies immediately. Removing an option or
+ * and not the option's name - so it applies immediately. Removing an option or
  * a value destroys every variant underneath it, so this component never does
  * it: it raises a request and the manager above confirms first.
  *
  * Values cannot be edited in place, only added and removed. That is deliberate
- * rather than an omission — a variant is matched to its combination by value,
+ * rather than an omission - a variant is matched to its combination by value,
  * so quietly retyping "Black" as "Navy" would orphan that row's SKU, stock and
  * image with no warning at all. Removing and adding says what is happening, and
  * gets the confirmation it deserves.
@@ -38,7 +38,7 @@ function suggestionsFor(type: ProductType, options: VariantOption[]): string[] {
   );
 }
 
-/** A square icon button at table density — reorder and remove controls. */
+/** A square icon button at table density - reorder and remove controls. */
 function IconButton({
   label,
   onClick,
@@ -185,7 +185,7 @@ function ValueInput({
 export interface VariantOptionsEditorProps {
   type: ProductType;
   options: VariantOption[];
-  /** Renames and value additions — changes that destroy nothing. */
+  /** Renames and value additions - changes that destroy nothing. */
   onChange: (next: VariantOption[]) => void;
   /**
    * A reorder, which has to re-slice every variant's positional values.
@@ -211,7 +211,7 @@ export function VariantOptionsEditor({
   const suggestions = suggestionsFor(type, options);
   const atLimit = options.length >= MAX_VARIANT_OPTIONS;
 
-  /** A name already taken by another option — the one thing §3 forbids. */
+  /** A name already taken by another option - the one thing §3 forbids. */
   function duplicateName(index: number): boolean {
     const name = options[index].name.trim().toLowerCase();
     if (!name) return false;
@@ -349,7 +349,7 @@ export function VariantOptionsEditor({
                   </ul>
                 ) : (
                   <p className="text-sm font-medium text-text-muted">
-                    No values yet — nothing is generated until this option has at
+                    No values yet - nothing is generated until this option has at
                     least one.
                   </p>
                 )}
@@ -379,7 +379,7 @@ export function VariantOptionsEditor({
 
         <p className="text-sm font-medium text-text-muted">
           {atLimit
-            ? `${MAX_VARIANT_OPTIONS} options is the limit — every extra axis multiplies the grid.`
+            ? `${MAX_VARIANT_OPTIONS} options is the limit - every extra axis multiplies the grid.`
             : suggestions.length > 0
               ? `Commonly ${suggestions.slice(0, 3).join(", ")}.`
               : `Up to ${MAX_VARIANT_OPTIONS} options.`}

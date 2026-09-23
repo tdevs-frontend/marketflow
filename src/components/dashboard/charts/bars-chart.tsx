@@ -15,7 +15,7 @@ import {
 import type { TrendSeries } from "./trend-chart";
 
 /**
- * Grouped or stacked bars, for comparing named things rather than time —
+ * Grouped or stacked bars, for comparing named things rather than time -
  * campaign against campaign, platform against platform.
  *
  * Horizontal is the default for long labels: "Abandoned Checkout Recovery"

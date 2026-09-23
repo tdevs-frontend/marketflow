@@ -27,7 +27,7 @@ import type {
  * a 9am post into the previous day for half the world's readers.
  *
  * Anchored to September 2026 so the calendar opens on a month with content in
- * it — past, present and future.
+ * it - past, present and future.
  */
 
 export const CALENDAR_MONTH = { year: 2026, month: 8 } as const; // 8 = September
@@ -61,7 +61,7 @@ export const MEDIA_FOLDERS: MediaFolder[] = [
  *
  * These were the library's *content* when it had no files: flat tints standing
  * in for pictures. Every asset now has a real one, so they have dropped back
- * to what a tone should be — the colour a tile holds while its image decodes,
+ * to what a tone should be - the colour a tile holds while its image decodes,
  * and the colour it keeps if the file ever goes missing. Still per-asset
  * rather than one grey, because a library mid-load should read as a set of
  * distinct things rather than as a wall of skeletons.
@@ -348,7 +348,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
     id: "sp-02",
     title: "Automation builder walkthrough",
     caption:
-      "Drag a trigger. Drop an action. Publish. The new automation builder is live on every plan — here is the whole thing in 40 seconds.",
+      "Drag a trigger. Drop an action. Publish. The new automation builder is live on every plan - here is the whole thing in 40 seconds.",
     hashtags: ["#marketingautomation", "#saas", "#whatsappmarketing"],
     platforms: ["linkedin", "x"],
     status: "published",
@@ -368,7 +368,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
   },
   {
     id: "sp-03",
-    title: "Customer spotlight — Bright Retail",
+    title: "Customer spotlight - Bright Retail",
     caption:
       "Bright Retail runs 12 stores on WhatsApp-first marketing. Sarah told us how she does it, and what she would do differently.",
     hashtags: ["#customerstory", "#retail", "#casestudy"],
@@ -412,7 +412,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
   },
   {
     id: "sp-05",
-    title: "Behind the scenes — Dhaka office",
+    title: "Behind the scenes - Dhaka office",
     caption:
       "Thursday afternoon in the Dhaka office. Eleven people, four timezones of customers, one very loud coffee machine.",
     hashtags: ["#teamculture", "#behindthescenes"],
@@ -456,7 +456,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
   },
   {
     id: "sp-07",
-    title: "Feature carousel — segments",
+    title: "Feature carousel - segments",
     caption:
       "Build a segment once, use it on WhatsApp, Email and SMS. Four slides on how segmentation actually works here.",
     hashtags: ["#segmentation", "#crm", "#marketing"],
@@ -541,7 +541,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
   },
   {
     id: "sp-11",
-    title: "Autumn offer — final week",
+    title: "Autumn offer - final week",
     caption: "Last week of autumn pricing. After Sunday it goes back up.",
     hashtags: ["#autumn2026", "#offer"],
     platforms: ["instagram", "facebook", "x"],
@@ -561,7 +561,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
   },
   {
     id: "sp-12",
-    title: "Product shot — Business Package",
+    title: "Product shot - Business Package",
     caption: "Everything in the Business Package, laid out flat.",
     hashtags: ["#product", "#flatlay"],
     platforms: ["instagram"],
@@ -602,7 +602,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
   },
   {
     id: "sp-14",
-    title: "Hiring — support engineer",
+    title: "Hiring - support engineer",
     caption: "We are hiring a support engineer in Dhaka. Remote-friendly, real ownership.",
     hashtags: ["#hiring", "#dhaka", "#support"],
     platforms: ["linkedin"],
@@ -670,7 +670,7 @@ export const SOCIAL_POSTS: SocialPost[] = [
  *
  * Derived rather than stored on the asset: a hand-maintained `usedIn` counter
  * drifts the moment a post's media changes, and the one place it must be right
- * is the delete confirmation — an asset wrongly reported as unused gets deleted
+ * is the delete confirmation - an asset wrongly reported as unused gets deleted
  * out from under a scheduled post.
  */
 export const mediaUsageCount = (assetId: string) =>
@@ -843,7 +843,7 @@ export const SOCIAL_ACCOUNTS: SocialAccount[] = [
  */
 const REACH_DAYS = 200;
 
-/** The module's "today" — the same September 2026 the calendar is anchored to. */
+/** The module's "today" - the same September 2026 the calendar is anchored to. */
 const REACH_ANCHOR = new Date(2026, 8, 8);
 
 /** Monday-first multipliers. Nobody reaches anyone on a Saturday. */
@@ -853,7 +853,7 @@ const WEEKDAY_SHAPE = [0.94, 1.14, 1.02, 1.16, 1.0, 0.8, 0.74];
  * Where each platform started and how fast it compounds.
  *
  * A rate per platform rather than one shared figure. With a single growth
- * constant every platform posted an identical change — four KPI cards side by
+ * constant every platform posted an identical change - four KPI cards side by
  * side all reading +19.8%, which is both obviously synthetic and useless: the
  * column exists to say which platform is pulling ahead, and it could not. The
  * spread here is about fourteen points, with LinkedIn compounding fastest off
@@ -975,7 +975,7 @@ export function reachSummary(window: ReachWindow) {
     total,
     previous,
     change: previous === 0 ? 0 : ((total - previous) / previous) * 100,
-    /** Per bucket — a day on the short windows, a week on the long one. */
+    /** Per bucket - a day on the short windows, a week on the long one. */
     average: Math.round(total / Math.max(window.total.length, 1)),
   };
 }
@@ -985,8 +985,8 @@ export function reachSummary(window: ReachWindow) {
  *
  * Reach is computed from the 30-day window rather than stated, so the KPI and
  * the chart below it are the same number by construction. Impressions follow
- * it at the ratio the account data has always carried — 1.4 views per account
- * reached — for the same reason: two independent literals is how a page ends
+ * it at the ratio the account data has always carried - 1.4 views per account
+ * reached - for the same reason: two independent literals is how a page ends
  * up claiming more unique accounts than views.
  */
 const REACH_30D = reachSummary(SOCIAL_REACH_TRENDS["30d"]);
@@ -1026,7 +1026,7 @@ export const BEST_POSTING_TIMES = [
 /**
  * The connection-level event log.
  *
- * Deliberately not the post log — "LinkedIn post published" appears here only
+ * Deliberately not the post log - "LinkedIn post published" appears here only
  * as evidence that the *connection* carried it. A merchant reading this is
  * debugging an integration, so the rows that matter are the syncs, the token
  * refreshes and the permission changes, and the publish lines are the
@@ -1037,7 +1037,7 @@ export const SOCIAL_ACTIVITY: SocialActivityEvent[] = [
     id: "sac-1",
     accountId: "sa-facebook",
     platform: "facebook",
-    message: "Page synced — 312 posts and follower counts up to date.",
+    message: "Page synced - 312 posts and follower counts up to date.",
     status: "success",
     at: minutesAgo(2),
   },
@@ -1045,7 +1045,7 @@ export const SOCIAL_ACTIVITY: SocialActivityEvent[] = [
     id: "sac-2",
     accountId: "sa-instagram",
     platform: "instagram",
-    message: "Analytics updated — insights pulled for the last 24 hours.",
+    message: "Analytics updated - insights pulled for the last 24 hours.",
     status: "success",
     at: minutesAgo(4),
   },
@@ -1053,7 +1053,7 @@ export const SOCIAL_ACTIVITY: SocialActivityEvent[] = [
     id: "sac-3",
     accountId: "sa-linkedin",
     platform: "linkedin",
-    message: "Post published — “Behind the build: our Q3 roadmap”.",
+    message: "Post published - “Behind the build: our Q3 roadmap”.",
     status: "success",
     at: minutesAgo(7),
   },
@@ -1061,7 +1061,7 @@ export const SOCIAL_ACTIVITY: SocialActivityEvent[] = [
     id: "sac-4",
     accountId: "sa-instagram",
     platform: "instagram",
-    message: "Token refresh scheduled — current token expires in 18 days.",
+    message: "Token refresh scheduled - current token expires in 18 days.",
     status: "warning",
     at: hoursAgo(3),
   },
@@ -1069,7 +1069,7 @@ export const SOCIAL_ACTIVITY: SocialActivityEvent[] = [
     id: "sac-5",
     accountId: "sa-x",
     platform: "x",
-    message: "Publishing failed — 401 Unauthorized. The access token has expired.",
+    message: "Publishing failed - 401 Unauthorized. The access token has expired.",
     status: "error",
     at: hoursAgo(9),
   },
@@ -1077,7 +1077,7 @@ export const SOCIAL_ACTIVITY: SocialActivityEvent[] = [
     id: "sac-6",
     accountId: "sa-x",
     platform: "x",
-    message: "Connection failed — re-authorisation required.",
+    message: "Connection failed - re-authorisation required.",
     status: "error",
     at: hoursAgo(31),
   },
@@ -1085,7 +1085,7 @@ export const SOCIAL_ACTIVITY: SocialActivityEvent[] = [
     id: "sac-7",
     accountId: "sa-facebook",
     platform: "facebook",
-    message: "Post published — “Autumn drop is live”.",
+    message: "Post published - “Autumn drop is live”.",
     status: "success",
     at: hoursAgo(5),
   },
@@ -1093,7 +1093,7 @@ export const SOCIAL_ACTIVITY: SocialActivityEvent[] = [
     id: "sac-8",
     accountId: "sa-linkedin",
     platform: "linkedin",
-    message: "Comment permission not granted — comment sync stays off.",
+    message: "Comment permission not granted - comment sync stays off.",
     status: "warning",
     at: daysAgo(96),
   },
@@ -1129,8 +1129,8 @@ export function capabilityState(
  *
  * One predicate, read by the composer, the calendar and the Planner's empty
  * states, so "can we post to this" is answered identically everywhere. An
- * account can be live but withheld from the Planner — `availableToPlanner` is
- * an integration-level switch — and that is the case a boolean on `status`
+ * account can be live but withheld from the Planner - `availableToPlanner` is
+ * an integration-level switch - and that is the case a boolean on `status`
  * alone could not express.
  */
 export function publishableAccounts(
@@ -1163,7 +1163,7 @@ export interface SocialConnectionTotals {
  * The Social integration's KPI row, derived rather than typed out.
  *
  * "Active platforms" counts distinct platforms that can actually publish, not
- * distinct platforms with a row — four accounts where one token has expired is
+ * distinct platforms with a row - four accounts where one token has expired is
  * three active platforms, and saying four would be the exact lie this page
  * exists to prevent.
  */

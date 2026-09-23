@@ -7,7 +7,7 @@ import { PlatformMark, type MarkSize } from "@/components/marketing-hub/shared/c
 /**
  * A provider's mark, whether or not it is a platform we publish to yet.
  *
- * For a connected platform this *is* `PlatformMark` — the same component the
+ * For a connected platform this *is* `PlatformMark` - the same component the
  * Social Planner's calendar and post rows use, so one Instagram glyph appears
  * in both modules and the two read as one product.
  *

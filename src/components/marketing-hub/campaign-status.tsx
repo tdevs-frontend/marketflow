@@ -43,7 +43,7 @@ const CHANNEL_META: Record<
 
 /**
  * Channel is the thing a merchant scans a campaign list by, so it gets an icon
- * chip rather than a word — four shapes read faster than four labels.
+ * chip rather than a word - four shapes read faster than four labels.
  */
 export function ChannelChip({
   channel,

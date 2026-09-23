@@ -6,13 +6,13 @@ import { WORKFLOW_STEPS } from "./platform-features";
 /**
  * The journey bar: Capture, Engage, Automate, Convert, Grow.
  *
- * An ordered list, because the steps are a sequence — the arrows between them
+ * An ordered list, because the steps are a sequence - the arrows between them
  * are decoration on top of that, not the thing carrying the order.
  *
  * The steps are deliberately neutral except one. Automate wears the brand
  * gradient because it is the differentiator the section above it spends eight
  * cards arguing for; five brand-coloured tiles would say nothing at all. The
- * bar as a whole is kept small and quiet for the same reason — it summarises
+ * bar as a whole is kept small and quiet for the same reason - it summarises
  * the ecosystem above it, it does not compete with it.
  */
 export function WorkflowBar() {

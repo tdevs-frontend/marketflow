@@ -19,7 +19,7 @@ export * from "./provider-selector";
 export * from "./sms-integration";
 export * from "./whatsapp-integration";
 
-/* The two sub-modules keep their own barrels — Webhooks and API are whole
+/* The two sub-modules keep their own barrels - Webhooks and API are whole
    workspaces rather than pieces of the provider pages. */
 export * from "./api";
 export * from "./social";

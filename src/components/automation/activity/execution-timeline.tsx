@@ -16,7 +16,7 @@ import { NodeIcon } from "../node-icon";
 
 /** Durations here run from 50ms to half an hour, so the unit has to move. */
 export function formatDuration(ms?: number): string {
-  if (ms === undefined) return "—";
+  if (ms === undefined) return "-";
   if (ms < 1000) return `${ms}ms`;
   if (ms < 60_000) return `${(ms / 1000).toFixed(1)}s`;
   if (ms < 3_600_000) return `${Math.round(ms / 60_000)}m`;
@@ -32,7 +32,7 @@ const timeOf = (iso: string) =>
  * What the step was given and what it gave back.
  *
  * Collapsed by default, because a timeline of nine steps each showing two JSON
- * objects is unreadable — and because the payload only matters once something
+ * objects is unreadable - and because the payload only matters once something
  * has gone wrong. A `<details>` rather than React state: the browser already
  * knows how to do this, and it stays open across a re-render for free.
  */
@@ -75,7 +75,7 @@ function StepPayload({ step }: { step: WorkflowRunStep }) {
  * The provider's own response is shown verbatim, in mono, because "Recipient
  * mailbox unavailable" is a paraphrase and `550 5.1.1` is the thing an admin
  * can search for. The three recovery actions sit with it rather than in a
- * toolbar somewhere else — the moment you understand the error is the moment
+ * toolbar somewhere else - the moment you understand the error is the moment
  * you want to retry it.
  */
 function StepError({
@@ -127,7 +127,7 @@ function StepError({
  * A run, top to bottom.
  *
  * The vertical rule is drawn per item rather than as one absolute line behind
- * the list, so the last step has no tail hanging off it — a timeline that runs
+ * the list, so the last step has no tail hanging off it - a timeline that runs
  * past its final entry reads as "and then something else happened".
  */
 export function ExecutionTimeline({

@@ -21,7 +21,7 @@ import type { NotificationModule, NotificationTone } from "@/types/notification"
  * The tile at the left of every notification, wherever one is rendered.
  *
  * One component for the bell and the archive page, because the icon is the only
- * thing a reader uses to triage a feed *before* reading it — and a feed where
+ * thing a reader uses to triage a feed *before* reading it - and a feed where
  * an order is a cart in the dropdown and a bag on the page has no triage value
  * at all. The vocabulary lives here and nowhere else.
  *

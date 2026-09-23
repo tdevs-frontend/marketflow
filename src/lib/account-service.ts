@@ -52,7 +52,7 @@ import { fail, ok } from "@/types/account";
  *
  * Every panel in Settings calls these functions and nothing else. They are
  * async, they return `ServiceResult` rather than throwing, and they never
- * report a success they did not perform — which together are the whole design.
+ * report a success they did not perform - which together are the whole design.
  * A component written against this is already written against the HTTP client
  * that will replace the body of each function.
  *
@@ -60,7 +60,7 @@ import { fail, ok } from "@/types/account";
  *
  * *Is there a backend?* No. `env.apiBaseUrl` falls back to `/api`, there are no
  * route handlers under `app/`, there are no server actions, and nothing in the
- * product ever dispatches `setCredentials` — `auth.user` is permanently `null`.
+ * product ever dispatches `setCredentials` - `auth.user` is permanently `null`.
  * `SESSION_MODE` is how the UI knows that without each panel re-deriving it.
  *
  * *So what actually works?* `CAPABILITIES`, exactly. Anything `true` there is
@@ -70,7 +70,7 @@ import { fail, ok } from "@/types/account";
  * disabled and says why. There is no third option where it raises a toast.
  *
  * Two-factor is the interesting entry. It is `true`, and the verification is
- * real RFC 6238 — see `lib/totp` — so a mistyped setup key is rejected here
+ * real RFC 6238 - see `lib/totp` - so a mistyped setup key is rejected here
  * rather than at a sign-in three weeks later. What it cannot do is protect that
  * sign-in, because protecting it means a server holding the secret. The Security
  * page states that where it cannot be missed; being able to *test* an
@@ -80,11 +80,11 @@ import { fail, ok } from "@/types/account";
  * Passwords are `false` for the mirror-image reason. Verifying a current
  * password requires something that knows the old hash. Nothing in the browser
  * does, or should, so the form validates everything it legitimately can and the
- * submit reports `service_unavailable` — a real outcome, not a failed success.
+ * submit reports `service_unavailable` - a real outcome, not a failed success.
  *
  * Sessions split down the same line, and the split is worth stating because it
  * is not obvious from the section headings. `listSessions` returns one genuine
- * row — this browser, described from its own user-agent and clock — because
+ * row - this browser, described from its own user-agent and clock - because
  * that much a client can observe. `remoteSessions` is `false` because the
  * other devices holding a token are known only to whatever issued the tokens,
  * and `signInActivity` is `false` because a sign-in log is a record of things
@@ -100,7 +100,7 @@ import { fail, ok } from "@/types/account";
  * True when no account API is configured, which today is always.
  *
  * Derived rather than hard-coded so that pointing `NEXT_PUBLIC_API_BASE_URL` at
- * a real host is the single change that flips the module over — the notices
+ * a real host is the single change that flips the module over - the notices
  * disappear, the capability gates open, and the functions below become the
  * place to put `fetch`.
  */
@@ -138,7 +138,7 @@ export interface AccountCapabilities {
    *
    * Separate from `payment`, and no longer tied to it. One is about the
    * *instrument* and one about the *agreement*: which tier a workspace is on
-   * decides its allowances, and this build genuinely records that — the store
+   * decides its allowances, and this build genuinely records that - the store
    * holds the new tier, the usage meters re-measure against its limits and
    * every surface reading the subscription agrees. What it does not do is move
    * money, which is `payment`'s question and still answered no.
@@ -153,7 +153,7 @@ export interface AccountCapabilities {
    * Downloadable invoice *documents*.
    *
    * Narrower than it used to be, and the distinction is the honest one. The
-   * invoice **records** — number, date, amount, status — are the workspace's
+   * invoice **records** - number, date, amount, status - are the workspace's
    * own billing history and are listed. The **PDF** is a document a payment
    * provider issues against a charge it made; none is connected, so there is
    * no file, and the rows say so instead of offering a link to nothing.
@@ -184,7 +184,7 @@ export const CAPABILITIES: AccountCapabilities = {
  *
  * One phrasing per capability, written once, so a merchant who meets two of
  * them recognises a boundary rather than two unrelated bugs. Each one names the
- * missing piece — "no payment provider", "no account service" — because "not
+ * missing piece - "no payment provider", "no account service" - because "not
  * available" without a reason reads as a fault.
  */
 export const UNAVAILABLE_REASON: Record<keyof AccountCapabilities, string> = {
@@ -196,7 +196,7 @@ export const UNAVAILABLE_REASON: Record<keyof AccountCapabilities, string> = {
     "Changing a password needs an account service to verify the current one. None is connected.",
   twoFactor: "",
   twoFactorEnforced:
-    "Enrolment is verified here, but sign-in is not yet gated by it — that needs the account service.",
+    "Enrolment is verified here, but sign-in is not yet gated by it - that needs the account service.",
   remoteSessions:
     "Sessions on your other devices are held by the account service. None is connected, so only this browser can be listed.",
   signInActivity:
@@ -214,7 +214,7 @@ export const UNAVAILABLE_REASON: Record<keyof AccountCapabilities, string> = {
  * A short, deliberate pause on every call.
  *
  * Not decoration and not a fake delay to look busy: the panels implement a real
- * three-state machine — idle, in flight, settled — and that machine has to be
+ * three-state machine - idle, in flight, settled - and that machine has to be
  * written and exercised now, because a network adapter will drive exactly the
  * same one. A store write that resolves synchronously would let a `Saving…`
  * state be skipped and then never be reached again until the day a real request
@@ -255,7 +255,7 @@ export async function updateProfile(
  * `POST /account/avatar`
  *
  * Takes the `File` rather than a URL because that is what the real endpoint
- * takes, and because the object URL is this adapter's implementation detail —
+ * takes, and because the object URL is this adapter's implementation detail -
  * a component that built the URL itself would be a component that has to be
  * rewritten when the upload becomes multipart.
  */
@@ -388,7 +388,7 @@ export async function startTwoFactorEnrollment(): Promise<
  *
  * Genuinely verifies. A wrong code is rejected, a code from a different secret
  * is rejected, and a code that has rolled over by more than one step is
- * rejected — which is the entire reason this step exists. An enrolment flow
+ * rejected - which is the entire reason this step exists. An enrolment flow
  * that accepts any six digits has confirmed nothing and has told the merchant
  * it confirmed something.
  */
@@ -397,7 +397,7 @@ export async function verifyTwoFactorEnrollment(
 ): Promise<ServiceResult<TwoFactorActivation>> {
   const enrollment = readSnapshot().enrollment;
   if (!enrollment) {
-    return fail("validation", "Start the setup again — this enrolment expired.");
+    return fail("validation", "Start the setup again - this enrolment expired.");
   }
 
   await settle();
@@ -458,7 +458,7 @@ export async function disableTwoFactor(
  * `POST /account/2fa/recovery-codes`
  *
  * Re-authenticated with a current code, and it replaces the whole set rather
- * than topping it up — codes a person may have written down have to stop
+ * than topping it up - codes a person may have written down have to stop
  * working, or regenerating them has bought nothing.
  */
 export async function regenerateRecoveryCodes(
@@ -491,7 +491,7 @@ export async function regenerateRecoveryCodes(
  * The id the current session answers to.
  *
  * A constant rather than something minted per call, because the panel compares
- * ids to decide which row may not be signed out — and a row whose identity
+ * ids to decide which row may not be signed out - and a row whose identity
  * changes between a render and a click is a row that eventually ends the wrong
  * session.
  */
@@ -502,7 +502,7 @@ export const CURRENT_SESSION_ID = "session_current";
  *
  * Everything on it is observed rather than chosen. The device comes from the
  * user-agent, the time zone from `Intl`, and `startedAt` from
- * `performance.timeOrigin` — the instant this document began, which with no
+ * `performance.timeOrigin` - the instant this document began, which with no
  * sign-in flow in the product is the honest answer to "since when has this
  * browser been holding a session". `location` stays `null`: the coarse region
  * is derived from the request address by whatever receives it, and there is
@@ -532,7 +532,7 @@ function currentSession(): AccountSession {
  *
  * Returns one session today, and it is a real one: the browser reading the
  * page. That is the part of "where am I signed in" a client can answer on its
- * own, and answering it is worth more than it sounds — somebody checking this
+ * own, and answering it is worth more than it sounds - somebody checking this
  * page after a scare wants to confirm the device in front of them is the
  * device the list describes.
  *
@@ -541,7 +541,7 @@ function currentSession(): AccountSession {
  * the merchant has never visited, each row carrying a Sign out button that
  * ends nothing, would turn the one screen whose job is to be trusted into the
  * one screen that cannot be. When `remoteSessions` opens, the body of this
- * function becomes a `fetch` and the panel renders whatever comes back — it
+ * function becomes a `fetch` and the panel renders whatever comes back - it
  * already renders a list.
  */
 export async function listSessions(): Promise<ServiceResult<AccountSession[]>> {
@@ -608,8 +608,8 @@ export async function revokeOtherSessions(): Promise<ServiceResult<number>> {
  * that would not be fiction.
  *
  * It is written as a failing call rather than left out because the failure is
- * the useful artefact. The panel renders it as a stated boundary — no retry
- * button, because there is nothing to retry — and the same panel renders real
+ * the useful artefact. The panel renders it as a stated boundary - no retry
+ * button, because there is nothing to retry - and the same panel renders real
  * rows, with real failed attempts and the alert they raise, the moment the
  * capability opens. The alternative, an empty list, would say something
  * different and false: that the account has never been signed into.
@@ -637,13 +637,13 @@ export async function listSignInActivity(): Promise<
  *
  * The module's single history, and it replaced two. There used to be
  * `listPlanHistory` and `listInvoices`, and they described the same events at
- * different resolutions — a period said "Business, April to July, $99", three
+ * different resolutions - a period said "Business, April to July, $99", three
  * invoices said what that meant month by month. Keeping both meant a merchant
  * matching a bank statement had to hold two tables open and join them by date,
  * and meant this file had two places for the same fact to be wrong in.
  *
- * So periods remain what is *stored* — a plan change creates one, a
- * cancellation ends one — and charges are derived from them here. Nothing can
+ * So periods remain what is *stored* - a plan change creates one, a
+ * cancellation ends one - and charges are derived from them here. Nothing can
  * disagree, because there is only one record and one reading of it.
  *
  * Three things are merged in:
@@ -660,13 +660,13 @@ export async function listSignInActivity(): Promise<
  *   generates is worst exactly where it matters most.
  *
  *   **The pending payment**, if one is outstanding. It is a purchase in
- *   progress and belongs at the top of the list the merchant checks — but it
+ *   progress and belongs at the top of the list the merchant checks - but it
  *   carries no invoice number, because an unverified transfer is a claim and a
  *   number against it would imply a document somebody could ask for.
  *
  * `planState` for the open period follows the *subscription* rather than the
  * period, which is the one place the two can differ: cancelling does not end
- * the period — the workspace keeps what it paid for until `renewsAt` — so its
+ * the period - the workspace keeps what it paid for until `renewsAt` - so its
  * charges read `cancelled` while the period itself is still the running one.
  */
 export async function listPurchaseHistory(): Promise<ServiceResult<Purchase[]>> {
@@ -757,7 +757,7 @@ export async function changePlan(
   /*
    * The history gains a period only when something about the agreement
    * actually moved. Pressing "Change plan" on the tier you are already on, or
-   * re-selecting the cycle you are already billed on, is a no-op — and a
+   * re-selecting the cycle you are already billed on, is a no-op - and a
    * ledger that grows a zero-length row every time somebody clicks is a ledger
    * nobody trusts to be a record of anything.
    */
@@ -785,8 +785,8 @@ export async function changePlan(
 /**
  * `DELETE /billing/subscription`
  *
- * Cancels at the end of the paid period rather than immediately — the
- * workspace has been charged for it — which is why this sets `cancelled` and
+ * Cancels at the end of the paid period rather than immediately - the
+ * workspace has been charged for it - which is why this sets `cancelled` and
  * leaves `renewsAt` standing as the date access ends.
  */
 export async function cancelSubscription(): Promise<
@@ -841,7 +841,7 @@ export async function listPaymentGateways(): Promise<
  * Take payment for a plan through an automatic gateway, and start it.
  *
  * Written against a provider that is not here, and written anyway, because the
- * shape of the transaction is not in doubt — pick a gateway, charge it, and
+ * shape of the transaction is not in doubt - pick a gateway, charge it, and
  * start the plan only if the charge succeeded. What is missing is the middle
  * step, and the guard at the top is what stops the other two running without
  * it. An unconfigured gateway fails with `service_unavailable` carrying that
@@ -851,7 +851,7 @@ export async function listPaymentGateways(): Promise<
  * the account, the provider's own hosted checkout collects the instrument, and
  * this function would receive a token. Collecting a PAN here to forward it
  * later is how an application that never wanted card data ends up in scope for
- * it — see `constants/billing`.
+ * it - see `constants/billing`.
  */
 export async function payForPlan(
   planId: string,
@@ -874,7 +874,7 @@ export async function payForPlan(
   }
 
   /* The charge would happen here, against a token the provider's own checkout
-     minted. It either succeeds or this returns — the plan change below is
+     minted. It either succeeds or this returns - the plan change below is
      deliberately downstream of it, so a failed charge cannot leave a workspace
      on a tier nobody paid for. */
 
@@ -958,7 +958,7 @@ export async function submitManualPayment(
  *
  * Here because the alternative is a merchant who mistyped a reference being
  * stuck behind their own pending payment until somebody else clears it. It
- * removes the claim and nothing else — no subscription changed when it was
+ * removes the claim and nothing else - no subscription changed when it was
  * made, so none changes when it is taken back.
  */
 export async function withdrawPaymentRequest(): Promise<ServiceResult<null>> {

@@ -20,7 +20,7 @@ interface Product {
   changePercent: number;
 }
 
-/* Ranked by revenue, not units — Starter outsells Business and earns less. */
+/* Ranked by revenue, not units - Starter outsells Business and earns less. */
 const PRODUCTS: Product[] = [
   { name: "Premium Package", unitsSold: 184, revenue: 12840, changePercent: 18.2 },
   { name: "Starter Package", unitsSold: 142, revenue: 8920, changePercent: 9.4 },

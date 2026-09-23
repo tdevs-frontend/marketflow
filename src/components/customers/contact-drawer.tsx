@@ -58,7 +58,7 @@ type Tab =
  * One consent row: the channel, and whether we may use it.
  *
  * Consent is its own block rather than a fact in the grid because it is the one
- * thing here with legal weight — a reader should be able to answer "can I
+ * thing here with legal weight - a reader should be able to answer "can I
  * message this person on WhatsApp?" without interpreting anything.
  */
 const CONSENT: {
@@ -114,7 +114,7 @@ function ConsentRow({ contact }: { contact: CustomerContact }) {
 /**
  * Quick inspection for one contact, without leaving the table.
  *
- * A drawer rather than a route because the job it serves is comparison — a
+ * A drawer rather than a route because the job it serves is comparison - a
  * reader works down a filtered list checking who to message, and a full page
  * navigation loses the list, the filters and the scroll position every time.
  *
@@ -142,7 +142,7 @@ export function ContactDrawer({
   const [tab, setTab] = useState<Tab>("overview");
   const [note, setNote] = useState("");
 
-  /* Reset to Overview when a different contact is opened — landing on the
+  /* Reset to Overview when a different contact is opened - landing on the
      previous contact's Automation tab is disorienting. */
   const subject = contact?.id ?? null;
   const [lastSubject, setLastSubject] = useState(subject);
@@ -158,7 +158,7 @@ export function ContactDrawer({
     : [];
   const segments = contact
     ? /* Asked of the segment, so a dynamic one is included when its rules
-         match — `segmentIds` only records the static memberships. */
+         match - `segmentIds` only records the static memberships. */
       CUSTOMER_SEGMENTS.filter((segment) =>
         segmentMembers(segment).some((member) => member.id === contact.id),
       )
@@ -168,7 +168,7 @@ export function ContactDrawer({
    * The contact's actual orders, not the activity entries that mention them.
    *
    * The tab used to render the "order" slice of the activity feed, which is a
-   * log of things that happened rather than a list of what was bought — no
+   * log of things that happened rather than a list of what was bought - no
    * reference, no line items, no payment state, and nothing to click through
    * to. These are the order records themselves, joined on the contact id that
    * the order book now uses.
@@ -333,10 +333,10 @@ export function ContactDrawer({
           {tab === "overview" ? (
             <TabPanel idBase="contact-drawer" value="overview">
               <dl className="grid grid-cols-2 gap-x-4 gap-y-3 rounded-panel bg-surface-secondary p-3.5">
-                <DrawerFact label="Email" value={contact.email ?? "—"} />
-                <DrawerFact label="Phone" value={contact.phone ?? "—"} />
-                <DrawerFact label="Company" value={contact.company ?? "—"} />
-                <DrawerFact label="Job title" value={contact.jobTitle ?? "—"} />
+                <DrawerFact label="Email" value={contact.email ?? "-"} />
+                <DrawerFact label="Phone" value={contact.phone ?? "-"} />
+                <DrawerFact label="Company" value={contact.company ?? "-"} />
+                <DrawerFact label="Job title" value={contact.jobTitle ?? "-"} />
                 <DrawerFact label="Owner" value={ownerName(contact.ownerId)} />
                 <DrawerFact
                   label="Source"
@@ -355,7 +355,7 @@ export function ContactDrawer({
                 <DrawerFact
                   label="Last order"
                   value={
-                    contact.lastOrderAt ? formatDate(contact.lastOrderAt) : "—"
+                    contact.lastOrderAt ? formatDate(contact.lastOrderAt) : "-"
                   }
                 />
                 <DrawerFact
@@ -488,7 +488,7 @@ export function ContactDrawer({
                               <OrderStatusBadge status={order.status} />
                             </p>
                             <p className="mt-1 truncate text-sm text-text-secondary">
-                              {first?.productName ?? "—"}
+                              {first?.productName ?? "-"}
                               {rest.length > 0
                                 ? ` + ${rest.length} more`
                                 : ""}

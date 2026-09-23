@@ -4,8 +4,8 @@ import { DashboardSidebar } from "@/components/layout/dashboard-sidebar";
 /**
  * `data-surface="app"` is the workspace's typography scope.
  *
- * The landing pages are set in two faces — Stack Sans Notch for headings over
- * Google Sans Flex for everything else — and the dashboard is set in one. This
+ * The landing pages are set in two faces - Stack Sans Notch for headings over
+ * Google Sans Flex for everything else - and the dashboard is set in one. This
  * attribute is what tells the two apart: THE SURFACE RULE in
  * `styles/font-themes.css` repoints `--font-heading` at the body face for this
  * subtree, so every heading in here, down to a dialog's title, comes out in

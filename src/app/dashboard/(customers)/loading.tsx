@@ -8,8 +8,8 @@ import {
  * The loading state for every page under Customers.
  *
  * One file at the group root rather than five at the leaves, matching how
- * Marketing does it: these pages all open with the same three bands — header,
- * KPI row, toolbar — and only the body below differs. Leads and Customer
+ * Marketing does it: these pages all open with the same three bands - header,
+ * KPI row, toolbar - and only the body below differs. Leads and Customer
  * Journey each override this with their own, because a kanban and a timeline
  * are not table-shaped and a table skeleton there would jump on swap.
  *

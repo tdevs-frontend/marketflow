@@ -84,7 +84,7 @@ export interface FlowStep {
   id: string;
   type: FlowStepType;
   title: string;
-  /** The configured detail — "Wait 1 day", "Send welcome_message". */
+  /** The configured detail - "Wait 1 day", "Send welcome_message". */
   detail: string;
   /** Lucide key for the node's icon. */
   icon: string;
@@ -93,7 +93,7 @@ export interface FlowStep {
   /** Contacts that have reached this step. */
   entered?: number;
   /**
-   * A condition's outcomes, in order. Two is the norm — yes and no — and the
+   * A condition's outcomes, in order. Two is the norm - yes and no - and the
    * builder renders them as parallel columns under the fork.
    */
   branches?: { label: string; steps: FlowStep[] }[];
@@ -108,7 +108,7 @@ export interface AutomationFlow {
   /** Plain-language trigger, e.g. "New lead created". */
   triggerLabel: string;
   triggerIcon: string;
-  /** Excludes the trigger — `steps.length` is what "5 steps" means. */
+  /** Excludes the trigger - `steps.length` is what "5 steps" means. */
   steps: FlowStep[];
   contactsProcessed: number;
   /** Percentage completing the flow. */

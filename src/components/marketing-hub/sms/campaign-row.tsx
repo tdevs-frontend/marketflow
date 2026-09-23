@@ -6,7 +6,7 @@ import type { CampaignStatus } from "@/types/marketing";
  *
  * Same shared `CampaignStatus` as the other channels, with the words SMS
  * people use: a broadcast is "Sending" and then "Delivered", because on this
- * channel the delivery receipt is the completion event — there is no open to
+ * channel the delivery receipt is the completion event - there is no open to
  * wait for afterwards.
  */
 const STATUS_LABELS: Record<CampaignStatus, string> = {

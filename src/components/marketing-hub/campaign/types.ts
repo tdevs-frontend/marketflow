@@ -7,7 +7,7 @@ import type { PreflightIssue } from "./validation";
  *
  * One shape rather than a bespoke prop list per step: the wizard owns the
  * draft, and a step's job is to render part of it and write back. `setChannel`
- * is separate from `set` because changing channel is not a field write — it
+ * is separate from `set` because changing channel is not a field write - it
  * invalidates the sender, the template and the UTM defaults, and that repair
  * belongs in one place rather than in whichever step happens to change it.
  */
@@ -18,7 +18,7 @@ export interface StepProps {
   errors: Record<string, string>;
   derived: DraftDerived;
   issues: PreflightIssue[];
-  /** Jump to a step — used by the Review checklist and the empty states. */
+  /** Jump to a step - used by the Review checklist and the empty states. */
   goTo: (step: WizardStep) => void;
   /** Shared preview controls, so a device choice survives a step change. */
   preview: {

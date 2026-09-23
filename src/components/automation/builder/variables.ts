@@ -74,7 +74,7 @@ export function missingTokens(node: WorkflowNode): string[] {
  * `{{first_name}}` almost always means the contact's first name, and asking
  * somebody to say so by hand for every message is the kind of busywork that
  * makes people skip the mapping step entirely. The guess is a default, not a
- * decision — every row stays editable.
+ * decision - every row stays editable.
  */
 export function guessBinding(token: string): VariableBinding {
   const normalised = token.toLowerCase();

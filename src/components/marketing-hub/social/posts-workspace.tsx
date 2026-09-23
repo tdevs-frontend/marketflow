@@ -45,7 +45,7 @@ import { PostComposer } from "./post-composer";
 import { PostStatusBadge, PostThumb } from "./post-status";
 
 /**
- * Post management — the list behind the calendar.
+ * Post management - the list behind the calendar.
  *
  * Two views, and they are not cosmetic: the grid is how you review *content*
  * (caption, imagery, which platforms) and the table is how you review
@@ -59,7 +59,7 @@ const PER_PAGE = TABLE_PAGE_SIZE;
 
 type View = "grid" | "table";
 
-/** Total interactions — the single number a post is ranked by. */
+/** Total interactions - the single number a post is ranked by. */
 const interactions = (post: SocialPost) =>
   post.engagement.likes + post.engagement.comments + post.engagement.shares;
 
@@ -144,7 +144,7 @@ export function SocialPostsWorkspace() {
   /*
    * Every row action, and every one of them writes.
    *
-   * Edit was `() => {}` — a menu item that opened nothing — while Duplicate
+   * Edit was `() => {}` - a menu item that opened nothing - while Duplicate
    * and Retry raised a toast claiming work that never happened. A control that
    * reports success without doing anything is worse than a missing one.
    */
@@ -319,7 +319,7 @@ export function SocialPostsWorkspace() {
                 No bulk Reschedule.
 
                 It reported that N posts had been rescheduled without ever
-                asking when — there is no date on this bar and no defensible
+                asking when - there is no date on this bar and no defensible
                 default for one. Rescheduling is a per-post decision and Edit
                 now does it properly, so the honest move is to drop the
                 control rather than keep a button that announces work it
@@ -379,7 +379,7 @@ export function SocialPostsWorkspace() {
                       className="flex h-full flex-col overflow-hidden p-0"
                     >
                       {/* Media band. 16:9 rather than square, so the card
-                          height stays predictable across mixed assets — a
+                          height stays predictable across mixed assets - a
                           1080×1920 reel and a 2400×1600 hero crop to the same
                           box and the row keeps one baseline. */}
                       <div className="relative aspect-video w-full overflow-hidden bg-surface-secondary">
@@ -398,7 +398,7 @@ export function SocialPostsWorkspace() {
                               so `bg-surface/90` and the checkbox's own
                               `bg-primary` were both emitted for the checked
                               state and which one painted came down to the
-                              order Tailwind happened to write them in — the
+                              order Tailwind happened to write them in - the
                               coin toss this design system warns about, with a
                               white tick on a white box as the losing side. The
                               scrim above already gives the unchecked box its
@@ -625,7 +625,7 @@ export function SocialPostsWorkspace() {
                               {formatNumber(post.engagement.reach)}
                             </span>
                           ) : (
-                            <span className="text-text-muted">—</span>
+                            <span className="text-text-muted">-</span>
                           )}
                         </TD>
 
@@ -640,12 +640,12 @@ export function SocialPostsWorkspace() {
                               </span>
                             </>
                           ) : (
-                            <span className="text-text-muted">—</span>
+                            <span className="text-text-muted">-</span>
                           )}
                         </TD>
 
                         {/* Author rides along under the date rather than
-                            taking an eighth column — "who wrote this and
+                            taking an eighth column - "who wrote this and
                             when" is one question. */}
                         <TD className="text-sm whitespace-nowrap text-text-secondary">
                           {post.createdAt.slice(0, 10)}
@@ -797,7 +797,7 @@ export function SocialPostsWorkspace() {
       >
         <p className="text-sm text-text-secondary">
           Scheduled posts are cancelled. Posts already published stay on the
-          platform — deleting here only removes them from MarketFlow, along with
+          platform - deleting here only removes them from MarketFlow, along with
           their engagement history.
         </p>
       </ConfirmDialog>

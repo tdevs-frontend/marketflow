@@ -24,7 +24,7 @@ import type {
  *
  * Three narrow dialogs rather than one "edit everything" sheet, because bulk
  * editing is only ever worth doing when the merchant already knows which single
- * thing they want to change across forty rows — a price rise, a delivery, a new
+ * thing they want to change across forty rows - a price rise, a delivery, a new
  * photograph. A combined dialog would make them scroll past two sections they
  * do not want on the way to the one they do, and would need a "leave unchanged"
  * state on every field to be safe.
@@ -320,7 +320,7 @@ export function BulkInventoryDialog({
           </div>
         ) : null}
 
-        {/* Reserved is never offered here — it is read off the order book, and
+        {/* Reserved is never offered here - it is read off the order book, and
             a bulk control that appeared to set it would be a lie. */}
         {type === "physical" ? (
           <p className="text-sm font-medium text-text-muted">
@@ -346,7 +346,7 @@ export function BulkInventoryDialog({
  * on the product and a different black shirt photo on the variant, with no way
  * to tell which one the storefront shows.
  *
- * The option-value shortcut is what makes this worth opening at all — "apply to
+ * The option-value shortcut is what makes this worth opening at all - "apply to
  * every Black variant" is the real job, and doing it by ticking four rows in a
  * twelve-row table is the tedium this replaces.
  */
@@ -367,7 +367,7 @@ export function VariantMediaDialog({
   onApply: (imageUrl: string | undefined, variantIds: string[]) => void;
 }) {
   const [chosen, setChosen] = useState<string | null>(null);
-  /* "opt-1:Black" — which option value the assignment should sweep across. */
+  /* "opt-1:Black" - which option value the assignment should sweep across. */
   const [scope, setScope] = useState("selection");
 
   const scopeOptions = [
@@ -388,7 +388,7 @@ export function VariantMediaDialog({
   /** Which ids the assignment lands on, given the chosen scope. */
   function targets(all: ProductVariant[]): string[] {
     if (scope === "selection") return variants.map((variant) => variant.id);
-    /* Split on the first colon only — an option value may contain one. */
+    /* Split on the first colon only - an option value may contain one. */
     const at = scope.indexOf(":");
     const index = scope.slice(0, at);
     const value = scope.slice(at + 1);
@@ -434,7 +434,7 @@ export function VariantMediaDialog({
                 Image
               </legend>
               <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4">
-                {/* "Use the product image" is a real choice, not an absence —
+                {/* "Use the product image" is a real choice, not an absence -
                     it is how a merchant undoes an assignment. */}
                 <li>
                   <button
@@ -496,7 +496,7 @@ export function VariantMediaDialog({
 
             {scope !== "selection" ? (
               <p className="rounded-panel bg-primary-soft px-3.5 py-3 text-sm text-primary-dark">
-                Every variant sharing that option value gets this image —
+                Every variant sharing that option value gets this image -
                 including any generated later.
               </p>
             ) : variants.length > 0 ? (

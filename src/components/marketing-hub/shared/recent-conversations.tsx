@@ -15,20 +15,20 @@ const STATUS_TONES: Record<ConversationStatus, BadgeTone> = {
 /**
  * Latest inbox threads, for the overview pages.
  *
- * Shows the newest message rather than the first, and whose it was — an
+ * Shows the newest message rather than the first, and whose it was - an
  * inbound message with nothing after it is a thread waiting on you, which is
  * the only reason this panel is on a dashboard at all.
  *
  * Laid out as an inbox row, because that is what it is: avatar, then the thread
  * (who, what they said, where it stands), then the right rail holding the two
- * things you scan a list of threads *for* — how long it has been waiting, and
+ * things you scan a list of threads *for* - how long it has been waiting, and
  * whether anything is unread. Those two stack on the right rather than sitting
  * inline, so the eye can run down a single column of times instead of finding
  * each one at the end of a different-length name.
  *
  * Three lines per row, in falling weight: the name is the anchor, the message
  * is the content, the status strip is metadata. An unanswered thread earns
- * fuller ink on its message — the whole panel exists to surface those.
+ * fuller ink on its message - the whole panel exists to surface those.
  */
 export function RecentConversations({
   conversations,
@@ -37,7 +37,7 @@ export function RecentConversations({
   conversations: Conversation[];
   /**
    * The inbox route. The thread is appended as `?conversation=`, which is the
-   * param the inbox page actually reads — see `whatsapp/inbox/page.tsx`.
+   * param the inbox page actually reads - see `whatsapp/inbox/page.tsx`.
    */
   hrefBase: string;
 }) {
@@ -48,7 +48,7 @@ export function RecentConversations({
      *
      * The two things this fixes were one mistake. Trimming the first row's top
      * padding and the last row's bottom left those rows' hover grounds shorter
-     * than the rows themselves — hovering the top of the first row lit nothing.
+     * than the rows themselves - hovering the top of the first row lit nothing.
      * And insetting only the anchor horizontally made the ground wider than the
      * `divide-y` lines, which are drawn on the list items, so the highlight
      * overhung the dividers by 8px a side.
@@ -56,7 +56,7 @@ export function RecentConversations({
      * With the bleed on the list instead, the ground and the divider are the
      * same box: they cannot disagree. Padding is uniform `p-3`, so the gap
      * around the text is even on all four sides, and the negative margin gives
-     * that padding back — the first name still starts exactly where the card
+     * that padding back - the first name still starts exactly where the card
      * body starts.
      */
     <ul className="-m-3 divide-y divide-border">
@@ -76,8 +76,8 @@ export function RecentConversations({
                 {conversation.online ? (
                   /* The channel's own green, ringed in the card's white so the
                      dot reads as a badge on the avatar rather than a hole
-                     punched through it. It was `primary-light` — the brand
-                     indigo — which made presence the one thing on a WhatsApp
+                     punched through it. It was `primary-light` - the brand
+                     indigo - which made presence the one thing on a WhatsApp
                      panel not wearing the channel's colour. */
                   <span
                     aria-label="Online"

@@ -10,8 +10,8 @@ import { INTEGRATION_ROUTES } from "@/constants/integrations";
  * The error boundary for every page under Integrations.
  *
  * It reuses Automation's error card rather than introducing a second one. The
- * name is module-specific and the component is not — it is the product's
- * failure card, with a title, a retry and a digest — and two of them is how a
+ * name is module-specific and the component is not - it is the product's
+ * failure card, with a title, a retry and a digest - and two of them is how a
  * failed webhook list and a failed workflow list end up looking like different
  * products. Worth renaming if a third module needs it; not worth forking.
  *
@@ -35,7 +35,7 @@ export default function IntegrationsError({
   return (
     <AutomationErrorState
       title="Unable to load this page"
-      description="Something went wrong while loading your integrations. Your connections are unaffected — nothing was disconnected, rotated or deleted by this."
+      description="Something went wrong while loading your integrations. Your connections are unaffected - nothing was disconnected, rotated or deleted by this."
       onRetry={reset}
       digest={error.digest}
       secondary={

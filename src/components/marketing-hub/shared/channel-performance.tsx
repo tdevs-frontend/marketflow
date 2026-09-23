@@ -12,7 +12,7 @@ import { ChannelBadge } from "./channel-badge";
  * The four-way channel comparison.
  *
  * Social is in the same table as the messaging channels but not measuring the
- * same thing — 742 posts against 317,800 messages — so the volume column is
+ * same thing - 742 posts against 317,800 messages - so the volume column is
  * labelled by the row rather than by the header, and revenue is what makes the
  * four rows genuinely comparable.
  */
@@ -54,8 +54,8 @@ export function ChannelPerformanceTable({ rows }: { rows: ChannelRow[] }) {
               <TD align="right" className="tabular-nums">
                 {row.engaged === 0 ? (
                   /* SMS has no read receipt, so this is genuinely unavailable
-                     rather than zero — an em dash says so, a 0 would not. */
-                  <span className="text-text-muted">—</span>
+                     rather than zero - an em dash says so, a 0 would not. */
+                  <span className="text-text-muted">-</span>
                 ) : (
                   <>
                     <span className="text-text-secondary">

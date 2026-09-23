@@ -5,14 +5,14 @@ import { ProductFrame } from "./feature-section";
 /**
  * The lead pipeline, as the Leads board draws it.
  *
- * Four of the seven stages MarketFlow ships — New, Contacted, Qualified, Won —
+ * Four of the seven stages MarketFlow ships - New, Contacted, Qualified, Won -
  * because a marketing page showing all seven at this width gives each column
  * 60px and nothing in them can be read. The stages shown are the real ones from
  * `constants/app.LEAD_STAGES`, in their real order.
  *
  * Under the board, one contact row: the same person from the Qualified column,
  * with the channel they came in on and the tags they carry. That pairing is the
- * section's whole argument — the card on the board and the record in Contacts
+ * section's whole argument - the card on the board and the record in Contacts
  * are one thing, so the lead you drag is the customer you later message.
  */
 

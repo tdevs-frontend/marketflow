@@ -10,7 +10,7 @@ import { siteConfig } from "@/config";
  * Recovery codes, shown the one time they exist in readable form.
  *
  * These are the answer to "my phone is at the bottom of a river". They are
- * generated at activation, displayed here, and never retrievable again — the
+ * generated at activation, displayed here, and never retrievable again - the
  * same contract a real service has, and the reason the panel that owns this
  * says "shown once" before generating them rather than after.
  *
@@ -56,7 +56,7 @@ export function RecoveryCodes({
     link.download = `marketflow-recovery-codes-${new Date().toISOString().slice(0, 10)}.txt`;
     link.click();
 
-    /* Released immediately — the download has already been handed the blob. */
+    /* Released immediately - the download has already been handed the blob. */
     URL.revokeObjectURL(url);
   }
 
@@ -66,7 +66,7 @@ export function RecoveryCodes({
         <p className="text-sm font-semibold text-text-primary">Recovery codes</p>
         <p className="mt-0.5 text-sm text-text-secondary">
           Each code works once, and only while two-factor is on. Store them
-          somewhere you can reach without your phone — this is the only time
+          somewhere you can reach without your phone - this is the only time
           they are shown.
         </p>
       </div>

@@ -14,7 +14,7 @@ import { APP_ROUTES } from "@/constants";
  * timed out, and retrying is both the likely fix and the cheapest thing to
  * try. The copy is deliberately not `error.message`: that string comes from
  * the server and can carry internals, so it stays generic and the detail stays
- * in the digest — which is the only thing support can correlate against a log.
+ * in the digest - which is the only thing support can correlate against a log.
  */
 export default function CustomersError({
   error,
@@ -38,7 +38,7 @@ export default function CustomersError({
       <h1 className="mt-4 text-lg">Unable to load this page</h1>
       <p className="mx-auto mt-2 max-w-sm text-sm text-text-secondary">
         Something went wrong while loading this data. Your contacts, leads and
-        segments are unaffected — nothing was changed by this.
+        segments are unaffected - nothing was changed by this.
       </p>
 
       <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
@@ -58,7 +58,7 @@ export default function CustomersError({
       {error.digest ? (
         <p className="mt-5 border-t border-border pt-4 text-sm text-text-muted">
           Reference{" "}
-          <code className="font-mono text-text-secondary">{error.digest}</code> —
+          <code className="font-mono text-text-secondary">{error.digest}</code> -
           quote this if you contact support.
         </p>
       ) : null}

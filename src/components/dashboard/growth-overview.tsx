@@ -32,7 +32,7 @@ interface RangeSeries {
 }
 
 /**
- * Placeholder figures — swap for `useGetGrowthQuery(range, metric)` once the
+ * Placeholder figures - swap for `useGetGrowthQuery(range, metric)` once the
  * API is live.
  *
  * Day ranges plot a daily rate and converge on the same end-of-May reading;
@@ -124,8 +124,8 @@ const SERIES: Record<RangeKey, RangeSeries> = {
  * One colour per metric rather than brand indigo for all three: the legend and
  * the columns are two confirmations of the same choice, and when they were
  * both indigo the only thing that changed on a tab press was the height of the
- * bars. Each hue is a theme token — the brand for leads, success green for
- * orders, the SMS violet for revenue — named twice because Apex needs the hex
+ * bars. Each hue is a theme token - the brand for leads, success green for
+ * orders, the SMS violet for revenue - named twice because Apex needs the hex
  * and the legend needs the utility.
  *
  * `swatch` must stay in step with `color`; they are one decision spelled for
@@ -192,7 +192,7 @@ function LegendSwatch({ className, children }: { className: string; children: st
  * at once: leads, orders and revenue differ by orders of magnitude, so plotting
  * them together flattens two of the three into the axis.
  *
- * The range chips drive the whole page rather than this card alone — they are
+ * The range chips drive the whole page rather than this card alone - they are
  * the header picker in a second form, which is why the reading below them and
  * the KPI row above never disagree about what window they describe.
  */
@@ -261,7 +261,7 @@ export function GrowthOverview({ className }: { className?: string }) {
       </div>
 
       {/* The negative left margin pulls the y-axis labels back to the card's
-          padding — Apex reserves more gutter than the axis text needs. */}
+          padding - Apex reserves more gutter than the axis text needs. */}
       <div className="mt-2 -ml-2.5 flex-1">
         <GrowthOverviewChart
           categories={SERIES[range].categories}

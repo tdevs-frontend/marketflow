@@ -107,7 +107,7 @@ function kpis(leads: PipelineLead[]): Kpi[] {
       label: "Conversion rate",
       value: closed.length
         ? `${((won.length / closed.length) * 100).toFixed(1)}%`
-        : "—",
+        : "-",
       icon: Percent,
       hint: "Won as a share of closed",
     },
@@ -125,13 +125,13 @@ function kpis(leads: PipelineLead[]): Kpi[] {
  * which tags, and when they last did something. A card that also carries
  * probability and close date is a card nobody can scan a column of.
  *
- * Draggable through the native HTML5 API — no library, per the project's
+ * Draggable through the native HTML5 API - no library, per the project's
  * no-unnecessary-dependencies rule. `dataTransfer` carries the lead id so a
  * column's drop handler needs no shared state, and `effectAllowed = "move"`
  * is what gives the cursor the right affordance.
  *
  * Dragging is pointer-only by nature, so the same move is always available
- * from the card's menu. That is not a fallback for tidiness — it is the only
+ * from the card's menu. That is not a fallback for tidiness - it is the only
  * route for a keyboard or a touch screen.
  */
 function LeadCard({
@@ -169,13 +169,13 @@ function LeadCard({
     >
       {/* No drag handle.
 
-          The grip was decorative — `aria-hidden`, with `draggable` living on
-          the card itself — so it advertised an affordance the whole card
+          The grip was decorative - `aria-hidden`, with `draggable` living on
+          the card itself - so it advertised an affordance the whole card
           already had, and cost 24px of the width the name needed. Dragging is
           unchanged. */}
       <div className="flex items-start gap-3">
         {/* Composed here rather than through `AvatarLabel`, which renders the
-            name and the company at the same size and weight — the two lines
+            name and the company at the same size and weight - the two lines
             the card most needs to tell apart. Same `Avatar`, same size; only
             the type beside it differs. It also stops a `<p>` from being
             nested inside a `<button>`, which is not phrasing content. */}
@@ -259,7 +259,7 @@ function LeadCard({
  * so they update together. Swap `moves` for `useUpdateLeadMutation` and this
  * becomes ordinary optimistic-update bookkeeping with a rollback on failure.
  *
- * The board scrolls horizontally at every width — six stages cannot be made
+ * The board scrolls horizontally at every width - six stages cannot be made
  * legible inside 1100px, and squeezing them is worse than scrolling.
  */
 export function LeadsBoard() {
@@ -572,7 +572,7 @@ export function LeadsBoard() {
                   className={cn(
                     "flex w-66 shrink-0 flex-col rounded-card border border-transparent bg-surface-secondary p-2.5 transition-colors",
                     /* The drop state has to be unmistakable while a card is
-                       mid-air — a 1px border change is invisible to someone
+                       mid-air - a 1px border change is invisible to someone
                        watching the cursor. */
                     dropTarget === column.stage &&
                       "border-primary bg-primary-soft",
@@ -607,7 +607,7 @@ export function LeadsBoard() {
                       </div>
                     </div>
                     {/* The badge already carries the count, so this line carries
-                        only the money — the two together are the "stage counter"
+                        only the money - the two together are the "stage counter"
                         and "pipeline value" that have to move when a card does. */}
                     <p className="mt-0.5 text-sm text-text-muted tabular-nums">
                       {column.value
@@ -692,7 +692,7 @@ export function LeadsBoard() {
                         {lead.title}
                       </TD>
                       <TD className="text-sm text-text-secondary">
-                        {contact ? contactName(contact) : "—"}
+                        {contact ? contactName(contact) : "-"}
                       </TD>
                       <TD>
                         <StageBadge

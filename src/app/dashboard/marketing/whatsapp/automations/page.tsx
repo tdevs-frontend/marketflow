@@ -23,7 +23,7 @@ export default function WhatsAppAutomationsPage() {
          *
          * `/dashboard/automation/activity` lists every execution with a
          * per-run drill-down, and until now the only way in was the global
-         * Automation sidebar entry — so "what actually happened when this flow
+         * Automation sidebar entry - so "what actually happened when this flow
          * ran" was two modules away from the flows themselves.
          *
          * It links to the log rather than to a per-flow view because the

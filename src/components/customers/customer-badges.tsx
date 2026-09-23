@@ -36,7 +36,7 @@ import type { LeadSource, LeadStage } from "@/types/lead";
 /**
  * Where a contact sits in the lifecycle.
  *
- * Green is spent only on the two stages that are actually good news — a
+ * Green is spent only on the two stages that are actually good news - a
  * customer and a repeat customer. Everything before that is neutral or brand,
  * because a "Lead" badge in green tells the reader something has been achieved
  * when nothing has yet.
@@ -108,7 +108,7 @@ export function ContactStatusBadge({
  *
  * The colour comes from the tag record, not from the call site, so the same
  * tag is the same colour in a table cell, a drawer and a lead card. An unknown
- * name falls back to slate rather than throwing — tags arrive from imports.
+ * name falls back to slate rather than throwing - tags arrive from imports.
  */
 export function TagBadge({
   name,
@@ -143,7 +143,7 @@ export function TagBadges({
   className?: string;
 }) {
   if (tags.length === 0) {
-    return <span className="text-sm text-text-muted">—</span>;
+    return <span className="text-sm text-text-muted">-</span>;
   }
 
   const shown = tags.slice(0, max);
@@ -205,7 +205,7 @@ const CHANNEL_ORDER: ContactChannel[] = ["whatsapp", "email", "sms"];
  *
  * All three are always drawn, granted ones tinted and the rest greyed, so the
  * column reads as a fixed three-slot state rather than a variable-length list
- * — that is what lets a reader scan down it and spot the WhatsApp-only rows.
+ * - that is what lets a reader scan down it and spot the WhatsApp-only rows.
  * Each carries its own channel colour, never the brand indigo.
  *
  * Colour is not the only signal: every icon has a title, so consent survives
@@ -252,8 +252,8 @@ export function ChannelConsentBadges({
 /**
  * Where the contact came from.
  *
- * The three channel sources keep their channel identity — WhatsApp green,
- * email blue, SMS purple — because a source column is the one place a reader
+ * The three channel sources keep their channel identity - WhatsApp green,
+ * email blue, SMS purple - because a source column is the one place a reader
  * scans for "which channel is working". The rest stay neutral: "Import" is not
  * a channel and colouring it competes with the ones that are.
  */
@@ -281,7 +281,7 @@ const SOURCE_META: Record<
 
 /**
  * Takes either union, because a contact's source and a lead's source are the
- * same question asked of two records — `LeadSource` simply also allows the two
+ * same question asked of two records - `LeadSource` simply also allows the two
  * channels a lead can arrive on directly. One component so a WhatsApp lead and
  * a WhatsApp contact are never drawn differently.
  */
@@ -313,7 +313,7 @@ export function SourceBadge({
 /* -------------------------------------------------------------------------- */
 
 /**
- * A lead's stage, for the places a board column header cannot say it — a
+ * A lead's stage, for the places a board column header cannot say it - a
  * drawer, a list row, a contact's related-leads panel.
  */
 const STAGE_TONE: Record<LeadStage, BadgeTone> = {
@@ -343,8 +343,8 @@ export function StageBadge({
 /**
  * The icon and tint for one timeline entry.
  *
- * Exported because three surfaces render the same vocabulary — a contact
- * drawer, a lead drawer and the journey drawer — and they have to agree on
+ * Exported because three surfaces render the same vocabulary - a contact
+ * drawer, a lead drawer and the journey drawer - and they have to agree on
  * what a WhatsApp reply looks like. Channel kinds carry channel identity;
  * everything internal to the product is neutral or brand.
  */

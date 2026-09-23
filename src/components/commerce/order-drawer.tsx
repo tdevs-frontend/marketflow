@@ -47,8 +47,8 @@ function Row({
 /**
  * Order detail.
  *
- * A drawer rather than a route: an order is read alongside the list — you scan,
- * open one, act, close and carry on — and a full page would lose the list
+ * A drawer rather than a route: an order is read alongside the list - you scan,
+ * open one, act, close and carry on - and a full page would lose the list
  * position each time.
  */
 export function OrderDrawer({
@@ -160,7 +160,7 @@ export function OrderDrawer({
                       *
                       * An order that says only "Premium T-Shirt" cannot be
                       * packed, and the SKU beside it is the number that goes on
-                      * the picking slip — so both are read off the line the
+                      * the picking slip - so both are read off the line the
                       * order stored, never looked up from the product now.
                       */}
                     {line.variantName ? (

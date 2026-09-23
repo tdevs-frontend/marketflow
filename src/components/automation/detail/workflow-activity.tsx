@@ -22,7 +22,7 @@ import { ExecutionDetailDrawer } from "../activity/execution-detail";
  * One workflow's execution history.
  *
  * The same table as the module-wide Activity page, minus the workflow column
- * and with its own local filter state rather than the URL's — the tab already
+ * and with its own local filter state rather than the URL's - the tab already
  * owns a query parameter, and stacking six more onto it makes the workflow's
  * address unreadable for a filter nobody links to.
  */

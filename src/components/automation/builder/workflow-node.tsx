@@ -26,7 +26,7 @@ export const NODE_H = 92;
  *
  * Fixed height on purpose: the summary truncates rather than wrapping, so a
  * node with a long template name cannot shove the ones below it out of
- * alignment, and the edges — which are drawn from a constant — always land on
+ * alignment, and the edges - which are drawn from a constant - always land on
  * the card. The detail that will not fit belongs in the inspector.
  *
  * The selectable surface is a `role="button"` div rather than a `<button>`
@@ -72,7 +72,7 @@ export function WorkflowNodeCard({
       style={{ width: NODE_W, height: NODE_H }}
     >
       {/* Category rail. Two pixels of colour is the whole of a node's
-          identity — the surface itself stays the product's own. */}
+          identity - the surface itself stays the product's own. */}
       <span
         aria-hidden
         className={cn("absolute inset-x-0 top-0 h-0.5 rounded-t-panel", theme.rail)}

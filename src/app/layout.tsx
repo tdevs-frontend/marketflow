@@ -7,7 +7,7 @@ import "@/styles/globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: `${siteConfig.name} — Marketing automation & CRM`,
+    default: `${siteConfig.name} - Marketing automation & CRM`,
     template: `%s · ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -27,7 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
          * `fonts.googleapis.com` and names font files on `fonts.gstatic.com`,
          * so without them the browser pays a fresh DNS + TLS handshake to a
          * second origin only *after* it has parsed the CSS. `crossOrigin` on
-         * the gstatic one is required — fonts are fetched in CORS mode, and a
+         * the gstatic one is required - fonts are fetched in CORS mode, and a
          * preconnect that does not match the eventual request is a wasted
          * connection rather than a reused one.
          *
@@ -39,7 +39,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         {/* `no-page-custom-font` guards against a font linked from a single
             Pages-Router page. This is the App Router's root layout, which wraps
-            every route, so the font is loaded once for the whole product — the
+            every route, so the font is loaded once for the whole product - the
             exact thing the rule asks for. */}
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link

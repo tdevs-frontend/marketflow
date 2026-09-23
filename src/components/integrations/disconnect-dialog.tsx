@@ -8,7 +8,7 @@ import type { Integration } from "@/types/integration";
  * The confirmation that says what breaks.
  *
  * "This cannot be undone" is the default `ConfirmDialog` copy and it is the
- * wrong warning here — disconnecting *can* be undone, and the real cost is that
+ * wrong warning here - disconnecting *can* be undone, and the real cost is that
  * twelve workflows stop firing in the meantime. So the dialog lists the
  * dependents, read from the integration's own `usage`, which is the only way
  * the warning stays true as the workspace grows.

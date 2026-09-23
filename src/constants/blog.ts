@@ -1,7 +1,7 @@
 /**
  * The Resources library.
  *
- * Twenty-four articles, each about something the product actually does —
+ * Twenty-four articles, each about something the product actually does -
  * WhatsApp automation, the lead pipeline, segments, campaigns, orders,
  * analytics. A marketing blog that writes about productivity in general is a
  * content farm wearing the brand; every piece here is answerable from a module
@@ -9,8 +9,8 @@
  * anything.
  *
  * The data lives here rather than in the components because three surfaces
- * read it — the landing section takes the first three, `/blog` pages through
- * all of them behind filters, and `/blog/[slug]` renders one in full — and a
+ * read it - the landing section takes the first three, `/blog` pages through
+ * all of them behind filters, and `/blog/[slug]` renders one in full - and a
  * set of cards that disagreed about a publication date depending on which page
  * you were on is the kind of thing nobody notices until a customer does.
  *
@@ -53,7 +53,7 @@ export type ArticleBlock =
 export interface BlogArticle {
   slug: string;
   /**
-   * The chip on the card — editorial, and written for a reader.
+   * The chip on the card - editorial, and written for a reader.
    *
    * Distinct from `topic`, which is the filter key. They are not the same
    * job: "WhatsApp Automation" is a useful thing to print on a card and a
@@ -69,7 +69,7 @@ export interface BlogArticle {
   /** ISO date. Formatted at the render site, never stored pre-formatted. */
   publishedAt: string;
   image: string;
-  /** Describes the photograph, not the article — it is the image's alt text. */
+  /** Describes the photograph, not the article - it is the image's alt text. */
   imageAlt: string;
   body: ArticleBlock[];
 }
@@ -90,7 +90,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     body: [
       {
         type: "p",
-        text: "Most teams start on WhatsApp the same way: one shared phone, a handful of saved replies, and somebody who remembers to follow up. It works until it does not. The moment volume rises, the follow-ups are the first thing to go — not because anyone decided to stop, but because nobody owns the reminder.",
+        text: "Most teams start on WhatsApp the same way: one shared phone, a handful of saved replies, and somebody who remembers to follow up. It works until it does not. The moment volume rises, the follow-ups are the first thing to go - not because anyone decided to stop, but because nobody owns the reminder.",
       },
       {
         type: "p",
@@ -99,15 +99,15 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: "h2", text: "Start with the trigger, not the message" },
       {
         type: "p",
-        text: "A journey begins with something happening: an inbound message, a form submission, a lead moving stage, an order placed. Pick the trigger first and the rest of the journey writes itself — you are no longer asking what to send, you are asking what should happen next.",
+        text: "A journey begins with something happening: an inbound message, a form submission, a lead moving stage, an order placed. Pick the trigger first and the rest of the journey writes itself - you are no longer asking what to send, you are asking what should happen next.",
       },
       {
         type: "list",
         items: [
-          "Inbound message from a new number — send a greeting, capture the contact, tag the enquiry.",
-          "Lead reaches Qualified — wait a day, then send the pricing template.",
-          "Order placed — confirm it, then check in a week later.",
-          "No reply after three days — one follow-up, then stop.",
+          "Inbound message from a new number - send a greeting, capture the contact, tag the enquiry.",
+          "Lead reaches Qualified - wait a day, then send the pricing template.",
+          "Order placed - confirm it, then check in a week later.",
+          "No reply after three days - one follow-up, then stop.",
         ],
       },
       { type: "h2", text: "Let the wait do the work" },
@@ -118,7 +118,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: "h2", text: "Keep the handover open" },
       {
         type: "p",
-        text: "Automation should never be a wall. Every journey needs a point where a human takes the conversation back, and the inbox is where that happens — an agent picks up the thread with the full history already attached, and the workflow stops rather than talking over them.",
+        text: "Automation should never be a wall. Every journey needs a point where a human takes the conversation back, and the inbox is where that happens - an agent picks up the thread with the full history already attached, and the workflow stops rather than talking over them.",
       },
       {
         type: "p",
@@ -145,7 +145,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: "h2", text: "One record, not three" },
       {
         type: "p",
-        text: "A customer who messaged you on WhatsApp in March, opened an email in May and ordered in June is one person. If your tools disagree about that, every downstream decision inherits the confusion — the segment is wrong, the campaign double-sends, and the report counts them twice.",
+        text: "A customer who messaged you on WhatsApp in March, opened an email in May and ordered in June is one person. If your tools disagree about that, every downstream decision inherits the confusion - the segment is wrong, the campaign double-sends, and the report counts them twice.",
       },
       { type: "h2", text: "Stages are decisions, not labels" },
       {
@@ -155,16 +155,16 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       {
         type: "list",
         items: [
-          "New — nobody has replied yet.",
-          "Contacted — a conversation has started.",
-          "Qualified — there is a real need and a real budget.",
-          "Won — the order exists, and the journey continues rather than ends.",
+          "New - nobody has replied yet.",
+          "Contacted - a conversation has started.",
+          "Qualified - there is a real need and a real budget.",
+          "Won - the order exists, and the journey continues rather than ends.",
         ],
       },
       { type: "h2", text: "The journey does not stop at the sale" },
       {
         type: "p",
-        text: "Most of the value in a customer record is created after the first order, and most teams stop maintaining it there. The second purchase is usually cheaper to earn than the first, but only if somebody is still paying attention — which, again, is a job for a workflow rather than a memory.",
+        text: "Most of the value in a customer record is created after the first order, and most teams stop maintaining it there. The second purchase is usually cheaper to earn than the first, but only if somebody is still paying attention - which, again, is a job for a workflow rather than a memory.",
       },
     ],
   },
@@ -193,10 +193,10 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       {
         type: "list",
         items: [
-          "WhatsApp — conversations, and anything that expects a reply.",
-          "Email — detail, and anything worth keeping.",
-          "SMS — short, time-critical, and used sparingly.",
-          "Social — reach, and the top of the journey rather than the end of it.",
+          "WhatsApp - conversations, and anything that expects a reply.",
+          "Email - detail, and anything worth keeping.",
+          "SMS - short, time-critical, and used sparingly.",
+          "Social - reach, and the top of the journey rather than the end of it.",
         ],
       },
       { type: "h2", text: "One audience, four doors" },
@@ -237,13 +237,13 @@ export const BLOG_ARTICLES: BlogArticle[] = [
           "Put a wait between them. Three messages in an hour reads as desperation.",
           "Stop the sequence the moment somebody replies.",
           "Tag the reason a lead went cold, so the pattern becomes visible.",
-          "Review the leads with no activity in seven days once a week — a short list, not a report.",
+          "Review the leads with no activity in seven days once a week - a short list, not a report.",
         ],
       },
       { type: "h2", text: "Automate the remembering, not the relationship" },
       {
         type: "p",
-        text: "None of the above replaces a salesperson. They remove the part of the job that a person is worst at — keeping a mental list of who is owed a message today — and leave the part a person is uniquely good at.",
+        text: "None of the above replaces a salesperson. They remove the part of the job that a person is worst at - keeping a mental list of who is owed a message today - and leave the part a person is uniquely good at.",
       },
     ],
   },
@@ -266,21 +266,21 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: "h2", text: "Segment on behaviour, not demographics" },
       {
         type: "p",
-        text: "What somebody did is a far better predictor than who they are. Ordered twice in ninety days, opened the last three campaigns, asked about pricing and never replied — each of those is a group with an obvious next message.",
+        text: "What somebody did is a far better predictor than who they are. Ordered twice in ninety days, opened the last three campaigns, asked about pricing and never replied - each of those is a group with an obvious next message.",
       },
       { type: "h2", text: "Start with three" },
       {
         type: "list",
         items: [
-          "Customers who bought recently — the group most likely to buy again.",
-          "Leads who engaged and went quiet — the group most worth recovering.",
-          "Contacts who have never engaged — the group to stop paying to reach.",
+          "Customers who bought recently - the group most likely to buy again.",
+          "Leads who engaged and went quiet - the group most worth recovering.",
+          "Contacts who have never engaged - the group to stop paying to reach.",
         ],
       },
       { type: "h2", text: "A segment is a hypothesis" },
       {
         type: "p",
-        text: "The value is not the list, it is what the list teaches you. If a segment never performs differently to the whole audience, it is not a segment — and deleting it is as useful as creating it was.",
+        text: "The value is not the list, it is what the list teaches you. If a segment never performs differently to the whole audience, it is not a segment - and deleting it is as useful as creating it was.",
       },
     ],
   },
@@ -290,7 +290,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     topic: "automation",
     title: "How Automation Helps Teams Follow Up at the Right Time",
     description:
-      "Triggers, conditions and delays decide when a message lands — and timing is usually what separates a reply from silence.",
+      "Triggers, conditions and delays decide when a message lands - and timing is usually what separates a reply from silence.",
     readingMinutes: 5,
     publishedAt: "2026-06-29",
     image: "/blog/automation-timing.jpg",
@@ -298,13 +298,13 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     body: [
       {
         type: "p",
-        text: "Teams tend to think of automation as a way to send more. Its more useful job is deciding when — because the same message is welcome on Tuesday morning and irritating on Friday night.",
+        text: "Teams tend to think of automation as a way to send more. Its more useful job is deciding when - because the same message is welcome on Tuesday morning and irritating on Friday night.",
       },
       { type: "h2", text: "Three controls, and what each one is for" },
       {
         type: "list",
         items: [
-          "Triggers decide what starts the sequence — an event, not a date.",
+          "Triggers decide what starts the sequence - an event, not a date.",
           "Conditions decide who continues through it, so one workflow can serve several cases.",
           "Delays decide the pace, which is the control that most changes how the sequence feels.",
         ],
@@ -355,7 +355,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: "h2", text: "Be honest about attribution" },
       {
         type: "p",
-        text: "No model is exact, and a customer who saw a post, read an email and then messaged you is not one channel's win. Attribution is useful as a direction, not as a verdict — the moment it becomes a scoreboard, teams start optimising for the model rather than for the customer.",
+        text: "No model is exact, and a customer who saw a post, read an email and then messaged you is not one channel's win. Attribution is useful as a direction, not as a verdict - the moment it becomes a scoreboard, teams start optimising for the model rather than for the customer.",
       },
     ],
   },
@@ -365,7 +365,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     topic: "marketing",
     title: "A Practical Guide to Building Better Marketing Campaigns",
     description:
-      "A repeatable way to plan, build, send and review a campaign — from the audience through to the number that judges it.",
+      "A repeatable way to plan, build, send and review a campaign - from the audience through to the number that judges it.",
     readingMinutes: 8,
     publishedAt: "2026-05-28",
     image: "/blog/campaigns.jpg",
@@ -389,7 +389,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: "h2", text: "Then the template" },
       {
         type: "p",
-        text: "Reusable templates are not just a time saving. They are what makes results comparable — when the structure is held constant, the difference in performance is attributable to the thing you actually changed.",
+        text: "Reusable templates are not just a time saving. They are what makes results comparable - when the structure is held constant, the difference in performance is attributable to the thing you actually changed.",
       },
       { type: "h2", text: "Review within the week" },
       {
@@ -421,13 +421,13 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     body: [
       {
         type: "p",
-        text: "Marketing analytics fails in two directions. Either nothing is tracked, or everything is — and a dashboard with forty numbers on it is the same as no dashboard, because nobody can tell which one moved for a reason.",
+        text: "Marketing analytics fails in two directions. Either nothing is tracked, or everything is - and a dashboard with forty numbers on it is the same as no dashboard, because nobody can tell which one moved for a reason.",
       },
       { type: "h2", text: "The short list" },
       {
         type: "list",
         items: [
-          "Reply rate, per channel — the clearest signal that a message landed.",
+          "Reply rate, per channel - the clearest signal that a message landed.",
           "Conversion rate from conversation to order.",
           "Revenue per campaign, not per send.",
           "Repeat purchase rate, which is the slowest number to move and the most worth moving.",
@@ -437,7 +437,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: "h2", text: "What to ignore" },
       {
         type: "p",
-        text: "Impressions, follower counts and open rates are diagnostics, not outcomes. They are useful for explaining why a number moved and dangerous as the number itself — open rate in particular has been unreliable since inbox providers began pre-fetching images.",
+        text: "Impressions, follower counts and open rates are diagnostics, not outcomes. They are useful for explaining why a number moved and dangerous as the number itself - open rate in particular has been unreliable since inbox providers began pre-fetching images.",
       },
       { type: "h2", text: "Pick a cadence and hold it" },
       {
@@ -474,7 +474,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
           "Give every placeholder a real example when you submit it.",
           "Never start or end a message with a variable.",
           "Do not use a variable to smuggle in the part of the message that would have failed review.",
-          "Keep the fixed text meaningful on its own — if the sentence only makes sense once filled in, it will not pass.",
+          "Keep the fixed text meaningful on its own - if the sentence only makes sense once filled in, it will not pass.",
         ],
       },
       { type: "h2", text: "Say who you are" },
@@ -503,7 +503,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: "h2", text: "Ownership beats etiquette" },
       {
         type: "p",
-        text: "Every open conversation should have exactly one name on it. Teams that rely on a convention — whoever saw it first — discover that the convention breaks at precisely the times it matters, which is when the inbox is busy.",
+        text: "Every open conversation should have exactly one name on it. Teams that rely on a convention - whoever saw it first - discover that the convention breaks at precisely the times it matters, which is when the inbox is busy.",
       },
       { type: "h2", text: "Three conventions worth writing down" },
       {
@@ -511,7 +511,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
         items: [
           "Assign before you reply, not after.",
           "Close a conversation when it is done, so the open count means something.",
-          "Hand over in the thread, not in a side channel — the next person needs the context, not the summary.",
+          "Hand over in the thread, not in a side channel - the next person needs the context, not the summary.",
         ],
       },
       { type: "h2", text: "Let the automation take the easy half" },
@@ -527,7 +527,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     topic: "marketing",
     title: "Email Deliverability Basics Every Marketing Team Should Know",
     description:
-      "Authentication, list hygiene and sending patterns — the three things that decide whether your campaign reaches an inbox at all.",
+      "Authentication, list hygiene and sending patterns - the three things that decide whether your campaign reaches an inbox at all.",
     readingMinutes: 7,
     publishedAt: "2026-04-02",
     image: "/blog/email-deliverability.jpg",
@@ -540,14 +540,14 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: "h2", text: "Authenticate the domain" },
       {
         type: "p",
-        text: "SPF, DKIM and DMARC are not optional any more — the large inbox providers now require them for bulk senders. They are a one-time DNS job and the single highest-return thing on this list.",
+        text: "SPF, DKIM and DMARC are not optional any more - the large inbox providers now require them for bulk senders. They are a one-time DNS job and the single highest-return thing on this list.",
       },
       { type: "h2", text: "Send to people who want it" },
       {
         type: "list",
         items: [
           "Remove hard bounces immediately, not monthly.",
-          "Suppress contacts who have not opened anything in a year — they are lowering the reputation of every send.",
+          "Suppress contacts who have not opened anything in a year - they are lowering the reputation of every send.",
           "Make unsubscribing easy. A spam complaint costs far more than a lost contact.",
           "Never send to a purchased list.",
         ],
@@ -555,7 +555,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: "h2", text: "Warm up, then stay steady" },
       {
         type: "p",
-        text: "A new sending domain that goes from zero to fifty thousand in a day looks exactly like a compromised one. Build volume gradually, and once you are there, keep the pattern regular — the irregular sender is the suspicious one.",
+        text: "A new sending domain that goes from zero to fifty thousand in a day looks exactly like a compromised one. Build volume gradually, and once you are there, keep the pattern regular - the irregular sender is the suspicious one.",
       },
     ],
   },
@@ -563,7 +563,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     slug: "when-sms-marketing-actually-works",
     category: "Marketing",
     topic: "marketing",
-    title: "When SMS Marketing Actually Works — and When It Backfires",
+    title: "When SMS Marketing Actually Works - and When It Backfires",
     description:
       "SMS has the highest read rate of any channel and the shortest patience. Here is where it earns its place.",
     readingMinutes: 4,
@@ -573,7 +573,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     body: [
       {
         type: "p",
-        text: "Almost every SMS is read, and read within minutes. That statistic is why teams adopt the channel and also why they misuse it — a channel nobody can ignore is a channel you can very easily wear out.",
+        text: "Almost every SMS is read, and read within minutes. That statistic is why teams adopt the channel and also why they misuse it - a channel nobody can ignore is a channel you can very easily wear out.",
       },
       { type: "h2", text: "Use it for time and certainty" },
       {
@@ -582,7 +582,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
           "Order and delivery updates.",
           "Appointment reminders.",
           "One-time codes.",
-          "A genuinely short window — today only, closing at six.",
+          "A genuinely short window - today only, closing at six.",
         ],
       },
       { type: "h2", text: "Do not use it for anything that needs a paragraph" },
@@ -593,7 +593,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: "h2", text: "Frequency is the whole discipline" },
       {
         type: "p",
-        text: "Set a cap — a small number per contact per month — and treat it as a hard limit rather than a target. The cost of one message too many is an opt-out, and on SMS an opt-out is permanent.",
+        text: "Set a cap - a small number per contact per month - and treat it as a hard limit rather than a target. The cost of one message too many is an opt-out, and on SMS an opt-out is permanent.",
       },
     ],
   },
@@ -621,7 +621,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: "h2", text: "Leave gaps on purpose" },
       {
         type: "p",
-        text: "A calendar with no empty slots has no room for the thing actually worth posting — the customer story, the launch, the answer to a question everybody suddenly has. Book about seventy per cent and defend the rest.",
+        text: "A calendar with no empty slots has no room for the thing actually worth posting - the customer story, the launch, the answer to a question everybody suddenly has. Book about seventy per cent and defend the rest.",
       },
       { type: "h2", text: "Review what happened, not what was planned" },
       {
@@ -640,7 +640,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     topic: "commerce",
     title: "Recovering Abandoned Carts Without Being Annoying About It",
     description:
-      "A short, well-timed sequence recovers more than a long one — and costs far less goodwill.",
+      "A short, well-timed sequence recovers more than a long one - and costs far less goodwill.",
     readingMinutes: 5,
     publishedAt: "2026-02-19",
     image: "/blog/abandoned-cart.jpg",
@@ -648,21 +648,21 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     body: [
       {
         type: "p",
-        text: "An abandoned cart is not a lost sale. It is usually an interruption — a phone call, a train stop, a question the page did not answer. The recovery message that works treats it that way.",
+        text: "An abandoned cart is not a lost sale. It is usually an interruption - a phone call, a train stop, a question the page did not answer. The recovery message that works treats it that way.",
       },
       { type: "h2", text: "Three messages, and then stop" },
       {
         type: "list",
         items: [
-          "One hour later — a reminder with the items in it, and nothing else.",
-          "A day later — answer the objection. Delivery time, returns, sizing.",
-          "Three days later — the last one, and make it clear it is the last one.",
+          "One hour later - a reminder with the items in it, and nothing else.",
+          "A day later - answer the objection. Delivery time, returns, sizing.",
+          "Three days later - the last one, and make it clear it is the last one.",
         ],
       },
       { type: "h2", text: "Hold the discount back" },
       {
         type: "p",
-        text: "Leading with a discount teaches customers to abandon deliberately, and the habit is very hard to unlearn. Keep it for the final message, if at all — most recovered carts do not need one.",
+        text: "Leading with a discount teaches customers to abandon deliberately, and the habit is very hard to unlearn. Keep it for the final message, if at all - most recovered carts do not need one.",
       },
       { type: "h2", text: "Read the failures" },
       {
@@ -694,7 +694,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
           "Categories that match how you sell, not how you warehouse.",
           "One good image per product, at a consistent crop.",
           "Stock status that is true, so the campaign cannot promote something unavailable.",
-          "Tags for the groupings you reach for repeatedly — new in, clearance, bestsellers.",
+          "Tags for the groupings you reach for repeatedly - new in, clearance, bestsellers.",
         ],
       },
       { type: "h2", text: "Build the audience from the orders" },
@@ -765,7 +765,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: "h2", text: "Score two things" },
       {
         type: "p",
-        text: "Fit — are they the kind of customer you serve well. Interest — have they done something recently. Keep them separate; a perfect-fit lead who has gone quiet needs a different action to a poor-fit lead who is very active.",
+        text: "Fit - are they the kind of customer you serve well. Interest - have they done something recently. Keep them separate; a perfect-fit lead who has gone quiet needs a different action to a poor-fit lead who is very active.",
       },
       { type: "h2", text: "Use four or five signals, not twenty" },
       {
@@ -780,7 +780,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: "h2", text: "Check it against reality every quarter" },
       {
         type: "p",
-        text: "Take the deals you actually won and look at what the model said about them beforehand. If the score had no relationship to the outcome, the model is decoration — and simplifying it is more useful than adding to it.",
+        text: "Take the deals you actually won and look at what the model said about them beforehand. If the score had no relationship to the outcome, the model is decoration - and simplifying it is more useful than adding to it.",
       },
     ],
   },
@@ -836,7 +836,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     body: [
       {
         type: "p",
-        text: "The best first workflow is not a clever one. It is the thing your team already does by hand, the same way, several times a week — because you already know it works and you already know what it should say.",
+        text: "The best first workflow is not a clever one. It is the thing your team already does by hand, the same way, several times a week - because you already know it works and you already know what it should say.",
       },
       { type: "h2", text: "Write it down before you build it" },
       {
@@ -884,14 +884,14 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: "h2", text: "Webhooks push, APIs pull" },
       {
         type: "p",
-        text: "Use a webhook when something happening should cause something elsewhere — an order placed, a lead qualified. Use the API when you need to ask a question, or write data in on a schedule.",
+        text: "Use a webhook when something happening should cause something elsewhere - an order placed, a lead qualified. Use the API when you need to ask a question, or write data in on a schedule.",
       },
       { type: "h2", text: "Build the receiver defensively" },
       {
         type: "list",
         items: [
           "Verify the signature before trusting the payload.",
-          "Respond fast and process afterwards — a slow endpoint causes retries.",
+          "Respond fast and process afterwards - a slow endpoint causes retries.",
           "Expect duplicates, and make handling one twice harmless.",
           "Log what you received, not just what you did with it.",
         ],
@@ -917,7 +917,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     body: [
       {
         type: "p",
-        text: "Every funnel loses most of its people at the top. That is not a finding, it is arithmetic — and teams that react to it end up optimising the step that was never the problem.",
+        text: "Every funnel loses most of its people at the top. That is not a finding, it is arithmetic - and teams that react to it end up optimising the step that was never the problem.",
       },
       { type: "h2", text: "Compare a step to itself, not to the one above" },
       {
@@ -927,7 +927,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: "h2", text: "Segment before you conclude" },
       {
         type: "p",
-        text: "An average funnel is several different funnels added together. Split by channel or by segment and the flat overall number usually resolves into one group doing well and one doing badly — which is an action, where the average was not.",
+        text: "An average funnel is several different funnels added together. Split by channel or by segment and the flat overall number usually resolves into one group doing well and one doing badly - which is an action, where the average was not.",
       },
       { type: "h2", text: "Look at time, not only at counts" },
       {
@@ -983,7 +983,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
     topic: "analytics",
     title: "A Weekly Marketing Review That Takes Twenty Minutes",
     description:
-      "Five questions, one page, once a week — a review short enough that it actually happens every week.",
+      "Five questions, one page, once a week - a review short enough that it actually happens every week.",
     readingMinutes: 4,
     publishedAt: "2025-10-09",
     image: "/blog/weekly-review.jpg",
@@ -999,7 +999,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
         items: [
           "What went out this week, and what did it produce?",
           "Which number moved more than usual, up or down?",
-          "What is stuck — leads with no activity, conversations with no reply?",
+          "What is stuck - leads with no activity, conversations with no reply?",
           "What are we sending next week, and to whom?",
           "What is one thing we are stopping?",
         ],
@@ -1012,13 +1012,13 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       { type: "h2", text: "Write down the decision, not the data" },
       {
         type: "p",
-        text: "The numbers are already in the dashboard. What is worth keeping is the sentence explaining what you decided because of them — which is the only part you will want in three months.",
+        text: "The numbers are already in the dashboard. What is worth keeping is the sentence explaining what you decided because of them - which is the only part you will want in three months.",
       },
     ],
   },
 ];
 
-/** The three on the landing page — newest first, which the array already is. */
+/** The three on the landing page - newest first, which the array already is. */
 export const FEATURED_ARTICLES = BLOG_ARTICLES.slice(0, 3);
 
 export function getArticleBySlug(slug: string): BlogArticle | undefined {
@@ -1028,7 +1028,7 @@ export function getArticleBySlug(slug: string): BlogArticle | undefined {
 /**
  * The articles to suggest under `article`, never including it.
  *
- * Same category first, then same topic, then whatever is newest — so a
+ * Same category first, then same topic, then whatever is newest - so a
  * category with fewer than `count` siblings still fills the row rather than
  * leaving a gap. Within each tier the array's own newest-first order holds,
  * because `sort` is stable.

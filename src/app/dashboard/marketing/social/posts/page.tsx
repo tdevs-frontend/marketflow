@@ -10,7 +10,7 @@ export default function SocialPostsPage() {
     <>
       <PageHeader
         title="Posts"
-        description="Every post as content or as performance — the grid reviews the caption, the table reviews the numbers."
+        description="Every post as content or as performance - the grid reviews the caption, the table reviews the numbers."
       />
 
       <SocialPostsWorkspace />

@@ -3,7 +3,7 @@
  *
  * Named `marketing-hub` because `components/marketing` was already taken by
  * the public landing-page sections rendered under the `(marketing)` route
- * group — different audience, different components, same obvious name.
+ * group - different audience, different components, same obvious name.
  */
 export * from "./campaign-status";
 export * from "./campaign-table";
@@ -21,7 +21,7 @@ export * from "./shared/top-campaigns";
 export * from "./shared/recent-conversations";
 export * from "./shared/ranked-list";
 
-/* Automations — one workspace and one builder, driven by channel. */
+/* Automations - one workspace and one builder, driven by channel. */
 export * from "./automation/automation-node";
 export * from "./automation/automations-workspace";
 export * from "./automation/flow-builder";

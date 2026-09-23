@@ -44,8 +44,8 @@ import { bindingsOf, guessBinding, requiredTokens } from "./variables";
  * The node editor, as a persistent panel rather than a modal.
  *
  * That is the single most important decision in the builder. Configuring a
- * node is a back-and-forth — set the template, look at where the node sits,
- * adjust the wait above it — and a dialog that covers the canvas makes the
+ * node is a back-and-forth - set the template, look at where the node sits,
+ * adjust the wait above it - and a dialog that covers the canvas makes the
  * thing being configured invisible exactly while it is being configured.
  *
  * The panel is sectioned rather than flat, and only Configuration is open to
@@ -123,7 +123,7 @@ const SEGMENT_OPTIONS = CUSTOMER_SEGMENTS.map((segment) =>
   option(segment.id, segment.name),
 );
 const OWNER_OPTIONS = [
-  option("round_robin", "Round robin — Sales team"),
+  option("round_robin", "Round robin - Sales team"),
   ...OWNERS.map((owner) => option(owner.id, owner.name)),
 ];
 const STAGE_OPTIONS = PIPELINE_STAGES.map((stage) => option(stage.stage, stage.label));
@@ -585,7 +585,7 @@ const labelOf = (options: SelectOption[], value: unknown) =>
  * Rebuilds the one line the node shows on the canvas.
  *
  * Derived from the config on save rather than typed by hand, so the canvas can
- * never disagree with the inspector — and so the validator, which reads the
+ * never disagree with the inspector - and so the validator, which reads the
  * summary, is reading the configuration.
  */
 function summaryOf(kind: NodeKind, config: Record<string, unknown>): string {
@@ -735,7 +735,7 @@ function summaryOf(kind: NodeKind, config: Record<string, unknown>): string {
       );
 
     default:
-      /* Unreachable while every kind is handled above — and a compile error
+      /* Unreachable while every kind is handled above - and a compile error
          the moment a new one is added without a summary. */
       return "";
   }
@@ -776,7 +776,7 @@ function crossLink(kind: NodeKind, config: Record<string, unknown>) {
 /**
  * A disclosure, not an accordion: several can be open at once.
  *
- * Closing one should never close another — somebody comparing a wait against
+ * Closing one should never close another - somebody comparing a wait against
  * its retry policy needs both, and an accordion would fight them for it.
  */
 function Section({
@@ -833,7 +833,7 @@ export function NodeInspector({
   /*
    * Selection changes reset the panel.
    *
-   * Adjusted during render rather than in an effect — React's own recommended
+   * Adjusted during render rather than in an effect - React's own recommended
    * shape for state that derives from a prop, and the one that avoids a frame
    * of the previous node's configuration showing under the new node's name.
    * Keyed on the id rather than the object, so a canvas drag (which replaces
@@ -1041,7 +1041,7 @@ export function NodeInspector({
             badge={<Badge tone="neutral">{draft.branches.length}</Badge>}
           >
             <p className="text-sm text-text-muted">
-              Paths are taken in order, top to bottom — the first one a contact
+              Paths are taken in order, top to bottom - the first one a contact
               matches wins, so the catch-all belongs last.
             </p>
 
@@ -1141,7 +1141,7 @@ export function NodeInspector({
               <>
                 <p className="text-sm text-text-muted">
                   Each token is filled per contact when the message is sent.
-                  Anything left unmapped blocks publishing — a message that goes
+                  Anything left unmapped blocks publishing - a message that goes
                   out reading “Hi {"{{first_name}}"}” is the worst bug this
                   module can ship.
                 </p>
@@ -1280,7 +1280,7 @@ export function NodeInspector({
               checked={Boolean(draft.config.ignoreSendWindow)}
               onCheckedChange={(checked) => set("ignoreSendWindow", checked)}
               label="Send outside the allowed window"
-              hint="For transactional steps — an order confirmation should not wait until Monday."
+              hint="For transactional steps - an order confirmation should not wait until Monday."
             />
           </Section>
         ) : null}
@@ -1318,7 +1318,7 @@ export function NodeInspector({
             checked={Boolean(draft.config.continueOnFailure)}
             onCheckedChange={(checked) => set("continueOnFailure", checked)}
             label="Continue the journey if this step fails"
-            hint="For steps that are nice to have — a tag, an internal notification."
+            hint="For steps that are nice to have - a tag, an internal notification."
           />
 
           {link ? (

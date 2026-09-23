@@ -7,7 +7,7 @@ import { CreditCard, Terminal } from "lucide-react";
  * section: nobody buys a marketing platform for its invoice page, and a
  * full-width block on subscription management next to the automation builder
  * would say the two matter equally. They get a two-up band with a small,
- * honest preview each — enough that a buyer knows the plumbing exists and stops
+ * honest preview each - enough that a buyer knows the plumbing exists and stops
  * wondering, which is the entire job.
  *
  * The previews are the smallest true thing about each: what a plan row looks

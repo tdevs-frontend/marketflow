@@ -11,7 +11,7 @@ import { AutomationErrorState } from "@/components/automation/automation-error";
  * that timed out, and retrying is both the likely fix and the cheapest thing
  * to try. The copy is deliberately not `error.message`: that string comes from
  * the server and can carry internals, so it stays generic and the detail stays
- * in the digest — the only thing support can correlate against a log.
+ * in the digest - the only thing support can correlate against a log.
  */
 export default function AutomationError({
   error,
@@ -29,7 +29,7 @@ export default function AutomationError({
   return (
     <AutomationErrorState
       title="Unable to load this page"
-      description="Something went wrong while loading your automations. Your workflows are unaffected — nothing was paused, published or deleted by this."
+      description="Something went wrong while loading your automations. Your workflows are unaffected - nothing was paused, published or deleted by this."
       onRetry={reset}
       digest={error.digest}
     />

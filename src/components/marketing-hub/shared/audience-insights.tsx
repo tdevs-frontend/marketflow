@@ -111,7 +111,7 @@ export function AudienceInsights({
         </div>
 
         {/* Fixed width, so the headline beside it keeps its measure whatever
-            the figures are. The sparkline is a shape, not a reading — it has
+            the figures are. The sparkline is a shape, not a reading - it has
             no axes and no tooltip, and the numbers are all stated already. */}
         <div className="w-28 shrink-0" aria-hidden>
           <SparklineChart data={trend} height={44} />

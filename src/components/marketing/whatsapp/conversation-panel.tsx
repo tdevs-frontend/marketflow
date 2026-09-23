@@ -13,7 +13,7 @@ import { CONVERSATION, WORKSPACE_THREADS } from "./automation-data";
 /**
  * The inbox column: who is waiting, and who is open.
  *
- * The first panel dropped when the monitor gets small — it is the only one in
+ * The first panel dropped when the monitor gets small - it is the only one in
  * the workspace whose job is already implied by the panel beside it.
  */
 export function ConversationList() {
@@ -80,8 +80,8 @@ export function ConversationList() {
 /**
  * The open thread: MarketFlow's WhatsApp inbox, not WhatsApp Web.
  *
- * The messaging conventions are honoured — warm thread ground, tinted outgoing
- * bubble, double ticks — because a reader clocks a chat as a chat from those
+ * The messaging conventions are honoured - warm thread ground, tinted outgoing
+ * bubble, double ticks - because a reader clocks a chat as a chat from those
  * before reading a word of it. Everything around them is the product: a SaaS
  * header above, a composer below, and the automated reply labelled with what
  * sent it, which is the difference between this and a WhatsApp screenshot.
@@ -90,7 +90,7 @@ export function ConversationList() {
  * has left after the header and the composer, and on a phone-width column that
  * is less than the two bubbles need; `justify-end` plus `overflow-hidden` runs
  * the excess off the top of the oldest bubble, which is what a scrolled chat
- * looks like — without the clip it overflowed onto the header instead. Three
+ * looks like - without the clip it overflowed onto the header instead. Three
  * rows step out ahead of that to keep the clip rare: the day divider, the
  * label naming the automation, then the attachment. The two messages
  * themselves never go, in either direction.
@@ -136,7 +136,7 @@ export function ConversationPanel() {
           </span>
         </span>
 
-        {/* Who is about to answer — the automation, named. */}
+        {/* Who is about to answer - the automation, named. */}
         <span className="hidden items-center gap-1 self-end pr-0.5 text-[6px] leading-none font-semibold text-primary @[380px]:flex @[440px]:text-[7px] @[600px]:text-[8.5px]">
           <Sparkles className="size-2 @[440px]:size-2.5" strokeWidth={2.2} />
           {CONVERSATION.sender}

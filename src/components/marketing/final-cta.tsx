@@ -7,7 +7,7 @@ import { APP_ROUTES } from "@/constants";
  * The closing block: a light brand-tinted panel, the last thing before the
  * footer.
  *
- * It is a panel rather than a full-bleed section on purpose — it sits in the
+ * It is a panel rather than a full-bleed section on purpose - it sits in the
  * page's own container with air above and below, so the eye reads it as the
  * final moment of the landing page rather than as a new one.
  *
@@ -15,7 +15,7 @@ import { APP_ROUTES } from "@/constants";
  * tokens and the same brand pair as `hero-surface`; the dot texture is the one
  * the platform and pricing sections above it already use, at 22px and masked to
  * fade at the panel's edges; the heading highlight, the eyebrow and the button
- * pair are the treatments the hero established. That repetition is the point —
+ * pair are the treatments the hero established. That repetition is the point -
  * a closing CTA that introduces its own colour language is a banner, not a
  * conclusion.
  *
@@ -58,7 +58,7 @@ export function FinalCta() {
           <ButtonLink href={APP_ROUTES.register} size="lg" className="group">
             Get Started Free
             <ArrowRight
-              /* `translate`, not `transform` — Tailwind v4 writes the utility to
+              /* `translate`, not `transform` - Tailwind v4 writes the utility to
                  the former, so a `transition-transform` here animates nothing. */
               className="h-4 w-4 transition-[translate] group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
               aria-hidden

@@ -16,7 +16,7 @@ const TYPES = PRODUCT_TYPE_CHOICES.map((choice) => choice.value);
  * The product form, opened with the type already chosen.
  *
  * `?type=` is optional. Add Product now links straight here and the merchant
- * picks the type on the form's first tab, so nothing produces the parameter —
+ * picks the type on the form's first tab, so nothing produces the parameter -
  * but it is still honoured, because "/products/new?type=service" is a link
  * worth being able to bookmark or hand to someone.
  *

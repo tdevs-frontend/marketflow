@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 /**
  * The questions a prospect actually types before signing up.
  *
- * Product questions with product answers — every one of them is answerable from
+ * Product questions with product answers - every one of them is answerable from
  * a section above, and each answer names the real surface rather than
  * restating the pitch. A FAQ whose answers are marketing copy is a second CTA
  * with a chevron on it.
@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
  * the right. Eight items centred under a centred heading is a very long, very
  * narrow ribbon; splitting it gives the list a shorter measure and puts the
  * section's title in the reader's eye for the whole scroll. Below `md` the
- * grid collapses to heading, description, list — which is the reading order
+ * grid collapses to heading, description, list - which is the reading order
  * already written into the source.
  *
  * A client component, which it did not used to be. This was a `<details>` set
@@ -29,7 +29,7 @@ import { cn } from "@/lib/utils";
  * browsers out of three. So: a button, a panel, and a measured height.
  *
  * What that costs is the free accessibility `<details>` came with, so it is
- * paid back by hand — `aria-expanded` and `aria-controls` on the button, the
+ * paid back by hand - `aria-expanded` and `aria-controls` on the button, the
  * panel labelled by it, and `inert` on the panel while it is closed so its text
  * is neither read out nor tabbed into while it sits at zero height.
  *
@@ -99,7 +99,7 @@ function FaqItem({ question, answer, isOpen, onToggle }: FaqItemProps) {
   const panelId = `${id}-answer`;
 
   /*
-   * Measured from the content, never from the panel — the panel is the element
+   * Measured from the content, never from the panel - the panel is the element
    * being clamped, so asking it its height is asking it what we just told it.
    *
    * A `ResizeObserver` rather than a measurement per toggle, because the number
@@ -149,7 +149,7 @@ function FaqItem({ question, answer, isOpen, onToggle }: FaqItemProps) {
          * A plus that merely rotates lands on a cross, and one swapped for a
          * minus outright is the jump this was meant to remove.
          *
-         * 36px, fixed in both states — the border, the bed and the glyph all
+         * 36px, fixed in both states - the border, the bed and the glyph all
          * change on open and the box does not, which is what keeps the row from
          * shifting under the cursor mid-click. The icon carries the brand
          * indigo whether it is open or closed; muting it while closed was what
@@ -227,7 +227,7 @@ export function FeaturesFaq() {
     >
       <div className="custom-container">
         {/*
-         * Roughly 35/65 from `lg`, a gentler 40/60 at `md` with a tighter gap —
+         * Roughly 35/65 from `lg`, a gentler 40/60 at `md` with a tighter gap -
          * the heading needs more of a tablet's width than it does a desktop's
          * before it starts wrapping every second word.
          */}
@@ -255,7 +255,7 @@ export function FeaturesFaq() {
             </p>
           </header>
 
-          {/* 14px between items — enough that each card reads as its own, tight
+          {/* 14px between items - enough that each card reads as its own, tight
               enough that eight of them still read as one list. */}
           <div className="space-y-3.5">
             {FAQS.map((faq, index) => (

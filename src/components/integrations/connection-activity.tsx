@@ -10,7 +10,7 @@ import type { ConnectionActivity } from "@/types/integration";
  *
  * "Last connected" and "last successful request" are what separate a
  * credential that was never right from one that expired this morning, and
- * "last error" carries the provider's own wording rather than a paraphrase —
+ * "last error" carries the provider's own wording rather than a paraphrase -
  * a merchant forwarding it to their provider's support needs the real string.
  *
  * Absolute time on the line, relative time under it. A merchant debugging at

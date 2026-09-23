@@ -3,7 +3,7 @@ import type { MerchantRole } from "@/constants/roles";
 /**
  * The Workspace module's vocabulary.
  *
- * Four questions, four entities, and no overlap between them — which is the
+ * Four questions, four entities, and no overlap between them - which is the
  * whole design constraint of this module:
  *
  *   WorkspaceMember      who works here
@@ -25,7 +25,7 @@ import type { MerchantRole } from "@/constants/roles";
  * Where a person is in the join/leave lifecycle.
  *
  * Kept apart from their role on purpose. A suspended Marketing Manager is still
- * a Marketing Manager — folding "suspended" into the role union would lose the
+ * a Marketing Manager - folding "suspended" into the role union would lose the
  * role you have to restore them to.
  */
 export type MemberStatus = "active" | "invited" | "suspended";
@@ -48,10 +48,10 @@ export interface WorkspaceMember {
   id: string;
   name: string;
   email: string;
-  /** Role id from `WORKSPACE_ROLES`, not a label — roles are renameable. */
+  /** Role id from `WORKSPACE_ROLES`, not a label - roles are renameable. */
   roleId: string;
   status: MemberStatus;
-  /** ISO. `null` for someone who has never signed in — an open invitation. */
+  /** ISO. `null` for someone who has never signed in - an open invitation. */
   lastActiveAt: string | null;
   /** ISO. When they accepted; `null` while still invited. */
   joinedAt: string | null;
@@ -67,8 +67,8 @@ export interface WorkspaceMember {
  * An invitation in flight.
  *
  * Modelled separately from the member row it will become because the two carry
- * different facts — an invitation has an expiry and a resend count, a member
- * has a join date and a last-active — but it is *listed* in the members table
+ * different facts - an invitation has an expiry and a resend count, a member
+ * has a join date and a last-active - but it is *listed* in the members table
  * as `status: "invited"`. One table, because "who is in this workspace"
  * includes the people who have been asked.
  */
@@ -117,12 +117,12 @@ export type PermissionAction =
  * Three things ride along with the action name, and each exists to answer a
  * question a merchant asks while editing a 100-permission role:
  *
- *   `advanced`  — "do I need to care about this one right now?" Rare and
+ *   `advanced`  - "do I need to care about this one right now?" Rare and
  *                 destructive actions sit behind a disclosure so the default
  *                 view is the handful most roles actually differ on.
- *   `sensitive` — "what happens if I grant this?" The string is the impact,
+ *   `sensitive` - "what happens if I grant this?" The string is the impact,
  *                 shown in a tooltip. Presence is what flags the badge.
- *   `requires`  — "is this combination even coherent?" Publish without Edit is
+ *   `requires`  - "is this combination even coherent?" Publish without Edit is
  *                 a permission that cannot be exercised, and the editor
  *                 resolves it rather than letting it be saved.
  */
@@ -136,7 +136,7 @@ export interface ResourceAction {
    * Other actions on the same resource this one depends on.
    *
    * `view` is an implicit prerequisite for everything and is not repeated
-   * here — see `requiredFor` in `constants/workspace`.
+   * here - see `requiredFor` in `constants/workspace`.
    */
   requires?: PermissionAction[];
 }
@@ -169,7 +169,7 @@ export interface PermissionGroup {
  * A role's grants: resource key → the actions it allows.
  *
  * A map rather than a flat list of `"contacts.edit"` strings, because every
- * question the UI asks is "what can this role do to contacts" — and the flat
+ * question the UI asks is "what can this role do to contacts" - and the flat
  * form answers it only by scanning. Absent key means no access at all, which is
  * also the safe default for a resource added after the role was created.
  */
@@ -207,7 +207,7 @@ export interface WorkspaceRole {
   grants: RoleGrants;
   createdAt: string;
   updatedAt: string;
-  /** `null` on system roles — nobody created them. */
+  /** `null` on system roles - nobody created them. */
   createdBy: string | null;
   /** Who last changed the permissions. `null` if never edited. */
   updatedBy: string | null;
@@ -217,8 +217,8 @@ export interface WorkspaceRole {
  * A starting point for a new custom role.
  *
  * Building a permission set from a hundred empty checkboxes is a job nobody
- * finishes correctly. Presets are the shapes merchants actually ask for —
- * "someone who runs marketing", "someone who only reads" — expressed as grants
+ * finishes correctly. Presets are the shapes merchants actually ask for -
+ * "someone who runs marketing", "someone who only reads" - expressed as grants
  * so the create flow can hand over a working role in one click.
  */
 export interface PermissionPreset {
@@ -299,8 +299,8 @@ export type AuditModule =
 /**
  * One field that changed, as before and after.
  *
- * Strings, not `unknown`. The audit trail renders a human diff — "Viewer →
- * Marketing Manager" — and anything that needs a shape richer than that belongs
+ * Strings, not `unknown`. The audit trail renders a human diff - "Viewer →
+ * Marketing Manager" - and anything that needs a shape richer than that belongs
  * in `metadata`, behind the Advanced disclosure, where a reader has opted in to
  * seeing raw values.
  */

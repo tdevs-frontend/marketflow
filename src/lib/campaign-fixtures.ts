@@ -22,7 +22,7 @@ import type { SocialPlatform } from "@/types/social";
  * The reference data the campaign wizard collects against.
  *
  * It sits beside `marketing-fixtures` rather than inside it because these are
- * not campaigns — they are the vocabulary a campaign is *authored* in:
+ * not campaigns - they are the vocabulary a campaign is *authored* in:
  * objectives, senders, exclusion rules, merge variables, UTM defaults. The
  * split keeps the file that a backend will delete (campaign records) apart from
  * the one it will keep (workspace configuration).
@@ -112,8 +112,8 @@ export const WHATSAPP_CONNECTIONS: WhatsAppConnection[] = [
     label: "MarketFlow Business (Cloud API)",
     verified: true,
     numbers: [
-      { id: "wa-num-primary", label: "+880 1700 000000 — Primary", quality: "high" },
-      { id: "wa-num-support", label: "+880 1700 000011 — Support", quality: "medium" },
+      { id: "wa-num-primary", label: "+880 1700 000000 - Primary", quality: "high" },
+      { id: "wa-num-support", label: "+880 1700 000011 - Support", quality: "medium" },
     ],
   },
   {
@@ -121,7 +121,7 @@ export const WHATSAPP_CONNECTIONS: WhatsAppConnection[] = [
     label: "MarketFlow Retail (Cloud API)",
     verified: true,
     numbers: [
-      { id: "wa-num-retail", label: "+971 50 000 0000 — Retail", quality: "high" },
+      { id: "wa-num-retail", label: "+971 50 000 0000 - Retail", quality: "high" },
     ],
   },
 ];
@@ -130,7 +130,7 @@ export const WHATSAPP_CONNECTIONS: WhatsAppConnection[] = [
 export const EMAIL_SENDERS = SENDER_IDENTITIES;
 
 /**
- * Reply-to choices — every mailbox an identity already replies to, plus the
+ * Reply-to choices - every mailbox an identity already replies to, plus the
  * one address that is not a mailbox at all. Derived rather than listed again,
  * so adding a sender in Email → Senders offers its reply-to here too.
  */
@@ -180,7 +180,7 @@ export interface ExclusionOption {
    * On, and not switchable.
    *
    * Sending to someone who opted out is not a campaign setting, so the wizard
-   * shows these as checked and disabled rather than hiding them — a merchant
+   * shows these as checked and disabled rather than hiding them - a merchant
    * should be able to see the protection is there.
    */
   locked?: boolean;
@@ -260,7 +260,7 @@ export const ELIGIBILITY_RULE: Record<MessagingChannel, string> = {
  * Resolve an audience down to the people who will actually be sent to.
  *
  * Exclusions are applied as independent shares of the original list rather than
- * compounded, then clamped — overlapping rules double-counting is the only way
+ * compounded, then clamped - overlapping rules double-counting is the only way
  * this arithmetic can produce a number a merchant would call wrong, and
  * over-reporting the exclusion is the safe direction to be wrong in.
  */
@@ -282,7 +282,7 @@ export function eligibilityFor(
     return sum + (segment?.contacts ?? 0);
   }, 0);
 
-  /* A tag is a slice of the list, not a list of its own — 3% each keeps the
+  /* A tag is a slice of the list, not a list of its own - 3% each keeps the
      estimate honest without pretending to know the overlap. */
   const tagShare = exclusions.tags.length * 0.03;
 
@@ -352,7 +352,7 @@ export const MERGE_VARIABLES: MergeVariable[] = [
  *
  * A social post is published to a page, not delivered to a person, so there is
  * no contact behind it and `{{first_name}}` would render as whatever fallback
- * was set — for every reader. Offering contact variables there would be
+ * was set - for every reader. Offering contact variables there would be
  * offering a foot-gun, so the catalogue is filtered rather than annotated.
  */
 export const SOCIAL_VARIABLE_SOURCES: VariableSource[] = [
@@ -380,7 +380,7 @@ export const VARIABLE_SAMPLES: Record<string, string> = Object.fromEntries(
 /**
  * The `utm_source` a channel defaults to.
  *
- * Social resolves per platform instead — `utm_source=facebook` is what an
+ * Social resolves per platform instead - `utm_source=facebook` is what an
  * analytics report needs, and `utm_source=social` is what makes four platforms
  * indistinguishable in it.
  */
@@ -408,7 +408,7 @@ export const utmSourceFor = (
   return platforms.length === 1 ? platforms[0] : UTM_SOURCE.social;
 };
 
-/** Lower-case, hyphenated, no punctuation — the shape an analytics tool wants. */
+/** Lower-case, hyphenated, no punctuation - the shape an analytics tool wants. */
 export const utmSlug = (value: string): string =>
   value
     .toLowerCase()

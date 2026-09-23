@@ -39,7 +39,7 @@ import {
 } from "./use-workspace-permissions";
 
 /**
- * Team Members — who works in this workspace.
+ * Team Members - who works in this workspace.
  *
  * One responsibility and no more: the people, their status, and the lifecycle
  * actions that move them between states. What they can *do* is one click away
@@ -139,7 +139,7 @@ export function TeamWorkspace() {
 
     /* Sorts on the underlying value, not the rendered string: "Never signed in"
        and "2 minutes ago" do not compare, and a null last-active always sorts
-       to the end regardless of direction — it is the absence of a date, not an
+       to the end regardless of direction - it is the absence of a date, not an
        early one. */
     return [...filtered].sort((a, b) => {
       switch (field) {
@@ -405,7 +405,7 @@ export function TeamWorkspace() {
             if (selected?.id === member.id) setSelected(null);
             toast(
               reassignToId
-                ? `${member.name} removed — their work moved to ${
+                ? `${member.name} removed - their work moved to ${
                     members.find((item) => item.id === reassignToId)?.name ?? "a teammate"
                   }`
                 : `${member.name} removed from this workspace`,

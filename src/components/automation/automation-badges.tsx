@@ -31,7 +31,7 @@ import { CHANNEL_ICON } from "./node-icon";
  * Every state in the Automation module, as a badge.
  *
  * All of them pair a tone with an icon and a word. That is the accessibility
- * rule the brief asks for — status is never colour alone — and it is also what
+ * rule the brief asks for - status is never colour alone - and it is also what
  * makes a run log readable at speed: `Failed` and `Skipped` are both muted
  * reds at a glance, and the glyph is what separates them.
  */
@@ -160,7 +160,7 @@ export function ComplexityBadge({ level }: { level: TemplateComplexity }) {
 /**
  * The channels a workflow or template sends on.
  *
- * Icon plus name, in the channel's own accent — the same treatment the
+ * Icon plus name, in the channel's own accent - the same treatment the
  * Marketing modules use, so a WhatsApp chip is the same object everywhere in
  * the product.
  */
@@ -174,7 +174,7 @@ export function ChannelChips({
   className?: string;
 }) {
   if (channels.length === 0) {
-    return <span className="text-sm text-text-muted">—</span>;
+    return <span className="text-sm text-text-muted">-</span>;
   }
 
   return (

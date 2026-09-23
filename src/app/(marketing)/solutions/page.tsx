@@ -12,7 +12,7 @@ import {
 export const metadata: Metadata = {
   title: "Solutions",
   description:
-    "See how MarketFlow works for e-commerce, small business, agencies, real estate, education, clinics and restaurants — one workspace for customers, conversations, campaigns and automation.",
+    "See how MarketFlow works for e-commerce, small business, agencies, real estate, education, clinics and restaurants - one workspace for customers, conversations, campaigns and automation.",
 };
 
 /**
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
  * Six bands, and the argument runs in one direction: who this is for, what
  * they get, how it fits together, who already bought it, and the way to start.
  *
- * `SolutionsHero` carries the page's `h1`, its copy and its trail — built from
+ * `SolutionsHero` carries the page's `h1`, its copy and its trail - built from
  * `BlogHero`, so the ground, the grid, the bloom and the breadcrumb are the
  * same ones `/blog` opens with.
  *
@@ -29,19 +29,19 @@ export const metadata: Metadata = {
  * "is this for a business like mine". Its heading is passed in rather than
  * left at the default: the default reads "Built for businesses of every size
  * and industry", and `WhyChooseUs` directly below opens "Built for businesses
- * that think bigger" — two headings that start with the same three words, one
+ * that think bigger" - two headings that start with the same three words, one
  * screen apart.
  *
  * `HowItWorks` walks one customer through the modules in eight steps, from the
- * campaign click to the revenue it is attributed to — the one place on the
+ * campaign click to the revenue it is attributed to - the one place on the
  * site that tells that story end to end.
  *
  * `WhyChooseUs` is the reused block: the home page's capability grid, and it
  * earns its place here because every card links into the matching `/features`
- * anchor — a reader who has just found their industry gets the capabilities
+ * anchor - a reader who has just found their industry gets the capabilities
  * behind it with a way through to the detail.
  *
- * The integration wall is no longer here — it moved to
+ * The integration wall is no longer here - it moved to
  * `/features#integrations`, where it sits directly under the section that
  * makes the integrations argument and supplies the evidence for it. It had
  * nothing to answer on this page: a reader who has just found their industry
@@ -63,7 +63,7 @@ export default function SolutionsPage() {
         eyebrow="Business solutions"
         headingLead="Solutions built for the realities"
         headingRest="your industry"
-        subheading="Whatever you sell and whoever you sell it to, MarketFlow gives you one workspace to attract, engage and retain customers — arranged around the way your business already works."
+        subheading="Whatever you sell and whoever you sell it to, MarketFlow gives you one workspace to attract, engage and retain customers - arranged around the way your business already works."
       />
 
       <HowItWorks />

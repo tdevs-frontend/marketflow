@@ -35,7 +35,7 @@ import { SocialAccountDrawer } from "./social-account-drawer";
  *
  * This page is about *connections*, not content. It answers what is connected,
  * whether the authorisation still works, what each account is allowed to do,
- * and where those accounts are used — the same five questions the WhatsApp,
+ * and where those accounts are used - the same five questions the WhatsApp,
  * Email and SMS pages answer, asked of a set of accounts rather than one
  * provider connection.
  *
@@ -45,8 +45,8 @@ import { SocialAccountDrawer } from "./social-account-drawer";
  * seam between the two is the "Used by" rail and the accounts themselves:
  * `SOCIAL_ACCOUNTS` is one array, read by both modules.
  *
- * The layout is the module's established one — main column, then a rail
- * carrying health, dependants and the activity timeline — so a merchant
+ * The layout is the module's established one - main column, then a rail
+ * carrying health, dependants and the activity timeline - so a merchant
  * arriving from the WhatsApp page already knows where to look.
  */
 export function SocialWorkspace() {
@@ -104,7 +104,7 @@ export function SocialWorkspace() {
     },
   ];
 
-  /* Providers with nothing connected yet, plus the ones not built — the row
+  /* Providers with nothing connected yet, plus the ones not built - the row
      that tells a merchant what else is possible without pretending. */
   const unconnected = SOCIAL_PROVIDERS.filter(
     (provider) =>
@@ -126,7 +126,7 @@ export function SocialWorkspace() {
       setRefreshing(false);
       toast(
         broken.length > 0
-          ? `${accounts.length - broken.length} of ${accounts.length} accounts refreshed — ${broken.length} still needs re-authorising`
+          ? `${accounts.length - broken.length} of ${accounts.length} accounts refreshed - ${broken.length} still needs re-authorising`
           : "All connections refreshed",
         broken.length > 0 ? "error" : "success",
       );

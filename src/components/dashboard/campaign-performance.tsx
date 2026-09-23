@@ -23,7 +23,7 @@ interface Campaign {
   revenue: number;
 }
 
-/* Sums to the 30-day KPI row exactly — 1,284 orders, $48,200 — so the month
+/* Sums to the 30-day KPI row exactly - 1,284 orders, $48,200 - so the month
    adds up whichever card you read it from. */
 const CAMPAIGNS: Campaign[] = [
   { name: "Summer Sale", reach: 24580, engagement: 8420, orders: 468, revenue: 18240 },
@@ -56,7 +56,7 @@ const TOTALS = {
  * Bars drawn in CSS rather than a second plotted chart: a bar chart here could
  * only ever show the one measure the tab selects, where a row can carry the
  * name, the measure, its share of the leader, the reach it came from and the
- * rate it converted at — five readings in the height a chart spends on one.
+ * rate it converted at - five readings in the height a chart spends on one.
  * It also lets this card end where the inbox beside it does, instead of being
  * pinned to a fixed plot height.
  */

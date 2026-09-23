@@ -14,7 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 
 /**
- * The tiers, the billing toggle and the cards — the part of the pricing page
+ * The tiers, the billing toggle and the cards - the part of the pricing page
  * that is *the pricing*, with none of the marketing page around it.
  *
  * Shared, deliberately and in one direction. `/pricing` and the homepage
@@ -164,7 +164,7 @@ function PlanCard({
             One badge, never two stacked.
 
             The workspace is quite likely on the featured tier, and a second
-            badge below the first makes that one card's header a row taller —
+            badge below the first makes that one card's header a row taller -
             which pushes its price, its button and its whole feature list out
             of line with the three beside it. Most popular keeps the slot when
             both apply, because the card is not left ambiguous: its call to
@@ -211,7 +211,7 @@ function PlanCard({
         {current ? (
           /*
            * Not a disabled button. There is no action here to be temporarily
-           * unavailable — this is a statement about the account — and a greyed
+           * unavailable - this is a statement about the account - and a greyed
            * "Current plan" button invites somebody to hunt for why they cannot
            * press it. Set at the button's exact height so every card's feature
            * list still starts on the same line.
@@ -223,7 +223,7 @@ function PlanCard({
         ) : account && priced ? (
           <Button
             /*
-             * The tier's own variant — the same `primary` on the featured card
+             * The tier's own variant - the same `primary` on the featured card
              * and `dark` on the rest that a visitor sees on the pricing page.
              * One set of cards has to look like one set of cards; a grid that
              * swaps to `outline` buttons once you sign in is a second pricing
@@ -231,14 +231,14 @@ function PlanCard({
              * sharing this component prevents.
              *
              * The label is the one thing that does change. A merchant already
-             * paying for Growth is not "Starting Free" — they are moving
+             * paying for Growth is not "Starting Free" - they are moving
              * between tiers, and the button has to name the act it performs.
              */
             variant={featured ? "primary" : "dark"}
             size="md"
             className="mt-6 w-full"
             /* Off for a role that may not change the plan, and for the moment
-               a change is in flight — four live buttons during one round trip
+               a change is in flight - four live buttons during one round trip
                is how a merchant ends up on the tier they clicked second. */
             disabled={!onChangePlan || changeBusy}
             title={onChangePlan ? undefined : changeDisabledReason}
@@ -250,8 +250,8 @@ function PlanCard({
           </Button>
         ) : account ? (
           /*
-           * A quoted tier has nothing to self-serve — there is no price for
-           * `changePlan` to move the workspace onto — so it stays a link, as
+           * A quoted tier has nothing to self-serve - there is no price for
+           * `changePlan` to move the workspace onto - so it stays a link, as
            * it is for a visitor, rather than a button that would refuse.
            */
           <ButtonLink
@@ -315,11 +315,11 @@ export function PricingPlans({
    * what the marketing pages pass by leaving it out.
    */
   currentPlanId = null,
-  /** Where the toggle starts — an account opens on the cycle it is billed on. */
+  /** Where the toggle starts - an account opens on the cycle it is billed on. */
   defaultBilling = "monthly",
   /**
    * Called for a priced tier the account is not on, with the period the
-   * billing toggle is currently showing — the caller needs both to know what
+   * billing toggle is currently showing - the caller needs both to know what
    * it is being asked to switch to. Absent means the control is off.
    */
   onChangePlan,
@@ -333,7 +333,7 @@ export function PricingPlans({
    * On by default, because `PricingSection` sets a heading, an eyebrow and a
    * paragraph above it and the toggle has to clear them. An app surface brings
    * its own heading and its own rhythm, and inherits that 40px as dead space
-   * between two things it has already spaced — so it turns this off.
+   * between two things it has already spaced - so it turns this off.
    */
   topSpacing = true,
   className,
@@ -353,7 +353,7 @@ export function PricingPlans({
      * A container, so the grid answers to the width it is actually given.
      *
      * The two breakpoints are the pixel widths `custom-container` reaches at
-     * `sm` and `xl` — 540 and 1140 — so /pricing and the homepage fold at
+     * `sm` and `xl` - 540 and 1140 - so /pricing and the homepage fold at
      * exactly the viewport sizes they always have. What changes is that the
      * same cards, rendered inside the Settings content column, fold on that
      * column's width instead of the window's. Four 270px cards crushed into an

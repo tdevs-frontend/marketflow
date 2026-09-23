@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 /**
  * Loading states for the Integrations module.
  *
- * Each one is sized to the component it stands in for — an integration card is
+ * Each one is sized to the component it stands in for - an integration card is
  * an icon tile, a badge, two lines of text, three detail rows and a full-width
  * button, so the skeleton reserves exactly that. A placeholder that does not
  * match what replaces it produces a layout jump, which is worse than no
@@ -150,17 +150,17 @@ export function IntegrationDetailSkeleton() {
   );
 }
 
-/** Six columns — endpoint, events, status, success rate, last delivery, actions. */
+/** Six columns - endpoint, events, status, success rate, last delivery, actions. */
 export function WebhookTableSkeleton({ rows = 5 }: { rows?: number }) {
   return <SkeletonTable rows={rows} columns={6} />;
 }
 
-/** Seven columns — name, prefix, created, last used, permissions, status, actions. */
+/** Seven columns - name, prefix, created, last used, permissions, status, actions. */
 export function ApiKeyTableSkeleton({ rows = 4 }: { rows?: number }) {
   return <SkeletonTable rows={rows} columns={7} />;
 }
 
-/** Five columns — time, method, endpoint, status, duration. */
+/** Five columns - time, method, endpoint, status, duration. */
 export function ApiLogSkeleton({ rows = 8 }: { rows?: number }) {
   return <SkeletonTable rows={rows} columns={5} />;
 }
@@ -169,7 +169,7 @@ export function ApiLogSkeleton({ rows = 8 }: { rows?: number }) {
  * The Social page: KPI row, then the account grid beside the health rail.
  *
  * An account card is an icon tile, three lines of identity, three detail rows
- * and a button — the same anatomy as `IntegrationCardSkeleton` but two across
+ * and a button - the same anatomy as `IntegrationCardSkeleton` but two across
  * rather than three, because the Social grid sits inside the narrower main
  * column rather than the full page width.
  */

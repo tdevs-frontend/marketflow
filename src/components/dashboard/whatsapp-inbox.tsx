@@ -16,7 +16,7 @@ const STATS = [
   /* Green, and the same green as the unread dot on a row below. Unread is the
      one count that maps onto something the reader can point at in the list. */
   { label: "Unread", value: 12, tone: "bg-whatsapp" },
-  /* "Awaiting Reply" truncated in the middle tile below ~1500px — three tiles
+  /* "Awaiting Reply" truncated in the middle tile below ~1500px - three tiles
      across a five-column card leaves roughly 90px of text width. */
   { label: "Awaiting", value: 8, tone: "bg-warning" },
   { label: "Assigned", value: 4, tone: "bg-border-strong" },
@@ -33,7 +33,7 @@ interface Conversation {
 }
 
 /**
- * Placeholder queue — swap for `useGetInboxQuery()` once the API is live.
+ * Placeholder queue - swap for `useGetInboxQuery()` once the API is live.
  *
  * Two of the four carry a photo and two do not, which is the real shape of a
  * CRM contact list: WhatsApp supplies a profile picture only when the contact
@@ -66,7 +66,7 @@ const CONVERSATIONS: Conversation[] = [
   {
     name: "David Chen",
     avatarUrl: "/customer-avatar-4.jpg",
-    preview: "Thanks — order received.",
+    preview: "Thanks - order received.",
     time: "24 min ago",
     unread: false,
     online: false,

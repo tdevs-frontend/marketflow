@@ -30,7 +30,7 @@ import type {
  *
  * That was the original defect, and it is worth naming precisely because it is
  * easy to reintroduce. Every Settings panel used to hold its form in local
- * `useState` and raise a toast on save — inside a tab strip that unmounted the
+ * `useState` and raise a toast on save - inside a tab strip that unmounted the
  * panel you left. So "Profile saved" was a message with nothing behind it: the
  * edit was gone before the toast finished animating, and the header went on
  * saying "Guest User" regardless.
@@ -62,7 +62,7 @@ interface Snapshot {
    * In the snapshot rather than read straight from the fixtures, because a
    * plan change has to *land* somewhere. Switching tiers closes the open
    * period and opens a new one, so Purchased History goes on agreeing with
-   * the Current subscription card a tab away — a history that still calls the
+   * the Current subscription card a tab away - a history that still calls the
    * old tier active is the same defect as a stale toast, arrived at more
    * slowly.
    */
@@ -71,8 +71,8 @@ interface Snapshot {
    * A manual payment submitted and not yet verified, or `null`.
    *
    * One slot, not a list. A workspace with two unverified payments against two
-   * different plans is a question nobody can answer — which one did they mean
-   * — so the checkout refuses a second while one is outstanding, and this
+   * different plans is a question nobody can answer - which one did they mean
+   * - so the checkout refuses a second while one is outstanding, and this
    * shape is what makes that refusal structural rather than a check somebody
    * has to remember to write.
    *
@@ -172,7 +172,7 @@ export function useTwoFactorEnrollment(): TwoFactorEnrollment | null {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Writes — for `lib/account-service` only                                    */
+/* Writes - for `lib/account-service` only                                    */
 /* -------------------------------------------------------------------------- */
 
 export const readSnapshot = (): Snapshot => snapshot;
@@ -211,7 +211,7 @@ export function writeSecurity(patch: Partial<SecurityState>) {
  *
  * A patch rather than a whole record: a plan change alters `planId` and the
  * amount, a cancellation alters `status`, and neither of them knows anything
- * about the payment method — so neither should be able to clear it.
+ * about the payment method - so neither should be able to clear it.
  */
 export function writeSubscription(patch: Partial<Subscription>) {
   commit({ ...snapshot, subscription: { ...snapshot.subscription, ...patch } });
@@ -222,7 +222,7 @@ export function writeSubscription(patch: Partial<Subscription>) {
  *
  * Called by `changePlan` alongside `writeSubscription`, and deliberately not
  * folded into it: cancelling also writes the subscription, and a cancellation
- * does *not* end the period — the workspace keeps the plan it paid for until
+ * does *not* end the period - the workspace keeps the plan it paid for until
  * `renewsAt`. One mutator for "the agreement changed" and another for "a period
  * ended" is what keeps those two apart.
  *

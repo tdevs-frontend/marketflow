@@ -14,14 +14,14 @@ import { LegalToc, type TocItem } from "./legal-toc";
  * A legal document page: the hero, then the numbered sections beside an
  * "On this page" rail.
  *
- * The hero is the Solutions and Blog band — same `hero-surface`, grid and
- * bloom — so the page is plainly part of the site. Everything under it is a
+ * The hero is the Solutions and Blog band - same `hero-surface`, grid and
+ * bloom - so the page is plainly part of the site. Everything under it is a
  * document rather than a landing page: no cards, no alternating grounds, one
  * column at reading width.
  *
  * From `lg` the rail sits to the left and sticks under the header, so a
  * reader deep in section 20 of the Terms can still see where they are and
- * jump elsewhere. Below `lg` it collapses into a `<details>` above the body —
+ * jump elsewhere. Below `lg` it collapses into a `<details>` above the body -
  * a native disclosure, so it works without JavaScript and is announced as a
  * button.
  *
@@ -174,7 +174,7 @@ function ListItem({ item }: { item: LegalListItem }) {
             <strong className="font-semibold text-text-primary">
               {item.term}
             </strong>{" "}
-            — {item.text}
+            - {item.text}
           </>
         )}
       </span>

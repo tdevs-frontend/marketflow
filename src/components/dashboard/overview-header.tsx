@@ -25,7 +25,7 @@ function useLocalHour(): number {
   return useSyncExternalStore(
     subscribe,
     () => new Date().getHours(),
-    /* Server snapshot — morning, matching the static prerender. */
+    /* Server snapshot - morning, matching the static prerender. */
     () => 9,
   );
 }

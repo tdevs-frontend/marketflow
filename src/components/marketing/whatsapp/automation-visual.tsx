@@ -18,7 +18,7 @@ const LABEL =
  * cards riding the edges of one object have to match or they stop reading as a
  * set, and pinned or wrapped they are the same three cards, so there is no
  * width worth varying between the two. The width is also what sets the
- * overlap, since each card is pushed out across its edge by half of itself —
+ * overlap, since each card is pushed out across its edge by half of itself -
  * making one wider would push it further onto the screen.
  */
 function AnnotationCard({
@@ -62,7 +62,7 @@ function AnnotationCard({
 /**
  * The right half of the section: one monitor, annotated, lit from behind.
  *
- * Two atmospheric layers under it, both decorative — the workflow dot canvas
+ * Two atmospheric layers under it, both decorative - the workflow dot canvas
  * the section has always used, and a violet bloom sized to the monitor so the
  * hardware sits in the section's light rather than on top of it.
  *
@@ -75,7 +75,7 @@ function AnnotationCard({
  * monitor is a different size in every column it lands in, and a card pinned
  * at `top-16` would sit in a different part of the screen at each one.
  *
- * That box must not clip — half of every card is outside it — so nothing in
+ * That box must not clip - half of every card is outside it - so nothing in
  * this file may take `overflow-hidden`. It is stated rather than left to the
  * default on the wrapper that would do the damage. The only clip in the whole
  * visual is on the glass itself, inside `WhatsAppWorkspaceMonitor`, where it

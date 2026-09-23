@@ -25,7 +25,7 @@ const ICONS: Record<string, LucideIcon> = {
 };
 
 /**
- * How a contact gets into this workflow — the first question, asked plainly.
+ * How a contact gets into this workflow - the first question, asked plainly.
  *
  * This screen exists because dropping somebody onto an empty canvas answers
  * none of the questions they actually have. "Welcome Series" is a template, a
@@ -36,7 +36,7 @@ const ICONS: Record<string, LucideIcon> = {
  * Cards, not a dropdown: six options each need a line of explanation and three
  * examples to be choosable without documentation, and a `<select>` has room
  * for none of that. They are the product's own `Card` at the product's own
- * size — this is a dashboard step, not a pricing page.
+ * size - this is a dashboard step, not a pricing page.
  */
 export function StartTypeCards({
   value,

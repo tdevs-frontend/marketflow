@@ -18,7 +18,7 @@ import type { LucideIcon } from "lucide-react";
  *
  * It is one screenshot of a product that does not exist yet, so the numbers,
  * names and copy all live here rather than being scattered through the four
- * panels that render them — a single place to keep the story straight.
+ * panels that render them - a single place to keep the story straight.
  */
 
 /* ------------------------------------------------------------ App sidebar */
@@ -82,7 +82,7 @@ export const WORKSPACE_THREADS: WorkspaceThread[] = [
 
 /**
  * The thread itself. The inbound line is a real buying question and the reply
- * is the automation answering it — the whole point the section is making, in
+ * is the automation answering it - the whole point the section is making, in
  * two messages.
  */
 export const CONVERSATION = {
@@ -108,7 +108,7 @@ export const CONVERSATION = {
 export type AutomationStepData = {
   label: string;
   icon: LucideIcon;
-  /** The tinted icon tile — soft ground, saturated glyph. */
+  /** The tinted icon tile - soft ground, saturated glyph. */
   tile: string;
 };
 
@@ -116,7 +116,7 @@ export type AutomationStepData = {
  * The five steps of the premium flow, top to bottom.
  *
  * Indigo carries the flow, one violet marks the wait, and the green is spent
- * only on the outcome — the same rule the rest of the section follows, where
+ * only on the outcome - the same rule the rest of the section follows, where
  * WhatsApp green means success and never decoration.
  */
 export const FLOW_STEPS: AutomationStepData[] = [
@@ -148,7 +148,7 @@ export type AnnotationCardData = {
   title: string;
   detail: string;
   icon: LucideIcon;
-  /** The tinted icon tile — soft ground, saturated glyph. */
+  /** The tinted icon tile - soft ground, saturated glyph. */
   tile: string;
   /**
    * Where the card hangs off the monitor, and on which phase of the shared
@@ -166,7 +166,7 @@ export type AnnotationCardData = {
  * Three, not five: the outcome ("lead qualified") and the proof ("+38% reply
  * rate") both used to hang out here too, and between them they turned the
  * hardware into the thing in the middle of a legend. What is left is the
- * mechanism only — a reply, a wait, a follow-up — and the outcome still reads,
+ * mechanism only - a reply, a wait, a follow-up - and the outcome still reads,
  * one panel further in, as the last step of the flow on the glass.
  *
  * Two on the left and one on the right, at three heights that share no line,
@@ -174,7 +174,7 @@ export type AnnotationCardData = {
  * header rather than as annotation.
  *
  * Each is anchored to its edge and then pushed back out across it by half its
- * own width — `left-0 -translate-x-1/2`, `right-0 translate-x-1/2`. Half the
+ * own width - `left-0 -translate-x-1/2`, `right-0 translate-x-1/2`. Half the
  * card outside, half over the frame, and no pixel offsets, so the overlap is
  * still half a card when the monitor is 520px wide instead of 630px.
  *

@@ -5,7 +5,7 @@ import { WORKSPACE_NAV } from "./automation-data";
 /**
  * The application's icon rail.
  *
- * Purely a shape — the labels live in the mock-up's `aria-label`, so the rail
+ * Purely a shape - the labels live in the mock-up's `aria-label`, so the rail
  * is hidden from assistive tech and carries no text at any size. WhatsApp is
  * the active destination and takes the product's indigo active state; it is
  * also the one item drawn with its own channel mark, because a rail of six

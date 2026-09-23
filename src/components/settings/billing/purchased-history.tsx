@@ -26,8 +26,8 @@ import { SettingsSection, useServiceQuery } from "../settings-section";
 /**
  * Everything this workspace has bought, in one table.
  *
- * This replaced two — a Plan History tab listing periods and a Recent Invoices
- * section listing charges — and the merge is the point rather than a tidy-up.
+ * This replaced two - a Plan History tab listing periods and a Recent Invoices
+ * section listing charges - and the merge is the point rather than a tidy-up.
  * The two tables were the same events at different resolutions: a period said
  * "Business, April to July, $99"; three invoices said what that meant month by
  * month. A merchant reconciling a bank statement had to hold both open and
@@ -35,7 +35,7 @@ import { SettingsSection, useServiceQuery } from "../settings-section";
  *
  * So there is one row per charge, carrying the tier it bought. No event appears
  * twice, because periods are what is *stored* and charges are derived from them
- * — see `listPurchaseHistory`. A plan cannot appear without its payments, and a
+ * - see `listPurchaseHistory`. A plan cannot appear without its payments, and a
  * payment cannot appear without the plan it was for.
  *
  * Six columns, and they are the six a merchant reconciles a statement against:
@@ -144,7 +144,7 @@ function PurchaseRow({ purchase }: { purchase: Purchase }) {
       </TD>
       <TD>
         {/*
-          Two facts, two badges, one column — §5's "Active · Paid". They are
+          Two facts, two badges, one column - §5's "Active · Paid". They are
           genuinely different questions: what the plan is doing, and what
           happened to the money. A row can be Ended and Paid, or Active and
           Pending, and collapsing them into one word makes the second
@@ -182,7 +182,7 @@ function PurchaseRow({ purchase }: { purchase: Purchase }) {
         ) : (
           /* The reference without a link. It is the string a merchant quotes
              when they chase a charge, and it is useful whether or not a PDF
-             exists — which is why it is text here rather than a dead button. */
+             exists - which is why it is text here rather than a dead button. */
           <span className="text-sm font-medium text-text-secondary tabular-nums">
             {purchase.invoiceNumber}
           </span>

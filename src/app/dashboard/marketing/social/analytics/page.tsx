@@ -21,7 +21,7 @@ export default function SocialAnalyticsPage() {
       */}
       <PageHeader
         title="Social Analytics"
-        description="Reach, engagement and follower growth per platform — ranked by rate, not by follower count."
+        description="Reach, engagement and follower growth per platform - ranked by rate, not by follower count."
         secondaryActions={<SocialAnalyticsExport />}
       />
 

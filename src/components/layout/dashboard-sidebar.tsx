@@ -27,15 +27,15 @@ const ALL_HREFS = dashboardNav.flatMap((section) =>
  * The one row the current route belongs to: the longest href that matches it.
  *
  * Longest-wins rather than a set of routes forced to match exactly, which is
- * what this replaced. The exact-match set was derived — any href another href
- * extended became exact — and that is a blunter rule than the sidebar needs.
+ * what this replaced. The exact-match set was derived - any href another href
+ * extended became exact - and that is a blunter rule than the sidebar needs.
  * `/dashboard/settings` is the parent of five pages, so it went exact, and the
  * Settings row went dark on Profile, Notifications and Security. It only looked
  * right because the sidebar happened to list no route under it.
  *
  * It stopped looking right the moment Billing and Developer moved out of
  * Settings into groups of their own. Their routes still live under
- * `/dashboard/settings/` — deliberately, so no bookmark breaks — so the
+ * `/dashboard/settings/` - deliberately, so no bookmark breaks - so the
  * Settings row prefix-matches them, and a merchant on the billing page would
  * have seen two rows lit, one of which is a different module.
  *
@@ -73,7 +73,7 @@ function useActiveHref(pathname: string): string | null {
 const ROW =
   "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-[15px] font-medium transition-colors focus-visible:outline-none focus-visible:shadow-focus";
 
-/* Brand ramp tokens, not opacity mixes — the ramp already has the tint steps. */
+/* Brand ramp tokens, not opacity mixes - the ramp already has the tint steps. */
 const ROW_ACTIVE = "bg-primary text-white";
 /*
  * Top-level rows take the primary ink rather than the secondary.
@@ -99,7 +99,7 @@ const SUB_IDLE = "text-text-muted hover:bg-primary-soft hover:text-primary-dark"
 /* Items                                                                      */
 /* -------------------------------------------------------------------------- */
 
-/** The parent is a disclosure, not a link — its own page is the first child. */
+/** The parent is a disclosure, not a link - its own page is the first child. */
 function CollapsibleItem({
   item,
   activeHref,

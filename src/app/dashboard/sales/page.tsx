@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 /**
- * Sales — the commercial reading of the order book.
+ * Sales - the commercial reading of the order book.
  *
  * Separate from Orders on purpose: Orders is the queue of work, this is the
  * performance. Both read the same data, and only Orders can change it.

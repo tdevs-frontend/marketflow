@@ -15,14 +15,14 @@ import {
  * grid's column gap (`-inset-x-10` against `lg:gap-10`), so its left edge sits
  * on the left rail's cards and its right edge on the right rail's. Its vertical
  * extent is the hub column, which the grid stretches to the rails' height. So
- * `RAIL_ROWS` — the row centres the rails lay their cards on — addresses the
+ * `RAIL_ROWS` - the row centres the rails lay their cards on - addresses the
  * same points here, and one constant keeps curves, dots and cards in step at
  * every width.
  *
  * The viewBox is percentage space with `preserveAspectRatio="none"`, which
  * anchors every endpoint however the box is shaped; `non-scaling-stroke` stops
  * the hairlines thickening with the stretch. Endpoint dots are HTML rather than
- * `<circle>` for the same reason — that stretch would turn a circle into an
+ * `<circle>` for the same reason - that stretch would turn a circle into an
  * ellipse.
  */
 
@@ -39,7 +39,7 @@ const LEFT_END = 40;
 const RIGHT_END = 60;
 
 /* Mirrors `--color-secondary` in `styles/variables.css`. Literal hex because a
-   gradient stop is read by the renderer, not resolved as a cascaded value —
+   gradient stop is read by the renderer, not resolved as a cascaded value -
    the same reason `dashboard/charts/chart-theme.ts` keeps its own copies. */
 const LINK = "var(--color-secondary)";
 

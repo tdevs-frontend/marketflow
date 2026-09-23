@@ -22,7 +22,7 @@ import { ProviderIcon } from "./provider-icon";
  * The card answers the five questions the Integrations module exists for, in
  * the order a merchant asks them: which platform and which account, is it
  * working, what is it allowed to do, when did it last work, and how do I fix
- * it. Audience figures are deliberately absent — followers and engagement rate
+ * it. Audience figures are deliberately absent - followers and engagement rate
  * are a Social Planner question, and putting them here is what would turn this
  * page into a second analytics dashboard.
  *
@@ -47,7 +47,7 @@ export function ConnectedAccountCard({
   const broken = account.status !== "connected";
 
   /* Granted capabilities only. A row of four chips where two say "not
-     available" reads as a broken account rather than a normal one — the
+     available" reads as a broken account rather than a normal one - the
      exceptions belong on the detail panel, where there is room to say why. */
   const granted = account.capabilities.filter(
     (capability) => capability.state === "granted",
@@ -138,7 +138,7 @@ export function ConnectedAccountCard({
       </dl>
 
       {/* `mt-auto` so buttons line up across a row whose cards differ in
-          height — an account with a long page name wraps, its neighbour does not. */}
+          height - an account with a long page name wraps, its neighbour does not. */}
       <div className="mt-auto pt-4">
         {broken ? (
           <Button size="sm" className="w-full" onClick={() => onReconnect(account)}>

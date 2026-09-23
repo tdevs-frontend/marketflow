@@ -58,7 +58,7 @@ import { ImportWorkflowDialog, RenameWorkflowDialog } from "./workflow-dialogs";
  * Two views on the same list, because they answer different questions: cards
  * show each journey's *shape*, which is what you want when deciding which
  * automation to open, and the table lines the numbers up, which is what you
- * want when deciding which one is underperforming. Cards are the default —
+ * want when deciding which one is underperforming. Cards are the default -
  * most visits here are "find the one I mean", not "audit all of them".
  *
  * Filter, sort, page and search all live in the URL through `useTableState`,
@@ -89,7 +89,7 @@ const SORTS: { value: SortField; label: string }[] = [
   { value: "conversion", label: "Conversion rate" },
 ];
 
-/** Triggers actually wired to a workflow — the rest would filter to nothing. */
+/** Triggers actually wired to a workflow - the rest would filter to nothing. */
 const USED_TRIGGERS = AUTOMATION_TRIGGERS.filter((trigger) =>
   WORKFLOWS.some((workflow) => workflow.triggerKey === trigger.eventKey),
 );
@@ -329,7 +329,7 @@ export function WorkflowsWorkspace() {
         action={
           /* A link, not a dialog: creating an automation starts with "how do
              people get in", which is a two-step question with a rule builder
-             in it — more than a modal should carry. */
+             in it - more than a modal should carry. */
           <ButtonLink href={AUTOMATION_ROUTES.create}>
             <Plus aria-hidden />
             New Workflow
@@ -459,7 +459,7 @@ export function WorkflowsWorkspace() {
             ) : (
               <EmptyState
                 title="No workflows match these filters"
-                description="Try a different status, trigger or channel — or clear the filters to see everything."
+                description="Try a different status, trigger or channel - or clear the filters to see everything."
                 action={
                   <Button size="sm" variant="outline" onClick={clearEverything}>
                     Clear filters
@@ -558,7 +558,7 @@ export function WorkflowsWorkspace() {
                       {workflow.stats.running > 0 ? (
                         formatCount(workflow.stats.running)
                       ) : (
-                        <span className="text-text-muted">—</span>
+                        <span className="text-text-muted">-</span>
                       )}
                     </TD>
                     <TD align="right" className="text-sm font-bold text-text-primary tabular-nums">
@@ -599,7 +599,7 @@ export function WorkflowsWorkspace() {
               </TBody>
             </Table>
 
-            {/* Below `lg` the table becomes the card list — the same content,
+            {/* Below `lg` the table becomes the card list - the same content,
                 without a nine-column row nobody can read on a phone. */}
             <ul className="mt-4 grid gap-4 lg:hidden">
               {rows.map((workflow) => (
@@ -697,7 +697,7 @@ export function WorkflowsWorkspace() {
       >
         <p className="text-sm text-text-secondary">
           Contacts currently inside the journey are stopped immediately and no
-          scheduled action will fire. This cannot be undone — archive it instead
+          scheduled action will fire. This cannot be undone - archive it instead
           if you only want it out of the way.
         </p>
       </ConfirmDialog>

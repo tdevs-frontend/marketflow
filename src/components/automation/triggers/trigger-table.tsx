@@ -17,7 +17,7 @@ import { EventKey, TriggerStatusBadge } from "../automation-badges";
  * The event registry.
  *
  * A table rather than cards, because this page is a reference: the question is
- * "what is the key for order paid, and is anything listening" — which is two
+ * "what is the key for order paid, and is anything listening" - which is two
  * columns and a count, read across a row. Cards would put eight facts in a box
  * and make the reader hunt for the one they came for.
  *
@@ -101,7 +101,7 @@ export function TriggerTable({
 
               <TD align="right">
                 {trigger.workflowIds.length === 0 ? (
-                  <span className="text-sm text-text-muted">—</span>
+                  <span className="text-sm text-text-muted">-</span>
                 ) : (
                   <Tooltip
                     content={`${trigger.workflowIds.length} workflow${

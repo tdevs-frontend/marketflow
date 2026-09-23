@@ -51,7 +51,7 @@ export function AutomationStep({
  * This is the panel that makes the section's second point: the conversation on
  * the left is not being typed by anyone. Status sits at the top where a real
  * product would put it, the five steps read top to bottom, and two numbers
- * close it out — the flow is the subject, so the metrics stay a footnote.
+ * close it out - the flow is the subject, so the metrics stay a footnote.
  */
 export function AutomationFlowPanel() {
   return (

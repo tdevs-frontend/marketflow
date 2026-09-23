@@ -12,7 +12,7 @@ import { PRICING_ASSURANCES } from "@/constants/pricing";
  * `section-space-pb` rather than `-py`, so it reads as the foot of the
  * capability block above it instead of a third full-height section.
  *
- * Every claim here is one the product can actually stand behind — no logos,
+ * Every claim here is one the product can actually stand behind - no logos,
  * ratings or user counts we would have to invent.
  */
 export function PricingTrust() {
@@ -41,7 +41,7 @@ export function PricingTrust() {
 
           <p className="mt-5 flex items-center justify-center gap-2 text-xs text-text-muted">
             <ShieldCheck className="size-3.5 shrink-0 text-primary" aria-hidden />
-            Self-hosted on your own infrastructure — your customer data stays
+            Self-hosted on your own infrastructure - your customer data stays
             yours.
           </p>
         </div>

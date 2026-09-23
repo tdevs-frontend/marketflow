@@ -12,7 +12,7 @@ export const metadata: Metadata = {
  *
  * "API & Developer" sat in the Settings group pointing here, the permission
  * model's `developer` resource names this exact path, and no page was ever
- * emitted for it — so the row 404'd.
+ * emitted for it - so the row 404'd.
  */
 export default function DeveloperSettingsPage() {
   return <DeveloperSettings />;

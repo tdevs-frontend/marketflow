@@ -9,7 +9,7 @@ import type { FunnelStage } from "@/lib/overview-fixtures";
  * The conversion funnel, drawn rather than charted.
  *
  * A bar chart would show the five counts, but the number people actually want
- * is the *drop* between two steps — so each bar is scaled against the top of
+ * is the *drop* between two steps - so each bar is scaled against the top of
  * the funnel, and the step-to-step rate sits in the gap between bars where the
  * loss happens. Built in CSS because a charting library cannot put a label
  * between two bars.
@@ -41,7 +41,7 @@ export function ConversionFunnel({
         return (
           <li key={stage.label}>
             {previous ? (
-              /* The gap carries the drop — the interesting number. */
+              /* The gap carries the drop - the interesting number. */
               <div className="flex items-center gap-2 py-1.5 pl-1">
                 <ChevronDown className="size-3.5 shrink-0 text-border-strong" aria-hidden />
                 <p className="text-sm text-text-muted">

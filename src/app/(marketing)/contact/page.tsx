@@ -10,7 +10,7 @@ import {
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Talk to the MarketFlow team — call us, email support or sales, or find us on the map.",
+    "Talk to the MarketFlow team - call us, email support or sales, or find us on the map.",
 };
 
 /**

@@ -33,9 +33,9 @@ import { ProviderIcon } from "./provider-icon";
 /**
  * One connected account, in full.
  *
- * The same five-section anatomy the WhatsApp page established — what it is,
+ * The same five-section anatomy the WhatsApp page established - what it is,
  * what it may do, how it behaves, whether it works, and what it has been
- * doing — as tabs rather than a scroll, because this is a drawer beside a grid
+ * doing - as tabs rather than a scroll, because this is a drawer beside a grid
  * rather than a page of its own.
  *
  * Nothing here renders a token. `SocialAuth` does not carry one, which is the
@@ -169,7 +169,7 @@ export function SocialAccountDrawer({
             Changing them means reconnecting.
           </p>
 
-          {/* Every capability the provider offers, not only the granted ones —
+          {/* Every capability the provider offers, not only the granted ones -
               a merchant wondering why comment sync is off needs to see the row
               that says it was never available. */}
           {provider.capabilities.map((key) => {

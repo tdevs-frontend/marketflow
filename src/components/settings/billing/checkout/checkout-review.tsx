@@ -8,16 +8,16 @@ import type { BillingPeriod, PaymentGateway } from "@/types/account";
 import type { ManualForm } from "./payment-details";
 
 /**
- * Step 4 — everything that is about to happen, on one screen.
+ * Step 4 - everything that is about to happen, on one screen.
  *
  * The last place a merchant can leave, so it repeats rather than summarises:
  * tier, cycle, amount, tax, total and how it will be paid, all stated in full.
- * A review that says "Growth — confirm?" saves a reader four lines and costs
+ * A review that says "Growth - confirm?" saves a reader four lines and costs
  * them the only chance to notice the cycle is yearly.
  *
  * Tax is a row even at zero. A total that silently equals the plan price leaves
  * the reader unable to tell whether tax is included, exempt, or simply not
- * calculated — and the first thing they do about that is email support.
+ * calculated - and the first thing they do about that is email support.
  *
  * For a manual payment the review also shows what was entered, because the
  * reference and the date are the two fields a mistype makes worthless, and this

@@ -65,25 +65,25 @@ export interface SettingsNavGroup {
  * Settings, grouped the way it is navigated.
  *
  * One group now, and what left it is the point. Billing and Developer used to
- * be the second and third — *what the workspace pays for* and *how other
- * systems reach it* — and neither is an account preference. They are modules a
+ * be the second and third - *what the workspace pays for* and *how other
+ * systems reach it* - and neither is an account preference. They are modules a
  * different person opens for a different reason: an owner checks the bill,
  * a developer lives in the API pages, and everybody changes their own
  * password. Both are groups of their own in the dashboard sidebar now; their
  * routes are unchanged, so every existing link still resolves.
  *
- * What is left is a single coherent subject — the person signed in — which is
+ * What is left is a single coherent subject - the person signed in - which is
  * why the rail no longer needs the grouping to explain itself.
  *
  * **There is no Overview.** A hub page listing three destinations, above a
  * rail that lists the same three, was a landing screen whose only content was
  * a second copy of the navigation beside it. `/dashboard/settings` now sends
- * the reader straight to Profile — the first real page — so the sidebar's
+ * the reader straight to Profile - the first real page - so the sidebar's
  * Settings row still lands somewhere, and the rail lights the item it landed
  * on rather than a fourth entry that exists to be a table of contents.
  *
  * **There is no General.** It used to be a second editor for the workspace name,
- * timezone, currency, business details and default senders — every one of which
+ * timezone, currency, business details and default senders - every one of which
  * Workspace Settings already owns. Two editors for one value is not a
  * convenience, it is a question about which screen is telling the truth, and
  * the merchant has no way to answer it. The overview carries a read-only
@@ -130,7 +130,7 @@ export const SETTINGS_PAGES: SettingsPage[] = SETTINGS_NAV.flatMap(
   (group) => group.items,
 );
 
-/** The sections the overview links to — everything except itself. */
+/** The sections the overview links to - everything except itself. */
 export const SETTINGS_SECTIONS: SettingsPage[] = SETTINGS_PAGES.filter(
   (page) => page.href !== APP_ROUTES.settings,
 );
@@ -247,7 +247,7 @@ const MUTED: NotificationChannel[] = [];
  * below duplicates a page that already exists.
  *
  * **Somebody has to act on it.** Every row is something a merchant would
- * change their afternoon for — an order to pack, a card that declined, a
+ * change their afternoon for - an order to pack, a card that declined, a
  * workflow that threw, a template Meta rejected. Rows for "a tag was created"
  * or "a segment recalculated" are not here, because nobody does anything
  * differently on hearing them, and a list padded with those teaches the reader
@@ -262,7 +262,7 @@ const MUTED: NotificationChannel[] = [];
  *
  * `defaultChannels` is the editorial part, and the rule is unchanged: mail is
  * the default only where *not* knowing costs money or leaves a customer
- * waiting — a failed payment, a campaign that stopped, a webhook that stopped
+ * waiting - a failed payment, a campaign that stopped, a webhook that stopped
  * delivering. Everything else starts in-app, because an inbox that fills with
  * routine dashboard activity is an inbox somebody builds a filter for, and the
  * filter catches the important one too.
@@ -276,7 +276,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A new order has been placed, whatever channel it came from.",
     channels: BOTH,
     defaultChannels: IN_APP,
-    source: "types/commerce — order created",
+    source: "types/commerce - order created",
   },
   {
     key: "order.status_changed",
@@ -285,7 +285,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "Paid, shipped, cancelled or refunded.",
     channels: BOTH,
     defaultChannels: IN_APP,
-    source: "types/commerce — OrderStatus / FulfillmentStatus transitions",
+    source: "types/commerce - OrderStatus / FulfillmentStatus transitions",
   },
   {
     key: "order.payment_failed",
@@ -294,7 +294,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A customer's payment did not go through and the order is unpaid.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "types/commerce — PaymentStatus reaches failed",
+    source: "types/commerce - PaymentStatus reaches failed",
   },
   {
     key: "inventory.low_stock",
@@ -303,7 +303,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A product has fallen to its low-stock threshold.",
     channels: BOTH,
     defaultChannels: IN_APP,
-    source: "types/commerce — StockStatus reaches low-stock, per lowStockThreshold",
+    source: "types/commerce - StockStatus reaches low-stock, per lowStockThreshold",
   },
   {
     key: "inventory.out_of_stock",
@@ -312,7 +312,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A product can no longer be sold until it is restocked.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "types/commerce — StockStatus reaches out-of-stock",
+    source: "types/commerce - StockStatus reaches out-of-stock",
   },
   {
     key: "product.published",
@@ -321,7 +321,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A product moved out of draft and is now on sale.",
     channels: IN_APP,
     defaultChannels: IN_APP,
-    source: "types/commerce — ProductStatus reaches published",
+    source: "types/commerce - ProductStatus reaches published",
   },
   {
     key: "discount.status_changed",
@@ -330,7 +330,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A discount or coupon became active, or stopped being redeemable.",
     channels: IN_APP,
     defaultChannels: IN_APP,
-    source: "types/commerce — DiscountStatus reaches active or expired",
+    source: "types/commerce - DiscountStatus reaches active or expired",
   },
 
   /* -- Customers --------------------------------------------------------- */
@@ -341,7 +341,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "Someone new was added to the CRM, from any source.",
     channels: BOTH,
     defaultChannels: IN_APP,
-    source: "lib/customer-fixtures — contact created",
+    source: "lib/customer-fixtures - contact created",
   },
   {
     key: "lead.captured",
@@ -350,7 +350,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A new lead entered the workspace.",
     channels: BOTH,
     defaultChannels: IN_APP,
-    source: "lib/customer-fixtures — lead created",
+    source: "lib/customer-fixtures - lead created",
   },
   {
     key: "lead.assigned",
@@ -359,7 +359,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "Only leads where you are set as the owner.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "lib/customer-fixtures — lead ownerId set to you",
+    source: "lib/customer-fixtures - lead ownerId set to you",
   },
   {
     key: "lead.qualified",
@@ -368,7 +368,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A lead you own moved into the qualified stage.",
     channels: IN_APP,
     defaultChannels: IN_APP,
-    source: "types/lead — stage reaches qualified",
+    source: "types/lead - stage reaches qualified",
   },
   {
     key: "journey.stage_changed",
@@ -377,7 +377,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A contact you follow moved to a new stage of their journey.",
     channels: IN_APP,
     defaultChannels: IN_APP,
-    source: "lib/customer-fixtures — journey stage transition",
+    source: "lib/customer-fixtures - journey stage transition",
   },
 
   /* -- Marketing --------------------------------------------------------- */
@@ -388,7 +388,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "Confirmation that a campaign is queued, and for when.",
     channels: IN_APP,
     defaultChannels: IN_APP,
-    source: "lib/marketing-fixtures — campaign status reaches scheduled",
+    source: "lib/marketing-fixtures - campaign status reaches scheduled",
   },
   {
     key: "campaign.completed",
@@ -397,7 +397,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A campaign finished sending, with what it reached.",
     channels: BOTH,
     defaultChannels: IN_APP,
-    source: "lib/marketing-fixtures — campaign status reaches completed",
+    source: "lib/marketing-fixtures - campaign status reaches completed",
   },
   {
     key: "campaign.failed",
@@ -406,7 +406,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A send stopped part way, with how far it got first.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "lib/marketing-fixtures — campaign status reaches failed",
+    source: "lib/marketing-fixtures - campaign status reaches failed",
   },
   {
     key: "campaign.performance_alert",
@@ -415,7 +415,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A live campaign's open or click rate fell well below its channel's norm.",
     channels: BOTH,
     defaultChannels: IN_APP,
-    source: "lib/marketing-fixtures — campaign metrics against channel baseline",
+    source: "lib/marketing-fixtures - campaign metrics against channel baseline",
   },
   {
     key: "audience.updated",
@@ -424,7 +424,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A segment's membership changed enough to affect who a campaign would reach.",
     channels: IN_APP,
     defaultChannels: IN_APP,
-    source: "types/segment — SegmentRule evaluation changes membership",
+    source: "types/segment - SegmentRule evaluation changes membership",
   },
 
   /* -- WhatsApp ---------------------------------------------------------- */
@@ -435,7 +435,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "Someone messaged the business number for the first time.",
     channels: BOTH,
     defaultChannels: IN_APP,
-    source: "types/whatsapp — conversation created",
+    source: "types/whatsapp - conversation created",
   },
   {
     key: "whatsapp.message_received",
@@ -444,7 +444,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A reply on a conversation assigned to you.",
     channels: BOTH,
     defaultChannels: IN_APP,
-    source: "types/whatsapp — inbound message on assigned conversation",
+    source: "types/whatsapp - inbound message on assigned conversation",
   },
   {
     key: "whatsapp.campaign_completed",
@@ -453,7 +453,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A WhatsApp send finished, with delivery and read counts.",
     channels: BOTH,
     defaultChannels: IN_APP,
-    source: "lib/whatsapp-fixtures — campaign status reaches completed",
+    source: "lib/whatsapp-fixtures - campaign status reaches completed",
   },
   {
     key: "whatsapp.campaign_failed",
@@ -462,7 +462,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A WhatsApp send stopped, usually on a template or window problem.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "lib/whatsapp-fixtures — campaign status reaches failed",
+    source: "lib/whatsapp-fixtures - campaign status reaches failed",
   },
   {
     key: "whatsapp.template_status",
@@ -471,7 +471,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "Meta reviewed a message template. Rejections say why.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "types/marketing — TemplateStatus reaches approved or rejected",
+    source: "types/marketing - TemplateStatus reaches approved or rejected",
   },
 
   /* -- Email ------------------------------------------------------------- */
@@ -482,7 +482,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A send has been handed to the provider and is going out.",
     channels: IN_APP,
     defaultChannels: IN_APP,
-    source: "lib/email-fixtures — campaign status reaches sending",
+    source: "lib/email-fixtures - campaign status reaches sending",
   },
   {
     key: "email.campaign_completed",
@@ -491,7 +491,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A send finished, with opens, clicks and bounces.",
     channels: BOTH,
     defaultChannels: IN_APP,
-    source: "lib/email-fixtures — campaign status reaches completed",
+    source: "lib/email-fixtures - campaign status reaches completed",
   },
   {
     key: "email.campaign_failed",
@@ -500,7 +500,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A send stopped part way and the rest was not delivered.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "lib/email-fixtures — campaign status reaches failed",
+    source: "lib/email-fixtures - campaign status reaches failed",
   },
   {
     key: "email.delivery_issue",
@@ -509,7 +509,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "Sender verification failed, or the provider is refusing mail.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "types/email — SenderStatus, provider health",
+    source: "types/email - SenderStatus, provider health",
   },
   {
     key: "email.bounce_alert",
@@ -518,7 +518,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "Hard bounces on a send crossed the level that puts your domain at risk.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "types/email — EmailContactStatus bounced, rate against send volume",
+    source: "types/email - EmailContactStatus bounced, rate against send volume",
   },
 
   /* -- SMS --------------------------------------------------------------- */
@@ -529,7 +529,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A send has been handed to the operator and is going out.",
     channels: IN_APP,
     defaultChannels: IN_APP,
-    source: "lib/sms-fixtures — campaign status reaches sending",
+    source: "lib/sms-fixtures - campaign status reaches sending",
   },
   {
     key: "sms.campaign_completed",
@@ -538,7 +538,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A send finished, with delivered and failed counts.",
     channels: BOTH,
     defaultChannels: IN_APP,
-    source: "lib/sms-fixtures — campaign status reaches completed",
+    source: "lib/sms-fixtures - campaign status reaches completed",
   },
   {
     key: "sms.campaign_failed",
@@ -547,7 +547,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A send stopped part way and the rest was not delivered.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "lib/sms-fixtures — campaign status reaches failed",
+    source: "lib/sms-fixtures - campaign status reaches failed",
   },
   {
     key: "sms.delivery_issue",
@@ -556,7 +556,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A sender ID was rejected, or an operator is blocking your traffic.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "types/sms — SmsSenderStatus, SmsContactStatus",
+    source: "types/sms - SmsSenderStatus, SmsContactStatus",
   },
 
   /* -- Social ------------------------------------------------------------ */
@@ -567,7 +567,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "Confirmation that a post is queued, and for when.",
     channels: IN_APP,
     defaultChannels: IN_APP,
-    source: "types/social — PostStatus reaches scheduled",
+    source: "types/social - PostStatus reaches scheduled",
   },
   {
     key: "social.post_published",
@@ -576,7 +576,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A scheduled post went live on its account.",
     channels: IN_APP,
     defaultChannels: IN_APP,
-    source: "types/social — PostStatus reaches published",
+    source: "types/social - PostStatus reaches published",
   },
   {
     key: "social.post_failed",
@@ -585,7 +585,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A scheduled post did not publish, with the platform's reason.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "types/social — PostStatus reaches failed",
+    source: "types/social - PostStatus reaches failed",
   },
   {
     key: "social.account_disconnected",
@@ -594,7 +594,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A social account's authorisation expired, so nothing will publish to it.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "types/social — AccountStatus / AuthStatus loses authorisation",
+    source: "types/social - AccountStatus / AuthStatus loses authorisation",
   },
 
   /* -- Automation -------------------------------------------------------- */
@@ -602,13 +602,13 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     key: "workflow.started",
     category: "automation",
     title: "Workflow started",
-    description: "Every run, as it begins. Off by default — busy workflows fire constantly.",
+    description: "Every run, as it begins. Off by default - busy workflows fire constantly.",
     channels: IN_APP,
     /* Muted rather than absent. It is a real event and somebody debugging a
        trigger genuinely wants it for an afternoon; defaulting it on would bury
        every other row in this list on the first busy day. */
     defaultChannels: MUTED,
-    source: "lib/workflow-fixtures — run created",
+    source: "lib/workflow-fixtures - run created",
   },
   {
     key: "workflow.completed",
@@ -617,7 +617,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A run reached its last step.",
     channels: IN_APP,
     defaultChannels: IN_APP,
-    source: "lib/workflow-fixtures — run status reaches completed",
+    source: "lib/workflow-fixtures - run status reaches completed",
   },
   {
     key: "workflow.failed",
@@ -626,16 +626,16 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A run stopped on an error, with the step that threw.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "lib/workflow-fixtures — run status reaches failed",
+    source: "lib/workflow-fixtures - run status reaches failed",
   },
   {
     key: "trigger.error",
     category: "automation",
     title: "Trigger error",
-    description: "A trigger could not start its workflow — a bad payload or a disabled source.",
+    description: "A trigger could not start its workflow - a bad payload or a disabled source.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "types/workflow — TriggerEvent rejected, TriggerStatus disabled",
+    source: "types/workflow - TriggerEvent rejected, TriggerStatus disabled",
   },
 
   /* -- Integrations ------------------------------------------------------ */
@@ -646,7 +646,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A service was linked to this workspace, and by whom.",
     channels: IN_APP,
     defaultChannels: IN_APP,
-    source: "types/integration — IntegrationStatus reaches connected",
+    source: "types/integration - IntegrationStatus reaches connected",
   },
   {
     key: "integration.disconnected",
@@ -655,7 +655,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A service was unlinked, or its authorisation expired.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "types/integration — IntegrationStatus leaves connected",
+    source: "types/integration - IntegrationStatus leaves connected",
   },
   {
     key: "integration.error",
@@ -664,7 +664,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A connected service started failing its health checks.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "types/integration — HealthStatus reaches failing",
+    source: "types/integration - HealthStatus reaches failing",
   },
   {
     key: "webhook.failed",
@@ -673,7 +673,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "An endpoint stopped accepting events, so deliveries are being dropped.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "lib/webhook-store — WebhookStatus reaches failing",
+    source: "lib/webhook-store - WebhookStatus reaches failing",
   },
 
   /* -- Workspace --------------------------------------------------------- */
@@ -684,7 +684,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "Someone accepted an invitation and joined the workspace.",
     channels: IN_APP,
     defaultChannels: IN_APP,
-    source: "types/workspace — MemberStatus reaches active",
+    source: "types/workspace - MemberStatus reaches active",
   },
   {
     key: "workspace.role_changed",
@@ -693,7 +693,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A member was moved to a different role.",
     channels: BOTH,
     defaultChannels: IN_APP,
-    source: "lib/workspace-fixtures — member roleId changed",
+    source: "lib/workspace-fixtures - member roleId changed",
   },
   {
     key: "workspace.permissions_changed",
@@ -702,7 +702,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "What a role can do was edited, which changes it for everyone holding it.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "types/workspace — role permission set edited",
+    source: "types/workspace - role permission set edited",
   },
 
   /* -- Billing ----------------------------------------------------------- */
@@ -713,7 +713,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A plan became active on this workspace.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "types/account — Subscription created",
+    source: "types/account - Subscription created",
   },
   {
     key: "billing.plan_changed",
@@ -722,7 +722,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "The workspace moved to a different tier or billing cycle.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "lib/account-store — PlanPeriod opened by changePlan",
+    source: "lib/account-store - PlanPeriod opened by changePlan",
   },
   {
     key: "billing.payment_succeeded",
@@ -731,7 +731,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A charge went through, with the invoice reference.",
     channels: BOTH,
     defaultChannels: IN_APP,
-    source: "types/account — Purchase paymentState reaches paid",
+    source: "types/account - Purchase paymentState reaches paid",
   },
   {
     key: "billing.payment_failed",
@@ -745,13 +745,13 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
      *
      * Every other notification here is a convenience: miss it and you find out
      * on the dashboard. Miss this one and the workspace stops sending, with
-     * campaigns mid-flight and customers waiting — and the person who muted it
+     * campaigns mid-flight and customers waiting - and the person who muted it
      * is exactly the person who needed telling. The security notices that used
      * to carry this flag now live in Settings › Security, where the state they
      * report on is owned.
      */
     mandatory: true,
-    source: "types/account — Purchase paymentState reaches failed",
+    source: "types/account - Purchase paymentState reaches failed",
   },
   {
     key: "billing.renewal_upcoming",
@@ -760,7 +760,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "A reminder before the subscription renews and is charged again.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "types/account — Subscription renewsAt approaching",
+    source: "types/account - Subscription renewsAt approaching",
   },
   {
     key: "billing.subscription_cancelled",
@@ -769,7 +769,7 @@ export const NOTIFICATION_EVENTS: NotificationEventDef[] = [
     description: "The subscription was ended, with the date access stops.",
     channels: BOTH,
     defaultChannels: BOTH,
-    source: "types/account — SubscriptionStatus reaches cancelled",
+    source: "types/account - SubscriptionStatus reaches cancelled",
   },
 ];
 

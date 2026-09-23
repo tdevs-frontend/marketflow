@@ -16,13 +16,13 @@ export interface SparklineChartProps {
    * For sparklines inside a channel module, where the indigo the trend defaults
    * to is a second brand colour sitting beside the channel's own. Apex computes
    * its gradient stops from the value it is given, so this is a hex rather than
-   * a CSS variable — the same reason `CHANNEL_THEME` carries one.
+   * a CSS variable - the same reason `CHANNEL_THEME` carries one.
    */
   color?: string;
   height?: number;
 }
 
-/** KPI trend line. No axes or tooltip — at 40px the shape is the only signal. */
+/** KPI trend line. No axes or tooltip - at 40px the shape is the only signal. */
 export function SparklineChart({
   data,
   trend = "up",

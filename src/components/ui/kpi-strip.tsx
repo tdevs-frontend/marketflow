@@ -18,7 +18,7 @@ export interface Kpi {
   /**
    * What the figure is measured over, behind a `?`.
    *
-   * For the KPIs whose label is not self-evident — "Events Today" counts what,
+   * For the KPIs whose label is not self-evident - "Events Today" counts what,
    * exactly. `hint` is the line that always shows; this is the sentence that
    * does not earn permanent room in the tile.
    */
@@ -26,7 +26,7 @@ export interface Kpi {
   /**
    * Makes the whole tile a button.
    *
-   * For a figure with somewhere to go — an Events Today that opens the events
+   * For a figure with somewhere to go - an Events Today that opens the events
    * behind it. Not for filtering a list the page already has a filter row for:
    * two controls for one question is how a tile and a chip end up disagreeing
    * about which is pressed. Omit it and the tile stays inert, which is the
@@ -39,7 +39,7 @@ export interface Kpi {
 
 /**
  * The KPI strip a workspace page opens with. Four or five tiles, one line
- * each — the reader should take in the state of the page before scrolling.
+ * each - the reader should take in the state of the page before scrolling.
  *
  * This lives in `ui/` rather than in a feature folder because Commerce and
  * Customers both open on it, and a second copy is how two modules end up with
@@ -78,7 +78,7 @@ export function KpiStrip({
              *
              * Wrapping the tile would put the `?` tooltip's own button inside
              * this one, which is invalid and makes the hint unreachable. The
-             * overlay sits under the hint instead — see the `z-1` on it below.
+             * overlay sits under the hint instead - see the `z-1` on it below.
              */}
             {item.onSelect ? (
               <button

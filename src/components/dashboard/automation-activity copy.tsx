@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
  * What the run did, not what the workflow is.
  *
  * `Running` and `Queued` are the two states that are still moving, which is why
- * they read differently from the four settled ones — a merchant scanning this
+ * they read differently from the four settled ones - a merchant scanning this
  * card is looking for the row that needs them, and that is either a failure or
  * something that has not finished.
  */
@@ -55,8 +55,8 @@ interface ActivityItem {
   tone: string;
 }
 
-/* One customer's whole journey, in order — the lifecycle the rest of the
-   dashboard measures, shown happening — and then the batch work running
+/* One customer's whole journey, in order - the lifecycle the rest of the
+   dashboard measures, shown happening - and then the batch work running
    alongside it, including the one send that did not land. */
 const ACTIVITY: ActivityItem[] = [
   {
@@ -202,7 +202,7 @@ export function AutomationActivity({ className }: { className?: string }) {
                   </p>
 
                   {/* Status and time travel together: the badge says how the run
-                      ended, the timestamp says when — read apart, neither is
+                      ended, the timestamp says when - read apart, neither is
                       much use. */}
                   <div className="flex shrink-0 items-center gap-2.5">
                     <Badge

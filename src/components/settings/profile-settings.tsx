@@ -27,16 +27,16 @@ import {
 } from "./settings-section";
 
 /**
- * Profile — the person, as opposed to the workspace.
+ * Profile - the person, as opposed to the workspace.
  *
  * Everything on this page is about whoever is signed in and nobody else. The
  * workspace name, timezone and currency belong to Workspace Settings, and
  * keeping the two apart is what makes either page answerable at a glance:
  * *who am I* here, *what is this workspace* there.
  *
- * The user is real. It is `CURRENT_MEMBER` — the person the Team table marks as
+ * The user is real. It is `CURRENT_MEMBER` - the person the Team table marks as
  * you, the one the audit trail attributes changes to, the owner named in
- * Workspace Settings — reached through `lib/account-service`. This page used to
+ * Workspace Settings - reached through `lib/account-service`. This page used to
  * greet everybody as "Guest User" with a made-up role, because it read
  * `auth.user`, which is `null` and always has been: there are no route handlers
  * under `app/`, no server actions, and nothing that ever dispatches
@@ -45,7 +45,7 @@ import {
  *
  * Two blocks: the photo, and Your Details.
  *
- * Your Details holds both halves of "who am I here" — the fields you can change
+ * Your Details holds both halves of "who am I here" - the fields you can change
  * on top, and what the workspace has granted you below a rule. They are one
  * card because they are one answer; the read-only half was briefly a third card
  * at the bottom of the page, which is where the eye stops going.
@@ -76,7 +76,7 @@ export function ProfileSettings() {
           <ServiceNotice tone="session" title="Changes are kept for this session">
             No account service is connected yet, so what you save here lives in
             this browser tab and starts fresh on reload. Your details are read
-            from {user.email} — the same record the team directory and the
+            from {user.email} - the same record the team directory and the
             activity log use.
           </ServiceNotice>
         ) : null}
@@ -97,7 +97,7 @@ export function ProfileSettings() {
  *
  * "Uploading…" is shown while the call is in flight and "Photo updated" once it
  * resolves, because those are the two moments a person needs told apart. The
- * file is validated before anything is sent — type and size — so the common
+ * file is validated before anything is sent - type and size - so the common
  * rejection happens instantly and locally rather than after a wait.
  */
 function ProfilePhoto() {
@@ -140,8 +140,8 @@ function ProfilePhoto() {
       bodyClassName="flex flex-wrap items-center gap-5"
     >
       {/* `AvatarPhoto`, like the header chip and the account menu: this is the
-          one photo in the product that is *supplied* rather than fixtured — an
-          upload, or a path the account service last returned — so it is the one
+          one photo in the product that is *supplied* rather than fixtured - an
+          upload, or a path the account service last returned - so it is the one
           that can stop resolving. Plain `Avatar` would render the broken-image
           glyph; this falls back to the initials it would have shown anyway. */}
       <AvatarPhoto name={displayName(user)} src={user.avatarUrl} size="lg" />
@@ -306,7 +306,7 @@ function YourDetails() {
       }
     >
       {/* Two columns from `sm` up, stacked below it. Every pair here is two
-          halves of one fact — a first and last name, a way to reach you — so
+          halves of one fact - a first and last name, a way to reach you - so
           they sit on one line where there is room for one. */}
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="First name" htmlFor={`${id}-first`} error={nameError}>
@@ -398,15 +398,15 @@ function YourDetails() {
  *
  * It sits below the editable fields, behind a rule and under its own heading,
  * rather than in a card of its own at the bottom of the page. Two reasons.
- * These *are* your details — the same card should answer "who am I here" in
- * full — and a separate card of read-only facts at the end of a settings page
+ * These *are* your details - the same card should answer "who am I here" in
+ * full - and a separate card of read-only facts at the end of a settings page
  * is where the eye stops going.
  *
  * A description list, not disabled inputs. A greyed-out field says "you could
  * edit this, but not now" and sends somebody hunting for the unlock; a role
  * granted by an owner and a joined date are not things anybody edits, and
- * dressing them as fields invites the question. That contrast — real inputs
- * above, plain facts below — is what makes the boundary legible without a
+ * dressing them as fields invites the question. That contrast - real inputs
+ * above, plain facts below - is what makes the boundary legible without a
  * sentence explaining it.
  *
  * Role carries the link to the screen that governs it, because "how do I change

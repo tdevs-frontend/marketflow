@@ -214,7 +214,7 @@ export function ContactsWorkspace() {
 
   return (
     <>
-      {/* Header lives here — Add Contact opens a dialog. */}
+      {/* Header lives here - Add Contact opens a dialog. */}
       <PageHeader
         title="WhatsApp Contacts"
         description="Manage your WhatsApp contacts and customer information."
@@ -223,7 +223,7 @@ export function ContactsWorkspace() {
             <Button
               variant="outline"
               size="compact"
-              onClick={() => toast("Import started — we will email you when it finishes")}
+              onClick={() => toast("Import started - we will email you when it finishes")}
             >
               <Upload aria-hidden />
               Import
@@ -433,7 +433,7 @@ export function ContactsWorkspace() {
 
                         <TD className="max-w-48">
                           <p className="truncate text-text-secondary">
-                            {contact.email ?? "—"}
+                            {contact.email ?? "-"}
                           </p>
                         </TD>
 

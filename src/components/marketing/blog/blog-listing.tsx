@@ -12,7 +12,7 @@ import { BlogCard } from "./blog-card";
  * The full library: category filter, grid, pagination.
  *
  * Filtering and paging both happen on the client over an array that ships with
- * the page. Twenty-four articles is not a dataset — routing each click through
+ * the page. Twenty-four articles is not a dataset - routing each click through
  * `?topic=&page=` would cost a navigation to re-render cards that are already
  * in memory, and the URL would only be worth having if a filtered page two
  * were something people share. It is not.
@@ -31,7 +31,7 @@ export function BlogListing() {
   const [page, setPage] = useState(1);
 
   const gridRef = useRef<HTMLDivElement>(null);
-  /* Page one on mount is the initial render, not a navigation — scrolling
+  /* Page one on mount is the initial render, not a navigation - scrolling
      there would yank a reader who has just arrived down past the hero. */
   const paged = useRef(false);
 
@@ -104,7 +104,7 @@ export function BlogListing() {
          * The count is printed by `Pagination` under the grid, which is where
          * it belongs visually. This says the same thing to a screen reader at
          * the moment the filter changes, rather than several thousand pixels
-         * later — and says it once, since the visible copy is not live.
+         * later - and says it once, since the visible copy is not live.
          */}
         <p aria-live="polite" className="sr-only">
           {articles.length} {articles.length === 1 ? "article" : "articles"},
@@ -131,7 +131,7 @@ export function BlogListing() {
             onChange={changePage}
             noun="articles"
             /* The only control on the page, and as likely to be tapped as
-               clicked — the dashboard's 32px footer scale is too small to be
+               clicked - the dashboard's 32px footer scale is too small to be
                the last thing a marketing page asks somebody to hit. */
             size="lg"
           />

@@ -52,7 +52,7 @@ export function StatValue({ value, className }: { value: string; className?: str
       const start = performance.now();
       const step = (now: number) => {
         const progress = Math.min((now - start) / DURATION, 1);
-        // easeOutCubic — quick to read, settles gently.
+        // easeOutCubic - quick to read, settles gently.
         const eased = 1 - Math.pow(1 - progress, 3);
         setDigits(progress === 1 ? parsed.digits : frameValue(parsed.amount, eased));
         if (progress < 1) frame = requestAnimationFrame(step);

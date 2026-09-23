@@ -6,7 +6,7 @@ import { TONES, type PlatformFeature } from "./platform-features";
 export type RailSide = "left" | "right";
 
 /**
- * The section's one hover curve — a fast start easing to a long settle, so the
+ * The section's one hover curve - a fast start easing to a long settle, so the
  * lift reads as weight rather than as a slide. Shared by the cards and the
  * orbit nodes; nothing else in the section moves on hover.
  */
@@ -34,10 +34,10 @@ const ALIGN: Record<RailSide, string> = {
  * One module in a side rail: tinted icon tile, title, one-line description and
  * a status pill.
  *
- * Deliberately dense — around 100px tall, so four of them read as a stack of
+ * Deliberately dense - around 100px tall, so four of them read as a stack of
  * modules rather than four large empty panels. The hover is the whole card
  * lifting three pixels and leaning toward the hub, while the icon tile picks up
- * a halo in the module's tone — the same tone as the node on its connector and
+ * a halo in the module's tone - the same tone as the node on its connector and
  * the glyph on its satellite.
  *
  * `h-full` so four of them fill a rail's equal rows, which is what lets

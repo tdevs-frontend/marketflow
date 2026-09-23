@@ -108,7 +108,7 @@ export const TEMPLATES: WhatsAppTemplate[] = [
     useCase: "welcome",
     status: "approved",
     language: "en_US",
-    body: "Welcome to {{company}}, {{name}}! You are on the list. Reply with a question any time — a real person answers.",
+    body: "Welcome to {{company}}, {{name}}! You are on the list. Reply with a question any time - a real person answers.",
     variables: ["company", "name"],
     buttons: [
       { label: "Browse Catalog", type: "url" },
@@ -137,7 +137,7 @@ export const TEMPLATES: WhatsAppTemplate[] = [
     useCase: "promotion",
     status: "approved",
     language: "en_US",
-    body: "Hi {{name}}, our Summer Sale is live — 20% off every package until {{date}}. Use your code at checkout.",
+    body: "Hi {{name}}, our Summer Sale is live - 20% off every package until {{date}}. Use your code at checkout.",
     variables: ["name", "date"],
     buttons: [
       { label: "Shop Now", type: "url" },
@@ -153,7 +153,7 @@ export const TEMPLATES: WhatsAppTemplate[] = [
     useCase: "order",
     status: "approved",
     language: "en_US",
-    body: "Good news {{name}} — order {{order_id}} is on its way and should arrive by {{date}}.",
+    body: "Good news {{name}} - order {{order_id}} is on its way and should arrive by {{date}}.",
     variables: ["name", "order_id", "date"],
     buttons: [{ label: "Track Order", type: "url" }],
     updatedAt: "2026-05-24T09:40:00Z",
@@ -165,7 +165,7 @@ export const TEMPLATES: WhatsAppTemplate[] = [
     useCase: "reminder",
     status: "pending",
     language: "en_US",
-    body: "Hi {{name}}, you left {{product}} in your basket. It is still available — shall we hold it for you?",
+    body: "Hi {{name}}, you left {{product}} in your basket. It is still available - shall we hold it for you?",
     variables: ["name", "product"],
     buttons: [
       { label: "Complete Order", type: "url" },
@@ -207,7 +207,7 @@ export const TEMPLATES: WhatsAppTemplate[] = [
     useCase: "promotion",
     status: "rejected",
     language: "en_US",
-    body: "{{name}}, you get first look at our autumn range. Claim your VIP discount before anyone else — limited spots, act fast!!!",
+    body: "{{name}}, you get first look at our autumn range. Claim your VIP discount before anyone else - limited spots, act fast!!!",
     variables: ["name"],
     buttons: [{ label: "Claim Offer", type: "url" }],
     rejectionReason: "Excessive urgency and punctuation in a marketing template.",
@@ -408,7 +408,7 @@ export const WHATSAPP_CONTACTS: WhatsAppContact[] = [
     lastName: "Tanaka",
     phone: "+81 90 1234 5678",
     tags: ["Lead"],
-    /* The canonical path: a STOP reply. Blocked rather than inactive — going
+    /* The canonical path: a STOP reply. Blocked rather than inactive - going
        quiet and asking to be left alone are not the same state. */
     status: "blocked",
     optOut: {
@@ -429,7 +429,7 @@ export const contactName = (contact: WhatsAppContact) =>
 
 /**
  * Ten sample points across four weeks. Labels rather than dates because the
- * axis is read, not computed — and a chart that recomputes its own labels from
+ * axis is read, not computed - and a chart that recomputes its own labels from
  * `Date.now()` shifts every time this file is opened in a different month.
  */
 export const WA_DAY_LABELS = [
@@ -447,7 +447,7 @@ export const WA_DAY_LABELS = [
 
 /**
  * Counts only. The delivery, read and reply *rates* are derived from these by
- * `rateSeries` below rather than stored alongside them — two fields that must
+ * `rateSeries` below rather than stored alongside them - two fields that must
  * agree is one field too many, and a hand-edited fixture is exactly where they
  * stop agreeing.
  */
@@ -472,7 +472,7 @@ export const WA_SERIES = {
   /**
    * Orders placed inside a thread, per point.
    *
-   * Sums to 4,980 — the Conversions stage of `WA_FUNNEL` — so the trend and
+   * Sums to 4,980 - the Conversions stage of `WA_FUNNEL` - so the trend and
    * the funnel are the same population counted two ways and cannot drift. It
    * tracks `replied` rather than `sent`, because a conversion here follows a
    * conversation rather than a broadcast.
@@ -496,7 +496,7 @@ export const WA_CONVERSATION_VOLUME = {
  * Counts where a count is the fact and rates where the rate is: the analytics
  * table ranks by read and reply rate, and opt-out rate is the column that says
  * a segment is being over-messaged. Ordered best reply rate first, which is
- * also smallest-list first — the finding the panel exists to make.
+ * also smallest-list first - the finding the panel exists to make.
  */
 export const WA_AUDIENCE_INSIGHTS = [
   { label: "VIP Customers", contacts: 318, delivered: 3_120, readRate: 91.4, replyRate: 28.4, optOutRate: 0.4 },
@@ -514,7 +514,7 @@ export const WA_AUDIENCE_INSIGHTS = [
  * with the send count is two fields too many. The id matches TEMPLATES above,
  * so a row can be traced back to the library.
  *
- * login_verification is in the list deliberately — an authentication template
+ * login_verification is in the list deliberately - an authentication template
  * nobody replies to is not a failing template, and a list that quietly drops
  * it teaches the wrong lesson about the reply-rate column.
  */
@@ -538,7 +538,7 @@ export const WA_TEMPLATE_PERFORMANCE = [
  *
  * Median and p90 rather than a mean: one thread left overnight drags an average
  * past every number a team would recognise, and the gap between the two lines
- * is the actual finding — a median of 8 minutes with a p90 of 23 is a queue
+ * is the actual finding - a median of 8 minutes with a p90 of 23 is a queue
  * that is fine until it is not.
  *
  * The buckets sum to 49,831, the Replied stage of WA_FUNNEL. Same population
@@ -558,7 +558,7 @@ export const WA_RESPONSE_TIME = {
   ],
   medianMinutes: 8,
   p90Minutes: 23,
-  /** The first three buckets sit inside it — the panel derives that, not this. */
+  /** The first three buckets sit inside it - the panel derives that, not this. */
   targetMinutes: 15,
 } as const;
 
@@ -567,8 +567,8 @@ export const WA_RESPONSE_TIME = {
  *
  * Read used to sit between Delivered and Replies. It came out with the read
  * rate: a blue tick is a *delivery* fact rather than an engagement one, and at
- * 249,155 it sat so close to Delivered that the funnel's first real drop —
- * 311,444 down to 49,831 — was split across two steps and read as two small
+ * 249,155 it sat so close to Delivered that the funnel's first real drop -
+ * 311,444 down to 49,831 - was split across two steps and read as two small
  * losses instead of the one large one it is.
  *
  * Qualified Leads takes its place, between a reply and an order: a contact who
@@ -666,7 +666,7 @@ export const WA_OVERVIEW_TOTALS = {
  * names a different number than the one a campaign will send from is worse
  * than an Overview that names none.
  *
- * What is added here is the health Meta reports and nothing else stores — the
+ * What is added here is the health Meta reports and nothing else stores - the
  * quality rating, the rolling 24-hour send limit, and whether the inbound
  * webhook is delivering. Those three are the reasons a WhatsApp account stops
  * working, and none of them is visible anywhere else in the product.
@@ -676,8 +676,8 @@ const PRIMARY_NUMBER = PRIMARY_CONNECTION.numbers[0];
 
 export const WA_CONNECTION = {
   businessName: PRIMARY_CONNECTION.label,
-  /** The list stores "+880 1700 000000 — Primary"; the label is not the number. */
-  phone: PRIMARY_NUMBER.label.split(" — ")[0],
+  /** The list stores "+880 1700 000000 - Primary"; the label is not the number. */
+  phone: PRIMARY_NUMBER.label.split(" - ")[0],
   quality: PRIMARY_NUMBER.quality,
   verified: PRIMARY_CONNECTION.verified,
   /** Messages allowed in a rolling 24 hours at the current tier. */
@@ -705,7 +705,7 @@ export type WaInboxAgent = {
   /**
    * Threads closed over the reporting period.
    *
-   * A period total, where `open` is a snapshot of this moment — the Overview
+   * A period total, where `open` is a snapshot of this moment - the Overview
    * asks who is carrying the queue right now, Analytics asks who carried it.
    * Both read the same roster so the two pages cannot name different agents.
    */
@@ -717,7 +717,7 @@ export type WaInboxAgent = {
 /**
  * The seven agents on the queue.
  *
- * Unordered here on purpose — the panel sorts by open threads, so adding an
+ * Unordered here on purpose - the panel sorts by open threads, so adding an
  * eighth agent anywhere in this list still renders busiest-first.
  *
  * Four of the seven carry a photo and three do not, which is the real shape of
@@ -789,7 +789,7 @@ const INBOX_AGENTS: WaInboxAgent[] = [
 ];
 
 /**
- * The inbox as it stands right now — the overview's subject.
+ * The inbox as it stands right now - the overview's subject.
  *
  * Deliberately none of this is a rate over a period. It is the queue: how many
  * threads are open, how many nobody owns, how many are sitting on an inbound
@@ -809,7 +809,7 @@ export const WA_INBOX_SNAPSHOT = {
   awaitingReply: 23,
   awaitingChange: -14.8,
   unreadMessages: 61,
-  /** The roster, unordered — the panel sorts it busiest-first. */
+  /** The roster, unordered - the panel sorts it busiest-first. */
   agents: INBOX_AGENTS,
   /**
    * Open threads one agent is expected to carry.

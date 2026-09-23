@@ -4,7 +4,7 @@ import { ModuleNav } from "@/components/layout/module-nav";
  * The WhatsApp workspace, and its own navigation.
  *
  * The sidebar shows one entry for this module; everything below lives here.
- * A layout rather than a strip repeated in seven pages — one list, and a new
+ * A layout rather than a strip repeated in seven pages - one list, and a new
  * page joins it by being added once.
  */
 const PAGES = [

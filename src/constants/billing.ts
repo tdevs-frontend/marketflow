@@ -20,8 +20,8 @@ import { env } from "@/config";
  * is present in any build of this app today, which is why the automatic methods
  * are all off and the checkout's automatic branch stops at a stated boundary.
  *
- * Manual payment needs no third party — it is a merchant telling an
- * administrator what they sent and attaching proof — so it is the one method
+ * Manual payment needs no third party - it is a merchant telling an
+ * administrator what they sent and attaching proof - so it is the one method
  * that is always available, and the one the flow can carry end to end.
  */
 
@@ -42,7 +42,7 @@ export interface PaymentGatewayDef {
 /**
  * Publishable keys, read once.
  *
- * `NEXT_PUBLIC_*` because a publishable key is meant to reach the browser — it
+ * `NEXT_PUBLIC_*` because a publishable key is meant to reach the browser - it
  * identifies the account, it does not authorise a charge. The secret key never
  * appears in this file, in `config/env`, or anywhere else the client bundles:
  * a charge is created server-side against a token, which is also why the

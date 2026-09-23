@@ -17,7 +17,7 @@ import { WorkflowMiniMap } from "../workflow-mini-map";
  * The three figures under the diagram are the ones that decide whether a
  * template is worth opening: how many steps it is, how long it takes to set
  * up, and how many teams here already run it. Install count is doing real work
- * — a template used four hundred times is a different proposition from one
+ * - a template used four hundred times is a different proposition from one
  * used twice, and hiding that makes every card look equally plausible.
  *
  * Two actions, and Preview comes first: nobody should adopt a five-step

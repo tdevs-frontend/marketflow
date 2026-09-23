@@ -8,21 +8,21 @@ import type { MediaAsset, MediaFolder } from "@/types/social";
 /**
  * The Media Library, plus whatever has been uploaded this session.
  *
- * `MEDIA_ASSETS` is a fixture — a frozen list that every media surface reads
+ * `MEDIA_ASSETS` is a fixture - a frozen list that every media surface reads
  * directly, which is why "Upload New" could only ever raise a toast: there was
  * nowhere for a file to go. This is that missing shelf, and deliberately the
  * smallest one that works: a module-level array in front of the fixtures, and a
  * `useSyncExternalStore` subscription so every surface reading it re-renders
  * together.
  *
- * It is not a second library. Every media surface in the product — the
+ * It is not a second library. Every media surface in the product - the
  * Media Library page, the campaign picker, the post composer, the calendar's
- * thumbnails — reads `useMediaAssets()` and gets one list in one order. That
+ * thumbnails - reads `useMediaAssets()` and gets one list in one order. That
  * is what makes a file uploaded in the composer appear in the library a frame
  * later, and it is why the wizard never grew an upload shelf of its own.
  *
  * Session-scoped, and honestly so. An upload here is an object URL over a file
- * in this tab's memory — there is no service behind it, and a `blob:` URL dies
+ * in this tab's memory - there is no service behind it, and a `blob:` URL dies
  * with the document. Persisting the ids would resurrect a draft on Monday whose
  * images stopped existing on Friday, so a reload starts from the fixtures and a
  * draft's missing ids simply drop out of `chosen`, which already reads as "no
@@ -48,7 +48,7 @@ let uploads: MediaAsset[] = [];
  * `MEDIA_ASSETS` is a frozen module import that the server render also reads,
  * so renaming or deleting one cannot mean touching that array. These two hold
  * the difference instead, and `publish` folds them over the fixtures on every
- * write — which keeps the server snapshot honest and the client's view current.
+ * write - which keeps the server snapshot honest and the client's view current.
  */
 const overrides = new Map<string, MediaAsset>();
 const deleted = new Set<string>();
@@ -91,7 +91,7 @@ export function useMediaAssets(): MediaAsset[] {
 /**
  * Rename an asset in place.
  *
- * Only the label changes — the id and the URL are untouched, so every post
+ * Only the label changes - the id and the URL are untouched, so every post
  * already pointing at this file keeps pointing at it. A rename that broke
  * references would be a delete with a friendly name.
  */
@@ -118,7 +118,7 @@ export function renameMedia(id: string, name: string): MediaAsset | null {
  *
  * Fixture entries are tombstoned rather than spliced: `MEDIA_ASSETS` is a
  * frozen import shared with the server render, and mutating it would desync
- * the two. An uploaded file also has its object URL revoked — that is a real
+ * the two. An uploaded file also has its object URL revoked - that is a real
  * handle on a real file in this tab's memory, and dropping the record without
  * releasing it leaks the blob for the life of the document.
  */
@@ -153,8 +153,8 @@ export function removeMedia(ids: string[]): number {
  *
  * Same shape as the assets above and for the same reason: `MEDIA_FOLDERS` is a
  * frozen fixture the server render reads, so a new folder is held alongside it
- * rather than pushed into it. Keeping folders in the store — instead of every
- * surface importing the fixture — is what makes a folder created in the
+ * rather than pushed into it. Keeping folders in the store - instead of every
+ * surface importing the fixture - is what makes a folder created in the
  * sidebar immediately selectable as an upload destination, which is the whole
  * point of being able to create one.
  */
@@ -199,7 +199,7 @@ export const defaultUploadFolder = () =>
 /**
  * Create a folder.
  *
- * Returns `null` on a blank name or one that already exists — the caller shows
+ * Returns `null` on a blank name or one that already exists - the caller shows
  * the reason rather than quietly creating a second "Autumn 2026" that splits
  * the same campaign's assets across two identical-looking shelves.
  */
@@ -235,13 +235,13 @@ function formatBytes(bytes: number): string {
 /** Why this file cannot be uploaded, or `null` if it can. */
 export function rejectionFor(file: File): string | null {
   if (!ACCEPTED_TYPES.has(file.type)) {
-    return `${file.name} — JPG, PNG, WebP, GIF, MP4 and WebM only.`;
+    return `${file.name} - JPG, PNG, WebP, GIF, MP4 and WebM only.`;
   }
   if (file.size === 0) {
-    return `${file.name} — the file is empty.`;
+    return `${file.name} - the file is empty.`;
   }
   if (file.size > MAX_UPLOAD_BYTES) {
-    return `${file.name} — ${formatBytes(file.size)}, over the ${formatBytes(
+    return `${file.name} - ${formatBytes(file.size)}, over the ${formatBytes(
       MAX_UPLOAD_BYTES,
     )} limit.`;
   }
@@ -254,7 +254,7 @@ export function rejectionFor(file: File): string | null {
  * Worth the wait: the library shows dimensions on every asset, and a card
  * reading "0 × 0" is worse than a slightly slower upload. A file the browser
  * cannot decode resolves `null` and is reported as a failed upload rather than
- * stored as a broken tile — which is the difference between a corrupt JPEG and
+ * stored as a broken tile - which is the difference between a corrupt JPEG and
  * a silent one.
  */
 function probe(
@@ -296,7 +296,7 @@ export interface UploadResult {
  * Put files in the library.
  *
  * Validates first, then decodes, so a batch with one oversized file still
- * uploads the rest — a picker that refuses all five because the fourth was a
+ * uploads the rest - a picker that refuses all five because the fourth was a
  * PDF makes the person start over for no reason. Every file that fails comes
  * back as a sentence the caller can show.
  */
@@ -320,7 +320,7 @@ export async function uploadMedia(
     if (!measured) {
       /* Nothing will ever read this URL, so let go of the file now. */
       URL.revokeObjectURL(url);
-      rejected.push(`${file.name} — could not be read.`);
+      rejected.push(`${file.name} - could not be read.`);
       continue;
     }
 
@@ -337,7 +337,7 @@ export async function uploadMedia(
       duration: measured.duration,
       tags: [],
       /* The ground behind the thumbnail while it decodes, and after it if the
-         URL is ever dropped — the same neutral the fixtures fall back to. */
+         URL is ever dropped - the same neutral the fixtures fall back to. */
       tone: "bg-surface-secondary",
       uploadedAt: new Date().toISOString(),
       url,

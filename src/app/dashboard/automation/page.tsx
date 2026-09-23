@@ -12,7 +12,7 @@ export const metadata: Metadata = {
  * The Automation module's landing page.
  *
  * The workspace renders its own `PageHeader`, because every header action
- * opens a dialog it owns — the same shape `ContactsWorkspace` and the
+ * opens a dialog it owns - the same shape `ContactsWorkspace` and the
  * WhatsApp workspaces already use. Splitting them would put the button here
  * and its state one component away.
  */

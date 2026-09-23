@@ -25,8 +25,8 @@ import type { MarketingChannel } from "@/types/marketing";
  * Written as specs plus a layout pass rather than as hand-placed nodes: a
  * seventeen-workflow fixture with literal `{x, y}` on every node drifts the
  * first time a node's height changes, and nothing here is interesting enough
- * to be worth positioning by hand. The specs read as the journey does —
- * trigger, then steps, with a fork where the journey forks — and the layout
+ * to be worth positioning by hand. The specs read as the journey does -
+ * trigger, then steps, with a fork where the journey forks - and the layout
  * function turns that into the graph the canvas renders.
  *
  * Replacing this file with `GET /automation/workflows` should be the only
@@ -43,7 +43,7 @@ export const AUTOMATION_NOW = "2026-09-13T09:45:00Z";
  *
  * Components read this rather than `Date.now()`: a fixture whose newest run is
  * timestamped yesterday would vanish from a "last hour" filter driven by the
- * real clock, and calling `Date.now()` while rendering is impure — it can
+ * real clock, and calling `Date.now()` while rendering is impure - it can
  * return a different answer on the server than on the client and produce a
  * hydration mismatch. One fixed instant keeps both honest.
  */
@@ -52,7 +52,7 @@ export const AUTOMATION_NOW_MS = new Date(AUTOMATION_NOW).getTime();
 const NOW_MS = AUTOMATION_NOW_MS;
 
 /**
- * Ids for objects created in the browser — a duplicated workflow, a draft from
+ * Ids for objects created in the browser - a duplicated workflow, a draft from
  * a template.
  *
  * A counter rather than a timestamp, because `Date.now()` is impure and these
@@ -78,8 +78,8 @@ const inMinutes = (minutes: number) =>
 /**
  * A stable pseudo-random in [0, 1) from a string.
  *
- * The fixtures need figures that look measured rather than rounded — 11,940
- * out of 12,480, not 12,000 out of 12,000 — and they have to be identical on
+ * The fixtures need figures that look measured rather than rounded - 11,940
+ * out of 12,480, not 12,000 out of 12,000 - and they have to be identical on
  * the server and the client or hydration fails. Seeding off the node id gives
  * both.
  */
@@ -126,7 +126,7 @@ const DURATION = /(\d+)\s*(minute|hour|day|week)/i;
 /**
  * The config a seeded node arrives with, read back out of its summary.
  *
- * The summary is the human sentence — "1 day", "welcome_new_lead" — and the
+ * The summary is the human sentence - "1 day", "welcome_new_lead" - and the
  * config is what the inspector and the validator read. Deriving one from the
  * other keeps the fixture terse *and* keeps the two honest: a seeded workflow
  * that the validator flags on open would read as a bug in the validator rather
@@ -168,7 +168,7 @@ function nodeConfig(kind: NodeKind, summary: string): Record<string, unknown> {
  * One fork deep on purpose: the branch of a branch is a genuinely different
  * layout problem (it needs a real tree algorithm to stop columns colliding),
  * and no journey in this fixture set needs one. A node graph from the API can
- * be arbitrarily deep — the canvas reads positions, it does not compute them.
+ * be arbitrarily deep - the canvas reads positions, it does not compute them.
  */
 function build(
   id: string,
@@ -199,7 +199,7 @@ function build(
       title,
       summary,
       /* Nodes arrive configured, because every workflow in this fixture set is
-         one somebody has already published — and a published workflow the
+         one somebody has already published - and a published workflow the
          validator complains about on open reads as a bug in the validator. */
       config: nodeConfig(kind, summary),
       position,
@@ -250,7 +250,7 @@ function build(
 
       const forkY = y;
       let deepest = forkY;
-      /* The last node of each branch, and how many contacts reach it — what a
+      /* The last node of each branch, and how many contacts reach it - what a
          rejoin has to connect back together. */
       const tails: { id: string; count: number }[] = [];
 
@@ -283,7 +283,7 @@ function build(
 
       if (spec.rejoin?.length) {
         /* Every branch tail feeds the first rejoined step, and the counts add
-           back up — which is the whole point of a rejoin: one tail, and the
+           back up - which is the whole point of a rejoin: one tail, and the
            numbers on it are the population again rather than a fragment. */
         let mergedCount = tails.reduce((sum, tail) => sum + tail.count, 0);
         let mergeY = deepest;
@@ -438,7 +438,7 @@ const SEEDS: WorkflowSeed[] = [
           {
             label: "Yes",
             steps: [
-              ["assign_owner", "Assign Agent", "Round robin — Sales team"],
+              ["assign_owner", "Assign Agent", "Round robin - Sales team"],
               ["update_stage", "Update Lead Stage", "Contacted"],
             ],
           },
@@ -539,7 +539,7 @@ const SEEDS: WorkflowSeed[] = [
     updatedAt: daysAgo(1),
     createdAt: daysAgo(64),
     specs: [
-      ["trigger", "Form Submitted", "Pricing page — Request a demo"],
+      ["trigger", "Form Submitted", "Pricing page - Request a demo"],
       ["add_tag", "Add Tag", "Landing Page Lead"],
       ["add_segment", "Add to Segment", "New Leads"],
       ["send_whatsapp", "Send WhatsApp", "demo_request_ack"],
@@ -573,13 +573,13 @@ const SEEDS: WorkflowSeed[] = [
           {
             label: "Yes",
             steps: [
-              ["assign_owner", "Assign Agent", "Sales — available agent"],
+              ["assign_owner", "Assign Agent", "Sales - available agent"],
               ["notify", "Internal Notification", "Notify #sales channel"],
             ],
           },
           {
             label: "No",
-            steps: [["add_tag", "Add Tag", "Price Enquiry — No Reply"]],
+            steps: [["add_tag", "Add Tag", "Price Enquiry - No Reply"]],
           },
         ],
       },
@@ -619,7 +619,7 @@ const SEEDS: WorkflowSeed[] = [
             label: "Else",
             steps: [
               ["notify", "Internal Notification", "Alert support team"],
-              ["assign_owner", "Assign Owner", "Support — escalations"],
+              ["assign_owner", "Assign Owner", "Support - escalations"],
             ],
           },
         ],
@@ -975,7 +975,7 @@ const SEEDS: WorkflowSeed[] = [
     id: "wf-nps-archive",
     name: "Quarterly NPS Survey",
     description:
-      "Replaced by the Review Request journey — kept for its historical reporting.",
+      "Replaced by the Review Request journey - kept for its historical reporting.",
     status: "archived",
     triggerKey: "date.recurrence",
     triggerLabel: "Scheduled Recurrence",
@@ -1007,7 +1007,7 @@ const VERSION_NOTES = [
  * A workflow's version list, newest first.
  *
  * Only the newest can be a draft, exactly one is published, and the rest are
- * superseded — which is the whole invariant version history has to hold. The
+ * superseded - which is the whole invariant version history has to hold. The
  * superseded ones keep a count of contacts still running on them, because that
  * is the number that explains why an old version cannot simply be deleted.
  */
@@ -1072,8 +1072,8 @@ export const WORKFLOWS: Workflow[] = SEEDS.map((seed) => {
    * Failures, where the seed has not stated them.
    *
    * One to four per cent of entrants, seeded off the id. Messaging automation
-   * fails at roughly that rate in the real world — disconnected numbers,
-   * bounced addresses, templates rejected after the fact — and a fixture set
+   * fails at roughly that rate in the real world - disconnected numbers,
+   * bounced addresses, templates rejected after the fact - and a fixture set
    * with a 99.9% success rate makes the Activity page's whole reason for
    * existing look like decoration.
    */
@@ -1116,7 +1116,7 @@ export const WORKFLOWS: Workflow[] = SEEDS.map((seed) => {
       failed,
       exitedEarly,
       /* Between a few hours and a fortnight, depending on how many waits the
-         journey has — derived from the graph rather than invented, so a
+         journey has - derived from the graph rather than invented, so a
          seven-day nurture never reports a two-minute average. */
       averageCompletionMs: Math.round(
         nodes.filter((node) => NODE_META[node.kind]?.category === "wait").length *
@@ -1146,7 +1146,7 @@ export const WORKFLOWS: Workflow[] = SEEDS.map((seed) => {
 export const workflowById = (id: string) =>
   WORKFLOWS.find((workflow) => workflow.id === id);
 
-/** Everything except archived — what the list page opens on. */
+/** Everything except archived - what the list page opens on. */
 export const LIVE_WORKFLOWS = WORKFLOWS.filter(
   (workflow) => workflow.status !== "archived",
 );
@@ -1164,7 +1164,7 @@ export const conversionRate = (workflow: Workflow) =>
  * A blank draft, for the Create Workflow dialog.
  *
  * Built here rather than in the component so a draft created by hand and one
- * created from a template are the same object — which is what lets the builder
+ * created from a template are the same object - which is what lets the builder
  * open either without knowing where it came from. Ids are minted from the
  * caller's clock: with a real API the server owns them, and nothing downstream
  * reads meaning out of the string.
@@ -1225,7 +1225,7 @@ export function createDraftWorkflow({
       averageCompletionMs: 0,
     },
     settings: defaultSettings(),
-    /* Nothing is published until somebody publishes it — which is the whole
+    /* Nothing is published until somebody publishes it - which is the whole
        point of the draft lifecycle. */
     publishedVersion: 0,
     hasDraftChanges: true,
@@ -1405,7 +1405,7 @@ export const AUTOMATION_TEMPLATES: AutomationTemplate[] = [
     name: "Order Delivery Update",
     category: "ecommerce",
     description:
-      "Shipped, out for delivery and delivered — three messages, no agent time.",
+      "Shipped, out for delivery and delivered - three messages, no agent time.",
     channels: ["whatsapp", "sms"],
     complexity: "intermediate",
     setupMinutes: 6,
@@ -2043,7 +2043,7 @@ interface RunSeed {
  * Runs, written as an index into the workflow's node list.
  *
  * Naming the node rather than repeating its title keeps a log row and the
- * canvas node it executed from ever disagreeing — rename a node in the seed
+ * canvas node it executed from ever disagreeing - rename a node in the seed
  * above and every execution row follows it.
  */
 const RUN_SEEDS: RunSeed[] = [
@@ -2490,7 +2490,7 @@ export const runsForWorkflow = (workflowId: string) =>
   WORKFLOW_RUNS.filter((run) => run.workflowId === workflowId);
 
 /**
- * Every step of every run, newest first — the Activity table's row set.
+ * Every step of every run, newest first - the Activity table's row set.
  *
  * Derived rather than stored: the log is a view of the runs, and two lists
  * that have to agree are one list too many.
@@ -2530,8 +2530,8 @@ export function workflowTotals() {
     /*
      * A month's completions, from a lifetime figure.
      *
-     * `stats` covers the trailing 90 days — the same window `workflowSeries`
-     * builds its daily curve from — so a month is a third of it. Stated here
+     * `stats` covers the trailing 90 days - the same window `workflowSeries`
+     * builds its daily curve from - so a month is a third of it. Stated here
      * rather than in the KPI card, because a card that does arithmetic on a
      * figure it was handed is a card that will disagree with the next one.
      */

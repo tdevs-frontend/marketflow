@@ -33,7 +33,7 @@ import type { WorkflowDraft } from "./use-workflow-draft";
  * phone.
  *
  * The canvas is never crammed into a tiny viewport with the desktop chrome
- * intact — the toolbar loses its labels, the panels leave, and what is left is
+ * intact - the toolbar loses its labels, the panels leave, and what is left is
  * the graph and two buttons.
  */
 export function WorkflowBuilder({
@@ -197,7 +197,7 @@ export function WorkflowBuilder({
           onAutoLayout={() => {
             draft.autoLayout();
             /* Tidying and then leaving the view where it was defeats the
-               point — the whole graph has moved. */
+               point - the whole graph has moved. */
             window.setTimeout(fit, 0);
           }}
           canUndo={draft.canUndo}

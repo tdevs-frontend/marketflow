@@ -35,7 +35,7 @@ import { WorkflowMiniMapRow } from "../workflow-mini-map";
  *
  * A page rather than a drawer: this is a linkable thing ("use this one") and
  * it carries a step-by-step explanation, the integrations it needs and the
- * message templates it expects — more than a drawer can hold without
+ * message templates it expects - more than a drawer can hold without
  * scrolling twice.
  *
  * The requirements block is the part that matters. A journey adopted without
@@ -65,7 +65,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
       icon: Target,
       label: "Goal",
       value: template.goal,
-      /* A sentence, not a figure — it needs to wrap rather than set the row's
+      /* A sentence, not a figure - it needs to wrap rather than set the row's
          type scale. */
       wrap: true,
     },
@@ -253,7 +253,7 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
                 </h3>
                 {template.requiredMessageTemplates.length === 0 ? (
                   <p className="mt-2 text-sm text-text-muted">
-                    None — every message in this journey is written by you.
+                    None - every message in this journey is written by you.
                   </p>
                 ) : (
                   <ul className="mt-2 space-y-1.5">

@@ -35,7 +35,7 @@ import {
 } from "./settings-section";
 
 /**
- * Active sessions — where this account is signed in.
+ * Active sessions - where this account is signed in.
  *
  * The section answers one question, "is anything signed in that should not
  * be", and the answer has to be trustworthy or the section is worse than
@@ -44,18 +44,18 @@ import {
  *
  * What is known today is this browser. Its device, its time zone and the
  * instant it started are all things it can observe about itself, so the row
- * carrying the "Current session" badge is real — a merchant can check it
+ * carrying the "Current session" badge is real - a merchant can check it
  * against the laptop in front of them and find it correct. What is not known
  * is every other device, because a token issued to a phone is known only to
  * whatever issued it. A row for that phone would have to be invented, and the
- * invented version of this panel — three plausible devices in three cities,
- * each with a Sign out button that ends nothing — is precisely the thing that
+ * invented version of this panel - three plausible devices in three cities,
+ * each with a Sign out button that ends nothing - is precisely the thing that
  * would make a merchant stop believing the true row as well.
  *
  * So "Sign out other sessions" is rendered and disabled, with the reason
  * beside it, which is the rule the module holds to everywhere: a control
  * works, or it is off and says why. The list rendering is not a placeholder
- * either — it takes as many sessions as the service returns, badges the
+ * either - it takes as many sessions as the service returns, badges the
  * current one, and signs the others out individually. When `remoteSessions`
  * opens, nothing here changes shape; more rows simply arrive.
  */
@@ -186,7 +186,7 @@ export function ActiveSessionsCard() {
             title="Only this browser can be listed"
           >
             {UNAVAILABLE_REASON.remoteSessions} The session above is read from
-            this device itself, so it is accurate — but there may be others
+            this device itself, so it is accurate - but there may be others
             that nothing here can see.
           </ServiceNotice>
         </div>
@@ -224,7 +224,7 @@ export function ActiveSessionsCard() {
       >
         <p className="text-sm text-text-secondary">
           You stay signed in here. Every other device will need your password
-          again — which is the point, after losing one.
+          again - which is the point, after losing one.
         </p>
       </ConfirmDialog>
     </SettingsSection>
@@ -250,7 +250,7 @@ function SessionRow({
    * Location, at the coarsest resolution each source honestly supports.
    *
    * The service's region when there is one, this device's own time zone
-   * otherwise — and labelled as the time zone, because that is what it is. A
+   * otherwise - and labelled as the time zone, because that is what it is. A
    * city guessed from a browser setting would be new personal data invented to
    * fill a column.
    */
@@ -339,7 +339,7 @@ function SessionSkeleton() {
  *
  * Only reached for failures a retry could plausibly fix. `service_unavailable`
  * is not one of those, and the panels that can meet it render a
- * `ServiceNotice` instead — a Try again button against a service that does not
+ * `ServiceNotice` instead - a Try again button against a service that does not
  * exist is a loop with a button on it.
  */
 export function SectionError({

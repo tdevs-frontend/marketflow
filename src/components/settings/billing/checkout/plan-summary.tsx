@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import type { BillingPeriod } from "@/types/account";
 
 /**
- * Step 1 — the tier that was chosen, stated back.
+ * Step 1 - the tier that was chosen, stated back.
  *
  * Not a second pricing grid. The merchant has already compared four cards and
  * pressed one; reopening the comparison inside the checkout invites them to
@@ -38,7 +38,7 @@ export function PlanSummary({
 }) {
   const total = planPrice(plan, period);
   /* The per-month figure a yearly plan is advertised at, shown only when the
-     cycle is yearly — for a monthly plan it would be the same number divided
+     cycle is yearly - for a monthly plan it would be the same number divided
      by twelve, which is not a price anybody is quoted. */
   const perMonth =
     period === "yearly" && total !== null ? Math.round(total / 12) : null;

@@ -32,7 +32,7 @@ import type { AuthStatus, CapabilityState } from "@/types/social";
  * Every state in the Integrations module, as a badge.
  *
  * Each one pairs a tone with an icon and a word, the way the Automation module
- * does — status is never colour alone, and on a page where four checks sit in a
+ * does - status is never colour alone, and on a page where four checks sit in a
  * column the glyph is what separates "Warning" from "Error" at a glance.
  *
  * The tones are deliberately restrained. A card whose whole background turns
@@ -131,7 +131,7 @@ const DOT_TONE: Record<HealthStatus, string> = {
 };
 
 /**
- * The dot for places where the word is already on the line beside it — a card
+ * The dot for places where the word is already on the line beside it - a card
  * header, a summary row. Hidden from assistive tech on purpose: it is a
  * restatement, not information, and the label carries the meaning.
  */
@@ -186,7 +186,7 @@ export function WebhookStatusBadge({
 /**
  * An HTTP status code, toned by class.
  *
- * The code itself is the label — a developer reading a delivery log wants 504,
+ * The code itself is the label - a developer reading a delivery log wants 504,
  * not "Gateway Timeout" spelled out in a 90px column. `null` is a request that
  * never got a response at all, which is a different failure from a 500 and is
  * named as one.
@@ -242,7 +242,7 @@ export function MethodBadge({ method }: { method: string }) {
  * An event key, an endpoint path or a masked secret.
  *
  * Monospace, because all three are strings a developer copies rather than
- * reads — and a proportional font makes `mf_live_••••8F2A` and
+ * reads - and a proportional font makes `mf_live_••••8F2A` and
  * `mf_live_••••8F2A` look identical when they are not.
  */
 export function CodeText({
@@ -273,7 +273,7 @@ export function CodeText({
  *
  * A fifth scale on top of `HealthStatus` rather than a reuse of it, because a
  * social token fails on a clock: "Expiring Soon" has no equivalent in an SMTP
- * connection, and it is the single most useful thing this badge says — it is
+ * connection, and it is the single most useful thing this badge says - it is
  * the warning that arrives while there is still time to act on it.
  *
  * `expiring_soon` is amber rather than red on purpose. Nothing is broken yet,
@@ -314,8 +314,8 @@ export function AuthStatusBadge({
 /**
  * Whether one capability is usable.
  *
- * Three states, not two: `needs_reauth` was granted and has lapsed — fixed by
- * pressing Reconnect — while `missing` was never available on this account and
+ * Three states, not two: `needs_reauth` was granted and has lapsed - fixed by
+ * pressing Reconnect - while `missing` was never available on this account and
  * reconnecting will not change it. Showing both as "off" sends a merchant
  * round an OAuth loop that cannot help them.
  */

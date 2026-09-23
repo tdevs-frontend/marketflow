@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 export interface ChartLegendItem {
   label: string;
-  /** Background utility for the swatch — a channel accent, usually. */
+  /** Background utility for the swatch - a channel accent, usually. */
   swatch: string;
   /** Optional figure shown after the label, e.g. the latest value. */
   value?: string;
@@ -56,7 +56,7 @@ export function ChartCard({
           {legend.map((item) => (
             /*
              * The legend names the series, so it reads at secondary rather than
-             * muted — it was the one label on a chart card set lighter than the
+             * muted - it was the one label on a chart card set lighter than the
              * description above it. Where a legend carries a figure, the figure
              * outranks its own label: bold on primary ink, because it is a
              * reading and the label is a key to it.
@@ -81,7 +81,7 @@ export function ChartCard({
       ) : null}
 
       {/* The negative left margin pulls the y-axis labels back to the card's
-          padding — Apex reserves more gutter than the axis text needs. */}
+          padding - Apex reserves more gutter than the axis text needs. */}
       <div className={cn("mt-2 -ml-2.5 flex-1", bodyClassName)}>{children}</div>
 
       {footer ? (

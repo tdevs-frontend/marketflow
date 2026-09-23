@@ -1,14 +1,14 @@
 import { APP_ROUTES } from "@/constants/app";
 
 /**
- * The header bell's feed — what happened, as opposed to what you want to hear
+ * The header bell's feed - what happened, as opposed to what you want to hear
  * about.
  *
  * The distinction is the whole reason this type exists beside
  * `NotificationEventDef` in `types/account`, and the two are easy to confuse:
  *
  *   `NotificationEventDef` is the **catalogue**. It describes a kind of thing
- *   the product can raise — "Order payment failed" — and Settings →
+ *   the product can raise - "Order payment failed" - and Settings →
  *   Notifications is where a member says which channels they want it on.
  *
  *   `FeedNotification` is an **occurrence**. It is one payment that actually
@@ -32,12 +32,12 @@ import { APP_ROUTES } from "@/constants/app";
  * although both are Commerce preferences: a merchant scanning the bell is
  * sorting "something to pack" from "something to reorder" at a glance, and one
  * shopping-bag icon for both loses that. The settings page has no such problem
- * — there the rows carry their own titles.
+ * - there the rows carry their own titles.
  *
  * `security` is the more interesting addition. There is deliberately no
  * security *preference* category, because "your password changed" is not
  * something a person should be able to mute. A security *occurrence* is the
- * opposite — it is exactly what a feed exists to carry, and the bell is where
+ * opposite - it is exactly what a feed exists to carry, and the bell is where
  * somebody finds out a sign-in was not theirs. Reporting an event and offering
  * a switch for it are different acts.
  */
@@ -61,7 +61,7 @@ export type NotificationModule =
  * else.
  *
  * Three levels, not five. The bell is scanned, and a palette a reader has to
- * learn is a palette they ignore — `alert` is the only one that changes what
+ * learn is a palette they ignore - `alert` is the only one that changes what
  * somebody does with their afternoon, so it is the only one that gets a warm
  * colour. `success` marks the things that went right and would otherwise read
  * as neutral noise; everything else is `info`.
@@ -77,7 +77,7 @@ export interface FeedNotification {
   /** One line of what happened, naming the entity. */
   message: string;
   /**
-   * The entity or module the event belongs to — an order's product, a
+   * The entity or module the event belongs to - an order's product, a
    * conversation's subject, the workflow step that threw.
    *
    * A third line, and only the full page renders it. The bell is scanned
@@ -94,7 +94,7 @@ export interface FeedNotification {
    * Where the notification goes when opened, or `null`.
    *
    * Nullable and checked, because a row that navigates somewhere that does not
-   * exist is worse than one that only marks itself read — the reader loses
+   * exist is worse than one that only marks itself read - the reader loses
    * their place and learns not to click the next one. Every value set in
    * `lib/notification-fixtures` is a route this application actually serves;
    * see `APP_ROUTES`.
@@ -110,7 +110,7 @@ export const NOTIFICATION_ROUTES = {
   leads: APP_ROUTES.leads,
   /* The canonical routes, not the `/dashboard/campaigns` and
      `/dashboard/whatsapp` shortcuts, which both 307 elsewhere. A notification
-     should land on the page in one move — and for WhatsApp the destination a
+     should land on the page in one move - and for WhatsApp the destination a
      reply belongs at is the inbox, which is where that redirect ends up
      anyway. */
   campaigns: APP_ROUTES.marketingCampaigns,

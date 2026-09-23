@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 export interface RankedItem {
   id: string;
   label: string;
-  /** Second line — volume, size, whatever gives the metric context. */
+  /** Second line - volume, size, whatever gives the metric context. */
   secondary?: string;
   /** The figure this list is ranked by, already formatted. */
   display: string;
@@ -15,7 +15,7 @@ export interface RankedItem {
 }
 
 /**
- * "Top N by one metric" — the shape that repeats across every analytics page
+ * "Top N by one metric" - the shape that repeats across every analytics page
  * for campaigns, audiences, templates and platforms.
  *
  * Bars are scaled against the list's own leader rather than 100, because these
@@ -41,8 +41,8 @@ export function RankedList({
    * `sm` is the default and what every analytics panel uses: there the ranked
    * list is one of several supporting readings on the page, and a 16px label
    * would outrank the panel's own heading. `base` is for the panel where the
-   * ranked row *is* the card's subject — Automation Performance on the
-   * Marketing workspace — and the name needs to carry the row.
+   * ranked row *is* the card's subject - Automation Performance on the
+   * Marketing workspace - and the name needs to carry the row.
    */
   labelSize?: "sm" | "base";
   className?: string;

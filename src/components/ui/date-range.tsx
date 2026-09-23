@@ -83,7 +83,7 @@ export function DateRangePicker({
 }
 
 /**
- * Period stepper for the social calendar — prev, next, a label and a jump back
+ * Period stepper for the social calendar - prev, next, a label and a jump back
  * to today. Not a range: a calendar is browsed one period at a time.
  *
  * `unit` names what the arrows move by. It is not cosmetic: the same control

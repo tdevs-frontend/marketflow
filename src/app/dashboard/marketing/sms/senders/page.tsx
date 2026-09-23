@@ -11,7 +11,7 @@ export default function SmsSendersPage() {
     <>
       <PageHeader
         title="Sender IDs"
-        description="What the handset shows as the sender — and, with it, whether anyone can reply."
+        description="What the handset shows as the sender - and, with it, whether anyone can reply."
       />
 
       <SmsSendersWorkspace />

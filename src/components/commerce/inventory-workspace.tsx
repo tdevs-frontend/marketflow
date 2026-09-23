@@ -40,14 +40,14 @@ function kpis(): CommerceKpi[] {
 
   return [
     {
-      /* Cyan for the count, indigo for the money — on a page whose whole job
+      /* Cyan for the count, indigo for the money - on a page whose whole job
          is warning and error states, the two neutral figures still have to be
          told apart. */
       label: "Total Items",
       value: formatNumber(INVENTORY.reduce((sum, item) => sum + item.stock, 0)),
       icon: Boxes,
       tone: "accent",
-      /* Rows, not products — a shirt in twelve sizes is twelve things to count
+      /* Rows, not products - a shirt in twelve sizes is twelve things to count
          and one thing to sell, and this page is about the counting. */
       hint: `${INVENTORY.length} tracked ${INVENTORY.length === 1 ? "item" : "items"}`,
     },
@@ -85,10 +85,10 @@ function kpis(): CommerceKpi[] {
 const rowKey = (item: { productId: string; variantId?: string }) =>
   item.variantId ? `${item.productId}::${item.variantId}` : item.productId;
 
-/** "Premium T-Shirt — M / Black", or just the product where there is no variant. */
+/** "Premium T-Shirt - M / Black", or just the product where there is no variant. */
 const rowLabel = (item: { productName: string; variantName?: string }) =>
   item.variantName
-    ? `${item.productName} — ${item.variantName}`
+    ? `${item.productName} - ${item.variantName}`
     : item.productName;
 
 export function InventoryWorkspace() {
@@ -126,7 +126,7 @@ export function InventoryWorkspace() {
         The table takes the whole width.
 
         It used to sit in two thirds of an `xl:grid-cols-3` row with an
-        Inventory Activity feed in the remaining third — a timeline of every
+        Inventory Activity feed in the remaining third - a timeline of every
         movement, newest first, which is history rather than stock. This page
         is what to reorder and what to count today; the movement log still
         exists where it can be acted on, on the Activity tab of the product it
@@ -134,8 +134,8 @@ export function InventoryWorkspace() {
 
         Nine columns had been living in two thirds of an already narrow content
         column, so the 68rem minimum the table sets meant a horizontal scroll on
-        every desktop. Full width does not remove that scroll everywhere — 68rem
-        is 68rem, and it still bites under about a 1500px viewport — but it is
+        every desktop. Full width does not remove that scroll everywhere - 68rem
+        is 68rem, and it still bites under about a 1500px viewport - but it is
         now roughly half the overscroll it was, and Product and Variant get the
         measure to spell themselves out.
       */}
@@ -159,7 +159,7 @@ export function InventoryWorkspace() {
               <TH>Product</TH>
               {/* Variant gets a column of its own rather than being appended
                   to the product name: it is what a picker scans for, and a
-                  name that reads "Premium T-Shirt — M / Black" cannot be
+                  name that reads "Premium T-Shirt - M / Black" cannot be
                   sorted, filtered or truncated independently of the product. */}
               <TH>Variant</TH>
               <TH>SKU</TH>
@@ -194,7 +194,7 @@ export function InventoryWorkspace() {
                     </TD>
                     <TD className="text-text-secondary">
                       {item.variantName ?? (
-                        <span className="text-text-muted">—</span>
+                        <span className="text-text-muted">-</span>
                       )}
                     </TD>
                     <TD className="font-mono text-sm text-text-muted">
@@ -322,7 +322,7 @@ export function InventoryWorkspace() {
            * The adjustment targets a variant, not a product.
            *
            * "+24 Premium T-Shirt" is not something anyone can act on once the
-           * shirt exists in twelve sizes — there is no shelf it describes. The
+           * shirt exists in twelve sizes - there is no shelf it describes. The
            * option list is therefore one entry per stocked combination, with
            * the SKU as the second line because that is what is printed on the
            * box being counted.

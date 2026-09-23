@@ -122,7 +122,7 @@ export function WorkflowDetail({ workflow }: { workflow: Workflow }) {
     toast(
       neverPublished
         ? "Draft saved"
-        : "Draft saved — the published version keeps running",
+        : "Draft saved - the published version keeps running",
       "success",
     );
   }
@@ -144,7 +144,7 @@ export function WorkflowDetail({ workflow }: { workflow: Workflow }) {
     setPublishError(null);
     toast(
       neverPublished
-        ? `${name} published — it is live now`
+        ? `${name} published - it is live now`
         : `Version ${publishedVersion + 1} published. Contacts already inside finish on v${publishedVersion}.`,
       "success",
     );
@@ -358,7 +358,7 @@ export function WorkflowDetail({ workflow }: { workflow: Workflow }) {
         </div>
       ) : null}
 
-      {/* Page level, so no bleed — same reason as the Settings strip. */}
+      {/* Page level, so no bleed - same reason as the Settings strip. */}
       <Tabs
         tabs={TABS}
         value={tab}
@@ -451,7 +451,7 @@ export function WorkflowDetail({ workflow }: { workflow: Workflow }) {
         tone="danger"
       >
         <p className="text-sm text-text-secondary">
-          Nothing that is running changes — the published version has been live
+          Nothing that is running changes - the published version has been live
           the whole time. Only your unpublished edits are thrown away.
         </p>
       </ConfirmDialog>

@@ -13,7 +13,7 @@ export default function SmsOverviewPage() {
     <>
       <PageHeader
         title="SMS Overview"
-        description="Delivery, replies and spend — every message on this channel costs money."
+        description="Delivery, replies and spend - every message on this channel costs money."
         secondaryActions={
           <ButtonLink href={APP_ROUTES.smsTemplates} variant="outline" size="compact">
             Templates

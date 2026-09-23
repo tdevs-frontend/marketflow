@@ -26,7 +26,7 @@ export interface EmailCampaign {
   delivered: number;
   opened: number;
   clicked: number;
-  /** Hard and soft bounces together — the campaign list does not split them. */
+  /** Hard and soft bounces together - the campaign list does not split them. */
   bounced: number;
   unsubscribed: number;
   complained: number;
@@ -39,7 +39,7 @@ export interface EmailCampaign {
  * The library's shelves.
  *
  * Five, and deliberately not one per use case. A shelf earns its place by being
- * something a merchant *browses for* — the seven it replaced split promotions
+ * something a merchant *browses for* - the seven it replaced split promotions
  * across "Promotion", "Product Launch" and "Abandoned Cart", so the shelf a
  * template sat on stopped predicting anything about it. Transactional is the
  * one genuinely different kind: receipts and resets go to people who did not
@@ -69,7 +69,7 @@ export type EmailBlockType =
 export interface EmailBlock {
   id: string;
   type: EmailBlockType;
-  /** Rendered inside the block — a heading's words, a button's label. */
+  /** Rendered inside the block - a heading's words, a button's label. */
   content: string;
   /** Second line where the block has one, e.g. a button's destination. */
   meta?: string;
@@ -84,7 +84,7 @@ export interface EmailTemplate {
   subject: string;
   previewText: string;
   blocks: EmailBlock[];
-  /** How many campaigns have used it — the only honest sort for a library. */
+  /** How many campaigns have used it - the only honest sort for a library. */
   usageCount: number;
   /** Average open rate across those campaigns, or 0 if never sent. */
   openRate: number;
@@ -190,7 +190,7 @@ export interface EmailSenderIdentity {
 /**
  * The transport underneath every identity.
  *
- * Owned by Integrations → Email — this module reads it and links there rather
+ * Owned by Integrations → Email - this module reads it and links there rather
  * than offering a second set of credentials to fill in.
  */
 export interface EmailProviderStatus {

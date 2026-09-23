@@ -20,7 +20,7 @@ interface KpiDefinition {
   key: string;
   label: string;
   icon: LucideIcon;
-  /** Tints the icon tile — one identity per metric, never two the same. */
+  /** Tints the icon tile - one identity per metric, never two the same. */
   tone: KpiTone;
   /** Totals for the window, pre-formatted, one per selectable period. */
   values: Record<RangeKey, string>;
@@ -29,7 +29,7 @@ interface KpiDefinition {
 }
 
 /**
- * Placeholder figures — swap for `useGetOverviewKpisQuery(range)` once the API
+ * Placeholder figures - swap for `useGetOverviewKpisQuery(range)` once the API
  * is live.
  *
  * Every metric is a *total for the window*, not a running count, which is why
@@ -37,10 +37,10 @@ interface KpiDefinition {
  * campaign card's totals add up to its orders and revenue exactly.
  *
  * One tone per metric, because the four tiles used to be four identical grey
- * squares and the colour told a reader nothing — they had to read all four
+ * squares and the colour told a reader nothing - they had to read all four
  * labels to find the one they came for. Brand indigo opens the funnel, the
  * channel green names WhatsApp because the label does, info blue carries
- * Orders (blue, but not the *Email* blue — these are not the Email channel),
+ * Orders (blue, but not the *Email* blue - these are not the Email channel),
  * and Revenue takes success green.
  *
  * Revenue is the one deliberate spend of a state colour on an identity. The

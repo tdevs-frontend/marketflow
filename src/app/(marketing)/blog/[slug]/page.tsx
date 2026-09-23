@@ -45,7 +45,7 @@ export async function generateMetadata({
 /**
  * One article.
  *
- * A single column at reading width, on the white canvas — no rail, no sticky
+ * A single column at reading width, on the white canvas - no rail, no sticky
  * table of contents, no related-articles sidebar competing with the paragraph
  * being read. These pieces are 600 to 900 words; furniture built for a 5,000
  * word reference would be the page telling the reader it is longer than it is.
@@ -123,7 +123,7 @@ export default async function ArticlePage({
                 {article.description}
               </p>
 
-              {/* The byline. The product is the author — there is no author
+              {/* The byline. The product is the author - there is no author
                   record behind these yet, and inventing a person to sign them
                   is the one detail on this page a reader could catch. */}
               <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border pt-6 text-sm text-text-muted">

@@ -21,7 +21,7 @@ type OrderStatus = "Paid" | "Processing" | "Pending" | "Cancelled";
 interface Order {
   id: string;
   customer: string;
-  /** Where the order came from — the same vocabulary the Sales breakdown uses. */
+  /** Where the order came from - the same vocabulary the Sales breakdown uses. */
   channel: SalesChannel;
   product: string;
   amount: number;
@@ -31,7 +31,7 @@ interface Order {
 
 /* The top two are the WhatsApp inbox customers, buying the leading product.
 
-   `id` is the row key, so it has to stay unique — a copied row with a
+   `id` is the row key, so it has to stay unique - a copied row with a
    duplicate reference is React reconciling two different orders as one. */
 const ORDERS: Order[] = [
   {
@@ -133,7 +133,7 @@ const STATUS_TONE: Record<OrderStatus, BadgeTone> = {
   Cancelled: "danger",
 };
 
-/* Monochrome on purpose. The channel is the row's *smallest* fact — a coloured
+/* Monochrome on purpose. The channel is the row's *smallest* fact - a coloured
    mark for it would compete with the status badge, which is the one thing in
    the row a merchant has to act on. */
 const CHANNEL_ICON: Record<SalesChannel, LucideIcon> = {
@@ -163,7 +163,7 @@ const CHANNEL_ICON: Record<SalesChannel, LucideIcon> = {
  * rendered twice. The difference now is structural rather than textual: a
  * tinted header band over ruled rows, ledger figures right-aligned on tabular
  * numerals, and the reference as the row's entry point. Tabular and
- * transactional — where the card next to it is chronological.
+ * transactional - where the card next to it is chronological.
  */
 export function RecentOrders({ className }: { className?: string }) {
   return (
@@ -202,7 +202,7 @@ export function RecentOrders({ className }: { className?: string }) {
       ) : (
         <div className="mt-4 flex-1">
           {/* Six columns in a half-width card is tight, and the thing that
-              pays for tightness is the last column — Time slides under the
+              pays for tightness is the last column - Time slides under the
               scroll edge, and a status with no timestamp beside it is the half
               of the pair worth less on its own.
 
@@ -210,8 +210,8 @@ export function RecentOrders({ className }: { className?: string }) {
               overflowing. Customer and Product each take `w-1/2 max-w-0`,
               which splits whatever the four fixed columns leave between them
               and lets the text ellipsis inside its share. Below roughly 1500px
-              a name or a product gets shortened — with the full string on
-              hover — but no column is ever lost, no row is taller than its
+              a name or a product gets shortened - with the full string on
+              hover - but no column is ever lost, no row is taller than its
               neighbour, and Amount and Time stay on their right edge. The
               `minWidth` is only what the fixed columns need, so the wrapper's
               scroll is the fallback for a genuinely narrow viewport rather
@@ -222,7 +222,7 @@ export function RecentOrders({ className }: { className?: string }) {
           >
             {/* The band is what stops the header reading as a first row. It is
                 painted on the cells rather than the row so the ends can round,
-                and the end cells take their padding back — the table's
+                and the end cells take their padding back - the table's
                 `first:pl-0 last:pr-0` rule would otherwise cut the fill flush
                 against the first and last column's text. */}
             <THead className="[&>th]:bg-surface-secondary [&>th:first-child]:rounded-l-lg [&>th:first-child]:pl-3 [&>th:last-child]:rounded-r-lg [&>th:last-child]:pr-3">

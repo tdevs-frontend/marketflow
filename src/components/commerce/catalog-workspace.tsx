@@ -216,7 +216,7 @@ function CatalogPreview({
                  * The real photograph, in the container that already existed.
                  *
                  * `relative` and the absolute fill are what let the image cover
-                 * the frame without the grid centring shrinking it — the
+                 * the frame without the grid centring shrinking it - the
                  * aspect-video box, the tinted ground and the card's rounding
                  * are all untouched, so nothing reflows and a product with no
                  * photo still falls back to the icon tile it used to show.

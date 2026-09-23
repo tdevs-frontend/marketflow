@@ -45,8 +45,8 @@ import { PostThumb } from "./post-status";
  * people actually interacted. Anything that could not claim its own question
  * has gone.
  *
- * Three things went. The headline chart carried a four-way metric toggle —
- * Reach, Impressions, Engagement, Followers — and every position duplicated a
+ * Three things went. The headline chart carried a four-way metric toggle -
+ * Reach, Impressions, Engagement, Followers - and every position duplicated a
  * panel further down: Followers restated Follower Share, Engagement restated
  * Engagement by Platform, Reach restated Platform Comparison. A control whose
  * every setting repeats something else on the page is not a control, it is
@@ -54,15 +54,15 @@ import { PostThumb } from "./post-status";
  * previous period behind it, which is the comparison the toggle never offered.
  *
  * Platform Comparison was a second four-line reach chart sitting directly under
- * the first. It is a ranked list now: the question it answers — which platform
- * generates the reach — is an ordering, and an ordering does not need an axis.
+ * the first. It is a ranked list now: the question it answers - which platform
+ * generates the reach - is an ordering, and an ordering does not need an axis.
  * Engagement by Platform lost its grouped bars for the same reason. Three
  * numbers across four platforms is a table, and drawing it as a chart made it
  * read as a third pass over the same trend.
  *
  * The KPI strip is one card per platform rather than four page totals. The
- * totals it used to carry were each answered better further down — engagement
- * by the engagement table, followers by Follower Share — while the strip
+ * totals it used to carry were each answered better further down - engagement
+ * by the engagement table, followers by Follower Share - while the strip
  * itself said nothing about which platform anything belonged to. Four platform
  * cards give the page an identity row: who we are on, how far each one
  * reaches, and which way each is moving. They read reach out of the same
@@ -74,7 +74,7 @@ import { PostThumb } from "./post-status";
  * greys would defeat it. Everywhere else the four-hue palette is noise.
  *
  * Engagement *rate* leads over raw engagement, because reach differs by an
- * order of magnitude between LinkedIn and Instagram — 964 interactions on
+ * order of magnitude between LinkedIn and Instagram - 964 interactions on
  * 18,640 reach is a better post than 1,284 on 32,480.
  */
 
@@ -113,7 +113,7 @@ function periodFor(range: DateRangeValue): SocialTrendPeriod {
 /**
  * The seam the dashboard's date filter plugs into.
  *
- * The reach chart genuinely narrows now — it slices a daily record. The post
+ * The reach chart genuinely narrows now - it slices a daily record. The post
  * leaderboard still cannot, because a post's engagement is a lifetime total
  * rather than a dated series, so filtering it here would either do nothing or
  * empty the panel. This is the one function that changes when dated engagement
@@ -154,7 +154,7 @@ export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps)
    * Only accounts that actually granted analytics.
    *
    * A figure computed over an account MarketFlow cannot read insights for is a
-   * figure that is quietly wrong — the follower share would sum to 100% across
+   * figure that is quietly wrong - the follower share would sum to 100% across
    * a set that is missing a platform. Excluding them keeps every number on this
    * page true, and the notice below says which account is missing and why.
    */
@@ -166,7 +166,7 @@ export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps)
   /*
    * The strip follows the *page* period, not the chart's own control.
    *
-   * The chart's window is something you do to the chart — reading ninety days
+   * The chart's window is something you do to the chart - reading ninety days
    * of shape without moving the page's reporting period. The four cards are
    * the page's headline, so they answer the range the dashboard filter set and
    * stay put while the chart is explored.
@@ -177,7 +177,7 @@ export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps)
    * One card per platform.
    *
    * Reach, because it is the metric this page is built around and the only one
-   * with an honest previous-period comparison per platform — both slices come
+   * with an honest previous-period comparison per platform - both slices come
    * out of the same daily record, so the change is measured rather than
    * asserted. The tile carries the platform's own tint and mark, which is what
    * makes the row scannable: four identical grey tiles would send the eye to
@@ -367,7 +367,7 @@ export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps)
           height={280}
         />
 
-        {/* The insight row. Four readings on one line, no cards — these are
+        {/* The insight row. Four readings on one line, no cards - these are
             context for the chart above, not metrics in their own right. */}
         <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-border pt-4 sm:grid-cols-4">
           {[
@@ -504,7 +504,7 @@ export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps)
           title="Best Platform"
           description="Engagement relative to audience size, not audience size."
           action={
-            <InfoHint content="Engagement rate is likes, comments and shares as a share of reach — so a small audience that interacts beats a large one that scrolls past." />
+            <InfoHint content="Engagement rate is likes, comments and shares as a share of reach - so a small audience that interacts beats a large one that scrolls past." />
           }
         >
           <div className="flex flex-wrap items-center gap-3 rounded-panel border border-primary-border bg-primary-subtle px-3.5 py-3">
@@ -549,7 +549,7 @@ export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps)
         {/* -------------------------------------------------- 7. Top posts */}
         <PanelCard
           title="Top Performing Posts"
-          description="By engagement rate — interactions as a share of reach."
+          description="By engagement rate - interactions as a share of reach."
           className="xl:col-span-2"
         >
           {topPosts.length === 0 ? (
@@ -567,7 +567,7 @@ export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps)
                     {index + 1}
                   </span>
 
-                  {/* The post's real asset — the same record the calendar, the
+                  {/* The post's real asset - the same record the calendar, the
                       post grid and the Media Library draw. */}
                   <PostThumb post={post} size="lg" />
 

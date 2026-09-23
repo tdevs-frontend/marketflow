@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 /**
  * The catalogue view of the product database.
  *
- * Reached from the strip inside Products rather than its own sidebar row — it
+ * Reached from the strip inside Products rather than its own sidebar row - it
  * is the same dataset presented for sharing, not a second product store. The
  * header lives inside the workspace because both its actions open dialogs.
  */

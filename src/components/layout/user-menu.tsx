@@ -32,8 +32,8 @@ import { displayName } from "@/types/account";
  * The account menu behind the header's user chip.
  *
  * Navigation and nothing else. Every row here is a shortcut to a page that
- * already owns the thing it names — Security owns two-factor, Billing owns the
- * plan — and the menu deliberately surfaces none of that content itself. A
+ * already owns the thing it names - Security owns two-factor, Billing owns the
+ * plan - and the menu deliberately surfaces none of that content itself. A
  * dropdown that shows the current plan and an upgrade button is a second
  * billing surface that will disagree with the first one within a release, and
  * a dropdown with a two-factor toggle in it is a security control somebody can
@@ -45,7 +45,7 @@ import { displayName } from "@/types/account";
  * the same split the Settings rail makes, so a reader who learns one has
  * learned both.
  *
- * The trigger is the chip that was already in the header, unchanged — same
+ * The trigger is the chip that was already in the header, unchanged - same
  * height, same avatar, same name, same hover. It was a `<Link>` straight to
  * Profile; it is now the button that opens this. Profile is still one click
  * away, at the top of the menu and on the header block itself.
@@ -77,7 +77,7 @@ export function UserMenu() {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuId = useId();
 
-  /* The same dismissal behaviour as `Menu` and the notification panel —
+  /* The same dismissal behaviour as `Menu` and the notification panel -
      outside pointer-down, Escape, focus back to the trigger. */
   useDismissable(
     open,
@@ -115,7 +115,7 @@ export function UserMenu() {
       icon: HelpCircle,
       /*
        * There is no help centre. `/help` exists in the marketing footer, which
-       * points at pages that have not been built yet on purpose — borrowing it
+       * points at pages that have not been built yet on purpose - borrowing it
        * here would put a 404 one click from every screen in the product. The
        * row stays visible so the absence is legible, and says why on hover.
        */
@@ -128,7 +128,7 @@ export function UserMenu() {
    *
    * `logout()` resets the auth state and the route change leaves the
    * dashboard. What it cannot do is end a session, because nothing starts
-   * one — `auth.user` is `null` in every build and nothing dispatches
+   * one - `auth.user` is `null` in every build and nothing dispatches
    * `setCredentials`. This is the real behaviour available today rather than a
    * confirmation dialog in front of it; when an auth service is wired, this is
    * the one function that changes.
@@ -166,8 +166,8 @@ export function UserMenu() {
         <AvatarPhoto name={name} src={user.avatarUrl} size="md" />
 
         {/* Name and plan hide together below `sm`. The badge on its own beside
-            a photo reads as a status *on the person* — a role, or whether they
-            are online — rather than as the account's tier. */}
+            a photo reads as a status *on the person* - a role, or whether they
+            are online - rather than as the account's tier. */}
         <span className="hidden flex-col items-start gap-1.5 sm:flex">
           <span className="text-sm leading-none font-semibold text-text-primary">
             {name}
@@ -198,7 +198,7 @@ export function UserMenu() {
           aria-label="User menu"
           /* `right-0` against a chip already at the right edge of a full-width
              header, so the panel grows into the page. The width clamps to the
-             viewport minus both gutters — a fixed 320px panel overflows a
+             viewport minus both gutters - a fixed 320px panel overflows a
              narrow phone, and the symptom is a scrollbar on the whole
              dashboard rather than anything visibly wrong here. */
           className={cn(
@@ -245,7 +245,7 @@ export function UserMenu() {
              *
              * It carries the plan *and its state*, which is the one piece of
              * account context neither the header block nor any row above
-             * states — and it is why the tier is not also printed beside the
+             * states - and it is why the tier is not also printed beside the
              * email. Saying "Growth plan" twice in a 320px panel reads as a
              * rendering fault; saying it once, with the status attached,
              * answers a question. Managing any of it is Billing's job, three
@@ -256,7 +256,7 @@ export function UserMenu() {
              * the email.
              *
              * It sat in the identity block and said the same thing this line
-             * already said, 250px apart — the tier twice in a 320px panel. One
+             * already said, 250px apart - the tier twice in a 320px panel. One
              * of them had to go, and the bottom is where it earns its place:
              * the identity block stays avatar, name and address, and the badge
              * closes the menu with the one piece of account context nothing
@@ -295,7 +295,7 @@ export function UserMenu() {
  * The arrow says so without needing a label.
  *
  * The plan line is one muted sentence, not a card. It answers "which tier is
- * this workspace on" at a glance, which is genuinely useful context here —
+ * this workspace on" at a glance, which is genuinely useful context here -
  * and stops there. Managing it is Billing's job, two rows below.
  */
 function ProfileHeader({
@@ -317,7 +317,7 @@ function ProfileHeader({
       className="flex items-center gap-3 border-b border-border px-4 py-3.5 transition-colors hover:bg-surface-secondary focus-visible:shadow-focus focus-visible:outline-none"
     >
       {/* 40px. `AvatarPhoto` renders the photo when there is one and the
-          initials when there is not — or when the photo fails to load, which a
+          initials when there is not - or when the photo fails to load, which a
           plain `Avatar` would show as a broken glyph. */}
       <AvatarPhoto name={name} src={avatarUrl} size="md" />
 
@@ -330,7 +330,7 @@ function ProfileHeader({
         {/* `leading-tight` on both lines, so the pair stacks to roughly the
             avatar's own height. At the default leading the two lines run 44px
             against a 40px circle, and centring that difference leaves the name
-            sitting a couple of pixels above the photo's midline — close enough
+            sitting a couple of pixels above the photo's midline - close enough
             to look accidental rather than deliberate. Tightened, the block and
             the circle read as one unit. */}
         <span className="block truncate text-base leading-tight font-bold text-text-primary">
@@ -366,7 +366,7 @@ function Group({
       <p className="px-2.5 pt-1.5 pb-1.5 text-sm font-semibold tracking-normal text-text-primary">
         {label}
       </p>
-      {/* 3px between rows — enough that each is its own target, not enough to
+      {/* 3px between rows - enough that each is its own target, not enough to
           break the group into separate objects. */}
       <div className="space-y-[2px]">{children}</div>
     </div>
@@ -374,11 +374,11 @@ function Group({
 }
 
 /* 44px: 12px of padding either side of a 20px line. The shared string is the
-   point — the six navigation rows and the log-out row below them are the same
+   point - the six navigation rows and the log-out row below them are the same
    height whether they are links or a button, which is what stops the divider
    above Log out reading as a change of rhythm. */
 /*
- * `min-h-11` is 44px — a floor, not a fixed height.
+ * `min-h-11` is 44px - a floor, not a fixed height.
  *
  * The padding around it is deliberate and stays; what the floor adds is a
  * guarantee the row is big enough to hit on a touch screen even though its

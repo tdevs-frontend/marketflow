@@ -11,7 +11,7 @@ import {
  * The all-in-one section: MarketFlow at the centre, every module connected to
  * it, and the journey it covers along the bottom.
  *
- * The layout is one three-column grid — rail, hub, rail. From `xl` the rails
+ * The layout is one three-column grid - rail, hub, rail. From `xl` the rails
  * are a fixed 360px each and the centre column takes everything left over, so
  * the hub sits in open space rather than between two wide cards; below that the
  * three columns share the width proportionally. Columns stretch to a
@@ -27,7 +27,7 @@ import {
  * The ground is two decorative layers, both `pointer-events-none` and both
  * behind the content: a dot texture masked to a soft ellipse, and one indigo
  * bloom centred on the hub. The bloom is the section's only large colour, and
- * it is what makes the hub the brightest point on the page — see the layer
+ * it is what makes the hub the brightest point on the page - see the layer
  * notes in `platform/platform-hub.tsx`.
  *
  * Pieces live in `./platform`; this file is only the composition.
@@ -43,7 +43,7 @@ export function PlatformOverview() {
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10 mask-[radial-gradient(ellipse_at_center,black,transparent_72%)] bg-[radial-gradient(var(--color-border-strong)_1px,transparent_1px)] bg-size-[22px_22px] opacity-45"
       />
-      {/* Brand bloom behind the hub — two stops, so it reads as the brand pair
+      {/* Brand bloom behind the hub - two stops, so it reads as the brand pair
           rather than a flat wash of indigo. */}
       <div
         aria-hidden
@@ -74,7 +74,7 @@ export function PlatformOverview() {
         </header>
       </div>
 
-      {/* Ecosystem — its own, slightly wider container from `xl` up, so the two
+      {/* Ecosystem - its own, slightly wider container from `xl` up, so the two
           360px rails and a roomy centre fit without crowding the hub. */}
       <div className="custom-container-wide">
         <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)_minmax(0,1fr)] lg:gap-10 xl:grid-cols-[360px_minmax(0,1fr)_360px]">

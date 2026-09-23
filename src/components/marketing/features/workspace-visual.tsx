@@ -7,8 +7,8 @@ import { PanelLabel, ProductFrame } from "./feature-section";
  *
  * The permission grid is the whole section in one object: three roles down the
  * side, four capabilities across, ticks and dashes. It is the answer to the
- * only question anyone asks about team features — can I let a junior send
- * campaigns without letting them export the contact list — and a list of
+ * only question anyone asks about team features - can I let a junior send
+ * campaigns without letting them export the contact list - and a list of
  * feature names could not answer it.
  *
  * Deliberately smaller than the sections above. Team and workspace settings are

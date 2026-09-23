@@ -7,7 +7,7 @@ import type { MemberStatus } from "@/types/workspace";
  * Everything Settings reads or writes about *a person* is described here, and
  * nothing else describes it. That matters more than usual in this module: the
  * six Settings pages are the product's only surface where a wrong answer is
- * silently acted on — a merchant who reads "Two-factor: Enabled" stops worrying
+ * silently acted on - a merchant who reads "Two-factor: Enabled" stops worrying
  * about their password, and a merchant who reads "Saved" stops re-checking.
  *
  * These are deliberately *service* shapes rather than component props. When an
@@ -100,14 +100,14 @@ export function displayName(user: AccountUser): string {
 export type NotificationChannel = "in_app" | "email";
 
 /**
- * The areas the notification catalogue is grouped under — one per product
+ * The areas the notification catalogue is grouped under - one per product
  * module, in the order the sidebar lists them.
  *
  * These used to be six invented buckets (`campaigns`, `leads`, `messaging`,
  * `automations`, `orders`, `security`) that matched nothing else in the
  * product. `messaging` in particular folded WhatsApp, email and SMS into one
  * row each, on the argument that a merchant asks "do I want to hear about
- * WhatsApp" rather than about each underlying trigger — which was true of the
+ * WhatsApp" rather than about each underlying trigger - which was true of the
  * three-row version and stopped being true the moment the page was asked to
  * cover the whole product. A merchant who runs WhatsApp campaigns and no SMS
  * needs those separable, and "Messaging" gave them one switch for both.
@@ -118,7 +118,7 @@ export type NotificationChannel = "in_app" | "email";
  * should name something inside the module its category is named after.
  *
  * `security` is deliberately absent. Password changes, two-factor and new
- * sign-ins are not preferences — they are how a person finds out an account
+ * sign-ins are not preferences - they are how a person finds out an account
  * was taken, and they belong to `/dashboard/settings/security`, which owns the
  * state they report on. A category here implied they could be switched off.
  */
@@ -156,7 +156,7 @@ export interface NotificationEventDef {
    * A notice the person may not switch off.
    *
    * Reserved for the events where not knowing costs more than the interruption
-   * — today that is a failed payment, which ends in a suspended workspace if
+   * - today that is a failed payment, which ends in a suspended workspace if
    * nobody acts on it. It renders as a fixed state with a reason rather than
    * as a disabled checkbox nobody can explain.
    *
@@ -169,7 +169,7 @@ export interface NotificationEventDef {
 }
 
 /**
- * What the workspace allows — the administrator's half of the split.
+ * What the workspace allows - the administrator's half of the split.
  *
  * An event absent from `enabled`, or present as `false`, is off for everybody
  * and does not appear in a normal member's list at all. `channels` narrows what
@@ -216,11 +216,11 @@ export interface SecurityState {
  *
  * Handed out by `startTwoFactorEnrollment` and valid until it is verified or
  * abandoned. The secret is in it because the QR code and the manual setup key
- * are both renderings of that one value — there is no second, "displayable"
+ * are both renderings of that one value - there is no second, "displayable"
  * form of a TOTP secret.
  */
 export interface TwoFactorEnrollment {
-  /** Base32, unpadded — what an authenticator app expects. */
+  /** Base32, unpadded - what an authenticator app expects. */
   secret: string;
   /** `otpauth://totp/...`, the string the QR code encodes. */
   otpauthUri: string;
@@ -254,7 +254,7 @@ export interface DeviceInfo {
   browser: string;
   /** Major version only. `null` when the string does not carry one. */
   browserVersion: string | null;
-  /** "Windows", "macOS", "iOS" — no release number. See `lib/user-agent`. */
+  /** "Windows", "macOS", "iOS" - no release number. See `lib/user-agent`. */
   os: string;
   kind: DeviceKind;
 }
@@ -269,7 +269,7 @@ export interface DeviceInfo {
  *
  * Location is two fields on purpose, and neither is a city.
  *
- * `timeZone` is what the browser itself knows — `Europe/Lisbon` — and is
+ * `timeZone` is what the browser itself knows - `Europe/Lisbon` - and is
  * available for the current session without asking anybody anything.
  * `location` is the coarse region a service derives from the request address,
  * and stays `null` until one does. Keeping them apart is what stops the panel
@@ -353,20 +353,20 @@ export interface PaymentMethod {
 /**
  * One charge, and everything a merchant needs to recognise it.
  *
- * The billing module used to keep two histories — a list of plan periods and a
- * list of invoices — and they were the same events described twice. A merchant
+ * The billing module used to keep two histories - a list of plan periods and a
+ * list of invoices - and they were the same events described twice. A merchant
  * reconciling a statement had to hold both open and match them by date, which
  * is work the product was in a better position to do. This is the merged
  * record: one row per time money was taken, carrying the tier it bought.
  *
  * `PlanPeriod` is still the thing that is *stored*, because a period is what a
  * plan change creates and what a cancellation ends. A `Purchase` is derived
- * from it — see `listPurchaseHistory` — which is what keeps the two from ever
+ * from it - see `listPurchaseHistory` - which is what keeps the two from ever
  * disagreeing. There is one history, viewed at the resolution a merchant reads
  * it: charges.
  *
  * Two statuses, because there are genuinely two facts and merging them loses
- * one. `planState` is what became of the subscription this charge bought —
+ * one. `planState` is what became of the subscription this charge bought -
  * still running, superseded by an upgrade, cancelled. `paymentState` is what
  * became of the money. A row can be `ended` and `paid` (an old period, settled)
  * or `active` and `pending` (a manual payment for the tier being moved to,
@@ -388,7 +388,7 @@ export interface Purchase {
   /**
    * The provider's human-readable number, e.g. `INV-1024`.
    *
-   * `null` for a payment nothing has invoiced yet — a manual transfer waiting
+   * `null` for a payment nothing has invoiced yet - a manual transfer waiting
    * on verification is a claim, and an invoice number against it would imply a
    * document somebody could ask for.
    */
@@ -418,7 +418,7 @@ export type PurchasePaymentState = "paid" | "pending" | "failed" | "refunded";
  * three entries, because each one was charged separately and each one is a
  * separate answer to "what was I paying in March".
  *
- * `endedAt` is `null` for exactly one entry — the period running now, which is
+ * `endedAt` is `null` for exactly one entry - the period running now, which is
  * also the only one whose `status` is `active`. An open period has no end date,
  * and filling it with the next renewal date would state as settled something
  * that has not been charged yet.
@@ -446,7 +446,7 @@ export interface PlanPeriod {
 /**
  * A *period's* state, which is not a subscription's.
  *
- * Two values, because a closed period only ever answers one question — is this
+ * Two values, because a closed period only ever answers one question - is this
  * the one running, or is it over. `SubscriptionStatus` describes the agreement
  * as it stands today (trialing, past due, cancelled); a period that ended
  * fourteen months ago when the workspace moved up a tier was none of those, and
@@ -485,7 +485,7 @@ export interface PaymentGateway {
   kind: "automatic" | "manual";
   name: string;
   description: string;
-  /** Usable. `false` still renders — marked, and refused at the point of use. */
+  /** Usable. `false` still renders - marked, and refused at the point of use. */
   configured: boolean;
   /** Shown where the method is chosen and again where it would be charged. */
   unavailableReason?: string;
@@ -497,7 +497,7 @@ export interface ManualPaymentInput {
   period: BillingPeriod;
   amount: number;
   currency: string;
-  /** How it was sent — bank transfer, wire, cheque. See `MANUAL_PAYMENT_METHODS`. */
+  /** How it was sent - bank transfer, wire, cheque. See `MANUAL_PAYMENT_METHODS`. */
   method: string;
   /** The bank's reference for the transfer. What an administrator matches on. */
   reference: string;

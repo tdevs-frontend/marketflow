@@ -10,7 +10,7 @@ import { APP_ROUTES } from "@/constants";
  *
  * The split only opens at `lg`. Between tablet and there, a 40% brand column
  * would leave the card too narrow to be comfortable, so those widths get the
- * centred single column instead — the same treatment as mobile, with more air.
+ * centred single column instead - the same treatment as mobile, with more air.
  */
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
@@ -19,7 +19,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
 
       <main className="flex items-center justify-center px-5 py-12 sm:px-8 lg:py-16">
         <div className="w-full max-w-108">
-          {/* Stands in for the brand panel where it is hidden. No visual —
+          {/* Stands in for the brand panel where it is hidden. No visual -
               on a phone it would push the form below the fold. */}
           <div className="mb-8 text-center lg:hidden">
             <Link

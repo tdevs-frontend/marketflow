@@ -22,8 +22,8 @@ import type { MediaAsset } from "@/types/social";
 /**
  * Attach assets to a campaign, from the Media Library that already exists.
  *
- * It reads `useMediaAssets()` — the same store Marketing → Social → Media and
- * the post composer render — rather than holding a campaign-local upload. That
+ * It reads `useMediaAssets()` - the same store Marketing → Social → Media and
+ * the post composer render - rather than holding a campaign-local upload. That
  * is the whole point: an image uploaded for a campaign is an asset of the
  * workspace, and a second store would mean the same hero image existing twice
  * with two names, two sizes and no idea which the Planner is using.
@@ -201,7 +201,7 @@ function MediaDialog({
   /**
    * Read the picked files into the library, then tick what landed.
    *
-   * Selecting for the campaign is the point of uploading from here — an upload
+   * Selecting for the campaign is the point of uploading from here - an upload
    * that leaves the file sitting in the grid untouched makes the person hunt
    * for their own image among forty others. `max` still rules: on a channel
    * that takes one asset, the first one in wins and the rest wait in the
@@ -233,7 +233,7 @@ function MediaDialog({
       }
     } catch {
       /* Decoding runs in the browser, so a throw here is the browser itself
-         giving up — say so rather than leaving the spinner running. */
+         giving up - say so rather than leaving the spinner running. */
       setFailures(["Those files could not be read. Try again."]);
     } finally {
       setUploading(0);

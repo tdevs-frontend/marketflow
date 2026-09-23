@@ -23,7 +23,7 @@ type Module = {
   icon: LucideIcon;
 };
 
-/** Left rail — where a customer enters the system and gets organised. */
+/** Left rail - where a customer enters the system and gets organised. */
 const INBOUND: Module[] = [
   {
     title: "WhatsApp Automation",
@@ -45,7 +45,7 @@ const INBOUND: Module[] = [
   },
 ];
 
-/** Right rail — where the platform acts and reports back. */
+/** Right rail - where the platform acts and reports back. */
 const OUTBOUND: Module[] = [
   {
     title: "Automation",
@@ -86,8 +86,8 @@ type Side = "left" | "right";
 /**
  * Connectors are a bus, not a fan of curves: a hairline spine down each gutter,
  * a stub from every card, and a port on the dashboard edge. Every piece is
- * positioned off an element that already exists — the card, the rail, the
- * dashboard — so the junctions are pixel-exact at any width instead of
+ * positioned off an element that already exists - the card, the rail, the
+ * dashboard - so the junctions are pixel-exact at any width instead of
  * approximated in SVG percentage space.
  */
 function CardConnector({ side }: { side: Side }) {
@@ -225,7 +225,7 @@ export function PlatformOverview() {
 
           <p className="mt-5 text-base leading-[1.7] text-text-secondary text-pretty">
             Capture leads, manage conversations, launch campaigns, automate
-            follow-ups and measure growth — all from{" "}
+            follow-ups and measure growth - all from{" "}
             <span className="font-semibold text-primary">
               one powerful workspace
             </span>

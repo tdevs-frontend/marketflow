@@ -14,8 +14,8 @@ const TRUST_AVATARS = [avatar1, avatar2, avatar3, avatar4];
 /**
  * The closing panel.
  *
- * Built from `FinalCta`'s treatment — same `cta-surface` ground, same dot
- * texture, same eyebrow and button pair — rather than a second closing style,
+ * Built from `FinalCta`'s treatment - same `cta-surface` ground, same dot
+ * texture, same eyebrow and button pair - rather than a second closing style,
  * because a visitor who reaches the bottom of this page should recognise where
  * they are. The copy is this page's, not the home page's.
  *

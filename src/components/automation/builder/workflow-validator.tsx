@@ -20,7 +20,7 @@ import { missingTokens } from "./variables";
  * the builder and again at publish time.
  *
  * Three severities, and the distinction is doing real work. An `error` makes
- * the workflow impossible to run and blocks publishing — a message node with
+ * the workflow impossible to run and blocks publishing - a message node with
  * no template will fail on its first contact, and finding that out from the
  * Activity log is the worst possible way to find it out. A `warning` will
  * probably bite but might be deliberate. A `recommendation` is advice about
@@ -41,7 +41,7 @@ export function validateWorkflow(
       id: "no-trigger",
       severity: "error",
       message: "This workflow has no trigger",
-      fix: "Add a Trigger node — nothing can enter without one.",
+      fix: "Add a Trigger node - nothing can enter without one.",
     });
   }
 
@@ -244,7 +244,7 @@ export function validateWorkflow(
       id: "no-waits",
       severity: "recommendation",
       message: "Several messages send back to back",
-      fix: "Add a Wait between them — two messages in the same second reads as a bug to the customer.",
+      fix: "Add a Wait between them - two messages in the same second reads as a bug to the customer.",
     });
   }
 
@@ -289,7 +289,7 @@ const SEVERITY_LABEL: Record<ValidationSeverity, string> = {
  *
  * Collapsed it is one line, because that is all a reader needs while they are
  * building. Expanded, every issue names its node and what to do about it, and
- * selecting one moves the canvas selection there — which is the only thing
+ * selecting one moves the canvas selection there - which is the only thing
  * anybody ever wants to do with a validation message.
  */
 export function WorkflowValidator({
@@ -328,7 +328,7 @@ export function WorkflowValidator({
           ? `${tips} ${tips === 1 ? "recommendation" : "recommendations"}`
           : "Ready to publish";
 
-  /* Errors first, then warnings, then advice — the order they should be dealt
+  /* Errors first, then warnings, then advice - the order they should be dealt
      with, which is not the order the graph happens to be walked in. */
   const ordered = [...issues].sort((a, b) => {
     const rank = { error: 0, warning: 1, recommendation: 2 } as const;

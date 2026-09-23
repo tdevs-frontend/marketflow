@@ -32,7 +32,7 @@ import { ProviderIcon } from "./provider-icon";
  *
  * The shape of this flow is dictated by OAuth, not by preference. There is no
  * credential form anywhere in it, because a merchant must never type a social
- * password into MarketFlow — they authorise on the provider and we receive a
+ * password into MarketFlow - they authorise on the provider and we receive a
  * token. Step two is therefore a hand-off, and it says so.
  *
  * Step three exists because providers return *collections*: a Facebook login
@@ -40,7 +40,7 @@ import { ProviderIcon } from "./provider-icon";
  * to the wrong audience. A flow that silently took the first result would be
  * shorter and occasionally catastrophic.
  *
- * State is mount-scoped — callers render this only while it is open — so every
+ * State is mount-scoped - callers render this only while it is open - so every
  * connection starts from step one rather than resuming someone else's.
  */
 
@@ -55,7 +55,7 @@ const AUTHORIZE_MS = 1600;
  *
  * In a real build this is the resource list from the provider's API. It lives
  * here as a fixture so the account-selection step has something honest to show
- * — the point being that the step is driven by what came back, not by a
+ * - the point being that the step is driven by what came back, not by a
  * hard-coded pair of options per vendor.
  */
 const DISCOVERED: Record<string, { id: string; name: string; detail: string }[]> = {
@@ -105,7 +105,7 @@ export function OAuthConnectionDialog({
     timer.current = window.setTimeout(() => {
       setAuthorizing(false);
       const discovered = DISCOVERED[provider.id] ?? [];
-      /* One result needs no choice — skipping straight past a list of one is
+      /* One result needs no choice - skipping straight past a list of one is
          the difference between a step and an obstacle. */
       setResourceId(discovered.length === 1 ? discovered[0].id : null);
       setStep(discovered.length === 1 ? 3 : 2);
@@ -466,7 +466,7 @@ function PermissionsStep({
             className={cn("size-4 transition-transform", showScopes && "rotate-180")}
             aria-hidden
           />
-          Advanced — provider scopes
+          Advanced - provider scopes
         </button>
 
         {showScopes ? (

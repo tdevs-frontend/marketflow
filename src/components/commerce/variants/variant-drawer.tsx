@@ -37,8 +37,8 @@ import { ProductThumb, VariantAvailabilityBadge } from "../commerce-badges";
  * uses for record detail.
  *
  * A drawer rather than a route, for the same reason the order drawer is one: a
- * variant is read *alongside* its siblings — you scan the grid, open one, fix
- * it, close and carry on — and a full page would lose the merchant's place in a
+ * variant is read *alongside* its siblings - you scan the grid, open one, fix
+ * it, close and carry on - and a full page would lose the merchant's place in a
  * twelve-row table every time.
  *
  * The fields shown are the parent product's type and nothing else. A digital
@@ -48,7 +48,7 @@ import { ProductThumb, VariantAvailabilityBadge } from "../commerce-badges";
  * paid back.
  *
  * Reserved and available are *shown* here but never editable. Both are computed
- * — reserved off the open orders, available as `on hand − reserved` — and an
+ * - reserved off the open orders, available as `on hand − reserved` - and an
  * input on either would be a control that either lies about what it writes or
  * lets a merchant type over a figure the order book owns.
  */
@@ -147,7 +147,7 @@ export function VariantDrawer({
   variant: ProductVariant | null;
   type: ProductType;
   basePrice: number;
-  /** The option each value belongs to — "Size: Medium", not just "Medium". */
+  /** The option each value belongs to - "Size: Medium", not just "Medium". */
   optionNames: string[];
   fallbackImage?: string;
   /** The product's media library. A variant picks from it; it never uploads. */
@@ -172,7 +172,7 @@ export function VariantDrawer({
       onClose={onClose}
       title={variant ? variantName(variant.optionValues) : "Variant"}
       description={
-        variant ? `${VARIANT_CODE_LABEL[type]} ${variant.sku || "—"}` : undefined
+        variant ? `${VARIANT_CODE_LABEL[type]} ${variant.sku || "-"}` : undefined
       }
       footer={
         variant ? (
@@ -284,7 +284,7 @@ export function VariantDrawer({
                 />
               </Field>
 
-              {/* Cost is a physical and digital question — a service's cost is
+              {/* Cost is a physical and digital question - a service's cost is
                   the practitioner's time, which is not modelled per variant. */}
               {type !== "service" ? (
                 <Field
@@ -310,7 +310,7 @@ export function VariantDrawer({
               <strong className="font-bold">
                 {formatCurrency(effectivePrice(variant, basePrice))}
               </strong>
-              {variant.price === undefined ? " — inherited from the product." : "."}
+              {variant.price === undefined ? " - inherited from the product." : "."}
             </p>
           </Section>
 
@@ -376,7 +376,7 @@ export function VariantDrawer({
                     * Derived, so shown rather than editable.
                     *
                     * Reserved is the quantity open orders have claimed and
-                    * available is what is left — both computed from the order
+                    * available is what is left - both computed from the order
                     * book. An input here would let a merchant type a number the
                     * next order would silently overwrite.
                     */}
@@ -404,7 +404,7 @@ export function VariantDrawer({
                     <CheckboxField
                       id="variant-oversell"
                       label="Continue selling when out of stock"
-                      hint="Keeps this combination buyable at zero — for pre-orders and print-on-demand."
+                      hint="Keeps this combination buyable at zero - for pre-orders and print-on-demand."
                       checked={variant.continueSellingWhenOutOfStock ?? false}
                       onCheckedChange={(value) =>
                         set({ continueSellingWhenOutOfStock: value })
@@ -497,7 +497,7 @@ export function VariantDrawer({
                       {variant.fileName ?? "No file attached"}
                     </p>
                     <p className="text-sm text-text-muted">
-                      {variant.fileSizeMb ? `${variant.fileSizeMb} MB` : "—"}
+                      {variant.fileSizeMb ? `${variant.fileSizeMb} MB` : "-"}
                     </p>
                   </div>
                   <Button variant="outline" size="sm">
@@ -567,7 +567,7 @@ export function VariantDrawer({
                   * Licence seats, and emphatically not "stock".
                   *
                   * The only quantity a download has. It is never picked, packed
-                  * or reserved, so it gets its own word — labelling it stock is
+                  * or reserved, so it gets its own word - labelling it stock is
                   * how a merchant selling forty team licences ends up with a
                   * reorder level and a warehouse row.
                   */}
@@ -614,7 +614,7 @@ export function VariantDrawer({
 
                 {/*
                   * Capacity, not stock. A consultation is limited by how many
-                  * bookings the practitioner can take in a day — nothing is
+                  * bookings the practitioner can take in a day - nothing is
                   * consumed and nothing runs out permanently.
                   */}
                 <Field
@@ -772,7 +772,7 @@ export function VariantDrawer({
               <Stat
                 label="Last sold"
                 value={
-                  variant.sales?.lastSoldAt ? formatDate(variant.sales.lastSoldAt) : "—"
+                  variant.sales?.lastSoldAt ? formatDate(variant.sales.lastSoldAt) : "-"
                 }
               />
             </dl>

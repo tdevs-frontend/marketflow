@@ -28,7 +28,7 @@ import { ProviderSelector } from "./provider-selector";
  * Four steps in a drawer rather than a form on a page, for one reason: step
  * three has to happen before step four. A flat form invites Save, and saving a
  * token the provider has already rejected produces an integration that looks
- * connected and silently drops every message — which is the single worst
+ * connected and silently drops every message - which is the single worst
  * outcome this module can have.
  *
  * Saving after a failed test is still possible, because a merchant who knows
@@ -87,7 +87,7 @@ export function ConnectDrawer({
     : [];
 
   /*
-   * The credentials as they will be stored — masked at the point of leaving
+   * The credentials as they will be stored - masked at the point of leaving
    * this component, never after.
    *
    * Computed once and used twice: the review step renders it, and saving hands
@@ -102,7 +102,7 @@ export function ConnectDrawer({
       key: field.key,
       label: field.label,
       kind: field.kind,
-      value: field.kind === "secret" ? `${"•".repeat(10)}${tail}` : raw || "—",
+      value: field.kind === "secret" ? `${"•".repeat(10)}${tail}` : raw || "-",
       preview: field.kind === "secret" ? tail : undefined,
       hint: field.hint,
       /* The workspace's frozen instant, not the wall clock: every other
@@ -194,7 +194,7 @@ export function ConnectDrawer({
         {step === 0 ? (
           providers.length === 0 ? (
             <p className="text-sm text-text-secondary">
-              This integration has no configurable provider — it is enabled from
+              This integration has no configurable provider - it is enabled from
               the workspace settings instead.
             </p>
           ) : (

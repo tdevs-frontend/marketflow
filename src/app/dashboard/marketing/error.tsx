@@ -12,7 +12,7 @@ import { APP_ROUTES } from "@/constants";
  *
  * `reset()` is the primary action because most failures here are a fetch that
  * timed out, and retrying is both the likely fix and the cheapest thing to
- * try. The digest is shown rather than hidden — it is the only thing support
+ * try. The digest is shown rather than hidden - it is the only thing support
  * can correlate against a server log, and a user who cannot quote it has
  * nothing to report.
  *
@@ -42,7 +42,7 @@ export default function MarketingError({
       <h1 className="mt-4 text-lg">Something went wrong loading this page</h1>
       <p className="mx-auto mt-2 max-w-sm text-sm text-text-secondary">
         The page failed to load. Your campaigns, contacts and scheduled sends
-        are unaffected — nothing was changed by this.
+        are unaffected - nothing was changed by this.
       </p>
 
       <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
@@ -58,7 +58,7 @@ export default function MarketingError({
       {error.digest ? (
         <p className="mt-5 border-t border-border pt-4 text-sm text-text-muted">
           Reference{" "}
-          <code className="font-mono text-text-secondary">{error.digest}</code> —
+          <code className="font-mono text-text-secondary">{error.digest}</code> -
           quote this if you contact support.
         </p>
       ) : null}

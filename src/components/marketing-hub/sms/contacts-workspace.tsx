@@ -52,7 +52,7 @@ import type { SmsContact, SmsContactStatus } from "@/types/sms";
  * The column no other channel has is Country, and it is not decoration: SMS is
  * billed per destination, so "which countries is this list in" is a cost
  * question as much as a demographic one. Invalid numbers get their own status
- * rather than being folded into failures — an invalid number is a data problem
+ * rather than being folded into failures - an invalid number is a data problem
  * you can fix, where a failure is usually a carrier problem you cannot.
  */
 
@@ -71,7 +71,7 @@ const STATUS_TONES: Record<SmsContactStatus, BadgeTone> = {
  * Consent state, worded the same everywhere it appears.
  *
  * The table, the phone card and the drawer each used to spell this themselves,
- * and two of the three fell back to the raw status — so the same contact read
+ * and two of the three fell back to the raw status - so the same contact read
  * "Opted out" in one place and "invalid" in another. It is the field on this
  * page with legal weight behind it; it does not get to be approximate.
  */
@@ -361,7 +361,7 @@ export function SmsContactsWorkspace() {
             description={
               search || activeFilters
                 ? "Try a different search term, or clear the filters."
-                : "Import numbers in international format — a number without a country code cannot be routed, and gets billed as a failure."
+                : "Import numbers in international format - a number without a country code cannot be routed, and gets billed as a failure."
             }
             action={
               search || activeFilters ? (
@@ -630,14 +630,14 @@ export function SmsContactsWorkspace() {
             {detail.status === "invalid" ? (
               <p className="rounded-panel border border-error/25 bg-error-soft px-3 py-2.5 text-sm text-error-text">
                 This number is not routable. Messages to it are billed and never
-                delivered — correct the number or delete the contact.
+                delivered - correct the number or delete the contact.
               </p>
             ) : null}
 
             {detail.status === "opted-out" ? (
               <p className="rounded-panel border border-warning/40 bg-warning-soft px-3 py-2.5 text-sm text-warning-text">
                 This person replied STOP. Campaigns and automations skip them,
-                and only they can opt back in — adding them to a segment does
+                and only they can opt back in - adding them to a segment does
                 not override it.
               </p>
             ) : null}
@@ -649,7 +649,7 @@ export function SmsContactsWorkspace() {
                 label="Reply rate"
                 value={
                   detail.messages === 0
-                    ? "—"
+                    ? "-"
                     : formatPercent(rate(detail.replies, detail.messages))
                 }
               />
@@ -761,7 +761,7 @@ export function SmsContactsWorkspace() {
           <Field
             label="Phone number"
             htmlFor="sms-new-phone"
-            hint="Include the country code — +880 1711 223344, not 01711 223344."
+            hint="Include the country code - +880 1711 223344, not 01711 223344."
           >
             <Input id="sms-new-phone" type="tel" />
           </Field>
@@ -801,7 +801,7 @@ export function SmsContactsWorkspace() {
               size="compact"
               onClick={() => {
                 setImportOpen(false);
-                toast("Import started — numbers are validated as they load");
+                toast("Import started - numbers are validated as they load");
               }}
             >
               <Upload aria-hidden />
@@ -830,7 +830,7 @@ export function SmsContactsWorkspace() {
             </p>
             <p className="mt-1 text-sm text-text-secondary font-medium">
               Anything without a resolvable country code is flagged Invalid rather
-              than imported as subscribed — a number you cannot route still costs
+              than imported as subscribed - a number you cannot route still costs
               you a segment every time you try.
             </p>
           </div>
@@ -850,7 +850,7 @@ export function SmsContactsWorkspace() {
       >
         <p className="text-sm text-text-secondary">
           Deleting is not the same as opting out. A deleted number can come back
-          in the next import and start receiving messages again — opt them out
+          in the next import and start receiving messages again - opt them out
           instead if they asked you to stop.
         </p>
       </ConfirmDialog>

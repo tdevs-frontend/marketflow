@@ -1,7 +1,7 @@
 /*
  * A client component although nothing here is interactive.
  *
- * `StatsGrid` is one, and `StatItem.icon` is a component function — which a
+ * `StatsGrid` is one, and `StatItem.icon` is a component function - which a
  * server component cannot hand across the boundary ("Functions cannot be passed
  * directly to Client Components"). The directive is the cheapest fix; the
  * alternative is passing icon *names* through the stat row, which would mean
@@ -42,13 +42,13 @@ import { ActivityFeed } from "../shared/activity-feed";
 import { RecentConversations } from "../shared/recent-conversations";
 
 /**
- * The WhatsApp module's landing page — the operational one.
+ * The WhatsApp module's landing page - the operational one.
  *
  * Everything here answers "what is happening, and what do I do next": the
  * threads waiting, the queue behind them, what the automations ran, and what
  * changed.
  *
- * It used to open that second row on a Quick Actions card — five links to
+ * It used to open that second row on a Quick Actions card - five links to
  * Campaigns, Templates, Contacts, Automations and Analytics. Every one is a
  * tab in the module's own nav directly above it, so the card was the
  * navigation rendered a second time and dressed as content. Removed rather
@@ -60,7 +60,7 @@ import { RecentConversations } from "../shared/recent-conversations";
  * row or a timeline entry was drawn at.
  *
  * Nothing here is a trend. The page used to carry a message-performance chart,
- * a delivery-rate breakdown and a campaign comparison — three readings that
+ * a delivery-rate breakdown and a campaign comparison - three readings that
  * Analytics already owns, drawn from the same fixtures, so the two pages
  * answered the same question with two different layouts and a merchant had to
  * learn which one was authoritative. Performance moved out wholesale; see
@@ -75,8 +75,8 @@ const SNAPSHOT = WA_INBOX_SNAPSHOT;
 /**
  * One tone per subsystem, for the KPI row's icon tiles.
  *
- * The row covers five different things — a queue, a wait, a clock, a robot and
- * an audience — and five identical green tiles made the icons decorative:
+ * The row covers five different things - a queue, a wait, a clock, a robot and
+ * an audience - and five identical green tiles made the icons decorative:
  * nothing could be found without reading its label. Every pair is a
  * `-soft`/ink pair that already exists in the ramp, and each is the colour that
  * thing wears elsewhere in the product.
@@ -94,7 +94,7 @@ const TILES = {
  *
  * Sent, delivery rate and reply rate used to sit here. They are the first three
  * KPIs on Analytics, computed from the same `whatsappTotals()` call, so the two
- * rows could only ever agree — which made one of them redundant rather than
+ * rows could only ever agree - which made one of them redundant rather than
  * reassuring. These five have no counterpart on the other page.
  */
 const STATS: StatItem[] = [
@@ -149,13 +149,13 @@ const STATS: StatItem[] = [
  * `Avatar` is monochrome by default and says why: forty randomly tinted
  * circles in a contact table is the fastest way to make a clean list look like
  * a template. Its `tone` escape hatch exists for the few places where the
- * avatar carries meaning, and it names an agent as one of them — a support
+ * avatar carries meaning, and it names an agent as one of them - a support
  * queue is read by finding *your* row, and a colour finds it faster than a
  * name does.
  *
  * Keyed by name rather than assigned by index, so the palette survives the
  * sort below: an agent keeps their colour whether they are top of the queue or
- * bottom of it. Every pair is an existing token — including the pink, which is
+ * bottom of it. Every pair is an existing token - including the pink, which is
  * `--color-instagram` at a tenth opacity, the one rose in the ramp.
  */
 const AGENT_TONES: Record<string, string> = {
@@ -172,14 +172,14 @@ const AGENT_TONES: Record<string, string> = {
  * A tint per queue state, for the Inbox card's four counts.
  *
  * Four numbers in a row on one white ground read as the same number printed
- * four times; what a supervisor is actually scanning for is a *state* — what is
- * live, what is waiting on us, what nobody owns, what is done — and the tint
+ * four times; what a supervisor is actually scanning for is a *state* - what is
+ * live, what is waiting on us, what nobody owns, what is done - and the tint
  * separates those before a label is read. Each colour is the one that state
- * already wears in this product — the KPI row directly above this card tints
+ * already wears in this product - the KPI row directly above this card tints
  * its Awaiting Reply tile with the same warning amber.
  *
  * The status softs are carried at 60% and the other two at full strength, which
- * lands all four at roughly the same weight over white — `success-soft` and
+ * lands all four at roughly the same weight over white - `success-soft` and
  * `warning-soft` are a good deal heavier than the violet and slate beside them,
  * and four tints that disagree about how loud they are read as an alert rather
  * than as a legend.
@@ -189,11 +189,11 @@ const AGENT_TONES: Record<string, string> = {
  * highlighted cell instead of a designed tile.
  */
 const QUEUE_TINTS = {
-  /** Live conversations — the healthy state, so the success green. */
+  /** Live conversations - the healthy state, so the success green. */
   open: "border-success/20 bg-success-soft/60",
   /** Waiting on us. Same amber the Awaiting Reply KPI wears. */
   awaiting: "border-warning/25 bg-warning-soft/60",
-  /** Nobody owns these. Violet — unclaimed work, not a warning. */
+  /** Nobody owns these. Violet - unclaimed work, not a warning. */
   unassigned: "border-primary/15 bg-primary-subtle",
   /** Settled. The neutral slate, so "done" is the quietest tile in the row. */
   closed: "border-border-strong/60 bg-surface-secondary",
@@ -204,13 +204,13 @@ const QUEUE_TINTS = {
  *
  * Three bands rather than a gradient: the question a supervisor asks is "who
  * needs help", and that has a yes, a maybe and a no. The thresholds are where
- * a queue stops being comfortable — over 70% of capacity an agent is behind,
+ * a queue stops being comfortable - over 70% of capacity an agent is behind,
  * under 40% they have room for the next thread.
  *
  * The percentage still decides the band; it just no longer appears on screen.
  * A bar per agent made the panel the fourth meter on a page that already draws
  * one for the send limit, and it answered "how full" when the question was
- * "who needs help" — seven bar lengths have to be compared against each other
+ * "who needs help" - seven bar lengths have to be compared against each other
  * before they mean anything, where three badge colours sort themselves.
  *
  * "Medium" and "Balanced" rather than "Medium load" and "Low load": a badge is
@@ -254,7 +254,7 @@ const QUALITY_TONE: Record<"high" | "medium" | "low", BadgeTone> = {
  *
  * Above the KPIs on purpose: every number below assumes the account is
  * connected, inside its send limit and receiving webhooks. When one of those
- * three is wrong, it is the only thing on the page worth reading — a merchant
+ * three is wrong, it is the only thing on the page worth reading - a merchant
  * chasing a flat reply rate should find a failing webhook here, not in the
  * Integrations module two clicks away.
  *
@@ -364,7 +364,7 @@ export function WhatsAppOverview() {
    *
    * Sorted here rather than in the fixture so adding an eighth agent anywhere
    * in that list still lands them in the right place, and so the one row a
-   * supervisor is looking for — whoever is closest to drowning — is always the
+   * supervisor is looking for - whoever is closest to drowning - is always the
    * first one they read.
    */
   const agentLoad = [...SNAPSHOT.agents]
@@ -384,8 +384,8 @@ export function WhatsAppOverview() {
       {/*
         Conversations first, where Quick Actions used to be.
 
-        That card was five links — Campaigns, Templates, Contacts, Automations
-        and Analytics — and every one of them is a tab in the module's own nav
+        That card was five links - Campaigns, Templates, Contacts, Automations
+        and Analytics - and every one of them is a tab in the module's own nav
         directly above it, so it was the navigation rendered a second time and
         dressed as content. Removed rather than swapped for different
         shortcuts: what the slot is worth is the threads waiting on a reply.
@@ -462,7 +462,7 @@ export function WhatsAppOverview() {
               A roster, not a chart.
 
               Seven progress bars with a percentage beside each made this the
-              second meter on the page — the send limit above draws one too —
+              second meter on the page - the send limit above draws one too -
               and a bar answers "how full" when what a supervisor is asking is
               "who needs help". The band is a badge now, so the three states
               read as three colours down a column instead of as seven lengths
@@ -489,7 +489,7 @@ export function WhatsAppOverview() {
                     The dot is composed here rather than added to the
                     primitive, same as the dashboard inbox does it: an avatar
                     has no business knowing whether someone is signed in. It is
-                    drawn for both states — grey is "not here", and an absent
+                    drawn for both states - grey is "not here", and an absent
                     dot would be indistinguishable from a dot that failed to
                     render. The ring is the card's own white, so it reads as
                     sitting on the photo rather than cut out of it.
@@ -539,7 +539,7 @@ export function WhatsAppOverview() {
         The analytics pair, at even width.
 
         These two and Recent Conversations used to share a three-column row, so
-        each got a third of the page — which left a timeline entry's icon,
+        each got a third of the page - which left a timeline entry's icon,
         title, detail and timestamp competing inside about 380px. Two cards at
         half the page each, and grid stretch keeps them the same height without
         either one naming a height of its own.
@@ -558,8 +558,8 @@ export function WhatsAppOverview() {
             </ButtonLink>
           }
         >
-          {/* Same three-part row as the conversations panel beside it — tile,
-              thread of text, right-aligned figures — so two lists sitting side
+          {/* Same three-part row as the conversations panel beside it - tile,
+              thread of text, right-aligned figures - so two lists sitting side
               by side read as one page rather than two components. */}
           <ul className="divide-y divide-border">
             {WA_FLOWS.map((flow) => (
@@ -603,7 +603,7 @@ export function WhatsAppOverview() {
            * Three readings of the flows themselves.
            *
            * Opt-in rate and average reply time used to sit in this footer, and
-           * both are now KPIs in the row at the top of the page — a figure
+           * both are now KPIs in the row at the top of the page - a figure
            * stated twice on one screen is a figure a merchant checks twice.
            */}
           <div className="mt-4 grid grid-cols-3 gap-2 border-t border-border pt-4">

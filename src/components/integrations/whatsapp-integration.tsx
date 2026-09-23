@@ -27,7 +27,7 @@ import type { SummaryFact } from "./connection-summary";
  * to, and the sending defaults that belong to the channel rather than to any
  * one campaign. Campaigns, templates and the inbox live in the Marketing
  * module and are linked from the "Used by" rail, which is the seam between the
- * two — this page says whether WhatsApp works, that module says what it sends.
+ * two - this page says whether WhatsApp works, that module says what it sends.
  */
 
 const LANGUAGES = [
@@ -66,7 +66,7 @@ export function WhatsAppIntegration() {
   const webhookCheck = integration.health.find((check) => check.id === "webhook");
 
   const facts: SummaryFact[] = [
-    { label: "Phone Number", value: integration.account ?? "—" },
+    { label: "Phone Number", value: integration.account ?? "-" },
     { label: "Provider", value: integration.provider?.name ?? "Not selected" },
     { label: "Business Account", value: "MarketFlow Demo" },
     {
@@ -101,7 +101,7 @@ export function WhatsAppIntegration() {
         ))}
         <SettingRow
           label="Provider"
-          hint="Switch providers from Reconnect — credentials do not carry across."
+          hint="Switch providers from Reconnect - credentials do not carry across."
           value={
             <Badge tone="brand" className="normal-case">
               {integration.provider?.name ?? "Not selected"}
@@ -112,7 +112,7 @@ export function WhatsAppIntegration() {
 
       <SettingsSection
         title="Credentials"
-        description="Stored encrypted. Shown masked — a saved token is never returned in full."
+        description="Stored encrypted. Shown masked - a saved token is never returned in full."
       >
         {secrets.map((credential) => (
           <CredentialField

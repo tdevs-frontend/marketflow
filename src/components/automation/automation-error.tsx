@@ -12,7 +12,7 @@ import { AUTOMATION_ROUTES } from "@/constants/automation";
  *
  * One component rather than a message per call site, so a failed template load
  * and a failed publish look like the same product. `onRetry` is the primary
- * action wherever retrying is possible — most failures here are a request that
+ * action wherever retrying is possible - most failures here are a request that
  * timed out, and trying again is both the likely fix and the cheapest thing to
  * do. The copy never surfaces `error.message`: that string comes from the
  * server and can carry internals, so the detail stays in the digest, which is
@@ -32,7 +32,7 @@ export function AutomationErrorState({
   onRetry?: () => void;
   retryLabel?: string;
   digest?: string;
-  /** An escape route when retrying is not the answer — usually a way back. */
+  /** An escape route when retrying is not the answer - usually a way back. */
   secondary?: ReactNode;
   className?: string;
 }) {
@@ -68,7 +68,7 @@ export function AutomationErrorState({
       {digest ? (
         <p className="mt-5 border-t border-border pt-4 text-sm text-text-muted">
           Reference{" "}
-          <code className="font-mono text-text-secondary">{digest}</code> — quote
+          <code className="font-mono text-text-secondary">{digest}</code> - quote
           this if you contact support.
         </p>
       ) : null}
@@ -77,7 +77,7 @@ export function AutomationErrorState({
 }
 
 /**
- * The inline version, for a panel inside a page that otherwise loaded — a
+ * The inline version, for a panel inside a page that otherwise loaded - a
  * chart that failed while the page around it is fine.
  */
 export function InlineErrorState({

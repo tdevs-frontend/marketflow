@@ -19,22 +19,22 @@ import {
  * The overview chart's axis type, set from the product's own scale.
  *
  * Three departures from the shared `AXIS_LABEL_STYLE`, and the first is the
- * one that matters: in this project a weight *is* a family — `--font-medium`
+ * one that matters: in this project a weight *is* a family - `--font-medium`
  * points at a real medium cut, and neither typeface declares a `font-weight`
  * on its faces. Asking Apex for `fontWeight: 500` therefore does not reach that
  * cut at all; it hands the browser the Book face and a number, and the browser
  * synthesises a fake medium. Naming the family and pinning the weight back to
  * 400 is the same trick `globals.css` plays on `b, strong`.
  *
- * The colour moves from `textMuted` to `textSecondary` — the page's own body
- * ink — and the size from 11px to the 13px metadata step, the floor the rest
+ * The colour moves from `textMuted` to `textSecondary` - the page's own body
+ * ink - and the size from 11px to the 13px metadata step, the floor the rest
  * of the dashboard keeps to. Scoped to this file rather than pushed into the shared
  * constant because that one also dresses the charts in every marketing module.
  */
 const AXIS_LABELS = {
   ...AXIS_LABEL_STYLE,
   /* The body face and a real 500. This used to name `--font-medium`, which was
-     a *family* — the Medium cut — back when weight was spelled as a family
+     a *family* - the Medium cut - back when weight was spelled as a family
      name. That token is gone now that the typefaces carry their own weights,
      and a chart asking for a variable that no longer resolves would have
      dropped its axis labels to ApexCharts' built-in Helvetica. */
@@ -67,8 +67,8 @@ export interface GrowthOverviewChartProps {
  * The tooltip's own markup.
  *
  * Apex's built-in shared tooltip can list both series but cannot state the one
- * thing the comparison exists to answer — how far ahead of the previous period
- * this point is — so the row is computed here and the two series are laid out
+ * thing the comparison exists to answer - how far ahead of the previous period
+ * this point is - so the row is computed here and the two series are laid out
  * as a small table rather than as two bullets of running text.
  */
 function tooltipMarkup({
@@ -91,13 +91,13 @@ function tooltipMarkup({
 
   const changeMarkup =
     change === null
-      ? `<span class="text-sm font-medium text-text-muted">—</span>`
+      ? `<span class="text-sm font-medium text-text-muted">-</span>`
       : `<span class="text-sm font-bold tabular-nums" style="color:${
           change >= 0 ? color : CHART_COLORS.error
         }">${change >= 0 ? "+" : "−"}${Math.abs(change).toFixed(1)}%</span>`;
 
   /* The swatch is a rounded bar rather than a dot now that the series are
-     bars — a tooltip key should look like the mark it is naming. */
+     bars - a tooltip key should look like the mark it is naming. */
   const row = (swatch: string, name: string, value: number) => `
     <div class="flex items-center justify-between gap-6">
       <span class="inline-flex items-center gap-1.5 text-sm text-text-secondary">
@@ -172,7 +172,7 @@ export function GrowthOverviewChart({
        * Deepen the hovered bar rather than lighten it.
        *
        * Apex's default hover is `lighten`, which washes a column towards white
-       * and is the one direction that costs the bar its identity — on the
+       * and is the one direction that costs the bar its identity - on the
        * Orders tab a lightened green reads as a different green. Darkening
        * keeps the hue and still registers as a response. `active` is off
        * because a bar is not selectable and its click wash only looks broken.
@@ -188,7 +188,7 @@ export function GrowthOverviewChart({
         labels: { style: AXIS_LABELS, rotate: 0, hideOverlappingLabels: true },
         tooltip: { enabled: false },
         /* A soft band behind the hovered category, in place of the line
-           chart's dashed crosshair — a vertical rule through a column means
+           chart's dashed crosshair - a vertical rule through a column means
            nothing, whereas the band says which pair the tooltip belongs to. */
         crosshairs: {
           fill: { type: "solid", color: CHART_COLORS.gridSoft },

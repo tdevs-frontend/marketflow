@@ -7,7 +7,7 @@ import { Check } from "lucide-react";
  * purple ground a transparent green disc reads as a hole, and these ticks are
  * the section's one "this is the WhatsApp product" signal below the badge.
  *
- * The glyph inside is decorative — the label beside it is the accessible text,
+ * The glyph inside is decorative - the label beside it is the accessible text,
  * and it is white on green because that is what a success tick looks like
  * everywhere, at a stroke weight heavy enough to hold its shape at 12px.
  */

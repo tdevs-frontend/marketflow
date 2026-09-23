@@ -31,8 +31,8 @@ import { IntegrationActivityFeed } from "./integration-activity-feed";
  * Google Analytics, Shopify and Meta Pixel are connected and watched from the
  * hub: there is no inbox to read, no template library to sync and no delivery
  * log to page through, so a route of their own would be a page with a summary
- * card on it. A drawer is the right size for what they actually have —
- * connection, configuration, health, recent activity — and it keeps the
+ * card on it. A drawer is the right size for what they actually have -
+ * connection, configuration, health, recent activity - and it keeps the
  * merchant on the grid they were scanning.
  *
  * The same four sections as the routed detail pages, in the same order, because
@@ -40,7 +40,7 @@ import { IntegrationActivityFeed } from "./integration-activity-feed";
  * here. What is missing is the settings column, which is the whole difference
  * between the two and the reason this is not a page.
  *
- * Every action that leaves the drawer — reconnect, disconnect — is delegated
+ * Every action that leaves the drawer - reconnect, disconnect - is delegated
  * upward rather than handled here. Both open a dialog of their own, and a
  * `<dialog>` opened from inside another leaves the first one sitting behind it
  * in the top layer; the hub closes this before opening those.
@@ -74,7 +74,7 @@ export function IntegrationManageDrawer({
    * What "Enable" checks before it flips anything.
    *
    * A paused integration keeps its credentials, so enabling is a question about
-   * whether they still work rather than a switch — and the status must not read
+   * whether they still work rather than a switch - and the status must not read
    * Connected until the answer comes back. An integration with nothing saved
    * cannot be enabled at all; it is told to connect instead of being sent round
    * a check that has nothing to check.
@@ -179,7 +179,7 @@ export function IntegrationManageDrawer({
               label="Provider"
               value={integration.provider?.name ?? "Not selected"}
             />
-            <Fact label="Account" value={integration.account ?? "—"} />
+            <Fact label="Account" value={integration.account ?? "-"} />
             <Fact
               label="Connected since"
               value={
@@ -300,7 +300,7 @@ export function IntegrationManageDrawer({
  *
  * A heading and a rule, not a `Card`. The drawer is already a surface, and a
  * card inside it is the second border in 20px that the brief's "no card inside
- * a card" rule is about — the rule does the same separating job for nothing.
+ * a card" rule is about - the rule does the same separating job for nothing.
  */
 function Section({
   title,

@@ -9,7 +9,7 @@ import { ORBIT_RADIUS, type PlatformFeature } from "./platform-features";
  * both axes, the icons stay upright with no second transform to undo, and
  * `translate` is left free for the hover lift.
  *
- * The lift restates the centring offset — Tailwind v4 writes both axes into one
+ * The lift restates the centring offset - Tailwind v4 writes both axes into one
  * `translate` declaration, so `hover:-translate-y-[calc(50%+3px)]` is the
  * `-translate-y-1/2` plus three pixels, not a second transform stacked on it.
  */

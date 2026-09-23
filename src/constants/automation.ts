@@ -21,7 +21,7 @@ import type {
  * draw the same node, and the only way five renderers agree on the icon for
  * "Send WhatsApp" is to ask the same object.
  *
- * Node identity is carried by an icon and a *soft* tile — never a saturated
+ * Node identity is carried by an icon and a *soft* tile - never a saturated
  * card. A flow chart in eight fully-coloured boxes reads as a toy; the surface
  * stays the product's own `surface`, and the category shows up in a 28px tile
  * and a two-pixel top rule.
@@ -75,7 +75,7 @@ export const NODE_CATEGORY: Record<NodeCategory, CategoryTheme> = {
    * Wait is its own category, and its own neutral.
    *
    * It used to live under Logic, which put "Send WhatsApp after 3 days" and
-   * "Send WhatsApp if they replied" in the same bucket — and timing is the
+   * "Send WhatsApp if they replied" in the same bucket - and timing is the
    * thing people get wrong most often in an automation. A grey tile is right
    * for it: a delay is the absence of an action, and colouring it as loudly as
    * a send would be a lie about what is happening.
@@ -98,7 +98,7 @@ export const NODE_CATEGORY: Record<NodeCategory, CategoryTheme> = {
     rail: "bg-accent",
     text: "text-accent",
   },
-  /* Marketing borrows the brand's second stop — near the CRM cyan but clearly
+  /* Marketing borrows the brand's second stop - near the CRM cyan but clearly
      not it, which is the distinction between updating a record and acting on a
      campaign. */
   marketing: {
@@ -224,7 +224,7 @@ export const NODE_TYPES: NodeTypeMeta[] = [
     label: "Wait Until Event",
     category: "wait",
     icon: "Hourglass",
-    description: "Hold until the customer does something — with a timeout",
+    description: "Hold until the customer does something - with a timeout",
     defaultSummary: "No event set",
     defaultBranches: ["Event happened", "Timed out"],
     outputs: [
@@ -436,7 +436,7 @@ export const NODE_META: Record<NodeKind, NodeTypeMeta> = Object.fromEntries(
  *
  * Reads as the questions the journey answers: who starts, which path, when,
  * what do we say, what do we record, what does marketing do with it, and then
- * everything a developer needs — which is last on purpose.
+ * everything a developer needs - which is last on purpose.
  */
 export const NODE_LIBRARY: { category: NodeCategory; kinds: NodeKind[] }[] = [
   { category: "start", kinds: ["trigger"] },
@@ -494,7 +494,7 @@ export interface StartTypeMeta {
  * How a contact can be enrolled, as the creation wizard offers it.
  *
  * The first four are mechanisms; the last two are shortcuts to one. Keeping
- * them in one list is deliberate — "Use a template" and "Start from scratch"
+ * them in one list is deliberate - "Use a template" and "Start from scratch"
  * are what a reader is actually choosing between at that moment, and hiding
  * them behind a different control would make the common path the slow one.
  */
@@ -567,7 +567,7 @@ export interface VariableSourceMeta {
  * Where a `{{token}}` can get its value.
  *
  * Ordered by how often it is the answer: the contact record first, the event
- * that started the run second, and the output of an earlier node last — that
+ * that started the run second, and the output of an earlier node last - that
  * one is powerful and rarely what a marketer wants.
  */
 export const VARIABLE_SOURCES: VariableSourceMeta[] = [

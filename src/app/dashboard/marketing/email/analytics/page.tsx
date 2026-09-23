@@ -11,8 +11,8 @@ export default function EmailAnalyticsPage() {
       {/*
         No date control here.
 
-        The page used to open on a filter card — a range picker, an audience
-        select and Export — which put the period on the page rather than on the
+        The page used to open on a filter card - a range picker, an audience
+        select and Export - which put the period on the page rather than on the
         dashboard, and did it again on three other analytics pages. The range
         now comes from the central filter and is passed to `EmailAnalytics` as
         a prop; until that control exists the component falls back to the same

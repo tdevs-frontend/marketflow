@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 /**
  * The frame every section on this page is built in.
  *
- * The Features page makes the same argument eleven times — here is a part of
- * MarketFlow, here is what it does for you, here is what it looks like — and
+ * The Features page makes the same argument eleven times - here is a part of
+ * MarketFlow, here is what it does for you, here is what it looks like - and
  * the only way that reads as one page rather than eleven is for the argument to
  * have one shape. So the shell owns the shape (eyebrow, heading, promise,
  * capability list, visual) and each section supplies only its content and its
@@ -19,12 +19,12 @@ import { cn } from "@/lib/utils";
  *
  * `ground` alternates with it. Two neutrals, white and the tinted canvas, so
  * consecutive sections separate from each other without a rule between every
- * one — the page never needs a divider it has to style.
+ * one - the page never needs a divider it has to style.
  *
  * `layout="stacked"` is the exception to the two-column rule, for a visual that
  * cannot live in half a page. The WhatsApp monitor is the case it exists for:
  * its callout cards are pinned across the frame's own edges, so in a column
- * they overhang into the copy beside them. Centred header, full-width visual —
+ * they overhang into the copy beside them. Centred header, full-width visual -
  * which also gives the page a third shape to break up nine alternating splits.
  *
  * `scroll-mt-32` clears the sticky site header (72px) with room to spare, so
@@ -131,7 +131,7 @@ export function FeatureSection({
                 <ul
                   className={cn(
                     capabilityLabel ? "mt-3.5" : "mt-8",
-                    /* Centred and wrapping when stacked — a two-column grid
+                    /* Centred and wrapping when stacked - a two-column grid
                        under a centred heading leaves a ragged gutter down the
                        middle of the page. */
                     stacked
@@ -181,7 +181,7 @@ export function FeatureSection({
  * That route is the point: a visitor who reads `/dashboard/automation` under a
  * workflow canvas and later signs in and finds that exact path has been told
  * the truth about what they were looking at. It is also the cheapest possible
- * guard against the mock-ups drifting into generic SaaS — every one of them has
+ * guard against the mock-ups drifting into generic SaaS - every one of them has
  * to name a page that exists.
  *
  * Taken from `HeroDashboard`'s treatment rather than invented: bezel, inner

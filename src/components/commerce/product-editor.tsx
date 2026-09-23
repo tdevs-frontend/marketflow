@@ -43,7 +43,7 @@ type TabKey =
 /*
  * Variants sits directly after Pricing, because pricing is what it changes.
  *
- * Once it is on, the product no longer has one price or one stock figure —
+ * Once it is on, the product no longer has one price or one stock figure -
  * both become readings of the grid. Meeting it before Inventory is what makes
  * the disabled Stock field on the next tab read as a consequence of a choice
  * rather than as a broken form.
@@ -61,8 +61,8 @@ const TABS: TabItem<TabKey>[] = [
 /**
  * The tabs, read as an ordered path.
  *
- * Creating a product is a sequence — you cannot price a thing you have not
- * named — so on the create form the same seven tabs drive Back/Next and the
+ * Creating a product is a sequence - you cannot price a thing you have not
+ * named - so on the create form the same seven tabs drive Back/Next and the
  * final step is the only one that offers Publish. Editing keeps them as plain
  * tabs: someone fixing a typo in the description should not have to walk six
  * steps to save it.
@@ -89,7 +89,7 @@ const ERROR_STEP: Record<string, TabKey> = {
  *
  * Keyed separately from `ERROR_STEP` because the two do not always agree: the
  * category error is called `categoryId` in the draft and the field it belongs
- * to is `#category`. `variants` is absent on purpose — it is a table, not a
+ * to is `#category`. `variants` is absent on purpose - it is a table, not a
  * field, so there is nothing to focus and the tab itself is the answer.
  */
 const ERROR_FIELD: Record<string, string> = {
@@ -109,8 +109,8 @@ const ERROR_FIELD: Record<string, string> = {
  * Where the write goes once there is a backend.
  *
  * `commerceApi` already exposes `useCreateProductMutation` and
- * `useUpdateProductMutation`, but nothing in the product calls a mutation yet —
- * every page reads fixtures — so wiring one here would make Publish fail
+ * `useUpdateProductMutation`, but nothing in the product calls a mutation yet -
+ * every page reads fixtures - so wiring one here would make Publish fail
  * against an API that is not running. This stands in for it and is the only
  * line that changes when it is: the surrounding code already awaits, guards
  * against a double submit and shows a pending label.
@@ -143,7 +143,7 @@ interface Draft {
    * Variants live in the draft like everything else on this form.
    *
    * They are kept even while `hasVariants` is off, so switching the toggle back
-   * and forth does not destroy a grid the merchant already filled in — turning
+   * and forth does not destroy a grid the merchant already filled in - turning
    * the question off is an answer, not a delete.
    */
   hasVariants: boolean;
@@ -219,7 +219,7 @@ export function ProductEditor({
    *
    * Only used when creating: an existing product's type comes from the record.
    * Nothing in the UI sets it since Add Product started linking straight to
-   * the form — the merchant picks the type on the first tab — but it is kept
+   * the form - the merchant picks the type on the first tab - but it is kept
    * because it makes `/products/new?type=service` a shareable link, and it
    * costs one optional prop.
    */
@@ -239,12 +239,12 @@ export function ProductEditor({
   const set = <K extends keyof Draft>(key: K, value: Draft[K]) =>
     setDraft((prev) => ({ ...prev, [key]: value }));
 
-  /* Variants own stock only for a physical product — a service's capacity and
+  /* Variants own stock only for a physical product - a service's capacity and
      a digital licence are managed on the variant, not in the warehouse. */
   const variantsManageStock =
     draft.hasVariants && draft.type === "physical" && draft.variants.length > 0;
   const rolledUp = rollUpStock(draft.variants);
-  /* One media library per product — the Variants tab picks from exactly this. */
+  /* One media library per product - the Variants tab picks from exactly this. */
   const images = product?.images ?? [];
 
   /*
@@ -269,7 +269,7 @@ export function ProductEditor({
    *
    * Per step rather than one form-wide check, because Next must not refuse to
    * advance over a field three tabs away that the merchant has not reached
-   * yet. Publish runs every step's rules together — see `validateAll` — so
+   * yet. Publish runs every step's rules together - see `validateAll` - so
    * nothing is lost by checking them one at a time on the way through.
    */
   function validateStep(step: TabKey): Record<string, string> {
@@ -304,7 +304,7 @@ export function ProductEditor({
       case "variants":
         /*
          * Variant codes have to be unique across the whole catalogue, not
-         * just within this product — a SKU is what a warehouse, a courier and
+         * just within this product - a SKU is what a warehouse, a courier and
          * an invoice all key on, so two of them meaning different things is a
          * picking error rather than a validation nicety.
          */
@@ -336,7 +336,7 @@ export function ProductEditor({
         if (!draft.sku.trim() && !draft.hasVariants) {
           next.sku = "Enter a SKU.";
         }
-        /* Skipped while variants own the figures — those fields are disabled
+        /* Skipped while variants own the figures - those fields are disabled
            and show the roll-up, so there is nothing here to be wrong. */
         if (draft.trackInventory && !variantsManageStock) {
           if (Number(draft.stock) < 0) {
@@ -354,8 +354,8 @@ export function ProductEditor({
         /*
          * Nothing required.
          *
-         * Media has no upload control wired yet, SEO is optional by design —
-         * an empty slug falls back to the name — and Advanced holds only
+         * Media has no upload control wired yet, SEO is optional by design -
+         * an empty slug falls back to the name - and Advanced holds only
          * status, visibility and tags, all of which have defaults. They are
          * listed rather than omitted so the switch stays exhaustive and a new
          * tab cannot be added without someone deciding what it requires.
@@ -655,7 +655,7 @@ export function ProductEditor({
               </Field>
 
               {/*
-                * Stock is the variants' to own, or the product's — never both.
+                * Stock is the variants' to own, or the product's - never both.
                 *
                 * A parent quantity sitting beside twelve variant quantities is
                 * two answers to one question, and the moment they disagree the
@@ -753,7 +753,7 @@ export function ProductEditor({
               * This grid used to render a fixed set of placeholders regardless
               * of what the product had. That was tolerable while nothing read
               * the images; it is not now that variants assign one of *these*
-              * files to a combination — a merchant would be picking from a
+              * files to a combination - a merchant would be picking from a
               * library the Media tab never showed them.
               */}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -853,7 +853,7 @@ export function ProductEditor({
                   onChange={(next) => set("visibility", next as Draft["visibility"])}
                   options={[
                     { value: "visible", label: "Visible in catalog" },
-                    { value: "hidden", label: "Hidden — direct link only" },
+                    { value: "hidden", label: "Hidden - direct link only" },
                   ]}
                 />
               </Field>
@@ -888,7 +888,7 @@ export function ProductEditor({
         * Publish appears on the last step and nowhere else. Offering it on
         * Basic Information was an invitation to publish a product that had a
         * name and nothing else, and it made the six tabs after it look
-        * optional — which is the actual bug, not the button's position.
+        * optional - which is the actual bug, not the button's position.
         *
         * Save Draft sits on every step because "I am not finished" is true on
         * every step. The container keeps its existing classes; Back is pushed

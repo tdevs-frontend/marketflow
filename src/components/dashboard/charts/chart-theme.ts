@@ -5,7 +5,7 @@ import type { ApexOptions } from "apexcharts";
  * reads these back to compute gradient stops and hover shades, which
  * `var(--color-…)` cannot satisfy. Keep both in step.
  *
- * A few values below have no token counterpart on purpose — the mid and light
+ * A few values below have no token counterpart on purpose - the mid and light
  * stops of the per-channel ramps (`#a5b4fc`, `#60a5fa`, `#c084fc`, `#e9d5ff`).
  * They exist only to space a three-stop series apart inside one chart, nothing
  * in the DOM can use them, and promoting them to tokens would add theme
@@ -36,14 +36,14 @@ export const CHART_COLORS = {
   error: "#dc2626",
 } as const;
 
-/* Indigo leads, cyan supports, then neutral. Runs out on purpose — no rainbows. */
+/* Indigo leads, cyan supports, then neutral. Runs out on purpose - no rainbows. */
 export const SERIES_COLORS = [
   CHART_COLORS.primary,
   CHART_COLORS.accent,
   CHART_COLORS.neutral,
 ] as const;
 
-/** Shared `chart` block. Toolbar and zoom off — this is a read-only dashboard. */
+/** Shared `chart` block. Toolbar and zoom off - this is a read-only dashboard. */
 export const BASE_CHART: ApexOptions["chart"] = {
   fontFamily: "inherit",
   toolbar: { show: false },
@@ -65,7 +65,7 @@ export const BASE_GRID: ApexOptions["grid"] = {
  * Axis ticks, on secondary ink rather than muted.
  *
  * At 11px an axis label is the smallest type on the page, and `textMuted`
- * (#64748b) put the smallest type on the lowest contrast the ramp has — 5.0:1,
+ * (#64748b) put the smallest type on the lowest contrast the ramp has - 5.0:1,
  * which passes and still reads as a smudge under a chart. `textSecondary`
  * (#475569) is 7.5:1 at no cost in weight, size or layout.
  */
@@ -138,7 +138,7 @@ export const CHANNEL_SERIES = {
  * A rate chart's colours, keyed by what a fall in the rate means.
  *
  * `good` is the channel's own accent, `warn` the shared blue, and `bad` the
- * error red — so a bounce, opt-out or failure line is red in every module
+ * error red - so a bounce, opt-out or failure line is red in every module
  * without each one deciding for itself.
  */
 export const RATE_COLORS = {
@@ -147,7 +147,7 @@ export const RATE_COLORS = {
 } as const;
 
 /**
- * The default trio for a chart that is not about a single channel — lead
+ * The default trio for a chart that is not about a single channel - lead
  * sources, for instance. Brand green, the shared blue, then neutral: three
  * hues far enough apart to read at a 2px stroke without implying that any of
  * them is a channel.

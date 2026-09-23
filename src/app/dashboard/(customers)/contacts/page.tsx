@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Contacts" };
  * refers back to.
  *
  * The workspace renders its own `PageHeader`, because both header actions open
- * dialogs it owns — the same shape `catalog-workspace` and the WhatsApp
+ * dialogs it owns - the same shape `catalog-workspace` and the WhatsApp
  * workspaces already use. Splitting them would put the button here and its
  * state one component away.
  */

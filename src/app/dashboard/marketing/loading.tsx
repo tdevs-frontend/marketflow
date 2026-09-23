@@ -10,8 +10,8 @@ import {
  * The loading state for every page under Marketing.
  *
  * One file at the segment root rather than twelve at the leaves: these pages
- * all open with the same three bands — header, KPI row, then a chart or a
- * table — so a shared skeleton matches all of them closely enough to avoid a
+ * all open with the same three bands - header, KPI row, then a chart or a
+ * table - so a shared skeleton matches all of them closely enough to avoid a
  * layout jump, and there is only one thing to keep in step when the shape
  * changes.
  *

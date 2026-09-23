@@ -10,7 +10,7 @@ import type { SocialAccount } from "@/types/social";
  *
  * The per-account sibling of `DisconnectDialog`: that one warns about an entire
  * integration going away, this one about a single Page whose scheduled posts
- * are about to stop publishing. Same component, same copy discipline — name
+ * are about to stop publishing. Same component, same copy discipline - name
  * what breaks, in counts the merchant can check.
  *
  * The dependency counts are per account rather than the integration-wide

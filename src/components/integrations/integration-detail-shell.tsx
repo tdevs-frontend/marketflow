@@ -39,7 +39,7 @@ import { IntegrationUsageList } from "./integration-usage-list";
  *
  * Drawing the line there is deliberate. A shell shallow enough that each page
  * still writes its own body keeps the three pages from becoming the same page
- * with different nouns — which the brief asks for and which is also the only
+ * with different nouns - which the brief asks for and which is also the only
  * reason to have three pages at all.
  */
 export function IntegrationDetailShell({
@@ -133,7 +133,7 @@ export function IntegrationDetailShell({
          * Not connected.
          *
          * It replaces the KPI row rather than the settings below it, because
-         * the settings still hold the saved configuration — disconnecting keeps
+         * the settings still hold the saved configuration - disconnecting keeps
          * credentials so that reconnecting is one click, and blanking the page
          * would hide the very values a merchant came to check.
          */
@@ -152,8 +152,8 @@ export function IntegrationDetailShell({
       {/*
        * Settings on the left, state on the right.
        *
-       * The rail is 22rem — wide enough for a health row's label, detail line
-       * and badge without the badge wrapping — and it drops under the settings
+       * The rail is 22rem - wide enough for a health row's label, detail line
+       * and badge without the badge wrapping - and it drops under the settings
        * column below `xl`, where a two-column split would squeeze both.
        */}
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]">
@@ -204,7 +204,7 @@ export function IntegrationDetailShell({
  * One block of settings.
  *
  * A `Card` with a divided footer, because every settings group on these pages
- * ends in the same place — a Save that is disabled until something changes. Its
+ * ends in the same place - a Save that is disabled until something changes. Its
  * own component so the padding and the footer rule match across three pages
  * rather than being retyped nine times.
  */
@@ -236,7 +236,7 @@ export function SettingsSection({
 
 /**
  * A label/value pair inside a settings section, for configuration that is read
- * rather than edited — a webhook callback URL, a verification state, a quota.
+ * rather than edited - a webhook callback URL, a verification state, a quota.
  */
 export function SettingRow({
   label,

@@ -10,13 +10,13 @@ import { cn } from "@/lib/utils";
  * desktop, but the header stacks below `sm` so on a phone the title is read
  * before the button rather than around it. `secondaryActions` sit to the left
  * of `action` so the one green button on the page is always the rightmost
- * control — that consistency is what makes the CTA findable without looking.
+ * control - that consistency is what makes the CTA findable without looking.
  */
 /**
  * The two scales a page header comes in.
  *
  * `page` is the working default, on sixty-odd screens. `overview` is the
- * larger setting the merchant dashboard opens on — a step up in the title, a
+ * larger setting the merchant dashboard opens on - a step up in the title, a
  * step up in the subtitle, and the action centred against the block rather
  * than aligned to its top, which is what a two-line header wants when the
  * subtitle is set at body size.
@@ -57,7 +57,7 @@ export function PageHeader({
   description?: string;
   /** The page's primary button. */
   action?: ReactNode;
-  /** Outline or ghost buttons — Export, Import, Settings. */
+  /** Outline or ghost buttons - Export, Import, Settings. */
   secondaryActions?: ReactNode;
   /** Defaults to `page`. See `HEADER_SCALE`. */
   size?: PageHeaderSize;

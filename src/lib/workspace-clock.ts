@@ -8,7 +8,7 @@
  * anchored to the real clock drifts further every day nobody touches it.
  *
  * It lives in its own module so that the Integrations fixtures and the Social
- * Planner fixtures can share it without importing each other — Integrations
+ * Planner fixtures can share it without importing each other - Integrations
  * reads `SOCIAL_ACCOUNTS` from the Planner's file, so a clock exported from
  * either side would close a cycle.
  */

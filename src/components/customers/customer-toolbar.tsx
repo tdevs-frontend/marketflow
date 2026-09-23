@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 export interface FilterChip {
   /** The query-param key, used as the remove handle. */
   key: string;
-  /** What the filter is called — "Status", "Tag". */
+  /** What the filter is called - "Status", "Tag". */
   label: string;
   /** The chosen value, already humanised. */
   value: string;
@@ -23,7 +23,7 @@ export interface FilterChip {
  * What is currently filtered, and how to undo it.
  *
  * The row exists because a `Select` that has scrolled out of view, or one
- * collapsed behind the mobile Filters button, is an invisible filter — and an
+ * collapsed behind the mobile Filters button, is an invisible filter - and an
  * invisible filter is why a table looks empty for no reason. A chip per active
  * filter answers all four questions the reader has at once: what is on, how
  * many, how to remove one, how to remove all.
@@ -85,7 +85,7 @@ export function ActiveFilterChips({
  *
  * The count is stated in words rather than left to the checkboxes, because the
  * selection can span pages and the reader can only see one of them. Destructive
- * actions are `danger`, never primary — the whole bar sits one click from a
+ * actions are `danger`, never primary - the whole bar sits one click from a
  * delete and must not read as a row of equals.
  */
 export function BulkActionBar({

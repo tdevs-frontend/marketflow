@@ -86,7 +86,7 @@ export const CHANNEL_ICON: Record<string, LucideIcon> = {
 /**
  * A node's icon in its category tile.
  *
- * The tile is the *only* colour a node carries — the card itself stays on the
+ * The tile is the *only* colour a node carries - the card itself stays on the
  * product's own surface. Category is also stated in words on the node, so the
  * tint is reinforcement rather than the sole signal.
  */

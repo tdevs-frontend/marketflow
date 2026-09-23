@@ -1,5 +1,5 @@
 /**
- * Satoshi — the Font Squirrel kit, exactly as generated.
+ * Satoshi - the Font Squirrel kit, exactly as generated.
  *
  * Ten families, one per cut, with the generator's own lowercase names
  * (`satoshiregular`, `satoshimedium`, …). They are *not* collapsed into a
@@ -8,7 +8,7 @@
  * on `satoshiregular` gets you a browser-synthesised fake bold over the
  * regular cut, not `satoshibold`. The family name *is* the weight.
  *
- * That happens to be exactly how this project already spends type — see the
+ * That happens to be exactly how this project already spends type - see the
  * `--font-*` tokens in `variables.css`, where Tailwind's `font-medium` and
  * `font-bold` resolve to families rather than weights. Circular Std is built
  * the same way, which is why the two are interchangeable.

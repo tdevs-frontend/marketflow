@@ -129,7 +129,7 @@ export const CATEGORIES_PER_PAGE = TABLE_PAGE_SIZE;
  * Three vocabularies, not one. A merchant selling consultations should never
  * see a booking marked *Shipped*, and a customer downloading an ebook is not
  * waiting for it to be *Packed*. The arrays are ordered, so a step's position
- * is its progress — which is what lets one `OrderStatus` map onto whichever
+ * is its progress - which is what lets one `OrderStatus` map onto whichever
  * ladder the order belongs to.
  */
 export const FULFILLMENT_FLOW: Record<
@@ -240,13 +240,13 @@ export const CUSTOMER_TYPES: Option<CustomerType>[] = [
  * Where the derived customer classifications fall.
  *
  * Thresholds in one place so the table, the KPI row and the filter agree. They
- * are read off order history — nobody assigns these, which is what keeps them
+ * are read off order history - nobody assigns these, which is what keeps them
  * from drifting away from what a customer actually did.
  */
 export const CUSTOMER_RULES = {
   /** Spend at or above this is VIP, regardless of order count. */
   vipSpend: 1000,
-  /** Orders at or above this is VIP too — loyal beats large. */
+  /** Orders at or above this is VIP too - loyal beats large. */
   vipOrders: 6,
   /** No purchase in this many days moves an existing buyer to Inactive. */
   inactiveDays: 120,
@@ -279,8 +279,8 @@ export const PRODUCT_TYPE_LABEL: Record<ProductType, string> = {
  * The three product types, with the copy that explains them.
  *
  * These were the three cards on a "What are you selling?" dialog that opened
- * before the create form. The dialog is gone — the type is a field on the form
- * itself — but the descriptions are still the clearest statement of what each
+ * before the create form. The dialog is gone - the type is a field on the form
+ * itself - but the descriptions are still the clearest statement of what each
  * type means, and `/products/new` uses the labels for its heading.
  */
 export const PRODUCT_TYPE_CHOICES: {
@@ -309,7 +309,7 @@ export const PRODUCT_TYPE_CHOICES: {
   },
 ];
 
-/** Human duration for a service — 90 → "1h 30m". */
+/** Human duration for a service - 90 → "1h 30m". */
 export function formatDuration(minutes: number): string {
   if (minutes < 60) return `${minutes} minutes`;
   const hours = Math.floor(minutes / 60);
@@ -335,7 +335,7 @@ export const MAX_VARIANT_OPTIONS = 3;
 /**
  * The ceiling on generated combinations.
  *
- * A safety rail rather than a product decision — it exists so a stray paste of
+ * A safety rail rather than a product decision - it exists so a stray paste of
  * two hundred values into a value field cannot lock the browser up building a
  * table nobody asked for.
  */
@@ -344,7 +344,7 @@ export const MAX_VARIANTS = 100;
 /**
  * What each product type actually varies along.
  *
- * Suggestions in the option-name field, not a fixed list — a merchant can type
+ * Suggestions in the option-name field, not a fixed list - a merchant can type
  * anything. The point is that the *first* thing a merchant selling a service
  * sees offered is "Duration" and not "Size", which is the difference between a
  * form that knows what they sell and a clothing form they have to work around.
@@ -358,7 +358,7 @@ export const VARIANT_OPTION_PRESETS: Record<ProductType, string[]> = {
 /**
  * The quantity column, in each type's own vocabulary.
  *
- * A service has capacity, not stock — labelling a consultation's daily booking
+ * A service has capacity, not stock - labelling a consultation's daily booking
  * limit "Stock" is the same mistake as marking a booking *Shipped*, and it is
  * the reason `FULFILLMENT_FLOW` above exists. `noun` is the unit the figure is
  * counted in, for the drawer's supporting line.

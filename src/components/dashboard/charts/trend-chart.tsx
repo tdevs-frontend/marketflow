@@ -30,7 +30,7 @@ export type TrendFormat = "number" | "currency" | "percent";
  * near-identical files that drift apart the first time the grid or tooltip is
  * adjusted.
  *
- * `area` fills the first series and leaves the rest as lines — stacking two
+ * `area` fills the first series and leaves the rest as lines - stacking two
  * gradients makes the overlap unreadable, and the first series is the one the
  * card is about. `line` fills nothing, for charts comparing peers.
  */
@@ -53,15 +53,15 @@ export function TrendChart({
   format?: TrendFormat;
   unit?: string;
   height?: number;
-  /** Pins the scale — needed on rate charts so 96% and 98% are not a cliff. */
+  /** Pins the scale - needed on rate charts so 96% and 98% are not a cliff. */
   yAxisMax?: number;
   /**
    * The index of the series holding the *previous* period.
    *
    * Set it and that series is drawn as a thin dotted line rather than a second
    * solid one, and the tooltip gains a change row comparing the two. A
-   * period-over-period comparison is a different kind of series from a peer —
-   * it is the same measure shifted in time — and drawing it identically
+   * period-over-period comparison is a different kind of series from a peer -
+   * it is the same measure shifted in time - and drawing it identically
    * invites the reader to add the two lines together.
    */
   comparisonIndex?: number;

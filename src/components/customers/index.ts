@@ -1,7 +1,7 @@
 /**
  * The Customers module's public surface.
  *
- * Pages import from here, never from a file inside — so a page never depends
+ * Pages import from here, never from a file inside - so a page never depends
  * on how the module is split up, and the split can change without touching
  * five routes.
  */

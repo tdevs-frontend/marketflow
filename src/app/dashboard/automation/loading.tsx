@@ -9,8 +9,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 /**
  * The Workflows list, loading.
  *
- * Sized to the real page — header, four KPI tiles, the toolbar, then a grid of
- * cards at the card's own height — so the swap to content moves nothing. The
+ * Sized to the real page - header, four KPI tiles, the toolbar, then a grid of
+ * cards at the card's own height - so the swap to content moves nothing. The
  * nested routes each override this with a shape of their own, because a card
  * grid resolving into a three-panel builder is a visible jolt.
  */

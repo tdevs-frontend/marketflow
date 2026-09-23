@@ -10,7 +10,7 @@ import { useWorkspaceSettings } from "@/lib/workspace-settings-store";
 import { DetailList, SettingsSection } from "../settings-section";
 
 /**
- * Who an invoice would be addressed to — read from the record that owns it.
+ * Who an invoice would be addressed to - read from the record that owns it.
  *
  * The legal name, support address and business address live in Workspace
  * Settings under Business, and they stay there. This is the third place in the
@@ -21,7 +21,7 @@ import { DetailList, SettingsSection } from "../settings-section";
  *
  * The billing address is part of this card rather than a section of its own.
  * It is two lines of the same record, entered in the same form, and a heading
- * over it would promise a separate thing to manage — the brief's own rule
+ * over it would promise a separate thing to manage - the brief's own rule
  * against fields added for visual completeness applies to headings too.
  */
 export function BillingContact() {

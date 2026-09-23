@@ -19,7 +19,7 @@ import type {
 } from "@/types/marketing";
 
 const STATUS_TONES: Record<TemplateStatus, BadgeTone> = {
-  /* The channel's green rather than the generic one — see `BadgeTone`. */
+  /* The channel's green rather than the generic one - see `BadgeTone`. */
   approved: "whatsapp",
   pending: "warning",
   rejected: "danger",
@@ -56,7 +56,7 @@ export function TemplateStatusBadge({ status }: { status: TemplateStatus }) {
  * Analytics has computed this all along and the library never showed it, so
  * deciding which of two promotional templates to reuse meant leaving Templates,
  * reading the performance table, and coming back. A template that has never
- * sent has no row and the card simply omits the line — a "0% reply rate" on a
+ * sent has no row and the card simply omits the line - a "0% reply rate" on a
  * draft is a lie about a template nobody has tried.
  */
 const performanceOf = (id: string) =>
@@ -135,7 +135,7 @@ export function TemplateCard({
 
       {template.variables.length > 0 ? (
         <div className="mt-3">
-          {/* The module's section rule — 13px semibold on secondary, the same
+          {/* The module's section rule - 13px semibold on secondary, the same
               setting as the headings in the Inbox details panel and the Overview
               panels. It was 14px medium on muted, which is a heading set
               lighter than the list it introduces. */}

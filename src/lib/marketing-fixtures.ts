@@ -402,7 +402,7 @@ export const CAMPAIGNS: Campaign[] = [
    */
   {
     id: "cmp-social-summer",
-    name: "Summer Sale — Social Push",
+    name: "Summer Sale - Social Push",
     description: "Sale creative across Instagram, Facebook and LinkedIn.",
     channel: "social",
     status: "completed",
@@ -480,7 +480,7 @@ export const CAMPAIGNS: Campaign[] = [
   },
 ];
 
-/** Open rate is of delivered, not sent — a bounce was never an opportunity. */
+/** Open rate is of delivered, not sent - a bounce was never an opportunity. */
 export const rateOf = (part: number, total: number) =>
   total === 0 ? 0 : (part / total) * 100;
 
@@ -497,7 +497,7 @@ export const CHANNEL_SERIES: Record<MarketingChannel, number[]> = {
   email: [1920, 2040, 2180, 2260, 2420, 2540, 2680],
   sms: [640, 690, 720, 760, 810, 860, 920],
   /* Impressions, not messages. Social is on this chart because merchants
-     compare channels here, but the unit is not the same one — the axis is
+     compare channels here, but the unit is not the same one - the axis is
      labelled "reached" rather than "sent" for exactly that reason. */
   social: [8420, 9180, 10240, 11020, 12480, 13260, 14180],
 };
@@ -528,7 +528,7 @@ export const CONVERSATIONS: Conversation[] = [
       {
         id: "m1",
         direction: "outbound",
-        body: "Hi Sarah — the Summer Sale is live, 20% off every package until 30 June.",
+        body: "Hi Sarah - the Summer Sale is live, 20% off every package until 30 June.",
         at: "2026-05-30T09:40:00Z",
         state: "read",
       },
@@ -600,7 +600,7 @@ export const CONVERSATIONS: Conversation[] = [
       {
         id: "m2",
         direction: "outbound",
-        body: "Of course — here is our current collection: mf.link/c/summer",
+        body: "Of course - here is our current collection: mf.link/c/summer",
         at: "2026-05-30T09:39:00Z",
         state: "delivered",
       },
@@ -681,7 +681,7 @@ export const CONVERSATIONS: Conversation[] = [
 export const AGENTS = ["Nadia Karim", "Imran Hossain", "Tanvir Alam"];
 
 export const QUICK_REPLIES = [
-  "Thanks for reaching out — one moment while I check that.",
+  "Thanks for reaching out - one moment while I check that.",
   "Yes, that package is available. Would you like the catalog?",
   "Here is our current collection: mf.link/c/summer",
   "Your order is confirmed and on its way.",

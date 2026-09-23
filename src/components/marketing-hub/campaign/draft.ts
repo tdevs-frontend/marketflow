@@ -101,7 +101,7 @@ export function smsSegments(length: number) {
 /**
  * Placeholder names in a draft, deduplicated and in first-appearance order.
  *
- * Scans every field a merge tag can legally appear in — a tag in a subject line
+ * Scans every field a merge tag can legally appear in - a tag in a subject line
  * or a social caption with no fallback is the most visible way a campaign
  * embarrasses itself.
  */
@@ -126,7 +126,7 @@ export function placeholdersIn(draft: CampaignDraft): string[] {
  * `{{first_name | Customer}}` is the form a merchant can write without leaving
  * the composer, and it wins over the map because it is the more specific
  * statement of intent. Order of resolution is contact value, inline default,
- * mapped fallback, then the raw tag — which is exactly the case the
+ * mapped fallback, then the raw tag - which is exactly the case the
  * Personalise step exists to catch.
  */
 export function renderPersonalised(
@@ -177,7 +177,7 @@ export interface DraftDerived {
   eligibility: AudienceEligibility;
   accounts: SocialAccount[];
   platforms: SocialPlatform[];
-  /** Followers across the selected accounts — the only reach figure we have. */
+  /** Followers across the selected accounts - the only reach figure we have. */
   potentialReach: number;
   mergeTags: string[];
   missingFallbacks: string[];
@@ -237,7 +237,7 @@ export function deriveDraft(draft: CampaignDraft): DraftDerived {
  *
  * What survives a switch is the answer to a question the new channel still
  * asks: the name, the objective, the audience, the copy. What does not is the
- * sender configuration for a different channel and the UTM defaults — and the
+ * sender configuration for a different channel and the UTM defaults - and the
  * UTMs only when nobody has edited them, because overwriting a value someone
  * typed is worse than leaving one out of date.
  */
@@ -259,7 +259,7 @@ export function applyChannel(
             )
           ? draft.savedSegmentId
           : "",
-    /* Templates are per-channel — a WhatsApp template id means nothing to the
+    /* Templates are per-channel - a WhatsApp template id means nothing to the
        email composer, and leaving it set would silently mis-render Review. */
     templateId: "",
     abTest: {

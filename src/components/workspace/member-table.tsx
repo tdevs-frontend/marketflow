@@ -35,7 +35,7 @@ export type MemberSortField = "name" | "role" | "status" | "lastActive" | "joine
  * The team table.
  *
  * The row-actions menu is built per row from the member's own status, not
- * filtered from one fixed list — an invited member has no role to change and a
+ * filtered from one fixed list - an invited member has no role to change and a
  * suspended one has nothing to resend, and offering either produces a menu item
  * that can only fail. That is the brief's rule and it is also what keeps the
  * menu short enough to read.

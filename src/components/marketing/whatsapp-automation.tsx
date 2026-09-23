@@ -22,7 +22,7 @@ export function WhatsAppAutomation() {
          * Six and six from `xl`, stacked below it.
          *
          * `items-center` is what centres each half against the other, and it
-         * is also what lets the monitor set the row height — the copy is the
+         * is also what lets the monitor set the row height - the copy is the
          * shorter of the two at every width.
          *
          * The split starts at `xl` rather than `lg` because an equal half of
@@ -81,7 +81,7 @@ export function WhatsAppAutomation() {
            * The product, on a monitor.
            *
            * The monitor group centres inside its own half rather than being
-           * pushed to one side to make room for the cards — the cards cross
+           * pushed to one side to make room for the cards - the cards cross
            * the frame's edges, so they need no room of their own. This div is
            * the positioning parent's parent and nothing more: everything the
            * cards are measured against is the wrapper one level in.

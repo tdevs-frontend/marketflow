@@ -39,7 +39,7 @@ import type { EmailBlock, EmailBlockType, EmailTemplate } from "@/types/email";
  * handles for keyboard users and for anyone on a touchscreen.
  *
  * The preview switches between phone and desktop width because that is the
- * decision the layout hangs on — two thirds of opens are on a phone, and a
+ * decision the layout hangs on - two thirds of opens are on a phone, and a
  * three-column product block that looks right at 600px is unusable at 375px.
  */
 
@@ -227,7 +227,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
             const meta = BLOCK_META[block.type];
             const Icon = meta.icon;
             const active = block.id === selectedId;
-            /* Logo and footer are structural — they stay where they are. */
+            /* Logo and footer are structural - they stay where they are. */
             const locked = block.type === "logo" || block.type === "footer";
 
             return (
@@ -342,7 +342,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
           </div>
         </div>
 
-        {/* The inbox line — subject and preheader, as a client shows them. */}
+        {/* The inbox line - subject and preheader, as a client shows them. */}
         <div className="mt-4 rounded-panel border border-border bg-surface-secondary px-3.5 py-2.5">
           <p className="text-sm font-medium  text-text-muted capitalize">
             Inbox preview
@@ -351,7 +351,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
             {subject || "No subject"}
           </p>
           <p className="truncate text-sm text-text-muted">
-            {previewText || "No preview text — clients will pull the first line of the body."}
+            {previewText || "No preview text - clients will pull the first line of the body."}
           </p>
         </div>
 
@@ -386,7 +386,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
           ) : (
             <Monitor className="size-3.5" aria-hidden />
           )}
-          {width === "mobile" ? "376px — iPhone width" : "600px — the email standard"}
+          {width === "mobile" ? "376px - iPhone width" : "600px - the email standard"}
         </p>
       </Card>
 
@@ -465,7 +465,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
             <Field
               label="Subject line"
               htmlFor="template-subject"
-              hint={`${subject.length} characters — clients truncate around 45 on mobile.`}
+              hint={`${subject.length} characters - clients truncate around 45 on mobile.`}
             >
               <Input
                 id="template-subject"

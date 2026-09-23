@@ -13,7 +13,7 @@ export interface TocItem {
  * The desktop "On this page" rail, with the section being read highlighted.
  *
  * The highlight is the last section whose heading has crossed a line a little
- * below the sticky header — the one the reader is inside, not merely the one
+ * below the sticky header - the one the reader is inside, not merely the one
  * whose top happens to be on screen. An `IntersectionObserver` only says when
  * that changes; the pick itself is made by position, so a short section
  * scrolled past quickly cannot leave a stale highlight behind.

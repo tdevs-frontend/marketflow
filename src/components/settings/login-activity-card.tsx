@@ -16,7 +16,7 @@ import { ServiceNotice } from "./service-notice";
 import { SettingsRow, SettingsSection, useServiceQuery } from "./settings-section";
 
 /**
- * Login activity — who has tried to get in, and whether they managed it.
+ * Login activity - who has tried to get in, and whether they managed it.
  *
  * A compact list, deliberately. It is checked in a particular mood, usually
  * after something has gone wrong, and what it has to support is a single scan
@@ -27,14 +27,14 @@ import { SettingsRow, SettingsSection, useServiceQuery } from "./settings-sectio
  * The failed attempts are the reason the section exists, so they are in the
  * same list as the successes rather than behind a filter, and a failure inside
  * the alert window raises the notice at the top of the card. That alert is
- * *derived*, entirely — it counts rows the service returned. There is no
+ * *derived*, entirely - it counts rows the service returned. There is no
  * branch anywhere that can raise a security warning without a failed sign-in
  * behind it, which is the only way a warning on this page is worth anything.
  *
  * Today the service reports `service_unavailable` and this card says so. A
  * sign-in log is a record of events that happened elsewhere, at times this
  * browser was not running; the front end cannot reconstruct one, and an empty
- * list would be a different claim and a false one — that nobody has ever
+ * list would be a different claim and a false one - that nobody has ever
  * signed into this account. The stated boundary gets no Try again button,
  * because there is nothing on the other side of it to retry.
  */
@@ -194,7 +194,7 @@ function ActivityRow({ event }: { event: SignInEvent }) {
  * that. "3 days ago" reads as precision it is not: the question this list
  * answers is whether a particular evening was you, and that needs a date.
  *
- * Calendar days, not elapsed hours — 11pm and 1am are yesterday and today even
+ * Calendar days, not elapsed hours - 11pm and 1am are yesterday and today even
  * though two hours separate them, and an elapsed-time comparison gets that
  * backwards exactly when somebody is checking a late-night sign-in.
  */

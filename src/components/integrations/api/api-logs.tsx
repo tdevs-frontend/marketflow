@@ -12,7 +12,7 @@ import { HttpStatusBadge, MethodBadge } from "../integration-badges";
  *
  * The API's own logs are in UTC and so are the fixtures, so rendering in the
  * viewer's zone would put a timestamp here that does not match the one the
- * merchant reads back from the API — and it would differ between the server
+ * merchant reads back from the API - and it would differ between the server
  * render and the client, which is a hydration mismatch.
  */
 const CLOCK = new Intl.DateTimeFormat("en-GB", {
@@ -25,7 +25,7 @@ const CLOCK = new Intl.DateTimeFormat("en-GB", {
 /**
  * Recent requests.
  *
- * Time first, because this is read as a sequence — a 429 matters because of
+ * Time first, because this is read as a sequence - a 429 matters because of
  * what came immediately before it. The clock is rendered from the entry's own
  * timestamp in the workspace's locale rather than re-derived here, and the
  * endpoint keeps its query string: `/api/v1/contacts` and

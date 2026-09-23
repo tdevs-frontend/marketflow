@@ -72,8 +72,8 @@ export const EMAIL_TAGS = [
  * Who this workspace sends as.
  *
  * The sending identity is the one piece of email configuration that is a
- * marketing decision rather than an infrastructure one — it is what a recipient
- * reads before the subject line — so it lives in the channel module, while the
+ * marketing decision rather than an infrastructure one - it is what a recipient
+ * reads before the subject line - so it lives in the channel module, while the
  * transport underneath it stays in Integrations → Email. `EMAIL_PROVIDER`
  * below is that transport, read here and never re-entered.
  */
@@ -100,7 +100,7 @@ export const EMAIL_SENDER_IDENTITIES: EmailSenderIdentity[] = [
     status: "verified",
     spf: true,
     dkim: true,
-    /* Published at `p=none` — reporting only, so it counts as configured but
+    /* Published at `p=none` - reporting only, so it counts as configured but
        instructs nothing. The senders page says as much rather than showing a
        tick that implies enforcement. */
     dmarc: false,
@@ -173,14 +173,14 @@ export const senderLabel = (sender: EmailSenderIdentity) =>
  * Derived rather than listed a second time: the campaign wizard, the campaign
  * filter and the senders page are all choosing from the same four rows, and a
  * parallel list is how one of them ends up offering an address that no longer
- * verifies. Only verified identities are offered — an unverified one cannot
+ * verifies. Only verified identities are offered - an unverified one cannot
  * send, so putting it in the dropdown is offering a choice that fails later.
  */
 export const SENDER_IDENTITIES: Option<string>[] = EMAIL_SENDER_IDENTITIES.filter(
   (sender) => sender.status === "verified",
 ).map((sender) => ({ value: sender.email, label: senderLabel(sender) }));
 
-/** Reply-to options — every identity's mailbox, plus the discard address. */
+/** Reply-to options - every identity's mailbox, plus the discard address. */
 export const REPLY_TO_ADDRESSES: Option<string>[] = [
   ...new Set(EMAIL_SENDER_IDENTITIES.map((sender) => sender.replyTo)),
 ].map((email) => ({ value: email, label: email }));
@@ -238,7 +238,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
   },
   {
     id: "em-onboarding-day1",
-    name: "Onboarding — Day 1",
+    name: "Onboarding - Day 1",
     subject: "Welcome to MarketFlow, {{first_name}}",
     previewText: "Start with one channel. Here is how.",
     status: "running",
@@ -262,7 +262,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     id: "em-cart-recovery",
     name: "Basket Reminder",
     subject: "You left something behind",
-    previewText: "Still available — we held it for you.",
+    previewText: "Still available - we held it for you.",
     status: "running",
     segment: "custom",
     audienceLabel: "Abandoned Checkouts",
@@ -307,7 +307,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
     id: "em-winback",
     name: "We miss you",
     subject: "Your workspace is still here",
-    previewText: "Pick up where you left off — nothing was deleted.",
+    previewText: "Pick up where you left off - nothing was deleted.",
     status: "completed",
     segment: "custom",
     audienceLabel: "Inactive 90 days",
@@ -464,7 +464,7 @@ export const EMAIL_CAMPAIGNS: EmailCampaign[] = [
 /**
  * Totals across the email campaigns, for the stat row and the funnel.
  *
- * Counts only — no attributed revenue. Money earned belongs to the Marketing
+ * Counts only - no attributed revenue. Money earned belongs to the Marketing
  * workspace, which can weigh email against the other three channels; inside
  * the channel it would only ever be email compared against itself, and it
  * crowds out the four numbers that actually diagnose an email programme.
@@ -499,7 +499,7 @@ export function emailTotals(campaigns: EmailCampaign[]) {
 export const EMAIL_TEMPLATES: EmailTemplate[] = [
   {
     id: "et-welcome",
-    name: "Welcome Series — Day 1",
+    name: "Welcome Series - Day 1",
     description: "First message after signup. One call to action, nothing else.",
     category: "welcome",
     status: "published",
@@ -512,7 +512,7 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
         id: "b3",
         type: "text",
         content:
-          "Your workspace is ready. Most teams start by connecting WhatsApp — it takes about two minutes and everything else builds on it.",
+          "Your workspace is ready. Most teams start by connecting WhatsApp - it takes about two minutes and everything else builds on it.",
       },
       { id: "b4", type: "button", content: "Connect WhatsApp", meta: "/dashboard/integrations/whatsapp" },
       { id: "b5", type: "divider", content: "" },
@@ -604,7 +604,7 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
     category: "follow-up",
     status: "published",
     subject: "You left something behind",
-    previewText: "Still available — we held it for you.",
+    previewText: "Still available - we held it for you.",
     blocks: [
       { id: "b1", type: "logo", content: "MarketFlow" },
       { id: "b2", type: "heading", content: "Still interested, {{first_name}}?" },
@@ -644,7 +644,7 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
     category: "follow-up",
     status: "published",
     subject: "Your workspace is still here",
-    previewText: "Pick up where you left off — nothing was deleted.",
+    previewText: "Pick up where you left off - nothing was deleted.",
     blocks: [
       { id: "b1", type: "logo", content: "MarketFlow" },
       { id: "b2", type: "heading", content: "Nothing was deleted" },
@@ -664,7 +664,7 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
   },
   {
     id: "et-welcome-day3",
-    name: "Welcome Series — Day 3",
+    name: "Welcome Series - Day 3",
     description: "Second touch. Introduces templates once the channel is live.",
     category: "welcome",
     status: "draft",
@@ -712,14 +712,14 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
     previewText: "We are packing it now.",
     blocks: [
       { id: "b1", type: "logo", content: "MarketFlow" },
-      { id: "b2", type: "heading", content: "Thanks, {{first_name}} — order confirmed" },
+      { id: "b2", type: "heading", content: "Thanks, {{first_name}} - order confirmed" },
       { id: "b3", type: "products", content: "Order lines", meta: "Dynamic" },
       { id: "b4", type: "text", content: "Total {{order_total}}, paid on {{order_date}}." },
       { id: "b5", type: "button", content: "Track this order", meta: "{{tracking_url}}" },
       { id: "b6", type: "footer", content: "MarketFlow · This is a receipt, not marketing" },
     ],
     /* Transactional sends are not campaigns, so the library has no open rate
-       to average for them — the card says "Automated" rather than 0%. */
+       to average for them - the card says "Automated" rather than 0%. */
     usageCount: 0,
     openRate: 0,
     clickRate: 0,
@@ -1073,7 +1073,7 @@ export const EMAIL_SERIES = {
   clicked: [214, 268, 786, 296, 512, 224, 386, 1_842, 892, 604],
   /*
    * Rates are of *delivered*, not sent, so they are stored rather than derived
-   * from `sent` above — a bounce was never an opportunity to open.
+   * from `sent` above - a bounce was never an opportunity to open.
    */
   openRate: [30.0, 38.6, 51.0, 39.4, 45.9, 38.4, 41.0, 39.0, 43.0, 40.9],
   clickRate: [6.5, 12.3, 18.7, 15.3, 19.4, 12.3, 17.2, 10.2, 13.3, 14.7],
@@ -1089,7 +1089,7 @@ export const EMAIL_SERIES = {
  *
  * Three stored windows rather than one series sliced three ways: the numbers
  * are aggregates over a bucket, and the last ten days of a 90-day chart are not
- * the same readings as the last ten days of a 30-day one — taking a slice would
+ * the same readings as the last ten days of a 30-day one - taking a slice would
  * report ten-day totals as three-day ones. `30d` is assembled from the series
  * above rather than repeated, so the module still has one set of thirty-day
  * figures and the Overview cannot disagree with this page about them.
@@ -1145,7 +1145,7 @@ export const EMAIL_TREND_PERIODS: { value: EmailTrendPeriod; label: string }[] =
  * The same `ActivityEntry` shape the Marketing workspace and the WhatsApp
  * module already render through `ActivityFeed`, so the Email overview gets the
  * feed rather than a second timeline component. Email's version of "something
- * happened" is deliverability as much as delivery — a bounce spike and a
+ * happened" is deliverability as much as delivery - a bounce spike and a
  * domain warning are the entries that need acting on today.
  */
 export const EMAIL_ACTIVITY: ActivityEntry[] = [
@@ -1197,7 +1197,7 @@ export const EMAIL_ACTIVITY: ActivityEntry[] = [
   {
     id: "em-act-6",
     kind: "automation",
-    title: "Onboarding — Day 1 sent to 96 new customers",
+    title: "Onboarding - Day 1 sent to 96 new customers",
     detail: "71.8% opened, 30.8% clicked through to the setup guide",
     channel: "email",
     actor: "System",

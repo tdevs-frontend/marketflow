@@ -15,12 +15,12 @@ export const metadata: Metadata = {
  * closing panel, and the footer the layout supplies.
  *
  * `PricingSection` is shared with the home page and carries the intro, the
- * monthly/yearly toggle and the cards — so the header stays part of the
+ * monthly/yearly toggle and the cards - so the header stays part of the
  * pricing block rather than becoming a hero section of its own. The breadcrumb
  * is passed into it for the same reason.
  *
- * What used to sit between the cards and the bottom of the page — a
- * four-card capability grid and a reassurance strip — is gone. Both said true
+ * What used to sit between the cards and the bottom of the page - a
+ * four-card capability grid and a reassurance strip - is gone. Both said true
  * things and both said them after the decision had already been made: a
  * visitor who has read four tiers and a feature list per tier is not still
  * asking what the product does, and two more content blocks between the prices

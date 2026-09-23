@@ -11,7 +11,7 @@ import { cn, isActiveRoute } from "@/lib/utils";
  *
  * One component, two shapes, because the two viewports are answering different
  * questions. On desktop there is room for a rail that shows the whole module at
- * once — every destination, with the current one lit — and that standing map is
+ * once - every destination, with the current one lit - and that standing map is
  * what makes Settings feel like a place rather than a series of pages. On a phone there is no such room, so it collapses to a scrolling strip
  * of the same links in the same order: fewer things visible, nothing hidden
  * behind a control you have to think to open.
@@ -19,11 +19,11 @@ import { cn, isActiveRoute } from "@/lib/utils";
  * Links, not tabs. These are routes, so they belong in a `<nav>`, they are
  * middle-clickable, and the current one is announced with `aria-current="page"`
  * rather than `aria-selected`. The tab strip this replaced could not be deep
- * linked at all — there was no URL for Security to paste to anybody.
+ * linked at all - there was no URL for Security to paste to anybody.
  *
  * `SETTINGS_NAV` is the single list, and it is now a single group: the person
  * signed in. Billing and API & Developer used to be the other two and are
- * dashboard modules of their own — their routes still sit under
+ * dashboard modules of their own - their routes still sit under
  * `/dashboard/settings/`, so no link breaks, but they are outside this rail's
  * route group and never render it. See `app/dashboard/settings/(account)`.
  */
@@ -119,7 +119,7 @@ function DesktopNav({ active }: { active: string | null }) {
  * Not a `<select>`. A dropdown hides every destination behind a tap and gives
  * no sense of how much there is; the strip shows three at a time and the cut-off
  * fourth is what tells the reader to swipe. The group heading is dropped rather
- * than squeezed in — a handful of items on one line do not need one.
+ * than squeezed in - a handful of items on one line do not need one.
  *
  * `-mx-4` and the matching padding let it bleed to the screen edge inside the
  * dashboard's `p-4` main, so the last item scrolls fully into view instead of

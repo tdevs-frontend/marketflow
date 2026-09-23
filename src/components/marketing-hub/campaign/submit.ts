@@ -7,7 +7,7 @@ import type { CampaignDraft } from "@/types/marketing";
  * that would become a network call, so it is the only one an RTK Query mutation
  * has to replace. It is deliberately `async` and deliberately able to throw,
  * because the wizard's loading, double-submit and error states are only
- * meaningful against something that takes time and can fail — wiring them to a
+ * meaningful against something that takes time and can fail - wiring them to a
  * synchronous stub would mean shipping three code paths nobody has ever run.
  *
  * The offline check is a real failure this can hit today, so the error branch
@@ -28,7 +28,7 @@ export async function saveCampaign(
 ): Promise<SubmitResult> {
   if (typeof navigator !== "undefined" && navigator.onLine === false) {
     throw new Error(
-      "You appear to be offline. Nothing was saved — reconnect and try again.",
+      "You appear to be offline. Nothing was saved - reconnect and try again.",
     );
   }
 

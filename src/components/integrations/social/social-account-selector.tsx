@@ -30,8 +30,8 @@ function blockedReason(account: SocialAccount): string {
  * Pick the accounts a post publishes to.
  *
  * This is the component that makes "one source of truth" real. It reads
- * `publishableAccounts()` — the same predicate the Planner's calendar and the
- * Integrations page use — so an account whose token expired this morning stops
+ * `publishableAccounts()` - the same predicate the Planner's calendar and the
+ * Integrations page use - so an account whose token expired this morning stops
  * being selectable without the composer knowing anything about tokens. It is
  * still listed, greyed out and labelled, because the predicate can say *that*
  * an account is unusable and only the account record can say why.
@@ -62,7 +62,7 @@ export function SocialAccountSelector({
    * They used to be filtered out silently, which left the composer unable to
    * explain itself: an X post simply could not be written and nothing on
    * screen said why. A row that is present, disabled and labelled "Token
-   * expired" answers the question at the point it gets asked — and it is the
+   * expired" answers the question at the point it gets asked - and it is the
    * same rule the rest of the module follows, that a connection problem is
    * shown rather than hidden.
    */
@@ -100,12 +100,12 @@ export function SocialAccountSelector({
             <Checkbox
               checked={on}
               onCheckedChange={(next) => toggle(account, next)}
-              label={`Publish to ${provider.label} — ${account.name}`}
+              label={`Publish to ${provider.label} - ${account.name}`}
             />
             <ProviderIcon provider={provider} size="sm" />
             <span className="min-w-0 flex-1">
               <span className="block truncate text-sm font-medium text-text-primary">
-                {provider.label} — {account.name}
+                {provider.label} - {account.name}
               </span>
               <span className="block truncate text-meta text-text-muted">
                 {account.username}
@@ -130,13 +130,13 @@ export function SocialAccountSelector({
               checked={false}
               disabled
               onCheckedChange={() => {}}
-              label={`${provider.label} — ${account.name} is unavailable`}
+              label={`${provider.label} - ${account.name} is unavailable`}
             />
             <ProviderIcon provider={provider} size="sm" className="opacity-60" />
 
             <span className="min-w-0 flex-1">
               <span className="block truncate text-sm font-medium text-text-secondary">
-                {provider.label} — {account.name}
+                {provider.label} - {account.name}
               </span>
               <span className="block truncate text-meta text-text-muted">
                 {account.username}
@@ -175,7 +175,7 @@ export function SocialAccountSelector({
 /**
  * The Planner's empty state when nothing is connected.
  *
- * It links out rather than offering to connect here — there is one connection
+ * It links out rather than offering to connect here - there is one connection
  * flow and it lives in Integrations. A second "Connect Facebook" button in the
  * composer is exactly the duplicate system this architecture exists to avoid.
  */

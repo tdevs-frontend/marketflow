@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
  * What the run did, not what the workflow is.
  *
  * `Running` and `Queued` are the two states that are still moving, which is why
- * they read differently from the four settled ones — a merchant scanning this
+ * they read differently from the four settled ones - a merchant scanning this
  * card is looking for the row that needs them, and that is either a failure or
  * something that has not finished.
  */
@@ -54,8 +54,8 @@ interface ActivityItem {
   tone: string;
 }
 
-/* One customer's whole journey, in order — the lifecycle the rest of the
-   dashboard measures, shown happening — and then the batch work running
+/* One customer's whole journey, in order - the lifecycle the rest of the
+   dashboard measures, shown happening - and then the batch work running
    alongside it, including the one send that did not land. */
 const ACTIVITY: ActivityItem[] = [
   {
@@ -140,12 +140,12 @@ const ACTIVITY: ActivityItem[] = [
  * It sits beside the orders table, and the two used to read as one component
  * rendered twice: both were a row of single-line columns with a badge and a
  * timestamp on the right. This one is not tabular, because its rows are not
- * comparable the way two amounts are — each entry is an event, and an event
+ * comparable the way two amounts are - each entry is an event, and an event
  * wants a headline and a sentence under it rather than a cell in a grid.
  *
  * So: a rail down the icons for chronology, two lines of copy per run, and
  * status stacked over time at the right edge. Nothing lines up into columns,
- * which is the point — a glance should place this as a feed before any of the
+ * which is the point - a glance should place this as a feed before any of the
  * words are read.
  */
 export function AutomationActivity({ className }: { className?: string }) {
@@ -238,7 +238,7 @@ export function AutomationActivity({ className }: { className?: string }) {
                   </div>
 
                   {/* Status over time, right-aligned: the badge says how the run
-                      ended, the timestamp says when — read apart, neither is
+                      ended, the timestamp says when - read apart, neither is
                       much use. Stacking them keeps the pair off the
                       description's line, so the copy gets the full measure. */}
                   <div className="flex shrink-0 items-center gap-2.5 sm:flex-col sm:items-end sm:gap-1">

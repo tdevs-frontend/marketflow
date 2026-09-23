@@ -18,13 +18,13 @@ import type { VersionState, Workflow } from "@/types/workflow";
  * Every saved version of a workflow.
  *
  * In a dialog rather than on the builder screen, because version history is
- * something you go looking for perhaps twice a month — and the builder needs
+ * something you go looking for perhaps twice a month - and the builder needs
  * its height. The list is the whole feature: which version is live, what is
  * waiting in draft, and what the old ones were, with a way back to any of
  * them.
  *
  * Restoring never overwrites what is running. It copies an old version into
- * the draft, which is then published like any other change — because a "revert"
+ * the draft, which is then published like any other change - because a "revert"
  * that instantly changes what thousands of contacts are experiencing is not a
  * safety feature, it is a second way to cause the incident.
  */
@@ -174,9 +174,9 @@ export function VersionHistoryDialog({
       >
         <ul className="space-y-2 text-sm">
           {[
-            { change: "added", text: "Wait Until Event — Replies on WhatsApp" },
-            { change: "changed", text: "Send WhatsApp — template swapped to welcome_new_lead" },
-            { change: "removed", text: "Add Tag — Cold Lead" },
+            { change: "added", text: "Wait Until Event - Replies on WhatsApp" },
+            { change: "changed", text: "Send WhatsApp - template swapped to welcome_new_lead" },
+            { change: "removed", text: "Add Tag - Cold Lead" },
           ].map((item) => (
             <li
               key={item.text}

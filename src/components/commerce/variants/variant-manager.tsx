@@ -65,7 +65,7 @@ import { VariantsTable, type VariantSortField } from "./variants-table";
  * grid, the bulk bar, the table and the drawer.
  *
  * One component because those pieces share one piece of state and one
- * invariant — the grid is a pure function of the options, and every path that
+ * invariant - the grid is a pure function of the options, and every path that
  * changes an option has to regenerate through `generateVariants` so that
  * existing rows keep their SKUs, stock and images. Splitting the toggle from
  * the builder is how that invariant gets broken by the second person to touch
@@ -78,7 +78,7 @@ import { VariantsTable, type VariantSortField } from "./variants-table";
  * Destructive edits route through `pending`. Removing a value or an option
  * silently drops every variant underneath it, and a merchant who has spent ten
  * minutes entering stock for twelve rows deserves to be told that before it
- * happens — "Removing 'Blue' will remove 4 variants", in the `ConfirmDialog`
+ * happens - "Removing 'Blue' will remove 4 variants", in the `ConfirmDialog`
  * the rest of the module already uses.
  */
 
@@ -94,7 +94,7 @@ type BulkDialog = "pricing" | "inventory" | "media" | null;
 
 export interface VariantManagerProps {
   type: ProductType;
-  /** The stem for generated codes — the product's own reference SKU. */
+  /** The stem for generated codes - the product's own reference SKU. */
   baseSku: string;
   /** What an unpriced variant sells at. */
   basePrice: number;
@@ -103,11 +103,11 @@ export interface VariantManagerProps {
   options: VariantOption[];
   variants: ProductVariant[];
   onChange: (options: VariantOption[], variants: ProductVariant[]) => void;
-  /** Excluded from the cross-product SKU check — a product cannot clash with itself. */
+  /** Excluded from the cross-product SKU check - a product cannot clash with itself. */
   productId?: string;
   /** The product's media library. Variants pick from it; they never upload. */
   images?: ProductImage[];
-  /** Hides the toggle where the answer is already yes — the detail page's tab. */
+  /** Hides the toggle where the answer is already yes - the detail page's tab. */
   showToggle?: boolean;
 }
 
@@ -145,7 +145,7 @@ export function VariantManager({
   const thumbnail =
     images.find((image) => image.isThumbnail)?.url ?? images[0]?.url;
 
-  /* SKUs already spoken for by every *other* product and its variants — the
+  /* SKUs already spoken for by every *other* product and its variants - the
      uniqueness rule is catalogue-wide, so the check has to look outside this
      product as well as within it. */
   const takenElsewhere = useMemo(
@@ -159,7 +159,7 @@ export function VariantManager({
   );
 
   const expected = combinationCount(options);
-  /* The grid is stale when the options no longer describe the rows — after
+  /* The grid is stale when the options no longer describe the rows - after
      adding a value, before the merchant regenerates. */
   const stale = expected !== variants.length;
 
@@ -177,7 +177,7 @@ export function VariantManager({
     );
   }
 
-  /** The same patch across every ticked row — the spine of every bulk action. */
+  /** The same patch across every ticked row - the spine of every bulk action. */
   function patchMany(ids: string[], changes: Partial<ProductVariant>) {
     const target = new Set(ids);
     onChange(
@@ -247,7 +247,7 @@ export function VariantManager({
         const next: ProductVariant = { ...variant, updatedAt: now };
 
         if (input.quantity !== undefined) {
-          /* Services count capacity, everything physical counts units — the
+          /* Services count capacity, everything physical counts units - the
              same three modes, applied to whichever field this type owns. */
           const field = type === "service" ? "capacityPerSlot" : "stock";
           const current = (variant[field] as number | null | undefined) ?? 0;
@@ -305,7 +305,7 @@ export function VariantManager({
   /**
    * Display order only.
    *
-   * `variants` keeps its generated order as the canonical sequence — that is
+   * `variants` keeps its generated order as the canonical sequence - that is
    * what "S / Black, S / White, …" means and what regeneration matches against.
    * Sorting a copy lets a merchant find the low-stock rows without rewriting
    * the grid's identity.
@@ -340,7 +340,7 @@ export function VariantManager({
   /* Confirmations                                                            */
   /* ------------------------------------------------------------------------ */
 
-  /** How many rows the pending edit destroys — the figure the dialog quotes. */
+  /** How many rows the pending edit destroys - the figure the dialog quotes. */
   const affected = useMemo(() => {
     if (!pending) return 0;
     if (pending.kind === "remove-value") {
@@ -470,7 +470,7 @@ export function VariantManager({
   const copy = confirmCopy();
   const selectedVariants = variants.filter((item) => selected.includes(item.id));
 
-  /** The bulk bar's overflow — kept short so the bar never wraps to two lines. */
+  /** The bulk bar's overflow - kept short so the bar never wraps to two lines. */
   const bulkMenu = [
     {
       label: "Auto-generate SKUs",
@@ -513,7 +513,7 @@ export function VariantManager({
             checked={enabled}
             onCheckedChange={(next) => {
               /* Turning it off destroys nothing, but it does change what the
-                 product costs — worth a confirmation once rows exist. */
+                 product costs - worth a confirmation once rows exist. */
               if (!next && variants.length > 0) setPending({ kind: "disable" });
               else onEnabledChange(next);
             }}
@@ -529,7 +529,7 @@ export function VariantManager({
         ) : (
           <EmptyState
             title="This product has no variants"
-            description="Turn variants on to sell it in more than one size, tier or package — each with its own code, price and stock."
+            description="Turn variants on to sell it in more than one size, tier or package - each with its own code, price and stock."
             action={
               <Button size="sm" onClick={() => onEnabledChange(true)}>
                 <Layers aria-hidden />
@@ -609,7 +609,7 @@ export function VariantManager({
               title="No combinations yet"
               description={
                 options.length === 0
-                  ? "Add an option and at least one value — the grid builds itself from there."
+                  ? "Add an option and at least one value - the grid builds itself from there."
                   : "Add a value to an option and the combinations appear here."
               }
             />
@@ -685,7 +685,7 @@ export function VariantManager({
                 </p>
               ) : null}
 
-              {/* The bulk bar — the same tinted strip the products, contacts and
+              {/* The bulk bar - the same tinted strip the products, contacts and
                   campaigns tables already use when rows are ticked. */}
               {selected.length > 0 ? (
                 <div className="flex flex-wrap items-center gap-3 rounded-panel border border-primary-border bg-primary-soft px-3.5 py-2.5">
@@ -778,7 +778,7 @@ export function VariantManager({
         </>
       )}
 
-      {/* One dialog for every destructive edit — the shared `ConfirmDialog`,
+      {/* One dialog for every destructive edit - the shared `ConfirmDialog`,
           not a bespoke one per action. */}
       <ConfirmDialog
         open={pending !== null}
@@ -849,7 +849,7 @@ export function VariantManager({
         onClose={() => setBulk(null)}
         onApply={(changes) => {
           /* `price: undefined` is a deliberate reset to the product price, and
-             a spread would drop it — so it is applied as an explicit key. */
+             a spread would drop it - so it is applied as an explicit key. */
           patchMany(selected, changes);
           setBulk(null);
         }}

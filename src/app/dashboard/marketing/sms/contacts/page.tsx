@@ -10,7 +10,7 @@ export default function SmsContactsPage() {
     <>
       <PageHeader
         title="SMS Contacts"
-        description="Numbers, opt-in state and destination country — which is a cost question as much as a demographic one."
+        description="Numbers, opt-in state and destination country - which is a cost question as much as a demographic one."
       />
 
       <SmsContactsWorkspace />

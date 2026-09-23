@@ -18,8 +18,8 @@ import { NotificationIcon } from "./notification-icon";
  *   `compact` is the bell. Title, one sentence, time. It is read standing up,
  *   in a 368px panel, to answer "does anything need me".
  *
- *   `full` is the page. It adds the `context` line — the product on the order,
- *   the step the workflow threw on — and gives the row more air. It is read
+ *   `full` is the page. It adds the `context` line - the product on the order,
+ *   the step the workflow threw on - and gives the row more air. It is read
  *   sitting down, and the line that says *which* Premium Package is the one
  *   that saves opening the record.
  *
@@ -46,7 +46,7 @@ export function NotificationItem({
       className={cn(
         "flex w-full gap-3 text-left transition-colors",
         full ? "px-4 py-3.5 sm:px-5" : "px-4 py-3",
-        /* The only rule between rows, and none after the last — a border under
+        /* The only rule between rows, and none after the last - a border under
            the final row would sit on the container's own edge and read as a
            double line. */
         "border-b border-border last:border-b-0",
@@ -65,7 +65,7 @@ export function NotificationItem({
       <span className="min-w-0 flex-1">
         {/*
          * Title, time and dot on one line, with the dot at the row's right
-         * edge — it shares a line with the timestamp rather than floating
+         * edge - it shares a line with the timestamp rather than floating
          * beside the whole row, so it lines up without a hand-picked margin.
          *
          * `flex-wrap` is the narrow case: on a phone the title takes the width

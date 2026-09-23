@@ -6,14 +6,14 @@ import type { DeviceInfo, DeviceKind } from "@/types/account";
  * The Active Sessions panel has to name the device somebody is reading it on,
  * and the only source for that in a browser is the user-agent string. This
  * module is the single place that reads it, because a user-agent parse is a
- * pile of special cases that gets copied and then diverges — one screen saying
+ * pile of special cases that gets copied and then diverges - one screen saying
  * "Safari" and another "Mobile Safari 17" about the same device is worse than
  * either answer alone.
  *
  * Two rules the parse holds to, both of which are about not overstating.
  *
  * It reports only what the string actually carries. Windows sends
- * `Windows NT 10.0` for both Windows 10 and Windows 11 — Microsoft froze it —
+ * `Windows NT 10.0` for both Windows 10 and Windows 11 - Microsoft froze it -
  * so this says "Windows" and stops. The version is reachable through
  * `navigator.userAgentData.getHighEntropyValues`, which is asynchronous,
  * Chromium-only, and a permission-shaped API; naming a Windows release from
@@ -21,7 +21,7 @@ import type { DeviceInfo, DeviceKind } from "@/types/account";
  *
  * It is a description, not an identity. A user-agent is trivially forged and
  * two identical laptops produce identical strings, so nothing here is used to
- * decide *which* session a row is — that is the session id the service issues.
+ * decide *which* session a row is - that is the session id the service issues.
  * This only makes a row readable by a human who is trying to recognise their
  * own phone in a list.
  */
@@ -91,7 +91,7 @@ function match(
  *
  * `Mobi` is the token the specification actually reserves for "this is a
  * phone", and Android honours it: a tablet sends `Android` without it. iPadOS
- * is the exception that needs `maxTouchPoints` — since version 13 an iPad
+ * is the exception that needs `maxTouchPoints` - since version 13 an iPad
  * requests desktop sites by default and its string is indistinguishable from a
  * Mac's, so the touch count is the only signal left.
  */
@@ -109,7 +109,7 @@ function deviceKind(userAgent: string, touchPoints: number): DeviceKind {
  * The device this code is running on.
  *
  * Takes its inputs as arguments rather than reading `navigator` itself so it
- * can be called with a string from a service — the same function formats a
+ * can be called with a string from a service - the same function formats a
  * session recorded on another device once an account service is listing them.
  */
 export function describeDevice(
@@ -142,7 +142,7 @@ export function describeDevice(
   };
 }
 
-/** This browser, or a blank description when there is no `navigator` — SSR. */
+/** This browser, or a blank description when there is no `navigator` - SSR. */
 export function describeThisDevice(): DeviceInfo {
   if (typeof navigator === "undefined") {
     return {
@@ -160,12 +160,12 @@ export function describeThisDevice(): DeviceInfo {
 /* Rendering                                                                  */
 /* -------------------------------------------------------------------------- */
 
-/** "Chrome · Windows" — the line somebody scans for their own device. */
+/** "Chrome · Windows" - the line somebody scans for their own device. */
 export function deviceSummary(device: DeviceInfo): string {
   return `${device.browser} · ${device.os}`;
 }
 
-/** "Chrome 153 · Windows · Desktop" — the line under it. */
+/** "Chrome 153 · Windows · Desktop" - the line under it. */
 export function deviceDetail(device: DeviceInfo): string {
   const browser = device.browserVersion
     ? `${device.browser} ${device.browserVersion}`

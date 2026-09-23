@@ -49,7 +49,7 @@ import { AssetThumb, VideoOverlay } from "../shared/asset-thumb";
  * Usage count, defaulted.
  *
  * `MEDIA_USAGE` is keyed off the fixture posts, so an asset uploaded this
- * session has no row in it — and `undefined` in a sort comparator sends every
+ * session has no row in it - and `undefined` in a sort comparator sends every
  * uploaded asset to a random position. A file nothing references yet is used
  * zero times, which is a fact rather than a gap.
  */
@@ -59,7 +59,7 @@ const usageOf = (id: string) => MEDIA_USAGE[id] ?? 0;
  * The media library.
  *
  * A grid of square tiles regardless of the asset's own aspect ratio, because
- * the grid's job is *finding* a file — a wall of mixed-ratio cards is harder to
+ * the grid's job is *finding* a file - a wall of mixed-ratio cards is harder to
  * scan than a uniform one, and the real dimensions are on the card and in the
  * detail panel where they matter.
  *
@@ -99,14 +99,14 @@ export function MediaLibrary() {
    * Upload state, as a count and a list of reasons rather than a boolean.
    *
    * "Uploading 3 files" is the honest label, and a batch where the fourth file
-   * was a PDF should still land the other three — so the failures come back as
+   * was a PDF should still land the other three - so the failures come back as
    * sentences to show rather than as a thrown error that loses the successes.
    */
   const [uploading, setUploading] = useState(0);
   const [failures, setFailures] = useState<string[]>([]);
   const fileInput = useRef<HTMLInputElement>(null);
   /* The upload destination is separate from `folder`, which is the browse
-     filter — picking a destination should not navigate the library. */
+     filter - picking a destination should not navigate the library. */
   const [uploadFolder, setUploadFolder] = useState(defaultUploadFolder);
   /* The new-folder dialog's own name field, and the reason the last attempt
      was refused. */
@@ -119,7 +119,7 @@ export function MediaLibrary() {
   /**
    * Create the folder, then browse to it.
    *
-   * Landing on the new folder is the point — it is empty, which is the clearest
+   * Landing on the new folder is the point - it is empty, which is the clearest
    * possible invitation to put something in it, and it leaves the upload
    * destination already pointing where the person was going.
    */
@@ -144,15 +144,15 @@ export function MediaLibrary() {
   /**
    * Hand the file to the browser.
    *
-   * A real download, not a toast: every asset now has a URL — a path under
-   * `/media` or a `blob:` from this session — and an anchor with `download` is
+   * A real download, not a toast: every asset now has a URL - a path under
+   * `/media` or a `blob:` from this session - and an anchor with `download` is
    * all the browser needs. An asset with no file behind it says so instead.
    */
   function download(items: MediaAsset[]) {
     const withFiles = items.filter((asset) => asset.url);
 
     if (withFiles.length === 0) {
-      toast("Nothing to download — these assets have no file yet.");
+      toast("Nothing to download - these assets have no file yet.");
       return;
     }
 
@@ -229,7 +229,7 @@ export function MediaLibrary() {
    * Read the picked files into the shared library.
    *
    * This page had a dialog with a "Choose files" button wired to nothing and a
-   * "Start upload" button that raised a toast and closed — the file never
+   * "Start upload" button that raised a toast and closed - the file never
    * existed, and the grid behind it never changed. The uploader it needed was
    * already written: `lib/media-store` validates, decodes real dimensions and
    * duration off the file, and publishes to every surface subscribed to it.
@@ -258,7 +258,7 @@ export function MediaLibrary() {
         toast(
           `${added.length} file${added.length === 1 ? "" : "s"} added to the Media Library`,
         );
-        /* Only close on a clean batch — a dialog that vanishes while holding
+        /* Only close on a clean batch - a dialog that vanishes while holding
            the only explanation of what went wrong is the silent failure this
            page already had. */
         if (rejected.length === 0) setUploadOpen(false);
@@ -541,7 +541,7 @@ export function MediaLibrary() {
                              pictures rather than panels, and a 12px corner on
                              a 150px thumbnail eats a visible bite out of the
                              image. `overflow-hidden` is what makes the photo
-                             take the corner — the radius is on the box, the
+                             take the corner - the radius is on the box, the
                              asset just fills it. */
                           "relative block aspect-square overflow-hidden rounded-[5px] border transition-all",
                           active
@@ -652,7 +652,7 @@ export function MediaLibrary() {
       >
         {detail ? (
           <div className="space-y-4">
-            {/* The asset itself, not an icon standing for its type — the
+            {/* The asset itself, not an icon standing for its type - the
                 badge below already says which it is, and the one thing this
                 panel is for is looking at the thing. */}
             <div
@@ -688,7 +688,7 @@ export function MediaLibrary() {
                 { label: "File size", value: formatBytes(detail.size) },
                 {
                   label: "Duration",
-                  value: detail.duration ? `${detail.duration}s` : "—",
+                  value: detail.duration ? `${detail.duration}s` : "-",
                 },
                 { label: "Uploaded", value: formatRelativeTime(detail.uploadedAt) },
               ].map((row) => (

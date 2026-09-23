@@ -32,7 +32,7 @@ import type {
  * are both muted reds at a glance, the glyph is what separates them.
  *
  * Red is deliberately scarce here. An audit trail where half the rows are red
- * is an audit trail nobody reads — `warning` carries most of the "look at this"
+ * is an audit trail nobody reads - `warning` carries most of the "look at this"
  * weight and `failed` is reserved for something that did not happen.
  */
 
@@ -151,8 +151,8 @@ export function SeverityBadge({
  *
  * Three levels, derived from the sensitive permissions the role holds rather
  * than from a number a merchant has to interpret. `high` is reserved for the
- * grants that cannot be undone from inside the product — managing roles,
- * managing billing, issuing refunds — so the badge means "read this role
+ * grants that cannot be undone from inside the product - managing roles,
+ * managing billing, issuing refunds - so the badge means "read this role
  * carefully" rather than "this role is large".
  *
  * Standard is deliberately neutral rather than green: most roles are standard,

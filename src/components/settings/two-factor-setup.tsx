@@ -29,14 +29,14 @@ import { ServiceNotice } from "./service-notice";
  *
  * Scan, verify, keep your recovery codes. Each is its own view rather than one
  * long scroll, because each ends with the person doing something on a different
- * device and coming back — and a step boundary is what tells them they have
+ * device and coming back - and a step boundary is what tells them they have
  * finished one and started the next.
  *
  * The verification is real. `lib/totp` implements RFC 6238 over Web Crypto, so
  * a code from a mistyped secret is rejected here, thirty seconds after the
  * mistake, instead of at a sign-in three weeks later when the person has thrown
  * away the setup key. A flow that accepts any six digits has confirmed nothing
- * and has told the merchant it confirmed something — it is worse than no
+ * and has told the merchant it confirmed something - it is worse than no
  * verification step at all, because it manufactures confidence.
  *
  * What it cannot yet do is gate sign-in, and the notice on step one says so
@@ -51,7 +51,7 @@ type Step = "scan" | "verify" | "done";
  * No `onEnabled` callback.
  *
  * The card that opens this dialog reads the same store, so activation reaches
- * it the moment the service commits — a notification prop would be a second
+ * it the moment the service commits - a notification prop would be a second
  * path to the same fact, and the kind that goes stale when somebody adds a
  * third caller.
  */
@@ -71,7 +71,7 @@ export function TwoFactorSetupDialog({
    * Two things fall out of that. The dialog holds no copy to get out of step
    * with, so closing and reopening shows the same secret rather than minting a
    * second one while the first is half-typed into somebody's phone. And the
-   * effect below has nothing to `setState` — it starts the request, the store
+   * effect below has nothing to `setState` - it starts the request, the store
    * publishes the result, and the render follows.
    */
   const enrollment = useTwoFactorEnrollment();
@@ -110,10 +110,10 @@ export function TwoFactorSetupDialog({
       }
       description={
         step === "scan"
-          ? "Step 1 of 3 — add MarketFlow to your authenticator app."
+          ? "Step 1 of 3 - add MarketFlow to your authenticator app."
           : step === "verify"
-            ? "Step 2 of 3 — prove the app is set up correctly."
-            : "Step 3 of 3 — save your recovery codes somewhere safe."
+            ? "Step 2 of 3 - prove the app is set up correctly."
+            : "Step 3 of 3 - save your recovery codes somewhere safe."
       }
       footer={
         step === "scan" ? (
@@ -150,7 +150,7 @@ export function TwoFactorSetupDialog({
 }
 
 /* -------------------------------------------------------------------------- */
-/* Step 1 — scan                                                              */
+/* Step 1 - scan                                                              */
 /* -------------------------------------------------------------------------- */
 
 function ScanStep({ enrollment }: { enrollment: TwoFactorEnrollment | null }) {
@@ -170,14 +170,14 @@ function ScanStep({ enrollment }: { enrollment: TwoFactorEnrollment | null }) {
       {!CAPABILITIES.twoFactorEnforced ? (
         <ServiceNotice tone="security" title="Sign-in is not gated by this yet">
           {UNAVAILABLE_REASON.twoFactorEnforced} Setting it up here is a real
-          enrolment — the code you enter next is genuinely checked against this
-          secret — but do not rely on it as your only protection until the
+          enrolment - the code you enter next is genuinely checked against this
+          secret - but do not rely on it as your only protection until the
           account service is connected.
         </ServiceNotice>
       ) : null}
 
       {/* The QR and the instructions side by side on desktop, stacked on a
-          phone with the code first — where the person reading this is very
+          phone with the code first - where the person reading this is very
           likely holding the device they are about to scan it with. */}
       <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
         <QrCode
@@ -229,7 +229,7 @@ function ScanStep({ enrollment }: { enrollment: TwoFactorEnrollment | null }) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Step 2 — verify                                                            */
+/* Step 2 - verify                                                            */
 /* -------------------------------------------------------------------------- */
 
 function VerifyStep({
@@ -334,7 +334,7 @@ function VerifyStep({
  * The wall clock is exactly what `useSyncExternalStore` is for: a value that
  * exists on the client, does not exist on the server, and changes on its own.
  * An effect that calls `setState` on an interval would work and is a cascading
- * render every second for a number — and it has no server snapshot, so the
+ * render every second for a number - and it has no server snapshot, so the
  * first paint has to be a placeholder that swaps.
  *
  * The value is cached at module scope and only republished when the whole
@@ -398,7 +398,7 @@ function CodeCountdown() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Step 3 — done                                                              */
+/* Step 3 - done                                                              */
 /* -------------------------------------------------------------------------- */
 
 function DoneStep({ codes, onClose }: { codes: string[]; onClose: () => void }) {
@@ -417,7 +417,7 @@ function DoneStep({ codes, onClose }: { codes: string[]; onClose: () => void }) 
         <ShieldCheck className="mt-0.5 size-4.5 shrink-0" aria-hidden />
         {CAPABILITIES.twoFactorEnforced
           ? "Two-factor authentication enabled. You will be asked for a code from your authenticator the next time you sign in."
-          : "Two-factor authentication enabled, and your authenticator is verified against this account. Sign-in is not gated by it yet — that arrives with the account service."}
+          : "Two-factor authentication enabled, and your authenticator is verified against this account. Sign-in is not gated by it yet - that arrives with the account service."}
       </p>
 
       <RecoveryCodes codes={codes} />

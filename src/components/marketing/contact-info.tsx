@@ -12,8 +12,8 @@ import { Mail, MapPin, Phone, type LucideIcon } from "lucide-react";
  * to send anyone to, and a third card styled like a link that goes nowhere
  * would be worse than a card that plainly states an address.
  *
- * The composition is the reference's — tinted bed, round mark, title, two
- * lines — painted in MarketFlow's own colours: the brand gradient on the
+ * The composition is the reference's - tinted bed, round mark, title, two
+ * lines - painted in MarketFlow's own colours: the brand gradient on the
  * mark, `primary-soft` for the bed, and the text tokens the rest of the site
  * uses. The support address is the one in `siteConfig`, so the page and the
  * footer cannot drift apart.
@@ -27,7 +27,7 @@ interface ContactChannel {
 }
 
 /*
- * PLACEHOLDER: the phone numbers and the street address are stand-ins —
+ * PLACEHOLDER: the phone numbers and the street address are stand-ins -
  * MarketFlow has no real ones in this codebase. The two email addresses are
  * the product's own (`siteConfig.links.support`). Replace the rest before
  * this page goes anywhere near production.

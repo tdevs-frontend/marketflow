@@ -34,8 +34,8 @@ import { TopCampaigns } from "./shared/top-campaigns";
  * The Marketing workspace: an operations desk, not a second report.
  *
  * The split from the merchant overview is by question. `/dashboard` answers
- * "how is the business doing" — leads, conversations, orders, revenue, and the
- * trends under them. This answers "what is the marketing *doing*" — what is
+ * "how is the business doing" - leads, conversations, orders, revenue, and the
+ * trends under them. This answers "what is the marketing *doing*" - what is
  * running, what failed, who it reached, which channel carried it, and what
  * changed in the last two days.
  *
@@ -58,14 +58,14 @@ import { TopCampaigns } from "./shared/top-campaigns";
  */
 
 /**
- * Marketing's own four. Every one of these is a property of the *sends* — no
+ * Marketing's own four. Every one of these is a property of the *sends* - no
  * figure here is also on the merchant overview, which is the whole point.
  *
  * Four rather than the five this used to carry. Click Rate and Conversions
  * both went: Click Rate is a second reading of the same funnel Engagement Rate
  * already reports, and Conversions is the tail the merchant overview owns as
  * Orders. Audience Reach takes their place because nothing on the page said
- * how many *people* the sending actually touched — the row could tell you
+ * how many *people* the sending actually touched - the row could tell you
  * 482,450 messages went out and not that they landed on 186,400 contacts.
  */
 const STATS: StatItem[] = [
@@ -134,7 +134,7 @@ const CAMPAIGN_HEALTH_CHANGES = {
  *
  * That segment is defined as everyone with a valid opt-in on at least one
  * channel, which is exactly what "total audience" means on a page about
- * sending — and reading it from the segment rather than restating it keeps
+ * sending - and reading it from the segment rather than restating it keeps
  * this card and the Segments screen on one number.
  */
 const TOTAL_AUDIENCE = SEGMENTS.find((item) => item.system) ?? SEGMENTS[0];
@@ -182,8 +182,8 @@ export function MarketingOverview() {
         already plots Total Leads, and a five-stage funnel sat opposite the
         dashboard's five-stage Sales Funnel, close enough in shape that the two
         pages read as one. What a marketer cannot get from the overview is the
-        *operational* state — what is running right now, what failed, how the
-        audience is changing — so that is what sits here instead.
+        *operational* state - what is running right now, what failed, how the
+        audience is changing - so that is what sits here instead.
       */}
       <div className="grid gap-4 xl:grid-cols-2">
         <PanelCard
@@ -236,7 +236,7 @@ export function MarketingOverview() {
         Titled by what it plots, not by what it is about.
 
         This was "Campaign Performance", which is also the name of a card on
-        the merchant overview — and that card is a per-campaign ranking, so two
+        the merchant overview - and that card is a per-campaign ranking, so two
         different widgets shared one name across two pages. This one has only
         ever been send volume per channel per week, so it says so.
 
@@ -249,8 +249,8 @@ export function MarketingOverview() {
       {/*
         One card, two questions.
 
-        Channel Send Volume used to sit above this as a card of its own — a
-        twelve-week line of what each channel sent — and the table below it
+        Channel Send Volume used to sit above this as a card of its own - a
+        twelve-week line of what each channel sent - and the table below it
         answered how well each channel did. That split asked a reader to hold
         "WhatsApp sent the most" and "WhatsApp converts best" in their head and
         join the two up. They are one question about one channel, so the volume

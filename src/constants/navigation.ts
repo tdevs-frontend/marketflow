@@ -6,7 +6,7 @@ export interface NavItem {
   description?: string;
 }
 
-/** A leaf under a `DashboardNavItem`. Nesting stops here — one level only. */
+/** A leaf under a `DashboardNavItem`. Nesting stops here - one level only. */
 export interface NavChild {
   title: string;
   href: string;
@@ -64,7 +64,7 @@ export const marketingNav: NavItem[] = [
 
 /**
  * The dashboard sidebar, top to bottom. Where a group's landing page exists it
- * keeps the bare route and the group nests under it — `/dashboard/settings` is
+ * keeps the bare route and the group nests under it - `/dashboard/settings` is
  * General. The sidebar derives which routes need an exact match.
  */
 export const dashboardNav: NavSection[] = [
@@ -76,13 +76,13 @@ export const dashboardNav: NavSection[] = [
   },
   {
     /* Ahead of Marketing: the catalogue is what everything downstream sells.
-       Customers are not repeated — they have their own group. */
+       Customers are not repeated - they have their own group. */
     /*
      * Six entries, matching the six questions a merchant asks:
      * what do I sell, what needs processing, how much did I sell, who bought
      * from me, what stock do I have, how do I promote.
      *
-     * Categories and Product Catalog are gone from here — not removed, moved.
+     * Categories and Product Catalog are gone from here - not removed, moved.
      * Both are views of the same product dataset and are reached from the strip
      * inside Products (see `commerce/product-views-nav`), which has existed for
      * a while; the sidebar was still listing them as well, so three rows pointed
@@ -93,7 +93,7 @@ export const dashboardNav: NavSection[] = [
       { title: "Products", href: "/dashboard/products", icon: "package" },
       { title: "Orders", href: "/dashboard/orders", icon: "shopping-cart" },
       { title: "Sales", href: "/dashboard/sales", icon: "trending-up" },
-      /* Paying customers, derived from orders — the CRM contact database is
+      /* Paying customers, derived from orders - the CRM contact database is
          the Customers group below, and this links into it rather than copying
          it. The route nests under Sales because that is where the data is. */
       {
@@ -102,7 +102,7 @@ export const dashboardNav: NavSection[] = [
         icon: "user-check",
       },
       { title: "Inventory", href: "/dashboard/inventory", icon: "warehouse" },
-      /* Moved out of Growth, where it was "Offers & Coupons" — same feature. */
+      /* Moved out of Growth, where it was "Offers & Coupons" - same feature. */
       {
         title: "Discounts & Coupons",
         href: "/dashboard/discounts",
@@ -115,7 +115,7 @@ export const dashboardNav: NavSection[] = [
      * The Marketing group, matching the product's own vocabulary: Overview and
      * Campaigns sit at the top as the cross-channel pages, then one collapsible
      * group per channel. Each channel group opens on its own Overview, except
-     * Social Planner, whose landing page is the Calendar — that is where a
+     * Social Planner, whose landing page is the Calendar - that is where a
      * content team actually starts.
      */
     title: "Marketing",
@@ -249,14 +249,14 @@ export const dashboardNav: NavSection[] = [
    * There is no Growth group.
    *
    * It held five rows and none of them earned a place in the sidebar. Reports
-   * and Conversion Funnel had no route at all — both answered 404, which is a
+   * and Conversion Funnel had no route at all - both answered 404, which is a
    * navigation entry whose only behaviour is to break the page under it.
    * Forms and Landing Pages resolved, but only to a `ModulePlaceholder`
    * explaining that the module does not exist yet; a top-level row for a thing
    * that is not built is a promise the sidebar cannot keep.
    *
-   * Analytics is real, and it is the one worth naming. It is not gone — the
-   * route, the page and its charts are untouched — but it is now reached from
+   * Analytics is real, and it is the one worth naming. It is not gone - the
+   * route, the page and its charts are untouched - but it is now reached from
    * exactly one place: the "View analytics" link on the Marketing overview.
    * That is a contextual door next to the numbers it explains, which is a
    * better entrance than a sidebar row under a heading nobody could define,
@@ -264,7 +264,7 @@ export const dashboardNav: NavSection[] = [
    * wonders where the charts went.
    *
    * Every route in this group still resolves. What was removed is navigation,
-   * not functionality — see `constants/app.APP_ROUTES`, which still carries
+   * not functionality - see `constants/app.APP_ROUTES`, which still carries
    * them, and the permissions catalogue, which still governs them.
    */
   {
@@ -272,7 +272,7 @@ export const dashboardNav: NavSection[] = [
      * One row for the whole module.
      *
      * The seven integration pages are reached from the `ModuleNav` strip inside
-     * the module — see `constants/integrations.INTEGRATION_PAGES`, which the
+     * the module - see `constants/integrations.INTEGRATION_PAGES`, which the
      * layout renders on every one of them. Listing the same seven here as well
      * was the sidebar doing the tab strip's job: fourteen entries for seven
      * destinations, and a group tall enough to push Workspace and Settings off
@@ -282,7 +282,7 @@ export const dashboardNav: NavSection[] = [
      * Email and the rest of Marketing already follow: the sidebar carries
      * business areas, the module carries its own pages.
      *
-     * Note this row deliberately has no `items` — as the only href under
+     * Note this row deliberately has no `items` - as the only href under
      * `/dashboard/integrations`, it drops out of the sidebar's `EXACT_HREFS`
      * set and so stays lit on every page in the module rather than only on the
      * hub. That is the behaviour a single module row should have.
@@ -325,7 +325,7 @@ export const dashboardNav: NavSection[] = [
     title: "Settings",
     items: [
       /*
-       * One row for the whole module — the same split Integrations follows.
+       * One row for the whole module - the same split Integrations follows.
        *
        * Settings carries its own navigation rail (see
        * `components/settings/settings-nav`, built from
@@ -335,7 +335,7 @@ export const dashboardNav: NavSection[] = [
        * sidebar that is already the longest thing on the screen.
        *
        * This is the strategy the sidebar was designed around and that
-       * Marketing, Commerce and Integrations all follow — the sidebar carries
+       * Marketing, Commerce and Integrations all follow - the sidebar carries
        * business areas, the module carries its own pages.
        *
        * Billing and Developer used to be in that rail and are now groups of

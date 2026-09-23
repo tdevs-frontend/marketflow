@@ -10,7 +10,7 @@ import { CodeText, HttpStatusBadge } from "../integration-badges";
  * Recent deliveries for one endpoint.
  *
  * A list rather than a table: this sits in a 30rem drawer, where five columns
- * would either scroll sideways or crush the one column that matters — the error
+ * would either scroll sideways or crush the one column that matters - the error
  * string. So time, event and duration ride on one line as metadata, the status
  * anchors the right, and a failure gets a full-width line of its own carrying
  * what the endpoint actually said.

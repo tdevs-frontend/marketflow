@@ -20,13 +20,13 @@ import { StepSection } from "./shared";
 import type { StepProps } from "./types";
 
 /**
- * Step 4 — who the campaign comes from.
+ * Step 4 - who the campaign comes from.
  *
  * It used to be a section at the bottom of the Details step, under the channel
  * picker, and it was the part of that screen people scrolled past: by the time
  * anyone reached it they had already decided what they were making and were
  * looking for the Continue button. On its own screen the sender is a decision
- * instead of a default, which is what it should be — the from line is the first
+ * instead of a default, which is what it should be - the from line is the first
  * thing a recipient reads, reputation accrues to it, and replies land wherever
  * it says they do.
  *
@@ -38,7 +38,7 @@ import type { StepProps } from "./types";
  *
  * Nothing here is a second copy of a connection. Identities come from the Email
  * module's own sender settings, WhatsApp connections and SMS providers from
- * Integrations, social accounts from the Planner — this step chooses among
+ * Integrations, social accounts from the Planner - this step chooses among
  * them and says where they are managed.
  */
 
@@ -86,7 +86,7 @@ function FromPreview({
         {subject || "No subject line yet"}
       </p>
       <p className="truncate text-sm text-text-muted">
-        {previewText || "No preview text — the first line of the body shows here."}
+        {previewText || "No preview text - the first line of the body shows here."}
       </p>
     </div>
   );
@@ -124,7 +124,7 @@ function EmailSender({ draft, set }: StepProps) {
                     (item) => item.email === next,
                   );
                   /* Reply-to follows the identity, because it is a property of
-                     the mailbox someone agreed to monitor — but only until it
+                     the mailbox someone agreed to monitor - but only until it
                      is set by hand, which the field below is free to do. */
                   patch({
                     emailFrom: next,
@@ -138,7 +138,7 @@ function EmailSender({ draft, set }: StepProps) {
             <Field
               label="Sender name"
               htmlFor="cmp-email-name"
-              hint="Comes from the identity — change it in Email → Senders."
+              hint="Comes from the identity - change it in Email → Senders."
             >
               {/* Read-only rather than a text input: the display name is part of
                   the identity's reputation, and letting a campaign invent one
@@ -277,7 +277,7 @@ function WhatsAppSender({ draft, set }: StepProps) {
             onChange={(next) => {
               const target = WHATSAPP_CONNECTIONS.find((item) => item.id === next);
               /* Numbers belong to a connection, so switching one has to move
-                 the other — a number from the old connection would be a sender
+                 the other - a number from the old connection would be a sender
                  the new one cannot use. */
               patch({
                 whatsappConnectionId: next,

@@ -3,7 +3,7 @@
  *
  * Every external service MarketFlow talks to is described by the same record,
  * whatever it happens to be: a messaging provider, an SMTP host, an outbound
- * webhook fleet or the merchant's own API keys. That is deliberate — the hub
+ * webhook fleet or the merchant's own API keys. That is deliberate - the hub
  * renders a grid of these without knowing what any of them is, and the day a
  * backend adapter appears behind one of them nothing above has to change.
  *
@@ -27,17 +27,17 @@ export type IntegrationSlug =
   | "api";
 
 /**
- * The grouping axis on the hub — and, since the catalogue is rendered as
+ * The grouping axis on the hub - and, since the catalogue is rendered as
  * category sections rather than one flat grid, the heading a merchant scans to.
  *
  * Named after what the integration *does* for the merchant rather than after
- * the vendor's own product category — a merchant looking for Twilio is looking
+ * the vendor's own product category - a merchant looking for Twilio is looking
  * for "Messaging", not for "CPaaS".
  *
  * Email and SMS used to be categories of their own, which gave the hub seven
  * groups for nine integrations: a heading per card is not a grouping. Both are
- * Messaging, which is the answer to the question a heading is asked — where do
- * I go to reach a customer — and it leaves five sections that each hold
+ * Messaging, which is the answer to the question a heading is asked - where do
+ * I go to reach a customer - and it leaves five sections that each hold
  * something.
  */
 export type IntegrationCategory =
@@ -61,7 +61,7 @@ export type IntegrationStatus = "connected" | "needs_setup" | "issue" | "disable
  * The health vocabulary, shared by every integration.
  *
  * Four states, one set of colours, used by WhatsApp, Email, SMS, Webhooks and
- * API alike — a "Warning" has to mean the same thing on all five pages or the
+ * API alike - a "Warning" has to mean the same thing on all five pages or the
  * indicator stops carrying information.
  */
 export type HealthStatus = "healthy" | "warning" | "error" | "disconnected";
@@ -102,7 +102,7 @@ export interface IntegrationProvider {
   fields: CredentialSpec[];
   /** Where the merchant gets the credentials from. */
   docsLabel?: string;
-  /** Marked in the picker — the one most merchants pick. */
+  /** Marked in the picker - the one most merchants pick. */
   recommended?: boolean;
 }
 
@@ -110,7 +110,7 @@ export interface IntegrationProvider {
  * A saved credential.
  *
  * `value` is what the API returns after saving, which for a secret is already
- * masked at the source — the raw token never comes back, and this module is
+ * masked at the source - the raw token never comes back, and this module is
  * built on the assumption that it cannot. `preview` carries the tail so a
  * merchant can tell two keys apart without either being revealed.
  */
@@ -150,7 +150,7 @@ export interface HealthCheck {
  */
 export interface IntegrationUsage {
   label: string;
-  /** Omitted where the dependency is not countable — an inbox is one inbox. */
+  /** Omitted where the dependency is not countable - an inbox is one inbox. */
   count?: number;
   href: string;
   icon: string;
@@ -170,7 +170,7 @@ export interface IntegrationUsage {
  */
 export interface IntegrationEvent {
   id: string;
-  /** In the merchant's words — "Message received", not `message.received`. */
+  /** In the merchant's words - "Message received", not `message.received`. */
   label: string;
   at: string;
   outcome: "success" | "warning" | "failure";
@@ -188,7 +188,7 @@ export interface ConnectionActivity {
   lastError: string | null;
 }
 
-/** A headline figure on a detail page — messages today, delivery rate, balance. */
+/** A headline figure on a detail page - messages today, delivery rate, balance. */
 export interface IntegrationMetric {
   label: string;
   value: string;
@@ -219,7 +219,7 @@ export interface Integration {
   status: IntegrationStatus;
   /** The selected adapter. `null` until the integration is connected. */
   provider: IntegrationProvider | null;
-  /** What the merchant recognises the connection by — a number, a sender, a count. */
+  /** What the merchant recognises the connection by - a number, a sender, a count. */
   account: string | null;
   /** Events, messages or requests handled today. Summed into the hub's KPI row. */
   eventsToday: number;
@@ -278,7 +278,7 @@ export interface Webhook {
    * The one secret in the module that is legitimately re-readable: verifying a
    * MarketFlow signature requires having it, so an owner who lost it needs to
    * read it back rather than rotate every consumer. Provider access tokens get
-   * no such field — they are rotated, not revealed.
+   * no such field - they are rotated, not revealed.
    */
   secretReveal: string;
   createdAt: string;
@@ -316,7 +316,7 @@ export interface ApiKey {
   id: string;
   name: string;
   environment: ApiEnvironment;
-  /** `mf_live_••••8F2A` — the only form the key takes after creation. */
+  /** `mf_live_••••8F2A` - the only form the key takes after creation. */
   masked: string;
   createdAt: string;
   lastUsedAt: string | null;
@@ -341,6 +341,6 @@ export interface ApiUsage {
   failed24h: number;
   rateLimit: number;
   rateLimitUsed: number;
-  /** 24 hourly buckets, oldest first — the bars on the usage card. */
+  /** 24 hourly buckets, oldest first - the bars on the usage card. */
   hourly: number[];
 }

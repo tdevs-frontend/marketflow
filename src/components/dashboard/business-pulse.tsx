@@ -19,7 +19,7 @@ interface Signal {
 }
 
 /**
- * Placeholder figures — swap for `useGetPulseQuery()` once the API is live.
+ * Placeholder figures - swap for `useGetPulseQuery()` once the API is live.
  *
  * Deliberately *today*, not the page's reporting period: these are the numbers
  * a merchant acts on this morning, and a conversion rate averaged over ninety

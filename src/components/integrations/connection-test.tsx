@@ -14,7 +14,7 @@ import type { CredentialSpec, Integration } from "@/types/integration";
  * word for "it did not work".
  *
  * The rule for failures: name the thing that is wrong. "Something went wrong"
- * sends a merchant to support; "Authentication failed — the access token was
+ * sends a merchant to support; "Authentication failed - the access token was
  * rejected" sends them to the one field they need to change. Every branch below
  * produces a message a merchant can act on without opening a ticket.
  */
@@ -36,7 +36,7 @@ export function useConnectionTest() {
   const [state, setState] = useState<TestState>({ status: "idle" });
   const timer = useRef(0);
   /* Guards a result landing after the drawer closed, which would set state on
-     an unmounted tree and — worse — flash a stale "successful" on reopen. */
+     an unmounted tree and - worse - flash a stale "successful" on reopen. */
   const alive = useRef(true);
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export function useConnectionTest() {
    * `onSettled` fires with the verdict once the round-trip lands, and only
    * while the tree is still mounted.
    *
-   * It exists for the callers whose test *gates* something — enabling a paused
+   * It exists for the callers whose test *gates* something - enabling a paused
    * integration must not flip it to Connected until the check says the saved
    * credentials still work. Reading `state` from an effect would do the same
    * job and would also fire again on every unrelated re-render that happened to
@@ -87,7 +87,7 @@ export function useConnectionTest() {
 /**
  * The stand-in for a provider round-trip.
  *
- * Deterministic on purpose — a demo that fails at random teaches nothing. The
+ * Deterministic on purpose - a demo that fails at random teaches nothing. The
  * checks are the ones a real adapter performs first anyway: is everything
  * required present, is the endpoint safe to send a secret to, and is the secret
  * long enough to be a real credential rather than a placeholder.
@@ -142,7 +142,7 @@ export function evaluateCredentials(
  * What testing an already-configured integration reports.
  *
  * It repeats what the last real check found rather than inventing a fresh
- * verdict — "Connection successful" on an integration whose queue is full of
+ * verdict - "Connection successful" on an integration whose queue is full of
  * rejected messages is worse than no test at all. A real adapter replaces this
  * with the round-trip it stands in for, and the shape of the answer does not
  * change.

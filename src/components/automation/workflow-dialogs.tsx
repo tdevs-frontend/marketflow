@@ -14,7 +14,7 @@ import type { Workflow } from "@/types/workflow";
  *
  * Dialogs, not drawers: each is a short form with a single decision at the end
  * of it, and a modal is the right shape for a step you either finish or
- * abandon. Creating a workflow is not one of those — it is a two-step question
+ * abandon. Creating a workflow is not one of those - it is a two-step question
  * with a rule builder in it, so it has a route of its own. Node editing goes to
  * the inspector.
  */
@@ -145,7 +145,7 @@ export function ImportWorkflowDialog({
         <Field
           label="Or paste the export"
           htmlFor={`${id}-json`}
-          hint="The object from a workflow export — it starts with a nodes array."
+          hint="The object from a workflow export - it starts with a nodes array."
         >
           <Textarea
             id={`${id}-json`}

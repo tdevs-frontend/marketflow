@@ -7,7 +7,7 @@ import { APP_ROUTES } from "@/constants/app";
  *
  * It lived here while it was a page of its own; it is the Activity tab of
  * Settings › Notifications now, beside the preferences that govern it. The
- * route stays so nothing that already points at it breaks — the header bell
+ * route stays so nothing that already points at it breaks - the header bell
  * did, and so may a bookmark.
  *
  * `permanentRedirect` rather than `redirect`: this is a 308, which says the

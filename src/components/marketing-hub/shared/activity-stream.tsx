@@ -63,7 +63,7 @@ const CATEGORIES: {
  *
  * A fallback, not the rule: `kind` describes how a row should *look* and
  * `category` what it is *about*, and the two part company on exactly the rows
- * that matter — a failed campaign is an alert and belongs under Campaigns.
+ * that matter - a failed campaign is an alert and belongs under Campaigns.
  * Entries that set `category` bypass this entirely.
  */
 const KIND_CATEGORY: Record<ActivityKind, ActivityCategory> = {
@@ -99,7 +99,7 @@ const STATES: Record<ActivityState, { label: string; tone: BadgeTone }> = {
  * send should not have to read six automation rows to find it.
  *
  * There is deliberately no connector line. A vertical rail says these rows are
- * one sequence, and once the list is grouped they are four short sequences —
+ * one sequence, and once the list is grouped they are four short sequences -
  * the rail would be drawing a relationship that is no longer there.
  *
  * Colour comes from the *channel*, not the category: the icon tile takes the

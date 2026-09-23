@@ -6,7 +6,7 @@ import { ButtonLink } from "@/components/ui/button";
 export const metadata: Metadata = { title: "Forms" };
 
 /**
- * Forms had a sidebar link under Growth and no route behind it — a 404 from
+ * Forms had a sidebar link under Growth and no route behind it - a 404 from
  * the navigation. The link moved to Marketing in the cleanup; this makes it
  * resolve.
  */

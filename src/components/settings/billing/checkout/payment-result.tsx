@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import type { PaymentRequest, Subscription } from "@/types/account";
 
 /**
- * Step 5 — what actually happened.
+ * Step 5 - what actually happened.
  *
  * Three outcomes, and they are three components rather than one with a tone
  * prop, because the *facts* each one owes the reader are different. A success
@@ -17,7 +17,7 @@ import type { PaymentRequest, Subscription } from "@/types/account";
  *
  * The distinction that matters most is the middle one. A manual payment that
  * closed on a green tick reading "Payment successful" would be the module's
- * worst lie — the merchant stops watching for the plan to start, and nothing
+ * worst lie - the merchant stops watching for the plan to start, and nothing
  * has been verified. So it is amber, it says *submitted*, and it says the plan
  * begins when somebody confirms the money arrived.
  */
@@ -118,7 +118,7 @@ export function PaymentPending({ request }: { request: PaymentRequest }) {
     <Frame tone="pending" icon={Clock} title="Payment submitted">
       <p className="mx-auto max-w-sm text-sm text-text-secondary">
         Your payment is pending verification. The {request.planName} plan starts
-        once an administrator confirms the money arrived — your current plan is
+        once an administrator confirms the money arrived - your current plan is
         unchanged until then.
       </p>
 

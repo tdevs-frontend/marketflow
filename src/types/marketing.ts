@@ -3,8 +3,8 @@ import type { SocialPlatform } from "./social";
 /**
  * The channels a campaign can go out on.
  *
- * `social` was for a long time a reporting-only channel — `constants/channels`
- * has carried its theme since before it could send — and it now sends too. It
+ * `social` was for a long time a reporting-only channel - `constants/channels`
+ * has carried its theme since before it could send - and it now sends too. It
  * is deliberately part of the same union rather than a parallel type: a
  * campaign has exactly one channel, and splitting social out would mean every
  * list, filter and badge in the module learning about two kinds of campaign.
@@ -15,8 +15,8 @@ export type MarketingChannel = "whatsapp" | "email" | "sms" | "social";
  * The channels that deliver to a *contact*.
  *
  * Social publishes to accounts the workspace owns, so everything keyed to a
- * recipient — segments, eligibility, suppression, frequency caps, per-contact
- * merge tags — is typed against this narrower union rather than against
+ * recipient - segments, eligibility, suppression, frequency caps, per-contact
+ * merge tags - is typed against this narrower union rather than against
  * `MarketingChannel`. It is what stops "recipients" from silently meaning two
  * different things.
  */
@@ -64,7 +64,7 @@ export interface Campaign {
   scheduledAt?: string;
   /**
    * Social campaigns only. Present instead of, not alongside, meaning for the
-   * per-recipient counters above — a published post has no `delivered`.
+   * per-recipient counters above - a published post has no `delivered`.
    */
   social?: SocialCampaignMetrics;
 }
@@ -83,7 +83,7 @@ export interface SocialCampaignMetrics {
   publishedPosts: number;
   reach: number;
   impressions: number;
-  /** Likes, comments and shares combined — one number the list can rank by. */
+  /** Likes, comments and shares combined - one number the list can rank by. */
   engagements: number;
 }
 
@@ -113,7 +113,7 @@ export interface InboxMessage {
   direction: MessageDirection;
   body: string;
   at: string;
-  /** Outbound only — inbound messages have no delivery state of ours. */
+  /** Outbound only - inbound messages have no delivery state of ours. */
   state?: MessageState;
 }
 
@@ -143,7 +143,7 @@ export interface Conversation {
    * allowed only within 24 hours of the contact's last inbound message. After
    * that only an approved template may be sent.
    *
-   * Stored rather than derived because the fixture clocks are frozen — a live
+   * Stored rather than derived because the fixture clocks are frozen - a live
    * implementation computes it from the last inbound `at` against now, and
    * this field is what that computation would return.
    */
@@ -160,8 +160,8 @@ export interface Conversation {
  * The seven steps of the campaign wizard, in order.
  *
  * `sender` is its own step rather than a section at the bottom of `campaign`.
- * Who a message comes from is a decision with its own consequences — a
- * reputation, a reply mailbox, an unverified connection that cannot send — and
+ * Who a message comes from is a decision with its own consequences - a
+ * reputation, a reply mailbox, an unverified connection that cannot send - and
  * buried under the channel picker it was the part of the form people scrolled
  * past. Placing it after `content` also puts it where it is actually decided:
  * the sender you want depends on what you have just written.
@@ -191,7 +191,7 @@ export type WizardStep =
  * Why the campaign is being sent, recorded at the top of the wizard.
  *
  * Internal only and never shown to a recipient. It exists so reporting can
- * group a quarter of sends by what they were *for* — a 4% click rate is a good
+ * group a quarter of sends by what they were *for* - a 4% click rate is a good
  * awareness campaign and a poor conversion one, and without this the two are
  * averaged into a number that describes neither.
  */
@@ -229,7 +229,7 @@ export type CampaignGoal =
  * Standing reasons to drop a contact from a send.
  *
  * `unsubscribed` and `suppression-list` default to on and cannot be turned off
- * in the wizard — they are the legal floor, not a preference. The rest are
+ * in the wizard - they are the legal floor, not a preference. The rest are
  * campaign-by-campaign judgement calls.
  */
 export type ExclusionRule =
@@ -249,9 +249,9 @@ export interface AudienceExclusions {
 /**
  * What the audience actually resolves to, once the rules have run.
  *
- * `invalid` is separate from `excluded` on purpose. Excluded is a decision —
+ * `invalid` is separate from `excluded` on purpose. Excluded is a decision -
  * someone opted out, or this campaign is not for existing customers. Invalid is
- * data — no WhatsApp opt-in, a malformed address, a phone number that is not
+ * data - no WhatsApp opt-in, a malformed address, a phone number that is not
  * really a phone number. They need different fixes, so the wizard shows them as
  * different numbers rather than one "will not receive" total.
  */
@@ -310,7 +310,7 @@ export interface CampaignTracking {
    * Set once a human edits any UTM field.
    *
    * Until then the wizard keeps `source` and `medium` in step with the selected
-   * channel. After it, it stops — silently rewriting a value someone typed is
+   * channel. After it, it stops - silently rewriting a value someone typed is
    * worse than an out-of-date default.
    */
   utmTouched: boolean;
@@ -430,7 +430,7 @@ export interface CampaignDraft {
   /** Internal labels, from the workspace's campaign tag list. */
   tags: string[];
 
-  /* Sender — only the selected channel's fields are read. */
+  /* Sender - only the selected channel's fields are read. */
   sender: CampaignSender;
   /** Social account ids, owned by Integrations → Social. Social channel only. */
   socialAccountIds: string[];
@@ -445,7 +445,7 @@ export interface CampaignDraft {
   savedSegmentId: string;
   exclusions: AudienceExclusions;
 
-  /* Content — only the fields for the chosen channel are used. */
+  /* Content - only the fields for the chosen channel are used. */
   templateId: string;
   message: string;
   subject: string;
@@ -460,7 +460,7 @@ export interface CampaignDraft {
   /** SMS: shorten links at send time, and count them as one 23-char token. */
   shortenLinks: boolean;
 
-  /* Personalisation — a fallback per placeholder, used where a contact has no
+  /* Personalisation - a fallback per placeholder, used where a contact has no
      value for it. Keyed by placeholder name, without braces. */
   fallbacks: Record<string, string>;
 
@@ -499,7 +499,7 @@ export type TemplateStatus = "approved" | "pending" | "rejected";
  * What a template is *for*, alongside the Meta category above.
  *
  * Meta only recognises three categories, and a template's category determines
- * how it is priced and reviewed — so that field cannot be repurposed as a
+ * how it is priced and reviewed - so that field cannot be repurposed as a
  * library label. This is the merchant-facing shelf it sits on: a Welcome and a
  * Promotion template are both `marketing` to Meta and completely different
  * things to the person picking one.
@@ -549,7 +549,7 @@ export type WhatsAppContactStatus = "active" | "inactive" | "blocked";
  * Separate from `status`, which says whether we may send; this says what
  * happened. A merchant auditing a drop in list size needs the reason, and
  * "blocked" on its own does not distinguish someone who replied STOP from
- * someone who reported the message as spam — the second is a quality-rating
+ * someone who reported the message as spam - the second is a quality-rating
  * event and the first is not.
  */
 export interface WhatsAppOptOut {

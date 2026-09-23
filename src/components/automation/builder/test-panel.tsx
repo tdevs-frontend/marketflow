@@ -22,7 +22,7 @@ import { NodeIcon } from "../node-icon";
  * might have messaged a customer is a test nobody runs.
  *
  * The walk follows the first branch at every fork and reports which one it
- * took, which is what makes the result readable — a simulation that explored
+ * took, which is what makes the result readable - a simulation that explored
  * every path would print a tree, and the question being asked here is "what
  * happens to this person".
  */
@@ -60,11 +60,11 @@ function simulate(
       current.kind === "trigger"
         ? `Trigger passed for ${who}`
         : meta?.category === "messaging"
-          ? `${meta.label.replace("Send ", "")} simulated — nothing sent`
+          ? `${meta.label.replace("Send ", "")} simulated - nothing sent`
           : meta?.category === "wait"
             ? `Delay skipped in test mode (${current.summary})`
             : branch
-              ? `Condition evaluated — "${branch.label}" branch selected`
+              ? `Condition evaluated - "${branch.label}" branch selected`
               : `${current.title} applied`;
 
     steps.push({
@@ -241,7 +241,7 @@ export function TestWorkflowDialog({
 
         {revealed === steps.length && steps.length > 0 && !running ? (
           <p className="text-center text-sm font-medium text-success-text">
-            Test complete — {steps.length} steps ran without an error.
+            Test complete - {steps.length} steps ran without an error.
           </p>
         ) : null}
       </div>

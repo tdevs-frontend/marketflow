@@ -18,7 +18,7 @@ export interface SelectProps<T extends string> {
   value: T;
   onChange: (value: T) => void;
   options: SelectOption<T>[];
-  /** Accessible name. Required — a filter control with no name is unusable. */
+  /** Accessible name. Required - a filter control with no name is unusable. */
   label: string;
   /** Set when a visible `<label htmlFor>` names it instead. */
   hideLabel?: boolean;
@@ -27,7 +27,7 @@ export interface SelectProps<T extends string> {
   disabled?: boolean;
   error?: boolean;
   /**
-   * The shared control scale — see `InputSize`. `sm` is 40px, for filter and
+   * The shared control scale - see `InputSize`. `sm` is 40px, for filter and
    * toolbar rows. `md` is 44px and matches an `md` form input, so a Select
    * sits level with the fields beside it. `lg` is 48px, for the auth and
    * onboarding forms where the fields carry the page.
@@ -41,7 +41,7 @@ export interface SelectProps<T extends string> {
    order to beat them, and `cn()` is a plain join. `sm` and `md` keep exactly
    the px-3.5 and text-sm they already had. */
 const SIZES: Record<InputSize, string> = {
-  /* Secondary ink at `sm` so a filter row reads as one object — the search box
+  /* Secondary ink at `sm` so a filter row reads as one object - the search box
      beside it takes the same step back. `TRIGGER` is already `font-medium`. */
   sm: "h-10 px-3.5 text-sm text-text-secondary",
   md: "h-11 px-3.5 text-sm",
@@ -56,7 +56,7 @@ const TRIGGER =
  * be styled, hold two-line options and match the rest of the kit.
  *
  * Native `<select>` cannot be styled beyond the trigger, which is why this
- * exists — but it means the keyboard contract is ours to honour: Up/Down and
+ * exists - but it means the keyboard contract is ours to honour: Up/Down and
  * Home/End move the active option, typing jumps to a match, Enter or Space
  * commits, Escape cancels, and focus always returns to the trigger. The open
  * list takes focus and reports the active option through `aria-activedescendant`.

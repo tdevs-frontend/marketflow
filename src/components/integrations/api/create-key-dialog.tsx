@@ -27,7 +27,7 @@ import { OneTimeSecret } from "../credential-field";
  * very far apart in consequence.
  *
  * The secret is shown once. It is generated on create and returned exactly
- * once — so the dialog does not close on save; it switches to a panel the
+ * once - so the dialog does not close on save; it switches to a panel the
  * merchant has to copy from and dismiss deliberately.
  *
  * All of that state is mount-scoped: the parent renders this only while it is
@@ -69,7 +69,7 @@ export function CreateApiKeyDialog({
   const nameError = touched && !name.trim() ? "Name the key after what will use it." : undefined;
   const scopeError =
     touched && scopes.length === 0
-      ? "Grant at least one scope — a key with none can call nothing."
+      ? "Grant at least one scope - a key with none can call nothing."
       : undefined;
 
   const valid = Boolean(name.trim()) && scopes.length > 0;
@@ -216,7 +216,7 @@ export function CreateApiKeyDialog({
             <p className="flex items-start gap-2.5 rounded-panel border border-warning-soft bg-warning-soft px-3.5 py-3 text-sm text-warning-text">
               <ShieldAlert className="mt-0.5 size-4 shrink-0" aria-hidden />
               This key can create, change and delete records. Keep it on a server
-              — never in a browser, a mobile app or a public repository.
+              - never in a browser, a mobile app or a public repository.
             </p>
           ) : null}
         </div>

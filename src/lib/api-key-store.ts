@@ -12,7 +12,7 @@ import type { ApiKey } from "@/types/integration";
  * surface with usage and a request log, and Settings → API & Developer, which
  * is where somebody looks when they are already in Settings. Both render the
  * same `ApiKeyTable` over the same rows, so revoking a key on one is revoked on
- * the other — which is the only acceptable behaviour for a credential. A second
+ * the other - which is the only acceptable behaviour for a credential. A second
  * `useState(API_KEYS)` would mean a key that reads "Revoked" on one route and
  * "Active" on the other, and a developer choosing which page to believe.
  *

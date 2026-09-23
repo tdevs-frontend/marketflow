@@ -15,7 +15,7 @@ import type { PostStatus, SocialPost } from "@/types/social";
  * Schedule button announced a post it never created. This is the shelf those
  * actions were missing.
  *
- * The same shape as `lib/media-store`, deliberately — one module-level array
+ * The same shape as `lib/media-store`, deliberately - one module-level array
  * behind a `useSyncExternalStore` subscription, so every surface reading it
  * re-renders together. Editing a caption in the calendar changes the caption
  * on the Posts page and in Top Performing Posts, because all three are reading
@@ -65,7 +65,7 @@ export function useSocialPost(id: string | null): SocialPost | null {
  *
  * Engagement is not among them: it is reported by the platform, not typed by
  * the person editing, and letting an editor set it would make the analytics
- * page a fiction. `id` is absent for the same reason — an edit that could
+ * page a fiction. `id` is absent for the same reason - an edit that could
  * change the identity of the record is a duplicate with extra steps.
  */
 export interface PostDraft {
@@ -81,7 +81,7 @@ export interface PostDraft {
 /**
  * Apply a patch to one post, in place in the list.
  *
- * Returns the updated record, or `null` when the id is unknown — which the
+ * Returns the updated record, or `null` when the id is unknown - which the
  * caller should surface rather than swallow, because the only way to get here
  * with a bad id is a stale reference to something already deleted.
  */
@@ -93,7 +93,7 @@ export function updateSocialPost(
   if (index === -1) return null;
 
   /* Spread over the existing record, so anything the composer does not know
-     about — engagement, publishedAt, the failure reason — survives the edit. */
+     about - engagement, publishedAt, the failure reason - survives the edit. */
   const updated: SocialPost = { ...snapshot[index], ...patch, id };
 
   const next = [...snapshot];
@@ -175,6 +175,6 @@ export function duplicateSocialPost(id: string): SocialPost | null {
  *
  * A published post has already gone out; its `scheduledAt` is a record of when
  * that happened, not a plan, and editing it would rewrite history. Everything
- * else — draft, scheduled, failed — is still ahead of the send.
+ * else - draft, scheduled, failed - is still ahead of the send.
  */
 export const canReschedule = (status: PostStatus) => status !== "published";

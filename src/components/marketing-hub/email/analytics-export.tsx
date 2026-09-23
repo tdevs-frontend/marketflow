@@ -9,10 +9,10 @@ import { useToast } from "@/components/ui/toast";
  * The Email Analytics export, as a page action.
  *
  * It used to sit at the right-hand end of the page's own filter toolbar. That
- * toolbar is gone — the period is chosen centrally now, not per page — and
+ * toolbar is gone - the period is chosen centrally now, not per page - and
  * Export went with it only because of where it happened to be parked, not
  * because it is a filter. `PageHeader.secondaryActions` is the slot its own
- * documentation names for exactly this ("Outline or ghost buttons — Export,
+ * documentation names for exactly this ("Outline or ghost buttons - Export,
  * Import, Settings"), so the button moves there rather than being deleted.
  *
  * A component of its own because the page is a server component and this needs
@@ -30,7 +30,7 @@ export function EmailAnalyticsExport() {
       variant="outline"
       size="compact"
       onClick={() =>
-        toast("Report queued — we will email the CSV when it is ready")
+        toast("Report queued - we will email the CSV when it is ready")
       }
     >
       <Download aria-hidden />

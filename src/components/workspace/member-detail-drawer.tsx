@@ -28,12 +28,12 @@ import { MemberStatusBadge } from "./workspace-badges";
  * One member, in full.
  *
  * Scoped hard to workspace *access*. There is no phone number, no job title and
- * no start date here — this is not an HR record, and a drawer that drifts that
+ * no start date here - this is not an HR record, and a drawer that drifts that
  * way becomes a directory nobody maintains. What it answers is: who let them
  * in, what can they reach, what do they own, and what have they been doing.
  *
  * The ownership rows link into the modules that hold the records, so "12 leads"
- * is checkable rather than a number to be taken on trust — and it is the same
+ * is checkable rather than a number to be taken on trust - and it is the same
  * count the removal dialog warns about.
  */
 export function MemberDetailDrawer({
@@ -59,7 +59,7 @@ export function MemberDetailDrawer({
   const access = accessPreview(role?.grants ?? {});
   const invitedBy = member.invitedById ? memberById(member.invitedById) : null;
 
-  /* This member's own rows from the workspace audit trail — the same source the
+  /* This member's own rows from the workspace audit trail - the same source the
      Activity page reads, filtered to them. */
   const recent = WORKSPACE_AUDIT.filter(
     (event) => event.actorId === member.id,
@@ -97,7 +97,7 @@ export function MemberDetailDrawer({
     { label: "Role", value: roleName(member.roleId) },
     {
       label: "Permissions",
-      value: role ? `${grantCount(role.grants)} granted` : "—",
+      value: role ? `${grantCount(role.grants)} granted` : "-",
     },
     {
       label: "Joined",
@@ -174,7 +174,7 @@ export function MemberDetailDrawer({
           {/*
            * Effective access, not the permission list.
            *
-           * A member drawer is the wrong place for 105 checkboxes — the reader
+           * A member drawer is the wrong place for 105 checkboxes - the reader
            * is asking "roughly what can this person do", and the answer is
            * module names. The link below goes to the role for the detail.
            */}
@@ -312,7 +312,7 @@ export function MemberDetailDrawer({
               <li key={event.id} className="py-2.5 first:pt-0 last:pb-0">
                 <p className="text-sm text-text-primary">
                   {event.actionLabel}
-                  <span className="text-text-muted"> — {event.resourceName}</span>
+                  <span className="text-text-muted"> - {event.resourceName}</span>
                 </p>
                 <p className="mt-0.5 text-meta text-text-muted">
                   {formatRelativeTime(event.createdAt, WORKSPACE_NOW_MS)}

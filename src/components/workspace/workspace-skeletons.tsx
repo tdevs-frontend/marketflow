@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 /**
  * Loading states for the Workspace module.
  *
- * Each is sized to the component it replaces — the roles page reserves its
+ * Each is sized to the component it replaces - the roles page reserves its
  * 19rem list column and the matrix beside it, because a placeholder that does
  * not match what lands produces a layout jump, which is worse than none. No
  * centred spinners here.
@@ -63,7 +63,7 @@ function ToolbarSkeleton({ filters = 2 }: { filters?: number }) {
   );
 }
 
-/** Six columns — member, role, status, last active, joined, actions. */
+/** Six columns - member, role, status, last active, joined, actions. */
 export function TeamTableSkeleton({ rows = 8 }: { rows?: number }) {
   return <SkeletonTable rows={rows} columns={6} />;
 }
@@ -84,7 +84,7 @@ export function TeamPageSkeleton() {
   );
 }
 
-/** The role list column on its own — used inside `RolesSkeleton`. */
+/** The role list column on its own - used inside `RolesSkeleton`. */
 export function RoleListSkeleton({ rows = 8 }: { rows?: number }) {
   return (
     <div className="rounded-card border border-border bg-surface p-5 shadow-card">
@@ -107,7 +107,7 @@ export function RoleListSkeleton({ rows = 8 }: { rows?: number }) {
 /**
  * The permission editor: search row, tier toggle, then the module accordions.
  *
- * Only the first group is drawn open, matching the real component — a skeleton
+ * Only the first group is drawn open, matching the real component - a skeleton
  * showing eight expanded groups would collapse to one and jump the page.
  */
 export function PermissionMatrixSkeleton() {
@@ -207,7 +207,7 @@ export function RolesSkeleton() {
   );
 }
 
-/** Six columns — time, member, action, module, target, status. */
+/** Six columns - time, member, action, module, target, status. */
 export function ActivityTableSkeleton({ rows = 10 }: { rows?: number }) {
   return <SkeletonTable rows={rows} columns={6} />;
 }
@@ -261,7 +261,7 @@ export function WorkspaceSettingsSkeleton() {
 /**
  * The audit table, under the name the rest of the module calls it.
  *
- * Same six columns as `ActivityTableSkeleton` — this is an alias rather than a
+ * Same six columns as `ActivityTableSkeleton` - this is an alias rather than a
  * second definition, because two skeletons for one table is how they drift.
  */
 export const AuditTableSkeleton = ActivityTableSkeleton;

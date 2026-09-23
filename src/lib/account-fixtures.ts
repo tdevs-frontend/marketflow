@@ -25,7 +25,7 @@ import type {
  * What the account service would return, seeded from the workspace the rest of
  * the product already agrees on.
  *
- * The signed-in person is `CURRENT_MEMBER` — the same record the Team table
+ * The signed-in person is `CURRENT_MEMBER` - the same record the Team table
  * lists as "you", the audit trail attributes changes to, and Workspace Settings
  * shows as the owner. Profile used to greet that person as "Guest User" because
  * it read `auth.user`, which is `null` and always has been: no route handlers
@@ -47,19 +47,19 @@ const role = roleById(CURRENT_MEMBER.roleId);
 /**
  * Job titles are not on `WorkspaceMember`, and this is the honest consequence.
  *
- * The field is offered, starts empty, and saves — rather than being seeded with
+ * The field is offered, starts empty, and saves - rather than being seeded with
  * a plausible-looking "Head of Growth" that the merchant would have to notice
  * was invented before correcting it.
  *
  * `avatarUrl` points at `public/user/`, this person's own file, rather than at
- * one of the `customer-avatar-*.jpg` images — those are each already a named
+ * one of the `customer-avatar-*.jpg` images - those are each already a named
  * contact in the WhatsApp inbox and four of the faces in the landing hero, and
  * borrowing one would put the same face on a customer and on the person signed
  * in.
  *
  * The file is not load-bearing. Every surface that renders this photo uses
  * `AvatarPhoto`, which falls back to the initials when the image does not
- * resolve — so a moved or missing file shows "NR" rather than a broken glyph.
+ * resolve - so a moved or missing file shows "NR" rather than a broken glyph.
  */
 export const CURRENT_ACCOUNT: AccountUser = (() => {
   const [firstName, ...rest] = CURRENT_MEMBER.name.split(" ");
@@ -129,7 +129,7 @@ const GROWTH = PLANS.find((plan) => plan.id === "growth") ?? PLANS[0];
 /**
  * What this workspace subscribes to.
  *
- * The plan and its price come from `constants/pricing` — the same tiers the
+ * The plan and its price come from `constants/pricing` - the same tiers the
  * public pricing page renders, so there is one answer to what MarketFlow costs
  * and a change there cannot leave Billing quoting last quarter's number.
  *
@@ -175,8 +175,8 @@ export const SUBSCRIPTION: Subscription = {
  *   **The chain is continuous.** Each period opens the day the one before it
  *   closed, so there is no month the workspace was apparently on nothing.
  *
- *   **It agrees with the subscription.** The open period *is* `SUBSCRIPTION` —
- *   same tier, same cycle, same amount — and the oldest period opens on
+ *   **It agrees with the subscription.** The open period *is* `SUBSCRIPTION` -
+ *   same tier, same cycle, same amount - and the oldest period opens on
  *   `SUBSCRIPTION.startedAt`, which is the date Billing Information shows as
  *   "Subscribed since". The two tabs cannot be caught disagreeing.
  *
@@ -227,7 +227,7 @@ export const PLAN_HISTORY: PlanPeriod[] = PLAN_PERIODS.map(
  * Derived rather than written beside them, and that is the whole reason the
  * billing module now has one history instead of two. A hand-written invoice
  * list drifts from the plan history the first time either is edited, and the
- * merchant who catches it is the one reconciling a bank statement — the worst
+ * merchant who catches it is the one reconciling a bank statement - the worst
  * moment for two screens in the same product to disagree. Here there is nothing
  * to drift: a period says Business ran April to July at $99, and these are the
  * three charges that made it up.

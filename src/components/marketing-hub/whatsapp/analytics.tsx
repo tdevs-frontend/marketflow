@@ -22,7 +22,7 @@ import {
 import { formatCount, formatNumber, formatPercent, rate } from "@/lib/format";
 
 /**
- * WhatsApp analytics — the channel's own operational performance, and nothing
+ * WhatsApp analytics - the channel's own operational performance, and nothing
  * else's.
  *
  * Four things in order: what was sent and how much landed (the KPI row), how
@@ -47,8 +47,8 @@ import { formatCount, formatNumber, formatPercent, rate } from "@/lib/format";
  *   two rates.
  * - Customer Engagement Insights and Top Segments were audience analysis; the
  *   Customers module owns that.
- * - The page-level toolbar — a date-range picker, an audience select and an
- *   export button — sat above a chart that already carried its own window
+ * - The page-level toolbar - a date-range picker, an audience select and an
+ *   export button - sat above a chart that already carried its own window
  *   control, and was wired to none of the other panels.
  *
  * Nothing here reports revenue, sales or audience growth: Commerce, Sales and
@@ -58,7 +58,7 @@ import { formatCount, formatNumber, formatPercent, rate } from "@/lib/format";
  * The split with the module's Overview is by *what kind of fact*, not by
  * subject: a rate, a trend or a ranking over a period belongs here; something
  * waiting to be done belongs there. The agent roster appears on both and is
- * the same seven people from one fixture — Overview shows `open`, the queue
+ * the same seven people from one fixture - Overview shows `open`, the queue
  * right now, and this shows `handled`, the period's total.
  */
 
@@ -71,12 +71,12 @@ const TOTALS = whatsappTotals(WA_CAMPAIGNS);
 /**
  * Four headline figures: two counts and the two rates they make.
  *
- * Down from six. Read went with the read-rate view below it — a blue tick is a
+ * Down from six. Read went with the read-rate view below it - a blue tick is a
  * delivery fact, not an engagement one, and it sat between Delivered and
  * Replies hiding the funnel's one real drop. Failed and Opt-outs went because
  * neither is a performance reading: a failure is a number problem and an
  * opt-out is a consent event, and both are already visible where they can be
- * acted on — the connection strip on Overview and the contact list.
+ * acted on - the connection strip on Overview and the contact list.
  *
  * The two rates are derived from the two counts beside them rather than
  * stated, so a card can never disagree with the card next to it.
@@ -116,7 +116,7 @@ const STATS: StatItem[] = [
  * The windows the engagement trend can be read over.
  *
  * `WA_SERIES` is ten points at three-day spacing, which is the 30-day view.
- * Seven days is its tail and ninety days is the whole run stretched — a real
+ * Seven days is its tail and ninety days is the whole run stretched - a real
  * API would return a different series per window; slicing one is what a
  * fixture can honestly do, and the point counts differ so the three views
  * never look like the same chart relabelled.
@@ -156,7 +156,7 @@ const CATEGORY_TONE: Record<string, BadgeTone> = {
   authentication: "neutral",
 };
 
-/** Best reply rate first — the column the table exists to rank by. */
+/** Best reply rate first - the column the table exists to rank by. */
 const TEMPLATE_ROWS = [...WA_TEMPLATE_PERFORMANCE].sort(
   (a, b) => rate(b.replies, b.delivered) - rate(a.replies, a.delivered),
 );
@@ -165,8 +165,8 @@ export function WhatsAppAnalytics({ range }: { range?: TrendWindow } = {}) {
   /*
    * The window the trend opens on, seeded by the caller.
    *
-   * This page carried its own toolbar — a date-range picker, an audience
-   * select and an export button — sitting above a page that already had a
+   * This page carried its own toolbar - a date-range picker, an audience
+   * select and an export button - sitting above a page that already had a
    * window control on the chart the window actually applies to. Two date
    * controls on one screen is one too many, and the page-level one was the
    * wrong place: the KPI row, the funnel and the two tables all read whole
@@ -175,7 +175,7 @@ export function WhatsAppAnalytics({ range }: { range?: TrendWindow } = {}) {
    * `range` is the seam for the centralised filter. When a dashboard-level or
    * card-level control exists it passes the selection in here and the trend
    * opens on it; until then the chart's own control is the only thing driving
-   * it, and the default holds. Nothing passes `range` yet — it is deliberately
+   * it, and the default holds. Nothing passes `range` yet - it is deliberately
    * optional so wiring it later is one prop rather than a refactor.
    */
   const [trendWindow, setTrendWindow] = useState<TrendWindow>(range ?? "30d");
@@ -184,7 +184,7 @@ export function WhatsAppAnalytics({ range }: { range?: TrendWindow } = {}) {
   /*
    * The trend's series, sliced to the chosen window.
    *
-   * Taken from the *tail* of each series rather than the head — a seven-day
+   * Taken from the *tail* of each series rather than the head - a seven-day
    * view should be the last seven days, not the first three points of a
    * thirty-day run.
    */
@@ -223,7 +223,7 @@ export function WhatsAppAnalytics({ range }: { range?: TrendWindow } = {}) {
          * Every legend on this page named an indigo that no chart on it draws:
          * `bg-primary` is #4f46e5, and these lines are #059669 and #34d399. A
          * legend whose colour does not match its series is worse than no
-         * legend — it is a key that mislabels the thing it is keying.
+         * legend - it is a key that mislabels the thing it is keying.
          */
         legend={[
           { label: "Messages", swatch: "bg-whatsapp" },
@@ -235,13 +235,13 @@ export function WhatsAppAnalytics({ range }: { range?: TrendWindow } = {}) {
          * Three lines, not a stacked delivery breakdown.
          *
          * This card used to stack read, delivered-unread and failed to the
-         * total sent — which is the delivery story, and the delivery story was
+         * total sent - which is the delivery story, and the delivery story was
          * already the KPI row's Delivery Rate and the funnel's first two
          * stages. Three separate panels answering it left the page with no
          * chart of what the channel actually produced.
          *
          * Lines rather than bars because the three series are orders of
-         * magnitude apart — 35,200 messages against 597 conversions — and
+         * magnitude apart - 35,200 messages against 597 conversions - and
          * stacked bars would bury the bottom two inside the axis. A line keeps
          * the shape of a small series readable next to a large one.
          */}
@@ -302,7 +302,7 @@ export function WhatsAppAnalytics({ range }: { range?: TrendWindow } = {}) {
                   </TD>
                   {/*
                    * The column the table is sorted by, so it carries the weight
-                   * — and the channel's green, because a reply is the outcome
+                   * - and the channel's green, because a reply is the outcome
                    * this whole module exists to produce. The one coloured
                    * column in the table; the rest stay on the neutral ramp so
                    * the green means something.
@@ -314,11 +314,11 @@ export function WhatsAppAnalytics({ range }: { range?: TrendWindow } = {}) {
                     {formatPercent(rate(template.replies, template.delivered))}
                   </TD>
                   {/* A count, not a rate. An authentication template converts
-                      nothing by design, and 0.0% reads as a failure where "—"
+                      nothing by design, and 0.0% reads as a failure where "-"
                       reads as "not what this template is for". */}
                   <TD align="right" className="tabular-nums">
                     {template.conversions === 0 ? (
-                      <span className="text-text-muted">—</span>
+                      <span className="text-text-muted">-</span>
                     ) : (
                       formatNumber(template.conversions)
                     )}
@@ -334,12 +334,12 @@ export function WhatsAppAnalytics({ range }: { range?: TrendWindow } = {}) {
 
         This is now the only place response time is reported. A Response Time
         trend and a Response Time Distribution used to sit above it, which made
-        three panels answering "how fast is the inbox" on one page — and the
+        three panels answering "how fast is the inbox" on one page - and the
         two charts answered it for the channel as a whole, where only the per
         agent reading tells a team lead who needs help.
 
-        The roster is `WA_INBOX_SNAPSHOT.agents` — the same seven the Overview's
-        Agent Load panel draws — so the two pages can never name a different
+        The roster is `WA_INBOX_SNAPSHOT.agents` - the same seven the Overview's
+        Agent Load panel draws - so the two pages can never name a different
         team. What differs is the window: `open` is the queue right now and
         `handled` is the period, which is why Overview shows one and this shows
         the other.
@@ -366,7 +366,7 @@ export function WhatsAppAnalytics({ range }: { range?: TrendWindow } = {}) {
                 <TD align="right" className="tabular-nums">
                   {formatNumber(agent.open)}
                 </TD>
-                {/* Minutes, where down is the good direction — the one column
+                {/* Minutes, where down is the good direction - the one column
                     here a reader should want to see fall. */}
                 <TD align="right" className="tabular-nums">
                   {agent.avgResponseMinutes}m

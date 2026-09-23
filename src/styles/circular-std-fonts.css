@@ -1,5 +1,5 @@
 /**
- * Circular Std — four discrete cuts, no variable axis. Weight is the cut's
+ * Circular Std - four discrete cuts, no variable axis. Weight is the cut's
  * family name (Book / Medium / Bold / Black), so each face is declared with no
  * `font-weight` descriptor. Never pair one with `font-weight: 500` / `700`:
  * the face is already right and the browser would fake a bold on top.

@@ -80,14 +80,14 @@ import {
 import { RiskBadge, RoleTypeBadge } from "./workspace-badges";
 
 /**
- * Roles & Permissions — what workspace members can reach.
+ * Roles & Permissions - what workspace members can reach.
  *
  * Master/detail rather than a table that opens a modal: the permission editor
  * *is* the page, and burying it behind a dialog makes comparing two roles a
  * matter of memory. The list stays visible so switching between Marketing
  * Manager and Junior Marketer is one click and the matrix redraws beside it.
  *
- * The detail is three tabs — Permissions, Members, Activity — because a role
+ * The detail is three tabs - Permissions, Members, Activity - because a role
  * answers three questions and only one of them is the grid. No new routes: this
  * is one page, and Workspace already owns four sidebar entries.
  *
@@ -118,7 +118,7 @@ export function RolesWorkspace() {
   /**
    * The staged edit.
    *
-   * Permission toggles never write straight to `roles` — they accumulate here
+   * Permission toggles never write straight to `roles` - they accumulate here
    * until the merchant saves, which is what makes the change summary possible
    * and what stops a mis-click from revoking someone's access in real time.
    */
@@ -150,7 +150,7 @@ export function RolesWorkspace() {
   );
 
   /* Every toggle resolves dependencies, so an incoherent combination is never
-     held in state — not caught at save, simply not reachable. */
+     held in state - not caught at save, simply not reachable. */
   function toggle(resource: string, action: PermissionAction, next: boolean) {
     if (!role) return;
 
@@ -166,8 +166,8 @@ export function RolesWorkspace() {
     if (cascaded.length > 0) {
       toast(
         next
-          ? `Also granted ${cascaded.map((item) => permissionLabel(resource, item)).join(", ")} — required for this.`
-          : `Also removed ${cascaded.map((item) => permissionLabel(resource, item)).join(", ")} — they depend on it.`,
+          ? `Also granted ${cascaded.map((item) => permissionLabel(resource, item)).join(", ")} - required for this.`
+          : `Also removed ${cascaded.map((item) => permissionLabel(resource, item)).join(", ")} - they depend on it.`,
         "info",
       );
     }
@@ -202,7 +202,7 @@ export function RolesWorkspace() {
 
     setDraft(null);
     toast(
-      `${role.name} updated — ${deltas.length} permission ${deltas.length === 1 ? "change" : "changes"} saved`,
+      `${role.name} updated - ${deltas.length} permission ${deltas.length === 1 ? "change" : "changes"} saved`,
       "success",
     );
   }
@@ -233,7 +233,7 @@ export function RolesWorkspace() {
     for (const key of keys) base[key] = [...(source.grants[key] ?? [])];
 
     setDraft(base);
-    toast(`Copied ${source.name} permissions — review and save`, "info");
+    toast(`Copied ${source.name} permissions - review and save`, "info");
   }
 
   const active = roles.filter((item) => item.status === "active");
@@ -362,7 +362,7 @@ export function RolesWorkspace() {
                       detail: `Copied from ${role.name}`,
                     }),
                   );
-                  toast(`${copy.name} created — customise it now`, "success");
+                  toast(`${copy.name} created - customise it now`, "success");
                 }}
                 onCopyPermissions={() => setCopying(role)}
                 onArchive={() => setArchiving(role)}
@@ -425,9 +425,9 @@ export function RolesWorkspace() {
                   {editable ? null : (
                     <p className="text-sm text-text-muted">
                       {isOwnerRole
-                        ? "Read-only — the Owner role is protected."
+                        ? "Read-only - the Owner role is protected."
                         : role.status === "archived"
-                          ? "Read-only — restore this role to edit it."
+                          ? "Read-only - restore this role to edit it."
                           : permissionHint("Manage roles", permissions.roleName)}
                     </p>
                   )}
@@ -451,7 +451,7 @@ export function RolesWorkspace() {
                       <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />
                       <span>
                         This is your own role. Permissions that would lock you
-                        out of managing the workspace are held open — everything
+                        out of managing the workspace are held open - everything
                         else you turn off applies to you as soon as it is saved.
                       </span>
                     </p>
@@ -478,7 +478,7 @@ export function RolesWorkspace() {
       {/*
        * The save bar, sticky while an edit is staged.
        *
-       * Appears only when there is something to save — a permanently pinned bar
+       * Appears only when there is something to save - a permanently pinned bar
        * spends 64px of every visit saying "nothing has changed".
        */}
       {dirty && role ? (
@@ -584,7 +584,7 @@ export function RolesWorkspace() {
             );
             toast(
               reassignToId
-                ? `${target.name} deleted — members moved to ${roles.find((r) => r.id === reassignToId)?.name}`
+                ? `${target.name} deleted - members moved to ${roles.find((r) => r.id === reassignToId)?.name}`
                 : `${target.name} deleted`,
               "info",
             );
@@ -733,7 +733,7 @@ function RoleHeader({
   const isOwner = role.id === "role_owner";
   const isSystem = role.type === "system";
 
-  /* Duplicate is offered on every role including the Owner — copying a
+  /* Duplicate is offered on every role including the Owner - copying a
      permission set is not the same as changing it, and "start from Owner" is a
      legitimate way to build a second administrator. */
   const actions = [
@@ -804,7 +804,7 @@ function RoleHeader({
         </div>
       </div>
 
-      {/* Compact summary tiles — deliberately not KPI cards. This is context
+      {/* Compact summary tiles - deliberately not KPI cards. This is context
           above the editor, not the point of the page. */}
       <dl className="mt-5 grid gap-3 border-t border-border pt-5 sm:grid-cols-2 lg:grid-cols-4">
         <SummaryTile label="Members" value={String(memberCount)} />
@@ -856,8 +856,8 @@ function SummaryTile({ label, value }: { label: string; value: React.ReactNode }
  * What this role can reach, in plain terms.
  *
  * The mental model for a merchant who will never read a matrix. Three buckets
- * and module names — "Sales Agent works with Customers, reads Analytics, and
- * cannot touch Automation or Settings" — which is the sentence they would say
+ * and module names - "Sales Agent works with Customers, reads Analytics, and
+ * cannot touch Automation or Settings" - which is the sentence they would say
  * out loud when deciding who to give it to.
  */
 function AccessPreview({ grants }: { grants: RoleGrants }) {
@@ -1000,7 +1000,7 @@ function RoleActivity({ roleId }: { roleId: string }) {
             <li key={event.id} className="py-3.5 first:pt-0 last:pb-0">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <p className="text-sm font-medium text-text-primary">
-                  {event.actorName} — {event.summary}
+                  {event.actorName} - {event.summary}
                 </p>
                 <p className="text-meta text-text-muted">
                   {formatRelativeTime(event.createdAt, WORKSPACE_NOW_MS)}

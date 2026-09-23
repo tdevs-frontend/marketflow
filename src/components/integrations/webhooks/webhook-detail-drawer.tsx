@@ -18,8 +18,8 @@ import { WebhookDeliveryLog } from "./webhook-delivery-log";
  * One endpoint, in full.
  *
  * A drawer rather than a page: an endpoint is a configuration record, and the
- * job a merchant comes here to do — read the last failure, fire a test, check
- * which events are on — is done alongside the list, not instead of it.
+ * job a merchant comes here to do - read the last failure, fire a test, check
+ * which events are on - is done alongside the list, not instead of it.
  *
  * Two tabs, because the two audiences arrive for different things. Whoever set
  * the endpoint up wants the URL, the secret and the event list; whoever is

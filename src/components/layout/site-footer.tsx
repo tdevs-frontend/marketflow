@@ -8,7 +8,7 @@ import { siteConfig } from "@/config/site";
 /**
  * The three columns the footer shows, and which links from each.
  *
- * `footerNav` stays the full list — it is the site's own inventory of these
+ * `footerNav` stays the full list - it is the site's own inventory of these
  * destinations, Legal included, and nothing is deleted from it. This is the
  * footer's *selection* from it: three groups of five. Twenty-nine links over
  * four columns made the panel a directory; fifteen over three makes it a
@@ -16,7 +16,7 @@ import { siteConfig } from "@/config/site";
  *
  * Picked by title rather than by index, so the choices read as decisions
  * instead of offsets. Rename a link in `footerNav` and it drops out of the
- * footer rather than quietly pointing somewhere else — the better failure.
+ * footer rather than quietly pointing somewhere else - the better failure.
  */
 const COLUMN_PICKS = {
   Product: [
@@ -65,7 +65,7 @@ const LEGAL = pick("Legal", ["Privacy Policy", "Terms of Service"]);
  * colour only.
  *
  * One constant for both rows, because the bottom row's legal links and the
- * column links are the same kind of thing and were drifting apart — the
+ * column links are the same kind of thing and were drifting apart - the
  * columns fading colour while the legal pair also slid two pixels sideways.
  * They differ in size, which the call sites set, and in nothing else.
  */
@@ -76,18 +76,18 @@ const LINK =
  * The band's ground: four decorative layers, clipped by the footer's own
  * `overflow-hidden`, none of them in the accessibility tree.
  *
- * 1. `footer-mesh` — the colour, corner by corner. See the utility.
+ * 1. `footer-mesh` - the colour, corner by corner. See the utility.
  * 2. Two oversized blurred glows. These are what turn the mesh into
  *    atmosphere: a 60px blur on a shape half the viewport wide has no edge
  *    anywhere, so the light never gives away a boundary. The top-right one is
- *    the reference's signature, and its centre sits *above* the band — which
+ *    the reference's signature, and its centre sits *above* the band - which
  *    is the whole difference between light falling on a surface and a pale
  *    disc sitting on one.
  * 3. A scrim, which is the one layer here that is not about colour. It is what
  *    makes the reference's bright top survivable: link ink measures around
  *    3:1 against that top-right light on its own, and 8:1 against the same
  *    light behind this. Anchored in pixels for the reason the mesh is, and
- *    placed after the glows deliberately — ahead of them it would be the one
+ *    placed after the glows deliberately - ahead of them it would be the one
  *    thing they paint over.
  * 4. `footer-grain` at 3%, so the ramp does not band on an 8-bit display.
  */
@@ -134,7 +134,7 @@ function FooterGround() {
  * The bottom of the product: a full-bleed gradient band.
  *
  * The ground runs edge to edge while the content stays in `custom-container`,
- * the same measure every other section on the page uses — so the columns line
+ * the same measure every other section on the page uses - so the columns line
  * up with the pricing table and the hero copy above them, and only the colour
  * is full width.
  *

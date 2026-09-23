@@ -38,13 +38,13 @@ import { FilterBar } from "./filter-bar";
 import { FilterTabs, type FilterTab } from "./filter-tabs";
 
 /**
- * Commerce Customers — who bought from me?
+ * Commerce Customers - who bought from me?
  *
  * The single most important thing about this page is what it is *not*: a second
  * customer database. Every row is a projection of a contact that already exists
  * in the CRM, keyed by that contact's id, computed from the order book. A
  * contact appears here the moment they buy something and nothing is written
- * back — which is why "View full profile" can safely open the CRM record.
+ * back - which is why "View full profile" can safely open the CRM record.
  *
  * Customer type is derived too. New, Repeat, VIP and Inactive are read off
  * order history against the thresholds in `CUSTOMER_RULES`; nobody assigns
@@ -82,7 +82,7 @@ export function CommerceCustomersWorkspace() {
   const totals = useMemo(() => customerTotals(), []);
 
   /*
-   * Counted over every buyer, not the filtered set — the tabs describe the
+   * Counted over every buyer, not the filtered set - the tabs describe the
    * customer base, and a search for one name should not make them read zero.
    *
    * Not `customerTotals`: that folds VIP into repeat for the KPI row, which
@@ -324,7 +324,7 @@ export function CommerceCustomersWorkspace() {
  *
  * A commerce-shaped drawer rather than the CRM contact drawer, because the
  * question being asked here is "what have they bought" and the CRM record
- * answers "who are they". The link at the bottom is what keeps the two joined —
+ * answers "who are they". The link at the bottom is what keeps the two joined -
  * one contact, two readings of it.
  */
 function CustomerDrawer({
@@ -428,8 +428,8 @@ function CustomerDrawer({
                 * What they actually bought, variant included.
                 *
                 * A history that reads "Premium T-Shirt" three times cannot
-                * answer the one question this panel is opened for — what size
-                * to offer them next — so the line names the combination the
+                * answer the one question this panel is opened for - what size
+                * to offer them next - so the line names the combination the
                 * order recorded.
                 */}
               <ul className="mt-1 space-y-0.5">
@@ -465,8 +465,8 @@ function CustomerDrawer({
 
       <p className="mt-5 flex items-start gap-2 rounded-panel border border-border bg-surface-secondary px-3.5 py-3 text-sm text-text-secondary">
         <Sparkles className="mt-0.5 size-4 shrink-0 text-text-muted" aria-hidden />
-        These figures are calculated from orders. Editing the person — their
-        tags, consent or owner — happens on their contact record.
+        These figures are calculated from orders. Editing the person - their
+        tags, consent or owner - happens on their contact record.
       </p>
     </Drawer>
   );

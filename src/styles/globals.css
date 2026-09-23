@@ -3,7 +3,7 @@
 /*
  * The fallback kits, declared and nothing more.
  *
- * Neither is in the active theme — see `font-themes.css` — and an `@font-face`
+ * Neither is in the active theme - see `font-themes.css` - and an `@font-face`
  * nothing names is never fetched, so this costs a parse and no bytes. They are
  * here so the `data-font="satoshi"` and `data-font="legacy"` switches have real
  * faces to land on; Circular Std used to be missing from this list, which left
@@ -63,7 +63,7 @@
     /*
      * A real 700, where this used to be `font-weight: 400` over a bold *cut*.
      * Stack Sans Notch carries its own 400–700, so the weight is asked for
-     * rather than baked into the family name — and a heading that wants a
+     * rather than baked into the family name - and a heading that wants a
      * lighter setting says so with `font-semibold` or `font-medium`, which now
      * change the weight instead of swapping the face out from under it.
      */
@@ -88,7 +88,7 @@
   }
 
   /*
-   * Google sign-in button — reproduces `Button variant="outline" size="lg"` as
+   * Google sign-in button - reproduces `Button variant="outline" size="lg"` as
    * its own class. Keep in step with `SIZES.lg` / `VARIANTS.outline` in
    * `components/ui/button.tsx`.
    */
@@ -112,24 +112,24 @@
   /*
    * The landing page's section typography, as two classes.
    *
-   * Both carry type and nothing else — no colour, no margin, no decoration.
+   * Both carry type and nothing else - no colour, no margin, no decoration.
    * That split is deliberate: the sections sit on different grounds (light,
    * dark, gradient), so each call site keeps its own `text-*` colour, its own
    * `mt-*`, and its own pill treatment on the eyebrow, while the ramp itself
    * lives in one place.
    *
    * `@layer components` puts them below the utilities layer, so a `text-white`
-   * or `text-balance` at the call site still wins — and above `@layer base`, so
+   * or `text-balance` at the call site still wins - and above `@layer base`, so
    * they beat the global `h1..h6` rule the way the inline utilities they replace
    * used to.
    */
 
   /*
-   * Section eyebrow — the small label above a section heading. Set from the
+   * Section eyebrow - the small label above a section heading. Set from the
    * hero badge, "WhatsApp Business API · built for merchants": 14px in the
    * medium cut, normal tracking, sentence case.
    *
-   * `font-medium` is a family swap, not a weight — see the `--font-*` tokens in
+   * `font-medium` is a family swap, not a weight - see the `--font-*` tokens in
    * `variables.css`. Tracking and transform are stated rather than left to
    * inherit, so the label reads the same wherever it is dropped.
    */
@@ -140,7 +140,7 @@
   }
 
   /*
-   * Section heading — set from "Everything you need to turn leads into loyal
+   * Section heading - set from "Everything you need to turn leads into loyal
    * customers": 30px, rising to 36px at `sm` and 48px at `lg`.
    *
    * One ramp for every section, so the same viewport gives the same heading
@@ -167,13 +167,13 @@
 }
 
 /*
- * The MarketFlow brand gradient — 135° indigo to violet.
+ * The MarketFlow brand gradient - 135° indigo to violet.
  *
  * Defined once here rather than written out at each call site, so the angle and
  * the stops are a single edit. Four utilities, because a gradient behaves
  * differently depending on what it is painting:
  *
- *   brand-gradient         a surface with text on it — CTAs, badges. Uses the
+ *   brand-gradient         a surface with text on it - CTAs, badges. Uses the
  *                          deeper interactive pair so white labels clear AA.
  *                          This is what `Button variant="primary"` paints, so
  *                          every primary action in the product is this ramp.
@@ -226,11 +226,11 @@
 }
 
 /*
- * The automation ground — the page's one brand moment.
+ * The automation ground - the page's one brand moment.
  *
  * A 115° ramp across the full width: `primary` indigo at the left where the
  * copy is, `secondary` violet at the right behind the product. The two mid
- * stops are the point of it — indigo straight to violet crosses through a grey
+ * stops are the point of it - indigo straight to violet crosses through a grey
  * waist, and four stops keep the whole transit inside the purples, which is
  * what makes it read as one colour moving rather than as two colours meeting.
  *
@@ -260,7 +260,7 @@
  *
  * `brand-gradient-text` cannot be used here: it is the same indigo-violet the
  * section is painted in, so the phrase would sink into its own background. This
- * is the lavender end of that ramp instead — the same hues, three rungs up —
+ * is the lavender end of that ramp instead - the same hues, three rungs up -
  * opening on white, so the phrase picks up where the rest of the heading leaves
  * off and resolves into colour rather than switching to it. It runs 90° rather
  * than 135° because the phrase is one line wide, where a diagonal only wastes
@@ -313,7 +313,7 @@
 /*
  * The workflow canvas behind the automation illustration: a dot grid at the
  * spacing automation tools use, faded out at the edges so it never reaches the
- * copy in the next column. Decorative only — always `pointer-events-none`.
+ * copy in the next column. Decorative only - always `pointer-events-none`.
  */
 @utility workflow-dots {
   background-image: radial-gradient(
@@ -341,7 +341,7 @@
  * Closing-CTA ground: the page's own neutral, tinted.
  *
  * The panel is the last thing before the footer and it has to read as part of
- * the landing page, not as a banner dropped onto it — so the ramp stays inside
+ * the landing page, not as a banner dropped onto it - so the ramp stays inside
  * the tokens the rest of the page already uses: white, violet-50, indigo-50.
  * The two blooms are the same brand pair as `hero-surface`'s single one, at
  * roughly the same strength, which is what ties the top of the page to the
@@ -366,7 +366,7 @@
 /*
  * The footer panel's ground: a mesh, not a gradient.
  *
- * Six layers, and the order is the whole trick — in CSS the first
+ * Six layers, and the order is the whole trick - in CSS the first
  * `background-image` paints on top, so this reads bottom-up: a 135° indigo-to
  * navy ramp underneath, then the deep navy corner at the lower right, then a
  * lavender lift off the floor at the lower left, then deep indigo through the
@@ -382,7 +382,7 @@
  * And every vertical radius is in **pixels** while the horizontal stays in per
  * cent. That asymmetry is deliberate: this panel is around 840px tall on a
  * desktop and over 1500px on a phone, so a layer sized `65%` would put its
- * falloff in a completely different place at each width — and on the phone the
+ * falloff in a completely different place at each width - and on the phone the
  * bright top would reach the link columns. Anchored in pixels, the light
  * occupies the same first ~400px everywhere, which is what lets one set of
  * text colours clear AA at every viewport.
@@ -391,7 +391,7 @@
  * see `FooterGround`. This is only the colour underneath them.
  *
  * The navies are literals rather than tokens. They are one ramp belonging to
- * one panel — `--color-dark` is the product's dark *surface* (a blue-slate),
+ * one panel - `--color-dark` is the product's dark *surface* (a blue-slate),
  * and borrowing it here would either pull the footer grey or drag every dark
  * surface in the app toward indigo.
  */
@@ -407,7 +407,7 @@
       transparent 76%
     ),
     /* Top-right: the pale light. Its centre sits above the panel so only the
-       falloff lands inside — the blurred glow in the component does the rest. */
+       falloff lands inside - the blurred glow in the component does the rest. */
     radial-gradient(
       82% 360px at 90% -110px,
       rgba(255, 255, 255, 0.6) 0%,
@@ -450,7 +450,7 @@
 /*
  * Grain, at the threshold of visible.
  *
- * One `feTurbulence` tile as a data URI — CSS all the way down, no asset to
+ * One `feTurbulence` tile as a data URI - CSS all the way down, no asset to
  * ship or cache. It exists because a mesh this soft bands on an 8-bit display;
  * three per cent of noise gives the ramp something to dither against. Anything
  * you can actually see here is too much, so the opacity lives at the call site
@@ -647,7 +647,7 @@ body.mobile-menu-show {
  *
  * Opacity and a two-pixel lift, and nothing else: the bubble is positioned
  * with `left`/`top` on a fixed layer, so animating anything that resolves to
- * a layout value would put the browser back into reflow on every hover — which
+ * a layout value would put the browser back into reflow on every hover - which
  * is the whole reason the tooltip is on an overlay in the first place.
  */
 @keyframes tooltipIn {
@@ -670,7 +670,7 @@ body.mobile-menu-show {
  * A chart tooltip that brings its own box.
  *
  * ApexCharts wraps a `custom` tooltip in `.apexcharts-tooltip`, which already
- * carries a white ground, a grey border and a shadow — so a custom body styled
+ * carries a white ground, a grey border and a shadow - so a custom body styled
  * to match the design system lands inside a second, slightly different card.
  * Stripping the wrapper's chrome where ours is present is narrower than
  * restyling Apex's tooltip globally, which would also hit every default
@@ -708,7 +708,7 @@ body.mobile-menu-show {
 }
 
 /* Connector flow: a dash travelling along an SVG path. The offset is one full
-   dash period — 3 on, 34 off in `platform/connection-lines.tsx` — so the loop
+   dash period - 3 on, 34 off in `platform/connection-lines.tsx` - so the loop
    closes on itself instead of jumping. */
 @keyframes flow {
   from {
@@ -743,7 +743,7 @@ body.mobile-menu-show {
  * Two rather than the four these used to travel, because the cards now
  * straddle the monitor's edges instead of orbiting it at arm's length, and
  * travel that reads as drift in open space reads as a wobble once the thing is
- * touching something. Slow and shallow on purpose — enough to say the card is
+ * touching something. Slow and shallow on purpose - enough to say the card is
  * not glued to the page, not enough to pull the eye off the screen it hangs on.
  *
  * Each phase is a whole class rather than a delay utility on top of the first:
@@ -800,7 +800,7 @@ body.mobile-menu-show {
   animation: drift-monitor 7s ease-in-out infinite;
 }
 
-/* The auto-reply indicator, breathing. Opacity only — nothing moves. */
+/* The auto-reply indicator, breathing. Opacity only - nothing moves. */
 @keyframes soft-pulse {
   0%,
   100% {

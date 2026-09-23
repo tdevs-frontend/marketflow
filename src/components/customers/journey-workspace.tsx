@@ -77,7 +77,7 @@ const RANGES = [
  * Search, then pick.
  *
  * A journey is one person's story, so the page cannot start until somebody is
- * chosen — which makes the picker the page's first control rather than a
+ * chosen - which makes the picker the page's first control rather than a
  * filter tucked into a toolbar. It is a search box over a result list, not a
  * dropdown: with a real customer database a 20,000-option select is unusable,
  * and typing a name is what everybody tries first anyway.
@@ -178,8 +178,8 @@ function CustomerPicker({
  *
  * Compact and horizontal: five stages, the reached ones filled, the current
  * one ringed. Stage identity is carried by a tick and a label as well as the
- * fill, so it does not depend on colour alone. Churned sits outside the path —
- * it is an exit, not a sixth step — so it is stated in words rather than drawn
+ * fill, so it does not depend on colour alone. Churned sits outside the path -
+ * it is an exit, not a sixth step - so it is stated in words rather than drawn
  * as a stage nobody progresses to.
  */
 function LifecycleTracker({ contact }: { contact: CustomerContact }) {
@@ -301,7 +301,7 @@ function kpis(contact: CustomerContact): Kpi[] {
     },
     {
       label: "Journey length",
-      value: journey ? `${journey.durationDays} days` : "—",
+      value: journey ? `${journey.durationDays} days` : "-",
       icon: Target,
       hint: journey
         ? `First seen ${formatDate(journey.firstSeenAt)}`
@@ -327,7 +327,7 @@ function kpis(contact: CustomerContact): Kpi[] {
 /**
  * One customer's lifecycle, end to end.
  *
- * The page is deliberately not the aggregate funnel — that lives in Marketing
+ * The page is deliberately not the aggregate funnel - that lives in Marketing
  * analytics. What a support or sales person needs here is a single person's
  * history in order, filtered to the kind of event they are chasing, which is
  * the one view no other page in the module gives.
@@ -477,7 +477,7 @@ export function JourneyWorkspace() {
               sat 40px from the card's edge while the content under it sat at
               20px, and the rule beneath ran inset rather than edge to edge.
               `PanelCard` is the component the dashboard's own cards are built
-              from — same `p-5`, same heading, same 4px to the description —
+              from - same `p-5`, same heading, same 4px to the description -
               so this is the reference implementation rather than a copy of
               its measurements. */}
           <PanelCard

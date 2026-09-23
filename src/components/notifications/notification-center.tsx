@@ -13,7 +13,7 @@ import { markAllRead } from "@/redux/features/notification/notificationSlice";
 import { NotificationsWorkspace } from "./notifications-workspace";
 
 /**
- * Settings › Notifications — two tabs, and the split between them is the point.
+ * Settings › Notifications - two tabs, and the split between them is the point.
  *
  *   **Activity** is the feed: what happened, newest first, with search, an
  *   unread filter and pages. The same list the header bell shows, at the length
@@ -24,8 +24,8 @@ import { NotificationsWorkspace } from "./notifications-workspace";
  *
  * They were two pages at two routes, and one route now, because a merchant who
  * arrives at "Notifications" wants one of two things and cannot be expected to
- * know which URL holds which. The tab strip is the question — "what happened"
- * or "what do I want to hear about" — asked where they are already standing.
+ * know which URL holds which. The tab strip is the question - "what happened"
+ * or "what do I want to hear about" - asked where they are already standing.
  *
  * What the split is *not* is cosmetic. The feed is a record of occurrences; the
  * catalogue is a set of switches. Merging them into one list would give the
@@ -33,7 +33,7 @@ import { NotificationsWorkspace } from "./notifications-workspace";
  * settings they can toggle, which is the shape of a page nobody can scan.
  *
  * The header belongs to this shell rather than to either panel, so the title
- * does not change when the tab does — and "Mark all as read" sits in its action
+ * does not change when the tab does - and "Mark all as read" sits in its action
  * slot, rendered only on the tab where it means something.
  */
 
@@ -87,7 +87,7 @@ export function NotificationCenter() {
         action={
           /* Only on Activity, and only when there is something to mark. A
              permanently visible "Mark all as read" on an already-read feed is
-             a control that teaches the reader their click did nothing — and on
+             a control that teaches the reader their click did nothing - and on
              the Preferences tab it would act on a list that is not even in
              view. */
           tab === "activity" && unread > 0 ? (

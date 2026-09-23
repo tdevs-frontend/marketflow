@@ -36,8 +36,8 @@ import { AssetThumb, VideoOverlay } from "../shared/asset-thumb";
 /**
  * Create Post.
  *
- * Ordered the way the spec's flow runs — platform, media, caption, hashtags,
- * preview, schedule — and the preview is per-platform rather than generic,
+ * Ordered the way the spec's flow runs - platform, media, caption, hashtags,
+ * preview, schedule - and the preview is per-platform rather than generic,
  * because the same caption is a different post on each: X truncates at 280, an
  * Instagram caption hides after two lines, and LinkedIn shows a link preview
  * card. A single "preview" pane would be lying about at least two of them.
@@ -116,7 +116,7 @@ export function PostComposer({
    *
    * A merchant with two Facebook Pages has to be able to say which one, and a
    * platform-level toggle cannot express that. The list comes from
-   * `publishableAccounts()` — the same predicate Integrations → Social uses —
+   * `publishableAccounts()` - the same predicate Integrations → Social uses -
    * so an account whose token expired this morning is simply not offered, and
    * this component never has to know what a token is.
    */
@@ -132,7 +132,7 @@ export function PostComposer({
   const [previewPlatform, setPreviewPlatform] = useState<SocialPlatform>("instagram");
   const [mediaOpen, setMediaOpen] = useState(false);
   /* The schedule was two uncontrolled inputs and a `defaultValue`, so whatever
-     was typed into it never reached the submit handler — a post could not
+     was typed into it never reached the submit handler - a post could not
      carry the time it was given even when one was picked. */
   const [schedule, setSchedule] = useState(defaultSchedule);
   /* `saving` blocks a second submit and drives the button's own label; the
@@ -175,7 +175,7 @@ export function PostComposer({
   );
 
   /* Character limits and the preview are genuinely per-platform, not per
-     account — two Facebook Pages render a caption identically — so the
+     account - two Facebook Pages render a caption identically - so the
      platform list is derived rather than stored. */
   const platforms = useMemo(
     () => [...new Set(selectedAccounts.map((account) => account.platform))],
@@ -183,7 +183,7 @@ export function PostComposer({
   );
 
   /* Composed text is what the platforms actually receive, so it is what the
-     counters measure — hashtags count against the limit too. */
+     counters measure - hashtags count against the limit too. */
   const composed = useMemo(
     () => [caption, hashtags.join(" ")].filter(Boolean).join("\n\n"),
     [caption, hashtags],
@@ -199,7 +199,7 @@ export function PostComposer({
      picker and this dialog are meant to be looking at one shelf, and until now
      this one could not see anything uploaded during the session. */
   const library = useMediaAssets();
-  /* Ordered by the selection, not by the library — the first item is the one
+  /* Ordered by the selection, not by the library - the first item is the one
      the preview shows and the one a carousel leads with, so the order the
      person picked in is the order that has to survive. */
   const selectedMedia = mediaIds
@@ -251,7 +251,7 @@ export function PostComposer({
    * `saving` gates the whole thing so a double click cannot produce two
    * records, and the short pause is what makes Saving → Saved legible rather
    * than a flicker between two synchronous states. A failed write leaves the
-   * dialog open with the reason on it — the one outcome worse than an error is
+   * dialog open with the reason on it - the one outcome worse than an error is
    * an error nobody sees.
    */
   async function submit(action: "draft" | "schedule" | "save") {
@@ -326,7 +326,7 @@ export function PostComposer({
         title={editing ? `Edit ${editing.title}` : "Create post"}
         description={
           editing
-            ? "Changes replace the existing post — the schedule and the media move with it."
+            ? "Changes replace the existing post - the schedule and the media move with it."
             : "One caption, published to every platform you pick."
         }
         size="lg"
@@ -529,7 +529,7 @@ export function PostComposer({
               />
             </Field>
 
-            {/* One counter per selected platform — the limits differ by an
+            {/* One counter per selected platform - the limits differ by an
                 order of magnitude, so a single number would be meaningless. */}
             {platforms.length > 0 ? (
               <ul className="flex flex-wrap gap-x-4 gap-y-1.5">
@@ -567,7 +567,7 @@ export function PostComposer({
               <p className="rounded-panel border border-error/25 bg-error-soft px-3 py-2 text-sm text-error-text">
                 Too long for{" "}
                 {overLimit.map((p) => PLATFORM_THEME[p].label).join(" and ")}.
-                Publishing will fail there — trim the caption or deselect the
+                Publishing will fail there - trim the caption or deselect the
                 platform.
               </p>
             ) : null}

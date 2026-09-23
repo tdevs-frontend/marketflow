@@ -14,7 +14,7 @@ import type { FlowStep, FlowStepType } from "@/types/automation";
  * The node types are told apart by shape and border rather than by colour
  * alone: a trigger is filled, a condition has a dashed border and a fork
  * beneath it, a delay is a narrow pill, and actions are plain cards. That
- * survives being printed, being colour-blind, and being scanned at speed —
+ * survives being printed, being colour-blind, and being scanned at speed -
  * three things a colour-coded flow chart does not.
  */
 
@@ -80,7 +80,7 @@ export function FlowConnector({
 /**
  * A single node.
  *
- * `entered` is the honest measure of a step — how many contacts got this far —
+ * `entered` is the honest measure of a step - how many contacts got this far -
  * and it is what makes a flow diagram diagnostic rather than decorative: the
  * step where the count falls off a cliff is the step to fix.
  */
@@ -161,7 +161,7 @@ export function AutomationNode({
 /**
  * A step and everything below it, recursing through a condition's branches.
  *
- * Branches render as side-by-side columns from `md` and stack below it — two
+ * Branches render as side-by-side columns from `md` and stack below it - two
  * 200px columns on a phone are unreadable, and a flow is still legible read
  * top to bottom as "if replied … otherwise …".
  */

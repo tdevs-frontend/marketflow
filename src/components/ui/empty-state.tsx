@@ -16,7 +16,7 @@ export function EmptyState({
    * The inside-a-card size.
    *
    * The page-level empty state is 56px of padding tall, which is right when it
-   * is the only thing on the screen and wrong inside a dashboard widget — there
+   * is the only thing on the screen and wrong inside a dashboard widget - there
    * it doubles the card's height and the row it sits in stretches to match. The
    * compact variant keeps the same dashed-panel treatment at a third of the
    * height, and steps the radius down to `panel` the way every other nested

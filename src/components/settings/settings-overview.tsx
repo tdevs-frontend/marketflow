@@ -22,13 +22,13 @@ import { useWorkspaceSettings } from "@/lib/workspace-settings-store";
 import { displayName } from "@/types/account";
 
 /**
- * Settings — the account hub.
+ * Settings - the account hub.
  *
  * This page used to be "General", and General was a second editor for the
  * workspace name, slug, timezone, currency, business details and default
  * senders. Every one of those already had an owner in Workspace Settings, which
  * has held General, Business, Branding, Defaults and Data & Preferences all
- * along. Two editors for one value is not a convenience — it is a question
+ * along. Two editors for one value is not a convenience - it is a question
  * about which screen is telling the truth, and a merchant has no way to answer
  * it. The forms are gone; the *values* stay, read-only, with one link to the
  * screen that owns them.
@@ -88,8 +88,8 @@ export function SettingsOverview() {
  *
  * Read-only on purpose, and the three chosen are the ones people come to
  * Settings to check rather than to change: what this workspace is called, what
- * timezone its schedules run in, what currency its money is in. Anything else —
- * slug, business details, branding, senders, retention — is one click away in
+ * timezone its schedules run in, what currency its money is in. Anything else -
+ * slug, business details, branding, senders, retention - is one click away in
  * the editor that owns it.
  */
 function WorkspaceSummary() {
@@ -156,8 +156,8 @@ interface Status {
  * dialog has closed.
  *
  * One case per section this hub renders, and no more. Billing used to have one
- * too and is a dashboard module of its own now, so its branch — and the
- * subscription store it read — went with it. A status line for a card this page
+ * too and is a dashboard module of its own now, so its branch - and the
+ * subscription store it read - went with it. A status line for a card this page
  * does not render is a store subscription that re-renders the hub for a change
  * nobody can see.
  */
@@ -190,7 +190,7 @@ function useSectionStatus(href: string): Status | null {
         tone: on === 0 ? "warning" : "neutral",
         detail:
           on === 0
-            ? "Everything is muted — you will not be told about failures."
+            ? "Everything is muted - you will not be told about failures."
             : "Across campaigns, leads, messaging, automations, orders and security.",
       };
     }
@@ -241,7 +241,7 @@ function SectionCard({
               {/*
                 The whole card is the target, via a stretched overlay on the
                 link rather than a click handler on the card. It stays one
-                anchor — one tab stop, a real href, middle-clickable — and the
+                anchor - one tab stop, a real href, middle-clickable - and the
                 heading is still what a screen reader announces as the link.
               */}
               <Link href={section.href} className="focus-visible:outline-none">

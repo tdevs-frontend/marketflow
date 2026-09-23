@@ -23,7 +23,7 @@ import type {
 /** How option values are joined into a variant's name. */
 export const VARIANT_SEPARATOR = " / ";
 
-/** "Medium / Black" — the one name a variant is known by, everywhere. */
+/** "Medium / Black" - the one name a variant is known by, everywhere. */
 export function variantName(optionValues: string[]): string {
   return optionValues.join(VARIANT_SEPARATOR);
 }
@@ -53,7 +53,7 @@ const VOWELS = /[AEIOU]/g;
  * which is what lets a merchant predict a code before they generate it. Short
  * values are already codes ("S", "XL", "4K") and survive whole; longer ones
  * drop their vowels, and anything still over three characters keeps its first
- * two letters and its last — the shape that turns "Black" into BLK and
+ * two letters and its last - the shape that turns "Black" into BLK and
  * "Large" into LRG rather than the unreadable first-three-letters BLA.
  *
  * It is a starting point, not a rule: every generated SKU is editable, and the
@@ -109,7 +109,7 @@ export function collectSkus(
  * Which variants in one list share a SKU with each other or with another product.
  *
  * Returns variant ids rather than a boolean so the table can mark the exact
- * rows in conflict — telling a merchant "a SKU is duplicated" across forty rows
+ * rows in conflict - telling a merchant "a SKU is duplicated" across forty rows
  * is telling them to go and find it themselves.
  */
 export function duplicateSkuIds(
@@ -177,7 +177,7 @@ interface GenerateContext {
 /**
  * A new variant, with the defaults its product type actually needs.
  *
- * `price` is deliberately left unset — an unedited variant follows the parent
+ * `price` is deliberately left unset - an unedited variant follows the parent
  * price, and stamping a copy of it here is what silently detaches a variant the
  * next time the product is repriced.
  */
@@ -208,7 +208,7 @@ export function blankVariant(
  * The variant grid for a set of options, preserving everything already edited.
  *
  * Regeneration is idempotent by design: a combination that already exists keeps
- * its row untouched — its SKU, its price, its stock, its image — and only
+ * its row untouched - its SKU, its price, its stock, its image - and only
  * genuinely new combinations are created. Anything whose combination no longer
  * exists is dropped, which is the deletion the confirm dialog warns about
  * before this ever runs.
@@ -230,7 +230,7 @@ export function generateVariants(
     .slice(0, MAX_VARIANTS)
     .map((values) => {
       const kept = byKey.get(variantKey(values));
-      /* Keep the record, but take the freshly typed casing of the values —
+      /* Keep the record, but take the freshly typed casing of the values -
          renaming "black" to "Black" should show up, not be silently ignored. */
       return kept ? { ...kept, optionValues: values } : blankVariant(values, context);
     });
@@ -275,7 +275,7 @@ export function reorderVariantValues(
 /* Pricing                                                                    */
 /* -------------------------------------------------------------------------- */
 
-/** What a variant actually sells for — its own price, or the parent's. */
+/** What a variant actually sells for - its own price, or the parent's. */
 export function effectivePrice(variant: ProductVariant, basePrice: number): number {
   return variant.price ?? basePrice;
 }
@@ -325,7 +325,7 @@ export function formatPriceRange(range: PriceRange): string {
 /**
  * Parent stock, read off the variants rather than stored beside them.
  *
- * A product with variants has no stock of its own — there is no such thing as
+ * A product with variants has no stock of its own - there is no such thing as
  * "12 Premium T-Shirts" once three of them are XL. Keeping a separate parent
  * figure guarantees two numbers that disagree, so the parent's is derived and
  * the editor's Stock field is disabled while variants are on.
@@ -336,7 +336,7 @@ export function rollUpStock(variants: ProductVariant[]): {
   lowStockThreshold: number;
 } {
   /* Only tracked, sellable rows count. An untracked made-to-order size has no
-     shelf to add, and a disabled one is not on sale — including either inflates
+     shelf to add, and a disabled one is not on sale - including either inflates
      the parent figure with units nobody can buy. */
   const live = variants.filter(
     (variant) => variant.status === "active" && isTracked(variant),
@@ -365,7 +365,7 @@ export function isTracked(variant: ProductVariant): boolean {
 }
 
 /**
- * Sellable units — what is on the shelf minus what orders have claimed.
+ * Sellable units - what is on the shelf minus what orders have claimed.
  *
  * This is the one definition of available in the system: `current - reserved`,
  * computed here and nowhere else, so the table, the drawer, the roll-up and the
@@ -392,13 +392,13 @@ export function variantStockStatus(variant: ProductVariant): StockStatus {
  * What a merchant actually sees in the Status column.
  *
  * Three states, not two, because `VariantStatus` answers a different question
- * from the shelf. *Disabled* is a decision — the merchant switched this
- * combination off. *Out of stock* is a fact — it is on sale and there is none
+ * from the shelf. *Disabled* is a decision - the merchant switched this
+ * combination off. *Out of stock* is a fact - it is on sale and there is none
  * left. Collapsing them loses the distinction that matters: one is fixed by
  * changing your mind, the other by receiving stock.
  *
  * A variant that is allowed to oversell never reads out of stock, which is the
- * whole point of `continueSellingWhenOutOfStock` — a print-on-demand size has
+ * whole point of `continueSellingWhenOutOfStock` - a print-on-demand size has
  * no shelf and is always available.
  *
  * Crucially this is per variant. One disabled size does not take the product
@@ -414,7 +414,7 @@ export function variantAvailability(
 
   /* Only a physical variant can run out in the shelf sense. A service is
      limited by capacity and a download by licences, neither of which is a
-     quantity that gets picked — see `quantityLabelFor`. */
+     quantity that gets picked - see `quantityLabelFor`. */
   if (type === "physical" && isTracked(variant)) {
     if (variant.continueSellingWhenOutOfStock) return "active";
     if (availableOf(variant) <= 0) return "out-of-stock";
@@ -456,8 +456,8 @@ export function findVariant(
  * The image that stands for a product: its thumbnail, or its first photo.
  *
  * `images.find((image) => image.isThumbnail)?.url ?? images[0]?.url` was
- * written out at five call sites — the catalogue picker, the catalogue rows,
- * the detail header, the variant manager and `variantImage` below — which is
+ * written out at five call sites - the catalogue picker, the catalogue rows,
+ * the detail header, the variant manager and `variantImage` below - which is
  * five chances to disagree about what a product looks like. The `?? images[0]`
  * half is the part that kept getting dropped: a product whose media was
  * uploaded without one being marked as the thumbnail has photos and would

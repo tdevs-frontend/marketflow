@@ -22,7 +22,7 @@ import { formatNumber } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 /**
- * Ids only need to be unique inside the open builder, so a counter is enough —
+ * Ids only need to be unique inside the open builder, so a counter is enough -
  * and unlike a clock read it produces the same value on the server and after
  * hydration. Called from event handlers, never during render.
  */
@@ -322,7 +322,7 @@ export function RuleGroupEditor({
  * The live audience count.
  *
  * Evaluated from the rules on every keystroke, against the same contact list
- * the Contacts page shows — so the number here is the number of rows you get
+ * the Contacts page shows - so the number here is the number of rows you get
  * when you open the segment, not a separate estimate that can disagree with it.
  */
 export function AudiencePreview({

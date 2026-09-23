@@ -44,7 +44,7 @@ export function useTableState<
    * One writer for every change.
    *
    * Takes a patch rather than a full state so callers cannot accidentally drop
-   * a param they did not know about, and clears a key when handed `null` —
+   * a param they did not know about, and clears a key when handed `null` -
    * which is what keeps defaults out of the URL.
    */
   const write = useCallback(
@@ -81,8 +81,8 @@ export function useTableState<
    * Page size is fixed, and deliberately not a URL param.
    *
    * It used to read `?size=` and back a Rows dropdown. That put a display
-   * preference in the same place as the filters — so a shared link carried one
-   * person's row count to everyone who opened it — and it only ever existed on
+   * preference in the same place as the filters - so a shared link carried one
+   * person's row count to everyone who opened it - and it only ever existed on
    * four of the dashboard's tables, which is how the same list ended up a
    * different height depending on where you reached it from.
    */
@@ -96,7 +96,7 @@ export function useTableState<
    * A visible list would have to be written in full the first time anything is
    * toggled and would then silently freeze out any column added later. Storing
    * what was turned off means a new column appears for everyone, and the
-   * common case — nothing customised — writes nothing to the URL.
+   * common case - nothing customised - writes nothing to the URL.
    */
   const hidden = useMemo(() => {
     const param = params.get("hide");
@@ -126,7 +126,7 @@ export function useTableState<
     visibleColumns,
     isVisible,
 
-    /** Typing in search resets to page one — page three of the old result set
+    /** Typing in search resets to page one - page three of the old result set
         is meaningless against a new query. */
     setSearch: (value: string) => write({ q: value || null, page: null }),
 

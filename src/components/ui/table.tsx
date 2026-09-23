@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
  * A compact data table.
  *
  * The wrapper owns the horizontal scroll so a wide table never widens the
- * page. `minWidth` sets where scrolling starts — below it the columns would
+ * page. `minWidth` sets where scrolling starts - below it the columns would
  * crush rather than wrap.
  */
 export function Table({
@@ -67,7 +67,7 @@ export function TR({
          *
          * Both branches set a background, and `hover:` sorts after the base
          * utility, so a selected row used to swap its violet selection tint
-         * for the indigo hover tint the moment the cursor crossed it — the
+         * for the indigo hover tint the moment the cursor crossed it - the
          * same row reading as two different states, and the two tints being
          * different hues rather than two steps of one. A row that is already
          * selected does not need a second colour to say so.
@@ -129,7 +129,7 @@ export type SortDirection = "asc" | "desc";
 
 /**
  * A sortable column header. `aria-sort` is what actually tells a screen reader
- * the state — the arrow is decoration on top of it.
+ * the state - the arrow is decoration on top of it.
  */
 export function SortableTH<T extends string>({
   field,

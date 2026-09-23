@@ -35,7 +35,7 @@ import { CreateApiKeyDialog } from "./create-key-dialog";
  *
  * The rows come from `lib/api-key-store` rather than from this component's own
  * state. Settings → API & Developer lists the same register, and a credential
- * is the last thing that may differ between two screens — revoking here has to
+ * is the last thing that may differ between two screens - revoking here has to
  * be revoked there, or a developer has two pages and no way to know which one
  * is telling the truth.
  */
@@ -167,11 +167,11 @@ export function ApiWorkspace() {
                 onRevoke={setRevoking}
                 /* The masked prefix is the only part of a key that survives
                    creation, and it is what a merchant matches against their
-                   app's config — so copying it is worth having. */
+                   app's config - so copying it is worth having. */
                 onCopyPrefix={(key) => {
                   navigator.clipboard.writeText(key.masked).then(
                     () => toast(`${key.masked} copied to clipboard`, "success"),
-                    () => toast("Could not copy — clipboard access was blocked", "error"),
+                    () => toast("Could not copy - clipboard access was blocked", "error"),
                   );
                 }}
               />
@@ -215,7 +215,7 @@ export function ApiWorkspace() {
               <span className="font-mono">{revoking.masked}</span> has{" "}
               {scopeSummary(revoking.scopes).toLowerCase()} access and made{" "}
               {formatCount(revoking.requests24h)} requests today. Revoking cannot
-              be undone — issue a new key to restore access.
+              be undone - issue a new key to restore access.
             </>
           ) : null}
         </p>

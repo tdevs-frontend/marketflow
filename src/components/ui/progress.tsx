@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
  *
  * `role="progressbar"` with the value attributes, so the number is available
  * to assistive tech without the visible label having to repeat it. Used for
- * delivery/open/click rates, quota use and step progress — anywhere a
+ * delivery/open/click rates, quota use and step progress - anywhere a
  * percentage is easier to compare as a length than as digits.
  */
 export function ProgressBar({
@@ -46,7 +46,7 @@ export function ProgressBar({
   );
 }
 
-/** Label, value and bar as one block — the shape a metric list repeats. */
+/** Label, value and bar as one block - the shape a metric list repeats. */
 export function MeterRow({
   label,
   value,

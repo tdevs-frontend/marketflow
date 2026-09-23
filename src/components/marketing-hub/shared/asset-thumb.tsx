@@ -9,7 +9,7 @@ import type { MediaAsset } from "@/types/social";
  * The one place in the product that decides what to paint for an asset, so no
  * surface repeats the fallback and none of them can disagree about what a
  * given asset looks like. The campaign wizard's picker, the Planner's calendar
- * and post grid, the composer and the Media Library all render through this —
+ * and post grid, the composer and the Media Library all render through this -
  * which is what makes "the same asset appears the same everywhere" a property
  * of the code rather than a thing to remember.
  *
@@ -18,7 +18,7 @@ import type { MediaAsset } from "@/types/social";
  * - `poster`, when the asset has one. Videos always do: a grid must not fetch
  *   and decode an MP4 to draw a 200px tile, and it must certainly not autoplay
  *   one.
- * - `url`, for an image — a library path, or a `blob:` from this session's
+ * - `url`, for an image - a library path, or a `blob:` from this session's
  *   uploads.
  * - the `tone` swatch, when there is no file. An asset can exist before its
  *   bytes do, and a flat tint is a better answer than a broken-image glyph.
@@ -40,7 +40,7 @@ export function AssetThumb({
   if (still) {
     return (
       /* A `blob:` URL has nothing for the image optimiser to fetch, so this
-         stays a plain `img` — `next/image` would route it through
+         stays a plain `img` - `next/image` would route it through
          `/_next/image` and 404 on every upload. */
       // eslint-disable-next-line @next/next/no-img-element
       <img
@@ -69,7 +69,7 @@ export function AssetThumb({
   return <span aria-hidden className={cn("block", asset.tone, className)} />;
 }
 
-/** Seconds as a clip length — `0:42`, `1:05`. */
+/** Seconds as a clip length - `0:42`, `1:05`. */
 export function formatDuration(seconds: number): string {
   const minutes = Math.floor(seconds / 60);
   return `${minutes}:${String(seconds % 60).padStart(2, "0")}`;
@@ -80,7 +80,7 @@ export function formatDuration(seconds: number): string {
  *
  * Absolute, so it sits on whatever tile the caller already drew, and
  * `pointer-events-none` so it never intercepts the click that opens the post.
- * A video in a grid has to be identifiable as a video before it is opened —
+ * A video in a grid has to be identifiable as a video before it is opened -
  * that is the whole job, and it is why nothing here plays.
  */
 export function VideoOverlay({

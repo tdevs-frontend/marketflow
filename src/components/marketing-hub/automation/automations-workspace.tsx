@@ -65,7 +65,7 @@ type View = "cards" | "table";
 function statsFor(flows: AutomationFlow[], accentLabel: string): StatItem[] {
   const active = flows.filter((flow) => flow.status === "active");
   const processed = flows.reduce((sum, flow) => sum + flow.contactsProcessed, 0);
-  /* Weighted by volume — averaging the percentages would let a draft with a
+  /* Weighted by volume - averaging the percentages would let a draft with a
      0% rate drag the headline down as hard as a flow with 12,000 entrants. */
   const weighted = flows.reduce(
     (sum, flow) => sum + flow.successRate * flow.contactsProcessed,

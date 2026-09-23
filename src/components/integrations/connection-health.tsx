@@ -14,7 +14,7 @@ import { HealthBadge, HealthDot } from "./integration-badges";
  * The health panel, shared by every integration detail page.
  *
  * One row per check: what was tested, what the answer was, when it was last
- * asked, and — on a failing check only — the button that fixes it. The `detail`
+ * asked, and - on a failing check only - the button that fixes it. The `detail`
  * line is the part that earns the panel its place; "Webhook: Error" tells a
  * merchant nothing they can act on, and "Meta stopped accepting the callback
  * URL" tells them where to go.
@@ -33,7 +33,7 @@ export function ConnectionHealth({
   checks: HealthCheck[];
   /** Called with the check that needs attention. Wire it to the real repair. */
   onFix?: (check: HealthCheck) => void;
-  /** A header action — usually "Run checks". */
+  /** A header action - usually "Run checks". */
   action?: ReactNode;
   className?: string;
 }) {

@@ -17,7 +17,7 @@ import { APP_ROUTES } from "@/constants";
 
 type Errors = { email?: string; password?: string };
 
-/* Deliberately loose — catches typos, nothing else. Only the server can tell
+/* Deliberately loose - catches typos, nothing else. Only the server can tell
    a real address from a well-formed one. */
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -30,7 +30,7 @@ function validate(email: string, password: string): Errors {
     errors.email = "Enter a valid email address, like you@company.com.";
   }
 
-  /* No complexity rule on sign-in — hinting at the shape helps nobody. */
+  /* No complexity rule on sign-in - hinting at the shape helps nobody. */
   if (!password) {
     errors.password = "Enter your password.";
   }
@@ -45,7 +45,7 @@ function validate(email: string, password: string): Errors {
 type Pending = "credentials" | "google" | null;
 
 /**
- * NOTE — the network call is stubbed. `handleSubmit` and `handleGoogle` are the
+ * NOTE - the network call is stubbed. `handleSubmit` and `handleGoogle` are the
  * two seams: swap their bodies for the real mutation and dispatch
  * `setCredentials` / `setAuthError` from `redux/features/auth/authSlice`.
  */
@@ -95,7 +95,7 @@ export function LoginForm() {
       // TODO: swap for the real sign-in mutation.
       await new Promise((resolve) => setTimeout(resolve, 900));
       router.push(APP_ROUTES.dashboard);
-      /* Left pending — the button stays busy through the route change. */
+      /* Left pending - the button stays busy through the route change. */
     } catch {
       setFormError(
         "We could not sign you in. Check your email and password, then try again.",
@@ -233,7 +233,7 @@ export function LoginForm() {
         </button>
       </fieldset>
 
-      {/* Announces the busy state — a label change alone is not announced. */}
+      {/* Announces the busy state - a label change alone is not announced. */}
       <p role="status" aria-live="polite" className="sr-only">
         {isPending ? "Signing in, please wait." : ""}
       </p>

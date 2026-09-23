@@ -16,7 +16,7 @@ export * from "./automation-activity";
  * `/dashboard/analytics`, which is where channel-level reporting belongs.
  *
  * `BusinessPulse` and `ProductPerformance` came off the overview for the same
- * reason — the page reads better as three balanced rows than as eight
+ * reason - the page reads better as three balanced rows than as eight
  * competing cards. Both are untouched and still build.
  */
 export * from "./channel-performance";

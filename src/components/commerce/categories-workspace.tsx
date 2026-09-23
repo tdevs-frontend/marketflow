@@ -94,7 +94,7 @@ export function CategoriesWorkspace() {
   /*
    * The page's totals and its rows come from one place.
    *
-   * `categoryTotals` counts the whole set, not the visible slice — a footer
+   * `categoryTotals` counts the whole set, not the visible slice - a footer
    * that said "8 categories" on page one and "7" on page two would be
    * describing the pagination rather than the catalogue.
    */
@@ -117,7 +117,7 @@ export function CategoriesWorkspace() {
    * above it already reads "of 15 categories", and stacking "15 categories
    * covering 15 products" under that stutters. What the range line cannot say
    * is how much of the catalogue these categories actually account for, so
-   * that is what this adds — together they read as one sentence.
+   * that is what this adds - together they read as one sentence.
    */
   const summary = (
     <>
@@ -142,7 +142,7 @@ export function CategoriesWorkspace() {
     <>
       {/*
         * The header lives here rather than in the route, because Add Category
-        * opens a dialog this component owns — the same arrangement
+        * opens a dialog this component owns - the same arrangement
         * `ProductsWorkspace` uses. Putting the button in the page and its state
         * one file away is what pushed it into the card in the first place.
         */}
@@ -157,7 +157,7 @@ export function CategoriesWorkspace() {
         }
       />
 
-      {/* The card opens on the table itself — the count that used to sit above
+      {/* The card opens on the table itself - the count that used to sit above
           it is a closing total and now reads in the footer. */}
       <Card className="p-5">
         <div className="max-md:hidden">
@@ -192,7 +192,7 @@ export function CategoriesWorkspace() {
 
                   <TD className="max-w-xs">
                     <p className="truncate text-text-secondary">
-                      {item.description ?? "—"}
+                      {item.description ?? "-"}
                     </p>
                   </TD>
 
@@ -254,7 +254,7 @@ export function CategoriesWorkspace() {
                     {item.name}
                   </p>
                   <p className="mt-0.5 truncate text-sm text-text-secondary">
-                    {item.description ?? "—"}
+                    {item.description ?? "-"}
                   </p>
                 </div>
                 <Menu
@@ -380,7 +380,7 @@ export function CategoriesWorkspace() {
               value={draft.parentId}
               onChange={(next) => set("parentId", next)}
               options={[
-                { value: "", label: "None — top level" },
+                { value: "", label: "None - top level" },
                 ...parentOptions.map((item) => ({ value: item.id, label: item.name })),
               ]}
             />

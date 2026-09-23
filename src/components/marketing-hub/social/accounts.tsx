@@ -35,13 +35,13 @@ import { PlatformMark } from "../shared/channel-badge";
  *
  * This page reads the connection; it does not own it. Connecting, reconnecting
  * and disconnecting all live in Integrations → Social, and every action here
- * links there rather than opening a dialog of its own — one connection flow,
+ * links there rather than opening a dialog of its own - one connection flow,
  * one place a token is managed, one answer to "is this account live".
  *
  * What the Planner keeps is the half it is actually for: audience size, posting
  * volume and engagement per account, which is context a content team needs
  * while planning and which has no place on an integrations page. The split is
- * the same one that runs through the rest of the product — Integrations answers
+ * the same one that runs through the rest of the product - Integrations answers
  * *does it work*, the channel module answers *how is it doing*.
  *
  * Accounts come from `SOCIAL_ACCOUNTS`, the single shared source the composer

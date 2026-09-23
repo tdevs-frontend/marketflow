@@ -30,17 +30,17 @@ export type PaginationSize = "sm" | "md" | "lg";
  * The three scales, as whole class strings.
  *
  * Whole strings rather than a box size interpolated into a template, because
- * Tailwind reads the source for literals — `size-${n}` compiles to a control
+ * Tailwind reads the source for literals - `size-${n}` compiles to a control
  * with no dimensions at all.
  *
  * `sm` is the dashboard's, unchanged: a 32px control in a table footer, where
  * the pagination is a quiet thing under a dense grid. `lg` is for a marketing
  * page, where it is the only control on the screen and is as likely to be
- * tapped as clicked — 44px is the size a finger expects.
+ * tapped as clicked - 44px is the size a finger expects.
  *
  * The icon is one number per row rather than one per arrow. The two arrows
  * were previously set at 20px and 16px, which is not a scale, and a size map
- * has to pick one — see the note on `PaginationSize` in this file's export.
+ * has to pick one - see the note on `PaginationSize` in this file's export.
  */
 const SIZES: Record<
   PaginationSize,
@@ -88,7 +88,7 @@ export function Pagination({
   noun?: string;
   /**
    * Control scale: 32, 36 or 44px. `sm` is the default, so every existing
-   * caller is untouched. Only the geometry changes — border, radius, colours,
+   * caller is untouched. Only the geometry changes - border, radius, colours,
    * the active page's indigo and the behaviour are the same at all three.
    */
   size?: PaginationSize;
@@ -96,7 +96,7 @@ export function Pagination({
    * A second line under the range, in the same left slot.
    *
    * For the reading a table wants to leave a merchant with once they have
-   * finished scanning it — "15 categories covering 15 products". It sits here
+   * finished scanning it - "15 categories covering 15 products". It sits here
    * rather than above the table because it is a closing total, not a heading,
    * and rather than in its own row because a footer with two bars in it reads
    * as two controls.
@@ -118,7 +118,7 @@ export function Pagination({
   /*
    * Disabled says inactive with colour, not with opacity.
    *
-   * `opacity-40` faded the whole control — border included — so on the first
+   * `opacity-40` faded the whole control - border included - so on the first
    * and last page the arrow stopped being a button at all: the box dissolved
    * into the card and the chevron landed around 2:1 against it. A merchant
    * could not tell whether the control was off or simply not there, which is
@@ -127,8 +127,8 @@ export function Pagination({
    * So the shape stays at full strength and only the ink steps back: a tinted
    * ground plus muted text, which holds about 4.2:1 while still reading
    * clearly quieter than the 8.7:1 of an enabled arrow. This is the same
-   * correction `Button`'s primary variant already makes — see the
-   * `disabled:opacity-100` note there — that muting an already-neutral
+   * correction `Button`'s primary variant already makes - see the
+   * `disabled:opacity-100` note there - that muting an already-neutral
    * surface by opacity buys nothing and costs the contrast.
    *
    * The cursor is the other half of saying so, and `pointer-events-none` was
@@ -138,8 +138,8 @@ export function Pagination({
    * what `Input`, `Select`, `Checkbox` and the menu items already use.
    *
    * Dropping it means the hover rules would otherwise still match a disabled
-   * button — `:hover` applies to disabled controls even though they fire no
-   * events — so they are scoped to `enabled:` rather than left to light up a
+   * button - `:hover` applies to disabled controls even though they fire no
+   * events - so they are scoped to `enabled:` rather than left to light up a
    * control that cannot be clicked.
    */
   const arrow = cn(

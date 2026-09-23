@@ -34,8 +34,8 @@ export interface FilterTabsProps {
  * `min-w` and `tabular-nums` together are what stop the row twitching: without
  * them a tab jumps sideways the moment its count crosses from 9 to 10.
  *
- * The active chip steps one rung deeper than the tab it sits in —
- * `primary-soft-hover` on `primary-soft` — so it stays a distinct object rather
+ * The active chip steps one rung deeper than the tab it sits in -
+ * `primary-soft-hover` on `primary-soft` - so it stays a distinct object rather
  * than dissolving into the tab's own ground. It holds 5.1:1 against that deeper
  * tint, which a digit needs and a decorative icon would not.
  *
@@ -66,14 +66,14 @@ function CountChip({ count, active }: { count: number; active: boolean }) {
  * The filter row a Commerce list opens with.
  *
  * One component for Products, Sales and Customers. They filter different
- * things — a catalogue by type, a ledger by what sold, buyers by how they
- * behave — but they are the same control doing the same job, and three
+ * things - a catalogue by type, a ledger by what sold, buyers by how they
+ * behave - but they are the same control doing the same job, and three
  * hand-matched copies is how three pages slowly stop looking alike.
  *
  * Filled tabs rather than an underline. An underline is the right marker when
  * tabs swap whole panels and the reader is already looking at them; these are
  * the first control on the page and have to announce themselves as *filters*
- * from across the screen. A tinted, bordered box does that at a glance — the
+ * from across the screen. A tinted, bordered box does that at a glance - the
  * selected filter reads as switched on, rather than as a line you have to go
  * looking for.
  *
@@ -92,7 +92,7 @@ export function FilterTabs({
 }: FilterTabsProps) {
   const buttons = useRef(new Map<string, HTMLButtonElement>());
 
-  /* On a phone the active tab can start off-screen — a filter you cannot see
+  /* On a phone the active tab can start off-screen - a filter you cannot see
      is one you will not realise is applied. `nearest` keeps the page itself
      from scrolling. */
   useEffect(() => {
@@ -162,7 +162,7 @@ export function FilterTabs({
         {loading ? (
           /* Not `Skeleton`: its ground is `surface-secondary`, which is now
              the idle tab's own colour, so it would pulse invisibly. A
-             className cannot fix that — `cn()` is a plain join and the
+             className cannot fix that - `cn()` is a plain join and the
              component's own background wins on stylesheet order. */
           <span
             aria-hidden
@@ -188,7 +188,7 @@ export function FilterTabs({
            * instead.
            *
            * No negative margin. The row used to be pulled left by one tab's
-           * padding so the first *label* sat on the table's first column —
+           * padding so the first *label* sat on the table's first column -
            * correct while a tab was only its text, and wrong now that every tab
            * is a filled box: it left the first box hanging into the card's
            * padding. With a visible edge, the edge is the thing to align.

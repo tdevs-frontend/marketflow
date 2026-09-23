@@ -13,7 +13,7 @@ import { ActivityIcon } from "./customer-badges";
  * different icon on one of the three.
  *
  * The connector is drawn by each row rather than by a wrapper, so the line
- * always starts under an icon's centre and the last row can simply omit it —
+ * always starts under an icon's centre and the last row can simply omit it -
  * no absolute-positioned rail to keep in sync with the row height.
  */
 export function ActivityTimeline({

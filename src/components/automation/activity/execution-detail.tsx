@@ -17,8 +17,8 @@ import { ExecutionSummary, ExecutionTimeline } from "./execution-timeline";
  *
  * A drawer rather than a page transition because Activity is a monitoring
  * screen: the reader is working through a list of failures and needs to get
- * back to it. The same content has a route of its own —
- * `/automation/activity/[runId]` — for links out of an alert or a support
+ * back to it. The same content has a route of its own -
+ * `/automation/activity/[runId]` - for links out of an alert or a support
  * ticket, and both render `ExecutionDetailBody`.
  */
 export function ExecutionDetailBody({
@@ -126,7 +126,7 @@ export function ExecutionDetailDrawer({
         open={Boolean(confirmSkip)}
         onClose={() => setConfirmSkip(null)}
         onConfirm={() => {
-          toast(`${confirmSkip?.title} skipped — the run continues`, "success");
+          toast(`${confirmSkip?.title} skipped - the run continues`, "success");
           setConfirmSkip(null);
         }}
         title="Skip this step?"
@@ -135,7 +135,7 @@ export function ExecutionDetailDrawer({
         tone="primary"
       >
         <p className="text-sm text-text-secondary">
-          Whatever this step would have done — a message, a tag, a CRM update —
+          Whatever this step would have done - a message, a tag, a CRM update -
           does not happen for this contact. The rest of the journey is
           unaffected.
         </p>

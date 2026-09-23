@@ -25,15 +25,15 @@ export const metadata: Metadata = { title: "Dashboard" };
  *
  * Six cards in three rows, each row a pair: 8/4, 7/5, 7/5. The plot takes the
  * widest column because it is the only widget whose reading degrades with
- * width, and the inbox — the one narrow card tall enough to sit beside a chart
- * — is what keeps that row from leaving a gap under it. The two rows below it
+ * width, and the inbox - the one narrow card tall enough to sit beside a chart
+ * - is what keeps that row from leaving a gap under it. The two rows below it
  * share a measure: a 7-column card is wide enough for the orders table's six
  * columns, and a 5-column card is where the activity feed and the funnel both
  * still read, since neither has columns to lose.
  *
  * Tablet drops to even halves, since a 4- or 5-column card is too narrow to
  * read at that width. The orders table is the exception and keeps the full
- * measure until `lg` — it has a minimum width, and half a tablet is under it —
+ * measure until `lg` - it has a minimum width, and half a tablet is under it -
  * so the funnel beside it takes the full measure too rather than sitting in a
  * half-empty row. Mobile is a single column, and document order is reading
  * order, so no widget needs to be re-ordered.

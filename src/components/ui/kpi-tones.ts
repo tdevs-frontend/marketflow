@@ -8,7 +8,7 @@
  * site. That is how a row of tiles ends up bordered on one page and unbordered
  * on the next. One map, imported by both.
  *
- * The first five are identity colours — the brand and the channel hues — and
+ * The first five are identity colours - the brand and the channel hues - and
  * they exist so a row of four tiles can be told apart at a glance rather than
  * read one label at a time. The last four are *states*: success, warning and
  * danger mean something happened, and spending them on "this card is the
@@ -33,7 +33,7 @@ export type KpiTone =
 /**
  * Each tone, as the icon tile it colours.
  *
- * The tile is the only coloured thing on the card — the surface stays white
+ * The tile is the only coloured thing on the card - the surface stays white
  * with one neutral border, so a row still reads as a set of one kind of object
  * rather than a set of coloured panels.
  *
@@ -41,7 +41,7 @@ export type KpiTone =
  * hairline around an amber fill is the mismatch this map exists to prevent:
  * the border is the quiet edge of the same colour, never a second one.
  *
- * Four families ship a border token — `primary`, `email`, `sms`, `whatsapp` —
+ * Four families ship a border token - `primary`, `email`, `sms`, `whatsapp` -
  * and use it. The rest have no `-border` step, so rather than invent a hex the
  * border is mixed from the family's own solid hue with an alpha. The alphas are
  * measured, not guessed: the four tokened borders sit at 1.33, 1.31, 1.27 and
@@ -51,18 +51,18 @@ export type KpiTone =
  *   accent/30  1.31    success/25  1.29    warning/40  1.30
  *   danger/20  1.34    info/20     1.29
  *
- * Note that `info` and `email` are the *same blue* — `--color-info` and
+ * Note that `info` and `email` are the *same blue* - `--color-info` and
  * `--color-email` are both #2563eb, differing only in how deep their soft is.
  * They are not interchangeable in one row: pick `email` when the thing is the
  * Email channel, `info` when it is a state, and never put both side by side.
  * `whatsapp` and `success` are likewise two different greens, and the same rule
- * applies — the channel green names the channel, the state green means good.
+ * applies - the channel green names the channel, the state green means good.
  *
  * The four social platforms are identity tones of the same kind, and they are
  * the reason this map exists rather than four bespoke tiles: a row of platform
  * KPIs has to be told apart at a glance, and the mark alone does not do it at
- * 20px. Their fills come straight from `PLATFORM_THEME.soft` — an 8% wash of
- * the brand hue — so a KPI tile and the same platform's mark in a table row
+ * 20px. Their fills come straight from `PLATFORM_THEME.soft` - an 8% wash of
+ * the brand hue - so a KPI tile and the same platform's mark in a table row
  * are the same colour. Facebook and LinkedIn are two different blues sitting
  * next to each other by necessity; the marks inside them are what separate
  * them, which is exactly why the icon carries the brand colour rather than the

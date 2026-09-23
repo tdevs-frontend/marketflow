@@ -23,9 +23,9 @@ import type { FeedNotification } from "@/types/notification";
  * This is the *feed*. Settings → Notifications is the *preference centre*, and
  * the two are deliberately different surfaces answering different questions:
  * the bell answers "what happened", that page answers "what do I want to be
- * told about". They share a vocabulary — `NotificationModule` mirrors
+ * told about". They share a vocabulary - `NotificationModule` mirrors
  * `NotificationCategory`, so a row here and the switch that governs it draw the
- * same icon — and nothing else.
+ * same icon - and nothing else.
  *
  * No tabs and no search. A panel you open to check whether anything needs you
  * is a panel that has to be readable in one glance; a tab strip makes the
@@ -34,13 +34,13 @@ import type { FeedNotification } from "@/types/notification";
  * archive now exists at `/dashboard/notifications`, which is where the footer
  * link goes and where the search and the paging live.
  *
- * The rows are `NotificationItem`, the same component the archive renders — at
+ * The rows are `NotificationItem`, the same component the archive renders - at
  * its `compact` density rather than `full`. Two implementations of a
  * notification row is how one surface ends up bolding unread titles while the
  * other tints them.
  *
- * The button itself is unchanged from the header it replaced — same
- * `IconButton` geometry, same bell, same badge — because this is an interaction
+ * The button itself is unchanged from the header it replaced - same
+ * `IconButton` geometry, same bell, same badge - because this is an interaction
  * being added, not a header being redesigned.
  */
 
@@ -58,8 +58,8 @@ export function NotificationPopover() {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelId = useId();
 
-  /* The same three listeners `Menu` uses — outside pointer-down, Escape, focus
-     back to the trigger — rather than a second implementation that disagrees
+  /* The same three listeners `Menu` uses - outside pointer-down, Escape, focus
+     back to the trigger - rather than a second implementation that disagrees
      with it about what Escape does. */
   useDismissable(
     open,
@@ -75,7 +75,7 @@ export function NotificationPopover() {
    *
    * Both, and in that order. A reader who lands on the orders page and comes
    * back to find the row still bold learns the count is decorative. `href` is
-   * nullable and checked — a row with nowhere real to go marks itself read and
+   * nullable and checked - a row with nowhere real to go marks itself read and
    * closes the panel, which is a better outcome than navigating somewhere that
    * does not exist and losing the reader's place.
    */
@@ -87,7 +87,7 @@ export function NotificationPopover() {
 
   return (
     <div ref={wrapperRef} className="relative inline-flex">
-      {/* The header's own button, unchanged — same component, same geometry,
+      {/* The header's own button, unchanged - same component, same geometry,
           same bell, same badge. Only the ARIA wiring and the ref are new, and
           the ref is why `IconButtonProps` now forwards one. */}
       <IconButton
@@ -114,7 +114,7 @@ export function NotificationPopover() {
           aria-label="Notifications"
           /*
            * `right-0` anchors it to the bell, which is already at the right of
-           * a full-width header — so the panel grows leftwards, into the page,
+           * a full-width header - so the panel grows leftwards, into the page,
            * and cannot leave the viewport on that side.
            *
            * The width is the part that has to be said out loud: `w-[min(...)]`
@@ -128,7 +128,7 @@ export function NotificationPopover() {
             "absolute top-full right-0 z-40 mt-2 flex flex-col overflow-hidden",
             "max-h-128 w-[min(25rem,calc(100vw-2rem))]",
             /*
-             * One border, one shadow, one radius — on the container and
+             * One border, one shadow, one radius - on the container and
              * nowhere else. The rows inside carry none of the three, which is
              * what makes the panel read as a feed rather than as a stack of
              * cards that happen to be adjacent.
@@ -167,7 +167,7 @@ export function NotificationPopover() {
           </div>
 
           <Link
-            /* Settings › Notifications, which opens on its Activity tab — the
+            /* Settings › Notifications, which opens on its Activity tab - the
                full feed, beside the preferences that govern it. The label is
                honest now that the tab exists; it used to promise a list and
                land on a page of switches. */
@@ -214,7 +214,7 @@ function Header({
         <button
           type="button"
           onClick={onMarkAll}
-          /* Underline on hover and nothing else — the same treatment every
+          /* Underline on hover and nothing else - the same treatment every
              other inline link in the product carries. The colour shift it
              replaced made this read as a second state of the text rather than
              as a link answering the pointer, and `transition-colors` went with

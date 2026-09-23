@@ -19,7 +19,7 @@ import { EventKeyList } from "./event-picker";
  * column needs. The row opens the detail drawer; the kebab holds the actions
  * that should not be one misclick away from a delivery log.
  *
- * Success rate is coloured only when it has fallen — a column of green
+ * Success rate is coloured only when it has fallen - a column of green
  * percentages trains the eye to skip it, which is the opposite of what a health
  * figure is for.
  */

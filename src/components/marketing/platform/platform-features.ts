@@ -33,16 +33,16 @@ import {
  * The rule is the design system's own: a feature that *is* a channel wears that
  * channel's colour, and everything else stays on the brand pair. That caps the
  * section at six hues, which is what keeps eight cards from reading as a
- * rainbow — see the channel-identity notes in `styles/variables.css`.
+ * rainbow - see the channel-identity notes in `styles/variables.css`.
  *
  * Four faces per tone, because the same hue has four jobs in this section:
  *
- *   chip  the card's icon tile — soft ground plus its ink.
+ *   chip  the card's icon tile - soft ground plus its ink.
  *   ink   the orbit node's icon, which sits on white so it needs the ink alone.
  *   dot   the status pill's bullet and the connector's endpoint node.
  *   glow  the halo the card's icon tile picks up on hover. Literal rgba rather
  *         than a token, since a colour-mix in a shadow is not worth the
- *         indirection for six one-line values — the hexes are the ramp's own.
+ *         indirection for six one-line values - the hexes are the ramp's own.
  */
 export type Tone = "whatsapp" | "email" | "sms" | "primary" | "secondary" | "amber";
 
@@ -84,7 +84,7 @@ export const TONES: Record<Tone, ToneFaces> = {
     dot: "bg-secondary",
     glow: "group-hover:shadow-[0_0_0_4px_rgba(124,58,237,0.10)]",
   },
-  /* Named for the hue, not `warning` — nothing here is a warning. It borrows
+  /* Named for the hue, not `warning` - nothing here is a warning. It borrows
      that ramp's ink because it clears contrast on the soft amber. */
   amber: {
     chip: "bg-warning-soft text-warning-text",
@@ -101,13 +101,13 @@ export const TONES: Record<Tone, ToneFaces> = {
 export interface PlatformFeature {
   title: string;
   body: string;
-  /** The small pill under the description — a live-ish reading, not a label. */
+  /** The small pill under the description - a live-ish reading, not a label. */
   status: string;
   icon: LucideIcon;
   tone: Tone;
 }
 
-/** Left rail — how a customer arrives and what the business sells them. */
+/** Left rail - how a customer arrives and what the business sells them. */
 export const INBOUND_FEATURES: PlatformFeature[] = [
   {
     title: "WhatsApp Automation",
@@ -139,7 +139,7 @@ export const INBOUND_FEATURES: PlatformFeature[] = [
   },
 ];
 
-/** Right rail — how the platform reaches back out and reports. */
+/** Right rail - how the platform reaches back out and reports. */
 export const OUTBOUND_FEATURES: PlatformFeature[] = [
   {
     title: "Email Marketing",
@@ -171,7 +171,7 @@ export const OUTBOUND_FEATURES: PlatformFeature[] = [
   },
 ];
 
-/** Both rails, clockwise from the top — the order the satellites orbit in. */
+/** Both rails, clockwise from the top - the order the satellites orbit in. */
 export const ORBIT_FEATURES: PlatformFeature[] = [
   INBOUND_FEATURES[0], // WhatsApp, at twelve o'clock
   OUTBOUND_FEATURES[1], // SMS
@@ -214,8 +214,8 @@ export const WORKFLOW_STEPS: WorkflowStep[] = [
 /**
  * Where a rail's cards sit vertically, as a percentage of the rail.
  *
- * The rails are a four-row grid with no gap — each card gets its breathing room
- * from its own vertical padding instead — so the rows are exactly equal and a
+ * The rails are a four-row grid with no gap - each card gets its breathing room
+ * from its own vertical padding instead - so the rows are exactly equal and a
  * card's centre lands on `(i + 0.5) / 4`. `ConnectionLines` anchors its curves
  * and endpoint dots to the same numbers, which is what keeps a dot on its
  * card's centre line at every width without measuring anything.

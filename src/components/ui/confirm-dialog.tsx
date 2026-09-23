@@ -11,7 +11,7 @@ import { Dialog } from "./dialog";
  *
  * The confirm label says what will happen ("Delete 3 campaigns") instead of
  * "OK", so a keyboard user who has scrolled past the body still knows what
- * they are agreeing to. Destructive by default — a confirmation this cheap to
+ * they are agreeing to. Destructive by default - a confirmation this cheap to
  * add is nearly always guarding something irreversible.
  */
 export function ConfirmDialog({
@@ -33,7 +33,7 @@ export function ConfirmDialog({
   confirmLabel?: string;
   cancelLabel?: string;
   tone?: "danger" | "primary";
-  /** Extra detail — what is kept, what is lost. */
+  /** Extra detail - what is kept, what is lost. */
   children?: ReactNode;
 }) {
   return (

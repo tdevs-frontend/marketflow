@@ -4,11 +4,11 @@
  * ─────────────────────────────────────────────────────────────────────────
  *  TO PUT THE WHOLE APP BACK ON A PREVIOUS TYPEFACE
  *
- *  Either — one attribute, no rebuild:
+ *  Either - one attribute, no rebuild:
  *      <html data-font="satoshi">       (in `app/layout.tsx`)
  *      <html data-font="legacy">        Circular Std
  *
- *  Or — permanently, in THE SWITCH block below: point `--font-active-body`
+ *  Or - permanently, in THE SWITCH block below: point `--font-active-body`
  *  and `--font-active-display` at that theme's stack.
  *
  *  Nothing else, either way. No component, no Tailwind class, no utility.
@@ -18,16 +18,16 @@
  * Two variables where there used to be four, and that is the whole story of
  * this file's rewrite.
  *
- * The old kits ship as discrete static cuts — `SatoshiMedium` is a *family*,
- * not a weight — so the project spent weight as a family name and a theme had
+ * The old kits ship as discrete static cuts - `SatoshiMedium` is a *family*,
+ * not a weight - so the project spent weight as a family name and a theme had
  * to move four families at once. The typefaces now come from Google Fonts as
  * single variable families carrying real 400/500/600/700, so `font-medium` is
  * `font-weight: 500` again (see the `@theme` block in `variables.css`) and a
  * theme is what it should always have been: a family for headings, a family
  * for everything else.
  *
- * The old cut-families are still declared and still resolve — nothing that
- * names `SatoshiBold` broke — but nothing in the active theme names them. They
+ * The old cut-families are still declared and still resolve - nothing that
+ * names `SatoshiBold` broke - but nothing in the active theme names them. They
  * are fallback assets, serving the `data-font` switches at the bottom of this
  * file and nothing else.
  *
@@ -47,14 +47,14 @@
   /*
    * The old kits, exactly as `satoshi-fonts.css` and `circular-std-fonts.css`
    * declare them: one family per cut, each a static face. Nothing in the active
-   * theme names them — they are here for the `data-font` switches below, and
+   * theme names them - they are here for the `data-font` switches below, and
    * because deleting a still-installed typeface's names helps nobody.
    */
   --font-satoshi-book: "SatoshiRegular";
   --font-satoshi-medium: "SatoshiMedium";
   --font-satoshi-bold: "SatoshiBold";
   --font-satoshi-black: "SatoshiBlack";
-  /* No token points here — Satoshi has a Light cut, Circular Std does not. */
+  /* No token points here - Satoshi has a Light cut, Circular Std does not. */
   --font-satoshi-light: "SatoshiLight";
 
   --font-legacy-book: "CircularStdBook";
@@ -65,7 +65,7 @@
   /* ------------------------------------------------------- THE SWITCH */
 
   /*
-   * Which theme is on, in words. Nothing reads it — it is the label, so this
+   * Which theme is on, in words. Nothing reads it - it is the label, so this
    * file answers "what font is the app in" without tracing the indirections.
    */
   --font-active-name: "Stack Sans Notch + Google Sans Flex";
@@ -73,7 +73,7 @@
   /*
    * The last rung, and the only one. The generic stack stays because a
    * `font-family` with a single name and nothing after it has nowhere to go
-   * while the webfont is in flight, or if Google Fonts is unreachable — the
+   * while the webfont is in flight, or if Google Fonts is unreachable - the
    * browser picks its default serif, which is the one outcome nobody wants.
    */
   --font-fallback: system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -81,7 +81,7 @@
   /** Headings. */
   --font-active-display: var(--font-notch), var(--font-fallback);
 
-  /** Body, UI, controls — everything that is not a heading. */
+  /** Body, UI, controls - everything that is not a heading. */
   --font-active-body: var(--font-gsans), var(--font-fallback);
 
   /*
@@ -99,8 +99,8 @@
  *
  * The product is two typographic systems, not one:
  *
- *   Landing    Two faces. Stack Sans Notch sets every heading — hero, section,
- *              CTA, feature, pricing, footer — and Google Sans Flex sets the
+ *   Landing    Two faces. Stack Sans Notch sets every heading - hero, section,
+ *              CTA, feature, pricing, footer - and Google Sans Flex sets the
  *              body, nav, buttons, cards and every other run of UI text. The
  *              display face is doing brand work there, and a landing page is
  *              where brand work belongs.
@@ -115,7 +115,7 @@
  * `--font-heading` is the seam, and it is a *token*, so the switch is one
  * declaration and no component has to know it happened. The `@theme` block in
  * `variables.css` points that token at the display face, which makes the
- * landing rules the default — and the default is what the auth screens and
+ * landing rules the default - and the default is what the auth screens and
  * anything rendered up at `<body>` (the toast viewport) inherit, so the public
  * side stays whole without needing a label of its own.
  *
@@ -126,8 +126,8 @@
  * read would change nothing down here.
  *
  * Applied in `app/dashboard/layout.tsx`, which wraps every dashboard route.
- * Nothing in this app portals to `document.body` — dialogs are native
- * `<dialog>` elements, which stay in the DOM where they are written — so the
+ * Nothing in this app portals to `document.body` - dialogs are native
+ * `<dialog>` elements, which stay in the DOM where they are written - so the
  * subtree really is every pixel of the workspace.
  */
 [data-surface="app"] {
@@ -138,13 +138,13 @@
  * Runtime switching.
  *
  * Put `data-font="legacy"` on `<html>` and the whole app renders in Circular
- * Std without a rebuild — useful for comparing typefaces side by side, and the
+ * Std without a rebuild - useful for comparing typefaces side by side, and the
  * shape a user-facing appearance setting would plug into later. The attribute
  * selector outranks the bare `:root` above, so the CSS default stands until
  * something explicitly asks otherwise.
  *
  * Neither of these has a display face, so headings and body share one typeface
- * — which is exactly how the product looked before Stack Sans Notch arrived.
+ * - which is exactly how the product looked before Stack Sans Notch arrived.
  *
  * Both name a *cut*, because that is all these kits are: static faces with no
  * weight axis. Headings take the Bold cut and body the Book, and the weight

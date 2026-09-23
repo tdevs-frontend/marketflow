@@ -6,8 +6,8 @@ import type { SocialPlatform } from "@/types/social";
  *
  * The design system is shared, so what separates a WhatsApp page from an Email
  * page is this table and nothing else: one accent, one icon, one set of metric
- * words. Everything a channel page renders — stat cards, chart series, chips,
- * empty states — reads its colour from here rather than hard-coding a class,
+ * words. Everything a channel page renders - stat cards, chart series, chips,
+ * empty states - reads its colour from here rather than hard-coding a class,
  * which is what keeps four modules consistent without making them identical.
  *
  * WhatsApp maps onto the brand ramp because it is the product's lead channel;
@@ -20,7 +20,7 @@ import type { SocialPlatform } from "@/types/social";
  * This used to be `MarketingChannel | "social"`, back when social was a channel
  * the dashboards reported on but nothing could send to. Social is now a
  * campaign channel like the rest, so the alias is kept only because a hundred
- * call sites import `Channel` from here — the two types are the same set.
+ * call sites import `Channel` from here - the two types are the same set.
  */
 export type Channel = MarketingChannel;
 
@@ -29,7 +29,7 @@ export interface ChannelTheme {
   label: string;
   /** Lucide key resolved by `components/ui/icon`. */
   icon: string;
-  /** Solid accent — chart-free surfaces, dots, bars. */
+  /** Solid accent - chart-free surfaces, dots, bars. */
   accent: string;
   /** Text on a light ground. */
   text: string;
@@ -124,7 +124,7 @@ export interface PlatformTheme {
   /**
    * The same colour as a literal, and the only reason a hex lives in this
    * file: ApexCharts computes gradient stops and hover shades from the value
-   * it is given, which `var(--color-…)` cannot satisfy. Chart props only —
+   * it is given, which `var(--color-…)` cannot satisfy. Chart props only -
    * anything in the DOM uses the class fields above. Keep in step with the
    * `--color-<platform>` tokens.
    */

@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 /**
  * Loading states for the Automation module.
  *
- * Each one is sized to the component it stands in for — a workflow card's
- * mini-map is 104px of diagram, so the skeleton reserves 104px — because a
+ * Each one is sized to the component it stands in for - a workflow card's
+ * mini-map is 104px of diagram, so the skeleton reserves 104px - because a
  * placeholder that does not match what replaces it produces a layout jump,
  * which is worse than no placeholder. None of these is a centred spinner.
  */

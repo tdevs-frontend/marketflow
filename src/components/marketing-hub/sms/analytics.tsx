@@ -52,8 +52,8 @@ import type { SmsTrendPeriod } from "@/types/sms";
  * each of those replies cost, and how many people used the send as their
  * reason to leave.
  *
- * This page used to be nine panels. Four of them — a message volume chart, a
- * delivery-rate chart, a Top Campaigns list and a Campaign Comparison chart —
+ * This page used to be nine panels. Four of them - a message volume chart, a
+ * delivery-rate chart, a Top Campaigns list and a Campaign Comparison chart -
  * were the same handful of numbers drawn four ways, and two more repeated what
  * the Overview already shows above the fold. The rule applied here is that a
  * figure appears once, in the panel where someone could act on it: campaign
@@ -132,7 +132,7 @@ const STATS: StatItem[] = [
 /* Shared row set                                                             */
 /* -------------------------------------------------------------------------- */
 
-/** Campaigns with a delivery receipt — a draft has no rate to compare. */
+/** Campaigns with a delivery receipt - a draft has no rate to compare. */
 const SENT = SMS_CAMPAIGNS.filter((campaign) => campaign.sent > 0);
 
 /* -------------------------------------------------------------------------- */
@@ -146,7 +146,7 @@ const WASTED = TOTALS.cost * (1 - TOTALS.delivered / Math.max(TOTALS.sent, 1));
  * Spend on sends that earned nothing back.
  *
  * Almost all of it is the verification code, which is transactional and was
- * never going to be answered — and it is 40% of the channel's bill, which is
+ * never going to be answered - and it is 40% of the channel's bill, which is
  * why the headline cost-per-reply lands near $2.40 while the best campaign in
  * the table below is under fifty cents. The denominator is not wrong; the tile
  * just has to say what is in the numerator, or the two panels look like they
@@ -214,8 +214,8 @@ const costPerReply = (campaign: (typeof SENT)[number]) =>
  * One row per audience, folded from the campaigns that targeted it.
  *
  * Summed rather than sampled: an audience messaged four times has four
- * delivery receipts, and taking the first campaign's rate as the audience's —
- * which the ranked list this replaces did — reports one send as if it were the
+ * delivery receipts, and taking the first campaign's rate as the audience's -
+ * which the ranked list this replaces did - reports one send as if it were the
  * whole relationship.
  */
 const AUDIENCE_RESPONSE = Object.values(
@@ -277,8 +277,8 @@ export interface SmsAnalyticsProps {
    * The period this page reports on.
    *
    * Supplied by the dashboard's filter rather than chosen here. The page used
-   * to open on a toolbar of its own — a range picker, an audience select and
-   * Export — which made it the fourth analytics page in the product answering
+   * to open on a toolbar of its own - a range picker, an audience select and
+   * Export - which made it the fourth analytics page in the product answering
    * "which 30 days" separately, and the only one whose answer could disagree
    * with the others. Export moved to the page header, where it is a page
    * action rather than a filter; the range now arrives as a prop. Optional
@@ -386,7 +386,7 @@ export function SmsAnalytics({ range = DEFAULT_RANGE }: SmsAnalyticsProps) {
 
         {/* Destination rates differ by a factor of three, so a blended
             cost-per-message averages things that are not alike. This is the
-            breakdown behind the first tile — rows, not bars: the comparison is
+            breakdown behind the first tile - rows, not bars: the comparison is
             between two money columns, and a length would only redraw one. */}
         <div className="mt-5 border-t border-border pt-4">
           <p className="text-sm font-medium text-text-muted capitalize">
@@ -515,7 +515,7 @@ export function SmsAnalytics({ range = DEFAULT_RANGE }: SmsAnalyticsProps) {
 
                         <TD align="right" className="text-text-secondary tabular-nums">
                           {campaign.clicks === 0 ? (
-                            <span className="text-text-muted">—</span>
+                            <span className="text-text-muted">-</span>
                           ) : (
                             formatNumber(campaign.clicks)
                           )}
@@ -531,7 +531,7 @@ export function SmsAnalytics({ range = DEFAULT_RANGE }: SmsAnalyticsProps) {
                               {formatCurrency(perReply)}
                             </span>
                           ) : (
-                            /* Not zero and not infinity — a transactional send
+                            /* Not zero and not infinity - a transactional send
                                nobody was ever going to answer. */
                             <span className="text-text-muted">No replies</span>
                           )}
@@ -579,7 +579,7 @@ export function SmsAnalytics({ range = DEFAULT_RANGE }: SmsAnalyticsProps) {
                           label: "Cost / reply",
                           value: Number.isFinite(perReply)
                             ? formatCurrency(perReply)
-                            : "—",
+                            : "-",
                         },
                       ].map((cell) => (
                         <div
@@ -651,7 +651,7 @@ export function SmsAnalytics({ range = DEFAULT_RANGE }: SmsAnalyticsProps) {
 
           {/* Phone. Five numeric columns will not fit a handset, and a table
               that scrolls sideways inside a card hides its own right-hand
-              edge — which here is the column the panel is ranked by. */}
+              edge - which here is the column the panel is ranked by. */}
           <ul className="divide-y divide-border sm:hidden">
             {AUDIENCE_RESPONSE.map((row) => (
               <li key={row.label} className="py-3 first:pt-0 last:pb-0">

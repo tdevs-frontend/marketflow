@@ -59,7 +59,7 @@ function allGrants(): RoleGrants {
  * Grants built from a list of rules rather than typed out resource by resource.
  *
  * `"*"` means every action the resource supports, which keeps a role's intent
- * readable — "Marketing Manager has everything on campaigns" — and means a
+ * readable - "Marketing Manager has everything on campaigns" - and means a
  * resource that gains an action later does not silently leave a system role
  * behind. Anything narrower lists its actions.
  */
@@ -134,7 +134,7 @@ export const WORKSPACE_ROLES: WorkspaceRole[] = [
       workspace_activity: "*",
       workspace_settings: "*",
       /* Billing stays with the Owner. An admin can read the plan and cannot
-         change the card — that is the one thing ownership still means. */
+         change the card - that is the one thing ownership still means. */
       billing: ["view"],
       developer: "*",
     }),
@@ -506,7 +506,7 @@ export function memberTotals(
     active: count("active"),
     invited: count("invited"),
     suspended: count("suspended"),
-    /* A pending invitation holds a seat — otherwise a workspace at its limit
+    /* A pending invitation holds a seat - otherwise a workspace at its limit
        could invite indefinitely and only discover the problem on acceptance. */
     seatsUsed: members.filter((member) => member.status !== "suspended").length,
     seatLimit: SEAT_LIMIT,
@@ -523,7 +523,7 @@ export function membersWithRole(
 /**
  * What a member would lose by moving to another role.
  *
- * Computed by differencing the two grant maps, not written per role pair —
+ * Computed by differencing the two grant maps, not written per role pair -
  * seven roles would be forty-two hand-written warnings, and they would be wrong
  * the first time a permission moved.
  */
@@ -541,7 +541,7 @@ export function permissionsLost(fromId: string, toId: string): string[] {
       if (removed.length === 0) continue;
       /* One line per resource rather than per action: "Campaigns: publish,
          delete" reads; six separate bullets do not. */
-      lost.push(`${resource.label} — ${removed.join(", ")}`);
+      lost.push(`${resource.label} - ${removed.join(", ")}`);
     }
   }
 
@@ -568,7 +568,7 @@ export function lockoutWarning(
   if (action !== "manage") return null;
 
   return resource === "roles"
-    ? "You cannot remove Manage roles from your own role — you would not be able to grant it back."
+    ? "You cannot remove Manage roles from your own role - you would not be able to grant it back."
     : "You cannot remove Manage team members from your own role while it is the role you hold.";
 }
 
@@ -580,13 +580,13 @@ export function lockoutWarning(
  * The workspace audit trail.
  *
  * Meaningful business and system changes only. Nobody's page views are in here,
- * and neither are automation executions — those are `automation/activity`, and
+ * and neither are automation executions - those are `automation/activity`, and
  * a contact's own history is the customer timeline. This answers exactly one
  * question: who changed what in this workspace.
  *
  * `ipAddress` and `userAgent` are populated only where a real backend would
  * have them. The system rows carry `null`, and the UI renders that as "Not
- * recorded" — inventing a plausible address for a demo is how a reader learns
+ * recorded" - inventing a plausible address for a demo is how a reader learns
  * to trust a field that is not trustworthy.
  */
 const UA_CHROME =
@@ -821,7 +821,7 @@ export const WORKSPACE_AUDIT: WorkspaceAuditEvent[] = [
     ipAddress: "103.108.34.12",
     userAgent: UA_CHROME,
     changes: [{ field: "Status", before: "Active", after: "Suspended" }],
-    metadata: { reason: "Extended leave — access paused at the member's request" },
+    metadata: { reason: "Extended leave - access paused at the member's request" },
   },
   {
     id: "aud_12",
@@ -1082,7 +1082,7 @@ export function sensitiveGrants(
   return out;
 }
 
-/** Modules the role can reach at all — the "Modules 7 / 8" summary figure. */
+/** Modules the role can reach at all - the "Modules 7 / 8" summary figure. */
 export function moduleCoverage(grants: RoleGrants): {
   covered: number;
   total: number;
@@ -1116,8 +1116,8 @@ export function groupCoverage(
  * What a role can reach, in three buckets, for the access preview.
  *
  * Deliberately coarse. The point is a mental model for a merchant who will
- * never read a matrix — "Sales Agent works with contacts and leads, reads
- * analytics, and cannot touch automation or billing" — so a module the role can
+ * never read a matrix - "Sales Agent works with contacts and leads, reads
+ * analytics, and cannot touch automation or billing" - so a module the role can
  * only look at lands in `limited` rather than being called access.
  */
 export function accessPreview(grants: RoleGrants): {
@@ -1157,7 +1157,7 @@ export function accessPreview(grants: RoleGrants): {
 /**
  * The difference between two grant maps, as a reviewable list.
  *
- * Drives the change summary shown before saving. Removals sort first — taking
+ * Drives the change summary shown before saving. Removals sort first - taking
  * access away is the half that breaks somebody's day, and it is what a reviewer
  * should read before the additions.
  */
@@ -1200,8 +1200,8 @@ export function permissionDeltas(
  * Per-role change history.
  *
  * The same events reach the workspace audit trail, where they can be correlated
- * with everything else that happened. This is the narrow view — "what has been
- * done to this role" — which is the question asked while looking at it.
+ * with everything else that happened. This is the narrow view - "what has been
+ * done to this role" - which is the question asked while looking at it.
  */
 export const ROLE_ACTIVITY: RoleActivityEvent[] = [
   {
@@ -1286,7 +1286,7 @@ export function duplicateRole(role: WorkspaceRole, actor: string): WorkspaceRole
     type: "custom",
     status: "active",
     merchantRole: undefined,
-    /* A deep copy — editing the duplicate must not edit its source. */
+    /* A deep copy - editing the duplicate must not edit its source. */
     grants: Object.fromEntries(
       Object.entries(role.grants).map(([key, actions]) => [key, [...actions]]),
     ),
@@ -1306,7 +1306,7 @@ export function duplicateRole(role: WorkspaceRole, actor: string): WorkspaceRole
  *
  * The bridge between the role editor and the audit trail. Editing a role is one
  * of the most consequential things a merchant can do in this workspace and it
- * was the one change the trail could not see — every other module writes its
+ * was the one change the trail could not see - every other module writes its
  * events, and roles has to as well or "who granted them that?" has no answer.
  *
  * Each changed permission becomes one `AuditChange` reading `Allowed → Denied`,

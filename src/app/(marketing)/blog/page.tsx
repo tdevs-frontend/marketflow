@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 /**
  * The Resources library.
  *
- * Hero, then the filtered grid — the topic row, the cards and the pager are
+ * Hero, then the filtered grid - the topic row, the cards and the pager are
  * all `BlogListing`, which owns the filter and page state together because
  * changing a topic has to reset the page. Nothing between the two: a page
  * whose job is to get somebody into an article should not ask them to read a

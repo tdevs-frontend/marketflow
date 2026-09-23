@@ -15,7 +15,7 @@ import { BlogCard } from "./blog-card";
  * reason to stay on the site that does not require a decision.
  *
  * On the tinted ground, so it separates from the white pricing section above
- * it and from the CTA panel below — the same white/tint alternation the rest
+ * it and from the CTA panel below - the same white/tint alternation the rest
  * of the page uses to mark a seam.
  */
 export function BlogSection() {

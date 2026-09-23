@@ -20,14 +20,14 @@ import { TRUST_STATS } from "./trust-stats";
 /**
  * The case for the platform, argued once and then evidenced.
  *
- * Two columns from `lg`: the argument on the left — eyebrow, heading, the three
- * things that make it true, and the one CTA the section exists to land — and
+ * Two columns from `lg`: the argument on the left - eyebrow, heading, the three
+ * things that make it true, and the one CTA the section exists to land - and
  * the six reasons as cards on the right. The split is what keeps this from
  * reading as a third feature grid: a visitor scanning the right-hand cards is
  * reading detail on a claim the left column has already made, in the same way
  * the Features page's sections are read as detail on `AllFeatures`.
  *
- * It sits after `WhatsAppAutomation` and before `PlatformOverview` — the reader
+ * It sits after `WhatsAppAutomation` and before `PlatformOverview` - the reader
  * has met the flagship channel, and this is where the page widens from one
  * channel to the argument for the platform, before the ecosystem map spells the
  * whole thing out.
@@ -38,7 +38,7 @@ import { TRUST_STATS } from "./trust-stats";
  * from `primary-soft`, `primary-subtle` and `primary-border`, so the ground is
  * the brand's own lightest rungs rather than a tint mixed for this section.
  *
- * The icon tiles take the `tint-*` family from `styles/variables.css` — the set
+ * The icon tiles take the `tint-*` family from `styles/variables.css` - the set
  * the integrations hub and `AllFeatures` already paint from, so nothing here is
  * a new palette. WhatsApp is the one exception and draws from the channel ramp,
  * for the same reason it does everywhere else: there is one WhatsApp green.
@@ -49,7 +49,7 @@ import { TRUST_STATS } from "./trust-stats";
  */
 
 interface Reason {
-  /** `null` renders the WhatsApp brand mark instead — see `BrandIcon` below. */
+  /** `null` renders the WhatsApp brand mark instead - see `BrandIcon` below. */
   icon: LucideIcon | null;
   title: string;
   description: string;
@@ -69,7 +69,7 @@ interface Reason {
  * Every `href` points at a section that exists on the Features page or at a
  * page that ships. `#crm` and `#automation` render today; the rest are anchors
  * the site footer has linked to since before that page existed, and they are
- * used here on the same terms — the anchor is the destination the section will
+ * used here on the same terms - the anchor is the destination the section will
  * have, not a placeholder. Nothing below links to a route that is not planned.
  */
 const REASONS: Reason[] = [
@@ -85,7 +85,7 @@ const REASONS: Reason[] = [
     icon: Zap,
     title: "Powerful Automation",
     description:
-      "Set up automated follow-ups, personalized messages and smart workflows — without any coding.",
+      "Set up automated follow-ups, personalized messages and smart workflows - without any coding.",
     tint: "bg-tint-indigo-soft text-tint-indigo-ink border-tint-indigo-ink/15",
     href: "/features#automation",
   },
@@ -177,8 +177,8 @@ function ReasonCard({ icon: Icon, title, description, tint, href }: Reason) {
  * reason: this section is read on two pages now, and on `/solutions` its
  * neighbour above is the industry grid, which paints its own light grey. Two
  * tinted bands meeting put 160px of unbroken canvas between their content with
- * nothing to say a section ended. The default is the tint, so the home page —
- * where the neighbours are white — is unchanged.
+ * nothing to say a section ended. The default is the tint, so the home page -
+ * where the neighbours are white - is unchanged.
  */
 export function WhyChooseUs({
   ground = "tint",
@@ -258,7 +258,7 @@ export function WhyChooseUs({
 
             <p className="mt-5 text-base leading-[1.7] text-text-secondary text-pretty">
               MarketFlow gives you the tools, automation and insights to turn
-              conversations into customers — so you can grow faster, work
+              conversations into customers - so you can grow faster, work
               smarter and achieve more.
             </p>
 
@@ -287,7 +287,7 @@ export function WhyChooseUs({
             </ButtonLink>
           </div>
 
-          {/* The evidence — three across from `xl`, two from `sm`. */}
+          {/* The evidence - three across from `xl`, two from `sm`. */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {REASONS.map((reason) => (
               <ReasonCard key={reason.title} {...reason} />

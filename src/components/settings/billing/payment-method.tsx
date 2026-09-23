@@ -13,8 +13,8 @@ import { UnavailableAction } from "./shared";
  * The instrument on file, or the honest absence of one.
  *
  * `subscription.paymentMethod` is `null` and the branch below is written
- * against a real one anyway, because the shape of this block is not in doubt —
- * brand, last four, expiry — only whether anything fills it. What is *not*
+ * against a real one anyway, because the shape of this block is not in doubt -
+ * brand, last four, expiry - only whether anything fills it. What is *not*
  * written is a default: no `?? { brand: "Visa", last4: "4242" }` anywhere, at
  * any point in this module. Somebody who believes a card is on file believes
  * their service cannot lapse, and that is the single most expensive thing a

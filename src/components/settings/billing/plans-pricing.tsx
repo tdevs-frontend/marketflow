@@ -19,7 +19,7 @@ import { CheckoutFlow } from "./checkout/checkout-flow";
  * The pricing page's own cards, inside the dashboard.
  *
  * `PricingPlans` and nothing else: no marketing header, no navbar, no footer,
- * no sign-up call to action, no second grid, and no heading of its own — the
+ * no sign-up call to action, no second grid, and no heading of its own - the
  * tab above is already labelled "Plans & Pricing", and a matching `<h2>` under
  * it would be the same words twice. There is one pricing component and one set
  * of tiers in this product; two would be how it ends up quoting one price to a
@@ -29,7 +29,7 @@ import { CheckoutFlow } from "./checkout/checkout-flow";
  * exists to clear the marketing heading; with the tab strip directly above it
  * here, it is a gap between two things this page has already spaced.
  *
- * Pressing a tier's button opens the checkout. It does *not* change the plan —
+ * Pressing a tier's button opens the checkout. It does *not* change the plan -
  * that was the previous behaviour and it was wrong in the way that matters
  * most: a tier that switches on a single click has taken a decision about money
  * without asking how it is going to be paid, and left the merchant with no step

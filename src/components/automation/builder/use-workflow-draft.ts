@@ -11,8 +11,8 @@ import { validateWorkflow } from "./workflow-validator";
  * The builder's editing state, as a hook.
  *
  * It lives here rather than inside the canvas because three things need it at
- * once: the canvas draws it, the inspector edits it, and the detail header —
- * two components up, above the tab strip — reads `dirty` and `issues` to
+ * once: the canvas draws it, the inspector edits it, and the detail header -
+ * two components up, above the tab strip - reads `dirty` and `issues` to
  * decide whether Publish is allowed. Passing one object down beats three
  * components each keeping their own copy of the graph.
  *
@@ -44,14 +44,14 @@ const nextNodeId = () => {
  * The graph and both history stacks, as one value.
  *
  * They live together because every writer touches all three, and a change that
- * updated the graph without pushing onto `past` — or the other way round — is
+ * updated the graph without pushing onto `past` - or the other way round - is
  * an undo stack that silently skips a step. One state, one functional update,
  * no ordering to get wrong.
  *
  * Refs would be the obvious home for the stacks, and they are the wrong one:
  * a ref read during render (to decide whether Undo is enabled) does not
  * re-render when it changes, and a ref written inside a state updater makes
- * that updater impure — which React punishes by calling it twice in
+ * that updater impure - which React punishes by calling it twice in
  * development and recording every edit to the stack twice.
  */
 interface History {
@@ -77,7 +77,7 @@ export function useWorkflowDraft(workflow: Workflow) {
    * One writer for every change.
    *
    * `record: false` is what keeps a drag out of the undo stack as forty
-   * separate positions — `beginGesture` takes the single snapshot instead.
+   * separate positions - `beginGesture` takes the single snapshot instead.
    */
   const apply = useCallback(
     (next: (current: Snapshot) => Snapshot, record = true) => {
@@ -176,7 +176,7 @@ export function useWorkflowDraft(workflow: Workflow) {
    *
    * Dropped on the canvas it lands where the pointer let go and joins whatever
    * was selected; clicked in the library it is placed under the selection,
-   * which is the path a touch screen has. Either way it arrives connected —
+   * which is the path a touch screen has. Either way it arrives connected -
    * an unattached node is a validation error, and producing one on every add
    * would mean the panel is red from the first click.
    */
@@ -207,7 +207,7 @@ export function useWorkflowDraft(workflow: Workflow) {
           })),
         };
 
-        /* A second trigger is never what was meant — there is one entry point,
+        /* A second trigger is never what was meant - there is one entry point,
            so dropping another replaces nothing and simply arrives loose for the
            validator to flag. Everything else attaches to the selection. */
         const connectable =

@@ -47,7 +47,7 @@ const THUMB_SIZES = {
  * - An image shows the image.
  * - A video shows its poster frame with a play badge over it, so a reel is
  *   identifiable as a reel without the grid loading any video.
- * - A post with no media shows a document glyph rather than an empty tile —
+ * - A post with no media shows a document glyph rather than an empty tile -
  *   a text-only update is a real kind of post, and a blank square reads as a
  *   picture that failed to load.
  *
@@ -61,7 +61,7 @@ export function PostThumb({
   className,
 }: {
   post: SocialPost;
-  /** `fill` hands sizing to the caller — the grid's 16:9 media band. */
+  /** `fill` hands sizing to the caller - the grid's 16:9 media band. */
   size?: "sm" | "md" | "lg" | "fill";
   className?: string;
 }) {

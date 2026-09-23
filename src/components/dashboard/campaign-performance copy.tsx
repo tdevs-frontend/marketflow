@@ -22,7 +22,7 @@ interface Campaign {
   revenue: number;
 }
 
-/* Sums to the KPI row exactly — 1,284 orders, $48,200 — so the month adds up. */
+/* Sums to the KPI row exactly - 1,284 orders, $48,200 - so the month adds up. */
 const CAMPAIGNS: Campaign[] = [
   {
     name: "Summer Sale",

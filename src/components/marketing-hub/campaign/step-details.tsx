@@ -20,7 +20,7 @@ import { OptionCard, StepSection, TagPicker } from "./shared";
 import type { StepProps } from "./types";
 
 /**
- * Step 1 — what this campaign is, and which channel carries it.
+ * Step 1 - what this campaign is, and which channel carries it.
  *
  * The channel choice is here rather than later because it decides the shape of
  * every step after it: which segments are reachable, which composer opens,
@@ -39,7 +39,7 @@ import type { StepProps } from "./types";
  *
  * "All-in-one growth platform" describes a module with a tinted tile, a bold
  * title, a line of body and a status pill; this is that card with the one thing
- * a landing card never needs — a pressed state. The tile is the same 44px
+ * a landing card never needs - a pressed state. The tile is the same 44px
  * square at 12px radius holding a 20px glyph at 1.9 stroke, and the glyphs are
  * the section's own: `MessageCircle`, `Mail` and `Smartphone` are exactly what
  * `platform/platform-features` gives those three modules, so the card a
@@ -47,13 +47,13 @@ import type { StepProps } from "./types";
  * campaign are one object.
  *
  * No colour is invented here. WhatsApp, Email and SMS take their soft ground,
- * ink and hairline from `CHANNEL_THEME` — the table every chip, stat card and
+ * ink and hairline from `CHANNEL_THEME` - the table every chip, stat card and
  * chart series in their modules already reads, and the same tokens the landing
  * section tints its tiles with, which is why the two match without sharing a
  * constant. Social is the exception, and says why at its own entry.
  *
- * Every tile carries that hairline. On the four soft grounds — mint, powder
- * blue, lilac, pink — the square's edge is otherwise doing all its work at
+ * Every tile carries that hairline. On the four soft grounds - mint, powder
+ * blue, lilac, pink - the square's edge is otherwise doing all its work at
  * around 1.1:1 against a white card, which holds up in a mock-up and dissolves
  * on a real screen.
  */
@@ -61,7 +61,7 @@ const CHANNEL_CARDS: {
   value: MarketingChannel;
   label: string;
   hint: string;
-  /** Already sized and weighted — the tile only centres it. */
+  /** Already sized and weighted - the tile only centres it. */
   icon: ReactNode;
   /** Soft ground, ink and hairline for the tile, all in the channel's hue. */
   tile: string;
@@ -116,7 +116,7 @@ const CHANNEL_CARDS: {
        leave the other three out. The logos belong to the account rows below,
        where each is a particular account.
 
-       The pink stays — it is what separates Social from the three channels
+       The pink stays - it is what separates Social from the three channels
        either side of it, and `CHANNEL_THEME.social` is the Planner's slate,
        which reads as disabled next to them. It is the only tile mixing its own
        ground, since that hue has no `-soft` and `-border` pair on the ramp. */
@@ -126,7 +126,7 @@ const CHANNEL_CARDS: {
   },
 ];
 
-/** "2 connections" — the pill's reading, in the landing card's voice. */
+/** "2 connections" - the pill's reading, in the landing card's voice. */
 function plural(count: number, noun: string) {
   return `${count} ${noun}${count === 1 ? "" : "s"}`;
 }
@@ -135,8 +135,8 @@ function plural(count: number, noun: string) {
  * One channel card: `FeatureCard`'s anatomy, plus a pressed state.
  *
  * Selected swaps the white ground for the brand's subtle tint and the hairline
- * for the brand border — the dashboard's existing selected treatment, not a new
- * one — and drops the hover lift, so a chosen card sits still while the other
+ * for the brand border - the dashboard's existing selected treatment, not a new
+ * one - and drops the hover lift, so a chosen card sits still while the other
  * three still rise to the cursor. The tile keeps its own tone either way: the
  * channel's colour is what identifies it, and recolouring it on selection would
  * hide the thing being selected.
@@ -198,7 +198,7 @@ function ChannelCard({
 export function DetailsStep({ draft, set, setChannel, errors }: StepProps) {
 
   /* What each channel can actually send from, counted off the same fixtures the
-     sender section below reads — the pill is a reading, not a label. */
+     sender section below reads - the pill is a reading, not a label. */
   const status: Record<MarketingChannel, string> = {
     whatsapp: plural(WHATSAPP_CONNECTIONS.length, "connection"),
     email: plural(EMAIL_SENDERS.length, "sender"),
@@ -220,7 +220,7 @@ export function DetailsStep({ draft, set, setChannel, errors }: StepProps) {
       <Field
         label="Campaign Description"
         htmlFor="cmp-description"
-        hint="Internal only — helps your team find it later."
+        hint="Internal only - helps your team find it later."
       >
         <Textarea
           id="cmp-description"

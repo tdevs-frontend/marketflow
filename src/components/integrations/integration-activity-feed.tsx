@@ -12,8 +12,8 @@ import type { IntegrationEvent } from "@/types/integration";
  *
  * The counterpart to `ConnectionActivityPanel`: that answers *when* the
  * connection last worked, this answers *what it did*. "Connected · Healthy,
- * last activity 2 minutes ago" is reassuring and uninformative — a heartbeat
- * and a campaign of 840 messages produce the same line — and this is where the
+ * last activity 2 minutes ago" is reassuring and uninformative - a heartbeat
+ * and a campaign of 840 messages produce the same line - and this is where the
  * difference becomes readable.
  *
  * Deliberately not a table and not paginated. It is the last four or five
@@ -43,7 +43,7 @@ export function IntegrationActivityFeed({
   /**
    * Names the integration on each row.
    *
-   * On by default only where the feed is merged across connections — inside one
+   * On by default only where the feed is merged across connections - inside one
    * integration's own drawer every row would repeat the same name, which is
    * noise standing where the detail line should be.
    */
@@ -73,7 +73,7 @@ export function IntegrationActivityFeed({
             className="flex items-start gap-2.5 rounded-panel px-2 py-2 transition-colors hover:bg-surface-secondary"
           >
             {/* The source glyph where the feed is merged, the outcome glyph
-                otherwise — one 16px slot, never both, so the rows keep a single
+                otherwise - one 16px slot, never both, so the rows keep a single
                 left edge to scan down. */}
             {showSource && event.icon ? (
               <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-btn bg-surface-secondary text-text-secondary">

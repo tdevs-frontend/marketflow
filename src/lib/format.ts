@@ -78,8 +78,8 @@ const RELATIVE_UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
 /**
  * `nowMs` exists for modules whose fixtures are pinned to a fixed instant.
  * Measuring those against the wall clock makes the same timestamp render as
- * "2 minutes ago" on the server and something else on the client — a hydration
- * mismatch — and it drifts further every day the fixture is not touched.
+ * "2 minutes ago" on the server and something else on the client - a hydration
+ * mismatch - and it drifts further every day the fixture is not touched.
  */
 export function formatRelativeTime(
   value: string | Date,

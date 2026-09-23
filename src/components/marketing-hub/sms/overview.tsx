@@ -46,7 +46,7 @@ import { SmsCampaignStatusBadge } from "./campaign-row";
 /**
  * The SMS module's landing page.
  *
- * It answers one question — what is happening on this channel right now — and
+ * It answers one question - what is happening on this channel right now - and
  * stops. Everything that answers "and why" lives on Analytics: this page used
  * to carry a second volume chart on a Volume/Rates toggle, a spend-by-country
  * donut, a cost-per-reply pair and a handset preview of a template, all of
@@ -110,7 +110,7 @@ const STATS: StatItem[] = [
  *
  * Four outcomes of one send, each with the denominator it is honestly measured
  * against: delivery and failure against what was sent, replies and opt-outs
- * against what actually arrived — nobody answers or leaves over a message that
+ * against what actually arrived - nobody answers or leaves over a message that
  * never landed.
  */
 const OUTCOMES = [
@@ -154,7 +154,7 @@ const RECENT = [...SMS_CAMPAIGNS]
   .slice(0, 5);
 
 /* Ranked by how often they are reached for, which is the Overview's question.
-   Analytics ranks the same library by reply rate — that one asks which of them
+   Analytics ranks the same library by reply rate - that one asks which of them
    earned their sends, and the two orders are deliberately different. */
 const TOP_TEMPLATES = [...SMS_TEMPLATES]
   .sort((a, b) => b.usageCount - a.usageCount)
@@ -188,7 +188,7 @@ export function SmsOverview() {
             },
           ]}
         >
-          {/* The channel ramp — purple, light purple, grey — drew delivered
+          {/* The channel ramp - purple, light purple, grey - drew delivered
               and replies as two shades of the same idea, and it put this chart
               at odds with the panel beside it, where delivered is green. One
               vocabulary across the module instead: the channel's own hue for
@@ -305,7 +305,7 @@ export function SmsOverview() {
                     <div>
                       <dt className="text-sm font-medium text-text-muted">Cost</dt>
                       <dd className="text-sm font-bold text-text-primary tabular-nums">
-                        {campaign.cost === 0 ? "—" : formatCurrency(campaign.cost)}
+                        {campaign.cost === 0 ? "-" : formatCurrency(campaign.cost)}
                       </dd>
                     </div>
                   </dl>

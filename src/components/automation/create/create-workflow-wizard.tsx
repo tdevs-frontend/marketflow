@@ -32,14 +32,14 @@ import { StartTypeCards } from "./start-type-cards";
 /**
  * Creating an automation, in two steps.
  *
- * Step one is the mechanism — how contacts get in. Step two configures it, and
+ * Step one is the mechanism - how contacts get in. Step two configures it, and
  * only then does the builder open. That order is the whole point: a canvas
  * whose trigger is already answered is a canvas somebody can start from, and
  * "choose how customers should enter this workflow" is a question everybody
  * can answer on their first day.
  *
  * Two of the six start types have no second step. Template hands off to the
- * library, and Blank goes straight to the canvas — because somebody who picked
+ * library, and Blank goes straight to the canvas - because somebody who picked
  * "start from scratch" has already said they do not want to be asked anything.
  */
 
@@ -155,7 +155,7 @@ export function CreateWorkflowWizard() {
   function choose(key: StartTypeKey) {
     setStartType(key);
 
-    /* The two shortcuts do not have a second step — asking anyway would be
+    /* The two shortcuts do not have a second step - asking anyway would be
        ceremony for its own sake. */
     if (key === "template") {
       router.push(AUTOMATION_ROUTES.templates);
@@ -170,7 +170,7 @@ export function CreateWorkflowWizard() {
         triggerLabel: "Trigger",
         start: { type: "blank" },
       });
-      toast("Blank workflow created — add a trigger to start", "success");
+      toast("Blank workflow created - add a trigger to start", "success");
       router.push(AUTOMATION_ROUTES.workflow(workflow.id));
       return;
     }
@@ -279,7 +279,7 @@ export function CreateWorkflowWizard() {
           <StartTypeCards value={startType ?? undefined} onSelect={choose} />
 
           <p className="text-sm text-text-muted">
-            Not sure? <strong>Event-based</strong> covers most journeys — a lead
+            Not sure? <strong>Event-based</strong> covers most journeys - a lead
             arrives, an order is paid, somebody messages you on WhatsApp.
           </p>
         </>
@@ -566,7 +566,7 @@ export function CreateWorkflowWizard() {
                     <div className="flex items-start justify-between gap-3">
                       <span className="text-sm text-text-muted">Event</span>
                       <span className="text-right text-sm font-medium text-text-primary">
-                        {trigger?.name ?? "—"}
+                        {trigger?.name ?? "-"}
                       </span>
                     </div>
                     <div className="flex items-start justify-between gap-3">

@@ -58,7 +58,7 @@ import { VariantManager } from "./variants";
  * A product, read rather than edited.
  *
  * The edit form answers "what should this be"; this page answers "how is it
- * doing" — which is a different question with a different shape, and the reason
+ * doing" - which is a different question with a different shape, and the reason
  * the two are separate routes rather than one form with a stats header.
  *
  * The tab strip is per §15: five tabs every product has, then one more named in
@@ -158,7 +158,7 @@ export function ProductDetail({
   initialTab = "overview",
 }: {
   product: Product;
-  /** `?tab=variants` — what the product list's variant badge links to. */
+  /** `?tab=variants` - what the product list's variant badge links to. */
   initialTab?: TabKey;
 }) {
   const idBase = useId();
@@ -168,7 +168,7 @@ export function ProductDetail({
    * Variants are held here, seeded from the record.
    *
    * The writes stop at the fixtures like everywhere else in Commerce, but the
-   * grid has to stay live while a merchant works down it — an inline stock edit
+   * grid has to stay live while a merchant works down it - an inline stock edit
    * that snapped back on the next render would be worse than no editing at all.
    */
   const [hasVariants, setHasVariants] = useState(product.hasVariants);
@@ -219,7 +219,7 @@ export function ProductDetail({
     return [...byId.values()].sort((a, b) => b.spent - a.spent);
   }, [orders, product.id]);
 
-  /** Variants ranked by what they sold — §17's "Top Variants", where it belongs. */
+  /** Variants ranked by what they sold - §17's "Top Variants", where it belongs. */
   const topVariants = useMemo(
     () =>
       [...variants]
@@ -290,7 +290,7 @@ export function ProductDetail({
 
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
               {/* The price *range*, not a single figure, the moment a product
-                  sells at more than one — see §8. */}
+                  sells at more than one - see §8. */}
               <Figure
                 label="Price"
                 value={formatPriceRange(range)}
@@ -383,7 +383,7 @@ export function ProductDetail({
         {tab === "variants" ? (
           <TabPanel idBase={idBase} value="variants">
             {/*
-              * No toggle here — the empty state's button is the way in.
+              * No toggle here - the empty state's button is the way in.
               *
               * "This product has no variants / [Add Variants]" is a clearer
               * offer than a checkbox a merchant has to recognise, and turning
@@ -433,7 +433,7 @@ export function ProductDetail({
 
             {/* Variant-level sales, only where there are variants to compare.
                 §17 is explicit that this must not crowd the page when it has
-                nothing to say — so on a single-variant product it is absent. */}
+                nothing to say - so on a single-variant product it is absent. */}
             {live ? (
               <SectionCard
                 title="Sales by variant"
@@ -569,7 +569,7 @@ export function ProductDetail({
                         </span>
                       </div>
 
-                      {/* The variant, spelled out — the reason §16 exists. */}
+                      {/* The variant, spelled out - the reason §16 exists. */}
                       <ul className="mt-1 space-y-0.5">
                         {order.lines
                           .filter((line) => line.productId === product.id)
@@ -726,7 +726,7 @@ export function ProductDetail({
                       "Weight",
                       product.physical?.weightGrams
                         ? `${product.physical.weightGrams} g`
-                        : "—",
+                        : "-",
                     ],
                     [
                       "Shipping",
@@ -755,7 +755,7 @@ export function ProductDetail({
                           {variantName(variant.optionValues)}
                         </TD>
                         <TD className="font-mono text-sm text-text-secondary">
-                          {variant.fileName ?? "—"}
+                          {variant.fileName ?? "-"}
                           {variant.fileSizeMb ? (
                             <span className="ml-1.5 text-text-muted">
                               {variant.fileSizeMb} MB
@@ -783,12 +783,12 @@ export function ProductDetail({
                 <DetailList
                   rows={[
                     ["Access type", product.digital?.accessType ?? "download"],
-                    ["File", product.digital?.fileName ?? "—"],
+                    ["File", product.digital?.fileName ?? "-"],
                     [
                       "Download limit",
                       product.digital?.downloadLimit === null
                         ? "Unlimited"
-                        : String(product.digital?.downloadLimit ?? "—"),
+                        : String(product.digital?.downloadLimit ?? "-"),
                     ],
                     [
                       "Access expiry",
@@ -823,7 +823,7 @@ export function ProductDetail({
                             <Timer className="size-3.5 text-text-muted" aria-hidden />
                             {variant.durationMinutes
                               ? formatDuration(variant.durationMinutes)
-                              : "—"}
+                              : "-"}
                           </span>
                         </TD>
                         <TD align="right" className="tabular-nums text-text-secondary">
@@ -854,7 +854,7 @@ export function ProductDetail({
                       "Duration",
                       product.service?.durationMinutes
                         ? formatDuration(product.service.durationMinutes)
-                        : "—",
+                        : "-",
                     ],
                     [
                       "Booking",

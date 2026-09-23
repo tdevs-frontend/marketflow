@@ -9,7 +9,7 @@ import {
  * The board, not a table.
  *
  * The group's shared skeleton ends in ten table rows, which is the wrong shape
- * here — swapping a table skeleton for six kanban columns is a visible jump.
+ * here - swapping a table skeleton for six kanban columns is a visible jump.
  * Six columns of three cards is what the page actually opens with.
  */
 export default function LeadsLoading() {

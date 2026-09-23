@@ -13,12 +13,12 @@ import type { RoleActivityEvent, WorkspaceAuditEvent } from "@/types/workspace";
  * This is that something: a module-level list plus a subscription, read through
  * `useSyncExternalStore` so both pages re-render when it changes.
  *
- * It stands in for exactly one thing a backend would do — persist the event and
+ * It stands in for exactly one thing a backend would do - persist the event and
  * serve it back on the next request. Replacing this with `POST /audit` and a
  * refetch is the whole migration; nothing above it knows the difference.
  *
  * Deliberately not Redux. The store in this app holds auth, workspace identity
- * and UI chrome — durable, cross-cutting state. A demo-session audit buffer is
+ * and UI chrome - durable, cross-cutting state. A demo-session audit buffer is
  * neither, and putting it there would imply it survives a reload, which it does
  * not.
  */
@@ -40,7 +40,7 @@ function subscribe(listener: () => void) {
 /**
  * The merged trail: this session's events first, then the fixture's.
  *
- * Cached rather than rebuilt per call — `useSyncExternalStore` compares the
+ * Cached rather than rebuilt per call - `useSyncExternalStore` compares the
  * snapshot by identity, and a fresh array every time is an infinite re-render.
  */
 let mergedCache: WorkspaceAuditEvent[] = WORKSPACE_AUDIT;
@@ -65,7 +65,7 @@ export function useWorkspaceAudit(): WorkspaceAuditEvent[] {
   return useSyncExternalStore(
     subscribe,
     () => mergedCache,
-    /* The server render sees the fixture alone — a session buffer does not
+    /* The server render sees the fixture alone - a session buffer does not
        exist there, and returning the same value both sides is what keeps
        hydration quiet. */
     () => WORKSPACE_AUDIT,

@@ -15,7 +15,7 @@ export interface MenuItem {
   disabled?: boolean;
   /**
    * Keep the menu open after choosing. Defaults to closing, which is right for
-   * an action; a menu of toggles — column visibility — would otherwise need
+   * an action; a menu of toggles - column visibility - would otherwise need
    * reopening once per column.
    */
   closeOnSelect?: boolean;
@@ -24,8 +24,8 @@ export interface MenuItem {
 /**
  * Close on an outside pointer-down or on Escape, and hand focus back.
  *
- * Extracted from `Menu` so anything else anchored to a trigger — the header's
- * notification panel — behaves identically rather than reimplementing three
+ * Extracted from `Menu` so anything else anchored to a trigger - the header's
+ * notification panel - behaves identically rather than reimplementing three
  * listeners slightly differently. The bugs in this shape are always the same
  * ones: a listener left attached after close, Escape swallowed by the panel,
  * or focus dropped at the top of the document when the panel disappears.
@@ -81,7 +81,7 @@ export function Menu({
   label?: string;
   align?: "left" | "right";
   /**
-   * Replaces the kebab glyph inside the same button — so a labelled dropdown
+   * Replaces the kebab glyph inside the same button - so a labelled dropdown
    * ("Columns") reuses this component's outside-click, Escape and
    * focus-return behaviour instead of reimplementing it. The button element,
    * its ARIA wiring and the panel are unchanged; only the face differs.

@@ -35,7 +35,7 @@ export interface Product {
    * Inventory.
    *
    * Present on every product because the shape is shared, but only meaningful
-   * where `trackInventory` is on — which for a service or a normal digital
+   * where `trackInventory` is on - which for a service or a normal digital
    * product it is not. Anything rendering stock has to check that flag first;
    * showing "Untracked" in a stock column teaches a merchant selling
    * consultations that this product form is not for them.
@@ -51,7 +51,7 @@ export interface Product {
    *
    * Exactly one of these is set, matching `type`. Optional rather than a
    * discriminated union so the existing list, editor and catalogue code keeps
-   * compiling against the shared fields — the forms and detail tabs narrow on
+   * compiling against the shared fields - the forms and detail tabs narrow on
    * `type` and reach for the matching object.
    */
   physical?: PhysicalDetails;
@@ -65,7 +65,7 @@ export interface Product {
    * a form that opens with an empty option grid teaches a merchant selling a
    * single ebook that they have work to do. `hasVariants` is the merchant's
    * answer to that question, kept as its own flag rather than inferred from a
-   * non-empty array — a product mid-setup has the toggle on and no options yet,
+   * non-empty array - a product mid-setup has the toggle on and no options yet,
    * and inferring would flip it back off under them.
    *
    * When it is on, `variants` is the source of truth for price and stock and
@@ -164,7 +164,7 @@ export interface OrderLine {
    *
    * Stored on the line rather than looked up from the product later: a variant
    * can be renamed, repriced or deleted, and an order has to keep saying what
-   * the customer actually received. `sku` is captured for the same reason — it
+   * the customer actually received. `sku` is captured for the same reason - it
    * is the number that goes on a picking slip.
    */
   variantId?: string;
@@ -197,7 +197,7 @@ export interface Order {
   /**
    * What the order contains, derived from its lines.
    *
-   * Chooses which fulfilment vocabulary applies — a `service` order is
+   * Chooses which fulfilment vocabulary applies - a `service` order is
    * scheduled and completed, a `physical` one is packed and shipped.
    */
   orderType: OrderType;
@@ -384,7 +384,7 @@ export type UpdateDiscountPayload = Partial<CreateDiscountPayload> & { id: strin
  * One `Product` entity with an optional detail object per type, rather than
  * three product tables. A merchant selling a T-shirt, an ebook and a
  * consultation manages all three in one list, filters across them, and reports
- * on them together — which is impossible the moment they live in separate
+ * on them together - which is impossible the moment they live in separate
  * databases.
  *
  * The detail object is what makes the forms and the detail tabs adapt: a
@@ -445,7 +445,7 @@ export interface ProductSales {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Orders — payment and fulfilment as separate axes                           */
+/* Orders - payment and fulfilment as separate axes                           */
 /* -------------------------------------------------------------------------- */
 
 /**
@@ -487,8 +487,8 @@ export type FulfillmentStatus =
 /**
  * What an order contains.
  *
- * `mixed` is a real case — a merchant selling a course plus a printed workbook
- * ships one and grants access to the other — and it is why the order's
+ * `mixed` is a real case - a merchant selling a course plus a printed workbook
+ * ships one and grants access to the other - and it is why the order's
  * fulfilment vocabulary is chosen per order rather than per workspace.
  */
 export type OrderType = ProductType | "mixed";
@@ -517,7 +517,7 @@ export type SaleStatus =
 /**
  * One line of commercial performance.
  *
- * Derived from orders rather than stored separately — Sales is a *reading* of
+ * Derived from orders rather than stored separately - Sales is a *reading* of
  * the order book, not a second ledger. Clicking a row goes to the order it came
  * from, which is the only place the operational actions live.
  */
@@ -535,7 +535,7 @@ export interface Sale {
    *
    * Sales is a reading of the order book, so it reports what the order line
    * recorded. "Premium T-Shirt" alone cannot tell a merchant which size is
-   * actually selling — which is the whole question this page exists to answer.
+   * actually selling - which is the whole question this page exists to answer.
    */
   variantId?: string;
   /** "Medium / Black". */
@@ -558,7 +558,7 @@ export interface Sale {
 /**
  * How a buyer behaves, derived rather than assigned.
  *
- * These are not CRM segments and not tags — nobody sets them. They are read off
+ * These are not CRM segments and not tags - nobody sets them. They are read off
  * the order history, which means they cannot drift from the truth and there is
  * no second customer record to keep in step.
  */
@@ -599,7 +599,7 @@ export interface CommerceCustomer {
  *
  * Deliberately two states rather than the product's three. `draft` and
  * `archived` are answers to "is this thing in my catalogue at all", which is a
- * question about the *product* — a single size of a shirt is never
+ * question about the *product* - a single size of a shirt is never
  * independently unpublished, it is either sellable or it is switched off while
  * the shirt stays on sale. Two states also keep the table's Disable action
  * honest: one toggle, one meaning.
@@ -612,7 +612,7 @@ export type VariantStatus = "active" | "inactive";
  * Order matters and is the array's own order: it fixes how a variant reads
  * ("Medium / Black", never "Black / Medium") and which position in
  * `ProductVariant.optionValues` belongs to which option. Reordering options
- * therefore has to reorder every variant's values in step — see
+ * therefore has to reorder every variant's values in step - see
  * `reorderVariantValues` in `lib/variants`.
  */
 export interface VariantOption {
@@ -634,7 +634,7 @@ export interface VariantOption {
  * had nowhere to put them.
  *
  * The type-specific fields are all optional and only the ones matching the
- * parent's `type` are ever read or written — the same discipline `Product`
+ * parent's `type` are ever read or written - the same discipline `Product`
  * already uses for its three detail objects. A digital variant has no weight, a
  * service has no stock, and showing those fields empty is how a merchant learns
  * the form is not about their business.
@@ -645,7 +645,7 @@ export interface ProductVariant {
    * One value per option, in option order: `["Medium", "Black"]`.
    *
    * The identity of the variant. Two variants of the same product can never
-   * share it — that is what makes regeneration idempotent.
+   * share it - that is what makes regeneration idempotent.
    */
   optionValues: string[];
   /** SKU for physical and digital, service code for a service. */
@@ -687,7 +687,7 @@ export interface ProductVariant {
   /**
    * Units held by unfulfilled orders, so not sellable.
    *
-   * Derived from the order book — see `reservedFor` in the fixtures — never
+   * Derived from the order book - see `reservedFor` in the fixtures - never
    * authored and never editable. A hand-typed reserved figure is a second
    * answer to a question the orders already answer, and the two drift apart the
    * first time an order is fulfilled.
@@ -712,7 +712,7 @@ export interface ProductVariant {
    * The only quantity a digital variant genuinely has, and it is not stock: it
    * is never picked, packed or reserved, and calling it stock is how a merchant
    * selling forty team licences ends up with a reorder level. `undefined` is
-   * the normal case — an unlimited download.
+   * the normal case - an unlimited download.
    */
   licensesAvailable?: number;
 

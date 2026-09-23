@@ -3,7 +3,7 @@ import type { MarketingChannel } from "./marketing";
 /**
  * Audience segmentation, shared by every channel.
  *
- * A segment is defined once and reused across WhatsApp, Email and SMS — which
+ * A segment is defined once and reused across WhatsApp, Email and SMS - which
  * is the point of a unified workspace, and why this type lives on its own
  * rather than inside a channel module.
  */
@@ -46,7 +46,7 @@ export interface Segment {
    * easier to reason about than a rule tree with mixed precedence.
    */
   rules: SegmentRule[];
-  /** Channels this segment is usable on — a phone-less list cannot take SMS. */
+  /** Channels this segment is usable on - a phone-less list cannot take SMS. */
   channels: MarketingChannel[];
   /** Built in and not editable, e.g. "All Contacts". */
   system?: boolean;

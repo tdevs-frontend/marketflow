@@ -6,7 +6,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 /**
  * A module the navigation reaches before the module exists.
  *
- * Three sidebar entries in the agreed structure — Forms, Landing Pages, Team —
+ * Three sidebar entries in the agreed structure - Forms, Landing Pages, Team -
  * have no pages behind them yet. The alternatives were both worse: leaving
  * them out would ship a navigation that does not match the product plan, and
  * pointing them at nothing would hand merchants a 404 from the sidebar, which
@@ -14,7 +14,7 @@ import { EmptyState } from "@/components/ui/empty-state";
  *
  * So the route resolves and says plainly what is there. It states what the
  * module will do and where the nearest working thing is, and it is built from
- * `PageHeader` and `EmptyState` like every other empty view in the product —
+ * `PageHeader` and `EmptyState` like every other empty view in the product -
  * no special "coming soon" styling to remove later.
  */
 export function ModulePlaceholder({

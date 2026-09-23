@@ -49,7 +49,7 @@ import {
 } from "./settings-section";
 
 /**
- * Notifications — two settings with one name, told apart.
+ * Notifications - two settings with one name, told apart.
  *
  * This is the distinction the module is built around, and it is a governance
  * boundary rather than a layout choice:
@@ -64,7 +64,7 @@ import {
  * whole workspace's failure alerts from their own preferences page. So they are
  * different records (`WorkspaceNotificationPolicy` against
  * `UserNotificationPreferences`), different service calls with different
- * authorisation, and — for anyone who can do both — two views that you have to
+ * authorisation, and - for anyone who can do both - two views that you have to
  * deliberately switch between. A member without the permission never sees the
  * workspace view at all, and their list is *derived* from the policy: an event
  * an administrator turns off simply is not there.
@@ -91,7 +91,7 @@ export function NotificationSettings() {
       <div className="space-y-6">
         <ServiceNotice tone="session" title="Preferences are saved, delivery is not connected">
           These choices are kept for this session and are the events the product
-          genuinely models — nothing here is a placeholder switch. What does not
+          genuinely models - nothing here is a placeholder switch. What does not
           exist yet is the service that sends them, so turning something on
           records the preference rather than starting a mail.
         </ServiceNotice>
@@ -138,7 +138,7 @@ function MyPreferences() {
    * The member's list, derived from the policy rather than from the catalogue.
    *
    * An event the workspace has switched off does not appear, and a channel the
-   * workspace has not permitted is not offered — which is what makes the split
+   * workspace has not permitted is not offered - which is what makes the split
    * real. A UI that shows every event and quietly ignores half of them has an
    * administrator's setting that does nothing visible.
    */
@@ -260,7 +260,7 @@ function MyPreferences() {
       ) : (
         <>
           {/* The browser and the count sit above the sections rather than
-              inside a card of their own — they are controls over the list,
+              inside a card of their own - they are controls over the list,
               not a section of it. */}
           <div className="space-y-3">
             <EventFilterBar
@@ -349,7 +349,7 @@ function MyPreferences() {
 /**
  * Search and a category filter, over a catalogue of fifty-odd rows.
  *
- * Neither would earn its place at a dozen events — and neither was here when
+ * Neither would earn its place at a dozen events - and neither was here when
  * there were sixteen. The page now covers every module in the product, which
  * is what makes it useful and also what makes "turn off the bounce alert" a
  * scrolling problem. Two controls, both compact, both operating on the same
@@ -457,7 +457,7 @@ function EventFilterBar({
  *
  * One line, not a card. The number a merchant wants from this page at a glance
  * is "am I going to hear about anything", and with fifty rows that is no longer
- * answerable by looking. It counts the *available* events — an event an
+ * answerable by looking. It counts the *available* events - an event an
  * administrator has switched off is not the member's to be on or off about.
  */
 function PreferenceSummary({
@@ -504,7 +504,7 @@ function PreferenceSummary({
  * event deserve", and it is the right answer here too.
  *
  * It only ever writes the member's own preferences. The workspace policy is an
- * administrator's record and is not reachable from this control — a master
+ * administrator's record and is not reachable from this control - a master
  * switch that quietly widened its blast radius would be the exact collapse the
  * two-record split exists to prevent.
  */
@@ -519,7 +519,7 @@ function CategoryToggle({
   onChange: (next: Record<string, NotificationChannel[]>) => void;
 }) {
   /* Mandatory rows are not the member's to switch, so they are excluded from
-     both the reading and the writing — otherwise the control could never show
+     both the reading and the writing - otherwise the control could never show
      "off" for a category holding one. */
   const optional = group.events.filter((event) => !event.mandatory);
   const anyOn = optional.some(
@@ -552,7 +552,7 @@ function CategoryToggle({
 /**
  * One notification, as a row.
  *
- * Title, one line of what raises it, and a checkbox per permitted channel — the
+ * Title, one line of what raises it, and a checkbox per permitted channel - the
  * four things the reader needs and nothing else. The channels are checkboxes
  * rather than a switch because an event can legitimately go to both, to one, or
  * to neither, and "neither" is a normal answer that a single on/off control
@@ -577,7 +577,7 @@ function EventRow({
         event.mandatory ? (
           /*
            * Not a disabled checkbox. The one mandatory row left is a declined
-           * charge, which ends in a suspended workspace if nobody acts on it —
+           * charge, which ends in a suspended workspace if nobody acts on it -
            * and the person who muted it is exactly the person who needed
            * telling. A greyed-out box invites the reader to look for the way
            * to un-grey it; a badge that states the rule ends the question.
@@ -605,7 +605,7 @@ function EventRow({
               /* Names the event as well as the channel, so a screen reader
                  announces "Campaign completed, Email" rather than the tenth
                  unlabelled "Email" on the page. */
-              label={`${NOTIFICATION_CHANNEL_LABEL[channel]} — ${event.title}`}
+              label={`${NOTIFICATION_CHANNEL_LABEL[channel]} - ${event.title}`}
             />
           ))
         )
@@ -713,7 +713,7 @@ function WorkspacePolicy() {
                         checked={permitted.includes(channel)}
                         disabled={!on}
                         onCheckedChange={(next) => setChannel(event, channel, next)}
-                        label={`Allow ${NOTIFICATION_CHANNEL_LABEL[channel]} — ${event.title}`}
+                        label={`Allow ${NOTIFICATION_CHANNEL_LABEL[channel]} - ${event.title}`}
                       />
                     ))
                   )

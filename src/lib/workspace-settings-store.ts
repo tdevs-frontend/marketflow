@@ -15,7 +15,7 @@ import type { SettingsSection, WorkspaceSettings } from "@/types/workspace";
  * open, and Workspace Settings is the full editor with branding, data retention
  * and the defaults that feed every module.
  *
- * Two *views* is fine. Two *copies* is not, and that was the previous state —
+ * Two *views* is fine. Two *copies* is not, and that was the previous state -
  * each screen held `useState(WORKSPACE_SETTINGS)`, so the same field could show
  * a different answer depending on which route you arrived from, with no way for
  * a merchant to tell which one was the truth. The fix is not to delete one

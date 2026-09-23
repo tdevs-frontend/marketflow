@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
  * The industry grid: who MarketFlow is for, one card per industry.
  *
  * Six cards, each tinted from the `tint-*` identity family the dashboard's own
- * tiles use — one hue per industry, so a reader scanning for their own
+ * tiles use - one hue per industry, so a reader scanning for their own
  * business finds it by colour before they read a title. The beds are the 50s
  * and the ink is the 700, the same pairing everywhere else in the product, so
  * this grid is six shades of the existing system rather than six new colours.
@@ -33,7 +33,7 @@ import { cn } from "@/lib/utils";
  * Each card carries a small product still beside its copy: the order
  * confirmation an e-commerce merchant sends, the channel list an SMB manages,
  * the client roster an agency watches. They are illustrations, not screenshots
- * — `aria-hidden`, built from spans, with nothing in them that looks like a
+ * - `aria-hidden`, built from spans, with nothing in them that looks like a
  * control a reader could press.
  *
  * The still is hidden in the two-column range and shown either side of it. At
@@ -43,7 +43,7 @@ import { cn } from "@/lib/utils";
  * container, and in both the pair sits comfortably.
  *
  * "Learn more" points at the route the footer already advertises for that
- * industry. None of the six is built yet — the same arrangement the footer's
+ * industry. None of the six is built yet - the same arrangement the footer's
  * columns have had since before the pages behind them existed, and the links
  * are correct the day they land.
  */
@@ -475,7 +475,7 @@ export function SolutionsSection() {
                     </Link>
                   </div>
 
-                  {/* Hidden across the cramped two-column range — see the note
+                  {/* Hidden across the cramped two-column range - see the note
                       at the top of the file. */}
                   <div className="hidden shrink-0 sm:block md:hidden lg:block">
                     <SolutionVisual kind={industry.visual} />

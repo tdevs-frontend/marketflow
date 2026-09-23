@@ -38,8 +38,8 @@ import { EmailCampaignStatusBadge } from "./campaign-row";
  * beat the average, and which templates are worth reusing.
  *
  * The page opened on a Sent → Delivered → Opened → Clicked → Converted funnel
- * until this revision. It was the most generic thing on it — every channel's
- * analytics can draw that shape, so it said nothing about *email* — and the two
+ * until this revision. It was the most generic thing on it - every channel's
+ * analytics can draw that shape, so it said nothing about *email* - and the two
  * stages nobody could act on from here, delivered and converted, are exactly
  * the ones a campaign's own report exists to explain. The engagement card in
  * its place carries the same information where it is useful: as four rates with
@@ -58,7 +58,7 @@ const TOTALS = emailTotals(EMAIL_CAMPAIGNS);
  *
  * `invert` marks the two where a fall is the good outcome. Without it a bounce
  * rate dropping a point and an open rate dropping a point are drawn the same
- * colour, which is the one mistake this card cannot afford — these are the
+ * colour, which is the one mistake this card cannot afford - these are the
  * numbers people scan for red.
  */
 const ENGAGEMENT: {
@@ -109,7 +109,7 @@ const SORT_OPTIONS = [
 
 type SortField = (typeof SORT_OPTIONS)[number]["value"];
 
-/** Sent campaigns only — a scheduled campaign has no rate to compare. */
+/** Sent campaigns only - a scheduled campaign has no rate to compare. */
 const SENT = EMAIL_CAMPAIGNS.filter((campaign) => campaign.delivered > 0);
 
 /** Templates with sends behind them. A 0% average is an absence, not a result. */
@@ -144,7 +144,7 @@ export interface EmailAnalyticsProps {
   /**
    * The period this page reports on.
    *
-   * Supplied by the dashboard's filter rather than chosen here — the page used
+   * Supplied by the dashboard's filter rather than chosen here - the page used
    * to own a `DateRangePicker` of its own, which made it one of four analytics
    * pages each answering "which 30 days" separately. Optional while the central
    * control is being wired up, and the default is the same 30 days the picker
@@ -260,7 +260,7 @@ export function EmailAnalytics({ range = DEFAULT_RANGE }: EmailAnalyticsProps) {
                     </p>
                   </div>
 
-                  {/* The shape, not a second reading of the number beside it —
+                  {/* The shape, not a second reading of the number beside it -
                       no axes, because at 40px the direction is the signal. */}
                   <div className="w-24 shrink-0" aria-hidden>
                     <SparklineChart

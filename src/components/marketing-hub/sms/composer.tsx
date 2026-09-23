@@ -24,7 +24,7 @@ import { SMS_CONCAT_LIMIT, SMS_SINGLE_LIMIT, countSmsSegments } from "@/types/sm
  * `{{first_name}}` becomes "Christopher".
  *
  * That is also why the counter shows the segment count and the projected cost
- * next to it — crossing 160 characters does not break anything, it doubles the
+ * next to it - crossing 160 characters does not break anything, it doubles the
  * bill, and the only way to make that visible is to show it.
  */
 
@@ -220,7 +220,7 @@ export function SmsComposer({
         </ul>
         <p className="mt-2 min-h-4 text-sm text-text-muted">
           {focusedVariable
-            ? `Counted as "${SMS_SUBSTITUTIONS[focusedVariable]}" — the longest value on your list.`
+            ? `Counted as "${SMS_SUBSTITUTIONS[focusedVariable]}" - the longest value on your list.`
             : null}
         </p>
       </div>
@@ -232,7 +232,7 @@ export function SmsComposer({
  * The message as a handset would show it, placeholders filled in.
  *
  * Worth the space because the two things people get wrong in an SMS draft are
- * a placeholder that reads as literal braces and an opt-out line they forgot —
+ * a placeholder that reads as literal braces and an opt-out line they forgot -
  * both obvious the moment the message is shown in a bubble.
  */
 export function SmsPreview({

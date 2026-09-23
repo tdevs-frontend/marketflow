@@ -18,7 +18,7 @@ import { AuditStatusBadge, SeverityBadge } from "./workspace-badges";
  * One audit event, in full.
  *
  * The request metadata is the part worth being careful about. `ipAddress` and
- * `userAgent` render only when the record actually carries them — a system
+ * `userAgent` render only when the record actually carries them - a system
  * action has no browser and no address, and filling those in with something
  * plausible would make a field that exists to support an investigation the
  * least trustworthy thing on the screen. Absent renders as "Not recorded".
@@ -50,12 +50,12 @@ export function AuditDetailDrawer({
       label: "IP address",
       value: event.ipAddress,
       /* Never invented. A system action genuinely has neither. */
-      fallback: event.actorId ? "Not recorded" : "System action — no request",
+      fallback: event.actorId ? "Not recorded" : "System action - no request",
     },
     {
       label: "Device",
       value: event.userAgent ? describeAgent(event.userAgent) : null,
-      fallback: event.actorId ? "Not recorded" : "System action — no device",
+      fallback: event.actorId ? "Not recorded" : "System action - no device",
     },
   ];
 

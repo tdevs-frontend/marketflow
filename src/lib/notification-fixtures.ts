@@ -22,13 +22,13 @@ import {
  * reader the bell is decorative, which is the one thing a feed cannot afford.
  *
  * `minutes` rather than a timestamp, resolved through `minutesAgo` against
- * `WORKSPACE_NOW` — the frozen instant every other fixture measures from. A
+ * `WORKSPACE_NOW` - the frozen instant every other fixture measures from. A
  * "2 minutes ago" computed on the server and again on the client is a
  * hydration mismatch waiting for a slow response, and a feed anchored to the
  * real clock drifts further every day nobody touches it.
  *
  * The first eight are unread, which is the number the bell's badge shows.
- * Ordered newest first — the order both surfaces render and the reducer keeps.
+ * Ordered newest first - the order both surfaces render and the reducer keeps.
  */
 
 interface Seed extends Omit<FeedNotification, "createdAt"> {

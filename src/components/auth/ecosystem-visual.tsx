@@ -63,7 +63,7 @@ const NODES: Node[] = [
 /* Visual                                                                     */
 /* -------------------------------------------------------------------------- */
 
-/** One platform, five jobs. Decorative — the headline says it in words. */
+/** One platform, five jobs. Decorative - the headline says it in words. */
 export function EcosystemVisual({ className }: { className?: string }) {
   return (
     <div

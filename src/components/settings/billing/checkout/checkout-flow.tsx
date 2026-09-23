@@ -41,18 +41,18 @@ import { PlanSummary } from "./plan-summary";
  * A modal rather than a route, and the reason is what sits behind it. The
  * merchant chose a tier by comparing four cards; a full-page checkout replaces
  * that comparison with a form and makes "actually, what did Business include?"
- * a navigation problem. `Dialog` is the product's own — native `<dialog>`,
- * focus trap, Escape, `::backdrop` — so nothing here re-implements modality.
+ * a navigation problem. `Dialog` is the product's own - native `<dialog>`,
+ * focus trap, Escape, `::backdrop` - so nothing here re-implements modality.
  *
  * The step is local state and deliberately *not* in the URL. The draft it
- * carries — a chosen method, a typed reference, an attached receipt — cannot be
+ * carries - a chosen method, a typed reference, an attached receipt - cannot be
  * reconstructed from a query string, so a shareable step-4 link would open on a
  * review of nothing. The tab underneath stays addressable; the transaction on
  * top of it does not.
  *
  * What this component owns is the order of the steps and the one decision at
  * each boundary: whether the current step is complete enough to leave. What it
- * does not own is any of the five screens, which is why each is its own file —
+ * does not own is any of the five screens, which is why each is its own file -
  * and none of them knows it is in a checkout.
  */
 
@@ -213,7 +213,7 @@ export function CheckoutFlow({
     setStep("result");
   };
 
-  /** Back to the method step with the plan intact — §12's "change method". */
+  /** Back to the method step with the plan intact - §12's "change method". */
   const retry = (target: Step) => {
     setOutcome(null);
     setStep(target);

@@ -9,7 +9,7 @@
  * do it silently, over the network, from the merchant's own browser.
  *
  * So: no network, no dependency, no secret leaving the tab. `encodeQr` returns a
- * matrix of booleans and the caller decides how to draw it — `components/settings/qr-code`
+ * matrix of booleans and the caller decides how to draw it - `components/settings/qr-code`
  * renders it as a single SVG path.
  *
  * Scope is deliberately narrow. Byte mode only, because a URI is bytes; level M
@@ -17,7 +17,7 @@
  * be a parameter with one caller; versions 1–15, which tops out around 400 bytes
  * and is roughly triple the longest `otpauth` URI this product can build. Past
  * that it throws rather than silently truncating, because a QR code that scans
- * and yields a truncated secret is the worst possible outcome — it looks like it
+ * and yields a truncated secret is the worst possible outcome - it looks like it
  * worked.
  *
  * Implements ISO/IEC 18004. The section names below are that document's.
@@ -181,7 +181,7 @@ class BitBuffer {
 /**
  * Data codewords for `bytes`, padded to the version's capacity.
  *
- * The 0xEC / 0x11 alternation at the end is not arbitrary filler — it is the
+ * The 0xEC / 0x11 alternation at the end is not arbitrary filler - it is the
  * pad pattern the spec names, chosen because it produces a well-mixed module
  * pattern rather than a large blank region that would trip the mask penalties.
  */
@@ -253,7 +253,7 @@ function buildCodewords(bytes: Uint8Array, version: number): Uint8Array {
 /* Matrix                                                                     */
 /* -------------------------------------------------------------------------- */
 
-/** `null` means "still free for data" — the placement walk depends on it. */
+/** `null` means "still free for data" - the placement walk depends on it. */
 type Grid = (boolean | null)[][];
 
 function placeFunctionPatterns(grid: Grid, version: number) {
@@ -287,14 +287,14 @@ function placeFunctionPatterns(grid: Grid, version: number) {
 
   /*
    * Alignment patterns sit at every combination of the version's centre
-   * coordinates, minus the three that would land on a finder — which the spec
+   * coordinates, minus the three that would land on a finder - which the spec
    * identifies by *index*: first/first, first/last and last/first.
    *
    * It has to be the index rule and not "skip anything already drawn". From
    * version 7 there are centres like (6, 22) that lie on the timing row and are
    * nonetheless real alignment patterns; an occupancy test skips exactly those,
    * and the symbol it produces has finder patterns, timing and a valid format
-   * block — so it *looks* right — while a scanner that uses the alignment grid
+   * block - so it *looks* right - while a scanner that uses the alignment grid
    * to correct for perspective finds nothing where it expects a pattern.
    *
    * Overwriting the timing modules underneath is correct and lossless: centres
@@ -358,7 +358,7 @@ function reservedMask(version: number, size: number): boolean[][] {
 /**
  * The zigzag walk: two columns at a time, right to left, alternating direction.
  *
- * Column 6 is skipped entirely — it is the vertical timing pattern, and the
+ * Column 6 is skipped entirely - it is the vertical timing pattern, and the
  * pairing is defined over the columns that remain.
  */
 function placeData(grid: Grid, codewords: Uint8Array, reserved: boolean[][]) {
@@ -548,7 +548,7 @@ export interface QrMatrix {
  * Encodes `text` as a QR matrix, choosing the smallest version that fits.
  *
  * Throws rather than truncating when the text is too long. A truncated QR code
- * still scans — it just yields the wrong secret, and the merchant finds out
+ * still scans - it just yields the wrong secret, and the merchant finds out
  * when a code they carefully typed in is rejected forever.
  */
 export function encodeQr(text: string): QrMatrix {

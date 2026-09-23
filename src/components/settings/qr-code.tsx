@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 /**
  * A QR code, drawn as one SVG path.
  *
- * Encoded in the browser by `lib/qr` — not fetched from an image service. The
+ * Encoded in the browser by `lib/qr` - not fetched from an image service. The
  * only thing this product ever puts in a QR code is an `otpauth://` URI
  * carrying a TOTP shared secret, and posting that to a third party to have a
  * PNG drawn would hand over the whole second factor in the course of rendering
@@ -18,12 +18,12 @@ import { cn } from "@/lib/utils";
  *
  * **It is always dark-on-white, in both themes.** Every other surface in the
  * product follows the theme; this one must not. A QR scanner thresholds the
- * image, and inverted codes are read by some phone cameras and not others —
+ * image, and inverted codes are read by some phone cameras and not others -
  * which turns "enable two-factor" into a coin flip that depends on the user's
  * handset. The white plate is drawn explicitly rather than inherited, so a dark
  * theme cannot take it away.
  *
- * **One `<path>`, not `size²` rects.** A version 7 symbol is 45×45 — two
+ * **One `<path>`, not `size²` rects.** A version 7 symbol is 45×45 - two
  * thousand elements if each module is its own node, all of which React would
  * diff. Concatenating the run into a single path string makes it one node, and
  * `shape-rendering="crispEdges"` keeps the module boundaries from being
@@ -49,7 +49,7 @@ export function QrCode({
     } catch {
       /* `encodeQr` throws rather than truncating past its capacity. Nothing
          this product encodes comes close, but a silently wrong QR code is the
-         one failure worth refusing to draw — the manual setup key beside it is
+         one failure worth refusing to draw - the manual setup key beside it is
          the working path either way. */
       return null;
     }

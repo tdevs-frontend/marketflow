@@ -13,19 +13,19 @@
    /*
    * Two families, and weight is a weight again.
    *
-   * This block used to carry a token per weight utility — `--font-medium`,
-   * `--font-bold` and so on — because Tailwind resolves `font-<name>` against
+   * This block used to carry a token per weight utility - `--font-medium`,
+   * `--font-bold` and so on - because Tailwind resolves `font-<name>` against
    * `--font-*` before `--font-weight-*`, and the old kits shipped as discrete
    * static cuts where `SatoshiMedium` was a family rather than a 500. Those
    * tokens are gone. The typefaces now come from Google Fonts as variable
    * families with genuine 400/500/600/700, so `font-medium` goes back to
-   * meaning `font-weight: 500` — Tailwind's own default, on a face that has a
+   * meaning `font-weight: 500` - Tailwind's own default, on a face that has a
    * real Medium to render it with.
    *
    * That change deletes a whole class of bug rather than trading one for
    * another. Under the old scheme a weight utility *replaced the family*, so
    * `<h2 className="font-semibold">` silently took a heading off the heading
-   * face — invisible while headings and body were cuts of one typeface, and a
+   * face - invisible while headings and body were cuts of one typeface, and a
    * different typeface the moment they were not. Nothing can do that now: a
    * weight utility sets a weight, and the family comes from the element.
    *
@@ -33,7 +33,7 @@
    * faces. The typeface behind each is chosen in `font-themes.css`.
    *
    * `--font-heading` is also the seam between the two *surfaces*. The value
-   * below is the landing rule — headings in the display face — and THE SURFACE
+   * below is the landing rule - headings in the display face - and THE SURFACE
    * RULE in `font-themes.css` restates the token inside `[data-surface="app"]`
    * so the dashboard resolves it to the body face instead. Declaring it here
    * is what makes `font-heading` a utility at all; overriding it there is what
@@ -43,7 +43,7 @@
    --font-heading: var(--font-active-display);
 
    /*
-   * The metadata step — 13px.
+   * The metadata step - 13px.
    *
    * The dashboard's type scale is 13 / 14 / 16 / 20 / 28, and Tailwind's own
    * ramp has no rung between `text-xs` (12px) and `text-sm` (14px). 12px is too
@@ -100,7 +100,7 @@
    --color-black: #000000;
 
    /*
-   * Primary Brand — indigo, with violet as the second stop.
+   * Primary Brand - indigo, with violet as the second stop.
    *
    * Two pairs, because one pair cannot do both jobs.
    *
@@ -141,7 +141,7 @@
    /*
    * Secondary & Accent.
    *
-   * `secondary` is the gradient's deeper second stop — violet-600. It also
+   * `secondary` is the gradient's deeper second stop - violet-600. It also
    * stands alone wherever a full gradient would be too loud for the element's
    * size. `accent` is the supporting *cyan*: deliberately outside the
    * indigo-violet range, so a chart or chip row is never three shades of the
@@ -151,7 +151,7 @@
    /*
    * The violet one step deeper, and the second stop of the gradient's *hover*
    * ramp. It exists because the hover state used to run `primary-dark` to
-   * `primary` — indigo to indigo — which threw the violet away exactly when
+   * `primary` - indigo to indigo - which threw the violet away exactly when
    * the button was being pressed. Pairing it with `primary-dark` keeps the
    * hover the same two-hue object as the resting state, only deeper. White
    * clears AA on it at 7.0:1, comfortably past the resting pair.
@@ -159,7 +159,7 @@
    --color-secondary-dark: #6d28d9;
 
    /*
-   * Lavender — ink for a brand-gradient ground, where the brand ramp itself is
+   * Lavender - ink for a brand-gradient ground, where the brand ramp itself is
    * the background and cannot also be the highlight.
    *
    * All three clear AA-large against every stop of that ramp (3.8:1 at the
@@ -169,7 +169,7 @@
    --color-lavender-deep: #c7d2fe;
    --color-lavender: #ddd6fe;
    --color-lavender-pale: #ede9fe;
-   /* The deepest rung the set goes to — violet-300, 3.1:1 on the brand ramp's
+   /* The deepest rung the set goes to - violet-300, 3.1:1 on the brand ramp's
      lightest point. It is what gives a gradient-clipped phrase somewhere to
      travel to; on its own it is right at the AA-large line, so it is only ever
      one stop of a ramp, never a whole word. */
@@ -204,7 +204,7 @@
    --color-whatsapp-bright: #34d399;
    /*
    * WhatsApp's own green, and the only place that ramp is departed from.
-   * It is spent on the logo mark and on the success ticks beside it — a brand
+   * It is spent on the logo mark and on the success ticks beside it - a brand
    * mark drawn in a borrowed green stops being the brand mark, and the ticks
    * read as the same "verified" family because they share it. At 3.1:1 on the
    * section ground it carries a graphic; it is never set as text.
@@ -215,7 +215,7 @@
    /*
    * The chat surfaces, for the conversation mock-up.
    *
-   * Separate from the ramp above because they are not the brand's green — they
+   * Separate from the ramp above because they are not the brand's green - they
    * are the conventions a messaging thread is read by, and a reader clocks a
    * chat as a chat from the warm ground and the tinted outgoing bubble before
    * they read a word of it. `chat-ground` is warm rather than blue-grey on
@@ -240,7 +240,7 @@
    * The other three channels,
    * because WhatsApp *is* this product's primary channel. The other three get
    * one hue each, spaced far enough apart to survive a legend: blue, violet,
-   * slate. Social stays neutral on purpose — its colour comes from the
+   * slate. Social stays neutral on purpose - its colour comes from the
    * platform marks below, and a fifth brand hue competing with four platform
    * logos is what makes a content calendar unreadable.
    */
@@ -276,7 +276,7 @@
    --color-border-strong: #cbd5e1;
 
    /*
-   * True grey — equal parts, no blue cast. The surface and border ramp above is
+   * True grey - equal parts, no blue cast. The surface and border ramp above is
    * slate and leans cool on purpose; keep the two apart, since mixing them is
    * what makes one grey look faintly blue next to another.
    */
@@ -285,7 +285,7 @@
    --color-gray-strong: #d4d4d4;
    --color-gray-ink: #525252;
 
-   /* Typography — deep blue-slate, not near-black. */
+   /* Typography - deep blue-slate, not near-black. */
    --color-text-primary: #111827;
    --color-text-secondary: #475569;
    /* --color-text-secondary: #4f4f4f; */
@@ -317,14 +317,14 @@
    *
    * A grid of nine identical grey tiles makes a merchant read nine names to
    * find the one they came for. A tinted tile is recognised before the label
-   * is, which is the whole job of a mark — so these exist to make Shopify
+   * is, which is the whole job of a mark - so these exist to make Shopify
    * findable at a glance, not to decorate.
    *
    * They are a family of their own rather than borrowed status steps, because
    * status is reserved: amber has to keep meaning "warning" everywhere in the
    * product, and an SMS tile painted out of the warning ramp would read as an
    * alert on a healthy connection. The separation is visual as well as
-   * nominal — every bed here is a 50-step where the status beds are
+   * nominal - every bed here is a 50-step where the status beds are
    * 100-steps, so a tint stays quieter than any badge sitting beside it.
    * State is the badge and the health dot; the tile is identity.
    *
@@ -352,7 +352,7 @@
    --color-tint-indigo-soft: #eef2ff;
    --color-tint-indigo-ink: #4338ca;
 
-   /* Olive rather than emerald — Shopify's own green, and what keeps its tile
+   /* Olive rather than emerald - Shopify's own green, and what keeps its tile
      from reading as a second WhatsApp two rows down. */
    --color-tint-lime-soft: #f4faec;
    --color-tint-lime-ink: #4d7c0f;
@@ -385,7 +385,7 @@
    * `chart-neutral` is right for a bar that is merely *not* the subject; it is
    * too faint for a line the reader is meant to measure the current period
    * against, which at 1.5px and 5-dash was reading as part of the gridwork.
-   * Not a new hue — it is the value already carried as `--color-dark-muted`,
+   * Not a new hue - it is the value already carried as `--color-dark-muted`,
    * named here for the job it does in a plot.
    */
    --color-chart-neutral-strong: #94a3b8;
@@ -415,7 +415,7 @@
    --shadow-btn: 0 1px 2px rgba(15, 23, 42, 0.06);
    --shadow-btn-hover: 0 6px 16px rgba(99, 102, 241, 0.18);
    --shadow-float: 0 12px 32px rgba(15, 23, 42, 0.1);
-   /* Focus rings — brand by default, red on destructive controls. */
+   /* Focus rings - brand by default, red on destructive controls. */
    --shadow-focus: 0 0 0 3px rgba(99, 102, 241, 0.18);
    --shadow-focus-field: 0 0 0 3px rgba(99, 102, 241, 0.1);
    --shadow-focus-error: 0 0 0 3px rgba(220, 38, 38, 0.18);

@@ -8,7 +8,7 @@ import { ApexChart } from "./apex-chart";
 import { BASE_CHART, BASE_TOOLTIP, CHART_COLORS } from "./chart-theme";
 
 /**
- * Share of a total — messages by channel, posts by platform.
+ * Share of a total - messages by channel, posts by platform.
  *
  * A donut rather than a pie so the centre can carry the total, which is the
  * number people look for first; and only where the parts genuinely sum to a

@@ -101,7 +101,7 @@ export interface CanvasProps {
   onDuplicate?: (nodeId: string) => void;
   onDelete?: (nodeId: string) => void;
   invalidIds?: Set<string>;
-  /** Hangs the entered count off every node — the Analytics tab's reading. */
+  /** Hangs the entered count off every node - the Analytics tab's reading. */
   showAnalytics?: boolean;
   /** Turns off dragging and the node menus, leaving pan and zoom. */
   readOnly?: boolean;
@@ -112,7 +112,7 @@ export interface CanvasProps {
  * The workflow canvas: a pan-and-zoom surface with absolutely positioned nodes
  * and SVG connectors between them.
  *
- * Nodes carry their own coordinates, which the API owns — nothing here lays
+ * Nodes carry their own coordinates, which the API owns - nothing here lays
  * anything out. That is what lets the same component render an authored graph
  * in the builder and a read-only one in Analytics without a second code path.
  *
@@ -156,7 +156,7 @@ export function WorkflowCanvas({
    * Written from an effect rather than during render: a ref assigned while
    * rendering is a side effect in the render phase, and React's rules reject
    * it. The effect runs after every commit, so a gesture in progress is
-   * reading at most one frame of staleness — which at 60fps is a pixel.
+   * reading at most one frame of staleness - which at 60fps is a pixel.
    */
   const state = useRef({ viewport, onViewportChange });
 
@@ -209,7 +209,7 @@ export function WorkflowCanvas({
         return;
       }
 
-      /* Plain wheel pans, the way every canvas tool behaves — the page behind
+      /* Plain wheel pans, the way every canvas tool behaves - the page behind
          the builder does not scroll while the pointer is over it. */
       event.preventDefault();
       const { viewport: current, onViewportChange: change } = state.current;
@@ -297,7 +297,7 @@ export function WorkflowCanvas({
     <div
       ref={viewportRef}
       /* `workflow-dots` is the marketing page's grid; this is the in-product
-         one — the same idea at the product's own neutral, subtle enough that
+         one - the same idea at the product's own neutral, subtle enough that
          nodes sit on it rather than in front of it. */
       className={cn(
         "relative h-full w-full touch-none overflow-hidden bg-surface-secondary/50",
@@ -334,7 +334,7 @@ export function WorkflowCanvas({
         }}
       >
         {/* Zero-sized and overflow-visible, so paths can use the graph's own
-            coordinates — including the negative ones a fork produces — without
+            coordinates - including the negative ones a fork produces - without
             the SVG needing a viewBox that moves every time a node does. */}
         <svg
           aria-hidden

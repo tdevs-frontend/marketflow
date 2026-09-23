@@ -17,7 +17,7 @@ import type { PaymentGateway } from "@/types/account";
 import { ServiceNotice } from "../../service-notice";
 
 /**
- * Step 3 — whatever the chosen method needs before it can be reviewed.
+ * Step 3 - whatever the chosen method needs before it can be reviewed.
  *
  * Two branches, and they are genuinely different screens rather than one form
  * with fields hidden:
@@ -26,7 +26,7 @@ import { ServiceNotice } from "../../service-notice";
  *   hosted checkout collects the instrument and hands back a token; a card
  *   number typed into a MarketFlow input would be card data this product never
  *   wanted and would be in scope for. So the automatic branch is a statement of
- *   where the merchant will be sent — or, when no provider is connected, a
+ *   where the merchant will be sent - or, when no provider is connected, a
  *   plain statement that they cannot be, which is the case in this build.
  *
  *   **Manual** needs everything, because there is no third party to ask. The
@@ -172,8 +172,8 @@ function ManualDetails({
         >
           {/*
             Read-only rather than absent, and read-only rather than editable.
-            The merchant has to see the figure they are meant to have sent — it
-            is what they will check against their bank — but what the plan costs
+            The merchant has to see the figure they are meant to have sent - it
+            is what they will check against their bank - but what the plan costs
             is the product's answer, not theirs. A typed amount that disagrees
             with the tier is a verification failure invented at the form.
           */}
@@ -235,7 +235,7 @@ function ManualDetails({
         hint={PAYMENT_PROOF_RULES.label}
         error={errors.proofName}
       >
-        {/* The input is the control and the button is its label — the same
+        {/* The input is the control and the button is its label - the same
             arrangement the avatar picker uses, so the two uploads in Settings
             keep one focus ring and one keyboard path. */}
         <input

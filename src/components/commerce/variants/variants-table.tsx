@@ -38,7 +38,7 @@ import { ProductThumb, VariantAvailabilityBadge } from "../commerce-badges";
  * anything else.
  *
  * Quantities deliberately do *not* edit inline. Available is `current -
- * reserved`, and reserved is read off the open orders — so an editable cell
+ * reserved`, and reserved is read off the open orders - so an editable cell
  * there would either be lying about which number it writes, or letting a
  * merchant type over a figure the order book owns. Stock changes go through the
  * bulk Adjust dialog or the drawer, which is also where the existing
@@ -54,7 +54,7 @@ export interface VariantsTableProps {
   basePrice: number;
   /** The product image a variant with none of its own inherits. */
   fallbackImage?: string;
-  /** Variant ids whose SKU collides — flagged inline rather than in a summary. */
+  /** Variant ids whose SKU collides - flagged inline rather than in a summary. */
   duplicateSkus: Set<string>;
   /** Ids currently ticked, for the bulk bar above the table. */
   selected: string[];
@@ -77,7 +77,7 @@ export interface VariantsTableProps {
 /**
  * Price, with the inherited figure as the placeholder.
  *
- * An empty field is not missing data — it is "sells at the product price", and
+ * An empty field is not missing data - it is "sells at the product price", and
  * showing that price greyed in the box is what makes the rule legible without a
  * second column explaining it. Clearing the field is how a merchant goes back
  * to following the parent.
@@ -145,7 +145,7 @@ function AvailableCell({ variant }: { variant: ProductVariant }) {
       >
         {available}
       </span>
-      {/* The arithmetic, shown rather than asserted — a merchant looking at
+      {/* The arithmetic, shown rather than asserted - a merchant looking at
           "12" needs to know whether the three claimed units are in it. */}
       <span className="text-meta font-medium text-text-muted tabular-nums">
         {variant.stock ?? 0} on hand
@@ -180,7 +180,7 @@ function CapacityCell({ variant }: { variant: ProductVariant }) {
 /**
  * Delivery, for a digital variant.
  *
- * What is delivered is a file and a set of access rules, not a quantity — the
+ * What is delivered is a file and a set of access rules, not a quantity - the
  * only number a download genuinely has is seats left in a finite licence pool,
  * and that is shown only when there is one.
  */
@@ -244,7 +244,7 @@ export function VariantsTable({
       icon: <Copy className="size-4" />,
       onSelect: () => onDuplicate(variant.id),
     },
-    /* Digital variants deliver a file, not a picture — offering an image
+    /* Digital variants deliver a file, not a picture - offering an image
        assignment there would be a control with nothing to point at. */
     ...(type === "digital"
       ? []
@@ -310,7 +310,7 @@ export function VariantsTable({
     );
   };
 
-  /** The supporting line under a variant's name — what it is, in one phrase. */
+  /** The supporting line under a variant's name - what it is, in one phrase. */
   const subtitle = (variant: ProductVariant) => {
     if (type === "digital" && variant.licenseType) return variant.licenseType;
     if (type === "physical" && variant.barcode) return variant.barcode;
@@ -319,7 +319,7 @@ export function VariantsTable({
       : undefined;
   };
 
-  /** Thumbnail plus name — §3's variant cell. */
+  /** Thumbnail plus name - §3's variant cell. */
   const variantCell = (variant: ProductVariant) => {
     const hint = subtitle(variant);
 
@@ -457,7 +457,7 @@ export function VariantsTable({
         </Table>
       </div>
 
-      {/* Mobile: the same rows as cards — the module's existing responsive
+      {/* Mobile: the same rows as cards - the module's existing responsive
           pattern, not a second mobile design. A seven-column grid on a phone is
           a horizontal scroll nobody completes. */}
       <ul className="space-y-2.5 lg:hidden">

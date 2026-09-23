@@ -14,7 +14,7 @@ export interface ModuleNavItem {
  * A module's own pages, as a strip of links.
  *
  * This is the second half of the navigation strategy the sidebar depends on.
- * The global sidebar carries business areas — WhatsApp, Email, Commerce — and
+ * The global sidebar carries business areas - WhatsApp, Email, Commerce - and
  * stops there; the pages inside a module are reached from here. That split is
  * what took the sidebar from fifty links to nine entries without a single page
  * becoming unreachable.
@@ -24,7 +24,7 @@ export interface ModuleNavItem {
  * sits in can say which one you are looking at.
  *
  * Links, not `Tabs`. The tab component owns `role="tablist"`, arrow-key
- * movement and a `tabpanel` — promises that belong to panels swapped in place.
+ * movement and a `tabpanel` - promises that belong to panels swapped in place.
  * These are routes: they belong in a `<nav>`, they are middle-clickable, and
  * the current one is announced with `aria-current`, not `aria-selected`.
  * The look is deliberately the same as `Tabs` so the two read as one system.
@@ -35,7 +35,7 @@ export function ModuleNav({
   className,
 }: {
   items: ModuleNavItem[];
-  /** Names the module for assistive tech — "WhatsApp pages". */
+  /** Names the module for assistive tech - "WhatsApp pages". */
   label: string;
   className?: string;
 }) {

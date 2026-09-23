@@ -9,14 +9,14 @@ import { cn } from "@/lib/utils";
 
 export interface StatItem {
   label: string;
-  /** Pre-formatted — the caller owns whether this is 24,580, 98.2% or $184k. */
+  /** Pre-formatted - the caller owns whether this is 24,580, 98.2% or $184k. */
   value: string;
   /** Signed. Positive is the accent colour, negative is red. Nothing else. */
   changePercent: number;
   /**
    * The tile's glyph.
    *
-   * Widened from `LucideIcon` so a brand mark can sit here too — the Social
+   * Widened from `LucideIcon` so a brand mark can sit here too - the Social
    * Analytics strip is one card per platform, and a row of platform KPIs
    * wearing Lucide's generic `users` and `heart` says nothing about which
    * platform it is. Every Lucide icon still satisfies this, since their props
@@ -26,7 +26,7 @@ export interface StatItem {
   /** The comparison the change is against, e.g. "vs last 30 days". */
   hint: string;
   /**
-   * Flips the colouring where a fall is the good outcome — bounce rate,
+   * Flips the colouring where a fall is the good outcome - bounce rate,
    * unsubscribes, failures, opt-outs.
    */
   invertTrend?: boolean;
@@ -36,7 +36,7 @@ export interface StatItem {
    * For a row where the metrics are different *kinds* of thing rather than five
    * readings of one: messages, delivery, replies and automations are four
    * subsystems, and five identical green tiles make the eye scan the labels to
-   * tell them apart. It colours the tile only — the trend below stays on the
+   * tell them apart. It colours the tile only - the trend below stays on the
    * grid's accent, so a row still reads as one module.
    */
   accent?: { soft: string; text: string };
@@ -61,7 +61,7 @@ export interface StatsGridProps {
    */
   accent?: { soft: string; text: string };
   /**
-   * Column count at `xl`. Derived from `items.length` when omitted — five KPIs
+   * Column count at `xl`. Derived from `items.length` when omitted - five KPIs
    * across four columns leaves one card stranded on its own row.
    */
   columns?: 3 | 4 | 5 | 6;
@@ -86,7 +86,7 @@ function autoColumns(count: number): 3 | 4 | 5 | 6 {
  * The KPI row every dashboard page opens with.
  *
  * One shape, one type scale, one trend treatment across all four channel
- * modules — the accent is the only thing that changes. Values arrive
+ * modules - the accent is the only thing that changes. Values arrive
  * pre-formatted because "482,450", "98.4%" and "$184,250" have no common
  * formatter, and pushing that decision into the card would mean a `format`
  * union that grows every time a new metric appears.
@@ -157,11 +157,11 @@ export function StatsGrid({ items, accent, columns, className }: StatsGridProps)
 }
 
 /**
- * A metric with no trend — a total, a count, a rate that has no prior period
+ * A metric with no trend - a total, a count, a rate that has no prior period
  * to compare against. Used inside cards, in rows of three or four.
  *
  * `tone` follows `Avatar`'s: a ground-and-edge class pair, for the rows where
- * the tiles mean different things — a queue state, a health band — and the
+ * the tiles mean different things - a queue state, a health band - and the
  * neutral outline everywhere else, which is the default. It replaces the edge
  * rather than joining it, since `cn` concatenates and two border colours on one
  * box is a coin toss over which one the stylesheet happens to order last.
@@ -190,7 +190,7 @@ export function MiniStat({
     >
       {/* Secondary, not muted: this is the tile's only label, and a metric
           whose name is the faintest thing in the box is a metric nobody reads
-          twice. The hint below it stays muted — that one is tertiary. */}
+          twice. The hint below it stays muted - that one is tertiary. */}
       <p className="text-sm font-medium text-text-secondary">
         {label}
       </p>

@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
  * the honesty has to be uniform to be believed. A merchant who reads a clear
  * notice on Billing and then meets a Security panel cheerfully announcing that
  * two-factor is protecting their sign-in learns that the first notice was
- * decoration — and stops reading the rest.
+ * decoration - and stops reading the rest.
  *
  * The three tones map onto the three genuinely different situations in
  * Settings, and `lib/account-service.CAPABILITIES` is what decides which one a
@@ -26,8 +26,8 @@ import { cn } from "@/lib/utils";
  *                  for real but does not yet gate sign-in.
  *
  * The distinction the `security` tone exists to hold is narrow and matters: a
- * TOTP code entered during setup is genuinely checked against the secret — see
- * `lib/totp` — so a mistyped setup key fails here rather than at a sign-in
+ * TOTP code entered during setup is genuinely checked against the secret - see
+ * `lib/totp` - so a mistyped setup key fails here rather than at a sign-in
  * three weeks later. What it does not do is stand between an attacker and the
  * account. Both halves have to be said, or the screen claims the second.
  */

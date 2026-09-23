@@ -30,7 +30,7 @@ import type { SummaryFact } from "./connection-summary";
  * Written against the provider abstraction rather than against SMTP. The
  * credential rows are rendered from whatever the connected adapter saved, so
  * the same page shows a host and a port for SMTP and a region and an API key
- * for SES without a branch anywhere — the only email-specific thing on it is
+ * for SES without a branch anywhere - the only email-specific thing on it is
  * the part that genuinely is: sender identity, sending limits, and proving a
  * message actually arrives.
  */
@@ -69,7 +69,7 @@ export function EmailIntegration() {
 
   const invalidFrom = fromEmail.length > 0 && !isValidEmail(fromEmail);
 
-  /** The test send. Validates the address first — a 422 from our own form is noise. */
+  /** The test send. Validates the address first - a 422 from our own form is noise. */
   function runTestSend(): TestOutcome {
     if (!isValidEmail(testAddress)) {
       return {

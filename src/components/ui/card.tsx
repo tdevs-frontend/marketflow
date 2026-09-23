@@ -18,7 +18,7 @@ export function Card({
    * A prop rather than something a caller passes through `className`, because
    * a caller *cannot*. `cn` is a plain join, so a `bg-primary-subtle` arriving
    * in `className` lands next to this component's own `bg-surface` and the
-   * winner is whichever Tailwind happened to emit last — which is `bg-surface`,
+   * winner is whichever Tailwind happened to emit last - which is `bg-surface`,
    * so the tint simply never appeared. Every selectable card in the product
    * worked around that by drawing a border and no tint, while the table row
    * beside it drew a tint and no border, and one act of selecting ended up
@@ -30,7 +30,7 @@ export function Card({
    */
   selected?: boolean;
   /**
-   * For callers that need to measure or scroll to the card — the product
+   * For callers that need to measure or scroll to the card - the product
    * wizard scrolls its form back to the top on every step change. A plain prop
    * rather than `forwardRef`: React 19 passes refs straight through, and it is
    * optional, so every existing call site is unchanged.
@@ -60,7 +60,7 @@ export function Card({
  *
  * The dense one: a 14px semibold line over a muted note, inside a rule, for a
  * dialog panel or a settings block whose card is `p-0` and whose body is a
- * `CardBody`. It is *not* the heading the dashboard's section cards use —
+ * `CardBody`. It is *not* the heading the dashboard's section cards use -
  * those are `PanelCard`, which sets the title at `text-base sm:text-lg` and
  * pads the whole card once rather than padding a band inside it. Putting this
  * inside a `p-5` card double-pads the header, which is how a title ends up
@@ -69,11 +69,11 @@ export function Card({
  * ---
  *
  * `title` and `description` are `ReactNode`, and both branch on whether what
- * arrived is actually text. That is not a style choice — it is the HTML
+ * arrived is actually text. That is not a style choice - it is the HTML
  * content model.
  *
  * `<h3>` and `<p>` both accept *phrasing* content only, so an element child
- * that renders a `<div>` — a `Skeleton`, a chart, a stacked hint — produces
+ * that renders a `<div>` - a `Skeleton`, a chart, a stacked hint - produces
  * markup the parser cannot represent. The browser closes the paragraph before
  * the `<div>` and reopens it after, so the tree it builds is not the tree
  * React rendered on the server, and hydration reports the mismatch:

@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 /**
  * The pieces every wizard step is built from.
  *
- * None of these are new design — they are the radio card, section legend and
+ * None of these are new design - they are the radio card, section legend and
  * summary row the wizard already used, lifted out of one 980-line file so that
  * seven steps cannot each drift their own version. Same classes, same
  * behaviour, one definition.
@@ -37,7 +37,7 @@ export function StepSection({
               at full strength: a step is a stack of these, and a heading set at
               body size in secondary ink leaves the person reading a wall with
               no shape. The hint under it sits one step up from muted for the
-              same reason — it is the sentence explaining the section, not an
+              same reason - it is the sentence explaining the section, not an
               aside, and it is frequently the only instruction on screen. */}
           <h3 className="text-base font-bold text-text-primary">{title}</h3>
           {hint ? (
@@ -55,7 +55,7 @@ export function StepSection({
  * The selectable card the wizard uses for every either/or choice.
  *
  * `aria-pressed` rather than a radio input because the visual is a card, not a
- * dot — and because the same component has to serve single-select (channel,
+ * dot - and because the same component has to serve single-select (channel,
  * send mode) and multi-select (social accounts) without changing shape.
  */
 export function OptionCard({
@@ -147,7 +147,7 @@ export function SummaryRow({
  * A setting that is on or off, with room for the fields it reveals.
  *
  * The bordered panel is what makes a disclosed sub-form read as belonging to
- * its switch rather than floating beside it — quiet hours and the frequency cap
+ * its switch rather than floating beside it - quiet hours and the frequency cap
  * both need that, and both would otherwise invent it separately.
  */
 export function TogglePanel({
@@ -216,7 +216,7 @@ export function StatTile({
 /**
  * A fixed vocabulary of labels, picked by toggling.
  *
- * Free text would be a third tag system — the workspace already has campaign
+ * Free text would be a third tag system - the workspace already has campaign
  * tags and contact tags, and a campaign labelled "summer-sale" cannot be
  * grouped with one labelled "Summer Sale".
  */

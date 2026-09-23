@@ -54,7 +54,7 @@ interface Props {
 /**
  * What each metric column is called, for the channels in the list.
  *
- * Social does not send, deliver or get opened — it publishes, reaches and is
+ * Social does not send, deliver or get opened - it publishes, reaches and is
  * engaged with. Forcing it through the messaging vocabulary would mean showing
  * a post's reach under a column headed "Delivered", which is worse than showing
  * nothing. When the list is entirely social the headers change to match; in a
@@ -111,7 +111,7 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
    * The rate column's value, in whatever the row's channel actually measures.
    *
    * SMS has no opens and never did. Social has no opens either, but it does
-   * have engagement against impressions — a real rate, from a real
+   * have engagement against impressions - a real rate, from a real
    * denominator, so it gets one rather than a dash.
    */
   const rateValue = (campaign: Campaign) => {
@@ -139,7 +139,7 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
   /**
    * Clicks over the right denominator.
    *
-   * Impressions for social, delivered messages for everything else — dividing a
+   * Impressions for social, delivered messages for everything else - dividing a
    * post's clicks by `delivered` would be dividing by zero.
    */
   const clickRate = (campaign: Campaign) => {
@@ -296,7 +296,7 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
 
                   <TD align="right" className="tabular-nums">
                     {open === null ? (
-                      <span className="text-text-muted">—</span>
+                      <span className="text-text-muted">-</span>
                     ) : (
                       <span className="font-bold text-text-primary">
                         {formatPercent(open)}
@@ -305,7 +305,7 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
                   </TD>
 
                   <TD align="right" className="text-text-secondary tabular-nums">
-                    {ctr === null ? "—" : formatPercent(ctr)}
+                    {ctr === null ? "-" : formatPercent(ctr)}
                   </TD>
 
                   <TD>
@@ -383,7 +383,7 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
                       {campaign.channel === "social" ? "Engaged" : "Open"}
                     </dt>
                     <dd className="font-medium text-text-primary tabular-nums">
-                      {open === null ? "—" : formatPercent(open)}
+                      {open === null ? "-" : formatPercent(open)}
                     </dd>
                   </div>
                 </dl>

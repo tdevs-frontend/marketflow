@@ -13,7 +13,7 @@ import type { ApiUsage } from "@/types/integration";
  *
  * The 24 bars are plain divs rather than an Apex chart. That is a deliberate
  * exception to the module's "reuse what exists" rule: this is a shape, not a
- * plot — it has no axes, no tooltipped series and no period switcher, and
+ * plot - it has no axes, no tooltipped series and no period switcher, and
  * loading a charting runtime to draw 24 rectangles in a 22rem rail costs more
  * than the information is worth. Anything with an axis still goes to
  * `ChartCard`.
@@ -71,7 +71,7 @@ export function ApiUsageCard({
               <button
                 key={hour}
                 type="button"
-                aria-label={`${hourLabel(hour)} — ${formatCount(value)} requests`}
+                aria-label={`${hourLabel(hour)} - ${formatCount(value)} requests`}
                 onPointerEnter={() => setHovered(hour)}
                 onFocus={() => setHovered(hour)}
                 onBlur={() => setHovered(null)}

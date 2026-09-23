@@ -27,7 +27,7 @@ import { SaveBar, SettingsSection, useSaveState } from "./settings-section";
  * one differing from the current one. All of that is worth doing in the browser
  * and none of it needs a server.
  *
- * What does need a server is the one check that matters — that the current
+ * What does need a server is the one check that matters - that the current
  * password is actually the current password. Nothing in this browser knows the
  * stored hash, nothing should, and a comparison against a seeded demo value
  * would be a security control made of theatre. So the submit calls the service,
@@ -119,7 +119,7 @@ export function ChangePasswordCard() {
       {!CAPABILITIES.password ? (
         <ServiceNotice tone="security" title="Passwords cannot be changed yet">
           {UNAVAILABLE_REASON.password} The form below validates everything it
-          legitimately can and then tells you exactly that — your password is
+          legitimately can and then tells you exactly that - your password is
           unchanged, and nothing was sent.
         </ServiceNotice>
       ) : security.passwordChangedAt ? (
@@ -187,7 +187,7 @@ export function ChangePasswordCard() {
                       <X className="size-4 shrink-0" aria-hidden />
                     )}
                     {rule.label}
-                    <span className="sr-only">{met ? " — met" : " — not met"}</span>
+                    <span className="sr-only">{met ? " - met" : " - not met"}</span>
                   </li>
                 );
               })}
@@ -218,13 +218,13 @@ export function ChangePasswordCard() {
 /**
  * A password input with a reveal toggle.
  *
- * The toggle is a real button with a label that changes — "Show password" /
- * "Hide password" — rather than an icon with a fixed name, because the thing a
+ * The toggle is a real button with a label that changes - "Show password" /
+ * "Hide password" - rather than an icon with a fixed name, because the thing a
  * screen reader user needs is the *state*, and an eye glyph called "toggle
  * password" tells them nothing about which way it currently is.
  *
  * `aria-pressed` carries the same fact for assistive tech that reports it, and
- * the input keeps its `autoComplete` so password managers still work — turning
+ * the input keeps its `autoComplete` so password managers still work - turning
  * that off is a common instinct on a change-password form and it just pushes
  * people towards passwords they can retype from memory.
  */

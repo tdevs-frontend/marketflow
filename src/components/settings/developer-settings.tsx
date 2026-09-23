@@ -36,12 +36,12 @@ import type { ApiKey, Webhook, WebhookStatus } from "@/types/integration";
 import { SettingsSection } from "./settings-section";
 
 /**
- * API & Developer — how external systems connect to this workspace.
+ * API & Developer - how external systems connect to this workspace.
  *
  * This route is new. The sidebar has pointed at `/dashboard/settings/api` for
  * as long as the Settings group has existed, the permission model has a
  * `developer` resource whose `href` is this exact path, and `next build` never
- * emitted a page for it — so the row 404'd for anyone who clicked it.
+ * emitted a page for it - so the row 404'd for anyone who clicked it.
  *
  * What it is *not* is a second developer module. Integrations already owns the
  * deep surfaces: the key register with usage and a request log, and the webhook
@@ -50,7 +50,7 @@ import { SettingsSection } from "./settings-section";
  * of them.
  *
  * So every table, dialog and drawer on this page is imported from those modules
- * and rendered over the same stores — `ApiKeyTable` and `CreateApiKeyDialog`
+ * and rendered over the same stores - `ApiKeyTable` and `CreateApiKeyDialog`
  * over `lib/api-key-store`, `WebhookTable`, `WebhookDetailDrawer` and the
  * webhook dialogs over `lib/webhook-store`. Revoke a key or pause an endpoint
  * here and it is revoked or paused there, because there is one register of
@@ -62,7 +62,7 @@ import { SettingsSection } from "./settings-section";
  *
  * No secret is ever displayed. `createApiKey` hands back the plaintext exactly
  * once, inside the dialog that says so; from then on only the masked prefix
- * exists, which is also what makes the prefix column worth having — it is the
+ * exists, which is also what makes the prefix column worth having - it is the
  * only way to match a key in this table to the one in a config file.
  */
 
@@ -102,7 +102,7 @@ export function DeveloperSettings() {
     }
 
     const paused = webhook.status === "paused";
-    /* A previously failing endpoint comes back as failing, not as healthy —
+    /* A previously failing endpoint comes back as failing, not as healthy -
        enabling it does not repair whatever was timing out. */
     const next: WebhookStatus = paused
       ? webhook.failures24h > 0
@@ -216,7 +216,7 @@ export function DeveloperSettings() {
             />
           ) : (
             <>
-              {/* Straight into the body, with no wrapper of its own — the
+              {/* Straight into the body, with no wrapper of its own - the
                   convention every table on the dashboard follows. `Table`
                   already pulls to the card's edges and pads its own content
                   back in (`-mx-5 overflow-x-auto px-5`), so it owns both the
@@ -227,8 +227,8 @@ export function DeveloperSettings() {
                 keys={keys}
                 /* A role that cannot revoke gets told so, rather than a menu
                    item that quietly does nothing. `ApiKeyTable` renders the
-                   action unconditionally — it is shared with the Integrations
-                   screen — so the refusal belongs here, with the reason. */
+                   action unconditionally - it is shared with the Integrations
+                   screen - so the refusal belongs here, with the reason. */
                 onRevoke={(key) => {
                   if (!canManage) {
                     toast(
@@ -244,17 +244,17 @@ export function DeveloperSettings() {
                     .writeText(key.masked)
                     .then(() => toast(`${key.name} prefix copied`, "success"))
                     .catch(() =>
-                      toast("Could not copy — your browser blocked it", "error"),
+                      toast("Could not copy - your browser blocked it", "error"),
                     );
                 }}
               />
 
               {/* Pulled out to the card's edges so the rule spans its full
                   width, then padded back in so the sentence lines up with the
-                  table above it — the same two moves `Table` makes. */}
+                  table above it - the same two moves `Table` makes. */}
               <p className="-mx-5 mt-4 border-t border-border px-5 pt-3 text-sm text-text-muted">
                 {active} active {active === 1 ? "key" : "keys"}. A key is shown
-                in full once, when it is created — after that only its prefix
+                in full once, when it is created - after that only its prefix
                 exists.
               </p>
             </>
@@ -309,7 +309,7 @@ export function DeveloperSettings() {
              * The same `WebhookTable` the Integrations screen renders, over the
              * same `lib/webhook-store`. Edit, Test, Disable and Delete are the
              * real actions from that module, so pausing an endpoint here pauses
-             * it there — a webhook is live routing configuration, and two
+             * it there - a webhook is live routing configuration, and two
              * screens with their own copies would disagree about whether it is
              * delivering with no way to tell which is right.
              */
@@ -397,7 +397,7 @@ export function DeveloperSettings() {
 
       {/*
         Revoking is immediate and irreversible for anything holding the key, so
-        it is confirmed by name. The row stays in the table afterwards — "which
+        it is confirmed by name. The row stays in the table afterwards - "which
         key did we revoke, and when" is an incident question, and a row that
         vanishes answers it with nothing.
       */}

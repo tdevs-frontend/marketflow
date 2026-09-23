@@ -244,7 +244,7 @@ export function SolutionsSection({
   eyebrow = "Solutions",
   headingLead = "Built for businesses",
   headingRest = "every size and industry",
-  subheading = "No matter your industry, MarketFlow gives you the tools to attract, engage and retain customers — all from one powerful platform.",
+  subheading = "No matter your industry, MarketFlow gives you the tools to attract, engage and retain customers - all from one powerful platform.",
   cards = SOLUTION_CARDS,
 }: {
   eyebrow?: string;

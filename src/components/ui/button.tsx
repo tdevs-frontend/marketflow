@@ -21,22 +21,22 @@ export type ButtonSize = "sm" | "compact" | "md" | "lg" | "icon";
 /**
  * Shared shell: geometry, motion, focus and icon rules.
  *
- * Icons are sized from the button rather than at each call site — pass a bare
+ * Icons are sized from the button rather than at each call site - pass a bare
  * `<ArrowRight />` and it inherits the right box. An icon that genuinely needs
  * to break the scale can override with `!size-5`.
  */
 const BASE = [
   "inline-flex select-none items-center justify-center whitespace-nowrap rounded-btn font-medium",
-  // `transition-all` on the project's 200ms ease default — the softer curve.
+  // `transition-all` on the project's 200ms ease default - the softer curve.
   "transition-all",
   "focus-visible:outline-none focus-visible:shadow-focus",
   /* A disabled button keeps its pointer events so the `not-allowed` cursor
-     has something to paint on — `pointer-events-none` makes the element stop
+     has something to paint on - `pointer-events-none` makes the element stop
      being the hit target, so the cursor resolves from the parent instead and no
      `disabled:cursor-*` rule can ever show. Nothing leaks by allowing them: a
      native `<button disabled>` fires no click. The trade is that `:hover` now
      matches too, so every variant re-states its resting look under `disabled:`
-     and the lift is pinned here — Tailwind emits `disabled:` after `hover:` at
+     and the lift is pinned here - Tailwind emits `disabled:` after `hover:` at
      equal specificity, so those win without needing `!` or `enabled:`. */
   "disabled:cursor-not-allowed disabled:translate-y-0 disabled:opacity-50 disabled:shadow-none",
   "[&_svg]:pointer-events-none [&_svg]:shrink-0",
@@ -46,7 +46,7 @@ const BASE = [
 
 /**
  * Hover lifts the button 1px and deepens the shadow; active drops it back to
- * rest so a press reads as a press. Ghost stays flat — it has no elevation to
+ * rest so a press reads as a press. Ghost stays flat - it has no elevation to
  * begin with.
  */
 const VARIANTS: Record<ButtonVariant, string> = {
@@ -54,7 +54,7 @@ const VARIANTS: Record<ButtonVariant, string> = {
    * The brand gradient, and the product's one primary action.
    *
    * This used to be solid indigo with a separate `gradient` variant beside it
-   * for page-level CTAs only — which meant the landing page's "Start Free" and
+   * for page-level CTAs only - which meant the landing page's "Start Free" and
    * the dashboard's "Add contact" were different colours while being the same
    * kind of thing. One variant now, so the journey from a marketing CTA to a
    * dialog's confirm button is one continuous brand.
@@ -65,7 +65,7 @@ const VARIANTS: Record<ButtonVariant, string> = {
    *
    * Disabled drops the gradient entirely. Half-opacity indigo-violet still
    * reads as the brand's loudest object, so it is swapped for the neutral
-   * surface and muted ink — `bg-none` is what removes the gradient, since a
+   * surface and muted ink - `bg-none` is what removes the gradient, since a
    * `background-image` sits above any `background-color` beneath it.
    */
   primary: [
@@ -84,7 +84,7 @@ const VARIANTS: Record<ButtonVariant, string> = {
    *
    * `dark` is the token for the product's dark surfaces (the footer, full-bleed
    * breaks), so the button matches them rather than introducing a second black.
-   * Hover moves one step up that same ramp — still unmistakably dark, and white
+   * Hover moves one step up that same ramp - still unmistakably dark, and white
    * labels clear AA on both (16.7:1 at rest, 14.7:1 on hover).
    */
   dark: [
@@ -102,11 +102,11 @@ const VARIANTS: Record<ButtonVariant, string> = {
     "disabled:border-border-strong disabled:bg-surface disabled:text-primary",
   ].join(" "),
   /*
-   * The quiet neutral action — a border and a label, nothing else.
+   * The quiet neutral action - a border and a label, nothing else.
    *
    * Disabled follows `primary` in dropping the shell's `opacity-50`. An outline
    * button is already the lightest object on the page, so halving it took the
-   * border to ~1.1:1 against the surface and the label to ~2.4:1 — a control
+   * border to ~1.1:1 against the surface and the label to ~2.4:1 - a control
    * that had vanished rather than one reading as unavailable. Full-strength
    * tokens say the same thing legibly: the border steps *up* to `border-strong`
    * so the shape survives on both the white card and the tinted page behind it,
@@ -127,7 +127,7 @@ const VARIANTS: Record<ButtonVariant, string> = {
   /**
    * For dark brand surfaces, where the ink is white rather than a token color.
    * It exists as a variant instead of a `className` override because `cn()` is
-   * a plain join — an override would race the base variant in the stylesheet.
+   * a plain join - an override would race the base variant in the stylesheet.
    */
   inverse: [
     "border border-white/25 bg-transparent text-white",
@@ -150,7 +150,7 @@ const VARIANTS: Record<ButtonVariant, string> = {
  */
 const SIZES: Record<ButtonSize, string> = {
   sm: "h-9 gap-1 px-3.5 text-sm [&_svg]:size-4",
-  /* 40px — matches `IconButton` md and the header search field. */
+  /* 40px - matches `IconButton` md and the header search field. */
   compact: "h-10 gap-1 px-4 text-sm [&_svg]:size-4.5",
   md: "h-11 gap-2 px-5 text-sm [&_svg]:size-4",
   lg: "h-12 gap-2.5 px-6 text-base [&_svg]:size-5",
@@ -191,7 +191,7 @@ export function Button({ variant, size, className, ...props }: ButtonProps) {
 export type ButtonLinkProps = ButtonVariantProps &
   Omit<ComponentPropsWithoutRef<typeof Link>, "className"> & {
     children: ReactNode;
-    /** Renders a real disabled `<button>` instead of a link — see below. */
+    /** Renders a real disabled `<button>` instead of a link - see below. */
     disabled?: boolean;
   };
 
@@ -210,12 +210,12 @@ export function ButtonLink({
    *
    * An `<a>` is never `:disabled`, so none of the variants' disabled rules
    * would reach it, and the old `pointer-events-none` both removed the click
-   * target and took the `not-allowed` cursor with it — the cursor resolves from
+   * target and took the `not-allowed` cursor with it - the cursor resolves from
    * the parent once an element stops being hit-testable. Cancelling navigation
    * in an `onClick` isn't open to us either: `ButtonLink` is rendered from
    * Server Components, which can't pass event handlers to a Client Component.
    *
-   * A disabled button needs none of that — it is unfocusable and unclickable by
+   * A disabled button needs none of that - it is unfocusable and unclickable by
    * the platform, and it matches `:disabled`, so it gets the same treatment as
    * every other disabled button in the system, cursor included. The navigation
    * props go with the anchor, which is what disabled means here.
@@ -251,7 +251,7 @@ const ICON_SIZES: Record<Exclude<ButtonSize, "icon" | "compact">, string> = {
 };
 
 export type IconButtonProps = {
-  /** Accessible name — the button has no visible label. */
+  /** Accessible name - the button has no visible label. */
   label: string;
   size?: Exclude<ButtonSize, "icon" | "compact">;
   /** Defaults to the neutral toolbar treatment; opt into a full variant here. */
@@ -262,8 +262,8 @@ export type IconButtonProps = {
    * Forwarded to the button.
    *
    * `ComponentPropsWithRef` rather than `ButtonHTMLAttributes`, which carries
-   * no `ref`. A trigger that opens a panel needs one — to hand focus back when
-   * Escape closes it — and without this the only way to get a focusable
+   * no `ref`. A trigger that opens a panel needs one - to hand focus back when
+   * Escape closes it - and without this the only way to get a focusable
    * reference was to copy this component's classes onto a bare `<button>`,
    * which is how two bells in one product end up a pixel apart.
    */

@@ -9,12 +9,12 @@ import { APP_ROUTES } from "@/constants";
  * Same ground, grid and bloom as the Features hero, because a visitor crossing
  * from anywhere else on the site should land somewhere that is obviously the
  * same product. What differs is the promise: this page is not selling, so
- * there is no button pair under the heading — the thing to do next is scroll
+ * there is no button pair under the heading - the thing to do next is scroll
  * into the library, and a CTA here would compete with it.
  *
  * The breadcrumb is left-aligned against the container while the heading block
- * stays centred. Centring it too would read as part of the heading — a trail
- * is chrome for the page, not the opening line of it — and left is also where
+ * stays centred. Centring it too would read as part of the heading - a trail
+ * is chrome for the page, not the opening line of it - and left is also where
  * a reader's eye already is when the page loads.
  */
 export function BlogHero() {
@@ -52,14 +52,14 @@ export function BlogHero() {
           {/*
            * The trail closes the hero rather than opening it, and it is
            * centred on the same axis as the eyebrow, heading and description
-           * above it — so the hero reads as one centred column rather than as
+           * above it - so the hero reads as one centred column rather than as
            * a centred block with a stray line under it.
            *
            * The margin matches the block's own bottom padding, so the
            * breadcrumb carries equal air above and below within the hero.
            *
            * Resources carries no `href`. It is the section this page belongs
-           * to rather than a page of its own — there is no `/resources` route,
+           * to rather than a page of its own - there is no `/resources` route,
            * and pointing it at `/blog` would give the trail two names for the
            * screen the reader is already on.
            */}

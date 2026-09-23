@@ -24,7 +24,7 @@ export function HeroDashboard() {
         className="pointer-events-none absolute -inset-6 -z-10 rounded-[2.5rem] bg-[radial-gradient(closest-side,rgba(99,102,241,0.16),transparent)] blur-2xl"
       />
 
-      {/* Contact shadow on the ground beneath it — the frame's own `shadow-float`
+      {/* Contact shadow on the ground beneath it - the frame's own `shadow-float`
           is a drop shadow and reads as flat on its own at this size. */}
       <div
         aria-hidden
@@ -59,15 +59,15 @@ export function HeroDashboard() {
 
           {/*
            * The screenshot's viewport, sized by aspect ratio so the shot scales
-           * proportionally and never distorts — `object-cover` does the fitting,
+           * proportionally and never distorts - `object-cover` does the fitting,
            * and the box's ratio alone decides how much of the shot is in view.
            *
            * From `md` the box matches the file exactly, so cover fills it with
            * nothing cropped. Below that a 2.1:1 desktop capture across a phone
            * would be a 140px letterbox strip with the type far too small to
            * read, so the box gets squarer and `object-left-top` holds the crop
-           * on the sidebar, the greeting and the KPI cards — the part worth
-           * seeing — at roughly 1.4x the scale a full-fit would give.
+           * on the sidebar, the greeting and the KPI cards - the part worth
+           * seeing - at roughly 1.4x the scale a full-fit would give.
            */}
           <div className="relative aspect-4/3 sm:aspect-video md:aspect-1908/908">
             <Image
@@ -157,7 +157,7 @@ export function HeroDashboard() {
         </svg>
       </div>
 
-      {/* Floating: new lead toast — the diagonally opposite corner, over the
+      {/* Floating: new lead toast - the diagonally opposite corner, over the
           bottom fade. It stays fully opaque there, so the dissolve behind it
           reads as depth. Same scale-as-a-whole treatment as the card above. */}
       <div className="animate-float-slow absolute -bottom-6 -left-4 flex origin-bottom-left scale-75 items-center gap-2.5 rounded-card border border-border bg-surface px-3.5 py-2.5 shadow-float 3xsm:scale-90 sm:scale-100">

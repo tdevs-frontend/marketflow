@@ -7,7 +7,7 @@ import { ORBIT_FEATURES } from "./platform-features";
 const STEP = (2 * Math.PI) / ORBIT_FEATURES.length;
 
 /** The brand mark's rendered size, in px. Fixed: it is the one element in the
- *  section that should not grow with the viewport — a compact mark is what
+ *  section that should not grow with the viewport - a compact mark is what
  *  makes the ring around it read as an orbit rather than a border. */
 const MARK = 72;
 

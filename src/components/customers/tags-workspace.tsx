@@ -44,7 +44,7 @@ const usage = (tag: CustomerTag) => ({
 const dependants = (tag: CustomerTag) =>
   tag.usedBySegments + tag.usedByAutomations + tag.usedByCampaigns;
 
-/** "1 segment", "3 segments" — a count is read too often here to get wrong. */
+/** "1 segment", "3 segments" - a count is read too often here to get wrong. */
 const plural = (count: number, noun: string) =>
   `${count} ${noun}${count === 1 ? "" : "s"}`;
 
@@ -81,7 +81,7 @@ function kpis(): Kpi[] {
     },
     {
       label: "Most Used",
-      value: most?.tag.name ?? "—",
+      value: most?.tag.name ?? "-",
       icon: TrendingUp,
       tone: "success",
       hint: most ? `${most.contacts} contacts` : undefined,
@@ -184,7 +184,7 @@ function TagDrawer({
           <DrawerSection title="Used by">
             {dependants(tag) === 0 ? (
               <p className="text-sm text-text-muted">
-                Nothing depends on this tag — it is safe to delete.
+                Nothing depends on this tag - it is safe to delete.
               </p>
             ) : (
               <p className="text-sm text-text-secondary">
@@ -234,7 +234,7 @@ function TagDrawer({
  *
  * Tags are metadata, so this page is a table and two dialogs rather than a
  * workspace with its own layout. The one piece of real product thinking is the
- * delete path — it counts dependants first and says what will break, because a
+ * delete path - it counts dependants first and says what will break, because a
  * tag that three automations branch on is not a label, it is a rule.
  */
 export function TagsWorkspace() {
@@ -381,7 +381,7 @@ export function TagsWorkspace() {
                         </TD>
 
                         <TD className="text-sm text-text-muted">
-                          {dependants(tag) === 0 ? "—" : dependantSummary(tag)}
+                          {dependants(tag) === 0 ? "-" : dependantSummary(tag)}
                         </TD>
 
                         <TD className="text-sm whitespace-nowrap text-text-muted">

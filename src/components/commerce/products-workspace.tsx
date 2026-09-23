@@ -99,8 +99,8 @@ const ALL = "all";
  * figures were permanently zero and told it this page was not for it. Those
  * figures now open Inventory, where they are the whole point.
  *
- * The mix is the useful reading here — "I have 12 things to sell and 7 of them
- * are services" — and it works whichever kinds a merchant actually has.
+ * The mix is the useful reading here - "I have 12 things to sell and 7 of them
+ * are services" - and it works whichever kinds a merchant actually has.
  */
 function kpis(counts: ProductCounts): CommerceKpi[] {
   return [
@@ -109,7 +109,7 @@ function kpis(counts: ProductCounts): CommerceKpi[] {
       /*
        * The same figure the All tab shows, from the same function.
        *
-       * These two used to be computed separately and disagreed — the KPI
+       * These two used to be computed separately and disagreed - the KPI
        * counted archived products and the tab did not. Passing one
        * `ProductCounts` through both is what makes the page's arithmetic
        * check out: Physical + Digital + Services == Total == All.
@@ -127,9 +127,9 @@ function kpis(counts: ProductCounts): CommerceKpi[] {
      * The three types used to share a single brand tint with no tone at all on
      * two of them, so the strip read as one number repeated four times and a
      * merchant had to read every label to find the one they wanted. Each type
-     * now keeps the hue it already has elsewhere in the product — cyan for the
+     * now keeps the hue it already has elsewhere in the product - cyan for the
      * things that ship, the email blue for downloads, the SMS violet for
-     * booked time — so the colour is a second way to find the card rather than
+     * booked time - so the colour is a second way to find the card rather than
      * decoration invented for this row.
      */
     {
@@ -137,8 +137,8 @@ function kpis(counts: ProductCounts): CommerceKpi[] {
       value: formatNumber(counts.physical),
       /* A warehouse, not a second box: `Package` already carries Total
          Products, and two box glyphs side by side at 20px are the same shape
-         twice. This one says what the card's own hint says — these are the
-         things that are stocked and shipped — so the icon and the text
+         twice. This one says what the card's own hint says - these are the
+         things that are stocked and shipped - so the icon and the text
          agree. */
       icon: Warehouse,
       tone: "accent",
@@ -175,8 +175,8 @@ function kpis(counts: ProductCounts): CommerceKpi[] {
  * The views the row offers: three product types, then two lifecycle states.
  *
  * Both are ways of narrowing one list, which is why they share a row. They
- * do answer different questions — type is what a merchant sells, draft and
- * archived are where a thing is in its life — and the order says so: the
+ * do answer different questions - type is what a merchant sells, draft and
+ * archived are where a thing is in its life - and the order says so: the
  * three types first, then the two states any of them can be in.
  */
 type ProductView = typeof ALL | ProductType | "draft" | "archived";
@@ -202,7 +202,7 @@ export function ProductsWorkspace({
 }) {
   const router = useRouter();
   /*
-   * One list, filtered — not six pages.
+   * One list, filtered - not six pages.
    *
    * Type and lifecycle share a single control because they are the same
    * question asked twice ("show me a subset of my catalogue"), and because a
@@ -216,8 +216,8 @@ export function ProductsWorkspace({
    *
    * Seeded from the server-read `?tab=`, so a refresh or a pasted link opens
    * on the right view with the list already rendered. Every change writes the
-   * parameter back with `replace` rather than `push` — switching a filter is
-   * not a step a merchant wants to walk back through one tab at a time — and
+   * parameter back with `replace` rather than `push` - switching a filter is
+   * not a step a merchant wants to walk back through one tab at a time - and
    * `scroll: false` keeps the page where they were reading.
    */
   const [view, setViewState] = useState<ProductView>(() =>
@@ -262,7 +262,7 @@ export function ProductsWorkspace({
   /*
    * Counts for the view strip and the KPI row, from one function.
    *
-   * Over the whole catalogue rather than the filtered set — a tab reading
+   * Over the whole catalogue rather than the filtered set - a tab reading
    * "Digital 0" because of an unrelated search is a tab that lies about what
    * the merchant sells.
    *
@@ -290,7 +290,7 @@ export function ProductsWorkspace({
     const term = search.trim().toLowerCase();
 
     const rows = COMMERCE_PRODUCTS.filter((item) => {
-      /* The view is either a product type or a lifecycle state — one control,
+      /* The view is either a product type or a lifecycle state - one control,
          because to a merchant they are the same act of narrowing. */
       if (view === "physical" || view === "digital" || view === "service") {
         if (item.type !== view) return false;
@@ -341,7 +341,7 @@ export function ProductsWorkspace({
     current * PRODUCTS_PER_PAGE,
   );
 
-  /* Selection is scoped to the visible page — a select-all that silently
+  /* Selection is scoped to the visible page - a select-all that silently
      picked up filtered-out rows would be a nasty surprise on bulk delete. */
   const pageIds = rows.map((item) => item.id);
   const allOnPage = pageIds.length > 0 && pageIds.every((id) => selected.includes(id));
@@ -439,7 +439,7 @@ export function ProductsWorkspace({
               * the dialog was an extra click to answer a question the form
               * asks again anyway.
               *
-              * A link rather than a button, now there is nothing to open —
+              * A link rather than a button, now there is nothing to open -
               * it is a navigation, so it middle-clicks and opens in a new
               * tab like one.
               */}
@@ -458,7 +458,7 @@ export function ProductsWorkspace({
          * The view row.
          *
          * Real `role="tablist"` semantics now, which the old pill track could
-         * not claim: these tabs own one panel — the list below — and arrow
+         * not claim: these tabs own one panel - the list below - and arrow
          * keys move between them, so the role is earned rather than borrowed.
          *
          * It bleeds to the card's edges and pads back in, so its rule runs the
@@ -673,7 +673,7 @@ export function ProductsWorkspace({
                                 {item.name}
                               </Link>
                               {/*
-                                * One row per product, always — a shirt with
+                                * One row per product, always - a shirt with
                                 * twelve sizes is still one thing a merchant
                                 * sells, and spilling its variants into this
                                 * list would bury the eleven other products.
@@ -722,7 +722,7 @@ export function ProductsWorkspace({
                         </TD>
 
                         {/*
-                          * Sales, in the unit the product is actually sold in —
+                          * Sales, in the unit the product is actually sold in -
                           * "142 sales" for a shirt, "38 bookings" for a
                           * consultation. Stock rides underneath only where it
                           * is tracked, which is how a physical row keeps its

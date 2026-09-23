@@ -22,7 +22,7 @@ export interface CheckboxProps {
  *
  * Native `input[type=checkbox]` cannot be styled consistently across browsers
  * and has no real indeterminate rendering, so this uses `role="checkbox"` with
- * `aria-checked="mixed"` — which is the state a screen reader should hear on a
+ * `aria-checked="mixed"` - which is the state a screen reader should hear on a
  * partially selected header. Space and Enter toggle, as the role requires.
  */
 export function Checkbox({

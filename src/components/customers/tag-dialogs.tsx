@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
  *
  * The colour is a swatch row, not a colour input. Six choices drawn from the
  * product's own tokens means a tag can never introduce a hue the dashboard
- * does not already use — which is exactly what a free-form picker eventually
+ * does not already use - which is exactly what a free-form picker eventually
  * produces, and why a tag list ends up with two nearly identical greens.
  */
 export function TagFormDialog({
@@ -42,7 +42,7 @@ export function TagFormDialog({
   /*
    * Load the subject during render rather than in an effect.
    *
-   * Keyed on the tag's id — or `"new"` when creating — so opening the dialog
+   * Keyed on the tag's id - or `"new"` when creating - so opening the dialog
    * for a different tag reloads the fields while a re-render for the same one
    * keeps whatever has been typed. An effect here would paint the previous
    * tag's name for a frame first.

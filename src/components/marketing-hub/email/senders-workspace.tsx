@@ -49,8 +49,8 @@ import type { EmailSenderIdentity, SenderStatus } from "@/types/email";
  * Sender settings.
  *
  * Two things live on this page and they are not the same thing. An *identity*
- * is what a recipient reads — a name, an address, and a mailbox that replies
- * land in — and choosing it is a marketing decision. The *provider* is the
+ * is what a recipient reads - a name, an address, and a mailbox that replies
+ * land in - and choosing it is a marketing decision. The *provider* is the
  * transport underneath every identity, and it is infrastructure.
  *
  * So the provider panel here is a reading, not a form: host, port, quota and
@@ -59,8 +59,8 @@ import type { EmailSenderIdentity, SenderStatus } from "@/types/email";
  * mean two places to change the same secret and one of them silently stale.
  *
  * The two panels are built to look unlike each other, because they answer
- * unlike questions. Provider is a configuration read-out — monospace facts and
- * two counters. Deliverability is a reputation list — one row per address, each
+ * unlike questions. Provider is a configuration read-out - monospace facts and
+ * two counters. Deliverability is a reputation list - one row per address, each
  * scored and banded. Both used to be stacks of horizontal meters, which made a
  * quota, a throughput ceiling and three delivery rates look like five readings
  * of the same kind of thing when only the last three are comparable at all.
@@ -69,7 +69,7 @@ import type { EmailSenderIdentity, SenderStatus } from "@/types/email";
  * band, not a length.
  *
  * Domain authentication is shown per identity rather than per domain, because
- * that is the granularity someone fixes it at — a DKIM record that has not
+ * that is the granularity someone fixes it at - a DKIM record that has not
  * propagated stops one address from sending, not the workspace.
  */
 
@@ -142,7 +142,7 @@ function AuthChecks({ sender }: { sender: EmailSenderIdentity }) {
 /**
  * Messages per second going out right now.
  *
- * A reading the provider record does not carry — `EMAIL_PROVIDER` stores the
+ * A reading the provider record does not carry - `EMAIL_PROVIDER` stores the
  * ceiling, not the current throughput, which a live implementation would poll.
  * It was already a literal inside the meter's label; it is named here so the
  * three figures on the rate tile are visibly one sum.
@@ -153,7 +153,7 @@ const CURRENT_SEND_RATE = 25;
  * One provider counter: a number, what it is out of, and two facts under it.
  *
  * Deliberately not a meter. The quota is 12% used with thirteen hours left in
- * the window, and a bar drawn at 12% invites reading that as a problem — what
+ * the window, and a bar drawn at 12% invites reading that as a problem - what
  * an operator actually wants is the headroom as a figure they can weigh against
  * the send they are about to queue. The tile's job is to make three related
  * numbers legible at once, not to rank one of them on a scale.
@@ -171,7 +171,7 @@ function ProviderTile({
   label: string;
   /** The headline figure, pre-formatted. */
   value: string;
-  /** The muted line under it — what the figure is out of, or when it was taken. */
+  /** The muted line under it - what the figure is out of, or when it was taken. */
   unit: string;
   /** Exactly two, so the pair of tiles keeps one baseline grid. */
   facts: [{ label: string; value: string }, { label: string; value: string }];
@@ -276,7 +276,7 @@ export function EmailSendersWorkspace() {
 
   const [senders, setSenders] = useState(EMAIL_SENDER_IDENTITIES);
   const [editing, setEditing] = useState<EmailSenderIdentity | null>(null);
-  /* Set when the dialog is adding rather than editing — the two differ in
+  /* Set when the dialog is adding rather than editing - the two differ in
      their title, their button and whether the address can still be changed. */
   const [isNew, setIsNew] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -329,7 +329,7 @@ export function EmailSendersWorkspace() {
     setEditing(null);
     toast(
       isNew
-        ? `${saved.email} added — check your DNS to finish verifying it`
+        ? `${saved.email} added - check your DNS to finish verifying it`
         : `${saved.email} updated`,
       "success",
     );
@@ -437,7 +437,7 @@ export function EmailSendersWorkspace() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => toast("Test email sent — check your inbox")}
+              onClick={() => toast("Test email sent - check your inbox")}
             >
               <MailCheck aria-hidden />
               Send test
@@ -461,7 +461,7 @@ export function EmailSendersWorkspace() {
 
           {/* Verified only. An identity that cannot send has no reputation
               yet, and a 0% score beside it would read as a failure rather than
-              as an absence — the table below is where its pending state is
+              as an absence - the table below is where its pending state is
               reported. */}
           <ul className="mt-4 divide-y divide-border border-t border-border pt-3">
             {verified.map((sender) => (
@@ -527,7 +527,7 @@ export function EmailSendersWorkspace() {
 
                   <TD align="right" className="tabular-nums">
                     {sender.sent30d === 0 ? (
-                      <span className="text-text-muted">—</span>
+                      <span className="text-text-muted">-</span>
                     ) : (
                       formatNumber(sender.sent30d)
                     )}
@@ -535,7 +535,7 @@ export function EmailSendersWorkspace() {
 
                   <TD align="right" className="tabular-nums">
                     {sender.deliveryRate === 0 ? (
-                      <span className="text-text-muted">—</span>
+                      <span className="text-text-muted">-</span>
                     ) : (
                       formatPercent(sender.deliveryRate)
                     )}

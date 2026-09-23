@@ -44,7 +44,7 @@ import { blockersIn, preflight } from "./validation";
  * cannot disagree with the one on the Audience step.
  *
  * Deliberately not a workflow builder. A campaign is one message to one
- * audience at one time — the moment it needs "and then, three days later", it
+ * audience at one time - the moment it needs "and then, three days later", it
  * belongs in Automation, which is built for exactly that.
  */
 
@@ -58,7 +58,7 @@ const STEPS: { value: WizardStep; label: string }[] = [
   { value: "send", label: "Send" },
 ];
 
-/* A store that never changes — `useSyncExternalStore` is being used purely
+/* A store that never changes - `useSyncExternalStore` is being used purely
    for its server/client split, not to subscribe to anything. */
 const subscribeToNothing = () => () => {};
 
@@ -68,7 +68,7 @@ const stepIndex = (step: WizardStep) =>
 /**
  * Blockers already rendered beside the field they are about.
  *
- * The list above the nav is for problems with nowhere else to appear — an
+ * The list above the nav is for problems with nowhere else to appear - an
  * unverified WhatsApp connection, a sender ID the provider will not accept.
  * Anything already marked on its own input is left to that input.
  */
@@ -85,7 +85,7 @@ const INLINE_ISSUE_IDS = new Set([
 /**
  * @param channel Which channel to open on, when the wizard was reached from a
  *   channel module rather than from the cross-channel campaign list. It is a
- *   starting point, not a lock — the Details step can still change it — and a
+ *   starting point, not a lock - the Details step can still change it - and a
  *   restored draft always wins, because a half-written campaign outranks the
  *   link someone happened to arrive by.
  */
@@ -129,7 +129,7 @@ export function CampaignWizard({ channel }: { channel?: MarketingChannel }) {
    * Reading storage in a lazy initialiser would hand the server one draft and
    * the browser another, which is a hydration mismatch. `useSyncExternalStore`
    * is the sanctioned way to ask "are we past hydration yet": it reports false
-   * on the server and through the hydrating render, then true — so the restore
+   * on the server and through the hydrating render, then true - so the restore
    * below runs on a render React already expects to differ.
    *
    * Adjusted during render rather than in an effect, the way the template
@@ -188,7 +188,7 @@ export function CampaignWizard({ channel }: { channel?: MarketingChannel }) {
   const blockers = blockersIn(issues);
 
   /* Blockers this step is responsible for. They gate Continue, so a campaign
-     cannot reach Review with a sender that was never configured — and because
+     cannot reach Review with a sender that was never configured - and because
      they come from `preflight`, the rule is written once and enforced twice. */
   const stepBlockers = blockers.filter((issue) => issue.step === step);
 
@@ -204,7 +204,7 @@ export function CampaignWizard({ channel }: { channel?: MarketingChannel }) {
   /**
    * Each step gates the next.
    *
-   * Only the blockers that belong to *this* step are enforced here — the full
+   * Only the blockers that belong to *this* step are enforced here - the full
    * pre-flight runs on Review. Blocking Continue on an empty UTM field while
    * someone is still writing the message would be the wizard arguing with the
    * order it asked the questions in.
@@ -273,7 +273,7 @@ export function CampaignWizard({ channel }: { channel?: MarketingChannel }) {
   /**
    * Save or launch.
    *
-   * Draft mode skips every check by design — someone pulled away mid-sentence
+   * Draft mode skips every check by design - someone pulled away mid-sentence
    * should keep what they have written, and a save that demands a valid sender
    * is a save that loses work. Launch has already been gated by the Send step's
    * confirmation and the pre-flight blockers.
@@ -389,7 +389,7 @@ export function CampaignWizard({ channel }: { channel?: MarketingChannel }) {
         </Button>
 
         <div className="ml-auto flex flex-wrap items-center gap-2.5">
-          {/* A draft is a save, not a submission — it never runs validation.
+          {/* A draft is a save, not a submission - it never runs validation.
               Someone interrupted halfway through the audience step should be
               able to leave with what they have. */}
           <Button
@@ -461,14 +461,14 @@ function Stepper({
   onJump: (index: number) => void;
 }) {
   return (
-    /* `py-1` keeps the focus ring off the scroll container's clip edge — with
+    /* `py-1` keeps the focus ring off the scroll container's clip edge - with
        `overflow-x-auto` the browser clips vertically too, and a ring drawn at
        the button's exact bounds loses its top and bottom. */
     <ol className="flex items-center gap-1 overflow-x-auto py-1">
       {STEPS.map((step, index) => {
         const done = index < furthest;
         const current = index === active;
-        /* Only steps already reached are clickable — jumping ahead would skip
+        /* Only steps already reached are clickable - jumping ahead would skip
            the validation that gates each one. */
         const reachable = index <= furthest;
 

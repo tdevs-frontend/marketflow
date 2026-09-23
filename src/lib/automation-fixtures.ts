@@ -145,7 +145,7 @@ export const AUTOMATION_FLOWS: AutomationFlow[] = [
         {
           label: "Paid",
           steps: [
-            act("s3a", "Assign owner", "Sales — Imran Hossain", "user-check", 842),
+            act("s3a", "Assign owner", "Sales - Imran Hossain", "user-check", 842),
             send("s3b", "whatsapp", "Template: paid_offer", 842),
           ],
         },
@@ -153,7 +153,7 @@ export const AUTOMATION_FLOWS: AutomationFlow[] = [
           label: "Organic",
           steps: [
             wait("s3c", "1 day", 1_306),
-            send("s3d", "email", "Template: Welcome Series — Day 1", 1_306),
+            send("s3d", "email", "Template: Welcome Series - Day 1", 1_306),
           ],
         },
       ]),
@@ -199,7 +199,7 @@ export const AUTOMATION_FLOWS: AutomationFlow[] = [
     /*
      * The lifecycle stage the channel was missing.
      *
-     * WhatsApp had welcome, follow-up, cart recovery and order confirmation —
+     * WhatsApp had welcome, follow-up, cart recovery and order confirmation -
      * everything up to and including the first purchase, and nothing after a
      * customer goes quiet. Win-back is the one flow a merchant asks for once
      * the list is big enough to have a lapsed half, and it is the flow that
@@ -232,7 +232,7 @@ export const AUTOMATION_FLOWS: AutomationFlow[] = [
             act(
               "s3d",
               "Tag contact",
-              "Tagged Inactive Customers — no further sends",
+              "Tagged Inactive Customers - no further sends",
               "tag",
               2_698,
             ),
@@ -345,7 +345,7 @@ export const AUTOMATION_FLOWS: AutomationFlow[] = [
     lastActivityAt: "2026-08-30T11:10:00Z",
     createdAt: "2026-04-28T13:00:00Z",
     steps: [
-      send("s1", "email", "Template: Welcome Series — Day 1", 1_248),
+      send("s1", "email", "Template: Welcome Series - Day 1", 1_248),
       wait("s2", "2 days", 1_236),
       condition("s3", "WhatsApp connected", 1_236, [
         {

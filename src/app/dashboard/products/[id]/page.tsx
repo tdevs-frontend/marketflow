@@ -33,7 +33,7 @@ export async function generateMetadata({
  *
  * `?tab=variants` is what the product list's variant badge links to, so a
  * merchant clicking "12 variants" lands on the grid rather than on an overview
- * they then have to navigate out of. Validated rather than trusted — a
+ * they then have to navigate out of. Validated rather than trusted - a
  * hand-edited tab name falls back to the overview.
  */
 const TABS = [
@@ -73,7 +73,7 @@ export default async function ProductDetailPage({
 
       <PageHeader
         title={product.name}
-        /* The summary line says what the product *is* and what it costs — and
+        /* The summary line says what the product *is* and what it costs - and
            for a product with variants, cost is a range, not a number. */
         description={[
           product.sku,

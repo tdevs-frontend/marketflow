@@ -19,7 +19,7 @@ import type { ServiceError, ServiceResult } from "@/types/account";
  *
  * Nothing new is drawn here. `Card`, `CardHeader`, `CardBody` and `Button` are
  * the product's own; this composes them at the spacing Settings uses and adds
- * the two things a settings form needs and a card does not — a footer band for
+ * the two things a settings form needs and a card does not - a footer band for
  * the save action, and a save state that can be announced.
  */
 
@@ -32,8 +32,8 @@ import type { ServiceError, ServiceResult } from "@/types/account";
  *
  * It used to be `Card` + `CardHeader` + `CardBody`: a 14px semibold title in a
  * bordered band, a muted note under it, and a separately padded body below the
- * rule. Every other card in the product — the overview's widgets, the charts,
- * the order table — is a single `p-5` box with a 16/18px heading, a
+ * rule. Every other card in the product - the overview's widgets, the charts,
+ * the order table - is a single `p-5` box with a 16/18px heading, a
  * secondary-ink description and the content sixteen pixels under it. Settings
  * was the one module drawing a second kind of card, and it read as a different
  * application the moment somebody moved between Billing and the dashboard.
@@ -42,14 +42,14 @@ import type { ServiceError, ServiceResult } from "@/types/account";
  * rather than the component imported for one reason: a settings card is a
  * `<section>` with an anchor id and `scroll-mt`, because Security links between
  * its own blocks from the page header, and a card cannot be a landmark. Every
- * class below is `PanelCard`'s, in `PanelCard`'s order — if that component's
+ * class below is `PanelCard`'s, in `PanelCard`'s order - if that component's
  * padding or type scale changes, this is the file that has to change with it.
  *
  * Three consequences worth naming, because call sites depend on them:
  *
  *   **The padding moved onto the card.** `p-5` is on the `Card` now, not on the
  *   body. A body that wants to run edge to edge asks for `-mx-5` rather than
- *   `p-0` — same result, opposite direction, and the children keep whatever
+ *   `p-0` - same result, opposite direction, and the children keep whatever
  *   padding they already had.
  *
  *   **There is no rule under the heading.** The 16px gap does that work, the
@@ -62,7 +62,7 @@ import type { ServiceError, ServiceResult } from "@/types/account";
  *
  * `description` is `string`, deliberately narrowed from `ReactNode`. It renders
  * inside a `<p>`, which accepts phrasing content only, and the last time this
- * prop took elements a `Skeleton` — a `<div>` — was passed into one and every
+ * prop took elements a `Skeleton` - a `<div>` - was passed into one and every
  * Settings page logged a hydration error. The type is the fix that cannot be
  * forgotten.
  */
@@ -77,7 +77,7 @@ export function SettingsSection({
   children,
 }: {
   /**
-   * Anchor id, for a page that links between its own sections — Security has
+   * Anchor id, for a page that links between its own sections - Security has
    * two and the page header links to each.
    */
   id?: string;
@@ -135,7 +135,7 @@ export function SettingsSection({
  * One setting inside a divided section: what it is on the left, its controls on
  * the right.
  *
- * The shape the long lists repeat — every notification row, in both the member
+ * The shape the long lists repeat - every notification row, in both the member
  * and the administrator view. It exists because those two were the same eight
  * utility classes written twice, and a row that drifts by a few pixels between
  * two lists of the same thing is the kind of difference everybody sees and
@@ -145,7 +145,7 @@ export function SettingsSection({
  * belong under the label they apply to rather than squeezed beside it.
  *
  * `px-5` matches the card's own padding, so a section using this passes
- * `bodyClassName="-mx-5 divide-y divide-border"` — the body reaches the card's
+ * `bodyClassName="-mx-5 divide-y divide-border"` - the body reaches the card's
  * edges, the rules run its full width, and the text still lines up with every
  * other card in the module.
  */
@@ -156,7 +156,7 @@ export function SettingsRow({
 }: {
   /** The label and its description. */
   children: ReactNode;
-  /** Checkboxes, badges — whatever the row is set with. */
+  /** Checkboxes, badges - whatever the row is set with. */
   actions: ReactNode;
   className?: string;
 }) {
@@ -249,7 +249,7 @@ const IDLE: SaveState = { status: "idle", message: null };
  * arrive on screen as "Saved".
  *
  * It settles. "Saved" reverts to idle after a few seconds, because a receipt
- * that stays up forever stops being a receipt — the next edit would sit under a
+ * that stays up forever stops being a receipt - the next edit would sit under a
  * tick belonging to the previous one.
  *
  * It does not set state on an unmounted panel. Settings pages are routes now,
@@ -316,7 +316,7 @@ export function useSaveState(resetAfterMs = 2600) {
 /**
  * The commit control, its label, and the outcome beside it.
  *
- * The label is the state — Save changes / Saving… / Saved — because a button
+ * The label is the state - Save changes / Saving… / Saved - because a button
  * that says the same thing throughout leaves the reader checking a spinner in
  * the corner to find out whether anything happened.
  *
@@ -339,7 +339,7 @@ export function SaveBar({
   state: SaveState;
   onSave: () => void;
   onCancel?: () => void;
-  /** When false the button is inert — there is nothing to commit. */
+  /** When false the button is inert - there is nothing to commit. */
   dirty?: boolean;
   disabled?: boolean;
   label?: string;
@@ -423,7 +423,7 @@ export type QueryState<T> =
  * The read side of `useSaveState`: fetch once, and be honest about where it
  * got to.
  *
- * `useSaveState` covers a panel that *writes* — a form with a save button.
+ * `useSaveState` covers a panel that *writes* - a form with a save button.
  * Active Sessions and Sign-in activity are the first panels that *read*, and
  * reading has a state the writing machine does not: the moment before there is
  * anything to show. A section that renders nothing then is a section that looks
@@ -433,7 +433,7 @@ export type QueryState<T> =
  * Three states, all of them rendered. `loading` is a skeleton shaped like the
  * rows that will replace it. `ready` may still be empty, and empty is a
  * legitimate answer that the caller renders as such. `error` carries the
- * service's own `ServiceError`, code included — which is what lets a caller
+ * service's own `ServiceError`, code included - which is what lets a caller
  * tell "this failed, try again" apart from `service_unavailable`, where there
  * is nothing to retry and a Try again button would be a loop with a button on
  * it.
@@ -475,7 +475,7 @@ export function useServiceQuery<T>(load: () => Promise<ServiceResult<T>>) {
   }, []);
 
   /**
-   * A retry, from a button. This one *does* return to `loading` first — a Try
+   * A retry, from a button. This one *does* return to `loading` first - a Try
    * again that leaves the error on screen until the second answer arrives
    * looks like a button that did nothing.
    */

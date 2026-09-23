@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
  * Kept to a plain `<pre>` with one accent on the keys rather than a full
  * syntax highlighter: this is four lines of JSON that an integrator reads once
  * to learn the field names, and a tokeniser would be more code than the thing
- * it renders. Copy is the action that actually matters — the next step is
+ * it renders. Copy is the action that actually matters - the next step is
  * always pasting it into a test request.
  */
 export function EventPayloadViewer({
@@ -32,7 +32,7 @@ export function EventPayloadViewer({
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
-      /* Clipboard access can be refused — the text is on screen either way,
+      /* Clipboard access can be refused - the text is on screen either way,
          so there is nothing useful to say about it. */
     }
   }

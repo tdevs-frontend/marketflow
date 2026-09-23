@@ -18,7 +18,7 @@ import { StepSection, TogglePanel, WarningNote } from "./shared";
 import type { StepProps } from "./types";
 
 /**
- * Step 3 — the message itself, composed for the channel it is going out on.
+ * Step 3 - the message itself, composed for the channel it is going out on.
  *
  * Four composers, not one with fields hidden. A generic composer forces every
  * channel through the widest common shape, which in practice means an SMS box
@@ -28,7 +28,7 @@ import type { StepProps } from "./types";
  *
  * Personalisation sits under the composer rather than on a step of its own.
  * Merge tags are written here, so the fallback each one needs belongs here too
- * — a tag typed on one screen and its "what if this contact has no first name"
+ * - a tag typed on one screen and its "what if this contact has no first name"
  * answered on the next is one decision asked twice.
  */
 
@@ -100,12 +100,12 @@ function WhatsAppComposer({ draft, set, errors, derived }: StepProps) {
           onChange={(next) => {
             const picked = TEMPLATES.find((item) => item.id === next);
             set("templateId", next);
-            /* Pre-fill the body from the template, but never over typed copy —
+            /* Pre-fill the body from the template, but never over typed copy -
                losing a written message to a dropdown is unforgivable. */
             if (picked && !draft.message.trim()) set("message", picked.body);
           }}
           options={[
-            { value: "", label: "No template — free-form reply window" },
+            { value: "", label: "No template - free-form reply window" },
             ...TEMPLATES.map((item) => ({
               value: item.id,
               label: `${item.name} (${item.category})`,
@@ -136,7 +136,7 @@ function WhatsAppComposer({ draft, set, errors, derived }: StepProps) {
           </div>
 
           {/* Header, body, footer and buttons are fixed by the approved
-              template — shown, not edited, because Meta approved this exact
+              template - shown, not edited, because Meta approved this exact
               shape and editing it here would silently invalidate it. */}
           <dl className="mt-3 space-y-2 text-sm">
             <div>
@@ -371,7 +371,7 @@ function SocialComposer({ draft, set, errors, derived }: StepProps) {
         label="Post text"
         htmlFor="cmp-message"
         error={errors.message}
-        hint="Campaign, product and workspace variables resolve here. Contact variables do not — a post has no single recipient."
+        hint="Campaign, product and workspace variables resolve here. Contact variables do not - a post has no single recipient."
       >
         <Textarea
           id="cmp-message"
@@ -442,7 +442,7 @@ function SocialComposer({ draft, set, errors, derived }: StepProps) {
 
           <p className="text-sm font-medium text-text-muted">
             {draft.hashtags.length === 0
-              ? "No hashtags — the caption publishes as written."
+              ? "No hashtags - the caption publishes as written."
               : `${draft.hashtags.length} hashtag${
                   draft.hashtags.length === 1 ? "" : "s"
                 } appended below the caption.`}
@@ -461,7 +461,7 @@ function SocialComposer({ draft, set, errors, derived }: StepProps) {
  * Optional, and off by default.
  *
  * The fields a test can vary come from `AB_TEST_FIELDS` per channel, so this
- * renders the same regardless of which composer is above it — and so the
+ * renders the same regardless of which composer is above it - and so the
  * backend that eventually runs the split reads one shape rather than four.
  */
 function AbTestSection({ draft, set, derived }: StepProps) {

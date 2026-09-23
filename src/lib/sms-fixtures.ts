@@ -49,7 +49,7 @@ export const SMS_SENDER_TYPES: Option<SmsSenderType>[] = [
  *
  * A list rather than the single field the gateway integration holds, because
  * which sender a campaign goes out on is a marketing decision with a
- * consequence — an alphanumeric ID carries the brand and silently discards
+ * consequence - an alphanumeric ID carries the brand and silently discards
  * every reply, so a campaign that asks a question has to leave it. The gateway
  * page still owns the credentials; this owns the choice.
  */
@@ -89,7 +89,7 @@ export const SMS_SENDERS: SmsSenderId[] = [
     countries: ["United Kingdom"],
     sent30d: 0,
     isDefault: false,
-    note: "Awaiting UK sender ID registration — 3 to 5 working days.",
+    note: "Awaiting UK sender ID registration - 3 to 5 working days.",
   },
 ];
 
@@ -135,7 +135,7 @@ export const SMS_TAGS = ["Customer", "VIP", "Lead", "Appointment", "Wholesale", 
 /**
  * Placeholders the composer offers, with the longest realistic substitution.
  *
- * The sample is what the character counter measures — counting the literal
+ * The sample is what the character counter measures - counting the literal
  * `{{first_name}}` would under-report by four characters and quietly push a
  * one-segment message into two.
  */
@@ -245,7 +245,7 @@ export const SMS_CAMPAIGNS: SmsCampaign[] = [
   {
     id: "sms-back-in-stock",
     name: "Back in Stock",
-    message: "Good news — the item on your waitlist is back. mf.link/stock",
+    message: "Good news - the item on your waitlist is back. mf.link/stock",
     senderId: "MARKETFLOW",
     status: "completed",
     segment: "custom",
@@ -472,7 +472,7 @@ export const SMS_TEMPLATES: SmsTemplate[] = [
     id: "st-back-in-stock",
     name: "Back in Stock",
     category: "alert",
-    body: "Good news — the item on your waitlist is back. mf.link/stock",
+    body: "Good news - the item on your waitlist is back. mf.link/stock",
     variables: [],
     usageCount: 12,
     deliveryRate: 97.6,
@@ -749,8 +749,8 @@ export const SMS_SERIES = {
  *
  * Four series in one chart rather than one chart per metric: sent, delivered,
  * failed and replies are four readings of the same send, and the only
- * questions worth asking of them — is the gap between sent and delivered
- * widening, do replies track volume — can only be answered with all four on
+ * questions worth asking of them - is the gap between sent and delivered
+ * widening, do replies track volume - can only be answered with all four on
  * the same axis.
  */
 export const SMS_TRENDS: Record<SmsTrendPeriod, SmsTrendSeries> = {
@@ -806,7 +806,7 @@ export const SMS_TREND_PERIODS: { value: SmsTrendPeriod; label: string }[] = [
  * Both numbers, because neither is the reading on its own: per-segment rates
  * differ by an order of magnitude between destinations, so the country at the
  * top of the spend list is not necessarily the one being messaged most. The
- * rows sum to `smsTotals(SMS_CAMPAIGNS).sent` and `.cost` — the cost panel
+ * rows sum to `smsTotals(SMS_CAMPAIGNS).sent` and `.cost` - the cost panel
  * divides one by the other and the two have to agree.
  */
 export const SMS_COST_BY_COUNTRY: {

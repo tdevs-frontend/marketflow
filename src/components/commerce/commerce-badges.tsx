@@ -42,7 +42,7 @@ const STOCK_LABELS: Record<StockStatus, string> = {
   "out-of-stock": "Out of Stock",
 };
 
-/** Healthy / Low / Out — the inventory page's wording for the same three states. */
+/** Healthy / Low / Out - the inventory page's wording for the same three states. */
 const HEALTH_LABELS: Record<StockStatus, string> = {
   "in-stock": "Healthy",
   "low-stock": "Low Stock",
@@ -144,7 +144,7 @@ const THUMB_PX = { sm: 32, md: 40, lg: 56 } as const;
  * goes through `next/image`, which serves a resized WebP at the box's own size
  * and costs a few KB a row instead.
  *
- * Anything else — a merchant's uploaded image on a CDN, once that exists — is
+ * Anything else - a merchant's uploaded image on a CDN, once that exists - is
  * left on a plain `<img>`. `next/image` refuses a remote host that is not in
  * `remotePatterns`, and that refusal is a runtime error, so routing an unknown
  * origin through it would trade a heavy thumbnail for a broken page.
@@ -231,7 +231,7 @@ export function SaleStatusBadge({ status }: { status: SaleStatus }) {
  * Fulfilment, in the vocabulary of the order's own product type.
  *
  * The label comes from `FULFILLMENT_LABEL`, so a booking reads *Scheduled* and
- * a download reads *Access granted* — neither is ever told it has been packed.
+ * a download reads *Access granted* - neither is ever told it has been packed.
  */
 const FULFILLMENT_TONES: Partial<Record<FulfillmentStatus, BadgeTone>> = {
   delivered: "success",
@@ -253,7 +253,7 @@ export function FulfillmentBadge({ status }: { status: FulfillmentStatus }) {
 /**
  * How a buyer behaves, derived from their orders.
  *
- * VIP is the only one that gets the brand tint — it is the label a merchant
+ * VIP is the only one that gets the brand tint - it is the label a merchant
  * scans for. Inactive stays neutral rather than red: a lapsed customer is an
  * opportunity, not an error.
  */
@@ -291,7 +291,7 @@ export function VariantStatusBadge({ status }: { status: VariantStatus }) {
  * The three states a merchant actually distinguishes between.
  *
  * *Disabled* is a decision and *Out of stock* is a fact, and the fix for each
- * is different — one is changing your mind, the other is a delivery. A two-tone
+ * is different - one is changing your mind, the other is a delivery. A two-tone
  * Active/Inactive badge collapses them and leaves a merchant staring at a greyed
  * row with no idea which.
  *

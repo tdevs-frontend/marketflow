@@ -141,14 +141,14 @@ function kpis(): Kpi[] {
 /**
  * The contact database: filter, sort, select, inspect, act.
  *
- * Built on the composition every other workspace in this dashboard uses —
+ * Built on the composition every other workspace in this dashboard uses -
  * `KpiStrip`, then one `Card` holding a `FilterBar` and a `Table`, with a
  * stacked card list taking over below `lg` and a `Drawer` for detail.
  *
  * All of the table's state lives in the URL through `useTableState`, so a
  * filtered view is linkable and Back from a contact returns to it. Search is
  * debounced through the existing `useDebounce` so typing does not re-filter
- * 24 rows on every keystroke — and, more importantly, does not write to the
+ * 24 rows on every keystroke - and, more importantly, does not write to the
  * router on every keystroke either.
  */
 export function ContactsWorkspace() {
@@ -185,7 +185,7 @@ export function ContactsWorkspace() {
      * Segment membership is asked of the segment, not of the contact.
      *
      * A dynamic segment is its rules, so `contact.segmentIds` only records the
-     * static ones — filtering on that made this page and the Segments page
+     * static ones - filtering on that made this page and the Segments page
      * disagree about how many people are in VIP Customers.
      */
     const segment =
@@ -678,7 +678,7 @@ export function ContactsWorkspace() {
                     </TD>
 
                     <TD className="text-sm whitespace-nowrap text-text-secondary">
-                      {item.phone ?? "—"}
+                      {item.phone ?? "-"}
                     </TD>
 
                     <TD>
@@ -704,7 +704,7 @@ export function ContactsWorkspace() {
                       align="right"
                       className="text-sm font-bold whitespace-nowrap text-text-primary tabular-nums"
                     >
-                      {item.lifetimeValue ? formatCurrency(item.lifetimeValue) : "—"}
+                      {item.lifetimeValue ? formatCurrency(item.lifetimeValue) : "-"}
                     </TD>
 
                     <TD className="text-sm whitespace-nowrap text-text-muted">
@@ -729,7 +729,7 @@ export function ContactsWorkspace() {
             </Table>
 
             {/* Below `lg` the columns become a card each. The brief's priority
-                order — contact, status, tags, action — is what survives. */}
+                order - contact, status, tags, action - is what survives. */}
             <ul className="mt-4 space-y-2.5 lg:hidden">
               {rows.map((item) => (
                 <li key={item.id}>

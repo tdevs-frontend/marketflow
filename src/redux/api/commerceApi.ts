@@ -22,7 +22,7 @@ import type {
 } from "@/types/commerce";
 
 /**
- * The whole Commerce module in one slice — products, categories, orders,
+ * The whole Commerce module in one slice - products, categories, orders,
  * inventory, catalogs and discounts share a module and cross-invalidate each
  * other, so keeping them together avoids six files that all import the same
  * tags. Pages currently read fixtures from `lib/commerce-fixtures`; swapping a

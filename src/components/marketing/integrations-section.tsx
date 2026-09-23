@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
  *
  * The heading is this section's own, not a second telling of the hero's. The
  * hero names what the page is about; this one names what the grid under it is
- * — the tools a merchant already runs their business on — and carries the
+ * - the tools a merchant already runs their business on - and carries the
  * sentence the hero no longer does. No eyebrow, because the hero's says
  * "Integrations" a screen above it and a second pill saying the same word is
  * furniture.
@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
  * connect on `/dashboard/integrations`: the three messaging channels and their
  * recommended providers, the four social platforms the Planner publishes to,
  * the commerce sync, and the two developer surfaces. Nothing here is a logo
- * borrowed to fill a row — a wall that claims a tool the product cannot
+ * borrowed to fill a row - a wall that claims a tool the product cannot
  * connect is the first claim a buyer checks, and the hub is one click away to
  * check it with.
  *
@@ -29,13 +29,13 @@ import { cn } from "@/lib/utils";
  *
  * The marks wear their own brands, not MarketFlow's: a wall tinted a single
  * indigo is a wall where nothing is recognised before its label is read. The
- * three that have no brand — Email, Webhooks, API — take the identity tints
+ * three that have no brand - Email, Webhooks, API - take the identity tints
  * the dashboard's own tiles use for them, so the blue Email mark here is the
  * blue Email tile there.
  *
  * The separators are the cells' own right and bottom borders, with the grid
  * pulled a pixel past its clipping frame so the outer two never show. That
- * keeps one rule between every pair of tiles at any column count — and the two
+ * keeps one rule between every pair of tiles at any column count - and the two
  * spacer cells exist for the same reason: ten tiles divide evenly into five
  * columns and into two, but not into the three the tablet gets, which would
  * otherwise leave a bordered stub hanging under the last row.
@@ -43,7 +43,7 @@ import { cn } from "@/lib/utils";
 
 interface IntegrationMark {
   name: string;
-  /** The hub's own category vocabulary — see `INTEGRATION_CATEGORIES`. */
+  /** The hub's own category vocabulary - see `INTEGRATION_CATEGORIES`. */
   category: string;
   href: string;
   /** A key in `BrandIcon`'s table, for the marks that have a logo. */
@@ -139,7 +139,7 @@ export function IntegrationsSection() {
       className="section-space-py relative scroll-mt-32 bg-surface"
     >
       {/* The Instagram ramp, defined once. Sized to nothing and referenced by
-          id from the mark itself — `currentColor` cannot carry a gradient. */}
+          id from the mark itself - `currentColor` cannot carry a gradient. */}
       <svg
         aria-hidden
         focusable="false"
@@ -165,7 +165,7 @@ export function IntegrationsSection() {
 
           <p className="mt-3.5 text-base leading-[1.7] text-text-secondary text-pretty">
             Connect the channels, commerce tools and developer services that
-            power your MarketFlow workspace — all from one place.
+            power your MarketFlow workspace - all from one place.
           </p>
         </header>
 

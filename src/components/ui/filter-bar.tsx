@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
  * Search plus filters.
  *
  * The selects sit inline from `lg` and collapse behind a "Filters" button
- * below it — on a phone four dropdowns in a row are unusable, and a sheet
+ * below it - on a phone four dropdowns in a row are unusable, and a sheet
  * keeps them reachable without stealing the whole screen. `activeCount` shows
  * on the trigger so a collapsed filter is never invisible.
  */
@@ -39,7 +39,7 @@ export function FilterBar({
   /**
    * The `Select` controls.
    *
-   * Optional, because a page can legitimately have search and nothing else —
+   * Optional, because a page can legitimately have search and nothing else -
    * Tags is one. With none, the collapsed "Filters" button and its sheet are
    * suppressed too: a button that opens an empty panel is worse than no button.
    */
@@ -55,7 +55,7 @@ export function FilterBar({
          * `min-w-56` rather than `min-w-0`: as a flex item with `flex-1`,
          * search was the only thing in this row that could shrink, so a page
          * with six filters collapsed it to just its magnifier. A floor means
-         * the filters wrap to a second line instead — the row gets taller,
+         * the filters wrap to a second line instead - the row gets taller,
          * which is far better than the search box disappearing.
          */}
         <div className="relative min-w-56 flex-1 sm:max-w-xs">

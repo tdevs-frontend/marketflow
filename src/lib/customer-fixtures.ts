@@ -12,7 +12,7 @@ import type { Lead, LeadSource, LeadStage } from "@/types/lead";
  * different company. Every cross-reference here is an id into another export
  * in this file, so a rename breaks the build rather than the story.
  *
- * Replace with the real endpoints — see the per-export notes for which.
+ * Replace with the real endpoints - see the per-export notes for which.
  */
 
 /* -------------------------------------------------------------------------- */
@@ -43,7 +43,7 @@ export const ownerName = (id?: string) =>
  * A tag's colour is picked from a fixed set, never free-form.
  *
  * Six swatches drawn from tokens the product already owns, so a tag can never
- * introduce a hue the rest of the dashboard does not use — which is what a
+ * introduce a hue the rest of the dashboard does not use - which is what a
  * colour picker with a full spectrum always eventually does. `dot` and `pill`
  * are separate because the same tag is a 6px dot in a table cell and a tinted
  * pill in a contact row, and the pill needs ink that clears AA on its own
@@ -235,7 +235,7 @@ export const CONTACT_SOURCES: { value: ContactSource; label: string }[] = [
  * The lifecycle position the module is organised around.
  *
  * Distinct from `ContactStatus` in `types/contact`, which is about
- * deliverability — a contact can be a paying `customer` whose email has
+ * deliverability - a contact can be a paying `customer` whose email has
  * `bounced`. Two axes, two fields; collapsing them is how "unsubscribed
  * customer" becomes unrepresentable.
  */
@@ -276,7 +276,7 @@ export interface CustomerContact extends Contact {
  * What each contact has bought, folded out of the order book once.
  *
  * A failed payment is not a purchase, which is the same rule
- * `COMMERCE_CUSTOMERS` applies — the two have to agree or the contact drawer
+ * `COMMERCE_CUSTOMERS` applies - the two have to agree or the contact drawer
  * and the customers page would report different revenue for the same person.
  */
 const PURCHASES = (() => {
@@ -307,7 +307,7 @@ const contact = (
   firstName: string,
   lastName: string,
   /* `lifetimeValue`, `orders` and `lastOrderAt` are deliberately not
-     accepted — they are looked up, so a fixture cannot assert a revenue the
+     accepted - they are looked up, so a fixture cannot assert a revenue the
      order book does not back. */
   extra: Omit<
     Partial<CustomerContact>,
@@ -333,7 +333,7 @@ const contact = (
 });
 
 /**
- * `GET /contacts`. Twenty-four rows — enough that pagination, multi-select and
+ * `GET /contacts`. Twenty-four rows - enough that pagination, multi-select and
  * every filter combination have something to act on, which a six-row fixture
  * cannot demonstrate.
  */
@@ -648,8 +648,8 @@ export const CONTACTS: CustomerContact[] = [
   /*
    * Three people who were buying from the store and did not exist in the CRM.
    *
-   * They were only ever `order.customer` records, so the contact list — the
-   * thing this module calls the master record — was missing three paying
+   * They were only ever `order.customer` records, so the contact list - the
+   * thing this module calls the master record - was missing three paying
    * customers, and no amount of filtering on it would have found them. Their
    * details are the ones the orders already carry; their lifecycle and their
    * value are derived from those orders below rather than typed here.
@@ -705,14 +705,14 @@ export const hasConsent = (item: CustomerContact, channel: ContactChannel) =>
  *
  * `LeadStage` in `types/lead` is the contract and is not changed here; this is
  * only the display order and the labels the board shows. `lost` is deliberately
- * absent from the board and reachable from a lead's own actions — a Lost column
+ * absent from the board and reachable from a lead's own actions - a Lost column
  * beside Won turns a pipeline into a scoreboard, and it is the one column
  * nobody wants to look at every day.
  */
 /**
  * The pipelines a lead can belong to.
  *
- * Two, so the selector is a real control rather than a decorative one — a
+ * Two, so the selector is a real control rather than a decorative one - a
  * single-pipeline dropdown teaches the reader nothing about what it does.
  * Most leads sit on `pipe-sales` and four on `pipe-partner`, so switching
  * pipelines visibly changes the board, its counters and its value.
@@ -780,7 +780,7 @@ const lead = (
 
 /** `GET /leads?pipelineId=`. Every `contactId` resolves in `CONTACTS`. */
 export const LEADS: PipelineLead[] = [
-  lead("led-1", "con-1", "Bright Retail — 3 locations", "qualified", 2400, {
+  lead("led-1", "con-1", "Bright Retail - 3 locations", "qualified", 2400, {
     source: "whatsapp",
     score: 88,
     probability: 70,
@@ -790,7 +790,7 @@ export const LEADS: PipelineLead[] = [
     lastActivity: "Replied on WhatsApp",
     lastActivityAt: "2026-09-10T08:12:00Z",
   }),
-  lead("led-2", "con-10", "Bello Foods — pilot", "qualified", 1800, {
+  lead("led-2", "con-10", "Bello Foods - pilot", "qualified", 1800, {
     source: "whatsapp",
     score: 81,
     probability: 65,
@@ -803,7 +803,7 @@ export const LEADS: PipelineLead[] = [
   lead(
     "led-3",
     "con-18",
-    "Yusuf Logistics — fleet rollout",
+    "Yusuf Logistics - fleet rollout",
     "proposal",
     12400,
     {
@@ -817,7 +817,7 @@ export const LEADS: PipelineLead[] = [
       lastActivityAt: "2026-09-09T13:30:00Z",
     },
   ),
-  lead("led-4", "con-6", "Smith Agency — retainer", "proposal", 7600, {
+  lead("led-4", "con-6", "Smith Agency - retainer", "proposal", 7600, {
     pipelineId: "pipe-partner",
     source: "campaign",
     score: 74,
@@ -828,7 +828,7 @@ export const LEADS: PipelineLead[] = [
     lastActivity: "Reviewing with legal",
     lastActivityAt: "2026-09-09T10:00:00Z",
   }),
-  lead("led-5", "con-21", "Khan Textiles — wholesale", "negotiation", 5200, {
+  lead("led-5", "con-21", "Khan Textiles - wholesale", "negotiation", 5200, {
     source: "referral",
     score: 69,
     probability: 50,
@@ -838,7 +838,7 @@ export const LEADS: PipelineLead[] = [
     lastActivity: "Requested trade pricing",
     lastActivityAt: "2026-09-10T06:50:00Z",
   }),
-  lead("led-6", "con-11", "Meyer Bau — procurement", "contacted", 9800, {
+  lead("led-6", "con-11", "Meyer Bau - procurement", "contacted", 9800, {
     source: "website",
     score: 58,
     probability: 30,
@@ -847,7 +847,7 @@ export const LEADS: PipelineLead[] = [
     lastActivity: "Left voicemail",
     lastActivityAt: "2026-09-08T11:00:00Z",
   }),
-  lead("led-7", "con-3", "Chen Studio — team plan", "contacted", 1400, {
+  lead("led-7", "con-3", "Chen Studio - team plan", "contacted", 1400, {
     source: "campaign",
     score: 52,
     probability: 25,
@@ -856,7 +856,7 @@ export const LEADS: PipelineLead[] = [
     lastActivity: "Trial started",
     lastActivityAt: "2026-09-08T09:15:00Z",
   }),
-  lead("led-8", "con-5", "Verma Tutors — annual", "new", 2200, {
+  lead("led-8", "con-5", "Verma Tutors - annual", "new", 2200, {
     source: "website",
     score: 41,
     probability: 15,
@@ -865,7 +865,7 @@ export const LEADS: PipelineLead[] = [
     lastActivity: "Filled pricing form",
     lastActivityAt: "2026-09-06T15:45:00Z",
   }),
-  lead("led-9", "con-16", "Morales Café — single store", "new", 600, {
+  lead("led-9", "con-16", "Morales Café - single store", "new", 600, {
     pipelineId: "pipe-partner",
     source: "manual",
     score: 34,
@@ -874,14 +874,14 @@ export const LEADS: PipelineLead[] = [
     lastActivity: "Added by Amara",
     lastActivityAt: "2026-09-03T15:00:00Z",
   }),
-  lead("led-10", "con-24", "Adeyemi Farms — enquiry", "new", 1100, {
+  lead("led-10", "con-24", "Adeyemi Farms - enquiry", "new", 1100, {
     source: "website",
     score: 29,
     probability: 10,
     lastActivity: "Downloaded guide",
     lastActivityAt: "2026-08-27T09:00:00Z",
   }),
-  lead("led-11", "con-4", "Rossi Atelier — expansion", "negotiation", 6800, {
+  lead("led-11", "con-4", "Rossi Atelier - expansion", "negotiation", 6800, {
     source: "referral",
     score: 77,
     probability: 55,
@@ -891,7 +891,7 @@ export const LEADS: PipelineLead[] = [
     lastActivity: "Second call booked",
     lastActivityAt: "2026-09-07T11:20:00Z",
   }),
-  lead("led-12", "con-8", "Haddad Trading — restock", "won", 4200, {
+  lead("led-12", "con-8", "Haddad Trading - restock", "won", 4200, {
     source: "referral",
     score: 90,
     probability: 100,
@@ -900,7 +900,7 @@ export const LEADS: PipelineLead[] = [
     lastActivity: "Signed",
     lastActivityAt: "2026-09-05T08:40:00Z",
   }),
-  lead("led-13", "con-7", "Silva Móveis — Q4 order", "won", 8600, {
+  lead("led-13", "con-7", "Silva Móveis - Q4 order", "won", 8600, {
     pipelineId: "pipe-partner",
     source: "whatsapp",
     score: 94,
@@ -910,7 +910,7 @@ export const LEADS: PipelineLead[] = [
     lastActivity: "Invoice paid",
     lastActivityAt: "2026-09-02T10:30:00Z",
   }),
-  lead("led-14", "con-23", "Santos Jóias — festive range", "won", 3400, {
+  lead("led-14", "con-23", "Santos Jóias - festive range", "won", 3400, {
     source: "whatsapp",
     score: 86,
     probability: 100,
@@ -919,7 +919,7 @@ export const LEADS: PipelineLead[] = [
     lastActivity: "Order placed",
     lastActivityAt: "2026-09-07T15:30:00Z",
   }),
-  lead("led-15", "con-20", "Bianchi Sport — kit deal", "contacted", 2900, {
+  lead("led-15", "con-20", "Bianchi Sport - kit deal", "contacted", 2900, {
     source: "whatsapp",
     score: 55,
     probability: 30,
@@ -928,7 +928,7 @@ export const LEADS: PipelineLead[] = [
     lastActivity: "Sent catalogue",
     lastActivityAt: "2026-09-04T09:20:00Z",
   }),
-  lead("led-16", "con-15", "Zahra Beauty — salon bundle", "negotiation", 3100, {
+  lead("led-16", "con-15", "Zahra Beauty - salon bundle", "negotiation", 3100, {
     pipelineId: "pipe-partner",
     source: "referral",
     score: 72,
@@ -939,7 +939,7 @@ export const LEADS: PipelineLead[] = [
     lastActivity: "Comparing tiers",
     lastActivityAt: "2026-09-04T09:00:00Z",
   }),
-  lead("led-17", "con-17", "Dubois Fleurs — subscription", "qualified", 1500, {
+  lead("led-17", "con-17", "Dubois Fleurs - subscription", "qualified", 1500, {
     source: "website",
     score: 66,
     probability: 55,
@@ -949,7 +949,7 @@ export const LEADS: PipelineLead[] = [
     lastActivity: "Demo completed",
     lastActivityAt: "2026-09-06T13:00:00Z",
   }),
-  lead("led-18", "con-12", "Tanaka Craft — reorder", "lost", 1900, {
+  lead("led-18", "con-12", "Tanaka Craft - reorder", "lost", 1900, {
     source: "campaign",
     score: 38,
     probability: 0,
@@ -1020,7 +1020,7 @@ export const notesForLead = (leadId: string) =>
  * The fixture clock.
  *
  * Every date in this file is written relative to it, and anything that has to
- * decide whether a date has passed — an overdue task, for one — compares
+ * decide whether a date has passed - an overdue task, for one - compares
  * against this rather than `Date.now()`. A real clock read during render
  * differs between the server render and hydration, and would also make the
  * seeded data drift into the past as the demo ages.
@@ -1129,7 +1129,7 @@ export type ConditionOperator =
   | "is_set"
   | "is_not_set";
 
-/** How a condition's value is entered — the builder picks the control from this. */
+/** How a condition's value is entered - the builder picks the control from this. */
 export type ConditionInput = "select" | "number" | "text" | "none";
 
 export interface ConditionFieldMeta {
@@ -1240,7 +1240,7 @@ export interface Condition {
  * A group of conditions, and optionally nested groups.
  *
  * `match` is the group's own connective, so "ALL of these, and ANY of those"
- * is one root group with a nested one — the shape every CRM audience builder
+ * is one root group with a nested one - the shape every CRM audience builder
  * settles on, because a flat rule list cannot express it at all.
  */
 export interface RuleGroup {
@@ -1350,7 +1350,7 @@ function matchesCondition(
  * Does this contact match the group?
  *
  * An empty group matches everybody, which is what makes a half-built rule show
- * the whole database rather than zero — a count of 0 while somebody is still
+ * the whole database rather than zero - a count of 0 while somebody is still
  * choosing their first field reads as "broken", not "empty".
  */
 export function matchesGroup(
@@ -1365,7 +1365,7 @@ export function matchesGroup(
   return rule.match === "all" ? results.every(Boolean) : results.some(Boolean);
 }
 
-/** `POST /segments/preview` — the live count under the rule builder. */
+/** `POST /segments/preview` - the live count under the rule builder. */
 export const matchContacts = (rule: RuleGroup) =>
   CONTACTS.filter((contact) => matchesGroup(contact, rule));
 
@@ -1388,7 +1388,7 @@ export interface CustomerSegment {
    */
   type: SegmentType;
   rule: RuleGroup;
-  /** Set on static segments — the frozen membership. */
+  /** Set on static segments - the frozen membership. */
   memberIds?: string[];
   usage: SegmentUsage;
   /** Built in and not editable, e.g. "All Contacts". */
@@ -1404,7 +1404,7 @@ export interface CustomerSegment {
  * module reads, so a segment is the same segment wherever it is named. What is
  * added here is the part Customers needs and Marketing does not: the condition
  * tree in an evaluable vocabulary, dynamic vs static, and what each segment is
- * currently used by — which is what makes a delete warning possible.
+ * currently used by - which is what makes a delete warning possible.
  *
  * Member counts come from evaluating the rules against `CONTACTS`, so the
  * number in the table is the number of rows you get when you open it. The
@@ -1500,7 +1500,7 @@ export const CUSTOMER_SEGMENTS: CustomerSegment[] = [
   {
     id: "seg-recent-purchasers",
     name: "Recent Purchasers",
-    description: "Ordered in the last month — good for cross-sell.",
+    description: "Ordered in the last month - good for cross-sell.",
     type: "dynamic",
     rule: group(
       "all",
@@ -1574,7 +1574,7 @@ export const CUSTOMER_SEGMENTS: CustomerSegment[] = [
   {
     id: "seg-sunset",
     name: "Sunset Candidates",
-    description: "No engagement in six months — review before removing.",
+    description: "No engagement in six months - review before removing.",
     type: "dynamic",
     rule: group(
       "any",
@@ -1615,7 +1615,7 @@ export const segmentUsageCount = (segment: CustomerSegment) =>
  * One thing that happened to a contact.
  *
  * `kind` drives the icon and its tint, and the channel kinds keep their channel
- * identity rather than the brand indigo — a WhatsApp reply in a timeline is
+ * identity rather than the brand indigo - a WhatsApp reply in a timeline is
  * green wherever it appears, which is what makes a mixed-channel timeline
  * scannable at all.
  */
@@ -2169,7 +2169,7 @@ export interface JourneyStage {
 }
 
 /**
- * `GET /analytics/lifecycle`. Counts descend, which the funnel relies on —
+ * `GET /analytics/lifecycle`. Counts descend, which the funnel relies on -
  * a stage larger than the one before it would draw a bar wider than its
  * parent and quietly misreport the drop-off.
  */

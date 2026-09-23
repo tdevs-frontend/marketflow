@@ -19,7 +19,7 @@ import { OptionCard, StepSection, TogglePanel } from "./shared";
 import type { StepProps } from "./types";
 
 /**
- * Step 5 — when it goes, and the guards on when it must not.
+ * Step 5 - when it goes, and the guards on when it must not.
  *
  * Everything below "when" on this step is a safety rail rather than a feature:
  * quiet hours stop a 3am SMS, allowed days stop a B2B campaign landing on a
@@ -308,7 +308,7 @@ function DeliverySpeed({ draft, set, derived }: StepProps) {
  * Social has one extra question, and only when it is worth asking.
  *
  * With a single account there is nothing to coordinate, so the toggle does not
- * render at all — the default stays "one time for everything", which is what
+ * render at all - the default stays "one time for everything", which is what
  * almost every campaign wants.
  */
 function SocialScheduling({ draft, set, derived }: StepProps) {

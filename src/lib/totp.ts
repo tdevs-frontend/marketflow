@@ -1,5 +1,5 @@
 /**
- * Time-based one-time passwords — RFC 6238, over RFC 4226, keyed in RFC 4648
+ * Time-based one-time passwords - RFC 6238, over RFC 4226, keyed in RFC 4648
  * base32.
  *
  * This is the real algorithm, and that is the point. The Settings module could
@@ -7,13 +7,13 @@
  * looked identical; the difference is that a merchant who mistypes the setup
  * key into their authenticator finds out *here*, at the verification step,
  * instead of at the sign-in that locks them out. A 2FA setup flow whose
- * verification always passes has not tested anything — it has taught the user
+ * verification always passes has not tested anything - it has taught the user
  * that the code they hold is correct when nobody checked.
  *
  * Runs on Web Crypto, so it is client-only: `crypto.subtle` is unavailable
  * during the server render and every function here is called from an event
  * handler. `crypto.getRandomValues` is likewise the only acceptable source for
- * a shared secret — `Math.random` is seeded, predictable, and not a secret.
+ * a shared secret - `Math.random` is seeded, predictable, and not a secret.
  *
  * What this does *not* do is make the second factor load-bearing. Verifying a
  * code proves the authenticator is set up correctly; it protects sign-in only
@@ -58,7 +58,7 @@ function base32Encode(bytes: Uint8Array): string {
  * Spaces, hyphens, lower case and trailing padding are all stripped, because
  * the manual setup key is displayed in groups of four and somebody will paste
  * it back with the groups intact. Returns `null` on a character that is not
- * base32 at all — that is a typo worth reporting, not worth guessing at.
+ * base32 at all - that is a typo worth reporting, not worth guessing at.
  */
 export function base32Decode(secret: string): Uint8Array | null {
   const clean = secret.replace(/[\s-]/g, "").replace(/=+$/, "").toUpperCase();
@@ -91,7 +91,7 @@ export function base32Decode(secret: string): Uint8Array | null {
 /**
  * A fresh shared secret.
  *
- * Twenty bytes — 160 bits, the HMAC-SHA1 block size RFC 4226 specifies, which
+ * Twenty bytes - 160 bits, the HMAC-SHA1 block size RFC 4226 specifies, which
  * comes out as a 32-character base32 string. Longer is not stronger here and
  * makes the manual key harder to retype; shorter weakens it for no gain.
  */
@@ -109,8 +109,8 @@ export function formatSetupKey(secret: string): string {
 /**
  * The `otpauth://` URI an authenticator app expects, and the QR code's payload.
  *
- * The issuer appears twice — once as a prefix on the label and once as a
- * parameter — which looks redundant and is not: older apps read only the label
+ * The issuer appears twice - once as a prefix on the label and once as a
+ * parameter - which looks redundant and is not: older apps read only the label
  * prefix, newer ones read only the parameter, and omitting either gives some
  * portion of users an entry called "MarketFlow" with no account beside it.
  *
@@ -198,7 +198,7 @@ export async function currentTotp(
  * without widening the window a shoulder-surfed code stays usable in.
  *
  * Comparison is on the whole string after normalising, rather than short-circuiting
- * digit by digit — the difference is not meaningful against a six-digit code over
+ * digit by digit - the difference is not meaningful against a six-digit code over
  * a network, but the habit is the right one to keep in verification code.
  */
 export async function verifyTotp(

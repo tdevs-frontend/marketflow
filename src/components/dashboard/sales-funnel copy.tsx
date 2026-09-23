@@ -56,7 +56,7 @@ export function SalesFunnel({ className }: { className?: string }) {
        * Every gap in the funnel is that one value. A bar has 10px under it
        * before the step line, the step line has 10px under it before the next
        * bar, and the first bar is spaced exactly like the other four because
-       * nothing else contributes — no `gap-y` on this list, no margin on the
+       * nothing else contributes - no `gap-y` on this list, no margin on the
        * items. Change the rhythm by changing that one padding.
        *
        * This column stays `flex-1` so the footer keeps the card's bottom edge.

@@ -7,7 +7,7 @@ import { TERMS_OF_SERVICE } from "@/constants/legal";
 export const metadata: Metadata = {
   title: "Terms of Service",
   description:
-    "The terms that govern your use of MarketFlow — accounts and workspaces, messaging, customer data, billing, and each party's responsibilities.",
+    "The terms that govern your use of MarketFlow - accounts and workspaces, messaging, customer data, billing, and each party's responsibilities.",
 };
 
 /** The Terms of Service. Content is `TERMS_OF_SERVICE` in `constants/legal.ts`. */

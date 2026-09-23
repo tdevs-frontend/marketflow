@@ -22,7 +22,7 @@ import { TagDot } from "./customer-badges";
 /**
  * Create a lead.
  *
- * A deal has to belong to somebody, so the first field is the contact — either
+ * A deal has to belong to somebody, so the first field is the contact - either
  * an existing one or a name to create alongside the lead. That choice is a
  * segmented pair rather than a clever combobox that does both: "search or
  * type a new name" is the control everyone gets wrong, and the two modes have
@@ -55,7 +55,7 @@ export function NewLeadDialog({
   const [notes, setNotes] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  /* Reset on open, during render — see `ContactFormDialog` for why not an
+  /* Reset on open, during render - see `ContactFormDialog` for why not an
      effect. `defaultStage` lets the column's own "+" preselect its stage. */
   const [wasOpen, setWasOpen] = useState(open);
   if (open !== wasOpen) {
@@ -168,7 +168,7 @@ export function NewLeadDialog({
                     ...CONTACTS.map((item) => ({
                       value: item.id,
                       label: item.company
-                        ? `${contactName(item)} — ${item.company}`
+                        ? `${contactName(item)} - ${item.company}`
                         : contactName(item),
                     })),
                   ]}

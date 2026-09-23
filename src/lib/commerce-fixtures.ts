@@ -37,7 +37,7 @@ import { slugify } from "@/lib/utils";
  * Placeholder commerce data.
  *
  * Every page reads from here so the module is reviewable without a backend.
- * The RTK Query slices in `redux/api/*` are the real seam — swap a page's
+ * The RTK Query slices in `redux/api/*` are the real seam - swap a page's
  * import for its hook and the shapes already match.
  *
  * The figures line up with the merchant dashboard on purpose: the four
@@ -64,7 +64,7 @@ export const COMMERCE_NOW_MS = new Date(COMMERCE_NOW).getTime();
  *
  * `productCount` is deliberately absent from these literals: it is derived from
  * the catalogue by `CATEGORIES` below. The authored figures this replaced had
- * already drifted — they summed to 12 against a catalogue of 15, so the
+ * already drifted - they summed to 12 against a catalogue of 15, so the
  * Categories page reported three products that were filed somewhere it could
  * not see.
  */
@@ -113,8 +113,8 @@ const CATEGORY_RECORDS: Omit<Category, "productCount">[] = [
   /*
    * The channel and practice categories.
    *
-   * Named after the modules a MarketFlow merchant already works in — WhatsApp,
-   * Email, SMS, Social, Automation, Analytics, Integrations — so the catalogue
+   * Named after the modules a MarketFlow merchant already works in - WhatsApp,
+   * Email, SMS, Social, Automation, Analytics, Integrations - so the catalogue
    * is filed the same way the product is navigated, rather than inventing a
    * second vocabulary for the same business.
    *
@@ -234,7 +234,7 @@ export const PRODUCTS: Product[] = [
     id: "prd-premium",
     name: "Premium Package",
     description:
-      "The full workspace — WhatsApp automation, campaigns, CRM and analytics.",
+      "The full workspace - WhatsApp automation, campaigns, CRM and analytics.",
     sku: "MF-PREM-01",
     type: "service",
     categoryId: "cat-packages",
@@ -248,7 +248,7 @@ export const PRODUCTS: Product[] = [
     lowStockThreshold: 25,
     featured: true,
     tags: ["bestseller", "whatsapp"],
-    seoTitle: "Premium Package — MarketFlow",
+    seoTitle: "Premium Package - MarketFlow",
     metaDescription: "Everything you need to turn conversations into customers.",
     createdAt: "2025-11-02T10:00:00Z",
     updatedAt: "2026-05-30T08:12:00Z",
@@ -465,7 +465,7 @@ export const PRODUCTS: Product[] = [
    * management table each adapt to what is being sold, and a fixture set with
    * only a T-shirt in it would let a service regression ship unnoticed.
    *
-   * `price` on each is the *base* — the figure a variant falls back to when it
+   * `price` on each is the *base* - the figure a variant falls back to when it
    * sets no price of its own. `stock` is required by the shared shape but is
    * *overwritten* for these three by `variantsFor`, which rolls it up from the
    * active tracked variants; it is set to zero here so the literal never looks
@@ -477,7 +477,7 @@ export const PRODUCTS: Product[] = [
     description:
       "Heavyweight combed cotton, printed in-house. Sizes S to XL in three colours.",
     sku: "TS",
-    /* The product's media library. Variants pick from *these* — there is no
+    /* The product's media library. Variants pick from *these* - there is no
        second uploader, which is why a variant stores a url rather than a file. */
     images: [
       {
@@ -506,13 +506,13 @@ export const PRODUCTS: Product[] = [
     price: 29,
     costPrice: 11,
     taxRate: 5,
-    /* Derived — see the note above. */
+    /* Derived - see the note above. */
     stock: 0,
     lowStockThreshold: 5,
     hasVariants: true,
     featured: true,
     tags: ["apparel", "merch"],
-    seoTitle: "Premium T-Shirt — MarketFlow",
+    seoTitle: "Premium T-Shirt - MarketFlow",
     createdAt: "2026-02-18T10:00:00Z",
     updatedAt: "2026-05-31T14:20:00Z",
   }),
@@ -572,10 +572,10 @@ export const PRODUCTS: Product[] = [
  * replaced had done exactly that.
  *
  * Defined here rather than beside `CATEGORY_RECORDS` because it has to read
- * `PRODUCTS`, which is declared above — the same ordering `INVENTORY` follows.
+ * `PRODUCTS`, which is declared above - the same ordering `INVENTORY` follows.
  *
  * Archived products still count. A category's product count answers "what is
- * filed here", not "what is on sale" — deleting a category would orphan an
+ * filed here", not "what is on sale" - deleting a category would orphan an
  * archived product just as surely as a live one, which is the rule the table's
  * disabled Delete action depends on.
  */
@@ -591,7 +591,7 @@ export const categoryById = (id: string) =>
  * The one summary the Categories page quotes, computed once.
  *
  * `products` is the number of products *filed in a category*, not the size of
- * the catalogue — the two are the same today and would diverge the moment a
+ * the catalogue - the two are the same today and would diverge the moment a
  * product were left uncategorised, and the footer should say what it counted.
  */
 export function categoryTotals(list: Category[] = CATEGORIES) {
@@ -651,8 +651,8 @@ function timelineTo(
  *
  * Derived rather than stored on each fixture: the type of an order is a fact
  * about its lines, and a hand-set field is a chance for them to disagree. An
- * order spanning two product types is `mixed`, which is a real case — a course
- * plus a printed workbook — and is why fulfilment is chosen per order.
+ * order spanning two product types is `mixed`, which is a real case - a course
+ * plus a printed workbook - and is why fulfilment is chosen per order.
  */
 function orderTypeOf(lines: OrderLine[]): OrderType {
   const types = new Set(
@@ -669,7 +669,7 @@ function orderTypeOf(lines: OrderLine[]): OrderType {
 /**
  * The fulfilment step that matches an order's commercial status.
  *
- * Each product type has its own vocabulary — see `FULFILLMENT_FLOW` — so the
+ * Each product type has its own vocabulary - see `FULFILLMENT_FLOW` - so the
  * same "paid but not delivered" order reads as *Processing* for a shipped
  * item, *Access pending* for a download and *Scheduled* for a booking. One
  * shared ladder would have to call all three "Processing".
@@ -859,7 +859,7 @@ export const ORDERS: Order[] = [
       email: "john@smithagency.io",
       whatsappNumber: "+447700900123",
     },
-    /* Two sizes of the same shirt — separate lines, because they are separate
+    /* Two sizes of the same shirt - separate lines, because they are separate
        things to pick, and one of them costs more. */
     lines: [
       {
@@ -1160,7 +1160,7 @@ export const ORDERS: Order[] = [
  * exactly the quantity that customers have already claimed and the warehouse
  * has not yet handed to a courier. Storing it beside the stock figure creates a
  * second answer to that question, and the two diverge the first time an order
- * is fulfilled — which is why §8 forbids editing it and why `available` is
+ * is fulfilled - which is why §8 forbids editing it and why `available` is
  * computed from it rather than typed.
  *
  * Shipped and delivered orders are excluded on purpose: those units have left
@@ -1178,7 +1178,7 @@ export function reservedFor(productId: string, variantId?: string): number {
           (line) =>
             line.productId === productId &&
             /* A product without variants holds its stock on lines that name no
-               variant — matching on `undefined` keeps that case working. */
+               variant - matching on `undefined` keeps that case working. */
             (variantId ? line.variantId === variantId : !line.variantId),
         )
         .reduce((lines, line) => lines + line.quantity, 0),
@@ -1192,7 +1192,7 @@ export function reservedFor(productId: string, variantId?: string): number {
 
 export const STOCK_ACTIVITY: StockAdjustment[] = [
   /* Variant-level movements. An adjustment naming only the product is unusable
-     once stock is held per size — "+24 Premium T-Shirt" does not say which
+     once stock is held per size - "+24 Premium T-Shirt" does not say which
      shelf. */
   {
     id: "adj-0a",
@@ -1549,7 +1549,7 @@ const PRODUCT_OPTIONS: Record<string, VariantOption[]> = {
  * One row of a variant grid.
  *
  * `id` and `name` are derived from the values rather than typed, exactly as
- * `generateVariants` derives them — so a fixture cannot drift into a shape the
+ * `generateVariants` derives them - so a fixture cannot drift into a shape the
  * generator would never produce.
  */
 function variant(
@@ -1568,7 +1568,7 @@ function variant(
 /**
  * The colour-shared fields, so twelve rows do not repeat them.
  *
- * Every Black variant carries the black photograph and the same reorder level —
+ * Every Black variant carries the black photograph and the same reorder level -
  * which is exactly the "assign the same image to every variant sharing an
  * option value" convenience the media dialog offers in the UI, expressed here
  * as the spread it compiles to.
@@ -1589,14 +1589,14 @@ const PRODUCT_VARIANTS: Record<string, ProductVariant[]> = {
   /*
    * Four sizes across three colours.
    *
-   * What is *not* here is the point. No `reserved` — that is read off the open
+   * What is *not* here is the point. No `reserved` - that is read off the open
    * orders by `reservedFor`, because it is a fact about the order book and not
    * a number anyone types. No `price` except on XL, which genuinely costs more
    * to make; the other nine follow the product and re-follow it automatically
    * the next time the shirt is repriced.
    *
    * `imageUrl` points at one of the product's own three photographs rather than
-   * at a separate upload — a variant picks from the product's media, it does
+   * at a separate upload - a variant picks from the product's media, it does
    * not keep a media library of its own.
    */
   "prd-tshirt": [
@@ -1611,7 +1611,7 @@ const PRODUCT_VARIANTS: Record<string, ProductVariant[]> = {
     /* Low: four on the shelf, one of them claimed, against a threshold of five. */
     variant(["L", "Blue"], { sku: "TS-L-BLU", stock: 4, ...BLUE }),
     variant(["XL", "Black"], { sku: "TS-XL-BLK", price: 34, stock: 12, ...BLACK }),
-    /* Disabled — a decision the merchant made, not a shelf that ran dry. */
+    /* Disabled - a decision the merchant made, not a shelf that ran dry. */
     variant(["XL", "White"], {
       sku: "TS-XL-WHT",
       price: 34,
@@ -1619,13 +1619,13 @@ const PRODUCT_VARIANTS: Record<string, ProductVariant[]> = {
       status: "inactive",
       ...WHITE,
     }),
-    /* Out of stock — still on sale, nothing left. The distinction between this
+    /* Out of stock - still on sale, nothing left. The distinction between this
        row and the one above it is exactly what `variantAvailability` exists to
        keep: one is fixed by changing your mind, the other by a delivery. */
     variant(["XL", "Blue"], { sku: "TS-XL-BLU", price: 34, stock: 0, ...BLUE }),
   ],
 
-  /* Licence tiers. No stock, no weight, no shipping — the fields a digital
+  /* Licence tiers. No stock, no weight, no shipping - the fields a digital
      variant has are the file, the download limit and how long access lasts. */
   "prd-guide": [
     variant(["Personal"], {
@@ -1734,7 +1734,7 @@ function variantsFor(item: Product): Partial<Product> {
 
   /* Sales and reserved are both joined here rather than authored, so the grid
      literal above stays a statement of what the merchant set up and nothing
-     else. Reserved in particular has to be derived — see `reservedFor`. */
+     else. Reserved in particular has to be derived - see `reservedFor`. */
   const variants = (PRODUCT_VARIANTS[item.id] ?? []).map((entry) => ({
     ...entry,
     reserved: reservedFor(item.id, entry.id),
@@ -1756,7 +1756,7 @@ function variantsFor(item: Product): Partial<Product> {
  * One photograph per product, self-hosted under `public/products`.
  *
  * Real images rather than an icon tile, because the catalogue preview is the
- * one screen in the product that a *customer* sees — a grid of identical grey
+ * one screen in the product that a *customer* sees - a grid of identical grey
  * placeholders tells a merchant nothing about whether their storefront is worth
  * sharing, which is the only question that screen exists to answer.
  *
@@ -1766,9 +1766,9 @@ function variantsFor(item: Product): Partial<Product> {
  * Every file is 16-100KB; the whole set is under a megabyte.
  *
  * Sourced from Unsplash, whose licence permits commercial use without
- * attribution. Each is chosen to match what the product actually is — a studio
+ * attribution. Each is chosen to match what the product actually is - a studio
  * shirt for the shirt, a chat-bubble render for the template pack, a headset
- * for the support plan — so nothing is a stock-photo stand-in for a different
+ * for the support plan - so nothing is a stock-photo stand-in for a different
  * product.
  */
 const PRODUCT_PHOTO: Record<string, string> = {
@@ -1792,7 +1792,7 @@ const PRODUCT_PHOTO: Record<string, string> = {
 /**
  * The photograph, joined in front of whatever the product already had.
  *
- * It becomes the thumbnail and anything authored keeps its place behind it —
+ * It becomes the thumbnail and anything authored keeps its place behind it -
  * which matters for the T-shirt, whose three colour swatches are what its
  * variants point at and must not be replaced by a single photo of a shirt.
  */
@@ -1877,7 +1877,7 @@ export function productSales(productId: string): ProductSales {
 /**
  * The product catalogue with its type detail and sales attached.
  *
- * This is what every Commerce surface should read — `PRODUCTS` remains the raw
+ * This is what every Commerce surface should read - `PRODUCTS` remains the raw
  * literal list so the derivation stays visible, and nothing has to remember to
  * join sales at the call site.
  */
@@ -1901,7 +1901,7 @@ export const commerceProductById = (id: string) =>
  *
  * The type check matters. `trackInventory` alone let a digital product or a
  * service appear in the warehouse the moment someone ticked the box on the old
- * shared form — which is how a consultation ends up with a reorder level.
+ * shared form - which is how a consultation ends up with a reorder level.
  *
  * Finite digital licences and service capacity are real, and they are managed
  * on the variant (`downloadLimit`, `capacityPerSlot`) rather than here, because
@@ -1914,7 +1914,7 @@ export const commerceProductById = (id: string) =>
  * the same for both.
  *
  * Derived from `COMMERCE_PRODUCTS` rather than the raw literals, because that
- * is where the variant grids are attached — which is also why this sits below
+ * is where the variant grids are attached - which is also why this sits below
  * them in the file rather than up with the other fixtures.
  */
 export const INVENTORY: InventoryItem[] = COMMERCE_PRODUCTS.filter(
@@ -1927,7 +1927,7 @@ export const INVENTORY: InventoryItem[] = COMMERCE_PRODUCTS.filter(
         productName: item.name,
         sku: item.sku,
         stock: item.stock,
-        /* Derived from open orders, exactly as the variant rows are — the
+        /* Derived from open orders, exactly as the variant rows are - the
            old 8%-of-stock guess made Available a number with no meaning. */
         reserved: reservedFor(item.id),
         lowStockThreshold: item.lowStockThreshold,
@@ -1963,7 +1963,7 @@ export const INVENTORY: InventoryItem[] = COMMERCE_PRODUCTS.filter(
  * The rule, stated once here and followed everywhere:
  *
  *   An archived product is out of the catalogue. It is not in All, not in its
- *   type's count, and not in the KPI row — it is only in Archived, which exists
+ *   type's count, and not in the KPI row - it is only in Archived, which exists
  *   to find it again.
  *
  * So `physical + digital + service === all`, always, and the pagination total
@@ -2015,7 +2015,7 @@ function saleStatusOf(order: Order): SaleStatus {
 /**
  * Sales, as a reading of the order book.
  *
- * Not a second ledger — every row points back at the order it came from, and
+ * Not a second ledger - every row points back at the order it came from, and
  * clicking one goes there. Orders answer "what needs processing"; this answers
  * "how much did we sell", and the two must never disagree because only one of
  * them holds data.
@@ -2033,7 +2033,7 @@ export const SALES: Sale[] = ORDERS.map((order) => {
     productName:
       order.lines.length > 1
         ? `${headline?.productName} +${order.lines.length - 1} more`
-        : (headline?.productName ?? "—"),
+        : (headline?.productName ?? "-"),
     productId: headline?.productId ?? "",
     /* The combination behind the headline line, when it had one. Reported
        rather than recomputed: Sales reads the order book, and the line is
@@ -2115,7 +2115,7 @@ export function topSellers(type: ProductType, limit = 3) {
  *
  * The single most important rule in this module: there is one customer
  * database, and it is `CONTACTS`. This projects order history onto the contacts
- * who bought something — it does not create a customer record. `contactId` is
+ * who bought something - it does not create a customer record. `contactId` is
  * the CRM id, and "View full profile" opens that record.
  *
  * A contact appears here the moment they have an order, and disappears from
@@ -2123,7 +2123,7 @@ export function topSellers(type: ProductType, limit = 3) {
  *
  * `order.customer.id` is a CRM contact id, and that is load-bearing. It used
  * to be a `cus-*` key of its own, which meant Sarah Ahmed was `con-1` in the
- * CRM and `cus-sarah` here — two records, one person, and
+ * CRM and `cus-sarah` here - two records, one person, and
  * `commerceCustomerFor(contactId)` returning `undefined` for every contact in
  * the product. One namespace is the whole reason a contact can show what it
  * bought.
@@ -2180,7 +2180,7 @@ export const COMMERCE_CUSTOMERS: CommerceCustomer[] = (() => {
       firstPurchaseAt: first.placedAt,
       lastPurchaseAt: last.placedAt,
       topProductName:
-        [...spendByProduct.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? "—",
+        [...spendByProduct.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? "-",
       purchasedTypes,
       customerType: classifyCustomer(orders.length, totalSpent, last.placedAt),
     };
@@ -2190,7 +2190,7 @@ export const COMMERCE_CUSTOMERS: CommerceCustomer[] = (() => {
 /**
  * Which bucket a buyer falls into.
  *
- * Computed, never assigned — see `CUSTOMER_RULES` for the thresholds. VIP wins
+ * Computed, never assigned - see `CUSTOMER_RULES` for the thresholds. VIP wins
  * over Repeat because it is the more useful label, and Inactive wins over both
  * because a lapsed VIP is the one a merchant most wants to see.
  */
@@ -2212,7 +2212,7 @@ function classifyCustomer(
 export const commerceCustomerById = (contactId: string) =>
   COMMERCE_CUSTOMERS.find((item) => item.contactId === contactId);
 
-/** Every order one buyer placed, newest first — the customer drawer's timeline. */
+/** Every order one buyer placed, newest first - the customer drawer's timeline. */
 export const ordersForCustomer = (contactId: string) =>
   ORDERS.filter((order) => order.customer.id === contactId).sort((a, b) =>
     b.placedAt.localeCompare(a.placedAt),

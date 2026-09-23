@@ -20,23 +20,23 @@ import { PlansAndPricing } from "./plans-pricing";
 import { PurchasedHistory } from "./purchased-history";
 
 /**
- * Billing & Subscription — three tabs, and the split between them is the point.
+ * Billing & Subscription - three tabs, and the split between them is the point.
  *
  *   **Billing Information** is the standing record: what this workspace is on,
  *   what it is used against, what would be charged and who the invoice is
  *   addressed to. What has already been charged is the third tab's job. Dashboard design throughout
- *   — the same cards, rules and spacing as every other Settings page.
+ *   - the same cards, rules and spacing as every other Settings page.
  *
  *   **Plans & Pricing** is what else is available, and renders the *actual
- *   pricing page component* — `PricingPlans`, the same module `/pricing`, the
+ *   pricing page component* - `PricingPlans`, the same module `/pricing`, the
  *   homepage and the merchant overview compose. Not a copy of it: the same
  *   file. Choosing a tier there starts the checkout rather than switching the
  *   plan, because a change of tier is a change of what is charged.
  *
  *   **Purchased History** is the ledger: one row per charge, newest first,
  *   each carrying the tier it bought and the invoice reference behind it. It
- *   is one table because the two it replaced — plan periods and recent
- *   invoices — were the same events at two resolutions, and a merchant
+ *   is one table because the two it replaced - plan periods and recent
+ *   invoices - were the same events at two resolutions, and a merchant
  *   reconciling a statement should not have to join them by date. A tab rather
  *   than a card beside the pricing grid, because "what could I move to" and
  *   "what have I been paying" are opposite questions, and a history panel
@@ -45,8 +45,8 @@ import { PurchasedHistory } from "./purchased-history";
  *
  * Which is why the pricing tab deliberately does *not* share a card style with
  * the other two. It is supposed to feel like the pricing page opened inside the
- * dashboard — featured tier, gradient rule, Most popular badge, the same
- * billing toggle, the same buttons — while Billing Information and Purchased
+ * dashboard - featured tier, gradient rule, Most popular badge, the same
+ * billing toggle, the same buttons - while Billing Information and Purchased
  * History are supposed to feel like settings. Flattening the tiers into dashboard cards
  * would have been the easy mistake.
  *
@@ -55,7 +55,7 @@ import { PurchasedHistory } from "./purchased-history";
  *   **Real.** The plan, its price, the renewal date, the usage and the
  *   purchase records. The tiers come from `constants/pricing`,
  *   so there is one answer to what MarketFlow costs; every usage figure is
- *   counted from this workspace — contacts are rows in the CRM, message counts
+ *   counted from this workspace - contacts are rows in the CRM, message counts
  *   are summed from what campaigns sent. A merchant checks a usage meter
  *   against their own knowledge of the business, and a hand-written number is
  *   the one they catch.
@@ -70,7 +70,7 @@ import { PurchasedHistory } from "./purchased-history";
  *   and the invoice documents. No payment provider is integrated, so the
  *   automatic methods are listed as *not connected* and the checkout stops at
  *   that boundary rather than crossing it. A card ending in 4242 would be the
- *   most expensive fiction in the product — somebody who believes a card is on
+ *   most expensive fiction in the product - somebody who believes a card is on
  *   file believes their service cannot lapse.
  *
  * The billing contact is none of those: it is the workspace's own business
@@ -120,7 +120,7 @@ export function BillingSettings() {
 
   /*
    * `push`, not `replace`. Each tab is a place the merchant navigated to, and
-   * Back should return them to the one they came from — a merchant who opens
+   * Back should return them to the one they came from - a merchant who opens
    * Plans from Billing Information and presses Back means "put the billing
    * details back", not "leave Settings". The cost is that Back walks the strip
    * before it leaves the page, which is the correct trade for a three-tab

@@ -109,7 +109,7 @@ export function PersonalisationSection({ draft, set, derived }: StepProps) {
             No merge tags in this message
           </p>
           <p className="mx-auto mt-1 max-w-sm text-sm text-text-muted">
-            Add one above — a message that opens with the recipient&apos;s first
+            Add one above - a message that opens with the recipient&apos;s first
             name reads noticeably better than one that does not. Or send it as it
             is.
           </p>
@@ -173,7 +173,7 @@ export function PersonalisationSection({ draft, set, derived }: StepProps) {
               {derived.missingFallbacks.length} tag
               {derived.missingFallbacks.length === 1 ? " has" : "s have"} no
               fallback. Any contact missing that field receives the tag literally
-              — set a fallback here, or write one inline as{" "}
+              - set a fallback here, or write one inline as{" "}
               <code className="font-mono">{"{{first_name | Customer}}"}</code>.
             </WarningNote>
           ) : null}

@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
  * Loading placeholder.
  *
  * Sized by the caller to the shape of the real content, not a generic grey
- * box — a skeleton that does not match what replaces it produces a layout
+ * box - a skeleton that does not match what replaces it produces a layout
  * jump, which is worse than a spinner. `animate-pulse` respects
  * `prefers-reduced-motion` through Tailwind's own media query.
  */
@@ -47,7 +47,7 @@ export function SkeletonText({
   );
 }
 
-/** The stat row's loading state — one card per metric, at the card's height. */
+/** The stat row's loading state - one card per metric, at the card's height. */
 export function SkeletonStats({ count = 4 }: { count?: number }) {
   return (
     <div

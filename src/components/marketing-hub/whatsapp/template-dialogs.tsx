@@ -42,7 +42,7 @@ const BUTTON_ICONS: Record<TemplateButton["type"], typeof Reply> = {
 /* -------------------------------------------------------------------------- */
 
 /**
- * The template as the customer receives it — a chat bubble on the WhatsApp
+ * The template as the customer receives it - a chat bubble on the WhatsApp
  * wallpaper ground, with variables filled in. Approving a template is a
  * judgement about the message someone actually reads, not the raw string.
  */
@@ -223,7 +223,7 @@ export function TemplateFormDialog({
             label="Template Name"
             htmlFor="tpl-name"
             error={errors.name}
-            hint="Lowercase and underscores — this is the API identifier."
+            hint="Lowercase and underscores - this is the API identifier."
           >
             <Input
               id="tpl-name"

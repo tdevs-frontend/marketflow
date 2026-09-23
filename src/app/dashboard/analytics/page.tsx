@@ -10,7 +10,7 @@ import type { ChannelPerformance, FunnelStep, MetricSummary } from "@/types/anal
 
 export const metadata: Metadata = { title: "Analytics" };
 
-// Placeholder figures — replace with `useGetOverviewQuery` once the API is live.
+// Placeholder figures - replace with `useGetOverviewQuery` once the API is live.
 const METRICS: MetricSummary[] = [
   { key: "sent", label: "Messages sent", value: 84210, previousValue: 79800, changePercent: 5.5, format: "number" },
   { key: "delivered", label: "Delivery rate", value: 97.4, previousValue: 96.9, changePercent: 0.5, format: "percent" },

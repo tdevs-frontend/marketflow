@@ -16,7 +16,7 @@ import { ExecutionDetailBody } from "./execution-detail";
  * One run, as a page.
  *
  * The same body the drawer renders. A run needs a route of its own because
- * failures get linked to — from an alert, a ticket, a message to a colleague —
+ * failures get linked to - from an alert, a ticket, a message to a colleague -
  * and a drawer has no address. Anybody arriving from inside the product gets
  * the drawer instead, which keeps their place in the log.
  */
@@ -89,7 +89,7 @@ export function RunDetail({ run }: { run: WorkflowRun }) {
         open={Boolean(confirmSkip)}
         onClose={() => setConfirmSkip(null)}
         onConfirm={() => {
-          toast(`${confirmSkip?.title} skipped — the run continues`, "success");
+          toast(`${confirmSkip?.title} skipped - the run continues`, "success");
           setConfirmSkip(null);
         }}
         title="Skip this step?"
@@ -98,7 +98,7 @@ export function RunDetail({ run }: { run: WorkflowRun }) {
         tone="primary"
       >
         <p className="text-sm text-text-secondary">
-          Whatever this step would have done — a message, a tag, a CRM update —
+          Whatever this step would have done - a message, a tag, a CRM update -
           does not happen for this contact. The rest of the journey is
           unaffected.
         </p>

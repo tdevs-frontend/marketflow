@@ -25,7 +25,7 @@ export function AuthBrandPanel() {
         className="pointer-events-none absolute inset-0 -z-10 opacity-40 bg-[radial-gradient(var(--color-primary-border)_1px,transparent_1px)] bg-size-[22px_22px] mask-[radial-gradient(ellipse_at_center,black,transparent_70%)]"
       />
 
-      {/* Two long, very thin sweeps — customer journeys crossing the panel. */}
+      {/* Two long, very thin sweeps - customer journeys crossing the panel. */}
       <svg
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10 size-full"

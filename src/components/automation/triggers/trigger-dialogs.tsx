@@ -16,7 +16,7 @@ import { slugify } from "@/lib/utils";
  * Advanced on purpose: the built-in registry covers everything a marketer
  * needs, and this exists for a product raising its own events through the API.
  * So the dialog leads with the event key, validates its shape, and shows the
- * payload schema — the three things an integrator actually has to get right.
+ * payload schema - the three things an integrator actually has to get right.
  */
 
 const SOURCES = [
@@ -94,7 +94,7 @@ export function CustomTriggerDialog({
               setTouched(true);
               if (invalid) return;
               onClose();
-              toast(`${eventKey} registered — post to it from the API`, "success");
+              toast(`${eventKey} registered - post to it from the API`, "success");
             }}
           >
             Create trigger
@@ -120,7 +120,7 @@ export function CustomTriggerDialog({
         <Field
           label="Event key"
           htmlFor={`${id}-key`}
-          hint="Lowercase, dots and underscores only — this is what you POST."
+          hint="Lowercase, dots and underscores only - this is what you POST."
           error={
             keyInvalid
               ? "Use lowercase letters, numbers, underscores and dots, e.g. demo.requested"

@@ -12,12 +12,12 @@ export interface SegmentedOption<T extends string> {
  *
  * `control` is the original: a compact switch that swaps a chart or a panel in
  * place, sitting inside a card header beside a title. It is deliberately dense
- * and bold — it is chrome, and it is read at a glance rather than scanned.
+ * and bold - it is chrome, and it is read at a glance rather than scanned.
  *
  * `filter` is a page's primary filter strip: wider, lighter in weight, and with
  * a bordered chip for the active item so it reads as a *selected* thing rather
  * than a highlighted one. It is the first control on the page and carries
- * counts, so its inactive items sit on secondary ink instead of muted — they
+ * counts, so its inactive items sit on secondary ink instead of muted - they
  * have to stay readable, not recede.
  *
  * Two variants rather than restyling the one: thirty-odd call sites use the
@@ -38,7 +38,7 @@ export interface SegmentedControlProps<T extends string> {
 }
 
 /* Geometry only. Weight and colour belong to the variant, so the two never
-   fight over the same utility — `cn()` is a plain join, and a class that loses
+   fight over the same utility - `cn()` is a plain join, and a class that loses
    the cascade is a class that silently does nothing. */
 const SIZES = {
   sm: "h-7 px-2.5 text-sm",
@@ -59,7 +59,7 @@ const VARIANTS: Record<
     idle: "text-text-muted hover:text-text-primary",
   },
   filter: {
-    /* A touch more room than the compact form — this is a control a merchant
+    /* A touch more room than the compact form - this is a control a merchant
        aims at, not one they glance past. */
     track: "gap-1 rounded-panel p-1",
     /* The border is on both states, transparent when idle, so selecting an
@@ -71,7 +71,7 @@ const VARIANTS: Record<
 };
 
 /**
- * Filter chips in a tinted track. Not `role="tablist"` — that would promise
+ * Filter chips in a tinted track. Not `role="tablist"` - that would promise
  * arrow-key navigation and a `tabpanel`; these just switch what a list or a
  * chart is showing, in place.
  */

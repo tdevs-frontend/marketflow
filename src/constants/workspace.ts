@@ -16,8 +16,8 @@ import type {
  * The Workspace module's registry.
  *
  * Two tables and a vocabulary: what can be permitted, and what can be audited.
- * The components read these — the permission matrix has no knowledge of what a
- * "campaign" is, and the audit filters have no list of modules of their own —
+ * The components read these - the permission matrix has no knowledge of what a
+ * "campaign" is, and the audit filters have no list of modules of their own -
  * which is what keeps adding a module a data change.
  */
 
@@ -122,7 +122,7 @@ export const AUDIT_SEVERITY_LABEL: Record<AuditSeverity, string> = {
  * empty teaches a merchant to stop reading the grid.
  *
  * `href` turns each row into a link to the module it governs, so a role page is
- * never a dead end — "what does Campaigns: Publish actually control" is one
+ * never a dead end - "what does Campaigns: Publish actually control" is one
  * click away.
  */
 export const PERMISSION_GROUPS: PermissionGroup[] = [
@@ -429,7 +429,7 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
         key: "orders",
         label: "Orders",
         href: APP_ROUTES.orders,
-        hint: "Orders arrive from a store — they are never created by hand.",
+        hint: "Orders arrive from a store - they are never created by hand.",
         actions: [
           { action: "view" },
           { action: "edit", requires: ["view"] },
@@ -710,7 +710,7 @@ export function isAdvanced(resourceKey: string, action: PermissionAction): boole
  * catalogue: nothing can be done to a resource that cannot be seen, and writing
  * that out per action is forty chances to forget it.
  *
- * The result is transitive — Publish requires Edit, and Edit requires View, so
+ * The result is transitive - Publish requires Edit, and Edit requires View, so
  * enabling Publish turns on all three in one action rather than making the
  * merchant discover the chain a checkbox at a time.
  */
@@ -762,7 +762,7 @@ export function dependentsOf(
  * A grant map with dependencies resolved.
  *
  * Every toggle goes through here, so an incoherent combination is never held in
- * state — not caught at save time, not rejected by the server, simply not
+ * state - not caught at save time, not rejected by the server, simply not
  * reachable. Enabling pulls prerequisites up with it; disabling pushes
  * dependents down.
  *
@@ -816,7 +816,7 @@ export function permissionLabel(resource: string, action: PermissionAction): str
  *
  * `roles.manage` is the one that matters most: a member who removes it from
  * their own active role can no longer restore it, and on a workspace with one
- * admin that is unrecoverable without support. The role editor refuses it — see
+ * admin that is unrecoverable without support. The role editor refuses it - see
  * `lockoutWarning` in `lib/workspace-fixtures`.
  */
 export const SELF_LOCKOUT_GUARDS = [
@@ -841,12 +841,12 @@ export const WORKSPACE_TIMEZONES = [
 ];
 
 export const WORKSPACE_CURRENCIES = [
-  { value: "BDT", label: "BDT — Bangladeshi Taka" },
-  { value: "USD", label: "USD — US Dollar" },
-  { value: "EUR", label: "EUR — Euro" },
-  { value: "GBP", label: "GBP — Pound Sterling" },
-  { value: "INR", label: "INR — Indian Rupee" },
-  { value: "AED", label: "AED — UAE Dirham" },
+  { value: "BDT", label: "BDT - Bangladeshi Taka" },
+  { value: "USD", label: "USD - US Dollar" },
+  { value: "EUR", label: "EUR - Euro" },
+  { value: "GBP", label: "GBP - Pound Sterling" },
+  { value: "INR", label: "INR - Indian Rupee" },
+  { value: "AED", label: "AED - UAE Dirham" },
 ];
 
 export const WORKSPACE_LANGUAGES = [
@@ -887,7 +887,7 @@ export const DUPLICATE_HANDLING_OPTIONS = [
   {
     value: "merge",
     label: "Merge with existing",
-    hint: "Recommended — updates the existing contact in place.",
+    hint: "Recommended - updates the existing contact in place.",
   },
   {
     value: "duplicate",
@@ -942,8 +942,8 @@ function preset(rules: Record<string, PermissionAction[] | "*" | "read">): RoleG
 /**
  * Starting points for a custom role.
  *
- * These are the shapes merchants ask for in their own words — "someone who runs
- * marketing", "someone who only reads" — so the create flow can hand over a
+ * These are the shapes merchants ask for in their own words - "someone who runs
+ * marketing", "someone who only reads" - so the create flow can hand over a
  * working permission set in one click. Building one from a hundred empty
  * checkboxes is a job nobody finishes correctly, and the result is usually
  * either too wide or missing a prerequisite.

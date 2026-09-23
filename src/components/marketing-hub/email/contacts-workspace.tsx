@@ -204,7 +204,7 @@ export function EmailContactsWorkspace() {
       prev.includes(id) ? prev.filter((value) => value !== id) : [...prev, id],
     );
 
-  /* Campaigns this contact could plausibly have received — the drawer's
+  /* Campaigns this contact could plausibly have received - the drawer's
      campaign history, without modelling per-recipient delivery. */
   const historyFor = (contact: EmailContact) =>
     EMAIL_CAMPAIGNS.filter((campaign) => campaign.sent > 0).slice(
@@ -625,7 +625,7 @@ export function EmailContactsWorkspace() {
                 label="Open rate"
                 value={
                   detail.campaigns === 0
-                    ? "—"
+                    ? "-"
                     : formatPercent(rate(detail.opens, detail.campaigns))
                 }
               />
@@ -638,7 +638,7 @@ export function EmailContactsWorkspace() {
               <dl className="mt-2 space-y-2 text-sm">
                 {[
                   { label: "Email", value: detail.email },
-                  { label: "Company", value: detail.company ?? "—" },
+                  { label: "Company", value: detail.company ?? "-" },
                   { label: "Source", value: detail.source },
                   { label: "Subscribed", value: formatDate(detail.createdAt) },
                   {
@@ -674,7 +674,7 @@ export function EmailContactsWorkspace() {
               </h3>
               {detail.campaigns === 0 ? (
                 <p className="mt-2 text-sm text-text-muted">
-                  Nothing sent yet — this contact joined the list{" "}
+                  Nothing sent yet - this contact joined the list{" "}
                   {formatRelativeTime(detail.createdAt)}.
                 </p>
               ) : (
@@ -816,7 +816,7 @@ export function EmailContactsWorkspace() {
               size="compact"
               onClick={() => {
                 setImportOpen(false);
-                toast("Import started — we will email you when it finishes");
+                toast("Import started - we will email you when it finishes");
               }}
             >
               <Upload aria-hidden />
@@ -864,7 +864,7 @@ export function EmailContactsWorkspace() {
       >
         <p className="text-sm text-text-secondary">
           Deleting is not the same as unsubscribing. A deleted contact can be
-          re-added by a future import, which would start sending to them again —
+          re-added by a future import, which would start sending to them again -
           unsubscribe instead if that is what you mean.
         </p>
       </ConfirmDialog>

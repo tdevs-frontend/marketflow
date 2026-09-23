@@ -2,7 +2,7 @@
  * Who a person is inside one merchant workspace.
  *
  * These are *workspace* roles, not platform roles. MarketFlow's Admin
- * Dashboard — merchant management, plans, system health — is a separate
+ * Dashboard - merchant management, plans, system health - is a separate
  * application, and nothing in this union grants access to it. The widest role
  * here still only reaches one merchant's own business.
  *
@@ -62,7 +62,7 @@ export const OPERATORS: readonly MerchantRole[] = ["owner", "admin"];
 /** Anyone who *does* marketing work, as opposed to reading about it. */
 export const MARKETERS: readonly MerchantRole[] = ["owner", "admin", "manager"];
 
-/** Marketers plus the front line — everyone who touches a customer record. */
+/** Marketers plus the front line - everyone who touches a customer record. */
 export const CUSTOMER_FACING: readonly MerchantRole[] = [
   "owner",
   "admin",

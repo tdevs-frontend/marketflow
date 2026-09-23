@@ -23,7 +23,7 @@ const timeOf = (iso: string) =>
 /**
  * The execution log.
  *
- * A row is one *step*, not one run — which is the difference between this page
+ * A row is one *step*, not one run - which is the difference between this page
  * and a list of runs. Debugging an automation means finding the step that
  * failed, and a run-level list makes you open nine runs to find it. The run is
  * one click away on every row.
@@ -140,7 +140,7 @@ export function ActivityTable({
       </Table>
 
       {/* Below `lg` the seven columns become a card. Time, who, what, and the
-          status — the four things a monitoring screen is scanned for. */}
+          status - the four things a monitoring screen is scanned for. */}
       <ul className="space-y-2.5 lg:hidden">
         {rows.map((row) => (
           <li key={row.id}>

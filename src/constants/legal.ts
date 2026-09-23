@@ -1,5 +1,5 @@
 /**
- * The legal documents — Privacy Policy and Terms of Service — as data.
+ * The legal documents - Privacy Policy and Terms of Service - as data.
  *
  * Content lives here rather than in JSX for the same reason the blog's does:
  * every section renders with the same measure, the same numbering and the same
@@ -26,7 +26,7 @@
 /**
  * Every fact the documents need that the product does not supply.
  *
- * All of these are DUMMY values for development and demo work —
+ * All of these are DUMMY values for development and demo work -
  * `example.com` is a reserved domain, so nothing sent to those addresses goes
  * anywhere. Replace them with the real details before launch.
  */
@@ -40,7 +40,7 @@ export const LEGAL_PLACEHOLDERS = {
 
 const P = LEGAL_PLACEHOLDERS;
 
-/** A list item, optionally led by a bold term: "Account information — …". */
+/** A list item, optionally led by a bold term: "Account information - …". */
 export type LegalListItem = string | { term: string; text: string };
 
 export type LegalBlock =
@@ -49,7 +49,7 @@ export type LegalBlock =
   | { type: "list"; items: LegalListItem[] };
 
 export interface LegalSection {
-  /** The anchor. Stable — other pages and support replies link to these. */
+  /** The anchor. Stable - other pages and support replies link to these. */
   id: string;
   title: string;
   /** A shorter label for the "On this page" navigation, where one reads better. */
@@ -80,7 +80,7 @@ export const PRIVACY_POLICY: LegalDocument = {
         },
         {
           type: "p",
-          text: "Because of what MarketFlow does, two kinds of information pass through it. The first is information about you as a MarketFlow user — your account, your workspace and how you use the product. The second is information that businesses put into MarketFlow about their own customers and leads. We treat these differently, and Section 11 explains how.",
+          text: "Because of what MarketFlow does, two kinds of information pass through it. The first is information about you as a MarketFlow user - your account, your workspace and how you use the product. The second is information that businesses put into MarketFlow about their own customers and leads. We treat these differently, and Section 11 explains how.",
         },
         {
           type: "p",
@@ -183,7 +183,7 @@ export const PRIVACY_POLICY: LegalDocument = {
             "keep the Service, our users and their customers secure;",
             "detect, investigate and prevent abuse, spam, fraud and violations of our Terms of Service;",
             "respond to support requests and questions;",
-            "send you service messages — such as security alerts, billing notices and changes to the Service or to this policy.",
+            "send you service messages - such as security alerts, billing notices and changes to the Service or to this policy.",
           ],
         },
         {
@@ -242,7 +242,7 @@ export const PRIVACY_POLICY: LegalDocument = {
       blocks: [
         {
           type: "p",
-          text: "MarketFlow lets you connect external services to your workspace — for example messaging providers, social platforms, commerce platforms such as Shopify, and your own systems through webhooks and the API. Connecting an integration is your choice, and you can disconnect it from your workspace settings.",
+          text: "MarketFlow lets you connect external services to your workspace - for example messaging providers, social platforms, commerce platforms such as Shopify, and your own systems through webhooks and the API. Connecting an integration is your choice, and you can disconnect it from your workspace settings.",
         },
         {
           type: "p",
@@ -278,7 +278,7 @@ export const PRIVACY_POLICY: LegalDocument = {
         },
         {
           type: "p",
-          text: "Most browsers let you block or delete cookies. If you block essential cookies, parts of the Service — including signing in — will not work.",
+          text: "Most browsers let you block or delete cookies. If you block essential cookies, parts of the Service - including signing in - will not work.",
         },
       ],
     },
@@ -296,7 +296,7 @@ export const PRIVACY_POLICY: LegalDocument = {
           items: [
             {
               term: "Service providers",
-              text: "companies that help us run the Service — for example with hosting, email delivery, customer support or billing — who may use the information only to provide those services to us.",
+              text: "companies that help us run the Service - for example with hosting, email delivery, customer support or billing - who may use the information only to provide those services to us.",
             },
             {
               term: "Integration providers",
@@ -340,7 +340,7 @@ export const PRIVACY_POLICY: LegalDocument = {
         },
         {
           type: "p",
-          text: "After an account is closed we delete or de-identify its information within a reasonable period, except where we need to keep some of it longer — for example to meet legal, tax or accounting obligations, resolve disputes, enforce our agreements or protect against fraud and abuse. Copies may persist in backups for a limited time before they are overwritten.",
+          text: "After an account is closed we delete or de-identify its information within a reasonable period, except where we need to keep some of it longer - for example to meet legal, tax or accounting obligations, resolve disputes, enforce our agreements or protect against fraud and abuse. Copies may persist in backups for a limited time before they are overwritten.",
         },
       ],
     },
@@ -385,7 +385,7 @@ export const PRIVACY_POLICY: LegalDocument = {
         },
         {
           type: "p",
-          text: "If you are a customer or lead of a business that uses MarketFlow, please see Section 11 — in most cases that business is the right place to send your request.",
+          text: "If you are a customer or lead of a business that uses MarketFlow, please see Section 11 - in most cases that business is the right place to send your request.",
         },
       ],
     },
@@ -403,7 +403,7 @@ export const PRIVACY_POLICY: LegalDocument = {
           items: [
             {
               term: "MarketFlow users",
-              text: "the people who sign in to MarketFlow — workspace owners, admins and team members. We are responsible for their account information as described in this policy.",
+              text: "the people who sign in to MarketFlow - workspace owners, admins and team members. We are responsible for their account information as described in this policy.",
             },
             {
               term: "Businesses using MarketFlow",
@@ -462,7 +462,7 @@ export const PRIVACY_POLICY: LegalDocument = {
       blocks: [
         {
           type: "p",
-          text: 'We may update this Privacy Policy from time to time. When we do, we will change the "Last updated" date at the top of this page, and if the changes are material we will give you notice — for example by email or in the Service — before they take effect.',
+          text: 'We may update this Privacy Policy from time to time. When we do, we will change the "Last updated" date at the top of this page, and if the changes are material we will give you notice - for example by email or in the Service - before they take effect.',
         },
         {
           type: "p",
@@ -545,7 +545,7 @@ export const TERMS_OF_SERVICE: LegalDocument = {
       blocks: [
         {
           type: "p",
-          text: "Your account operates within one or more workspaces. The workspace owner can invite team members and assign them roles — such as Workspace Admin, Marketing Manager, Sales Agent, Support Agent, Analyst or Viewer — which control what each person can see and do.",
+          text: "Your account operates within one or more workspaces. The workspace owner can invite team members and assign them roles - such as Workspace Admin, Marketing Manager, Sales Agent, Support Agent, Analyst or Viewer - which control what each person can see and do.",
         },
         {
           type: "p",
@@ -626,7 +626,7 @@ export const TERMS_OF_SERVICE: LegalDocument = {
         },
         {
           type: "p",
-          text: "Where the law requires it, you must obtain permission from recipients before sending them marketing messages, identify yourself as the sender, provide a way to opt out, and honour opt-out requests promptly. MarketFlow provides tools to help — such as segments and templates — but using them correctly remains your responsibility.",
+          text: "Where the law requires it, you must obtain permission from recipients before sending them marketing messages, identify yourself as the sender, provide a way to opt out, and honour opt-out requests promptly. MarketFlow provides tools to help - such as segments and templates - but using them correctly remains your responsibility.",
         },
       ],
     },
@@ -637,7 +637,7 @@ export const TERMS_OF_SERVICE: LegalDocument = {
       blocks: [
         {
           type: "p",
-          text: "MarketFlow sends and receives messages through channels operated by other companies. When you use a channel, you must also follow that provider's terms and policies — for example WhatsApp's business and commerce policies and template approval rules, your email provider's sending rules, carrier and registration requirements for SMS, and each social platform's terms.",
+          text: "MarketFlow sends and receives messages through channels operated by other companies. When you use a channel, you must also follow that provider's terms and policies - for example WhatsApp's business and commerce policies and template approval rules, your email provider's sending rules, carrier and registration requirements for SMS, and each social platform's terms.",
         },
         {
           type: "p",
@@ -656,7 +656,7 @@ export const TERMS_OF_SERVICE: LegalDocument = {
       blocks: [
         {
           type: "p",
-          text: "Workflows run the actions you configure — such as sending messages, updating contacts or moving leads — when their triggers and conditions are met. You are responsible for building, testing and monitoring your workflows, and for the messages and changes they produce.",
+          text: "Workflows run the actions you configure - such as sending messages, updating contacts or moving leads - when their triggers and conditions are met. You are responsible for building, testing and monitoring your workflows, and for the messages and changes they produce.",
         },
         {
           type: "p",
@@ -701,7 +701,7 @@ export const TERMS_OF_SERVICE: LegalDocument = {
       blocks: [
         {
           type: "p",
-          text: "MarketFlow's analytics and reports are based on data from your workspace and from the providers you connect. Some figures — such as delivery, open and attribution data — depend on what those providers report and may be delayed, estimated or incomplete.",
+          text: "MarketFlow's analytics and reports are based on data from your workspace and from the providers you connect. Some figures - such as delivery, open and attribution data - depend on what those providers report and may be delayed, estimated or incomplete.",
         },
         {
           type: "p",
@@ -715,7 +715,7 @@ export const TERMS_OF_SERVICE: LegalDocument = {
       blocks: [
         {
           type: "p",
-          text: "The Service — including its software, design, text, graphics, logos and the MarketFlow name — is owned by us or our licensors and protected by intellectual property laws. These Terms give you a limited, non-exclusive, non-transferable right to use the Service for your business during your subscription. They do not transfer any ownership to you.",
+          text: "The Service - including its software, design, text, graphics, logos and the MarketFlow name - is owned by us or our licensors and protected by intellectual property laws. These Terms give you a limited, non-exclusive, non-transferable right to use the Service for your business during your subscription. They do not transfer any ownership to you.",
         },
         {
           type: "p",
@@ -753,7 +753,7 @@ export const TERMS_OF_SERVICE: LegalDocument = {
       blocks: [
         {
           type: "p",
-          text: "Paid plans are billed in advance on a monthly or yearly basis, as selected when you subscribe. Plan features and limits — such as workspaces, contacts and message volumes — are described on our pricing page and may differ between plans.",
+          text: "Paid plans are billed in advance on a monthly or yearly basis, as selected when you subscribe. Plan features and limits - such as workspaces, contacts and message volumes - are described on our pricing page and may differ between plans.",
         },
         {
           type: "p",
@@ -801,7 +801,7 @@ export const TERMS_OF_SERVICE: LegalDocument = {
       blocks: [
         {
           type: "p",
-          text: "We may suspend or terminate your access to all or part of the Service — including sending on particular channels — if you materially breach these Terms, fail to pay fees, create a risk of harm or legal exposure for us, other users or recipients, or if a provider requires us to. Where reasonable, we will notify you first and give you an opportunity to fix the issue.",
+          text: "We may suspend or terminate your access to all or part of the Service - including sending on particular channels - if you materially breach these Terms, fail to pay fees, create a risk of harm or legal exposure for us, other users or recipients, or if a provider requires us to. Where reasonable, we will notify you first and give you an opportunity to fix the issue.",
         },
         {
           type: "p",
@@ -839,7 +839,7 @@ export const TERMS_OF_SERVICE: LegalDocument = {
         },
         {
           type: "p",
-          text: "MarketFlow does not guarantee any business outcome from using the Service — including message delivery or open rates, lead volumes, conversion rates, sales or revenue. Results depend on your business, your content, your audience and third-party providers.",
+          text: "MarketFlow does not guarantee any business outcome from using the Service - including message delivery or open rates, lead volumes, conversion rates, sales or revenue. Results depend on your business, your content, your audience and third-party providers.",
         },
       ],
     },

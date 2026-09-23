@@ -12,7 +12,7 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 
 /**
  * Three measures of very different magnitude (leads, conversions, revenue)
- * cannot share a y-axis honestly, and a second axis is never the answer — so
+ * cannot share a y-axis honestly, and a second axis is never the answer - so
  * every series is indexed to the period start at 100. That keeps one axis,
  * and the shape of each line stays truthful.
  */
@@ -82,7 +82,7 @@ const CHANNELS: Channel[] = [
   },
 ];
 
-/** Widths stay strictly proportional — the narrowing *is* the story. */
+/** Widths stay strictly proportional - the narrowing *is* the story. */
 const FUNNEL = [
   { stage: "Visitors", value: "48,920", width: "100%" },
   { stage: "Leads", value: "12,480", width: "25.5%" },
@@ -211,7 +211,7 @@ function GrowthChart() {
         }
       />
 
-      {/* Legend — identity never rests on color alone. */}
+      {/* Legend - identity never rests on color alone. */}
       <ul className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-1.5">
         {SERIES.map((series) => (
           <li key={series.name} className="flex items-center gap-2 text-xs font-medium text-text-secondary">
@@ -282,7 +282,7 @@ function GrowthChart() {
           ))}
         </svg>
 
-        {/* Direct labels in text ink — the two lighter hues sit under 3:1 on
+        {/* Direct labels in text ink - the two lighter hues sit under 3:1 on
             white, so identity is carried by the swatch plus a readable label. */}
         {endLabels.map((label) => (
           <span

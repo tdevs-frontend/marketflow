@@ -118,7 +118,7 @@ export function SegmentsWorkspace() {
   const [draftName, setDraftName] = useState("");
   const [draftDescription, setDraftDescription] = useState("");
   const [draftRules, setDraftRules] = useState<SegmentRule[]>([]);
-  /* Counter rather than a clock read — rule ids only need to be unique inside
+  /* Counter rather than a clock read - rule ids only need to be unique inside
      the open builder. */
   const nextRuleId = useRef(0);
 
@@ -354,7 +354,7 @@ export function SegmentsWorkspace() {
 
                       The timestamp moved up beside the "Usable on" label. It
                       used to sit at the end of the icon row, which put it at a
-                      different height on every card — two channels or three
+                      different height on every card - two channels or three
                       changed nothing about the date, but the date moved anyway.
                     */}
                     <div className="mt-auto pt-5">
@@ -375,7 +375,7 @@ export function SegmentsWorkspace() {
                             return (
                               <span
                                 key={key}
-                                /* Greyed rather than hidden — "why can I not
+                                /* Greyed rather than hidden - "why can I not
                                    text this list" deserves an answer on the
                                    card. */
                                 className={cn(
@@ -410,7 +410,7 @@ export function SegmentsWorkspace() {
         title={editing ? `${editing.system ? "Rules for" : "Edit"} ${editing.name}` : "Create segment"}
         description={
           editing?.system
-            ? "This segment is built in — its rules cannot be changed."
+            ? "This segment is built in - its rules cannot be changed."
             : "Rules are combined with AND. For an OR, build a second segment."
         }
         size="lg"
@@ -551,7 +551,7 @@ export function SegmentsWorkspace() {
             </ul>
           </section>
 
-          {/* An estimate, not a promise — the real count comes from the API. */}
+          {/* An estimate, not a promise - the real count comes from the API. */}
           <div className="rounded-panel border border-primary-border bg-primary-subtle px-3.5 py-3">
             <p className="flex items-center gap-1.5 text-sm font-medium text-primary-dark">
               <Users className="size-3.5" aria-hidden />
@@ -592,7 +592,7 @@ export function SegmentsWorkspace() {
         confirmLabel="Delete segment"
       >
         <p className="text-sm text-text-secondary">
-          The contacts stay — a segment is a saved filter, not a container. Any
+          The contacts stay - a segment is a saved filter, not a container. Any
           scheduled campaign or automation targeting this segment will need a new
           audience before it can send.
         </p>

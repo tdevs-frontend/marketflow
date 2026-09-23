@@ -44,7 +44,7 @@ import {
 import { AuditStatusBadge, SeverityBadge } from "./workspace-badges";
 
 /**
- * Workspace Activity — the audit trail.
+ * Workspace Activity - the audit trail.
  *
  * Who changed what in this workspace, and nothing else. It is deliberately not
  * a notification feed: there are no "campaign finished sending" rows, because
@@ -90,8 +90,8 @@ const STATUS_OPTIONS = [
  * The two lenses an auditor actually uses.
  *
  * A segmented control rather than two more dropdowns: these are the questions
- * someone opens this page to ask — "show me anything security-related" and
- * "show me what actually mattered" — and burying them among five selects makes
+ * someone opens this page to ask - "show me anything security-related" and
+ * "show me what actually mattered" - and burying them among five selects makes
  * them as hard to reach as a date range.
  */
 const SCOPE_OPTIONS = [
@@ -108,7 +108,7 @@ export function ActivityWorkspace() {
   const [selected, setSelected] = useState<WorkspaceAuditEvent | null>(null);
   const [range, setRange] = useState<DateRangeValue>(DEFAULT_RANGE);
 
-  /* The fixture plus anything recorded in this session — a role edit made on
+  /* The fixture plus anything recorded in this session - a role edit made on
      the Roles page is in the trail before you navigate here. */
   const events = useWorkspaceAudit();
 
@@ -190,8 +190,8 @@ export function ActivityWorkspace() {
    *
    * Exporting the whole log when the screen shows eleven filtered rows is the
    * kind of surprise that ends in a spreadsheet nobody trusts. Secrets are
-   * never in these records to begin with — `metadata` carries a key's prefix
-   * and scopes, never the key — so nothing has to be stripped on the way out.
+   * never in these records to begin with - `metadata` carries a key's prefix
+   * and scopes, never the key - so nothing has to be stripped on the way out.
    */
   function exportCsv() {
     toast(

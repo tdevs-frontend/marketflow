@@ -2,12 +2,12 @@ import type { Channel } from "@/constants/channels";
 import type { MarketingChannel } from "@/types/marketing";
 
 /**
- * Marketing Overview data — the cross-channel command centre.
+ * Marketing Overview data - the cross-channel command centre.
  *
  * Campaign and conversation rows are deliberately not duplicated here: the
  * overview reads them from `marketing-fixtures` so the summary and the detail
  * pages can never disagree. What lives here is the aggregate no single channel
- * owns — totals, the four-way comparison, the funnel and the activity feed.
+ * owns - totals, the four-way comparison, the funnel and the activity feed.
  *
  * Dated to early September 2026, the same clock as the other module fixtures,
  * so every relative timestamp in the app reads from one "now".
@@ -43,7 +43,7 @@ export const MARKETING_TOTALS = {
 /**
  * The state of the audience, as four counts a marketer acts on.
  *
- * Placeholder figures — swap for `useGetAudienceInsightsQuery()` once the API
+ * Placeholder figures - swap for `useGetAudienceInsightsQuery()` once the API
  * is live. Kept here rather than derived from `CONTACTS` because that fixture
  * is a two-dozen-row table for the contacts screen: deriving from it would put
  * "New Contacts 3" beside "Messages Sent 482,450" and make the page read as
@@ -74,7 +74,7 @@ export const AUDIENCE_INSIGHTS = {
 /* Trends                                                                     */
 /* -------------------------------------------------------------------------- */
 
-/** Twelve weeks — long enough to show a trend, short enough to label. */
+/** Twelve weeks - long enough to show a trend, short enough to label. */
 export const WEEK_LABELS = [
   "Jun 15",
   "Jun 22",
@@ -190,7 +190,7 @@ export const CHANNEL_ROWS: ChannelRow[] = [
  *
  * `kind` exists because Social does not measure in percentages the way the
  * messaging channels do: its clicks and leads are counts, and drawing 4,200
- * clicks as a 4,200% bar — or silently dividing it by something — is how a
+ * clicks as a 4,200% bar - or silently dividing it by something - is how a
  * comparison widget starts lying. A `count` metric prints its figure and
  * skips the bar.
  */
@@ -204,7 +204,7 @@ export interface ChannelActivityRow {
   channel: Channel;
   /** Messages for the messaging channels, posts for Social. */
   volume: number;
-  /** The noun `volume` is counted in — "messages", "emails", "posts". */
+  /** The noun `volume` is counted in - "messages", "emails", "posts". */
   unit: string;
   /** Exactly three, and not the same three for every channel. */
   metrics: [ChannelMetric, ChannelMetric, ChannelMetric];
@@ -213,8 +213,8 @@ export interface ChannelActivityRow {
 /**
  * How much each channel carried, and how well it did.
  *
- * The two halves used to be separate cards — a send-volume chart above a
- * performance table — which asked a reader to hold "WhatsApp sent the most"
+ * The two halves used to be separate cards - a send-volume chart above a
+ * performance table - which asked a reader to hold "WhatsApp sent the most"
  * and "WhatsApp converts best" in their head and join them. They are one
  * question about one channel, so they are one row.
  *
@@ -276,7 +276,7 @@ export interface FunnelStage {
   count: number;
   /**
    * What the step actually counts. Rendered on the first row only, where there
-   * is no drop-off percentage to show instead — optional because a funnel used
+   * is no drop-off percentage to show instead - optional because a funnel used
    * as a secondary panel does not always need the gloss.
    */
   hint?: string;
@@ -284,7 +284,7 @@ export interface FunnelStage {
 
 /**
  * One population thinning at each step, so every stage is a subset of the one
- * above it — a funnel where a later stage is larger is a data bug, not an
+ * above it - a funnel where a later stage is larger is a data bug, not an
  * insight.
  */
 export const CONVERSION_FUNNEL: FunnelStage[] = [
@@ -299,7 +299,7 @@ export const CONVERSION_FUNNEL: FunnelStage[] = [
  * The two rate metrics the Marketing workspace opens with.
  *
  * Read out of the funnel rather than stated, so the KPI row and the funnel
- * panel below it cannot drift apart — they are the same five numbers, once as
+ * panel below it cannot drift apart - they are the same five numbers, once as
  * a headline and once as a shape. Only the period-over-period changes are
  * fixtures, because a rate's movement is not derivable from a single window.
  *

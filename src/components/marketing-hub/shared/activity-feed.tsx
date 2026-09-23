@@ -47,7 +47,7 @@ export function ActivityFeed({
    * `base` is the default and what the Marketing workspace uses, where the feed
    * is a half-width panel beside a ranked list set at the same step. `sm` is
    * for a panel sharing a row with `RecentConversations` or an automation list,
-   * both of which title their rows at 14px — three panels side by side with two
+   * both of which title their rows at 14px - three panels side by side with two
    * title sizes between them reads as a mistake, because it is one.
    *
    * Same escape hatch as `RankedList.labelSize`, for the same reason.

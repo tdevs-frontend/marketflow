@@ -19,7 +19,7 @@ import { OptionCard, StepSection, TagPicker } from "./shared";
 import type { StepProps } from "./types";
 
 /**
- * Step 2 — who receives this, and who deliberately does not.
+ * Step 2 - who receives this, and who deliberately does not.
  *
  * The exclusion half is the reason this step is worth more than a dropdown. A
  * campaign that goes to everyone who matches a segment is one that goes to
@@ -62,7 +62,7 @@ function ContactAudience(props: StepProps) {
               hint={item.hint}
               trailing={
                 <span className="text-sm font-bold text-text-primary tabular-nums">
-                  {item.size > 0 ? formatNumber(item.size) : "—"}
+                  {item.size > 0 ? formatNumber(item.size) : "-"}
                 </span>
               }
             />
@@ -140,7 +140,7 @@ function ContactAudience(props: StepProps) {
                   label={option.label}
                   hint={
                     option.locked
-                      ? `${option.hint} — always applied`
+                      ? `${option.hint} - always applied`
                       : option.hint
                   }
                 />
@@ -205,7 +205,7 @@ function ContactAudience(props: StepProps) {
  *
  * Three numbers rather than one, because they have three different fixes.
  * Excluded is a choice this screen made. Invalid is a data problem that no
- * campaign setting can solve. Eligible is what will actually be sent — and it
+ * campaign setting can solve. Eligible is what will actually be sent - and it
  * is the only number the Send step is allowed to quote.
  */
 function EligibilityPanel({ derived }: StepProps) {

@@ -21,7 +21,7 @@ import { VersionHistoryDialog } from "./version-history";
 /**
  * Everything about the workflow that is not a step.
  *
- * Grouped by the question each section answers — who gets in, who is never let
+ * Grouped by the question each section answers - who gets in, who is never let
  * in, what takes them out, what counts as success, when we are allowed to
  * send, and what happens when a send fails. Six questions, six cards. One long
  * form would be shorter to write and far harder to audit, and these are the
@@ -168,7 +168,7 @@ export function WorkflowSettings({
                 {
                   value: "every_time",
                   label: "Every time the trigger fires",
-                  hint: "For recurring events — orders, appointments, birthdays",
+                  hint: "For recurring events - orders, appointments, birthdays",
                 },
                 {
                   value: "cooldown",
@@ -684,7 +684,7 @@ export function WorkflowSettings({
 
       <div className="sticky bottom-4 z-10 flex flex-wrap items-center justify-end gap-2.5 rounded-card border border-border bg-surface/95 px-4 py-3 shadow-float backdrop-blur">
         <p className="mr-auto text-sm text-text-muted">
-          Settings apply to contacts entering from now on — people already
+          Settings apply to contacts entering from now on - people already
           inside keep the rules they entered under.
         </p>
         <Button

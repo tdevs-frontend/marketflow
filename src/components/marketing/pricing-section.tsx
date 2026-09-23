@@ -11,7 +11,7 @@ export function PricingSection({
    * A trail above the heading, for the routes that have one.
    *
    * A slot rather than a flag, because this section is shared with the home
-   * page — where there is nothing to trail from — and the breadcrumb's own
+   * page - where there is nothing to trail from - and the breadcrumb's own
    * items belong to the route rendering it, not to the pricing copy. Omitted,
    * nothing renders and the header is exactly what it was.
    */

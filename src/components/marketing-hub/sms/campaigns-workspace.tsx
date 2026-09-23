@@ -61,14 +61,14 @@ import { SmsComposer, SmsPreview } from "./composer";
  * campaign look simply expensive rather than fixable.
  *
  * No KPI row. This page used to open on Messages Sent, Delivered, Replies and
- * Total Spend — the same four figures, from the same totals, that the module
+ * Total Spend - the same four figures, from the same totals, that the module
  * Overview shows one click away. A number that appears twice is a number that
  * can disagree with itself, and neither copy is the one anyone came here for:
  * this is where campaigns are found, filtered and started, and the table is
  * the page.
  *
  * Compose opens a dialog rather than a page. An SMS is one message and a
- * schedule — routing that through the seven-step campaign wizard would be
+ * schedule - routing that through the seven-step campaign wizard would be
  * ceremony. What the dialog does owe the reader is the chain that decides the
  * bill, in the order it resolves: the message sets the segment count, the
  * audience sets the recipients, and the two multiply into a cost that is
@@ -153,7 +153,7 @@ export function SmsCampaignsWorkspace() {
     "Hi {{first_name}}, your appointment is scheduled for {{appointment_date}}.",
   );
   /* Real state rather than an uncontrolled pair of inputs, because the review
-     line has to say what will actually happen — "Send now" and "9:00 AM on the
+     line has to say what will actually happen - "Send now" and "9:00 AM on the
      14th" are different promises and the button used to make both at once. */
   const [schedule, setSchedule] = useState<"now" | "later">("later");
   const [draftDate, setDraftDate] = useState("");
@@ -174,7 +174,7 @@ export function SmsCampaignsWorkspace() {
       ? "Send now"
       : draftDate
         ? /* The midnight suffix keeps the parse local. A bare "2026-09-20" is
-             read as UTC, which renders as the 19th for anyone west of it — and
+             read as UTC, which renders as the 19th for anyone west of it - and
              a send date that is off by one is the worst kind of wrong. */
           `${formatDate(`${draftDate}T00:00:00`)} at ${draftTime}`
         : "No date set";
@@ -484,7 +484,7 @@ export function SmsCampaignsWorkspace() {
 
                         <TD align="right" className="font-bold text-text-primary tabular-nums">
                           {campaign.cost === 0 ? (
-                            <span className="font-normal text-text-muted">—</span>
+                            <span className="font-normal text-text-muted">-</span>
                           ) : (
                             formatCurrency(campaign.cost)
                           )}
@@ -584,7 +584,7 @@ export function SmsCampaignsWorkspace() {
                         {
                           label: "Cost",
                           value:
-                            campaign.cost === 0 ? "—" : formatCurrency(campaign.cost),
+                            campaign.cost === 0 ? "-" : formatCurrency(campaign.cost),
                         },
                       ].map((cell) => (
                         <div
@@ -674,7 +674,7 @@ export function SmsCampaignsWorkspace() {
         {/* Numbered, because the four sections are a chain rather than a form:
             the message decides the segment count, the audience decides the
             recipients, and those two multiply into the figure in the review
-            line. Steps rather than a wizard — every step stays on screen, so
+            line. Steps rather than a wizard - every step stays on screen, so
             editing the message and watching the cost move is one motion. */}
         <div className="space-y-5">
           <ComposeStep
@@ -697,7 +697,7 @@ export function SmsCampaignsWorkspace() {
                 htmlFor="sms-sender"
                 hint={
                   draftSenderRecord && !canReceiveReplies(draftSenderRecord.type)
-                    ? "Alphanumeric — replies to this campaign go nowhere."
+                    ? "Alphanumeric - replies to this campaign go nowhere."
                     : "Replies come back to this number."
                 }
               >
@@ -800,7 +800,7 @@ export function SmsCampaignsWorkspace() {
 
           {/* The review. Four figures and no controls: this is what the button
               underneath commits to, and the cost is the one nobody can work
-              out in their head — segments times recipients times the rate. */}
+              out in their head - segments times recipients times the rate. */}
           <div
             className={cn(
               "rounded-panel border px-3.5 py-3",
@@ -862,7 +862,7 @@ export function SmsCampaignsWorkspace() {
                   label: "Delivery rate",
                   value:
                     preview.sent === 0
-                      ? "—"
+                      ? "-"
                       : formatPercent(rate(preview.delivered, preview.sent)),
                 },
                 {
@@ -871,7 +871,7 @@ export function SmsCampaignsWorkspace() {
                 },
                 {
                   label: "Total cost",
-                  value: preview.cost === 0 ? "—" : formatCurrency(preview.cost),
+                  value: preview.cost === 0 ? "-" : formatCurrency(preview.cost),
                 },
               ].map((row) => (
                 <div key={row.label}>

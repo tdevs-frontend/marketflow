@@ -81,7 +81,7 @@ const CONSENT_ICON: Record<ContactChannel, typeof Mail> = {
  *
  * One component rather than two because the fields, the validation and the
  * consent block are identical and only the title, the button and the initial
- * values differ — two copies is how "Add" gains a field that "Edit" silently
+ * values differ - two copies is how "Add" gains a field that "Edit" silently
  * drops.
  *
  * Validation runs on submit and the dialog stays open on failure, which is the
@@ -119,7 +119,7 @@ export function ContactFormDialog({
   /*
    * Load the subject during render rather than in an effect.
    *
-   * Keyed on the contact's id — or `"new"` when creating — so opening the
+   * Keyed on the contact's id - or `"new"` when creating - so opening the
    * dialog for a different contact reloads the fields while a re-render for
    * the same one keeps whatever has been typed. An effect would paint the
    * previous contact's values for a frame first.
@@ -166,7 +166,7 @@ export function ContactFormDialog({
 
   function submit() {
     setSubmitted(true);
-    /* Stays open on failure — nothing typed is thrown away. */
+    /* Stays open on failure - nothing typed is thrown away. */
     if (invalid) return;
     onSaved(`${first.trim()} ${last.trim()}`.trim(), Boolean(contact));
   }
@@ -413,7 +413,7 @@ export function ContactFormDialog({
                 </label>
               ))}
             <p className="px-2 text-sm text-text-muted">
-              Only manual segments are listed — rule-based membership is
+              Only manual segments are listed - rule-based membership is
               computed.
             </p>
           </div>
@@ -532,7 +532,7 @@ export function TagPickerDialog({
  *
  * Rule-based segments are excluded and say why. Their membership is the result
  * of their rules, so hand-adding someone would either be silently reverted on
- * the next evaluation or quietly corrupt the rule's meaning — both worse than
+ * the next evaluation or quietly corrupt the rule's meaning - both worse than
  * not offering it.
  */
 export function SegmentPickerDialog({
@@ -619,7 +619,7 @@ export function SegmentPickerDialog({
           </ul>
 
           <p className="text-sm text-text-muted">
-            Rule-based segments cannot take contacts by hand — edit their rules
+            Rule-based segments cannot take contacts by hand - edit their rules
             on the Segments page instead.
           </p>
         </div>

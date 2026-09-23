@@ -44,12 +44,12 @@ import { IntegrationManageDrawer } from "./integration-manage-drawer";
  * Its whole job is the first two seconds, and there are exactly four questions:
  * what is connected, what is waiting on someone, what is broken, and how do I
  * deal with each. The KPI strip answers the first three before a merchant reads
- * a single card — and the Issues tile is the one they are meant to press, which
+ * a single card - and the Issues tile is the one they are meant to press, which
  * is why it filters rather than merely counting.
  *
  * The grid below is a catalogue, not a dashboard: one continuous run of cards
  * in one shape, which is what makes nine of them scannable. Category is a way
- * to narrow that run — it lives in the filter row beside status and search —
+ * to narrow that run - it lives in the filter row beside status and search -
  * and not a set of headings that cut the grid into five short rows, most of
  * them holding one card with two thirds of the row left empty.
  *
@@ -124,7 +124,7 @@ export function IntegrationsHub() {
    *
    * The first three tiles are deliberately inert. They restate the same four
    * states the chip row is made of, and a count that is *also* a filter gives
-   * the page two controls for one question — press "Issues" the tile and
+   * the page two controls for one question - press "Issues" the tile and
    * "Issues" the chip and only one of them looks pressed afterwards. Events
    * Today is the exception because it has no chip: pressing it opens the
    * activity behind the figure, which is a drill-down, not a filter.
@@ -175,7 +175,7 @@ export function IntegrationsHub() {
          * The last two are what make the box worth typing into: "analytics"
          * and "issue" are how a merchant describes what they are looking for
          * long before they remember it is called Meta Pixel. The description
-         * stays in too — it is where "orders" finds Shopify.
+         * stays in too - it is where "orders" finds Shopify.
          */
         const haystack = [
           integration.name,
@@ -227,7 +227,7 @@ export function IntegrationsHub() {
        * Both are selects in the same row rather than one of them being a strip
        * of chips. Status and category are the same kind of question asked about
        * the same list, and giving one of them a row to itself says it is the
-       * more important one — which it is not, once the grid is a single run of
+       * more important one - which it is not, once the grid is a single run of
        * cards whose states a merchant can already see. Two matched controls
        * also collapse into `FilterBar`'s sheet together on a phone, where a
        * chip strip has to scroll sideways on its own.
@@ -271,15 +271,15 @@ export function IntegrationsHub() {
         /*
          * `@container` on the wrapper; the grid inside measures against it.
          *
-         * The columns used to be chosen from the *viewport* — `sm:` and `xl:`
-         * — which is the wrong ruler on a dashboard page. The sidebar takes
+         * The columns used to be chosen from the *viewport* - `sm:` and `xl:`
+         * - which is the wrong ruler on a dashboard page. The sidebar takes
          * 16.5rem and the page padding another 3.5rem, so a 1280px window
          * leaves 960px of content: every breakpoint fired 320px later than the
          * cards actually needed, and the grid sat a column short of what it had
          * room for, with the difference banked as empty space on the right.
          *
          * Measured against the content box the thresholds are what they look
-         * like — 620px fits two cards, 940px fits three — and they stay true
+         * like - 620px fits two cards, 940px fits three - and they stay true
          * whatever happens to the sidebar.
          */
         <div className="@container">

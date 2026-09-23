@@ -11,7 +11,7 @@ export default function SocialCalendarPage() {
     <>
       <PageHeader
         title="Content Calendar"
-        description="Everything scheduled, published and still a draft — month, week or day."
+        description="Everything scheduled, published and still a draft - month, week or day."
       />
 
       <SocialCalendar />

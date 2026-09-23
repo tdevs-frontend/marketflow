@@ -19,20 +19,20 @@ import { HealthDot, IntegrationStatusBadge } from "./integration-badges";
  * badge, three metadata rows and one action. No provider logo at 64px, no
  * coloured card ground, no gradient, and no card nested inside it. A grid of
  * nine of these is something a merchant scans in a couple of seconds, and it
- * only stays scannable while every card is the same shape — which means the
+ * only stays scannable while every card is the same shape - which means the
  * broken one too. An Issue card that grows an error panel is a card that breaks
  * the row it is in, and the explanation it carries is one the merchant cannot
  * act on from here anyway; it lives on the detail view, where the fix is.
  *
  * The one thing that is allowed to differ before the label is read is the icon
- * tile, which wears the service's own colour — see `integrationTint`. Same
+ * tile, which wears the service's own colour - see `integrationTint`. Same
  * size, same radius, same border weight on every card; only the hue changes,
  * and it says which integration this is, never how it is doing.
  *
  * The three rows are the card's whole argument: who is carrying this
  * connection, what account it runs as, and when it last did anything. Health
  * rides on that last row as a coloured dot rather than taking a row of its own
- * — on a card this size the dot is read at the same glance as the timestamp,
+ * - on a card this size the dot is read at the same glance as the timestamp,
  * and a fourth row would push the button out of line with its neighbours.
  *
  * The card lifts and links where there is somewhere to go; a hub-only
@@ -49,7 +49,7 @@ import { HealthDot, IntegrationStatusBadge } from "./integration-badges";
  *
  * `primary` is spent only where something is genuinely waiting on the merchant.
  * A healthy connection's Manage and a paused integration's Enable are both
- * outline — nothing is wrong in either case, and nine primary buttons in a grid
+ * outline - nothing is wrong in either case, and nine primary buttons in a grid
  * is no emphasis at all.
  */
 const ACTION: Record<
@@ -95,7 +95,7 @@ export function IntegrationCard({
     >
       <div className="flex items-start justify-between gap-3">
         {/* Identity, not state. Geometry is fixed here so a tint can only
-            ever change the colour — the border is the tile's own ink at 15%,
+            ever change the colour - the border is the tile's own ink at 15%,
             which is what stops a 50-step bed reading as a smudge. */}
         <span
           className={cn(
@@ -128,7 +128,7 @@ export function IntegrationCard({
 
       <dl className="mt-3.5 space-y-1.5 border-t border-border pt-3.5 text-sm">
         {/* Provider where one is configured, category where none is. Both
-            answer "what is behind this", which is what the row is for — and
+            answer "what is behind this", which is what the row is for - and
             the grid is one continuous list, so the category is not a heading
             the card can lean on. */}
         <div className="flex items-baseline justify-between gap-3">

@@ -30,7 +30,7 @@ import { CreateTemplateDialog } from "./template-dialogs";
  *
  * Deliberately a different page from Workflows rather than a variation of it:
  * this one is browsed, not managed. So the categories are chips across the top
- * instead of a dropdown — the fastest way to say "show me e-commerce" — and
+ * instead of a dropdown - the fastest way to say "show me e-commerce" - and
  * there is no table view, because comparing templates by number is not a
  * question anybody asks.
  */

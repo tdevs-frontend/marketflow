@@ -9,7 +9,7 @@ import { formatArticleDate, type BlogArticle } from "@/constants/blog";
  * One article, as a card.
  *
  * The same component on the landing section and on `/blog`, because they are
- * the same object and two components would drift — the first thing to go is
+ * the same object and two components would drift - the first thing to go is
  * always the image ratio, and a row of cards whose thumbnails are not the same
  * shape reads as broken long before anyone works out why.
  *
@@ -19,7 +19,7 @@ import { formatArticleDate, type BlogArticle } from "@/constants/blog";
  *
  * The whole card is one link. A card with a separate "Read article" anchor
  * inside it gives a screen reader two destinations that go to the same place
- * and gives a mouse a target that is mostly dead — so the arrow is decorative
+ * and gives a mouse a target that is mostly dead - so the arrow is decorative
  * and the `<article>` is the hit area.
  */
 export function BlogCard({

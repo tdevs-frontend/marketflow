@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 /**
  * The active tab lives in the query string, so the panel reads
- * `useSearchParams` — and a client component that does cannot be statically
+ * `useSearchParams` - and a client component that does cannot be statically
  * prerendered unless something above it can suspend. This boundary is that
  * something: the shell is built at build time, the panel resolves on the
  * client against whatever `?tab=` says, and a link to `?tab=plans` opens on

@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
  * Hover and focus tooltip.
  *
  * Opens on pointer *and* on keyboard focus, and the trigger points at the
- * bubble with `aria-describedby` — a title-attribute tooltip is invisible to
+ * bubble with `aria-describedby` - a title-attribute tooltip is invisible to
  * touch and unreliable to screen readers, and a hover-only one is unreachable
  * by keyboard. Escape closes it, because a tooltip pinned open over the thing
  * you are reading is worse than none.
@@ -29,13 +29,13 @@ import { cn } from "@/lib/utils";
  * The bubble renders on an overlay layer rather than next to its trigger.
  *
  * It used to be an `absolute` span inside a `relative` wrapper, which is fine
- * until the trigger sits in a scroll container — and in this product it
+ * until the trigger sits in a scroll container - and in this product it
  * usually does. The composer's segment hint lives inside a `Dialog`, whose
  * body is `overflow-y-auto`: an absolutely positioned bubble above that
  * trigger extended the scrollable area upward, so the dialog gained scroll
  * height and visibly jumped the moment you hovered the `?`. The same bubble
  * near a viewport edge widened the document and produced a horizontal
- * scrollbar. Both are the same bug — the tooltip was participating in layout.
+ * scrollbar. Both are the same bug - the tooltip was participating in layout.
  *
  * Now it is `position: fixed` in a portal, so it is measured against the
  * viewport and contributes nothing to any ancestor's scroll box. Nothing it
@@ -46,7 +46,7 @@ import { cn } from "@/lib/utils";
  * modal dialog paints in the browser's *top layer*, above every z-index in the
  * page. A tooltip portaled to `document.body` would therefore be invisible
  * behind any open modal, whatever `z-50` says. So a trigger inside an open
- * `<dialog>` portals into that dialog — joining it in the top layer — and
+ * `<dialog>` portals into that dialog - joining it in the top layer - and
  * everything else portals to the body. Neither element is a containing block
  * for fixed positioning (no transform, filter or contain), so the coordinates
  * mean the same thing in both.
@@ -72,7 +72,7 @@ interface Placement {
  * bubble half off the top of a short viewport is still more readable than one
  * that jitters between sides as the page scrolls.
  *
- * `clientWidth` rather than `innerWidth` on purpose — the latter includes the
+ * `clientWidth` rather than `innerWidth` on purpose - the latter includes the
  * vertical scrollbar, and clamping against it parks the bubble underneath.
  */
 function place(trigger: DOMRect, bubble: DOMRect, preferred: Side): Placement {
@@ -95,8 +95,8 @@ function place(trigger: DOMRect, bubble: DOMRect, preferred: Side): Placement {
     side === "top" ? trigger.top - OFFSET - bubble.height : trigger.bottom + OFFSET;
 
   /* Centred on the trigger, then pulled back inside whichever edge it crossed.
-     When the bubble is wider than the viewport allows — a long string on a
-     narrow phone — it pins to the left margin and `max-width` wraps the rest
+     When the bubble is wider than the viewport allows - a long string on a
+     narrow phone - it pins to the left margin and `max-width` wraps the rest
      rather than letting it run off and widen the page. */
   const centred = trigger.left + trigger.width / 2 - bubble.width / 2;
   const furthestLeft = viewportWidth - EDGE - bubble.width;
@@ -130,7 +130,7 @@ export function Tooltip({
   /*
    * The layer doubles as the open flag: a tooltip is open exactly when it has
    * somewhere to render. One state rather than two means they cannot disagree,
-   * and it is resolved in the pointer handler rather than in an effect — the
+   * and it is resolved in the pointer handler rather than in an effect - the
    * trigger is already in the DOM by then, so there is nothing to wait for and
    * no cascading render to pay for. It starts null, so the server renders the
    * trigger alone.
@@ -167,7 +167,7 @@ export function Tooltip({
 
   /* Before paint: the bubble is mounted but hidden, so it can be measured at
      its real width without a flash at the wrong coordinates. Measuring the DOM
-     and writing the result back is what `useLayoutEffect` is for — the bubble
+     and writing the result back is what `useLayoutEffect` is for - the bubble
      cannot be placed until the browser has told us how big it is. */
   useLayoutEffect(() => {
     if (!layer) return;
@@ -199,7 +199,7 @@ export function Tooltip({
         /* Held back for one frame while it is measured. */
         visibility: placement ? "visible" : "hidden",
         /* Caps the bubble at its design width, or at the viewport on a phone
-           too narrow for it — the guard against a long label widening the
+           too narrow for it - the guard against a long label widening the
            page instead of wrapping. */
         maxWidth: `min(14rem, calc(100vw - ${EDGE * 2}px))`,
       }}
@@ -237,7 +237,7 @@ export function Tooltip({
 }
 
 /**
- * The `?` next to a metric whose definition is not obvious — "reply rate of
+ * The `?` next to a metric whose definition is not obvious - "reply rate of
  * what, exactly". Its own component so every one of them is the same size.
  */
 export function InfoHint({ content }: { content: ReactNode }) {

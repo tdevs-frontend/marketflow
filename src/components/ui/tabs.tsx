@@ -17,7 +17,7 @@ export const panelId = (idBase: string, value: string) =>
   `${idBase}-panel-${value}`;
 
 /**
- * An underlined tab strip with real `tablist` semantics — arrow keys move
+ * An underlined tab strip with real `tablist` semantics - arrow keys move
  * between tabs and each panel is wired to its tab, which is the behaviour the
  * role promises. (The chart filters elsewhere use `SegmentedControl`, which
  * deliberately does not claim it.)
@@ -47,7 +47,7 @@ export function Tabs<T extends string>({
    * of the panel edge reads as a stray underline rather than as a divider.
    *
    * Turn it off at page level. There the parent is `<main>`, whose padding runs
-   * 16px on a phone and 28px on a desktop — so a fixed −20px does not cancel
+   * 16px on a phone and 28px on a desktop - so a fixed −20px does not cancel
    * anything, it just pushes the strip out of alignment with every other block
    * on the page, and at 16px it pushes it off the screen entirely.
    */

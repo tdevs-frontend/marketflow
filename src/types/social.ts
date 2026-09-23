@@ -1,8 +1,8 @@
 /**
  * Social Planner.
  *
- * A post is multi-platform by design — the same caption goes to Instagram and
- * Facebook in one action — so `platforms` is a list, and the calendar renders
+ * A post is multi-platform by design - the same caption goes to Instagram and
+ * Facebook in one action - so `platforms` is a list, and the calendar renders
  * one card per post rather than one per platform.
  */
 
@@ -41,7 +41,7 @@ export interface SocialPost {
   publishedAt?: string;
   author: string;
   engagement: PostEngagement;
-  /** Set on `failed` — the calendar card says why without a round trip. */
+  /** Set on `failed` - the calendar card says why without a round trip. */
   failureReason?: string;
 }
 
@@ -78,7 +78,7 @@ export interface MediaAsset {
   /**
    * The frame to show instead of the asset.
    *
-   * Videos need one — a grid must not fetch and decode an MP4 to draw a
+   * Videos need one - a grid must not fetch and decode an MP4 to draw a
    * 200px tile, and it must certainly not autoplay one. It is also the escape
    * hatch for any asset whose own file is the wrong thing to paint.
    */
@@ -109,7 +109,7 @@ export type SocialTrendPeriod = "7d" | "30d" | "90d";
  * One window of the reach trend, and the window immediately before it.
  *
  * `previous` is a real slice of the same daily record rather than a separate
- * dataset — that is what lets the chart draw an honest comparison line and the
+ * dataset - that is what lets the chart draw an honest comparison line and the
  * header state a change percentage that cannot drift from the series under it.
  */
 export interface ReachWindow {
@@ -129,7 +129,7 @@ export interface ReachWindow {
 /**
  * The connection half of a social account.
  *
- * These fields describe the *authorisation*, not the audience — who granted it,
+ * These fields describe the *authorisation*, not the audience - who granted it,
  * what it is allowed to do, and whether it still works. They live on
  * `SocialAccount` rather than in a parallel record in the Integrations module
  * because there is one connected account, and two datasets describing it is how
@@ -146,7 +146,7 @@ export type SocialCapabilityKey = "publish" | "analytics" | "comments" | "media"
  *
  * `needs_reauth` is kept apart from `missing` because the fix differs: one was
  * never granted and may not be available on the plan, the other was granted and
- * has lapsed — and only the second is fixed by pressing Reconnect.
+ * has lapsed - and only the second is fixed by pressing Reconnect.
  */
 export type CapabilityState = "granted" | "missing" | "needs_reauth";
 
@@ -205,7 +205,7 @@ export interface SocialAccount {
   /* ---------------------------------------------------------- Connection */
 
   /**
-   * What this is on the provider's side — "Facebook Page", "Instagram Business
+   * What this is on the provider's side - "Facebook Page", "Instagram Business
    * account", "LinkedIn Organization". Providers model their resources
    * differently and the noun is part of what the merchant recognises.
    */
@@ -214,7 +214,7 @@ export interface SocialAccount {
   externalId: string;
   auth: SocialAuth;
   capabilities: SocialCapability[];
-  /** Integration behaviour only — what the Planner is *allowed* to do. */
+  /** Integration behaviour only - what the Planner is *allowed* to do. */
   publishing: {
     enabled: boolean;
     /** Offered to Social Planner as a publish target. */
@@ -226,7 +226,7 @@ export interface SocialAccount {
   postsToday: number;
 }
 
-/** A row in the connection-level event log — syncs, refreshes, failures. */
+/** A row in the connection-level event log - syncs, refreshes, failures. */
 export interface SocialActivityEvent {
   id: string;
   accountId: string;
@@ -243,7 +243,7 @@ export interface SocialActivityEvent {
 /**
  * A platform MarketFlow can connect, whether or not it is built yet.
  *
- * `platform` is `null` for a provider with no publishing pipeline behind it —
+ * `platform` is `null` for a provider with no publishing pipeline behind it -
  * that is what makes "Coming Soon" honest rather than a card that pretends to
  * connect. Keeping availability in the catalogue means the connect dialog, the
  * hub card and the empty states all agree without any of them special-casing a
@@ -254,7 +254,7 @@ export type ProviderAvailability = "available" | "coming_soon";
 export interface SocialProvider {
   id: string;
   label: string;
-  /** What the provider calls the thing you connect — "Page", "Organization". */
+  /** What the provider calls the thing you connect - "Page", "Organization". */
   resourceNoun: string;
   /** `null` until the publishing pipeline for it exists. */
   platform: SocialPlatform | null;

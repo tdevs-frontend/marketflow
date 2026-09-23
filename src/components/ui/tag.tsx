@@ -18,7 +18,7 @@ export function Tag({
   className,
 }: {
   label: string;
-  /** Present only where the tag is editable — adds the remove affordance. */
+  /** Present only where the tag is editable - adds the remove affordance. */
   onRemove?: () => void;
   /** Class pair for ground and ink. Defaults to the neutral chip. */
   tone?: string;
@@ -65,7 +65,7 @@ export function TagList({
   className?: string;
 }) {
   if (tags.length === 0) {
-    return <span className="text-sm text-text-muted">—</span>;
+    return <span className="text-sm text-text-muted">-</span>;
   }
 
   const shown = tags.slice(0, max);

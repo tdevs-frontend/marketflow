@@ -97,7 +97,7 @@ export interface SmsSenderId {
   note?: string;
 }
 
-/** Alphanumeric senders are one-way — there is no number for a reply to reach. */
+/** Alphanumeric senders are one-way - there is no number for a reply to reach. */
 export const canReceiveReplies = (type: SmsSenderType) => type !== "alphanumeric";
 
 /* -------------------------------------------------------------------------- */
@@ -114,7 +114,7 @@ export interface SmsContact {
   country: string;
   tags: string[];
   status: SmsContactStatus;
-  /** Where this person sits in the pipeline — shared vocabulary with the CRM. */
+  /** Where this person sits in the pipeline - shared vocabulary with the CRM. */
   leadStatus: string;
   messages: number;
   replies: number;
@@ -134,7 +134,7 @@ export type SmsTrendPeriod = "7d" | "30d" | "90d";
  *
  * Failures are a stored series rather than `sent - delivered`, because a
  * message can be accepted by the gateway and still be in flight when the day
- * closes — subtracting would draw that backlog as a failure it is not.
+ * closes - subtracting would draw that backlog as a failure it is not.
  */
 export interface SmsTrendSeries {
   labels: string[];

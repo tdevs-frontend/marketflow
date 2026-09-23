@@ -18,7 +18,7 @@ export const metadata: Metadata = {
    */
   title: {
     absolute:
-      "MarketFlow Features — CRM, Marketing Automation & Customer Conversations",
+      "MarketFlow Features - CRM, Marketing Automation & Customer Conversations",
   },
   description:
     "Explore MarketFlow features for CRM, WhatsApp automation, marketing campaigns, commerce, customer journeys, analytics and integrations.",
@@ -43,7 +43,7 @@ export default function FeaturesPage() {
       <PlatformFlow />
 
       {/*
-       * The integrations block, and the whole of it — the claim and the ten
+       * The integrations block, and the whole of it - the claim and the ten
        * marks that back it, each linking to the page in the workspace that
        * configures it. A wall a buyer can click through is the cheapest claim
        * on this page to verify.
@@ -58,7 +58,7 @@ export default function FeaturesPage() {
 
       {/*
        * `FeaturesCta`, not the shared `FinalCta` the other marketing routes
-       * close on. Same `cta-surface` panel, same type, same pair of buttons —
+       * close on. Same `cta-surface` panel, same type, same pair of buttons -
        * the difference is the second one. `FinalCta` offers "Explore the
        * Platform", which on this page is a link back to this page.
        */}

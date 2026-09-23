@@ -24,8 +24,8 @@ import { EmailTemplateBuilder } from "./template-builder";
  *
  * Cards rather than a table, and each card shows a miniature of the layout
  * rather than a thumbnail image: what distinguishes two templates is their
- * *structure* — where the image sits, how many buttons, whether there is a
- * product grid — and a stack of grey bars at the right proportions conveys
+ * *structure* - where the image sits, how many buttons, whether there is a
+ * product grid - and a stack of grey bars at the right proportions conveys
  * that faster than a screenshot scaled to 200px.
  *
  * Selecting Edit swaps the whole page for the builder rather than opening a
@@ -40,8 +40,8 @@ const CATEGORY_TONES: Record<EmailTemplateCategory, BadgeTone> = {
   promotion: "warning",
   welcome: "brand",
   "follow-up": "neutral",
-  /* Transactional is the one shelf that is not marketing at all — a receipt
-     goes to someone who never opted in — so it wears its own tone rather than
+  /* Transactional is the one shelf that is not marketing at all - a receipt
+     goes to someone who never opted in - so it wears its own tone rather than
      sharing the neutral the follow-ups use. */
   transactional: "success",
 };
@@ -50,7 +50,7 @@ const CATEGORY_TONES: Record<EmailTemplateCategory, BadgeTone> = {
  * A blank template for the Create path.
  *
  * Logo and footer are pre-placed because every email needs both and the
- * builder treats them as structural — starting with a truly empty canvas just
+ * builder treats them as structural - starting with a truly empty canvas just
  * means the first two things anyone does are add them back.
  */
 const BLANK_TEMPLATE: EmailTemplate = {
@@ -156,7 +156,7 @@ export function EmailTemplatesWorkspace() {
    *
    * Duplicate and Delete used to raise a toast and change nothing, so the card
    * you had just copied never appeared and the one you deleted was still
-   * there — a confirmation dialog whose confirmation did nothing. Seeded from
+   * there - a confirmation dialog whose confirmation did nothing. Seeded from
    * the fixture, which a backend will replace with the fetched list.
    */
   const [templates, setTemplates] = useState(EMAIL_TEMPLATES);
@@ -180,7 +180,7 @@ export function EmailTemplatesWorkspace() {
       name: `${template.name} (copy)`,
       status: "draft",
       /* A copy inherits the layout, never the record of sends the original
-         earned — its own usage starts at nothing. */
+         earned - its own usage starts at nothing. */
       usageCount: 0,
       openRate: 0,
       clickRate: 0,

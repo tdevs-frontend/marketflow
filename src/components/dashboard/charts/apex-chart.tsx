@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * The single place ApexCharts enters the app. It touches `window` at module
- * scope, so `ssr: false` keeps it out of the server bundle — and that flag is
+ * scope, so `ssr: false` keeps it out of the server bundle - and that flag is
  * only legal in a Client Component, which is why this is the boundary.
  */
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {

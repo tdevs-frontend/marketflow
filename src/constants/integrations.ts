@@ -19,7 +19,7 @@ import type {
  *
  * Three tables and nothing else: what the states are called, which provider
  * adapters exist, and which events and scopes a merchant can pick from. The
- * components read these — none of them carries a `switch` over a provider name,
+ * components read these - none of them carries a `switch` over a provider name,
  * which is what keeps "add Postmark" a data change rather than a UI change.
  */
 
@@ -82,8 +82,8 @@ export const WEBHOOK_STATUS_LABEL: Record<WebhookStatus, string> = {
  * reach a customer first, then the store the customers come from, then the
  * measurement, then the plumbing.
  *
- * These are a filter axis, not headings. The hub renders one continuous grid —
- * nine integrations split across five headings is mostly headings — so a
+ * These are a filter axis, not headings. The hub renders one continuous grid -
+ * nine integrations split across five headings is mostly headings - so a
  * category is how a merchant narrows the list, and the card names its own in
  * the row where no provider is configured.
  */
@@ -113,8 +113,8 @@ export function categoryLabel(value: IntegrationCategory): string {
  * The icon tile's colours, per integration.
  *
  * Nine grey tiles in a grid make a merchant read nine names to find the one
- * they came for. A tinted tile is recognised before the label is — which is
- * what a mark is for — so each integration wears the colour its service is
+ * they came for. A tinted tile is recognised before the label is - which is
+ * what a mark is for - so each integration wears the colour its service is
  * already known by: WhatsApp's green, Shopify's olive, Meta's cobalt, amber for
  * SMS.
  *
@@ -369,8 +369,8 @@ export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
 
   /* ----------------------------------------------- Analytics & Commerce */
   /*
-   * The hub-only integrations. They have no page of their own — there is
-   * nothing to monitor beyond "is it connected" — but they go through exactly
+   * The hub-only integrations. They have no page of their own - there is
+   * nothing to monitor beyond "is it connected" - but they go through exactly
    * the same connect flow, which is the point of generating it from `fields`.
    */
   {
@@ -604,9 +604,9 @@ export function scopeSummary(scopes: string[]): string {
  * The social platforms MarketFlow can connect, built or not.
  *
  * Deliberately not a Meta-shaped list with others bolted on. Every entry
- * declares its own `resourceNoun` — a Facebook Page, an Instagram Business
+ * declares its own `resourceNoun` - a Facebook Page, an Instagram Business
  * account, a LinkedIn Organization are three different things and the connect
- * flow says which one it is asking you to pick — and its own capability set,
+ * flow says which one it is asking you to pick - and its own capability set,
  * so a platform that cannot report analytics is not shown promising them.
  *
  * `availability` is what keeps "Coming Soon" honest. TikTok has no publishing
@@ -658,7 +658,7 @@ export const SOCIAL_PROVIDERS: SocialProvider[] = [
     id: "tiktok",
     label: "TikTok",
     resourceNoun: "Business account",
-    /* No publishing pipeline behind it yet — `null` is what makes the picker
+    /* No publishing pipeline behind it yet - `null` is what makes the picker
        show it as unavailable instead of opening a flow that cannot finish. */
     platform: null,
     availability: "coming_soon",
@@ -695,7 +695,7 @@ export const SOCIAL_CAPABILITY_DETAIL: Record<SocialCapabilityKey, string> = {
   media: "Upload images and video to the account's library.",
 };
 
-/** The provider scopes behind each capability — shown only under Advanced. */
+/** The provider scopes behind each capability - shown only under Advanced. */
 export const SOCIAL_CAPABILITY_SCOPES: Record<
   string,
   Partial<Record<SocialCapabilityKey, string>>

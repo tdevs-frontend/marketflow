@@ -23,7 +23,7 @@ import type { DraftDerived } from "./draft";
  * survives the fold.
  *
  * Deliberately restrained. These are built from the same panels, borders and
- * type scale as the rest of the dashboard — a pixel-accurate iPhone frame would
+ * type scale as the rest of the dashboard - a pixel-accurate iPhone frame would
  * be a second design system, and it would still be wrong on Android.
  */
 
@@ -80,7 +80,7 @@ function WhatsAppPreview({ body }: { body: string }) {
         </div>
 
         <div className="px-3.5 py-4">
-          {/* Outbound bubble: tail on the right, ticks in the corner — the two
+          {/* Outbound bubble: tail on the right, ticks in the corner - the two
               details that make a WhatsApp message recognisable at a glance. */}
           <div className="ml-auto max-w-[85%] rounded-panel rounded-tr-none bg-surface px-3 py-2 shadow-card">
             <p className="text-sm leading-relaxed whitespace-pre-wrap text-text-primary">
@@ -136,7 +136,7 @@ function EmailPreview({
             device === "mobile" ? "mx-auto max-w-sm" : "w-full",
           )}
         >
-          {/* The inbox row, before the open — subject and preview text are read
+          {/* The inbox row, before the open - subject and preview text are read
               together there or not at all. */}
           <div className="border-b border-border px-4 py-3">
             <p className="text-sm font-medium text-text-muted">

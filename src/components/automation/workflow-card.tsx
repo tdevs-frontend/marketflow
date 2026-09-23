@@ -84,7 +84,7 @@ export function workflowMenuItems(
  * The mini-map is the point of this card: it answers "what does this
  * automation actually do" without an open, which a name and a status badge
  * cannot. Everything else is the three numbers that decide whether it is worth
- * opening — how many entered, how many converted, and the rate between them.
+ * opening - how many entered, how many converted, and the rate between them.
  *
  * The status is a subtle badge, never a coloured card. Seventeen of these in a
  * grid, each tinted by state, is a dashboard nobody can read.
@@ -139,7 +139,7 @@ export function WorkflowCard({
       </div>
 
       {/* Active, entered, conversion. The first is what is happening now, the
-          second is the scale it has run at, the third is whether it works —
+          second is the scale it has run at, the third is whether it works -
           three questions, and nothing on the card that answers none of them. */}
       <dl className="mt-3 grid grid-cols-3 gap-2 border-t border-border pt-3">
         <div>
@@ -182,6 +182,6 @@ export function WorkflowCard({
   );
 }
 
-/** The completion figure the table shows — a share of everyone who entered. */
+/** The completion figure the table shows - a share of everyone who entered. */
 export const completionRate = (workflow: Workflow) =>
   rate(workflow.stats.completed, workflow.stats.entered);

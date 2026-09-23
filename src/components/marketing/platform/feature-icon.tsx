@@ -4,8 +4,8 @@ import { TONES, type PlatformFeature } from "./platform-features";
 /**
  * A module's icon, in the one size and weight the section uses everywhere.
  *
- * Two variants over one geometry — 44px tile, 12px radius, 20px glyph at 1.9
- * stroke — so a module's card tile and its orbit satellite are recognisably the
+ * Two variants over one geometry - 44px tile, 12px radius, 20px glyph at 1.9
+ * stroke - so a module's card tile and its orbit satellite are recognisably the
  * same object at a glance:
  *
  *   tile  on a card. Soft ground in the module's tone, picking up a halo in

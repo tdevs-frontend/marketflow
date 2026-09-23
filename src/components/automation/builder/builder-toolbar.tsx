@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
  *
  * Icon-only and grey, so it reads as chrome rather than as a row of actions
  * competing with Publish. Every button carries a tooltip and an accessible
- * name — an icon-only control with neither is a guess.
+ * name - an icon-only control with neither is a guess.
  *
  * The zoom percentage is a button: clicking it returns to 100%, which is the
  * one zoom level anybody ever asks for by name.

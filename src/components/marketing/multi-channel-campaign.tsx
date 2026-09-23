@@ -136,7 +136,7 @@ function CampaignCard() {
       </div>
 
       <p className="mt-4 rounded-panel bg-background px-4 py-3 text-sm text-text-secondary">
-        New collection is here — explore the latest products.
+        New collection is here - explore the latest products.
       </p>
 
       <ol className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -334,7 +334,7 @@ export function MultiChannelCampaign() {
       aria-labelledby="multi-channel-title"
       className="section-space-py relative isolate overflow-hidden bg-surface"
     >
-      {/* Curved background lines — the idea of messages travelling outward. */}
+      {/* Curved background lines - the idea of messages travelling outward. */}
       <svg
         aria-hidden
         viewBox="0 0 1200 600"
@@ -373,7 +373,7 @@ export function MultiChannelCampaign() {
 
           <p className="mt-5 text-lg leading-[1.7] text-text-secondary text-pretty">
             Create one campaign and deliver personalized experiences across{" "}
-            <span className="font-semibold text-primary">WhatsApp, Email and SMS</span> — from a
+            <span className="font-semibold text-primary">WhatsApp, Email and SMS</span> - from a
             single, unified workspace.
           </p>
         </header>

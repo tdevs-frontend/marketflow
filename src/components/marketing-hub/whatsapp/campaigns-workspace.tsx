@@ -42,7 +42,7 @@ const SORT_OPTIONS = [
 
 type SortField = (typeof SORT_OPTIONS)[number]["value"];
 
-/** Only WhatsApp campaigns — the unified list lives at /marketing/campaigns. */
+/** Only WhatsApp campaigns - the unified list lives at /marketing/campaigns. */
 const WHATSAPP_CAMPAIGNS = CAMPAIGNS.filter((item) => item.channel === "whatsapp");
 
 export function WhatsAppCampaignsWorkspace() {
@@ -107,7 +107,7 @@ export function WhatsAppCampaignsWorkspace() {
    * This page carried a four-card stat row and a "Campaign Performance" bar
    * chart. Both were readings of the whole channel rather than of any campaign
    * in the table, both were computed from the same `whatsappTotals()` call the
-   * Analytics KPIs use, and the chart plotted the five largest sends — which is
+   * Analytics KPIs use, and the chart plotted the five largest sends - which is
    * Analytics' "Campaign Comparison" with a different sort. A list page's job
    * is the list; the per-campaign delivery figures now live in the row they
    * belong to, including the failure count, which none of the removed cards
@@ -335,7 +335,7 @@ export function WhatsAppCampaignsWorkspace() {
 
                         {/* The only column where a number above zero is the
                             problem, so it is the only one that takes the error
-                            ink — a zero stays muted rather than shouting that
+                            ink - a zero stays muted rather than shouting that
                             nothing went wrong. */}
                         <TD align="right" className="tabular-nums">
                           {campaign.failed > 0 ? (
@@ -435,7 +435,7 @@ export function WhatsAppCampaignsWorkspace() {
                     </div>
 
                     {/* Five cells rather than the desktop table's ten columns,
-                        but the same five figures — a merchant checking a send on
+                        but the same five figures - a merchant checking a send on
                         a phone should not have to take the failure count on
                         trust. Labels drop to the metadata step to buy the width
                         the fifth cell costs. */}

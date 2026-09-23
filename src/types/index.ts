@@ -7,7 +7,7 @@ export * from "./automation";
 export * from "./analytics";
 
 /* Marketing modules. `marketing` is imported directly rather than re-exported
-   here — it defines `Campaign`, which `campaign.ts` also names. */
+   here - it defines `Campaign`, which `campaign.ts` also names. */
 export * from "./email";
 export * from "./sms";
 export * from "./social";

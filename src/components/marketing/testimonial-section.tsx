@@ -5,9 +5,9 @@ import { cn } from "@/lib/utils";
 /**
  * The testimonial wall: three columns of reviews, drifting.
  *
- * Dark on purpose. It sits between the platform grid and the pricing table —
+ * Dark on purpose. It sits between the platform grid and the pricing table -
  * the seam where a reader stops learning what the product does and starts
- * deciding whether to pay for it — and a dark band there is the page drawing
+ * deciding whether to pay for it - and a dark band there is the page drawing
  * a breath before the prices. The ground is a literal rather than a token for
  * the same reason the footer's navies are: it is one ramp belonging to one
  * panel, and pulling `--color-dark` toward it would drag every dark surface in
@@ -16,24 +16,24 @@ import { cn } from "@/lib/utils";
  * The three columns scroll at three speeds that share no common factor, so
  * they never fall into step and the wall never looks like one block moving.
  * Each column renders its three reviews twice and travels exactly half its own
- * height, which is what makes the loop seamless — at the end of the cycle the
+ * height, which is what makes the loop seamless - at the end of the cycle the
  * second copy is where the first began. The keyframes live in `globals.css`
  * beside the page's other animations, and all three stop under
  * `prefers-reduced-motion`.
  *
  * A marquee that ends in a hard edge reads as a clipped list rather than as a
- * wall that continues, so both ends are softened — by masking the columns, not
+ * wall that continues, so both ends are softened - by masking the columns, not
  * by painting the ground colour over them.
  *
  * Both fades were panels of flat `#080622` once. That cannot work at the top,
  * where the bloom and the corner wedge tint the ground: a flat panel reads as a
  * second, duller purple with a visible edge where the container ends. It is
- * merely fragile at the bottom — the panel restates the section's background as
+ * merely fragile at the bottom - the panel restates the section's background as
  * a second literal, and the two drift the moment one of them is edited, which
  * is exactly what happened when the ground moved to `#0F123A` and the fade
  * stayed behind. A mask has no colour to keep in step: it fades the columns to
- * real transparency, and whatever the section paints behind them — ground,
- * bloom and wedge alike — is what shows through. The ground is now named once,
+ * real transparency, and whatever the section paints behind them - ground,
+ * bloom and wedge alike - is what shows through. The ground is now named once,
  * on the section itself.
  */
 
@@ -118,7 +118,7 @@ const COLUMNS = [
   TESTIMONIALS.slice(6, 9),
 ];
 
-/** One per column — see the note above on why the three differ. */
+/** One per column - see the note above on why the three differ. */
 const DRIFT = [
   "animate-testimonial-up",
   "animate-testimonial-down",
@@ -220,7 +220,7 @@ export function TestimonialSection() {
         </header>
 
         <div className="relative mx-auto mt-16 overflow-hidden">
-          {/* Both edges are softened by the mask below — see the note above. */}
+          {/* Both edges are softened by the mask below - see the note above. */}
           <div className="grid grid-cols-1 gap-5 md:grid-cols-3 max-h-[80vh] overflow-hidden mask-t-from-[calc(100%_-_6rem)] mask-b-from-[calc(100%_-_8rem)]">
             {COLUMNS.map((column, columnIndex) => (
               <div

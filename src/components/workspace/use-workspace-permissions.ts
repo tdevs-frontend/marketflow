@@ -17,7 +17,7 @@ import type { PermissionAction } from "@/types/workspace";
  *
  * It is *not* enforcement. Everything here is client state and a determined
  * user can change it; the server has to make the same decision independently.
- * The reason to do it in the UI anyway is honesty — a button that is visible,
+ * The reason to do it in the UI anyway is honesty - a button that is visible,
  * clickable and then fails is worse than one that says it is unavailable.
  *
  * `can` reads from the role the member actually holds, so changing your own

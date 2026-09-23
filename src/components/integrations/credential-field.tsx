@@ -19,12 +19,12 @@ import type { CredentialSpec, CredentialValue } from "@/types/integration";
  *
  * The rule this file is built around: a saved secret is masked at the source.
  * `CredentialValue.value` is what the API returns, and for a token that is
- * already `••••••••••92AX` — the raw string is not in the client, in the store,
+ * already `••••••••••92AX` - the raw string is not in the client, in the store,
  * or in any fixture, so there is nothing for a "reveal" button to reveal.
  *
  * `revealValue` is the deliberate exception, and it is opt-in per field. Some
- * secrets genuinely are re-readable by their owner — a webhook signing secret
- * is the standard example, because verifying a signature requires having it —
+ * secrets genuinely are re-readable by their owner - a webhook signing secret
+ * is the standard example, because verifying a signature requires having it -
  * and for those the reveal is real, temporary, and rewinds itself. A provider
  * access token is not one of those: it gets Rotate, not Reveal.
  */
@@ -58,7 +58,7 @@ export function useClipboard() {
         timer.current = window.setTimeout(() => setCopied(false), 2000);
         toast(`${label} copied to clipboard`, "success");
       } catch {
-        toast("Could not copy — your browser blocked clipboard access", "error");
+        toast("Could not copy - your browser blocked clipboard access", "error");
       }
     },
   };
@@ -115,7 +115,7 @@ export function CredentialField({
    * it, which is the right default for a provider token.
    */
   revealValue?: string;
-  /** Rotate, Replace, Regenerate — whatever this particular secret supports. */
+  /** Rotate, Replace, Regenerate - whatever this particular secret supports. */
   actions?: ReactNode;
   className?: string;
 }) {
@@ -170,7 +170,7 @@ export function CredentialField({
         ) : null}
 
         {/* Copying a mask copies nothing useful, so secrets only offer it once
-            they are revealed — and non-secrets always do. */}
+            they are revealed - and non-secrets always do. */}
         {!secret || revealed ? (
           <CopyButton value={shown} label={credential.label} />
         ) : null}
@@ -209,7 +209,7 @@ export function CredentialList({
 /**
  * The form control for one `CredentialSpec`.
  *
- * Generated from the spec rather than written per provider — that is what lets
+ * Generated from the spec rather than written per provider - that is what lets
  * the same drawer configure Meta Cloud API, SMTP and a custom SMS gateway
  * without knowing anything about any of them. A provider whose form this cannot
  * express means `CredentialKind` needs another member, not that the drawer
@@ -304,7 +304,7 @@ export function CredentialInput({
 }
 
 /**
- * A secret shown exactly once — a new API key, a regenerated webhook secret.
+ * A secret shown exactly once - a new API key, a regenerated webhook secret.
  *
  * Deliberately loud and deliberately temporary: the merchant has one chance to
  * copy it, and the panel says so rather than letting them discover it by
@@ -330,7 +330,7 @@ export function OneTimeSecret({
       </div>
       <p className="mt-2 text-meta text-text-secondary">
         {note ??
-          "Copy it now — this is the only time it will be shown. After you close this it is stored hashed and cannot be recovered."}
+          "Copy it now - this is the only time it will be shown. After you close this it is stored hashed and cannot be recovered."}
       </p>
     </div>
   );
