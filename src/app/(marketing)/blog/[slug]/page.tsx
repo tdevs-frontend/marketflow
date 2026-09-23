@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Clock3 } from "lucide-react";
+import { ArrowRight, Clock3 } from "lucide-react";
 
 import { LogoMark } from "@/components/ui/logo";
 import { BlogCard, ShareArticle } from "@/components/marketing/blog";
@@ -9,6 +10,7 @@ import {
   BLOG_ARTICLES,
   formatArticleDate,
   getArticleBySlug,
+  getRelatedArticles,
   type ArticleBlock,
 } from "@/constants/blog";
 import { APP_ROUTES } from "@/constants";
@@ -95,11 +97,8 @@ export default async function ArticlePage({
 
   if (!article) notFound();
 
-  /* Three others, newest first, never this one. */
-  const more = BLOG_ARTICLES.filter((item) => item.slug !== article.slug).slice(
-    0,
-    3,
-  );
+  /* Three others on the same subject, never this one. */
+  const related = getRelatedArticles(article);
 
   return (
     <>
@@ -177,19 +176,32 @@ export default async function ArticlePage({
       </article>
 
       <section
-        aria-labelledby="more-articles-title"
+        aria-labelledby="related-articles-title"
         className="section-space-py bg-background"
       >
         <div className="custom-container">
-          <h2
-            id="more-articles-title"
-            className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl"
-          >
-            More from the blog
-          </h2>
+          <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+            <h2
+              id="related-articles-title"
+              className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl"
+            >
+              Related articles
+            </h2>
+
+            <Link
+              href={APP_ROUTES.blog}
+              className="group inline-flex items-center gap-1.5 rounded-sm text-sm font-semibold text-primary transition-colors hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
+            >
+              View all articles
+              <ArrowRight
+                className="size-4 transition-[translate] duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none"
+                aria-hidden
+              />
+            </Link>
+          </div>
 
           <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-            {more.map((item) => (
+            {related.map((item) => (
               <BlogCard key={item.slug} article={item} showDate />
             ))}
           </div>

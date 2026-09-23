@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Check, Link2 } from "lucide-react";
 
 import { BrandIcon } from "@/components/ui/brand-icon";
-import { cn } from "@/lib/utils";
 
 /**
  * The share row, closing an article.
@@ -85,9 +83,9 @@ export function ShareArticle({ url, title }: { url: string; title: string }) {
 
   return (
     <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6">
-      <p className="text-sm font-semibold text-text-primary">
+      <h3 className="text-base font-semibold text-text-primary">
         Share this article
-      </p>
+      </h3>
 
       <div className="flex flex-wrap items-center gap-2">
         {NETWORKS.map((network) => (
@@ -103,30 +101,6 @@ export function ShareArticle({ url, title }: { url: string; title: string }) {
             <BrandIcon name={network.icon} className="size-4" />
           </a>
         ))}
-
-        <button
-          type="button"
-          onClick={handleCopy}
-          className={cn(
-            "inline-flex h-9 items-center gap-1.5 rounded-full border px-3.5 text-sm font-semibold transition-colors focus-visible:shadow-focus focus-visible:outline-none",
-            copyState === "copied"
-              ? "border-success/30 bg-success-soft text-success-text"
-              : copyState === "failed"
-                ? "border-error/30 bg-error-soft text-error-text"
-                : "border-border bg-surface text-text-secondary hover:border-primary-border hover:bg-primary-soft hover:text-primary",
-          )}
-        >
-          {copyState === "copied" ? (
-            <Check className="size-4" aria-hidden />
-          ) : (
-            <Link2 className="size-4" aria-hidden />
-          )}
-          {copyState === "copied"
-            ? "Copied"
-            : copyState === "failed"
-              ? "Copy failed"
-              : "Copy link"}
-        </button>
 
         {/* The button's own label changes, which a screen reader announces
             only if it happens to be focused. This says it either way. */}

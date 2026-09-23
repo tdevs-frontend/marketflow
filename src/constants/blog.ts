@@ -1026,6 +1026,26 @@ export function getArticleBySlug(slug: string): BlogArticle | undefined {
 }
 
 /**
+ * The articles to suggest under `article`, never including it.
+ *
+ * Same category first, then same topic, then whatever is newest — so a
+ * category with fewer than `count` siblings still fills the row rather than
+ * leaving a gap. Within each tier the array's own newest-first order holds,
+ * because `sort` is stable.
+ */
+export function getRelatedArticles(
+  article: BlogArticle,
+  count = 3,
+): BlogArticle[] {
+  const rank = (item: BlogArticle) =>
+    item.category === article.category ? 0 : item.topic === article.topic ? 1 : 2;
+
+  return BLOG_ARTICLES.filter((item) => item.slug !== article.slug)
+    .sort((a, b) => rank(a) - rank(b))
+    .slice(0, count);
+}
+
+/**
  * The filter row, derived rather than declared.
  *
  * A filter that matches nothing is a broken control, and a hand-written list

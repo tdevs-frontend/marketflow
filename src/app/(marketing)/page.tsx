@@ -19,16 +19,16 @@ export default function HomePage() {
 
       <WhatsAppAutomation />
 
-      <WhyChooseUs />
-
       {/* <MultiChannelCampaign /> */}
 
       {/* <AnalyticsSection /> */}
 
       {/* <TrustStats /> */}
+
       <PlatformOverview />
 
       <TestimonialSection />
+      <WhyChooseUs />
 
       <PricingSection />
 

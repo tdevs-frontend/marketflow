@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { FinalCta } from "@/components/marketing";
 import { BlogHero, BlogListing } from "@/components/marketing/blog";
 
 export const metadata: Metadata = {
@@ -18,20 +17,15 @@ export const metadata: Metadata = {
  * whose job is to get somebody into an article should not ask them to read a
  * second introduction first.
  *
- * `FinalCta` closes it, on the white ground `BlogListing` ends on. This page
- * is read by people who are not buying today and the ask sat only in the
- * header for a long time — but a reader who has just worked through a filter
- * and a pager has spent real attention here, and the bottom of that scroll is
- * the one place on the route where asking costs nothing. It is the same panel
- * `/solutions`, `/pricing` and `/contact` end on, so the route closes the way
- * the rest of the site does.
+ * Nothing after the grid either. The page ends on the pager, so the last thing
+ * a reader meets is another article rather than a sales panel; the related
+ * articles under each post (`/blog/[slug]`) are what keep them reading.
  */
 export default function BlogPage() {
   return (
     <>
       <BlogHero />
       <BlogListing />
-      <FinalCta />
     </>
   );
 }
