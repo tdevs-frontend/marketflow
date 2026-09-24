@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { ContactsWorkspace } from "@/components/customers";
 
-export const metadata: Metadata = { title: "Contacts" };
+export const metadata: Metadata = { title: "Customers" };
 
 /**
  * The master customer database, and the page every other Customers route

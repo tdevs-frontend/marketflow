@@ -13,9 +13,8 @@ import {
   Wallet,
 } from "lucide-react";
 
-import { PageHeader } from "@/components/layout/page-header";
 import { AvatarLabel } from "@/components/ui/avatar";
-import { ButtonLink } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Drawer } from "@/components/ui/dialog";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -32,15 +31,20 @@ import {
   ordersForCustomer,
 } from "@/lib/commerce-fixtures";
 import type { CommerceCustomer, CustomerType, ProductType } from "@/types/commerce";
-import { CommerceKpis, type CommerceKpi } from "./commerce-kpis";
-import { CustomerTypeBadge, OrderStatusBadge } from "./commerce-badges";
-import { FilterBar } from "./filter-bar";
-import { FilterTabs, type FilterTab } from "./filter-tabs";
+import { CommerceKpis, type CommerceKpi } from "@/components/commerce/commerce-kpis";
+import { CustomerTypeBadge, OrderStatusBadge } from "@/components/commerce/commerce-badges";
+import { FilterBar } from "@/components/commerce/filter-bar";
+import { FilterTabs, type FilterTab } from "@/components/commerce/filter-tabs";
 
 /**
- * Commerce Customers - who bought from me?
+ * The Customers tab of the Contacts page - who bought from me?
  *
- * The single most important thing about this page is what it is *not*: a second
+ * It used to be its own page at `/dashboard/customers`. It is a tab now
+ * because it was never a second list of people: every row is a contact from
+ * the tab beside it, read through the order book. Both old URLs redirect to
+ * `/dashboard/contacts?view=customers`.
+ *
+ * The single most important thing about this view is what it is *not*: a second
  * customer database. Every row is a projection of a contact that already exists
  * in the CRM, keyed by that contact's id, computed from the order book. A
  * contact appears here the moment they buy something and nothing is written
@@ -72,7 +76,15 @@ const VIEWS: { value: TypeView; label: string }[] = [
   ...CUSTOMER_TYPES.map((item) => ({ value: item.value as TypeView, label: item.label })),
 ];
 
-export function CommerceCustomersWorkspace() {
+export function CustomersTab({
+  onShowContacts,
+  onOpenContact,
+}: {
+  /** Switches the page to its Contacts tab. */
+  onShowContacts: () => void;
+  /** Opens this buyer's contact record in the Contacts tab's drawer. */
+  onOpenContact: (contactId: string) => void;
+}) {
   const [view, setView] = useState<TypeView>(ALL);
   const [search, setSearch] = useState("");
   const [productType, setProductType] = useState<string>(ALL);
@@ -159,19 +171,6 @@ export function CommerceCustomersWorkspace() {
 
   return (
     <>
-      <PageHeader
-        title="Customers"
-        description="View customers who have purchased products or services from your business."
-        secondaryActions={
-          /* The seam back to the one contact database. Commerce is a reading of
-             it, not a replacement for it, and saying so in the header stops a
-             merchant hunting for "the other customer list". */
-          <ButtonLink href={APP_ROUTES.contacts} variant="outline">
-            All Contacts
-          </ButtonLink>
-        }
-      />
-
       <CommerceKpis items={kpis} />
 
       {COMMERCE_CUSTOMERS.length === 0 ? (
@@ -179,9 +178,9 @@ export function CommerceCustomersWorkspace() {
           title="No paying customers yet"
           description="Contacts appear here automatically once they place their first order."
           action={
-            <ButtonLink href={APP_ROUTES.contacts} size="sm">
+            <Button size="sm" onClick={onShowContacts}>
               View contacts
-            </ButtonLink>
+            </Button>
           }
         />
       ) : (
@@ -314,6 +313,10 @@ export function CommerceCustomersWorkspace() {
         customer={selected}
         open={Boolean(selected)}
         onClose={() => setSelected(null)}
+        onOpenContact={(contactId) => {
+          setSelected(null);
+          onOpenContact(contactId);
+        }}
       />
     </>
   );
@@ -331,10 +334,12 @@ function CustomerDrawer({
   customer,
   open,
   onClose,
+  onOpenContact,
 }: {
   customer: CommerceCustomer | null;
   open: boolean;
   onClose: () => void;
+  onOpenContact: (contactId: string) => void;
 }) {
   if (!customer) return null;
 
@@ -359,14 +364,14 @@ function CustomerDrawer({
       title={customer.name}
       description={customer.email ?? "No email on file"}
       footer={
-        <ButtonLink
-          href={APP_ROUTES.contacts}
+        <Button
           variant="outline"
           size="compact"
           className="w-full"
+          onClick={() => onOpenContact(customer.contactId)}
         >
           View Full Contact Profile
-        </ButtonLink>
+        </Button>
       }
     >
       <div className="flex items-center justify-between gap-3">

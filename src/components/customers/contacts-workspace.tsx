@@ -1,23 +1,27 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import {
+  Crown,
   Download,
   Eye,
   Layers,
   MessageCircle,
   Pencil,
+  Repeat,
   Route,
   Tag as TagIcon,
   Target,
   Trash2,
   Upload,
   UserCheck,
+  UserMinus,
   UserPlus,
   UserRoundPlus,
   Users,
 } from "lucide-react";
 
+import { FilterTabs, type FilterTab } from "@/components/commerce/filter-tabs";
 import { PageHeader } from "@/components/layout/page-header";
 import { AvatarLabel } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -39,9 +43,12 @@ import {
   TR,
   Table,
 } from "@/components/ui/table";
+import { panelId, tabId } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/toast";
+import { CUSTOMER_TYPES } from "@/constants/commerce";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useTableState } from "@/hooks/useTableState";
+import { COMMERCE_CUSTOMERS } from "@/lib/commerce-fixtures";
 import {
   CONSENT_CHANNELS,
   CONTACTS,
@@ -61,6 +68,7 @@ import {
   formatNumber,
   formatRelativeTime,
 } from "@/lib/format";
+import type { CustomerType } from "@/types/commerce";
 import type { ContactChannel } from "@/types/contact";
 import { ContactDrawer } from "./contact-drawer";
 import {
@@ -80,6 +88,47 @@ import {
   SourceBadge,
   TagBadges,
 } from "./customer-badges";
+
+/*
+ * The Customers page's type tabs, on the contact list.
+ *
+ * Same component, same icons, same labels (from `CUSTOMER_TYPES`) as
+ * `/dashboard/customers`, so the two pages read one vocabulary. A contact's
+ * type is the one the order book gives them - New, Repeat, VIP or Inactive -
+ * and a contact who has not bought yet sits under All only.
+ */
+type TypeView = "all" | CustomerType;
+
+const TYPE_ICON: Record<string, FilterTab["icon"]> = {
+  all: Users,
+  new: UserPlus,
+  repeat: Repeat,
+  vip: Crown,
+  inactive: UserMinus,
+};
+
+const TYPE_VIEWS: { value: TypeView; label: string }[] = [
+  { value: "all", label: "All" },
+  ...CUSTOMER_TYPES.map((item) => ({
+    value: item.value as TypeView,
+    label: item.label,
+  })),
+];
+
+const TYPE_BY_CONTACT = new Map<string, CustomerType>(
+  COMMERCE_CUSTOMERS.map((item) => [item.contactId, item.customerType]),
+);
+
+const TYPE_COUNTS: Record<string, number> = {
+  all: CONTACTS.length,
+  ...Object.fromEntries(
+    CUSTOMER_TYPES.map((item) => [
+      item.value,
+      CONTACTS.filter((contact) => TYPE_BY_CONTACT.get(contact.id) === item.value)
+        .length,
+    ]),
+  ),
+};
 
 type SortField = "name" | "value" | "activity" | "created";
 
@@ -155,6 +204,11 @@ export function ContactsWorkspace() {
   const toast = useToast();
   const table = useTableState<FilterKey>(FILTERS);
 
+  /* Local, like the Customers page's own tabs - a view, not a filter, so
+     "Clear filters" leaves it where it is. */
+  const [typeView, setTypeView] = useState<TypeView>("all");
+  const idBase = useId();
+
   /* Local mirror so the input stays responsive; the URL follows behind it. */
   const [searchDraft, setSearchDraft] = useState(table.search);
   const debouncedDraft = useDebounce(searchDraft, 300);
@@ -195,6 +249,9 @@ export function ContactsWorkspace() {
       : null;
 
     const rows = CONTACTS.filter((item) => {
+      if (typeView !== "all" && TYPE_BY_CONTACT.get(item.id) !== typeView) {
+        return false;
+      }
       if (term) {
         const haystack = [
           contactName(item),
@@ -249,7 +306,7 @@ export function ContactsWorkspace() {
         }
       }
     });
-  }, [debouncedDraft, filters, table.sortField, table.sortDirection]);
+  }, [debouncedDraft, filters, table.sortField, table.sortDirection, typeView]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / table.pageSize));
   const current = Math.min(table.page, totalPages);
@@ -383,7 +440,7 @@ export function ContactsWorkspace() {
   return (
     <>
       <PageHeader
-        title="Contacts"
+        title="Customers"
         description="Every person in your workspace, with consent tracked per channel."
         secondaryActions={
           <>
@@ -415,6 +472,22 @@ export function ContactsWorkspace() {
       <KpiStrip items={kpis()} />
 
       <Card className="mt-4 p-5">
+        <FilterTabs
+          className="-mx-5 mb-5 px-5"
+          idBase={idBase}
+          activeTab={typeView}
+          tabs={TYPE_VIEWS.map((item) => ({
+            id: item.value,
+            label: item.label,
+            count: TYPE_COUNTS[item.value] ?? 0,
+            icon: TYPE_ICON[item.value],
+          }))}
+          onTabChange={(next) => {
+            setTypeView(next as TypeView);
+            table.setPage(1);
+          }}
+        />
+
         <FilterBar
           search={searchDraft}
           onSearchChange={setSearchDraft}
@@ -559,238 +632,244 @@ export function ContactsWorkspace() {
           </Button>
         </BulkActionBar>
 
-        {rows.length === 0 ? (
-          filtersOn ? (
-            <EmptyState
-              title="No results found"
-              description="Try changing your search or filters."
-              action={
-                <Button size="sm" variant="outline" onClick={clearEverything}>
-                  Clear filters
-                </Button>
-              }
-            />
-          ) : (
-            <EmptyState
-              title="No contacts yet"
-              description="Import a CSV or add contacts one at a time to start building your audience."
-              action={
-                <div className="flex flex-col items-center gap-2.5">
-                  <div className="flex flex-wrap items-center justify-center gap-2">
-                    <Button size="sm" onClick={() => setFormFor("new")}>
-                      <UserPlus className="size-4" />
-                      Add contact
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() =>
-                        toast("CSV import arrives with the API", "info")
-                      }
-                    >
-                      <Upload className="size-4" />
-                      Import CSV
-                    </Button>
+        <div
+          id={panelId(idBase, "list")}
+          role="tabpanel"
+          aria-labelledby={tabId(idBase, typeView)}
+        >
+          {rows.length === 0 ? (
+            filtersOn ? (
+              <EmptyState
+                title="No results found"
+                description="Try changing your search or filters."
+                action={
+                  <Button size="sm" variant="outline" onClick={clearEverything}>
+                    Clear filters
+                  </Button>
+                }
+              />
+            ) : (
+              <EmptyState
+                title="No contacts yet"
+                description="Import a CSV or add contacts one at a time to start building your audience."
+                action={
+                  <div className="flex flex-col items-center gap-2.5">
+                    <div className="flex flex-wrap items-center justify-center gap-2">
+                      <Button size="sm" onClick={() => setFormFor("new")}>
+                        <UserPlus className="size-4" />
+                        Add contact
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() =>
+                          toast("CSV import arrives with the API", "info")
+                        }
+                      >
+                        <Upload className="size-4" />
+                        Import CSV
+                      </Button>
+                    </div>
+                    <p className="text-sm text-text-muted">
+                      CSV needs a name column plus an email or phone column.
+                    </p>
                   </div>
-                  <p className="text-sm text-text-muted">
-                    CSV needs a name column plus an email or phone column.
-                  </p>
-                </div>
-              }
-            />
-          )
-        ) : (
-          <>
-            <Table minWidth="60rem" className="mt-4 max-lg:hidden">
-              <THead>
-                <TH className="w-9">
-                  <Checkbox
-                    checked={allOnPage}
-                    indeterminate={someOnPage && !allOnPage}
-                    onCheckedChange={togglePage}
-                    label="Select all contacts on this page"
-                  />
-                </TH>
-                <SortableTH
-                  field="name"
-                  activeField={table.sortField}
-                  direction={table.sortDirection}
-                  onSort={table.toggleSort}
-                >
-                  Contact
-                </SortableTH>
-                <TH>Phone</TH>
-                <TH>Channels</TH>
-                <TH>Status</TH>
-                <TH>Tags</TH>
-                <TH>Source</TH>
-                <SortableTH
-                  field="value"
-                  activeField={table.sortField}
-                  direction={table.sortDirection}
-                  onSort={table.toggleSort}
-                  align="right"
-                >
-                  Value
-                </SortableTH>
-                <SortableTH
-                  field="activity"
-                  activeField={table.sortField}
-                  direction={table.sortDirection}
-                  onSort={table.toggleSort}
-                >
-                  Last activity
-                </SortableTH>
-                <SortableTH
-                  field="created"
-                  activeField={table.sortField}
-                  direction={table.sortDirection}
-                  onSort={table.toggleSort}
-                >
-                  Created
-                </SortableTH>
-                <TH align="right" />
-              </THead>
+                }
+              />
+            )
+          ) : (
+            <>
+              <Table minWidth="60rem" className="mt-4 max-lg:hidden">
+                <THead>
+                  <TH className="w-9">
+                    <Checkbox
+                      checked={allOnPage}
+                      indeterminate={someOnPage && !allOnPage}
+                      onCheckedChange={togglePage}
+                      label="Select all contacts on this page"
+                    />
+                  </TH>
+                  <SortableTH
+                    field="name"
+                    activeField={table.sortField}
+                    direction={table.sortDirection}
+                    onSort={table.toggleSort}
+                  >
+                    Contact
+                  </SortableTH>
+                  <TH>Phone</TH>
+                  <TH>Channels</TH>
+                  <TH>Status</TH>
+                  <TH>Tags</TH>
+                  <TH>Source</TH>
+                  <SortableTH
+                    field="value"
+                    activeField={table.sortField}
+                    direction={table.sortDirection}
+                    onSort={table.toggleSort}
+                    align="right"
+                  >
+                    Value
+                  </SortableTH>
+                  <SortableTH
+                    field="activity"
+                    activeField={table.sortField}
+                    direction={table.sortDirection}
+                    onSort={table.toggleSort}
+                  >
+                    Last activity
+                  </SortableTH>
+                  <SortableTH
+                    field="created"
+                    activeField={table.sortField}
+                    direction={table.sortDirection}
+                    onSort={table.toggleSort}
+                  >
+                    Created
+                  </SortableTH>
+                  <TH align="right" />
+                </THead>
 
-              <TBody>
-                {rows.map((item) => (
-                  <TR key={item.id} selected={selected.includes(item.id)}>
-                    <TD>
-                      <Checkbox
-                        checked={selected.includes(item.id)}
-                        onCheckedChange={() => toggle(item.id)}
-                        label={`Select ${contactName(item)}`}
-                      />
-                    </TD>
-
-                    <TD>
-                      <button
-                        type="button"
-                        onClick={() => setActive(item)}
-                        className="max-w-56 rounded-btn text-left focus-visible:shadow-focus focus-visible:outline-none"
-                      >
-                        <AvatarLabel
-                          name={contactName(item)}
-                          secondary={item.email ?? item.phone ?? undefined}
-                          size="sm"
+                <TBody>
+                  {rows.map((item) => (
+                    <TR key={item.id} selected={selected.includes(item.id)}>
+                      <TD>
+                        <Checkbox
+                          checked={selected.includes(item.id)}
+                          onCheckedChange={() => toggle(item.id)}
+                          label={`Select ${contactName(item)}`}
                         />
-                      </button>
-                    </TD>
+                      </TD>
 
-                    <TD className="whitespace-nowrap text-text-secondary">
-                      {item.phone ?? "-"}
-                    </TD>
+                      <TD>
+                        <button
+                          type="button"
+                          onClick={() => setActive(item)}
+                          className="max-w-56 rounded-btn text-left focus-visible:shadow-focus focus-visible:outline-none"
+                        >
+                          <AvatarLabel
+                            name={contactName(item)}
+                            secondary={item.email ?? item.phone ?? undefined}
+                            size="sm"
+                          />
+                        </button>
+                      </TD>
 
-                    <TD>
-                      <ChannelConsentBadges channels={item.optedInChannels} />
-                    </TD>
+                      <TD className="whitespace-nowrap text-text-secondary">
+                        {item.phone ?? "-"}
+                      </TD>
 
-                    <TD>
-                      <span className="flex flex-wrap items-center gap-1">
-                        <LifecycleBadge lifecycle={item.lifecycle} />
-                        <ContactStatusBadge status={item.status} />
-                      </span>
-                    </TD>
+                      <TD>
+                        <ChannelConsentBadges channels={item.optedInChannels} />
+                      </TD>
 
-                    <TD>
-                      <TagBadges tags={item.tags} />
-                    </TD>
+                      <TD>
+                        <span className="flex flex-wrap items-center gap-1">
+                          <LifecycleBadge lifecycle={item.lifecycle} />
+                          <ContactStatusBadge status={item.status} />
+                        </span>
+                      </TD>
 
-                    <TD>
-                      <SourceBadge source={item.source} />
-                    </TD>
+                      <TD>
+                        <TagBadges tags={item.tags} />
+                      </TD>
 
-                    <TD
-                      align="right"
-                      className="whitespace-nowrap text-text-primary tabular-nums"
-                    >
-                      {item.lifetimeValue ? formatCurrency(item.lifetimeValue) : "-"}
-                    </TD>
+                      <TD>
+                        <SourceBadge source={item.source} />
+                      </TD>
 
-                    <TD className="whitespace-nowrap text-text-muted">
-                      {item.lastContactedAt
-                        ? formatRelativeTime(item.lastContactedAt)
-                        : "Never"}
-                    </TD>
-
-                    <TD className="whitespace-nowrap text-text-muted">
-                      {formatDate(item.createdAt)}
-                    </TD>
-
-                    <TD align="right">
-                      <Menu
-                        items={rowActions(item)}
-                        label={`Actions for ${contactName(item)}`}
-                      />
-                    </TD>
-                  </TR>
-                ))}
-              </TBody>
-            </Table>
-
-            {/* Below `lg` the columns become a card each. The brief's priority
-                order - contact, status, tags, action - is what survives. */}
-            <ul className="mt-4 space-y-2.5 lg:hidden">
-              {rows.map((item) => (
-                <li key={item.id}>
-                  <div className="rounded-panel border border-border p-3.5">
-                    <div className="flex items-start gap-3">
-                      <Checkbox
-                        checked={selected.includes(item.id)}
-                        onCheckedChange={() => toggle(item.id)}
-                        label={`Select ${contactName(item)}`}
-                        className="mt-1"
-                      />
-
-                      <button
-                        type="button"
-                        onClick={() => setActive(item)}
-                        className="min-w-0 flex-1 rounded-btn text-left focus-visible:shadow-focus focus-visible:outline-none"
+                      <TD
+                        align="right"
+                        className="whitespace-nowrap text-text-primary tabular-nums"
                       >
-                        <AvatarLabel
-                          name={contactName(item)}
-                          secondary={item.email ?? item.phone ?? undefined}
-                          size="sm"
-                        />
-                      </button>
+                        {item.lifetimeValue ? formatCurrency(item.lifetimeValue) : "-"}
+                      </TD>
 
-                      <Menu
-                        items={rowActions(item)}
-                        label={`Actions for ${contactName(item)}`}
-                      />
-                    </div>
-
-                    <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-                      <LifecycleBadge lifecycle={item.lifecycle} />
-                      <ContactStatusBadge status={item.status} />
-                      <TagBadges tags={item.tags} max={2} />
-                    </div>
-
-                    <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1">
-                      <ChannelConsentBadges channels={item.optedInChannels} />
-                      <span className="ml-auto text-sm text-text-muted">
+                      <TD className="whitespace-nowrap text-text-muted">
                         {item.lastContactedAt
                           ? formatRelativeTime(item.lastContactedAt)
-                          : "Never contacted"}
-                      </span>
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
+                          : "Never"}
+                      </TD>
 
-            <div className="mt-4">
-              <Pagination
-                page={current}
-                totalPages={totalPages}
-                total={filtered.length}
-                perPage={table.pageSize}
-                onChange={table.setPage}
-                noun="contacts"
-              />
-            </div>
-          </>
-        )}
+                      <TD className="whitespace-nowrap text-text-muted">
+                        {formatDate(item.createdAt)}
+                      </TD>
+
+                      <TD align="right">
+                        <Menu
+                          items={rowActions(item)}
+                          label={`Actions for ${contactName(item)}`}
+                        />
+                      </TD>
+                    </TR>
+                  ))}
+                </TBody>
+              </Table>
+
+              {/* Below `lg` the columns become a card each. The brief's priority
+                  order - contact, status, tags, action - is what survives. */}
+              <ul className="mt-4 space-y-2.5 lg:hidden">
+                {rows.map((item) => (
+                  <li key={item.id}>
+                    <div className="rounded-panel border border-border p-3.5">
+                      <div className="flex items-start gap-3">
+                        <Checkbox
+                          checked={selected.includes(item.id)}
+                          onCheckedChange={() => toggle(item.id)}
+                          label={`Select ${contactName(item)}`}
+                          className="mt-1"
+                        />
+
+                        <button
+                          type="button"
+                          onClick={() => setActive(item)}
+                          className="min-w-0 flex-1 rounded-btn text-left focus-visible:shadow-focus focus-visible:outline-none"
+                        >
+                          <AvatarLabel
+                            name={contactName(item)}
+                            secondary={item.email ?? item.phone ?? undefined}
+                            size="sm"
+                          />
+                        </button>
+
+                        <Menu
+                          items={rowActions(item)}
+                          label={`Actions for ${contactName(item)}`}
+                        />
+                      </div>
+
+                      <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+                        <LifecycleBadge lifecycle={item.lifecycle} />
+                        <ContactStatusBadge status={item.status} />
+                        <TagBadges tags={item.tags} max={2} />
+                      </div>
+
+                      <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1">
+                        <ChannelConsentBadges channels={item.optedInChannels} />
+                        <span className="ml-auto text-sm text-text-muted">
+                          {item.lastContactedAt
+                            ? formatRelativeTime(item.lastContactedAt)
+                            : "Never contacted"}
+                        </span>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-4">
+                <Pagination
+                  page={current}
+                  totalPages={totalPages}
+                  total={filtered.length}
+                  perPage={table.pageSize}
+                  onChange={table.setPage}
+                  noun="contacts"
+                />
+              </div>
+            </>
+          )}
+        </div>
       </Card>
 
       <ContactDrawer

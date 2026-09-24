@@ -14,4 +14,3 @@ export * from "./discounts-workspace";
 
 export * from "./product-views-nav";
 export * from "./sales-workspace";
-export * from "./commerce-customers-workspace";
