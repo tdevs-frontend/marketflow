@@ -1,3 +1,5 @@
+import { APP_ROUTES } from "./app";
+
 export interface NavItem {
   title: string;
   href: string;
@@ -377,19 +379,28 @@ export interface SocialLink {
   icon: string;
 }
 
-/** Link columns rendered in the main footer, in display order. */
+/**
+ * The footer's link groups, in display order. Every href is a route that has a
+ * page in `app/(marketing)` or `app/auth`, taken from `APP_ROUTES` so there is
+ * one spelling of each.
+ *
+ * Integrations has no page of its own; it points at the `#integrations`
+ * section `/features` renders, which is the product's actual account of them.
+ * The individual modules (CRM, WhatsApp, commerce...) are not listed: they
+ * have neither pages nor anchors, and a link that lands on the top of
+ * `/features` is Features again under another name.
+ *
+ * Account is its own group so signing in never reads as a marketing page.
+ * Legal is not a column - it sits in the small print, see `footerLegal`.
+ */
 export const footerNav: FooterColumn[] = [
   {
     title: "Product",
     items: [
-      { title: "Features", href: "/features" },
-      { title: "WhatsApp Automation", href: "/features#whatsapp" },
-      { title: "Campaigns", href: "/features#campaigns" },
-      { title: "CRM & Leads", href: "/features#crm" },
-      { title: "Automation Builder", href: "/features#automation" },
-      { title: "Email Marketing", href: "/features#email" },
-      { title: "SMS Marketing", href: "/features#sms" },
-      { title: "Integrations", href: "/features#integrations" },
+      { title: "Features", href: APP_ROUTES.features },
+      { title: "Solutions", href: APP_ROUTES.solutions },
+      { title: "Pricing", href: APP_ROUTES.pricing },
+      { title: "Integrations", href: `${APP_ROUTES.features}#integrations` },
     ],
   },
   {
@@ -415,22 +426,29 @@ export const footerNav: FooterColumn[] = [
       { title: "API Documentation", href: "/docs/api" },
     ],
   },
-  {
-    title: "Legal",
-    items: [
-      { title: "Privacy Policy", href: "/legal/privacy" },
-      { title: "Terms of Service", href: "/legal/terms" },
-      { title: "Cookie Policy", href: "/legal/cookies" },
-      { title: "Data Processing", href: "/legal/data-processing" },
-      { title: "Acceptable Use Policy", href: "/legal/acceptable-use" },
-      { title: "Security", href: "/security" },
-    ],
-  },
+];
+
+/** The legal pair in the footer's bottom row, apart from the columns. */
+export const footerLegal: FooterLink[] = [
+  { title: "Privacy Policy", href: APP_ROUTES.legalPrivacy },
+  { title: "Terms of Service", href: APP_ROUTES.legalTerms },
 ];
 
 export const footerSocials: SocialLink[] = [
-  { label: "LinkedIn", href: "https://www.linkedin.com/company/marketflow", icon: "linkedin" },
-  { label: "Facebook", href: "https://www.facebook.com/marketflow", icon: "facebook" },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/marketflow",
+    icon: "linkedin",
+  },
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/marketflow",
+    icon: "facebook",
+  },
   { label: "X", href: "https://x.com/marketflow", icon: "x" },
-  { label: "YouTube", href: "https://www.youtube.com/@marketflow", icon: "youtube" },
+  {
+    label: "YouTube",
+    href: "https://www.youtube.com/@marketflow",
+    icon: "youtube",
+  },
 ];

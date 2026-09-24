@@ -207,10 +207,7 @@ export function TestimonialSection() {
             id="testimonials-title"
             className="section-title mt-7 text-balance text-white"
           >
-            Loved by teams{" "}
-            <span>
-              growing with MarketFlow
-            </span>
+            Loved by teams <span>growing with MarketFlow</span>
           </h2>
 
           <p className="mx-auto mt-5 max-w-2xl text-base leading-[1.7] text-white/60 text-pretty">
@@ -221,7 +218,8 @@ export function TestimonialSection() {
 
         <div className="relative mx-auto mt-16 overflow-hidden">
           {/* Both edges are softened by the mask below - see the note above. */}
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-3 max-h-[80vh] overflow-hidden mask-t-from-[calc(100%_-_6rem)] mask-b-from-[calc(100%_-_8rem)]">
+
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-3 max-h-220 h-[80vh] overflow-hidden mask-t-from-[calc(100%_-_6rem)] mask-b-from-[calc(100%_-_8rem)]">
             {COLUMNS.map((column, columnIndex) => (
               <div
                 key={columnIndex}

@@ -2,63 +2,8 @@ import Link from "next/link";
 
 import { BrandIcon } from "@/components/ui/brand-icon";
 import { Logo } from "@/components/ui/logo";
-import { APP_ROUTES, footerNav, footerSocials } from "@/constants";
+import { APP_ROUTES, footerLegal, footerNav, footerSocials } from "@/constants";
 import { siteConfig } from "@/config/site";
-
-/**
- * The three columns the footer shows, and which links from each.
- *
- * `footerNav` stays the full list - it is the site's own inventory of these
- * destinations, Legal included, and nothing is deleted from it. This is the
- * footer's *selection* from it: three groups of five. Twenty-nine links over
- * four columns made the panel a directory; fifteen over three makes it a
- * footer, and the reference works precisely because it is not crowded.
- *
- * Picked by title rather than by index, so the choices read as decisions
- * instead of offsets. Rename a link in `footerNav` and it drops out of the
- * footer rather than quietly pointing somewhere else - the better failure.
- */
-const COLUMN_PICKS = {
-  Product: [
-    "Features",
-    "WhatsApp Automation",
-    "Campaigns",
-    "CRM & Leads",
-    "Automation Builder",
-  ],
-  Solutions: [
-    "Small & Medium Business",
-    "E-commerce",
-    "Marketing Agencies",
-    "Real Estate",
-    "Education",
-  ],
-  Resources: [
-    "Documentation",
-    "Help Center",
-    "Blog",
-    "Guides",
-    "API Documentation",
-  ],
-} as const;
-
-const pick = (columnTitle: string, itemTitles: readonly string[]) => {
-  const source = footerNav.find((column) => column.title === columnTitle);
-  return itemTitles
-    .map((title) => source?.items.find((item) => item.title === title))
-    .filter((item): item is NonNullable<typeof item> => Boolean(item));
-};
-
-const COLUMNS = Object.entries(COLUMN_PICKS).map(([title, items]) => ({
-  title,
-  items: pick(title, items),
-}));
-
-/**
- * The two legal links that outlive the Legal column, taken from that same
- * column so their routes stay canonical rather than being retyped here.
- */
-const LEGAL = pick("Legal", ["Privacy Policy", "Terms of Service"]);
 
 /**
  * How every link on this band behaves: `dark-text` at rest, white on hover,
@@ -156,12 +101,13 @@ export function SiteFooter() {
       <div className="custom-container mx-auto px-4 pt-14 pb-6 sm:pt-16 lg:pt-20 lg:pb-8">
         {/*
          * Brand, then three columns: one wide brand cell against three equal
-         * link cells from `lg`, going to two columns and then one below it,
-         * with the brand always first. That is the reading order the groups
+         * link cells from `lg`; below it the brand takes a row of its own
+         * over the three columns, and on a phone everything stacks, brand
+         * first. That is the reading order the groups
          * are declared in, so the stacked order needs no separate rule.
          */}
-        <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.4fr)_repeat(3,minmax(0,1fr))] lg:gap-x-10">
-          <div className="sm:col-span-2 lg:col-span-1">
+        <div className="grid gap-x-8 gap-y-12 sm:grid-cols-3 lg:grid-cols-[minmax(0,1.4fr)_repeat(3,minmax(0,1fr))] lg:gap-x-10">
+          <div className="sm:col-span-3 lg:col-span-1">
             <Link
               href={APP_ROUTES.home}
               className="inline-flex items-center rounded-btn focus-visible:outline-none focus-visible:shadow-[0_0_0_3px_rgba(255,255,255,0.35)]"
@@ -196,7 +142,7 @@ export function SiteFooter() {
             </div>
           </div>
 
-          {COLUMNS.map((column) => (
+          {footerNav.map((column) => (
             <nav
               key={column.title}
               aria-labelledby={`footer-${column.title.toLowerCase()}`}
@@ -220,13 +166,13 @@ export function SiteFooter() {
           ))}
         </div>
 
-        {/* The small print, and the two legal links the column left behind. */}
+        {/* The small print, and the legal pair kept apart from the columns. */}
         <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/12 pt-6 text-sm sm:flex-row lg:mt-16">
           <p className="text-white/70">
             © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
           </p>
-          <nav className="flex gap-6">
-            {LEGAL.map((link) => (
+          <nav aria-label="Legal" className="flex gap-6">
+            {footerLegal.map((link) => (
               <Link key={link.href} href={link.href} className={LINK}>
                 {link.title}
               </Link>

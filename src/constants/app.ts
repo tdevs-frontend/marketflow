@@ -1,8 +1,10 @@
 export const APP_ROUTES = {
   home: "/",
   features: "/features",
+  solutions: "/solutions",
   pricing: "/pricing",
   blog: "/blog",
+  contact: "/contact",
   legalPrivacy: "/legal/privacy",
   legalTerms: "/legal/terms",
   /* Auth lives under one `/auth` segment, so sign-in, sign-up and password
