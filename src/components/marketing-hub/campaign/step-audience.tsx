@@ -340,7 +340,7 @@ function SocialAudience({ derived, goTo }: StepProps) {
           .
         </p>
         <p className="mt-2 flex items-center gap-2 text-sm font-medium text-text-muted">
-          <Badge tone="neutral" size="sm">
+          <Badge variant="default" size="sm">
             Estimate
           </Badge>
           Followers, not impressions. Actual reach comes back from each platform

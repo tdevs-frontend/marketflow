@@ -5,6 +5,7 @@ import {
   PageBreadcrumb,
   type Crumb,
 } from "@/components/marketing/page-breadcrumb";
+import { Badge } from "@/components/ui/badge";
 
 /**
  * The hero band every inner marketing page opens on - Features, Solutions,
@@ -55,10 +56,16 @@ export function PageHero({
       <div className="custom-container">
         <div className="py-16 lg:py-18">
           <div className="mx-auto max-w-4xl text-center">
-            <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
-              <Icon className="size-4 text-primary" aria-hidden />
+            <Badge
+              as="p"
+              variant="floating"
+              size="lg"
+              casing="none"
+              icon={<Icon className="size-4 text-primary" aria-hidden />}
+              className="pr-3.5"
+            >
               {eyebrow}
-            </p>
+            </Badge>
 
             <h1
               id={titleId}

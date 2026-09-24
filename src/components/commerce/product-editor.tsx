@@ -10,6 +10,7 @@ import {
   Star,
 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckboxField } from "@/components/ui/checkbox";
@@ -772,10 +773,15 @@ export function ProductEditor({
                     className="size-full object-cover"
                   />
                   {image.isThumbnail ? (
-                    <span className="absolute top-1.5 left-1.5 inline-flex items-center gap-1 rounded-full bg-surface px-1.5 py-0.5 text-sm font-bold text-primary uppercase">
-                      <Star className="size-2.5" aria-hidden />
+                    <Badge
+                      palette="bg-surface text-primary"
+                      weight="bold"
+                      casing="uppercase"
+                      icon={<Star className="size-2.5" aria-hidden />}
+                      className="absolute top-1.5 left-1.5 px-1.5"
+                    >
                       Thumb
-                    </span>
+                    </Badge>
                   ) : null}
                 </div>
               ))}

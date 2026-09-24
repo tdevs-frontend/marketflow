@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { LogoMark } from "@/components/ui/logo";
 import { cn } from "@/lib/utils";
 import { AutomationFlowPanel } from "./automation-flow-panel";
@@ -34,10 +35,16 @@ function WorkspaceTopBar() {
         WhatsApp Workspace
       </span>
 
-      <span className="ml-auto flex shrink-0 items-center gap-1 rounded-full bg-whatsapp-soft px-1.5 py-0.75 text-[7px] leading-none font-semibold text-whatsapp @[440px]:text-[8px] @[600px]:px-2 @[600px]:py-1 @[600px]:text-[9px]">
+      <Badge
+        palette="bg-whatsapp-soft text-whatsapp"
+        size="xs"
+        weight="semibold"
+        casing="none"
+        className="ml-auto flex shrink-0 px-1.5 py-0.75 text-[7px] leading-none @[440px]:text-[8px] @[600px]:px-2 @[600px]:py-1 @[600px]:text-[9px]"
+      >
         <span className="animate-soft-pulse size-1 rounded-full bg-whatsapp-brand" />
         Live
-      </span>
+      </Badge>
     </div>
   );
 }

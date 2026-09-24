@@ -324,7 +324,7 @@ export function SalesWorkspace() {
                         </TD>
 
                         <TD>
-                          <Badge size="sm" className="normal-case">
+                          <Badge size="sm" casing="none">
                             {sale.type === "mixed"
                               ? "Mixed"
                               : sale.type.charAt(0).toUpperCase() + sale.type.slice(1)}

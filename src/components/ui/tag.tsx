@@ -2,14 +2,16 @@
 
 import { X } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 /**
  * A contact or content label.
  *
- * Separate from `Badge`: a badge reports state the system owns (a status, a
- * count) and is read-only, while a tag is user data and can be removed. They
- * look similar on purpose and behave differently on purpose.
+ * Drawn by `Badge`, but kept as its own entry point for the behaviour: a
+ * badge reports state the system owns (a status, a count) and is read-only,
+ * while a tag is user data and can be removed. They look alike because they
+ * are the same pill; the remove affordance is what this adds.
  */
 export function Tag({
   label,
@@ -25,25 +27,26 @@ export function Tag({
   className?: string;
 }) {
   return (
-    <span
-      className={cn(
-        "inline-flex max-w-full items-center gap-1 rounded-btn px-2 py-0.5 text-sm font-medium",
-        tone ?? "bg-surface-secondary text-text-secondary",
-        className,
-      )}
+    <Badge
+      palette={tone}
+      casing="none"
+      className={cn("max-w-full rounded-btn px-2", className)}
+      iconPosition="end"
+      icon={
+        onRemove ? (
+          <button
+            type="button"
+            onClick={onRemove}
+            aria-label={`Remove ${label}`}
+            className="-mr-0.5 grid size-4 shrink-0 place-items-center rounded-full transition-colors hover:bg-text-primary/10 focus-visible:shadow-focus focus-visible:outline-none"
+          >
+            <X className="size-3" aria-hidden />
+          </button>
+        ) : null
+      }
     >
       <span className="truncate">{label}</span>
-      {onRemove ? (
-        <button
-          type="button"
-          onClick={onRemove}
-          aria-label={`Remove ${label}`}
-          className="-mr-0.5 grid size-4 shrink-0 place-items-center rounded-full transition-colors hover:bg-text-primary/10 focus-visible:shadow-focus focus-visible:outline-none"
-        >
-          <X className="size-3" aria-hidden />
-        </button>
-      ) : null}
-    </span>
+    </Badge>
   );
 }
 

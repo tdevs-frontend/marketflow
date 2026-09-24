@@ -7,6 +7,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { CONVERSATION, WORKSPACE_THREADS } from "./automation-data";
 
@@ -26,9 +27,14 @@ export function ConversationList() {
         <span className="text-[9px] leading-none font-bold tracking-tight text-text-primary @[600px]:text-[10.5px]">
           Conversations
         </span>
-        <span className="rounded-full bg-surface-secondary px-1 py-px text-[7px] leading-none font-semibold text-text-muted">
+        <Badge
+          variant="neutral"
+          size="xs"
+          weight="semibold"
+          className="px-1 py-px text-[7px] leading-none"
+        >
           12
-        </span>
+        </Badge>
       </div>
 
       <div className="mx-2 mb-1.5 flex items-center gap-1 rounded-md bg-surface-secondary px-1.5 py-1">
@@ -122,9 +128,15 @@ export function ConversationPanel() {
 
       {/* Thread */}
       <div className="flex min-h-0 flex-1 flex-col justify-end gap-1 overflow-hidden px-2 pt-2 pb-1.5 @[440px]:gap-1.5 @[440px]:px-3">
-        <span className="mx-auto mb-0.5 hidden rounded-full bg-black/5 px-1.5 py-0.5 text-[6px] leading-none font-semibold  text-text-muted uppercase @[440px]:block @[440px]:text-[7px]">
+        <Badge
+          palette="bg-black/5 text-text-muted"
+          size="xs"
+          weight="semibold"
+          casing="uppercase"
+          className="mx-auto mb-0.5 hidden px-1.5 text-[6px] leading-none @[440px]:block @[440px]:text-[7px]"
+        >
           Today
-        </span>
+        </Badge>
 
         {/* Inbound */}
         <span className="max-w-[88%] self-start rounded-[9px] rounded-bl-[3px] bg-surface px-2 py-1 shadow-[0_1px_1px_rgba(15,23,42,0.06)]">

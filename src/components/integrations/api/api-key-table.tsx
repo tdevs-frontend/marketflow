@@ -78,9 +78,9 @@ export function ApiKeyTable({
 
               <TD>
                 <Badge
-                  tone={scopeSummary(key.scopes) === "Read / Write" ? "warning" : "neutral"}
+                  variant={scopeSummary(key.scopes) === "Read / Write" ? "warning" : "default"}
                   size="sm"
-                  className="normal-case"
+                  casing="none"
                 >
                   {scopeSummary(key.scopes)}
                 </Badge>
@@ -90,7 +90,7 @@ export function ApiKeyTable({
               </TD>
 
               <TD>
-                <Badge tone={revoked ? "neutral" : "success"} size="sm" className="normal-case">
+                <Badge variant={revoked ? "default" : "success"} size="sm" casing="none">
                   {revoked ? "Revoked" : "Active"}
                 </Badge>
               </TD>

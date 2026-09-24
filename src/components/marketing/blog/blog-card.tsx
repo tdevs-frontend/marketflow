@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Clock3 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { CommonTextButton } from "@/components/ui/text-button";
 import { cn } from "@/lib/utils";
 import { formatArticleDate, type BlogArticle } from "@/constants/blog";
@@ -63,9 +64,15 @@ export function BlogCard({
         </div>
 
         <div className="flex flex-1 flex-col p-5 sm:p-6">
-          <p className="inline-flex w-fit items-center rounded-full border border-primary-border bg-primary-soft px-3 py-1 text-sm font-semibold text-primary">
+          <Badge
+            as="p"
+            variant="primary-outline"
+            weight="semibold"
+            casing="none"
+            className="w-fit px-3 py-1"
+          >
             {article.category}
-          </p>
+          </Badge>
 
           <h3 className="mt-4 text-lg sm:text-xl leading-7 font-bold text-text-primary transition-colors group-hover:text-primary text-pretty">
             {article.title}

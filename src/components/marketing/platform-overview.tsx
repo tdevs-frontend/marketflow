@@ -1,6 +1,6 @@
 import { Layers } from "lucide-react";
 
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
+import { Badge } from "@/components/ui/badge";
 
 import {
   ConnectionLines,
@@ -56,7 +56,15 @@ export function PlatformOverview() {
 
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <SectionEyebrow text="All-in-one growth platform" icon={Layers} />
+          <Badge
+            as="p"
+            variant="primary-outline"
+            size="lg"
+            casing="none"
+            icon={<Layers aria-hidden />}
+          >
+            All-in-one growth platform
+          </Badge>
 
           <h2
             id="platform-overview-title"

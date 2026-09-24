@@ -1,15 +1,15 @@
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import type { CampaignStatus } from "@/types/campaign";
 
-const TONES: Record<CampaignStatus, BadgeTone> = {
-  draft: "neutral",
+const TONES: Record<CampaignStatus, BadgeVariant> = {
+  draft: "default",
   scheduled: "info",
   sending: "info",
   sent: "success",
   paused: "warning",
-  failed: "danger",
+  failed: "error",
 };
 
 export function CampaignStatusBadge({ status }: { status: CampaignStatus }) {
-  return <Badge tone={TONES[status]}>{status}</Badge>;
+  return <Badge variant={TONES[status]}>{status}</Badge>;
 }

@@ -11,7 +11,7 @@
 
 import { Clock, Inbox, MessageSquare, Users, Workflow } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { BrandIcon } from "@/components/ui/brand-icon";
 import { ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -218,8 +218,8 @@ const QUEUE_TINTS = {
  * one worth printing. `Badge` capitalises what it is given, so these land as
  * "High Load", "Medium" and "Balanced".
  */
-function loadBand(percent: number): { tone: BadgeTone; label: string } {
-  if (percent >= 70) return { tone: "danger", label: "High load" };
+function loadBand(percent: number): { tone: BadgeVariant; label: string } {
+  if (percent >= 70) return { tone: "error", label: "High load" };
   if (percent >= 40) return { tone: "warning", label: "Medium" };
   return { tone: "success", label: "Balanced" };
 }
@@ -243,10 +243,10 @@ const AVG_SUCCESS =
 /* -------------------------------------------------------------------------- */
 
 /** Meta's own three-step rating, on the ramp the rest of the product uses. */
-const QUALITY_TONE: Record<"high" | "medium" | "low", BadgeTone> = {
+const QUALITY_TONE: Record<"high" | "medium" | "low", BadgeVariant> = {
   high: "success",
   medium: "warning",
-  low: "danger",
+  low: "error",
 };
 
 /**
@@ -290,24 +290,24 @@ function ConnectionStatus() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <Badge tone="success" size="sm" className="gap-1.5">
+          <Badge variant="success" size="sm" className="gap-1.5">
             <span aria-hidden className="size-1.5 rounded-full bg-success" />
             Connected
           </Badge>
-          <Badge tone={QUALITY_TONE[WA_CONNECTION.quality]} size="sm">
+          <Badge variant={QUALITY_TONE[WA_CONNECTION.quality]} size="sm">
             {WA_CONNECTION.quality} quality
           </Badge>
           {WA_CONNECTION.verified ? (
-            <Badge tone="neutral" size="sm">
+            <Badge variant="default" size="sm">
               Business verified
             </Badge>
           ) : (
-            <Badge tone="danger" size="sm">
+            <Badge variant="error" size="sm">
               Not verified
             </Badge>
           )}
           <Badge
-            tone={WA_CONNECTION.webhookHealthy ? "neutral" : "danger"}
+            variant={WA_CONNECTION.webhookHealthy ? "default" : "error"}
             size="sm"
           >
             {WA_CONNECTION.webhookHealthy
@@ -525,7 +525,7 @@ export function WhatsAppOverview() {
                     </p>
                   </div>
 
-                  <Badge tone={agent.band.tone} size="sm" className="shrink-0">
+                  <Badge variant={agent.band.tone} size="sm" className="shrink-0">
                     {agent.band.label}
                   </Badge>
                 </li>

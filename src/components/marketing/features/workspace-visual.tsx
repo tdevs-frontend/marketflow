@@ -1,5 +1,7 @@
 import { Check, Minus } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
+
 import { PanelLabel, ProductFrame } from "./feature-section";
 
 /**
@@ -55,11 +57,15 @@ export function WorkspaceVisual() {
                 <span className="min-w-0 flex-1 truncate text-xs font-semibold text-text-primary">
                   {member.name}
                 </span>
-                <span
-                  className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold ${ROLE_TONE[member.role]}`}
+                <Badge
+                  palette={ROLE_TONE[member.role]}
+                  size="xs"
+                  weight="semibold"
+                  casing="none"
+                  className="shrink-0 text-[10px]"
                 >
                   {member.role}
-                </span>
+                </Badge>
                 <span className="hidden w-14 shrink-0 text-right text-[10px] text-text-muted sm:block">
                   {member.active}
                 </span>

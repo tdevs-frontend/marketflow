@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { formatCurrency, formatNumber } from "@/lib/format";
@@ -246,17 +247,15 @@ export function GrowthOverview({ className }: { className?: string }) {
           {active.format === "currency" ? formatCurrency(latest) : formatNumber(latest)}
         </p>
         <span className="text-sm text-text-secondary">{meta.unit}</span>
-        <span
-          className={cn(
-            "inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-meta font-medium",
-            positive
-              ? "bg-primary-soft text-primary-dark"
-              : "bg-error-soft text-error-text",
-          )}
+        <Badge
+          variant={positive ? "primary" : "error"}
+          size="sm"
+          casing="none"
+          icon={<TrendIcon className="size-3.5" aria-hidden />}
+          className="gap-0.5"
         >
-          <TrendIcon className="size-3.5" aria-hidden />
           {Math.abs(change).toFixed(1)}%
-        </span>
+        </Badge>
         <span className="text-sm text-text-muted">{meta.comparison}</span>
       </div>
 

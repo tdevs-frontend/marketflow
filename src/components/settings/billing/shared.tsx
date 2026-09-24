@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Tooltip } from "@/components/ui/tooltip";
-import type { BadgeTone } from "@/components/ui/badge";
+import type { BadgeVariant } from "@/components/ui/badge";
 import type { SubscriptionStatus } from "@/types/account";
 
 /**
@@ -17,12 +17,12 @@ import type { SubscriptionStatus } from "@/types/account";
 /** Subscription status → its label and the product's tone for it. */
 export const STATUS: Record<
   SubscriptionStatus,
-  { label: string; tone: BadgeTone }
+  { label: string; tone: BadgeVariant }
 > = {
   active: { label: "Active", tone: "success" },
   trialing: { label: "Trial", tone: "info" },
-  past_due: { label: "Past due", tone: "danger" },
-  cancelled: { label: "Cancelled", tone: "neutral" },
+  past_due: { label: "Past due", tone: "error" },
+  cancelled: { label: "Cancelled", tone: "default" },
 };
 
 /**

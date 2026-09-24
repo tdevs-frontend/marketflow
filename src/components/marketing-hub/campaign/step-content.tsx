@@ -118,12 +118,12 @@ function WhatsAppComposer({ draft, set, errors, derived }: StepProps) {
         <div className="rounded-panel border border-border px-3.5 py-3">
           <div className="flex flex-wrap items-center gap-2">
             <Badge
-              tone={
+              variant={
                 template.status === "approved"
                   ? "success"
                   : template.status === "pending"
                     ? "warning"
-                    : "danger"
+                    : "error"
               }
               size="sm"
             >

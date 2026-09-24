@@ -316,8 +316,7 @@ export function WorkflowSettings({
           description="What success looks like. Conversion is measured against this."
           action={
             goal.enabled ? (
-              <Badge tone="brand">
-                <Target className="size-3" aria-hidden />
+              <Badge variant="primary" icon={<Target aria-hidden />}>
                 Set
               </Badge>
             ) : null

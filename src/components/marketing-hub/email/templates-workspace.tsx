@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { Copy, Eye, MailOpen, Pencil, Plus, Trash2, X } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -35,11 +35,11 @@ import { EmailTemplateBuilder } from "./template-builder";
 
 const ALL = "all";
 
-const CATEGORY_TONES: Record<EmailTemplateCategory, BadgeTone> = {
+const CATEGORY_TONES: Record<EmailTemplateCategory, BadgeVariant> = {
   newsletter: "info",
   promotion: "warning",
-  welcome: "brand",
-  "follow-up": "neutral",
+  welcome: "primary",
+  "follow-up": "default",
   /* Transactional is the one shelf that is not marketing at all - a receipt
      goes to someone who never opted in - so it wears its own tone rather than
      sharing the neutral the follow-ups use. */
@@ -361,11 +361,11 @@ export function EmailTemplatesWorkspace() {
                   </div>
 
                   <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-                    <Badge tone={CATEGORY_TONES[template.category]}>
+                    <Badge variant={CATEGORY_TONES[template.category]}>
                       {categoryLabel(template.category)}
                     </Badge>
                     {template.status === "draft" ? (
-                      <Badge tone="neutral">Draft</Badge>
+                      <Badge variant="default">Draft</Badge>
                     ) : null}
                   </div>
 

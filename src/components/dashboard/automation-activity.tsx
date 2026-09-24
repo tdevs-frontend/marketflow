@@ -10,7 +10,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -31,13 +31,13 @@ import { cn } from "@/lib/utils";
  */
 type RunStatus = "Completed" | "Sent" | "Running" | "Queued" | "Skipped" | "Failed";
 
-const STATUS_TONE: Record<RunStatus, BadgeTone> = {
+const STATUS_TONE: Record<RunStatus, BadgeVariant> = {
   Completed: "success",
   Sent: "success",
   Running: "info",
   Queued: "warning",
-  Skipped: "neutral",
-  Failed: "danger",
+  Skipped: "default",
+  Failed: "error",
 };
 
 /** The states that are still moving get the live mark. */
@@ -243,9 +243,10 @@ export function AutomationActivity({ className }: { className?: string }) {
                       description's line, so the copy gets the full measure. */}
                   <div className="flex shrink-0 items-center gap-2.5 sm:flex-col sm:items-end sm:gap-1">
                     <Badge
-                      tone={STATUS_TONE[item.status]}
+                      variant={STATUS_TONE[item.status]}
                       size="sm"
-                      className="gap-1.5 normal-case"
+                      casing="none"
+                      className="gap-1.5"
                     >
                       {/* `bg-current` takes the badge's own ink, so the mark
                           never introduces a colour the tone does not already

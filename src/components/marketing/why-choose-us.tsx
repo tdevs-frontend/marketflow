@@ -10,13 +10,13 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
 import { BrandIcon } from "@/components/ui/brand-icon";
 import { CommonTextButton } from "@/components/ui/text-button";
 import { APP_ROUTES } from "@/constants";
 import { cn } from "@/lib/utils";
 import { TRUST_STATS } from "./trust-stats";
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 /**
  * The case for the platform, argued once and then evidenced.
@@ -232,7 +232,15 @@ export function WhyChooseUs({
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[minmax(0,0.62fr)_minmax(0,1fr)] xl:gap-14">
           {/* The argument */}
           <div className="max-w-xl">
-            <SectionEyebrow text="Why choose us" icon={BadgeCheck} />
+            <Badge
+              as="p"
+              variant="primary-outline"
+              size="lg"
+              casing="none"
+              icon={<BadgeCheck aria-hidden />}
+            >
+              Why choose us
+            </Badge>
 
             <h2
               id="why-choose-us-title"

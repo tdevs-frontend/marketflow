@@ -14,8 +14,8 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 /* -------------------------------------------------------------------------- */
 /* Data                                                                       */
@@ -275,10 +275,16 @@ function ResultsCard() {
       <Node side="top" />
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
         <h3 className="text-sm font-bold text-text-primary">Campaign Results</h3>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary-dark">
-          <TrendingUp className="size-3" aria-hidden />
+        <Badge
+          variant="primary"
+          size="xs"
+          weight="semibold"
+          casing="none"
+          icon={<TrendingUp aria-hidden />}
+          className="gap-1.5 px-3 py-1"
+        >
           +21.5% campaign growth
-        </span>
+        </Badge>
       </div>
       <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-4">
         {RESULTS.map((result) => (
@@ -360,7 +366,15 @@ export function MultiChannelCampaign() {
 
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <SectionEyebrow text="Multi-channel campaigns" icon={Send} />
+          <Badge
+            as="p"
+            variant="primary-outline"
+            size="lg"
+            casing="none"
+            icon={<Send aria-hidden />}
+          >
+            Multi-channel campaigns
+          </Badge>
 
           <h2
             id="multi-channel-title"
@@ -381,16 +395,34 @@ export function MultiChannelCampaign() {
           <div className="relative order-1 lg:order-2">
             {/* Personalization badges, placed off the grid so the composition
                 reads as designed rather than tiled. */}
-            <span className="absolute -top-2 right-0 z-10 hidden rounded-full border border-border bg-surface px-3 py-1 text-xs font-semibold text-text-secondary shadow-card xl:block">
+            <Badge
+              variant="floating"
+              size="xs"
+              weight="semibold"
+              casing="none"
+              className="absolute -top-2 right-0 z-10 hidden px-3 py-1 xl:block"
+            >
               Personalized
-            </span>
-            <span className="absolute top-1/2 -left-6 z-10 hidden rounded-full border border-border bg-surface px-3 py-1 text-xs font-semibold text-text-secondary shadow-card xl:block">
+            </Badge>
+            <Badge
+              variant="floating"
+              size="xs"
+              weight="semibold"
+              casing="none"
+              className="absolute top-1/2 -left-6 z-10 hidden px-3 py-1 xl:block"
+            >
               Segment-based
-            </span>
-            <span className="absolute -right-4 bottom-24 z-10 hidden rounded-full border border-border bg-surface px-3 py-1 text-xs font-semibold text-text-secondary shadow-card xl:block">
+            </Badge>
+            <Badge
+              variant="floating"
+              size="xs"
+              weight="semibold"
+              casing="none"
+              className="absolute -right-4 bottom-24 z-10 hidden px-3 py-1 xl:block"
+            >
               <Clock className="mr-1 inline size-3 align-[-2px]" aria-hidden />
               Scheduled
-            </span>
+            </Badge>
 
             <CampaignCard />
 

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { CheckCheck, MessageSquare, Send } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { ChartCard, PanelCard } from "@/components/ui/chart-card";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { StatsGrid, type StatItem } from "@/components/ui/stats-card";
@@ -150,10 +150,10 @@ const AGENT_ROWS = [...WA_INBOX_SNAPSHOT.agents].sort(
 /* Templates                                                                  */
 /* -------------------------------------------------------------------------- */
 
-const CATEGORY_TONE: Record<string, BadgeTone> = {
-  marketing: "brand",
+const CATEGORY_TONE: Record<string, BadgeVariant> = {
+  marketing: "primary",
   utility: "info",
-  authentication: "neutral",
+  authentication: "default",
 };
 
 /** Best reply rate first - the column the table exists to rank by. */
@@ -283,7 +283,7 @@ export function WhatsAppAnalytics({ range }: { range?: TrendWindow } = {}) {
                         {template.name}
                       </span>
                       <Badge
-                        tone={CATEGORY_TONE[template.category] ?? "neutral"}
+                        variant={CATEGORY_TONE[template.category] ?? "neutral"}
                         size="sm"
                         className="shrink-0"
                       >

@@ -6,7 +6,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { CHANNEL_THEME } from "@/constants/channels";
 import { formatRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -75,12 +75,12 @@ const KIND_CATEGORY: Record<ActivityKind, ActivityCategory> = {
   alert: "channel",
 };
 
-const STATES: Record<ActivityState, { label: string; tone: BadgeTone }> = {
+const STATES: Record<ActivityState, { label: string; tone: BadgeVariant }> = {
   running: { label: "Running", tone: "info" },
-  scheduled: { label: "Scheduled", tone: "neutral" },
+  scheduled: { label: "Scheduled", tone: "default" },
   completed: { label: "Completed", tone: "success" },
   approved: { label: "Approved", tone: "success" },
-  failed: { label: "Failed", tone: "danger" },
+  failed: { label: "Failed", tone: "error" },
   attention: { label: "Action needed", tone: "warning" },
 };
 
@@ -127,15 +127,16 @@ export function ActivityStream({
       {groups.map((group) => (
         <section key={group.key}>
           <h3 className="flex items-center gap-2">
-            <span
-              className={cn(
-                "inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-meta font-bold",
-                group.chip,
-              )}
+            <Badge
+              size="sm"
+              weight="bold"
+              casing="none"
+              palette={cn("border", group.chip)}
+              icon={<group.icon aria-hidden />}
+              className="gap-1.5"
             >
-              <group.icon className="size-3" aria-hidden />
               {group.label}
-            </span>
+            </Badge>
             <span className="text-meta font-medium text-text-muted tabular-nums">
               {group.entries.length}
             </span>
@@ -186,7 +187,7 @@ export function ActivityStream({
                       being scanned for and the timestamp qualifies it. */}
                   <div className="flex shrink-0 flex-col items-end gap-1">
                     {state ? (
-                      <Badge tone={state.tone} size="sm">
+                      <Badge variant={state.tone} size="sm">
                         {state.label}
                       </Badge>
                     ) : null}

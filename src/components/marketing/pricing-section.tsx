@@ -1,6 +1,6 @@
 import { Tag } from "lucide-react";
 
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
+import { Badge } from "@/components/ui/badge";
 
 import { PricingPlans } from "./pricing-plans";
 
@@ -22,7 +22,15 @@ export function PricingSection() {
 
       <div className="custom-container">
         <header className="mx-auto max-w-3xl text-center">
-          <SectionEyebrow text="Simple, scalable pricing" icon={Tag} />
+          <Badge
+            as="p"
+            variant="primary-outline"
+            size="lg"
+            casing="none"
+            icon={<Tag aria-hidden />}
+          >
+            Simple, scalable pricing
+          </Badge>
           <h2
             id="pricing-title"
             className="section-title mt-5 text-balance"

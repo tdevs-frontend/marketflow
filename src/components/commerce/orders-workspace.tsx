@@ -331,7 +331,7 @@ export function OrdersWorkspace() {
                         </TD>
 
                         <TD>
-                          <Badge size="sm" className="normal-case">
+                          <Badge size="sm" casing="none">
                             {ORDER_TYPES.find((item) => item.value === order.orderType)
                               ?.label ?? order.orderType}
                           </Badge>

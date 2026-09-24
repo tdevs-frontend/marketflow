@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import { ArrowRight, Settings } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 /**
  * How it works - one customer, eight steps, from the campaign click to the
@@ -434,7 +434,15 @@ export function HowItWorks() {
         {/* Same header as `SolutionsSection` directly above it - pill, ramp,
             gradient phrase and subheading - so the two read as one page. */}
         <header className="section-title-space mx-auto max-w-3xl text-center">
-          <SectionEyebrow text="How it works" icon={Settings} />
+          <Badge
+            as="p"
+            variant="primary-outline"
+            size="lg"
+            casing="none"
+            icon={<Settings aria-hidden />}
+          >
+            How it works
+          </Badge>
 
           <h2
             id="how-it-works-title"

@@ -1,6 +1,6 @@
 import { BarChart3 } from "lucide-react";
 
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
+import { Badge } from "@/components/ui/badge";
 
 import { AnalyticsDashboard } from "./analytics-dashboard";
 
@@ -23,7 +23,15 @@ export function AnalyticsSection() {
 
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <SectionEyebrow text="Marketing Analytics" icon={BarChart3} />
+          <Badge
+            as="p"
+            variant="primary-outline"
+            size="lg"
+            casing="none"
+            icon={<BarChart3 aria-hidden />}
+          >
+            Marketing Analytics
+          </Badge>
 
           <h2
             id="analytics-title"

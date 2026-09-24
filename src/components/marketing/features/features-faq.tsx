@@ -1,7 +1,7 @@
 import { CircleHelp } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { FaqAccordion } from "@/components/marketing/faq-accordion";
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 import { FEATURES_FAQ_IDS, pickFaqs } from "@/constants/faq";
 
 /**
@@ -39,7 +39,15 @@ export function FeaturesFaq() {
          */}
         <div className="grid gap-10 md:grid-cols-[3fr_3fr] md:gap-10 lg:grid-cols-[6fr_13fr] lg:gap-16">
           <header className="md:pt-1">
-            <SectionEyebrow text="FAQ" icon={CircleHelp} />
+            <Badge
+              as="p"
+              variant="primary-outline"
+              size="lg"
+              casing="none"
+              icon={<CircleHelp aria-hidden />}
+            >
+              FAQ
+            </Badge>
 
             <h2 id="faq-title" className="section-title mt-5 text-balance">
               Frequently

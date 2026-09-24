@@ -155,7 +155,7 @@ function EmailSender({ draft, set }: StepProps) {
 
           {identity ? (
             <div className="mt-3 flex flex-wrap items-center gap-2.5">
-              <Badge tone="success" size="sm">
+              <Badge variant="success" size="sm">
                 Verified
               </Badge>
               <span className="text-sm font-medium text-text-muted">
@@ -202,7 +202,7 @@ function EmailSender({ draft, set }: StepProps) {
               <p className="text-sm font-bold text-text-primary">
                 {EMAIL_PROVIDER.name}
               </p>
-              <Badge tone={EMAIL_PROVIDER.connected ? "success" : "danger"} size="sm">
+              <Badge variant={EMAIL_PROVIDER.connected ? "success" : "error"} size="sm">
                 {EMAIL_PROVIDER.connected ? "Connected" : "Disconnected"}
               </Badge>
               <span className="font-mono text-sm text-text-muted">
@@ -308,7 +308,7 @@ function WhatsAppSender({ draft, set }: StepProps) {
 
       {connection?.verified ? (
         <p className="mt-2.5 flex items-center gap-2 text-sm font-medium text-text-muted">
-          <Badge tone="success" size="sm">
+          <Badge variant="success" size="sm">
             Verified
           </Badge>
           Approved templates are required outside the 24-hour reply window.

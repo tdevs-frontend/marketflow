@@ -1,6 +1,7 @@
 import { ChevronDown, Scale } from "lucide-react";
 
 import { PageBreadcrumb } from "@/components/marketing/page-breadcrumb";
+import { Badge } from "@/components/ui/badge";
 import { CommonTextButton } from "@/components/ui/text-button";
 import { APP_ROUTES } from "@/constants";
 import {
@@ -60,10 +61,16 @@ export function LegalDocument({
 
         <div className="custom-container">
           <div className="mx-auto max-w-3xl py-16 text-center lg:py-20">
-            <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pr-3.5 pl-3 text-text-secondary shadow-card">
-              <Scale className="size-4 text-primary" aria-hidden />
+            <Badge
+              as="p"
+              variant="floating"
+              size="lg"
+              casing="none"
+              icon={<Scale className="size-4 text-primary" aria-hidden />}
+              className="pr-3.5"
+            >
               Legal
-            </p>
+            </Badge>
 
             <h1
               id="legal-title"

@@ -2,6 +2,7 @@
 
 import { ChevronDown, Plus } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Icon } from "@/components/ui/icon";
 import { CHANNEL_THEME } from "@/constants/channels";
 import { formatNumber } from "@/lib/format";
@@ -67,9 +68,9 @@ export function FlowConnector({
     >
       <span className="absolute inset-y-0 w-px bg-border" />
       {label ? (
-        <span className="relative rounded-full border border-border bg-surface px-2 py-0.5 text-sm font-medium text-text-muted">
+        <Badge variant="surface-muted" casing="none" className="relative px-2">
           {label}
-        </span>
+        </Badge>
       ) : (
         <ChevronDown className="relative size-3.5 bg-surface text-border-strong" />
       )}

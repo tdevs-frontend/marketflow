@@ -1,20 +1,20 @@
 import { Mail, MessageCircle, Share2, Smartphone } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { CampaignStatus, MarketingChannel } from "@/types/marketing";
 
-const STATUS_TONES: Record<CampaignStatus, BadgeTone> = {
-  draft: "neutral",
+const STATUS_TONES: Record<CampaignStatus, BadgeVariant> = {
+  draft: "default",
   scheduled: "info",
   running: "success",
-  completed: "brand",
+  completed: "primary",
   paused: "warning",
-  failed: "danger",
+  failed: "error",
 };
 
 export function CampaignStatusBadge({ status }: { status: CampaignStatus }) {
-  return <Badge tone={STATUS_TONES[status]}>{status}</Badge>;
+  return <Badge variant={STATUS_TONES[status]}>{status}</Badge>;
 }
 
 const CHANNEL_META: Record<

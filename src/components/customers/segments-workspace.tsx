@@ -81,13 +81,11 @@ const USAGE = [
 /** Dynamic re-evaluates, static is frozen - a tone difference, not a colour. */
 function TypeBadge({ type }: { type: CustomerSegment["type"] }) {
   return type === "dynamic" ? (
-    <Badge tone="info">
-      <Zap className="size-3" aria-hidden />
+    <Badge variant="info" icon={<Zap aria-hidden />}>
       Dynamic
     </Badge>
   ) : (
-    <Badge tone="neutral">
-      <Lock className="size-3" aria-hidden />
+    <Badge variant="default" icon={<Lock aria-hidden />}>
       Static
     </Badge>
   );

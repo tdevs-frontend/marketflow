@@ -525,7 +525,7 @@ export function RoleChip({ roleId }: { roleId: string }) {
   if (!role) return null;
 
   return (
-    <Badge tone={role.type === "custom" ? "brand" : "neutral"} className="normal-case">
+    <Badge variant={role.type === "custom" ? "primary" : "default"} casing="none">
       {role.name}
     </Badge>
   );

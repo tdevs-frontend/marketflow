@@ -15,6 +15,7 @@ import {
   TriangleAlert,
 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CheckboxField } from "@/components/ui/checkbox";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -798,12 +799,15 @@ export function VariantManager({
             {variantsAffectedByValue(variants, pending.optionIndex, pending.value)
               .slice(0, 8)
               .map((variant) => (
-                <li
+                <Badge
+                  as="li"
                   key={variant.id}
-                  className="rounded-full border border-border bg-surface-secondary px-2.5 py-0.5 text-meta font-medium text-text-secondary"
+                  size="sm"
+                  casing="none"
+                  className="border border-border px-2.5"
                 >
                   {variantName(variant.optionValues)}
-                </li>
+                </Badge>
               ))}
             {affected > 8 ? (
               <li className="px-1 text-meta font-medium text-text-muted">
@@ -816,12 +820,15 @@ export function VariantManager({
         {pending?.kind === "delete-selected" ? (
           <ul className="mt-3 flex flex-wrap gap-1.5">
             {selectedVariants.slice(0, 8).map((variant) => (
-              <li
+              <Badge
+                as="li"
                 key={variant.id}
-                className="rounded-full border border-border bg-surface-secondary px-2.5 py-0.5 text-meta font-medium text-text-secondary"
+                size="sm"
+                casing="none"
+                className="border border-border px-2.5"
               >
                 {variantName(variant.optionValues)}
-              </li>
+              </Badge>
             ))}
             {selectedVariants.length > 8 ? (
               <li className="px-1 text-meta font-medium text-text-muted">

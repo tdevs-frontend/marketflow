@@ -9,7 +9,7 @@ import {
   Trash2,
 } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -53,10 +53,10 @@ import type { SmsSenderId, SmsSenderStatus, SmsSenderType } from "@/types/sms";
  * of every campaign that ends "reply STOP" and expects to hear anything.
  */
 
-const STATUS_TONES: Record<SmsSenderStatus, BadgeTone> = {
+const STATUS_TONES: Record<SmsSenderStatus, BadgeVariant> = {
   active: "success",
   pending: "warning",
-  blocked: "danger",
+  blocked: "error",
 };
 
 const STATUS_LABELS: Record<SmsSenderStatus, string> = {
@@ -147,7 +147,7 @@ export function SmsSendersWorkspace() {
                         {sender.value}
                       </span>
                       {sender.isDefault ? (
-                        <Badge tone="brand" size="sm">
+                        <Badge variant="primary" size="sm">
                           Default
                         </Badge>
                       ) : null}
@@ -170,7 +170,7 @@ export function SmsSendersWorkspace() {
                   </TD>
 
                   <TD>
-                    <Badge tone={STATUS_TONES[sender.status]}>
+                    <Badge variant={STATUS_TONES[sender.status]}>
                       {STATUS_LABELS[sender.status]}
                     </Badge>
                   </TD>
@@ -214,7 +214,7 @@ export function SmsSendersWorkspace() {
                   </p>
                 </div>
                 <div className="flex shrink-0 items-center gap-1">
-                  <Badge tone={STATUS_TONES[sender.status]} size="sm">
+                  <Badge variant={STATUS_TONES[sender.status]} size="sm">
                     {STATUS_LABELS[sender.status]}
                   </Badge>
                   <Menu
@@ -226,12 +226,12 @@ export function SmsSendersWorkspace() {
 
               <div className="mt-2 flex flex-wrap items-center gap-1.5">
                 {sender.isDefault ? (
-                  <Badge tone="brand" size="sm">
+                  <Badge variant="primary" size="sm">
                     Default
                   </Badge>
                 ) : null}
                 {canReceiveReplies(sender.type) ? null : (
-                  <Badge tone="warning" size="sm">
+                  <Badge variant="warning" size="sm">
                     No replies
                   </Badge>
                 )}

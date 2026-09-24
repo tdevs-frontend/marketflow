@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { ArrowRight, LayoutGrid, Rocket } from "lucide-react";
 
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
+import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
 import { APP_ROUTES } from "@/constants";
 
@@ -68,7 +68,15 @@ export function CtaSection({
       />
 
       <div className="relative mx-auto max-w-2xl text-center">
-        <SectionEyebrow text={eyebrow} icon={Rocket} />
+        <Badge
+          as="p"
+          variant="primary-outline"
+          size="lg"
+          casing="none"
+          icon={<Rocket aria-hidden />}
+        >
+          {eyebrow}
+        </Badge>
 
         <h2 id="cta-section-title" className="section-title mt-6 text-balance">
           {title}

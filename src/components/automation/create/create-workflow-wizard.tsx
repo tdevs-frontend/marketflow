@@ -596,7 +596,7 @@ export function CreateWorkflowWizard() {
 
                 <div className="flex items-start justify-between gap-3">
                   <span className="text-sm text-text-muted">Status on create</span>
-                  <Badge tone="neutral">Draft</Badge>
+                  <Badge variant="default">Draft</Badge>
                 </div>
 
                 <p className="border-t border-border pt-3 text-sm text-text-muted">

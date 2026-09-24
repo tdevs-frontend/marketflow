@@ -1,5 +1,6 @@
 import { MessageCircle, Send, TrendingUp, Workflow } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 type Kpi = { label: string; value: string; change: string };
@@ -61,10 +62,16 @@ export function PlatformDashboard({ className }: { className?: string }) {
       {/* Header */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-border px-5 py-4">
         <h3 className="text-sm font-bold text-text-primary">Marketing Overview</h3>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-soft px-2.5 py-1 text-xs font-semibold text-primary-dark">
-          <TrendingUp className="size-3" aria-hidden />
+        <Badge
+          variant="primary"
+          size="xs"
+          weight="semibold"
+          casing="none"
+          icon={<TrendingUp aria-hidden />}
+          className="gap-1.5 px-2.5 py-1"
+        >
           32.8% overall growth
-        </span>
+        </Badge>
         <ul className="ml-auto flex items-center gap-3">
           {CHANNELS.map((channel) => (
             <li key={channel} className="flex items-center gap-1.5 text-xs text-text-secondary">

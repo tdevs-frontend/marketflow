@@ -103,7 +103,7 @@ export function WhatsAppIntegration() {
           label="Provider"
           hint="Switch providers from Reconnect - credentials do not carry across."
           value={
-            <Badge tone="brand" className="normal-case">
+            <Badge variant="primary" casing="none">
               {integration.provider?.name ?? "Not selected"}
             </Badge>
           }

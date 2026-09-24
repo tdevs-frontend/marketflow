@@ -15,6 +15,7 @@ import {
 
 import { BarsChart, TrendChart } from "@/components/dashboard/charts";
 import { BRAND_SERIES, CHART_COLORS } from "@/components/dashboard/charts/chart-theme";
+import { Badge } from "@/components/ui/badge";
 import { ChartCard, PanelCard } from "@/components/ui/chart-card";
 import { KpiStrip, type Kpi } from "@/components/ui/kpi-strip";
 import { ProgressBar } from "@/components/ui/progress";
@@ -212,15 +213,19 @@ function NodeAnalyticsRow({
       {node.branches?.length ? (
         <ul className="mt-1.5 flex flex-wrap gap-1.5 pl-9">
           {node.branches.map((branch) => (
-            <li
+            <Badge
+              as="li"
               key={branch.id}
-              className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-border-strong px-2.5 py-0.5 text-sm text-text-secondary"
+              variant="dashed"
+              weight="inherit"
+              casing="none"
+              className="gap-1.5"
             >
               {branch.label}
               <span className="font-medium text-text-primary tabular-nums">
                 {node.branchShare?.[branch.id] ?? 0}%
               </span>
-            </li>
+            </Badge>
           ))}
         </ul>
       ) : null}

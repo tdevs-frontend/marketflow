@@ -11,8 +11,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 /**
  * The whole product, on one screen.
@@ -139,7 +139,15 @@ export function AllFeatures() {
     >
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <SectionEyebrow text="Our features" icon={Sparkles} />
+          <Badge
+            as="p"
+            variant="primary-outline"
+            size="lg"
+            casing="none"
+            icon={<Sparkles aria-hidden />}
+          >
+            Our features
+          </Badge>
 
           <h2
             id="all-features-title"

@@ -1,4 +1,4 @@
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import type { CampaignStatus } from "@/types/marketing";
 
 /**
@@ -18,17 +18,17 @@ const STATUS_LABELS: Record<CampaignStatus, string> = {
   failed: "Failed",
 };
 
-const STATUS_TONES: Record<CampaignStatus, BadgeTone> = {
-  draft: "neutral",
+const STATUS_TONES: Record<CampaignStatus, BadgeVariant> = {
+  draft: "default",
   scheduled: "info",
   running: "success",
-  completed: "brand",
+  completed: "primary",
   paused: "warning",
-  failed: "danger",
+  failed: "error",
 };
 
 export function EmailCampaignStatusBadge({ status }: { status: CampaignStatus }) {
-  return <Badge tone={STATUS_TONES[status]}>{STATUS_LABELS[status]}</Badge>;
+  return <Badge variant={STATUS_TONES[status]}>{STATUS_LABELS[status]}</Badge>;
 }
 
 /** Status filter options, in the order a campaign moves through them. */

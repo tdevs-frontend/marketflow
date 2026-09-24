@@ -210,13 +210,13 @@ export function WorkflowDetail({ workflow }: { workflow: Workflow }) {
                   onClick={() => setHistory(true)}
                   className="rounded-full focus-visible:shadow-focus focus-visible:outline-none"
                 >
-                  <Badge tone="neutral">Published v{publishedVersion}</Badge>
+                  <Badge variant="default">Published v{publishedVersion}</Badge>
                 </button>
               </Tooltip>
             ) : null}
 
             {savedDraft ? (
-              <Badge tone="warning">Draft changes</Badge>
+              <Badge variant="warning">Draft changes</Badge>
             ) : null}
 
             <span

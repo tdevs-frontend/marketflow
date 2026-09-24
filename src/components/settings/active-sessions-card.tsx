@@ -110,7 +110,7 @@ export function ActiveSessionsCard() {
       description="The devices your account is currently signed in on."
       action={
         state.status === "ready" ? (
-          <Badge tone="neutral" className="whitespace-nowrap">
+          <Badge variant="default" className="whitespace-nowrap">
             {sessions.length} {sessions.length === 1 ? "device" : "devices"}
           </Badge>
         ) : null
@@ -268,7 +268,7 @@ function SessionRow({
       )}
       actions={
         session.current ? (
-          <Badge tone="success" size="sm">
+          <Badge variant="success" size="sm">
             Current session
           </Badge>
         ) : (

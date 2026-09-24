@@ -16,7 +16,7 @@ import {
 
 import { AvatarLabel } from "@/components/ui/avatar";
 import { TABLE_PAGE_SIZE } from "@/constants/app";
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -66,18 +66,18 @@ const ALL = "all";
 const PER_PAGE = TABLE_PAGE_SIZE;
 const theme = CHANNEL_THEME.email;
 
-const STATUS_TONES: Record<EmailContactStatus, BadgeTone> = {
+const STATUS_TONES: Record<EmailContactStatus, BadgeVariant> = {
   subscribed: "success",
   pending: "warning",
-  unsubscribed: "neutral",
-  bounced: "danger",
+  unsubscribed: "default",
+  bounced: "error",
 };
 
-const ENGAGEMENT_TONES: Record<EngagementLevel, BadgeTone> = {
-  high: "brand",
+const ENGAGEMENT_TONES: Record<EngagementLevel, BadgeVariant> = {
+  high: "primary",
   medium: "info",
   low: "warning",
-  none: "neutral",
+  none: "default",
 };
 
 const ENGAGEMENT_LABELS: Record<EngagementLevel, string> = {
@@ -442,13 +442,13 @@ export function EmailContactsWorkspace() {
                         </TD>
 
                         <TD>
-                          <Badge tone={STATUS_TONES[contact.status]}>
+                          <Badge variant={STATUS_TONES[contact.status]}>
                             {contact.status}
                           </Badge>
                         </TD>
 
                         <TD>
-                          <Badge tone={ENGAGEMENT_TONES[contact.engagement]}>
+                          <Badge variant={ENGAGEMENT_TONES[contact.engagement]}>
                             {ENGAGEMENT_LABELS[contact.engagement]}
                           </Badge>
                         </TD>
@@ -539,7 +539,7 @@ export function EmailContactsWorkspace() {
                       >
                         <AvatarLabel name={name} secondary={contact.email} size="sm" />
                       </button>
-                      <Badge tone={STATUS_TONES[contact.status]}>
+                      <Badge variant={STATUS_TONES[contact.status]}>
                         {contact.status}
                       </Badge>
                     </div>
@@ -612,8 +612,8 @@ export function EmailContactsWorkspace() {
             </div>
 
             <div className="flex flex-wrap items-center gap-1.5">
-              <Badge tone={STATUS_TONES[detail.status]}>{detail.status}</Badge>
-              <Badge tone={ENGAGEMENT_TONES[detail.engagement]}>
+              <Badge variant={STATUS_TONES[detail.status]}>{detail.status}</Badge>
+              <Badge variant={ENGAGEMENT_TONES[detail.engagement]}>
                 {ENGAGEMENT_LABELS[detail.engagement]} engagement
               </Badge>
             </div>

@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import { CircleHelp } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { FaqAccordion } from "@/components/marketing/faq-accordion";
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 import { FAQ_ITEMS, type FaqEntry } from "@/constants/faq";
 import { cn } from "@/lib/utils";
 
@@ -54,7 +54,15 @@ export function FaqSection({
           <header className="mx-auto max-w-2xl text-center">
             {title !== null && (
               <>
-                <SectionEyebrow text="FAQ" icon={CircleHelp} />
+                <Badge
+                  as="p"
+                  variant="primary-outline"
+                  size="lg"
+                  casing="none"
+                  icon={<CircleHelp aria-hidden />}
+                >
+                  FAQ
+                </Badge>
                 <h2 id={titleId} className="section-title mt-5 text-balance">
                   {title}
                 </h2>

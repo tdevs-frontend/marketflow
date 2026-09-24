@@ -271,11 +271,11 @@ export function ProductDetail({
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <ProductStatusBadge status={product.status} />
-                  <Badge size="sm" className="normal-case">
+                  <Badge size="sm" casing="none">
                     {product.categoryName}
                   </Badge>
                   {live ? (
-                    <Badge tone="brand" size="sm" className="normal-case">
+                    <Badge variant="primary" size="sm" casing="none">
                       {variants.length} variants
                     </Badge>
                   ) : null}
@@ -361,7 +361,7 @@ export function ProductDetail({
                   <ul className="flex flex-wrap gap-1.5">
                     {product.tags.map((tag) => (
                       <li key={tag}>
-                        <Badge size="sm" className="normal-case">
+                        <Badge size="sm" casing="none">
                           {tag}
                         </Badge>
                       </li>

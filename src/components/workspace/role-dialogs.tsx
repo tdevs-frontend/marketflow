@@ -303,7 +303,7 @@ export function CreateRoleDrawer({
                       >
                         {item.label}
                       </span>
-                      <Badge size="sm" className="normal-case">
+                      <Badge size="sm" casing="none">
                         {item.kind === "preset" ? "Preset" : "Existing role"}
                       </Badge>
                     </span>
@@ -548,7 +548,7 @@ function DeltaList({
               {delta.resourceLabel} · {delta.actionLabel}
             </span>
             {delta.sensitive ? (
-              <Badge tone="warning" size="sm" className="normal-case">
+              <Badge variant="warning" size="sm" casing="none">
                 Sensitive
               </Badge>
             ) : null}

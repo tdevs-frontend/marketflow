@@ -8,7 +8,7 @@ import {
   Settings2,
 } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { MiniStat } from "@/components/ui/stats-card";
@@ -48,10 +48,10 @@ import { PlatformMark } from "../shared/channel-badge";
  * and the Integrations page also read.
  */
 
-const STATUS_TONES: Record<AccountStatus, BadgeTone> = {
+const STATUS_TONES: Record<AccountStatus, BadgeVariant> = {
   connected: "success",
   expired: "warning",
-  disconnected: "neutral",
+  disconnected: "default",
 };
 
 const STATUS_LABELS: Record<AccountStatus, string> = {
@@ -177,7 +177,7 @@ export function SocialAccounts() {
                   </div>
                 </div>
 
-                <Badge tone={STATUS_TONES[account.status]}>
+                <Badge variant={STATUS_TONES[account.status]}>
                   {STATUS_LABELS[account.status]}
                 </Badge>
               </div>

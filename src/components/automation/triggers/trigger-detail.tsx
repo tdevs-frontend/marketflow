@@ -101,7 +101,7 @@ export function TriggerDetail({ trigger }: { trigger: AutomationTrigger }) {
           <div className="flex flex-wrap items-center gap-2">
             <h1 className="text-2xl font-bold tracking-tight">{trigger.name}</h1>
             <TriggerStatusBadge status={status} />
-            {trigger.custom ? <Badge tone="brand">Custom</Badge> : null}
+            {trigger.custom ? <Badge variant="primary">Custom</Badge> : null}
           </div>
           <p className="mt-1.5 max-w-2xl text-sm text-text-secondary font-medium ">
             {trigger.description}
@@ -356,11 +356,11 @@ X-MarketFlow-Signature: <hmac-sha256>
                     ) : null}
                   </span>
                   <Badge
-                    tone={
+                    variant={
                       event.status === "failed"
-                        ? "danger"
+                        ? "error"
                         : event.status === "ignored"
-                          ? "neutral"
+                          ? "default"
                           : "success"
                     }
                   >

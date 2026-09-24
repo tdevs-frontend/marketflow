@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { Copy, Eye, Pencil, Plus, Trash2 } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -58,13 +58,13 @@ import { SmsComposer, SmsPreview } from "./composer";
 
 const ALL = "all";
 
-const CATEGORY_TONES: Record<SmsTemplateCategory, BadgeTone> = {
+const CATEGORY_TONES: Record<SmsTemplateCategory, BadgeVariant> = {
   promotion: "warning",
   reminder: "info",
-  alert: "danger",
-  otp: "neutral",
-  "follow-up": "neutral",
-  order: "brand",
+  alert: "error",
+  otp: "default",
+  "follow-up": "default",
+  order: "primary",
 };
 
 const categoryLabel = (category: SmsTemplateCategory) =>
@@ -231,11 +231,11 @@ export function SmsTemplatesWorkspace() {
                           {template.name}
                         </h3>
                         <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-                          <Badge tone={CATEGORY_TONES[template.category]} size="sm">
+                          <Badge variant={CATEGORY_TONES[template.category]} size="sm">
                             {categoryLabel(template.category)}
                           </Badge>
                           <Badge
-                            tone={multipart ? "warning" : "neutral"}
+                            variant={multipart ? "warning" : "default"}
                             size="sm"
                           >
                             {segments} segment{segments === 1 ? "" : "s"}

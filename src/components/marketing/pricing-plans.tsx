@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ArrowRight, Check } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { APP_ROUTES } from "@/constants";
 import {
@@ -171,13 +172,25 @@ function PlanCard({
             action reads "Current plan" in place of a button.
           */}
           {featured ? (
-            <span className="shrink-0 rounded-full brand-gradient px-2.5 py-1 text-xs font-bold text-white uppercase shadow-btn">
+            <Badge
+              variant="popular"
+              size="xs"
+              weight="bold"
+              casing="uppercase"
+              className="shrink-0 px-2.5 py-1"
+            >
               Most popular
-            </span>
+            </Badge>
           ) : current ? (
-            <span className="shrink-0 rounded-full bg-primary-soft px-2.5 py-1 text-xs font-bold text-primary-dark uppercase">
+            <Badge
+              variant="primary"
+              size="xs"
+              weight="bold"
+              casing="uppercase"
+              className="shrink-0 px-2.5 py-1"
+            >
               Current
-            </span>
+            </Badge>
           ) : null}
         </div>
         <p className="mt-2 min-h-10 text-sm leading-relaxed text-text-muted sm:min-h-18">

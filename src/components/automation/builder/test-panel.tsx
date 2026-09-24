@@ -226,7 +226,7 @@ export function TestWorkflowDialog({
                       {step.title}
                     </p>
                     {step.status === "skipped" ? (
-                      <Badge tone="neutral">Skipped</Badge>
+                      <Badge variant="default">Skipped</Badge>
                     ) : null}
                   </div>
                   <p className="mt-1 text-sm text-text-secondary font-medium">{step.outcome}</p>

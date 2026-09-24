@@ -42,7 +42,7 @@ export function TemplateCard({
           </p>
         </div>
         {template.custom ? (
-          <Badge tone="brand">Custom</Badge>
+          <Badge variant="primary">Custom</Badge>
         ) : (
           <ComplexityBadge level={template.complexity} />
         )}

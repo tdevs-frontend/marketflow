@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Globe, Megaphone, MessageCircle, PenLine, type LucideIcon } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -126,11 +126,11 @@ const ORDERS: Order[] = [
   },
 ];
 
-const STATUS_TONE: Record<OrderStatus, BadgeTone> = {
+const STATUS_TONE: Record<OrderStatus, BadgeVariant> = {
   Paid: "success",
   Processing: "info",
   Pending: "warning",
-  Cancelled: "danger",
+  Cancelled: "error",
 };
 
 /* Monochrome on purpose. The channel is the row's *smallest* fact - a coloured
@@ -293,9 +293,9 @@ export function RecentOrders({ className }: { className?: string }) {
 
                     <TD>
                       <Badge
-                        tone={STATUS_TONE[order.status]}
+                        variant={STATUS_TONE[order.status]}
                         size="sm"
-                        className="normal-case"
+                        casing="none"
                       >
                         {order.status}
                       </Badge>

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Bell, BellOff } from "lucide-react";
 
 import { NotificationItem } from "@/components/notifications/notification-item";
+import { Badge } from "@/components/ui/badge";
 import { IconButton } from "@/components/ui/button";
 import { useDismissable } from "@/components/ui/menu";
 import { APP_ROUTES } from "@/constants/app";
@@ -201,9 +202,9 @@ function Header({
           Notifications
         </h2>
         {unread > 0 ? (
-          <span className="rounded-full bg-primary-soft px-2 py-0.5 text-xs font-bold text-primary-dark tabular-nums">
+          <Badge variant="primary" size="xs" weight="bold" className="tabular-nums">
             {unread}
-          </span>
+          </Badge>
         ) : null}
       </div>
 

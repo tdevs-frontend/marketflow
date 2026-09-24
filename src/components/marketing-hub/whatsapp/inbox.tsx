@@ -17,7 +17,7 @@ import {
   X,
 } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -82,14 +82,14 @@ const CURRENT_AGENT = "Nadia Karim";
  * Brand green is spent on the two that mean "worth your attention" - a VIP, and
  * a thread still open - rather than on every chip in the sidebar.
  */
-const LIFECYCLE_TONE: Record<"lead" | "customer" | "vip", BadgeTone> = {
+const LIFECYCLE_TONE: Record<"lead" | "customer" | "vip", BadgeVariant> = {
   lead: "info",
-  customer: "neutral",
-  vip: "brand",
+  customer: "default",
+  vip: "primary",
 };
 
-const STATUS_TONE: Record<"open" | "pending" | "resolved", BadgeTone> = {
-  open: "brand",
+const STATUS_TONE: Record<"open" | "pending" | "resolved", BadgeVariant> = {
+  open: "primary",
   pending: "warning",
   resolved: "success",
 };
@@ -347,7 +347,7 @@ function ChatWindow({
          * a reply gets lost.
          */}
         <Badge
-          tone={conversation.sessionOpen ? "success" : "warning"}
+          variant={conversation.sessionOpen ? "success" : "warning"}
           size="sm"
           className="hidden shrink-0 gap-1.5 sm:inline-flex"
         >
@@ -601,7 +601,7 @@ function ContactDetails({
           <p className="mt-3 text-base font-semibold text-text-primary">
             {contact.name}
           </p>
-          <Badge tone={LIFECYCLE_TONE[contact.lifecycle]} size="sm" className="mt-2">
+          <Badge variant={LIFECYCLE_TONE[contact.lifecycle]} size="sm" className="mt-2">
             {contact.lifecycle}
           </Badge>
         </div>
@@ -611,7 +611,7 @@ function ContactDetails({
           <div className="min-w-0 rounded-panel bg-surface-secondary px-3 py-2.5">
             <dt className="text-meta font-medium text-text-secondary">Status</dt>
             <dd className="mt-1.5">
-              <Badge tone={STATUS_TONE[conversation.status]} size="sm">
+              <Badge variant={STATUS_TONE[conversation.status]} size="sm">
                 {conversation.status}
               </Badge>
             </dd>

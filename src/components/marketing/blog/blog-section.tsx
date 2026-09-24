@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { ArrowRight, BookOpen } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { APP_ROUTES } from "@/constants";
 import { FEATURED_ARTICLES } from "@/constants/blog";
 
 import { BlogCard } from "./blog-card";
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 /**
  * The Resources row on the landing page, immediately before the closing CTA.
@@ -28,7 +28,15 @@ export function BlogSection() {
     >
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <SectionEyebrow text="From the blog" icon={BookOpen} />
+          <Badge
+            as="p"
+            variant="primary-outline"
+            size="lg"
+            casing="none"
+            icon={<BookOpen aria-hidden />}
+          >
+            From the blog
+          </Badge>
 
           <h2 id="blog-section-title" className="section-title mt-5 text-balance">
             Ideas to help you <span className="brand-gradient-text">grow</span>{" "}

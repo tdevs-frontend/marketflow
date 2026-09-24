@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { FeatureIcon } from "./feature-icon";
 import { TONES, type PlatformFeature } from "./platform-features";
@@ -73,13 +74,18 @@ export function FeatureCard({
             {feature.body}
           </p>
 
-          <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-surface-secondary px-2 py-0.5 text-xs leading-[1.45] font-medium text-text-secondary">
+          <Badge
+            as="p"
+            size="xs"
+            casing="none"
+            className="mt-2 gap-1.5 leading-[1.45]"
+          >
             <span
               aria-hidden
               className={cn("size-1.5 rounded-full", TONES[feature.tone].dot)}
             />
             {feature.status}
-          </p>
+          </Badge>
         </div>
       </div>
     </article>

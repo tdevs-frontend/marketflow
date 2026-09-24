@@ -583,8 +583,7 @@ function EventRow({
            */
           <Tooltip content="A failed payment suspends the workspace, so this one cannot be switched off.">
             <span className="inline-flex items-center gap-1.5">
-              <Badge tone="neutral">
-                <Lock className="size-3" aria-hidden />
+              <Badge variant="default" icon={<Lock aria-hidden />}>
                 Always on
               </Badge>
               <span className="text-sm text-text-muted">
@@ -671,7 +670,7 @@ function WorkspacePolicy() {
       <ServiceNotice
         tone="unavailable"
         title="This changes what every member can receive"
-        action={<Badge tone="brand">{enabledCount} of {NOTIFICATION_EVENTS.length} enabled</Badge>}
+        action={<Badge variant="primary">{enabledCount} of {NOTIFICATION_EVENTS.length} enabled</Badge>}
       >
         Switching an event off removes it from every member&rsquo;s
         Notifications page, including people who had chosen to receive it.
@@ -700,8 +699,7 @@ function WorkspacePolicy() {
                 className={cn(!on && "[&>div:last-child]:opacity-50")}
                 actions={
                   event.mandatory ? (
-                    <Badge tone="neutral">
-                      <Lock className="size-3" aria-hidden />
+                    <Badge variant="default" icon={<Lock aria-hidden />}>
                       Required
                     </Badge>
                   ) : (

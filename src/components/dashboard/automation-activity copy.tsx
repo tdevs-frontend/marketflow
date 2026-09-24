@@ -10,7 +10,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -37,13 +37,13 @@ type RunStatus =
   | "Skipped"
   | "Failed";
 
-const STATUS_TONE: Record<RunStatus, BadgeTone> = {
+const STATUS_TONE: Record<RunStatus, BadgeVariant> = {
   Completed: "success",
   Sent: "success",
   Running: "info",
   Queued: "warning",
-  Skipped: "neutral",
-  Failed: "danger",
+  Skipped: "default",
+  Failed: "error",
 };
 
 interface ActivityItem {
@@ -206,9 +206,9 @@ export function AutomationActivity({ className }: { className?: string }) {
                       much use. */}
                   <div className="flex shrink-0 items-center gap-2.5">
                     <Badge
-                      tone={STATUS_TONE[item.status]}
+                      variant={STATUS_TONE[item.status]}
                       size="sm"
-                      className="normal-case"
+                      casing="none"
                     >
                       {item.status}
                     </Badge>

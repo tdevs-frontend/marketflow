@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowUpRight, Building2, ChevronRight } from "lucide-react";
 
 import { PageHeader } from "@/components/layout/page-header";
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { APP_ROUTES } from "@/constants/app";
@@ -143,7 +143,7 @@ function WorkspaceSummary() {
 
 interface Status {
   label: string;
-  tone: BadgeTone;
+  tone: BadgeVariant;
   /** The line under the title. Replaces the static summary when present. */
   detail?: string;
 }
@@ -173,7 +173,7 @@ function useSectionStatus(href: string): Status | null {
     case APP_ROUTES.settingsProfile:
       return {
         label: user.roleName,
-        tone: "brand",
+        tone: "primary",
         detail: `${displayName(user)} · ${user.email}`,
       };
 
@@ -187,7 +187,7 @@ function useSectionStatus(href: string): Status | null {
 
       return {
         label: `${on} of ${available.length} on`,
-        tone: on === 0 ? "warning" : "neutral",
+        tone: on === 0 ? "warning" : "default",
         detail:
           on === 0
             ? "Everything is muted - you will not be told about failures."
@@ -210,7 +210,7 @@ function useSectionStatus(href: string): Status | null {
       const active = keys.filter((key) => key.status === "active").length;
       return {
         label: `${active} active ${active === 1 ? "key" : "keys"}`,
-        tone: "neutral",
+        tone: "default",
         detail: `${webhooks.length} webhook ${webhooks.length === 1 ? "endpoint" : "endpoints"} configured.`,
       };
     }
@@ -261,7 +261,7 @@ function SectionCard({
           </p>
 
           {status ? (
-            <Badge tone={status.tone} size="sm" className="mt-3">
+            <Badge variant={status.tone} size="sm" className="mt-3">
               {status.label}
             </Badge>
           ) : null}

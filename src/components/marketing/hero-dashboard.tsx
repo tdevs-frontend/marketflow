@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { Send, TrendingUp } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
 import dashboardShot from "../../../public/marketflow-dashboard.png";
 
 const SHOT_SIZES = [
@@ -48,13 +50,18 @@ export function HeroDashboard() {
               </span>
             </p>
 
-            <span className="hidden items-center gap-1.5 rounded-full bg-primary-soft px-2.5 py-1 text-xs font-medium text-primary-dark sm:inline-flex">
+            <Badge
+              variant="primary"
+              size="xs"
+              casing="none"
+              className="hidden gap-1.5 px-2.5 py-1 sm:inline-flex"
+            >
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
               </span>
               Live
-            </span>
+            </Badge>
           </div>
 
           {/*

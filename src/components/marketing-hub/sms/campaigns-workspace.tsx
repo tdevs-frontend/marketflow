@@ -477,7 +477,7 @@ export function SmsCampaignsWorkspace() {
                         </TD>
 
                         <TD align="center">
-                          <Badge tone={segments > 1 ? "warning" : "neutral"}>
+                          <Badge variant={segments > 1 ? "warning" : "default"}>
                             {segments}
                           </Badge>
                         </TD>

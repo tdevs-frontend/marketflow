@@ -295,7 +295,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
         </dt>
         <dd className="mt-1 text-sm text-text-secondary font-medium tabular-nums">
           {run.durationMs === undefined ? (
-            <Badge tone="warning">In progress</Badge>
+            <Badge variant="warning">In progress</Badge>
           ) : (
             formatDuration(run.durationMs)
           )}

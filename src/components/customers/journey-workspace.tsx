@@ -15,6 +15,7 @@ import {
 
 import { PageHeader } from "@/components/layout/page-header";
 import { Avatar, AvatarLabel } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PanelCard } from "@/components/ui/chart-card";
@@ -196,9 +197,9 @@ function LifecycleTracker({ contact }: { contact: CustomerContact }) {
           Lifecycle
         </h3>
         {churned ? (
-          <span className="rounded-full bg-error-soft px-2 py-0.5 text-sm font-medium text-error-text">
+          <Badge variant="error" casing="none" className="px-2">
             Churned
-          </span>
+          </Badge>
         ) : null}
       </div>
 

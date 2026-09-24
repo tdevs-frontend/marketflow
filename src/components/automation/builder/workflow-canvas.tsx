@@ -9,6 +9,7 @@ import {
   type RefObject,
 } from "react";
 
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { WorkflowEdge, WorkflowNode } from "@/types/workflow";
 import { NODE_H, NODE_W, WorkflowNodeCard } from "./workflow-node";
@@ -378,9 +379,11 @@ export function WorkflowCanvas({
           const share = from.branchShare?.[branch.id];
 
           return (
-            <span
+            <Badge
               key={`${edge.id}-label`}
-              className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full border border-border bg-surface px-2 py-0.5 text-sm font-medium whitespace-nowrap text-text-secondary shadow-btn"
+              variant="surface"
+              casing="none"
+              className="pointer-events-none absolute block -translate-x-1/2 -translate-y-1/2 px-2 whitespace-nowrap shadow-btn"
               style={{
                 left: (from.position.x + to.position.x) / 2,
                 top: (from.position.y + NODE_H + to.position.y) / 2,
@@ -390,7 +393,7 @@ export function WorkflowCanvas({
               {showAnalytics && share !== undefined ? (
                 <span className="ml-1 text-text-muted tabular-nums">{share}%</span>
               ) : null}
-            </span>
+            </Badge>
           );
         })}
 

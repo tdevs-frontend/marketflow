@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 export interface TabItem<T extends string> {
@@ -127,9 +128,9 @@ export function Tabs<T extends string>({
  */
 export function TabCount({ value }: { value: number }) {
   return (
-    <span className="rounded-full bg-surface-secondary px-1.5 py-0.5 text-sm font-semibold text-text-secondary tabular-nums">
+    <Badge weight="semibold" className="px-1.5 tabular-nums">
       {value}
-    </span>
+    </Badge>
   );
 }
 

@@ -186,7 +186,7 @@ function ChannelCard({
         <span className="mt-0.5 block text-sm leading-normal font-medium text-text-secondary">
           {card.hint}
         </span>
-        <Badge tone="neutral" size="sm" className="mt-2">
+        <Badge variant="default" size="sm" className="mt-2">
           <span aria-hidden className={cn("size-1.5 rounded-full", card.dot)} />
           {status}
         </Badge>

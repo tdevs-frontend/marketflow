@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { MessageCircle, Pencil, Plus, X } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Dialog, Drawer } from "@/components/ui/dialog";
 import { Field, Input, Textarea } from "@/components/ui/input";
@@ -20,14 +20,14 @@ import { formatDate, formatRelativeTime } from "@/lib/format";
 import { cn, initials } from "@/lib/utils";
 import type { WhatsAppContact, WhatsAppContactStatus } from "@/types/marketing";
 
-const STATUS_TONES: Record<WhatsAppContactStatus, BadgeTone> = {
+const STATUS_TONES: Record<WhatsAppContactStatus, BadgeVariant> = {
   active: "success",
-  inactive: "neutral",
-  blocked: "danger",
+  inactive: "default",
+  blocked: "error",
 };
 
 export function ContactStatusBadge({ status }: { status: WhatsAppContactStatus }) {
-  return <Badge tone={STATUS_TONES[status]}>{status}</Badge>;
+  return <Badge variant={STATUS_TONES[status]}>{status}</Badge>;
 }
 
 export function ContactAvatar({
@@ -181,7 +181,7 @@ export function ContactDetailsSheet({
             <ul className="mt-2 flex flex-wrap gap-1.5">
               {tags.map((item) => (
                 <li key={item}>
-                  <Badge tone="neutral">{item}</Badge>
+                  <Badge variant="default">{item}</Badge>
                 </li>
               ))}
               {tags.length === 0 ? (
@@ -428,22 +428,29 @@ export function ContactFormDialog({
           <ul className="mt-2 flex flex-wrap gap-1.5">
             {draft.tags.map((item) => (
               <li key={item}>
-                <span className="inline-flex items-center gap-1 rounded-full bg-surface-secondary py-0.5 pr-1 pl-2.5 text-sm text-text-secondary">
+                <Badge
+                  weight="inherit"
+                  casing="none"
+                  className="pr-1 pl-2.5"
+                  iconPosition="end"
+                  icon={
+                    <button
+                      type="button"
+                      aria-label={`Remove ${item}`}
+                      onClick={() =>
+                        set(
+                          "tags",
+                          draft.tags.filter((value) => value !== item),
+                        )
+                      }
+                      className="grid size-4 place-items-center rounded-full text-text-muted transition-colors hover:text-error focus-visible:shadow-focus focus-visible:outline-none"
+                    >
+                      <X className="size-3" aria-hidden />
+                    </button>
+                  }
+                >
                   {item}
-                  <button
-                    type="button"
-                    aria-label={`Remove ${item}`}
-                    onClick={() =>
-                      set(
-                        "tags",
-                        draft.tags.filter((value) => value !== item),
-                      )
-                    }
-                    className="grid size-4 place-items-center rounded-full text-text-muted transition-colors hover:text-error focus-visible:shadow-focus focus-visible:outline-none"
-                  >
-                    <X className="size-3" aria-hidden />
-                  </button>
-                </span>
+                </Badge>
               </li>
             ))}
             {draft.tags.length === 0 ? (

@@ -1,6 +1,6 @@
 import { Copy, Eye, Pencil, Trash2 } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Menu } from "@/components/ui/menu";
@@ -18,22 +18,22 @@ import type {
   WhatsAppTemplate,
 } from "@/types/marketing";
 
-const STATUS_TONES: Record<TemplateStatus, BadgeTone> = {
-  /* The channel's green rather than the generic one - see `BadgeTone`. */
+const STATUS_TONES: Record<TemplateStatus, BadgeVariant> = {
+  /* The channel's green rather than the generic one - see `BadgeVariant`. */
   approved: "whatsapp",
   pending: "warning",
-  rejected: "danger",
+  rejected: "error",
 };
 
-const CATEGORY_TONES: Record<TemplateCategory, BadgeTone> = {
-  marketing: "brand",
+const CATEGORY_TONES: Record<TemplateCategory, BadgeVariant> = {
+  marketing: "primary",
   utility: "info",
-  authentication: "neutral",
+  authentication: "default",
 };
 
 export function TemplateStatusBadge({ status }: { status: TemplateStatus }) {
   return (
-    <Badge tone={STATUS_TONES[status]} className="gap-1.5">
+    <Badge variant={STATUS_TONES[status]} className="gap-1.5">
       <span
         aria-hidden
         className={cn(
@@ -97,8 +97,8 @@ export function TemplateCard({
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
             {/* Use case first: it is the shelf a merchant thinks in. The Meta
                 category sits beside it because it drives review and pricing. */}
-            <Badge tone="neutral">{useCaseLabel(template.useCase)}</Badge>
-            <Badge tone={CATEGORY_TONES[template.category]}>{template.category}</Badge>
+            <Badge variant="default">{useCaseLabel(template.useCase)}</Badge>
+            <Badge variant={CATEGORY_TONES[template.category]}>{template.category}</Badge>
             <TemplateStatusBadge status={template.status} />
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { ArrowRight, Mail, MessageCircle, Smartphone, Sparkles, TrendingUp } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 /* -------------------------------------------------------------------------- */
@@ -183,10 +184,16 @@ function GrowthChart() {
         note="Indexed to period start = 100"
         action={
           <div className="flex items-center gap-2">
-            <span className="hidden items-center gap-1.5 rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary-dark sm:inline-flex">
-              <TrendingUp className="size-3" aria-hidden />
+            <Badge
+              variant="primary"
+              size="xs"
+              weight="semibold"
+              casing="none"
+              icon={<TrendingUp aria-hidden />}
+              className="hidden gap-1.5 px-3 py-1 sm:inline-flex"
+            >
               32.8% growth this month
-            </span>
+            </Badge>
             <div
               role="group"
               aria-label="Date range"
@@ -330,9 +337,15 @@ function CampaignPerformance() {
                   {campaign.name}
                 </span>
                 {index === 0 ? (
-                  <span className="shrink-0 rounded-full bg-primary-soft px-2 py-0.5 text-xs font-semibold whitespace-nowrap text-primary-dark">
+                  <Badge
+                    variant="primary"
+                    size="xs"
+                    weight="semibold"
+                    casing="none"
+                    className="shrink-0 whitespace-nowrap"
+                  >
                     Top performing
-                  </span>
+                  </Badge>
                 ) : null}
               </span>
               <span className="shrink-0 text-xs text-text-muted tabular-nums">
@@ -411,9 +424,15 @@ function ConversionFunnel() {
       <PanelHead
         title="Conversion Funnel"
         action={
-          <span className="rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary-dark">
+          <Badge
+            variant="primary"
+            size="xs"
+            weight="semibold"
+            casing="none"
+            className="px-3 py-1"
+          >
             24.8% lead-to-customer
-          </span>
+          </Badge>
         }
       />
       <ol className="space-y-2.5">

@@ -785,7 +785,7 @@ function RoleHeader({
             <h2 className="text-base font-semibold">{role.name}</h2>
             <RoleTypeBadge type={role.type} />
             {role.status === "archived" ? (
-              <Badge size="sm" className="normal-case">
+              <Badge size="sm" casing="none">
                 Archived
               </Badge>
             ) : null}
@@ -1010,12 +1010,12 @@ function RoleActivity({ roleId }: { roleId: string }) {
               {event.added.length > 0 || event.removed.length > 0 ? (
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {event.added.map((key) => (
-                    <Badge key={key} tone="success" size="sm" className="normal-case">
+                    <Badge key={key} variant="success" size="sm" casing="none">
                       + {prettyKey(key)}
                     </Badge>
                   ))}
                   {event.removed.map((key) => (
-                    <Badge key={key} tone="danger" size="sm" className="normal-case">
+                    <Badge key={key} variant="error" size="sm" casing="none">
                       − {prettyKey(key)}
                     </Badge>
                   ))}

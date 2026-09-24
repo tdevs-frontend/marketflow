@@ -11,7 +11,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 /**
@@ -168,13 +168,17 @@ export function PlatformFlow() {
 
       <div className="custom-container">
         <header className="mx-auto mb-14 max-w-2xl text-center md:mb-16">
-          {/* `surface`, not the default: the soft brand fill would sink into
-              this section's `primary-soft` ground. */}
-          <SectionEyebrow
-            text="One connected workspace"
-            icon={Network}
-            variant="surface"
-          />
+          {/* `floating`, not `primary-outline`: the soft brand fill would sink
+              into this section's `primary-soft` ground. */}
+          <Badge
+            as="p"
+            variant="floating"
+            size="lg"
+            casing="none"
+            icon={<Network className="text-primary" aria-hidden />}
+          >
+            One connected workspace
+          </Badge>
 
           <h2 id="platform-flow-title" className="section-title mt-5 text-balance">
             Customer <span className="brand-gradient-text">Journey</span>

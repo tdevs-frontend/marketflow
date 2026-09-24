@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Check } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { Field, Input } from "@/components/ui/input";
@@ -149,14 +150,13 @@ export function TagFormDialog({
         {/* Preview, so the swatch choice is judged as the pill it becomes. */}
         <div className="rounded-panel bg-surface-secondary p-3.5">
           <p className="text-sm text-text-muted">Preview</p>
-          <span
-            className={cn(
-              "mt-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-sm leading-tight font-medium",
-              TAG_COLORS[color].pill,
-            )}
+          <Badge
+            palette={TAG_COLORS[color].pill}
+            casing="none"
+            className="mt-1.5 px-2 leading-tight"
           >
             {name.trim() || "Tag name"}
-          </span>
+          </Badge>
         </div>
       </div>
     </Dialog>

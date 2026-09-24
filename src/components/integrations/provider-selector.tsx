@@ -80,7 +80,7 @@ export function ProviderSelector({
                   {provider.name}
                 </span>
                 {provider.recommended ? (
-                  <Badge tone="brand" size="sm" className="normal-case">
+                  <Badge variant="primary" size="sm" casing="none">
                     Recommended
                   </Badge>
                 ) : null}

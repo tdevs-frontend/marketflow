@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import { Check, type LucideIcon } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 /**
  * The frame every section on this page is built in.
@@ -104,7 +104,15 @@ export function FeatureSection({
               !stacked && reverse && "lg:order-2",
             )}
           >
-            <SectionEyebrow text={eyebrow} icon={EyebrowIcon} />
+            <Badge
+              as="p"
+              variant="primary-outline"
+              size="lg"
+              casing="none"
+              icon={<EyebrowIcon aria-hidden />}
+            >
+              {eyebrow}
+            </Badge>
 
             <h2 id={`${id}-title`} className="section-title mt-5 text-balance">
               {title}
@@ -228,13 +236,18 @@ export function ProductFrame({
             </p>
 
             {status ? (
-              <span className="hidden items-center gap-1.5 rounded-full bg-primary-soft px-2.5 py-1 text-xs font-medium text-primary-dark sm:inline-flex">
+              <Badge
+                variant="primary"
+                size="xs"
+                casing="none"
+                className="hidden gap-1.5 px-2.5 py-1 sm:inline-flex"
+              >
                 <span
                   aria-hidden
                   className="animate-soft-pulse size-1.5 rounded-full bg-primary"
                 />
                 {status}
-              </span>
+              </Badge>
             ) : null}
           </div>
 

@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { BadgeCheck } from "lucide-react";
 
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 import { StatValue } from "./stat-value";
@@ -106,7 +106,15 @@ export function TrustStats() {
     >
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <SectionEyebrow text="Trusted by growing businesses" icon={BadgeCheck} />
+          <Badge
+            as="p"
+            variant="primary-outline"
+            size="lg"
+            casing="none"
+            icon={<BadgeCheck aria-hidden />}
+          >
+            Trusted by growing businesses
+          </Badge>
 
           <h2
             id="trust-stats-title"

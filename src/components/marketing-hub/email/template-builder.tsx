@@ -398,7 +398,7 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
               <p className="text-sm font-medium  text-text-muted capitalize">
                 Block settings
               </p>
-              <Badge tone="info">{BLOCK_META[selected.type].label}</Badge>
+              <Badge variant="info">{BLOCK_META[selected.type].label}</Badge>
             </div>
 
             <div className="mt-3 space-y-3">

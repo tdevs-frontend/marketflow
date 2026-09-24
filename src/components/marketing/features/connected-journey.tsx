@@ -10,8 +10,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 /**
  * One customer, nine steps, and the module that handles each.
@@ -66,7 +66,15 @@ export function ConnectedJourney() {
 
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <SectionEyebrow text="How MarketFlow works" icon={Workflow} />
+          <Badge
+            as="p"
+            variant="primary-outline"
+            size="lg"
+            casing="none"
+            icon={<Workflow aria-hidden />}
+          >
+            How MarketFlow works
+          </Badge>
 
           <h2 id="journey-title" className="section-title mt-5 text-balance">
             One customer journey. One connected system

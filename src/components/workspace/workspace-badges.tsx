@@ -10,12 +10,11 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import {
   AUDIT_STATUS_LABEL,
   MEMBER_STATUS_LABEL,
 } from "@/constants/workspace";
-import { cn } from "@/lib/utils";
 import type {
   AuditSeverity,
   AuditStatus,
@@ -37,7 +36,7 @@ import type {
  */
 
 interface StateStyle {
-  tone: BadgeTone;
+  tone: BadgeVariant;
   icon: LucideIcon;
   label: string;
 }
@@ -46,7 +45,7 @@ const MEMBER_STATE: Record<MemberStatus, StateStyle> = {
   active: { tone: "success", icon: CheckCircle2, label: MEMBER_STATUS_LABEL.active },
   invited: { tone: "info", icon: MailCheck, label: MEMBER_STATUS_LABEL.invited },
   suspended: {
-    tone: "neutral",
+    tone: "default",
     icon: CircleSlash,
     label: MEMBER_STATUS_LABEL.suspended,
   },
@@ -64,8 +63,7 @@ export function MemberStatusBadge({
   const { tone, icon: Icon, label } = MEMBER_STATE[status];
 
   return (
-    <Badge tone={tone} size={size} className={cn("normal-case", className)}>
-      <Icon className="size-3" aria-hidden />
+    <Badge variant={tone} size={size} casing="none" className={className} icon={<Icon aria-hidden />}>
       {label}
     </Badge>
   );
@@ -74,8 +72,8 @@ export function MemberStatusBadge({
 const AUDIT_STATE: Record<AuditStatus, StateStyle> = {
   success: { tone: "success", icon: CheckCircle2, label: AUDIT_STATUS_LABEL.success },
   warning: { tone: "warning", icon: AlertTriangle, label: AUDIT_STATUS_LABEL.warning },
-  failed: { tone: "danger", icon: XCircle, label: AUDIT_STATUS_LABEL.failed },
-  info: { tone: "neutral", icon: Info, label: AUDIT_STATUS_LABEL.info },
+  failed: { tone: "error", icon: XCircle, label: AUDIT_STATUS_LABEL.failed },
+  info: { tone: "default", icon: Info, label: AUDIT_STATUS_LABEL.info },
 };
 
 export function AuditStatusBadge({
@@ -90,8 +88,7 @@ export function AuditStatusBadge({
   const { tone, icon: Icon, label } = AUDIT_STATE[status];
 
   return (
-    <Badge tone={tone} size={size} className={cn("normal-case", className)}>
-      <Icon className="size-3" aria-hidden />
+    <Badge variant={tone} size={size} casing="none" className={className} icon={<Icon aria-hidden />}>
       {label}
     </Badge>
   );
@@ -112,9 +109,9 @@ export function RoleTypeBadge({
 }) {
   return (
     <Badge
-      tone={type === "system" ? "neutral" : "brand"}
+      variant={type === "system" ? "default" : "primary"}
       size={size}
-      className={cn("normal-case", className)}
+      casing="none" className={className}
     >
       {type === "system" ? "System role" : "Custom role"}
     </Badge>
@@ -139,8 +136,7 @@ export function SeverityBadge({
   if (severity !== "security") return null;
 
   return (
-    <Badge tone="warning" size="sm" className={cn("normal-case", className)}>
-      <ShieldCheck className="size-3" aria-hidden />
+    <Badge variant="warning" size="sm" casing="none" className={className} icon={<ShieldCheck aria-hidden />}>
       Security
     </Badge>
   );
@@ -158,10 +154,10 @@ export function SeverityBadge({
  * Standard is deliberately neutral rather than green: most roles are standard,
  * and a column of green badges is a column nobody reads.
  */
-const RISK_STATE: Record<RiskLevel, { tone: BadgeTone; label: string }> = {
-  standard: { tone: "neutral", label: "Standard" },
+const RISK_STATE: Record<RiskLevel, { tone: BadgeVariant; label: string }> = {
+  standard: { tone: "default", label: "Standard" },
   elevated: { tone: "warning", label: "Elevated" },
-  high: { tone: "danger", label: "High access" },
+  high: { tone: "error", label: "High access" },
 };
 
 export function RiskBadge({
@@ -176,7 +172,7 @@ export function RiskBadge({
   const { tone, label } = RISK_STATE[level];
 
   return (
-    <Badge tone={tone} size={size} className={cn("normal-case", className)}>
+    <Badge variant={tone} size={size} casing="none" className={className}>
       {level === "standard" ? null : <ShieldAlert className="size-3" aria-hidden />}
       {label}
     </Badge>

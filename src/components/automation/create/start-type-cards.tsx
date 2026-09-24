@@ -10,6 +10,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { START_TYPES } from "@/constants/automation";
 import { cn } from "@/lib/utils";
@@ -86,12 +87,15 @@ export function StartTypeCards({
 
                 <span className="mt-3 flex flex-wrap gap-1.5 pt-0.5">
                   {type.examples.map((example) => (
-                    <span
+                    <Badge
                       key={example}
-                      className="rounded-full bg-surface-secondary px-2 py-0.5 text-sm text-text-muted"
+                      variant="neutral"
+                      weight="inherit"
+                      casing="none"
+                      className="px-2"
                     >
                       {example}
-                    </span>
+                    </Badge>
                   ))}
                 </span>
               </button>

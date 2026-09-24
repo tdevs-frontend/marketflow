@@ -14,7 +14,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { CHANNEL_THEME } from "@/constants/channels";
 import { executionLabel } from "@/constants/automation";
 import { cn } from "@/lib/utils";
@@ -37,17 +37,17 @@ import { CHANNEL_ICON } from "./node-icon";
  */
 
 interface StateStyle {
-  tone: BadgeTone;
+  tone: BadgeVariant;
   icon: LucideIcon;
   label: string;
 }
 
 const WORKFLOW_STATE: Record<WorkflowStatus, StateStyle> = {
   active: { tone: "success", icon: Play, label: "Active" },
-  draft: { tone: "neutral", icon: Pencil, label: "Draft" },
+  draft: { tone: "default", icon: Pencil, label: "Draft" },
   paused: { tone: "warning", icon: Pause, label: "Paused" },
-  error: { tone: "danger", icon: AlertTriangle, label: "Error" },
-  archived: { tone: "neutral", icon: Archive, label: "Archived" },
+  error: { tone: "error", icon: AlertTriangle, label: "Error" },
+  archived: { tone: "default", icon: Archive, label: "Archived" },
 };
 
 export function WorkflowStatusBadge({
@@ -60,21 +60,20 @@ export function WorkflowStatusBadge({
   const { tone, icon: Icon, label } = WORKFLOW_STATE[status];
 
   return (
-    <Badge tone={tone} className={className}>
-      <Icon className="size-3" aria-hidden />
+    <Badge variant={tone} className={className} icon={<Icon aria-hidden />}>
       {label}
     </Badge>
   );
 }
 
-const EXECUTION_STATE: Record<ExecutionStatus, { tone: BadgeTone; icon: LucideIcon }> = {
+const EXECUTION_STATE: Record<ExecutionStatus, { tone: BadgeVariant; icon: LucideIcon }> = {
   completed: { tone: "success", icon: CheckCircle2 },
   running: { tone: "info", icon: Loader },
   waiting: { tone: "warning", icon: Clock },
-  queued: { tone: "neutral", icon: CircleDashed },
-  failed: { tone: "danger", icon: XCircle },
-  skipped: { tone: "neutral", icon: SkipForward },
-  cancelled: { tone: "neutral", icon: Ban },
+  queued: { tone: "default", icon: CircleDashed },
+  failed: { tone: "error", icon: XCircle },
+  skipped: { tone: "default", icon: SkipForward },
+  cancelled: { tone: "default", icon: Ban },
 };
 
 export function ExecutionStatusBadge({
@@ -87,8 +86,7 @@ export function ExecutionStatusBadge({
   const { tone, icon: Icon } = EXECUTION_STATE[status];
 
   return (
-    <Badge tone={tone} className={className}>
-      <Icon className="size-3" aria-hidden />
+    <Badge variant={tone} className={className} icon={<Icon aria-hidden />}>
       {executionLabel(status)}
     </Badge>
   );
@@ -128,7 +126,7 @@ export function ExecutionDot({
 
 const TRIGGER_STATE: Record<TriggerStatus, StateStyle> = {
   active: { tone: "success", icon: Play, label: "Active" },
-  disabled: { tone: "neutral", icon: Pause, label: "Disabled" },
+  disabled: { tone: "default", icon: Pause, label: "Disabled" },
   beta: { tone: "info", icon: CircleDashed, label: "Beta" },
 };
 
@@ -136,8 +134,7 @@ export function TriggerStatusBadge({ status }: { status: TriggerStatus }) {
   const { tone, icon: Icon, label } = TRIGGER_STATE[status];
 
   return (
-    <Badge tone={tone}>
-      <Icon className="size-3" aria-hidden />
+    <Badge variant={tone} icon={<Icon aria-hidden />}>
       {label}
     </Badge>
   );
@@ -151,7 +148,7 @@ const COMPLEXITY_LABEL: Record<TemplateComplexity, string> = {
 
 export function ComplexityBadge({ level }: { level: TemplateComplexity }) {
   return (
-    <Badge tone={level === "advanced" ? "warning" : "neutral"}>
+    <Badge variant={level === "advanced" ? "warning" : "default"}>
       {COMPLEXITY_LABEL[level]}
     </Badge>
   );
@@ -184,18 +181,16 @@ export function ChannelChips({
         const Icon = CHANNEL_ICON[channel];
 
         return (
-          <span
+          <Badge
             key={channel}
-            className={cn(
-              "inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-medium",
-              size === "sm" ? "text-xs" : "text-sm",
-              theme.soft,
-              theme.text,
-            )}
+            size={size === "sm" ? "xs" : "md"}
+            casing="none"
+            palette={cn(theme.soft, theme.text)}
+            icon={<Icon className={size === "sm" ? "size-2.5" : undefined} aria-hidden />}
+            className="px-2"
           >
-            <Icon className={size === "sm" ? "size-2.5" : "size-3"} aria-hidden />
             {theme.label}
-          </span>
+          </Badge>
         );
       })}
     </span>

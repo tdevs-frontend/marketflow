@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import type { LucideIcon } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { panelId, tabId } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
@@ -44,17 +45,18 @@ export interface FilterTabsProps {
  */
 function CountChip({ count, active }: { count: number; active: boolean }) {
   return (
-    <span
+    <Badge
+      size="sm"
+      weight="bold"
+      palette={active ? "bg-primary-soft-hover text-primary" : undefined}
+      variant="surface-plain"
       className={cn(
-        "inline-flex h-5 w-5 items-center justify-center rounded-full text-meta font-bold tabular-nums transition-colors leading-none",
-        active
-          ? "bg-primary-soft-hover text-primary"
-          : "bg-surface text-text-secondary",
+        "h-5 w-5 justify-center p-0 leading-none tabular-nums transition-colors",
         count === 0 && "opacity-80",
       )}
     >
       {count}
-    </span>
+    </Badge>
   );
 }
 

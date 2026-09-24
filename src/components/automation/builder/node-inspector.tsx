@@ -1024,7 +1024,7 @@ export function NodeInspector({
           <Section
             title="Branches"
             defaultOpen={draft.kind === "multi_branch"}
-            badge={<Badge tone="neutral">{draft.branches.length}</Badge>}
+            badge={<Badge variant="default">{draft.branches.length}</Badge>}
           >
             <p className="text-sm text-text-muted">
               Paths are taken in order, top to bottom - the first one a contact
@@ -1109,12 +1109,11 @@ export function NodeInspector({
             defaultOpen={unmapped.length > 0}
             badge={
               unmapped.length > 0 ? (
-                <Badge tone="danger">
-                  <AlertTriangle className="size-3" aria-hidden />
+                <Badge variant="error" icon={<AlertTriangle aria-hidden />}>
                   {unmapped.length} unmapped
                 </Badge>
               ) : tokens.length > 0 ? (
-                <Badge tone="success">{tokens.length} mapped</Badge>
+                <Badge variant="success">{tokens.length} mapped</Badge>
               ) : null
             }
           >
@@ -1197,7 +1196,7 @@ export function NodeInspector({
 
         <Section
           title="Conditions"
-          badge={conditions.length > 0 ? <Badge tone="brand">{conditions.length}</Badge> : null}
+          badge={conditions.length > 0 ? <Badge variant="primary">{conditions.length}</Badge> : null}
         >
           <p className="text-sm text-text-muted">
             Contacts who do not match skip this step and carry on to the next
@@ -1324,7 +1323,7 @@ export function NodeInspector({
 
         {draft.entered !== undefined && draft.entered > 0 ? (
           <p className="flex items-center gap-2 border-t border-border pt-3 text-sm text-text-muted">
-            <Badge tone="neutral">{draft.entered.toLocaleString("en-US")}</Badge>
+            <Badge variant="default">{draft.entered.toLocaleString("en-US")}</Badge>
             contacts have reached this step
           </p>
         ) : null}

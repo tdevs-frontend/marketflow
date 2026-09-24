@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ArrowRight, CalendarCheck, Star } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
 import { APP_ROUTES } from "@/constants";
 import { HeroDashboard } from "./hero-dashboard";
@@ -32,12 +33,17 @@ export function HeroSection() {
       <div className="custom-container">
         <div className="px-6 py-20 lg:py-24">
           <div className="mx-auto max-w-240 text-center">
-            <span className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pl-1.5 pr-3.5 text-text-secondary shadow-card">
-              <span className="rounded-full bg-primary-soft px-2 py-0.5 text-xs font-semibold text-primary-dark">
+            <Badge
+              variant="floating"
+              size="lg"
+              casing="none"
+              className="pr-3.5 pl-1.5"
+            >
+              <Badge variant="primary" size="xs" weight="semibold" casing="none">
                 New
-              </span>
+              </Badge>
               WhatsApp Business API built for merchants
-            </span>
+            </Badge>
 
             <h1 className="mx-auto mt-7 max-w-4xl text-[2.75rem] font-bold leading-[1.06] tracking-tight text-balance sm:text-6xl xl:text-[4.25rem]">
               Turn Every Conversation Into{" "}

@@ -1,5 +1,6 @@
 import { BadgeCheck, Star } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 /**
@@ -164,9 +165,9 @@ function ReviewCard({ testimonial }: { testimonial: Testimonial }) {
           {testimonial.rating}
         </span>
 
-        <span className="ml-1 rounded-full bg-emerald-400/10 px-2 py-0.5 text-xs font-medium text-emerald-400">
+        <Badge variant="success-dark" size="xs" casing="none" className="ml-1">
           Verified
-        </span>
+        </Badge>
       </div>
 
       <p className="mt-4 text-[15px] leading-6 text-white/70">
@@ -194,14 +195,22 @@ export function TestimonialSection() {
 
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-white/80 backdrop-blur">
-            <Star
-              className="size-4 text-amber-400"
-              fill="currentColor"
-              aria-hidden
-            />
+          <Badge
+            as="p"
+            variant="glass-subtle"
+            size="lg"
+            casing="none"
+            icon={
+              <Star
+                className="size-4 text-amber-400"
+                fill="currentColor"
+                aria-hidden
+              />
+            }
+            className="px-4 py-2"
+          >
             4.9/5 customer rating
-          </p>
+          </Badge>
 
           <h2
             id="testimonials-title"

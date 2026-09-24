@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { TAG_COLORS, tagByName } from "@/lib/customer-fixtures";
 import type {
   ActivityKind,
@@ -41,13 +41,13 @@ import type { LeadSource, LeadStage } from "@/types/lead";
  * because a "Lead" badge in green tells the reader something has been achieved
  * when nothing has yet.
  */
-const LIFECYCLE_TONE: Record<Lifecycle, BadgeTone> = {
-  subscriber: "neutral",
+const LIFECYCLE_TONE: Record<Lifecycle, BadgeVariant> = {
+  subscriber: "default",
   lead: "info",
-  qualified: "brand",
+  qualified: "primary",
   customer: "success",
   repeat: "success",
-  churned: "danger",
+  churned: "error",
 };
 
 const LIFECYCLE_LABEL: Record<Lifecycle, string> = {
@@ -61,7 +61,7 @@ const LIFECYCLE_LABEL: Record<Lifecycle, string> = {
 
 export function LifecycleBadge({ lifecycle }: { lifecycle: Lifecycle }) {
   return (
-    <Badge tone={LIFECYCLE_TONE[lifecycle]}>{LIFECYCLE_LABEL[lifecycle]}</Badge>
+    <Badge variant={LIFECYCLE_TONE[lifecycle]}>{LIFECYCLE_LABEL[lifecycle]}</Badge>
   );
 }
 
@@ -75,11 +75,11 @@ export function LifecycleBadge({ lifecycle }: { lifecycle: Lifecycle }) {
  * Only rendered when it is not `active`, so a healthy table is not a wall of
  * green "Active" pills competing with the lifecycle column beside it.
  */
-const STATUS_TONE: Record<ContactStatus, BadgeTone> = {
+const STATUS_TONE: Record<ContactStatus, BadgeVariant> = {
   active: "success",
   unsubscribed: "warning",
   bounced: "warning",
-  blocked: "danger",
+  blocked: "error",
 };
 
 export function ContactStatusBadge({
@@ -93,7 +93,7 @@ export function ContactStatusBadge({
   if (status === "active" && !always) return null;
 
   return (
-    <Badge tone={STATUS_TONE[status]} className="capitalize">
+    <Badge variant={STATUS_TONE[status]}>
       {status}
     </Badge>
   );
@@ -120,15 +120,13 @@ export function TagBadge({
   const color = tagByName(name)?.color ?? "slate";
 
   return (
-    <span
-      className={cn(
-        "inline-flex max-w-full items-center rounded-full px-2 py-0.5 text-sm leading-tight font-medium",
-        TAG_COLORS[color].pill,
-        className,
-      )}
+    <Badge
+      palette={TAG_COLORS[color].pill}
+      casing="none"
+      className={cn("max-w-full px-2 leading-tight", className)}
     >
       <span className="truncate">{name}</span>
-    </span>
+    </Badge>
   );
 }
 
@@ -316,14 +314,14 @@ export function SourceBadge({
  * A lead's stage, for the places a board column header cannot say it - a
  * drawer, a list row, a contact's related-leads panel.
  */
-const STAGE_TONE: Record<LeadStage, BadgeTone> = {
-  new: "neutral",
-  contacted: "neutral",
+const STAGE_TONE: Record<LeadStage, BadgeVariant> = {
+  new: "default",
+  contacted: "default",
   negotiation: "info",
-  qualified: "brand",
-  proposal: "brand",
+  qualified: "primary",
+  proposal: "primary",
   won: "success",
-  lost: "danger",
+  lost: "error",
 };
 
 export function StageBadge({
@@ -333,7 +331,7 @@ export function StageBadge({
   stage: LeadStage;
   label: string;
 }) {
-  return <Badge tone={STAGE_TONE[stage]}>{label}</Badge>;
+  return <Badge variant={STAGE_TONE[stage]}>{label}</Badge>;
 }
 
 /* -------------------------------------------------------------------------- */

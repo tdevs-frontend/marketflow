@@ -1,15 +1,15 @@
 import Link from "next/link";
 
 import { Avatar } from "@/components/ui/avatar";
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { formatRelativeTime } from "@/lib/format";
 import { cn, truncate } from "@/lib/utils";
 import type { Conversation, ConversationStatus } from "@/types/marketing";
 
-const STATUS_TONES: Record<ConversationStatus, BadgeTone> = {
+const STATUS_TONES: Record<ConversationStatus, BadgeVariant> = {
   open: "success",
   pending: "warning",
-  resolved: "neutral",
+  resolved: "default",
 };
 
 /**
@@ -105,7 +105,7 @@ export function RecentConversations({
 
                 <div className="mt-2 flex min-w-0 items-center gap-2">
                   <Badge
-                    tone={STATUS_TONES[conversation.status]}
+                    variant={STATUS_TONES[conversation.status]}
                     size="sm"
                     className="shrink-0"
                   >
@@ -141,12 +141,15 @@ export function RecentConversations({
                      between a thread to glance at and one to open now. Sized
                      from its own text so a two-digit count stays a lozenge
                      instead of squeezing. */
-                  <span
+                  <Badge
                     aria-label={`${conversation.unread} unread`}
-                    className="grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1.5 text-xs leading-none font-bold text-white tabular-nums"
+                    variant="solid"
+                    size="xs"
+                    weight="bold"
+                    className="grid h-5 min-w-5 place-items-center px-1.5 py-0 leading-none tabular-nums"
                   >
                     {conversation.unread}
-                  </span>
+                  </Badge>
                 ) : null}
               </div>
             </Link>

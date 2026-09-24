@@ -668,17 +668,17 @@ export function MediaLibrary() {
             </div>
 
             <div className="flex flex-wrap items-center gap-1.5">
-              <Badge tone={detail.type === "video" ? "info" : "brand"}>
+              <Badge variant={detail.type === "video" ? "info" : "primary"}>
                 {detail.type}
               </Badge>
-              <Badge tone="neutral">
+              <Badge variant="default">
                 {mediaFolders.find((item) => item.id === detail.folderId)?.name ??
                   "Uncategorised"}
               </Badge>
               {usageOf(detail.id) === 0 ? (
-                <Badge tone="warning">Unused</Badge>
+                <Badge variant="warning">Unused</Badge>
               ) : (
-                <Badge tone="success">{usageOf(detail.id)} posts</Badge>
+                <Badge variant="success">{usageOf(detail.id)} posts</Badge>
               )}
             </div>
 

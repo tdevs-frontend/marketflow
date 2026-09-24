@@ -277,7 +277,7 @@ function PlatformStep({
                     {provider.label}
                   </span>
                   {available ? null : (
-                    <Badge size="sm" className="normal-case">
+                    <Badge size="sm" casing="none">
                       Coming Soon
                     </Badge>
                   )}
@@ -519,7 +519,7 @@ function CompleteStep({
           <dt className="shrink-0 text-sm text-text-muted">Capabilities</dt>
           <dd className="flex min-w-0 flex-wrap justify-end gap-1.5">
             {provider.capabilities.map((key) => (
-              <Badge key={key} tone="success" size="sm" className="normal-case">
+              <Badge key={key} variant="success" size="sm" casing="none">
                 {SOCIAL_CAPABILITY_LABEL[key]}
               </Badge>
             ))}

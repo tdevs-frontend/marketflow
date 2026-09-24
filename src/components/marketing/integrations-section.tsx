@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Code, Mail, Plug, Webhook, type LucideIcon } from "lucide-react";
 
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
+import { Badge } from "@/components/ui/badge";
 import { BrandIcon } from "@/components/ui/brand-icon";
 import { INTEGRATION_ROUTES } from "@/constants/integrations";
 import { cn } from "@/lib/utils";
@@ -159,7 +159,15 @@ export function IntegrationsSection() {
 
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <SectionEyebrow text="Integrations" icon={Plug} />
+          <Badge
+            as="p"
+            variant="primary-outline"
+            size="lg"
+            casing="none"
+            icon={<Plug aria-hidden />}
+          >
+            Integrations
+          </Badge>
 
           <h2 id="integrations-title" className="section-title mt-5 text-balance">
             Everything you already use,{" "}

@@ -18,7 +18,7 @@ import {
   X,
 } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -53,11 +53,11 @@ import { FlowBuilder } from "./flow-builder";
 
 const ALL = "all";
 
-const STATUS_TONES: Record<AutomationStatus, BadgeTone> = {
+const STATUS_TONES: Record<AutomationStatus, BadgeVariant> = {
   active: "success",
   paused: "warning",
-  draft: "neutral",
-  archived: "neutral",
+  draft: "default",
+  archived: "default",
 };
 
 type View = "cards" | "table";
@@ -316,7 +316,7 @@ export function AutomationsWorkspace({ channel }: { channel: MessagingChannel })
                       </div>
 
                       <div className="flex shrink-0 items-center gap-1">
-                        <Badge tone={STATUS_TONES[flow.status]}>{flow.status}</Badge>
+                        <Badge variant={STATUS_TONES[flow.status]}>{flow.status}</Badge>
                         <Menu label={`Actions for ${flow.name}`} items={menuFor(flow)} />
                       </div>
                     </div>
@@ -450,7 +450,7 @@ export function AutomationsWorkspace({ channel }: { channel: MessagingChannel })
                     </TD>
 
                     <TD>
-                      <Badge tone={STATUS_TONES[flow.status]}>{flow.status}</Badge>
+                      <Badge variant={STATUS_TONES[flow.status]}>{flow.status}</Badge>
                     </TD>
 
                     <TD className="text-sm whitespace-nowrap text-text-muted">

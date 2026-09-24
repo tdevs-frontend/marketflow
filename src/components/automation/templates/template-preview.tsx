@@ -13,6 +13,7 @@ import {
   Users,
 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { useToast } from "@/components/ui/toast";
@@ -186,12 +187,15 @@ export function TemplatePreview({ template }: { template: AutomationTemplate }) 
                     {step.branches ? (
                       <p className="mt-1.5 flex flex-wrap gap-1.5">
                         {step.branches.map((branch) => (
-                          <span
+                          <Badge
                             key={branch}
-                            className="rounded-full border border-dashed border-border-strong px-2 py-0.5 text-sm text-text-secondary"
+                            variant="dashed"
+                            weight="inherit"
+                            casing="none"
+                            className="px-2"
                           >
                             {branch}
-                          </span>
+                          </Badge>
                         ))}
                       </p>
                     ) : null}

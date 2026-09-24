@@ -636,7 +636,7 @@ export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps)
                   </span>
 
                   {best ? (
-                    <Badge tone="brand" size="sm">
+                    <Badge variant="primary" size="sm">
                       Best
                     </Badge>
                   ) : null}

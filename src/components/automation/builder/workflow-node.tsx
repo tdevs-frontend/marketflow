@@ -3,6 +3,7 @@
 import type { PointerEvent as ReactPointerEvent } from "react";
 import { AlertTriangle, Copy, Settings2, Trash2 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Menu } from "@/components/ui/menu";
 import { NODE_CATEGORY, NODE_META } from "@/constants/automation";
 import { formatCount } from "@/lib/format";
@@ -158,10 +159,14 @@ export function WorkflowNodeCard({
       ) : null}
 
       {analytics ? (
-        <span className="absolute -right-1 -bottom-3 inline-flex items-center gap-1 rounded-full border border-border bg-surface px-2 py-0.5 text-sm font-medium text-text-secondary shadow-btn tabular-nums">
+        <Badge
+          variant="surface"
+          casing="none"
+          className="absolute -right-1 -bottom-3 px-2 shadow-btn tabular-nums"
+        >
           {formatCount(analytics.entered)}
           <span className="text-text-muted">{analytics.share.toFixed(1)}%</span>
-        </span>
+        </Badge>
       ) : null}
     </div>
   );

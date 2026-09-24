@@ -4,10 +4,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, BookOpen, Clock3 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { LogoMark } from "@/components/ui/logo";
 import { BlogCard, ShareArticle } from "@/components/marketing/blog";
 import { PageBreadcrumb } from "@/components/marketing/page-breadcrumb";
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 import {
   BLOG_ARTICLES,
   formatArticleDate,
@@ -125,9 +125,16 @@ export default async function ArticlePage({
                 ]}
               />
 
-              <p className="inline-flex w-fit items-center rounded-full border border-primary-border bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">
+              <Badge
+                as="p"
+                variant="primary-outline"
+                size="xs"
+                weight="semibold"
+                casing="none"
+                className="w-fit px-3 py-1"
+              >
                 {article.category}
-              </p>
+              </Badge>
 
               <h1 className="mt-4 text-[2rem] leading-[1.12] font-bold tracking-tight text-balance sm:text-[2.75rem]">
                 {article.title}
@@ -196,7 +203,15 @@ export default async function ArticlePage({
         <div className="custom-container">
           <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
             <div className="max-w-2xl">
-              <SectionEyebrow text="Keep reading" icon={BookOpen} />
+              <Badge
+                as="p"
+                variant="primary-outline"
+                size="lg"
+                casing="none"
+                icon={<BookOpen aria-hidden />}
+              >
+                Keep reading
+              </Badge>
 
               <h2
                 id="related-articles-title"

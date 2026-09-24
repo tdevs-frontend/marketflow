@@ -13,7 +13,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import {
   AUTH_STATUS_LABEL,
   HEALTH_LABEL,
@@ -41,7 +41,7 @@ import type { AuthStatus, CapabilityState } from "@/types/social";
  */
 
 interface StateStyle {
-  tone: BadgeTone;
+  tone: BadgeVariant;
   icon: LucideIcon;
   label: string;
 }
@@ -53,17 +53,17 @@ const INTEGRATION_STATE: Record<IntegrationStatus, StateStyle> = {
     label: INTEGRATION_STATUS_LABEL.connected,
   },
   needs_setup: {
-    tone: "neutral",
+    tone: "default",
     icon: CircleDashed,
     label: INTEGRATION_STATUS_LABEL.needs_setup,
   },
   issue: {
-    tone: "danger",
+    tone: "error",
     icon: AlertTriangle,
     label: INTEGRATION_STATUS_LABEL.issue,
   },
   disabled: {
-    tone: "neutral",
+    tone: "default",
     icon: CircleSlash,
     label: INTEGRATION_STATUS_LABEL.disabled,
   },
@@ -81,8 +81,7 @@ export function IntegrationStatusBadge({
   const { tone, icon: Icon, label } = INTEGRATION_STATE[status];
 
   return (
-    <Badge tone={tone} size={size} className={cn("normal-case", className)}>
-      <Icon className="size-3" aria-hidden />
+    <Badge variant={tone} size={size} casing="none" className={className} icon={<Icon aria-hidden />}>
       {label}
     </Badge>
   );
@@ -95,8 +94,8 @@ export function IntegrationStatusBadge({
 const HEALTH_STATE: Record<HealthStatus, StateStyle> = {
   healthy: { tone: "success", icon: CheckCircle2, label: HEALTH_LABEL.healthy },
   warning: { tone: "warning", icon: AlertTriangle, label: HEALTH_LABEL.warning },
-  error: { tone: "danger", icon: XCircle, label: HEALTH_LABEL.error },
-  disconnected: { tone: "neutral", icon: PlugZap, label: HEALTH_LABEL.disconnected },
+  error: { tone: "error", icon: XCircle, label: HEALTH_LABEL.error },
+  disconnected: { tone: "default", icon: PlugZap, label: HEALTH_LABEL.disconnected },
 };
 
 /**
@@ -116,8 +115,7 @@ export function HealthBadge({
   const { tone, icon: Icon, label } = HEALTH_STATE[status];
 
   return (
-    <Badge tone={tone} size={size} className={cn("normal-case", className)}>
-      <Icon className="size-3" aria-hidden />
+    <Badge variant={tone} size={size} casing="none" className={className} icon={<Icon aria-hidden />}>
       {label}
     </Badge>
   );
@@ -160,8 +158,8 @@ export function HealthDot({
 
 const WEBHOOK_STATE: Record<WebhookStatus, StateStyle> = {
   active: { tone: "success", icon: CheckCircle2, label: WEBHOOK_STATUS_LABEL.active },
-  paused: { tone: "neutral", icon: Pause, label: WEBHOOK_STATUS_LABEL.paused },
-  failing: { tone: "danger", icon: AlertTriangle, label: WEBHOOK_STATUS_LABEL.failing },
+  paused: { tone: "default", icon: Pause, label: WEBHOOK_STATUS_LABEL.paused },
+  failing: { tone: "error", icon: AlertTriangle, label: WEBHOOK_STATUS_LABEL.failing },
 };
 
 export function WebhookStatusBadge({
@@ -176,8 +174,7 @@ export function WebhookStatusBadge({
   const { tone, icon: Icon, label } = WEBHOOK_STATE[status];
 
   return (
-    <Badge tone={tone} size={size} className={cn("normal-case", className)}>
-      <Icon className="size-3" aria-hidden />
+    <Badge variant={tone} size={size} casing="none" className={className} icon={<Icon aria-hidden />}>
       {label}
     </Badge>
   );
@@ -200,41 +197,42 @@ export function HttpStatusBadge({
 }) {
   if (code === null) {
     return (
-      <Badge tone="danger" size={size} className="normal-case tabular-nums">
+      <Badge variant="error" size={size} casing="none" className="tabular-nums">
         Timeout
       </Badge>
     );
   }
 
-  const tone: BadgeTone =
-    code < 300 ? "success" : code < 400 ? "info" : code < 500 ? "warning" : "danger";
+  const tone: BadgeVariant =
+    code < 300 ? "success" : code < 400 ? "info" : code < 500 ? "warning" : "error";
 
   return (
-    <Badge tone={tone} size={size} className="tabular-nums">
+    <Badge variant={tone} size={size} className="tabular-nums">
       {code}
     </Badge>
   );
 }
 
-const METHOD_TONE: Record<string, string> = {
-  GET: "bg-info-soft text-info-text",
-  POST: "bg-success-soft text-success-text",
-  PUT: "bg-warning-soft text-warning-text",
-  PATCH: "bg-warning-soft text-warning-text",
-  DELETE: "bg-error-soft text-error-text",
+const METHOD_TONE: Record<string, BadgeVariant> = {
+  GET: "info",
+  POST: "success",
+  PUT: "warning",
+  PATCH: "warning",
+  DELETE: "error",
 };
 
 /** The verb in a request log. Monospace and fixed-width so the column aligns. */
 export function MethodBadge({ method }: { method: string }) {
   return (
-    <span
-      className={cn(
-        "inline-flex w-16 justify-center rounded-btn px-1.5 py-0.5 font-mono text-meta font-semibold",
-        METHOD_TONE[method] ?? "bg-surface-secondary text-text-secondary",
-      )}
+    <Badge
+      variant={METHOD_TONE[method] ?? "default"}
+      size="sm"
+      weight="semibold"
+      casing="none"
+      className="w-16 justify-center rounded-btn px-1.5 font-mono"
     >
       {method}
-    </span>
+    </Badge>
   );
 }
 
@@ -283,13 +281,13 @@ export function CodeText({
 const AUTH_STATE: Record<AuthStatus, StateStyle> = {
   healthy: { tone: "success", icon: ShieldCheck, label: AUTH_STATUS_LABEL.healthy },
   expiring_soon: { tone: "warning", icon: Clock, label: AUTH_STATUS_LABEL.expiring_soon },
-  expired: { tone: "danger", icon: ShieldAlert, label: AUTH_STATUS_LABEL.expired },
+  expired: { tone: "error", icon: ShieldAlert, label: AUTH_STATUS_LABEL.expired },
   permission_missing: {
     tone: "warning",
     icon: ShieldAlert,
     label: AUTH_STATUS_LABEL.permission_missing,
   },
-  disconnected: { tone: "neutral", icon: PlugZap, label: AUTH_STATUS_LABEL.disconnected },
+  disconnected: { tone: "default", icon: PlugZap, label: AUTH_STATUS_LABEL.disconnected },
 };
 
 export function AuthStatusBadge({
@@ -304,8 +302,7 @@ export function AuthStatusBadge({
   const { tone, icon: Icon, label } = AUTH_STATE[status];
 
   return (
-    <Badge tone={tone} size={size} className={cn("normal-case", className)}>
-      <Icon className="size-3" aria-hidden />
+    <Badge variant={tone} size={size} casing="none" className={className} icon={<Icon aria-hidden />}>
       {label}
     </Badge>
   );
@@ -321,7 +318,7 @@ export function AuthStatusBadge({
  */
 const CAPABILITY_STATE: Record<CapabilityState, StateStyle> = {
   granted: { tone: "success", icon: CheckCircle2, label: "Granted" },
-  missing: { tone: "neutral", icon: MinusCircle, label: "Not available" },
+  missing: { tone: "default", icon: MinusCircle, label: "Not available" },
   needs_reauth: { tone: "warning", icon: AlertTriangle, label: "Needs reauthorization" },
 };
 
@@ -337,8 +334,7 @@ export function CapabilityBadge({
   const { tone, icon: Icon, label } = CAPABILITY_STATE[state];
 
   return (
-    <Badge tone={tone} size={size} className={cn("normal-case", className)}>
-      <Icon className="size-3" aria-hidden />
+    <Badge variant={tone} size={size} casing="none" className={className} icon={<Icon aria-hidden />}>
       {label}
     </Badge>
   );

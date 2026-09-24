@@ -620,8 +620,7 @@ export function SensitiveSummary({
   if (count === 0) return null;
 
   return (
-    <Badge tone="warning" size="sm" className={cn("normal-case", className)}>
-      <ShieldAlert className="size-3" aria-hidden />
+    <Badge variant="warning" size="sm" casing="none" className={className} icon={<ShieldAlert aria-hidden />}>
       {count} sensitive
     </Badge>
   );

@@ -17,7 +17,7 @@ import {
   Zap,
 } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -73,10 +73,10 @@ import type { EmailSenderIdentity, SenderStatus } from "@/types/email";
  * propagated stops one address from sending, not the workspace.
  */
 
-const STATUS_TONES: Record<SenderStatus, BadgeTone> = {
+const STATUS_TONES: Record<SenderStatus, BadgeVariant> = {
   verified: "success",
   pending: "warning",
-  failed: "danger",
+  failed: "error",
 };
 
 const STATUS_LABELS: Record<SenderStatus, string> = {
@@ -370,10 +370,10 @@ export function EmailSendersWorkspace() {
             <p className="text-base font-bold text-text-primary">
               {EMAIL_PROVIDER.name}
             </p>
-            <Badge tone={EMAIL_PROVIDER.connected ? "success" : "danger"}>
+            <Badge variant={EMAIL_PROVIDER.connected ? "success" : "error"}>
               {EMAIL_PROVIDER.connected ? "Connected" : "Disconnected"}
             </Badge>
-            <Badge tone="neutral">{EMAIL_PROVIDER.mode.toUpperCase()}</Badge>
+            <Badge variant="default">{EMAIL_PROVIDER.mode.toUpperCase()}</Badge>
             <span className="text-sm text-text-muted">
               Checked {formatRelativeTime(EMAIL_PROVIDER.lastCheckedAt)}
             </span>
@@ -514,7 +514,7 @@ export function EmailSendersWorkspace() {
                   <TD>
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="font-bold text-text-primary">{sender.name}</p>
-                      {sender.isDefault ? <Badge tone="brand">Default</Badge> : null}
+                      {sender.isDefault ? <Badge variant="primary">Default</Badge> : null}
                     </div>
                     <p className="text-sm text-text-muted">{sender.email}</p>
                   </TD>
@@ -542,7 +542,7 @@ export function EmailSendersWorkspace() {
                   </TD>
 
                   <TD>
-                    <Badge tone={STATUS_TONES[sender.status]}>
+                    <Badge variant={STATUS_TONES[sender.status]}>
                       {STATUS_LABELS[sender.status]}
                     </Badge>
                   </TD>
@@ -597,7 +597,7 @@ export function EmailSendersWorkspace() {
                   </p>
                   <p className="truncate text-sm text-text-muted">{sender.email}</p>
                 </div>
-                <Badge tone={STATUS_TONES[sender.status]}>
+                <Badge variant={STATUS_TONES[sender.status]}>
                   {STATUS_LABELS[sender.status]}
                 </Badge>
               </div>

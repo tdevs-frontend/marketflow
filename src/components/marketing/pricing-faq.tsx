@@ -1,6 +1,6 @@
 import { CircleHelp } from "lucide-react";
 
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
+import { Badge } from "@/components/ui/badge";
 import { PRICING_FAQS } from "@/constants/pricing";
 
 import { FaqAccordion } from "./faq-accordion";
@@ -28,7 +28,15 @@ export function PricingFaq() {
       <div className="custom-container">
         <div className="grid gap-10 md:grid-cols-[3fr_3fr] md:gap-10 lg:grid-cols-[6fr_13fr] lg:gap-16">
           <header className="md:pt-1">
-            <SectionEyebrow text="FAQ" icon={CircleHelp} />
+            <Badge
+              as="p"
+              variant="primary-outline"
+              size="lg"
+              casing="none"
+              icon={<CircleHelp aria-hidden />}
+            >
+              FAQ
+            </Badge>
 
             <h2
               id="pricing-faq-title"

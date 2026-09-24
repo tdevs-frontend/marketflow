@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { PlatformDashboard } from "./platform-dashboard";
 
@@ -144,10 +145,10 @@ function ModuleCard({ module, side }: { module: Module; side: Side }) {
           <p className="mt-1 text-xs leading-relaxed text-text-secondary">
             {module.body}
           </p>
-          <p className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-surface-secondary px-2 py-0.5 text-xs font-medium text-text-secondary">
+          <Badge as="p" size="xs" casing="none" className="mt-2.5 gap-1.5">
             <span aria-hidden className="size-1.5 rounded-full bg-secondary" />
             {module.status}
-          </p>
+          </Badge>
         </div>
       </div>
     </article>
@@ -211,10 +212,16 @@ export function PlatformOverview() {
 
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-2xl text-center">
-          <p className="inline-flex items-center gap-2 rounded-full border border-border bg-surface py-1.5 pl-3 pr-3.5 text-xs font-medium text-text-secondary shadow-card">
+          <Badge
+            as="p"
+            variant="floating"
+            size="lg"
+            casing="none"
+            className="pr-3.5 text-xs"
+          >
             <span aria-hidden className="size-1.5 rounded-full bg-secondary" />
             One platform. Complete marketing control.
-          </p>
+          </Badge>
 
           <h2
             id="platform-overview-title"

@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 import { ExternalLink } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SkeletonTable } from "@/components/ui/skeleton";
@@ -46,23 +46,23 @@ import { SettingsSection, useServiceQuery } from "../settings-section";
 /** What the plan a charge bought is doing now. */
 const PLAN_STATE: Record<
   PurchasePlanState,
-  { label: string; tone: BadgeTone }
+  { label: string; tone: BadgeVariant }
 > = {
   active: { label: "Active", tone: "success" },
-  ended: { label: "Ended", tone: "neutral" },
-  cancelled: { label: "Cancelled", tone: "neutral" },
+  ended: { label: "Ended", tone: "default" },
+  cancelled: { label: "Cancelled", tone: "default" },
   pending: { label: "Pending", tone: "warning" },
 };
 
 /** What became of the money. */
 const PAYMENT_STATE: Record<
   PurchasePaymentState,
-  { label: string; tone: BadgeTone }
+  { label: string; tone: BadgeVariant }
 > = {
   paid: { label: "Paid", tone: "info" },
   pending: { label: "Pending", tone: "warning" },
-  failed: { label: "Failed", tone: "danger" },
-  refunded: { label: "Refunded", tone: "neutral" },
+  failed: { label: "Failed", tone: "error" },
+  refunded: { label: "Refunded", tone: "default" },
 };
 
 export function PurchasedHistory() {
@@ -154,11 +154,11 @@ function PurchaseRow({ purchase }: { purchase: Purchase }) {
           otherwise read "Pending · Pending", which says nothing twice.
         */}
         <span className="flex flex-wrap items-center gap-1.5">
-          <Badge tone={plan.tone} size="sm">
+          <Badge variant={plan.tone} size="sm">
             {plan.label}
           </Badge>
           {payment.label === plan.label ? null : (
-            <Badge tone={payment.tone} size="sm">
+            <Badge variant={payment.tone} size="sm">
               {payment.label}
             </Badge>
           )}

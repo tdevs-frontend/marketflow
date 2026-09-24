@@ -58,7 +58,7 @@ export function TwoFactorCard() {
       title="Two-factor authentication"
       description="Add an extra layer of security to protect your account."
       action={
-        <Badge tone={enabled ? "success" : "neutral"}>
+        <Badge variant={enabled ? "success" : "default"}>
           {enabled ? "Enabled" : "Disabled"}
         </Badge>
       }

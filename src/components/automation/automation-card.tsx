@@ -1,15 +1,15 @@
 import Link from "next/link";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { formatNumber, formatPercent, rate } from "@/lib/format";
 import type { Automation, AutomationStatus } from "@/types/automation";
 
-const TONES: Record<AutomationStatus, BadgeTone> = {
-  draft: "neutral",
+const TONES: Record<AutomationStatus, BadgeVariant> = {
+  draft: "default",
   active: "success",
   paused: "warning",
-  archived: "neutral",
+  archived: "default",
 };
 
 export function AutomationCard({ automation }: { automation: Automation }) {
@@ -31,7 +31,7 @@ export function AutomationCard({ automation }: { automation: Automation }) {
             </p>
           ) : null}
         </div>
-        <Badge tone={TONES[automation.status]}>{automation.status}</Badge>
+        <Badge variant={TONES[automation.status]}>{automation.status}</Badge>
       </div>
 
       <dl className="mt-4 grid grid-cols-3 gap-3 text-sm">

@@ -433,7 +433,7 @@ function AccountInformation() {
             label: "Role",
             value: (
               <span className="flex flex-wrap items-center gap-2">
-                <Badge tone="brand">{user.roleName}</Badge>
+                <Badge variant="primary">{user.roleName}</Badge>
                 <Link
                   href={APP_ROUTES.workspaceTeam}
                   className="text-sm font-semibold text-primary underline-offset-2 hover:underline"
@@ -447,7 +447,7 @@ function AccountInformation() {
           {
             label: "Status",
             value: (
-              <Badge tone={user.status === "active" ? "success" : "warning"}>
+              <Badge variant={user.status === "active" ? "success" : "warning"}>
                 {MEMBER_STATUS_LABEL[user.status]}
               </Badge>
             ),

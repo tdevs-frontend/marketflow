@@ -16,7 +16,7 @@ import {
 
 import { AvatarLabel } from "@/components/ui/avatar";
 import { TABLE_PAGE_SIZE } from "@/constants/app";
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -61,10 +61,10 @@ const ALL = "all";
 const PER_PAGE = TABLE_PAGE_SIZE;
 const theme = CHANNEL_THEME.sms;
 
-const STATUS_TONES: Record<SmsContactStatus, BadgeTone> = {
+const STATUS_TONES: Record<SmsContactStatus, BadgeVariant> = {
   subscribed: "success",
-  "opted-out": "neutral",
-  invalid: "danger",
+  "opted-out": "default",
+  invalid: "error",
 };
 
 /**
@@ -448,7 +448,7 @@ export function SmsContactsWorkspace() {
                         </TD>
 
                         <TD>
-                          <Badge tone={STATUS_TONES[contact.status]}>
+                          <Badge variant={STATUS_TONES[contact.status]}>
                             {statusLabel(contact.status)}
                           </Badge>
                         </TD>
@@ -541,7 +541,7 @@ export function SmsContactsWorkspace() {
                       >
                         <AvatarLabel name={name} secondary={contact.phone} size="sm" />
                       </button>
-                      <Badge tone={STATUS_TONES[contact.status]} size="sm">
+                      <Badge variant={STATUS_TONES[contact.status]} size="sm">
                         {statusLabel(contact.status)}
                       </Badge>
                     </div>
@@ -621,10 +621,10 @@ export function SmsContactsWorkspace() {
             />
 
             <div className="flex flex-wrap items-center gap-1.5">
-              <Badge tone={STATUS_TONES[detail.status]}>
+              <Badge variant={STATUS_TONES[detail.status]}>
                 {statusLabel(detail.status)}
               </Badge>
-              <Badge tone="neutral">{detail.leadStatus}</Badge>
+              <Badge variant="default">{detail.leadStatus}</Badge>
             </div>
 
             {detail.status === "invalid" ? (

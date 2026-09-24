@@ -43,7 +43,7 @@ export function ConversationListItem({
             {truncate(conversation.lastMessagePreview ?? "No messages yet", 40)}
           </span>
           {conversation.unreadCount > 0 ? (
-            <Badge tone="brand" className="px-1.5">{conversation.unreadCount}</Badge>
+            <Badge variant="primary">{conversation.unreadCount}</Badge>
           ) : null}
         </span>
       </span>

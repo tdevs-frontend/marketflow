@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { BrandIcon } from "@/components/ui/brand-icon";
 import { ButtonLink } from "@/components/ui/button";
 import { APP_ROUTES } from "@/constants";
@@ -34,13 +35,20 @@ export function WhatsAppAutomation() {
         <div className="grid items-center gap-14 xl:grid-cols-12 xl:gap-16">
           {/* Message */}
           <div className="xl:col-span-6">
-            <p className="section-eyebrow inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/8 py-1.5 pr-4 pl-3 text-white backdrop-blur-md">
-              <BrandIcon
-                name="whatsapp"
-                className="size-4 text-whatsapp-brand"
-              />
+            <Badge
+              as="p"
+              variant="glass"
+              size="lg"
+              casing="none"
+              icon={
+                <BrandIcon
+                  name="whatsapp"
+                  className="size-4 text-whatsapp-brand"
+                />
+              }
+            >
               WhatsApp-first automation
-            </p>
+            </Badge>
             <h2
               id="whatsapp-automation-title"
               className="section-title mt-6 text-white text-balance"

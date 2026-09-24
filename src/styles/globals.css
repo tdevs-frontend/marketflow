@@ -114,30 +114,19 @@
    *
    * Both carry type and nothing else - no colour, no margin, no decoration.
    * That split is deliberate: the sections sit on different grounds (light,
-   * dark, gradient), so each call site keeps its own `text-*` colour, its own
-   * `mt-*`, and its own pill treatment on the eyebrow, while the ramp itself
-   * lives in one place.
+   * dark, gradient), so each call site keeps its own `text-*` colour and its
+   * own `mt-*`, while the ramp itself lives in one place.
+   *
+   * The eyebrow above a section heading used to be a third class here. It is
+   * now `<Badge size="lg" casing="none">`, whose `lg` rung carries the same
+   * 14px medium cut and normal tracking, so the pill and its type live in one
+   * component instead of two.
    *
    * `@layer components` puts them below the utilities layer, so a `text-white`
    * or `text-balance` at the call site still wins - and above `@layer base`, so
    * they beat the global `h1..h6` rule the way the inline utilities they replace
    * used to.
    */
-
-  /*
-   * Section eyebrow - the small label above a section heading. Set from the
-   * hero badge, "WhatsApp Business API · built for merchants": 14px in the
-   * medium cut, normal tracking, sentence case.
-   *
-   * `font-medium` is a family swap, not a weight - see the `--font-*` tokens in
-   * `variables.css`. Tracking and transform are stated rather than left to
-   * inherit, so the label reads the same wherever it is dropped.
-   */
-  .section-eyebrow {
-    @apply text-sm font-medium;
-    letter-spacing: normal;
-    text-transform: none;
-  }
 
   /*
    * Section heading - set from "Everything you need to turn leads into loyal

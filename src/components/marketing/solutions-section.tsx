@@ -9,8 +9,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { CommonTextButton } from "@/components/ui/text-button";
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 /* ------------------------------------------------------------------ tokens */
 
@@ -244,7 +244,15 @@ export function SolutionsSection({
     >
       <div className="custom-container">
         <header className="section-title-space mx-auto max-w-3xl text-center">
-          <SectionEyebrow text={eyebrow} icon={LayoutGrid} />
+          <Badge
+            as="p"
+            variant="primary-outline"
+            size="lg"
+            casing="none"
+            icon={<LayoutGrid aria-hidden />}
+          >
+            {eyebrow}
+          </Badge>
 
           <h2 id="industries-title" className="section-title mt-5 text-balance">
             {headingLead} of{" "}

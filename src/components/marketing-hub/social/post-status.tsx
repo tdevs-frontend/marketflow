@@ -2,22 +2,22 @@
 
 import { FileText } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { useMediaAssets } from "@/lib/media-store";
 import { cn } from "@/lib/utils";
 import type { PostStatus, SocialPost } from "@/types/social";
 import { AssetThumb, VideoOverlay } from "../shared/asset-thumb";
 
 /** Post status, shared by the calendar, the list and the composer. */
-const STATUS_TONES: Record<PostStatus, BadgeTone> = {
-  draft: "neutral",
+const STATUS_TONES: Record<PostStatus, BadgeVariant> = {
+  draft: "default",
   scheduled: "info",
   published: "success",
-  failed: "danger",
+  failed: "error",
 };
 
 export function PostStatusBadge({ status }: { status: PostStatus }) {
-  return <Badge tone={STATUS_TONES[status]}>{status}</Badge>;
+  return <Badge variant={STATUS_TONES[status]}>{status}</Badge>;
 }
 
 /**

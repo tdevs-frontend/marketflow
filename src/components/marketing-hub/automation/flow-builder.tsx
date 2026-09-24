@@ -162,7 +162,7 @@ export function FlowBuilder({ flow }: { flow: AutomationFlow }) {
               <p className="text-sm font-medium  text-text-muted capitalize">
                 Step settings
               </p>
-              <Badge tone="neutral">{selected.type}</Badge>
+              <Badge variant="default">{selected.type}</Badge>
             </div>
 
             <div className="mt-3 space-y-3">

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Layers, Package } from "lucide-react";
 
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import {
   CUSTOMER_TYPES,
   FULFILLMENT_LABEL,
@@ -24,16 +24,16 @@ import type {
   VariantStatus,
 } from "@/types/commerce";
 
-const PRODUCT_TONES: Record<ProductStatus, BadgeTone> = {
+const PRODUCT_TONES: Record<ProductStatus, BadgeVariant> = {
   active: "success",
-  draft: "neutral",
-  archived: "neutral",
+  draft: "default",
+  archived: "default",
 };
 
-const STOCK_TONES: Record<StockStatus, BadgeTone> = {
+const STOCK_TONES: Record<StockStatus, BadgeVariant> = {
   "in-stock": "success",
   "low-stock": "warning",
-  "out-of-stock": "danger",
+  "out-of-stock": "error",
 };
 
 const STOCK_LABELS: Record<StockStatus, string> = {
@@ -49,38 +49,38 @@ const HEALTH_LABELS: Record<StockStatus, string> = {
   "out-of-stock": "Out of Stock",
 };
 
-const ORDER_TONES: Record<OrderStatus, BadgeTone> = {
+const ORDER_TONES: Record<OrderStatus, BadgeVariant> = {
   pending: "warning",
   paid: "success",
   processing: "info",
   shipped: "info",
   delivered: "success",
-  cancelled: "danger",
-  refunded: "neutral",
+  cancelled: "error",
+  refunded: "default",
 };
 
-const PAYMENT_TONES: Record<PaymentStatus, BadgeTone> = {
+const PAYMENT_TONES: Record<PaymentStatus, BadgeVariant> = {
   paid: "success",
   pending: "warning",
-  failed: "danger",
-  refunded: "neutral",
+  failed: "error",
+  refunded: "default",
 };
 
-const CATALOG_TONES: Record<CatalogStatus, BadgeTone> = {
+const CATALOG_TONES: Record<CatalogStatus, BadgeVariant> = {
   published: "success",
-  draft: "neutral",
-  archived: "neutral",
+  draft: "default",
+  archived: "default",
 };
 
-const DISCOUNT_TONES: Record<DiscountStatus, BadgeTone> = {
+const DISCOUNT_TONES: Record<DiscountStatus, BadgeVariant> = {
   active: "success",
   scheduled: "info",
-  expired: "neutral",
-  draft: "neutral",
+  expired: "default",
+  draft: "default",
 };
 
 export function ProductStatusBadge({ status }: { status: ProductStatus }) {
-  return <Badge tone={PRODUCT_TONES[status]}>{status}</Badge>;
+  return <Badge variant={PRODUCT_TONES[status]}>{status}</Badge>;
 }
 
 export function StockBadge({
@@ -93,30 +93,30 @@ export function StockBadge({
 }) {
   const labels = variant === "health" ? HEALTH_LABELS : STOCK_LABELS;
   return (
-    <Badge tone={STOCK_TONES[status]} className="normal-case">
+    <Badge variant={STOCK_TONES[status]} casing="none">
       {labels[status]}
     </Badge>
   );
 }
 
 export function OrderStatusBadge({ status }: { status: OrderStatus }) {
-  return <Badge tone={ORDER_TONES[status]}>{status}</Badge>;
+  return <Badge variant={ORDER_TONES[status]}>{status}</Badge>;
 }
 
 export function PaymentStatusBadge({ status }: { status: PaymentStatus }) {
-  return <Badge tone={PAYMENT_TONES[status]}>{status}</Badge>;
+  return <Badge variant={PAYMENT_TONES[status]}>{status}</Badge>;
 }
 
 export function CategoryStatusBadge({ status }: { status: CategoryStatus }) {
-  return <Badge tone={status === "active" ? "success" : "neutral"}>{status}</Badge>;
+  return <Badge variant={status === "active" ? "success" : "default"}>{status}</Badge>;
 }
 
 export function CatalogStatusBadge({ status }: { status: CatalogStatus }) {
-  return <Badge tone={CATALOG_TONES[status]}>{status}</Badge>;
+  return <Badge variant={CATALOG_TONES[status]}>{status}</Badge>;
 }
 
 export function DiscountStatusBadge({ status }: { status: DiscountStatus }) {
-  return <Badge tone={DISCOUNT_TONES[status]}>{status}</Badge>;
+  return <Badge variant={DISCOUNT_TONES[status]}>{status}</Badge>;
 }
 
 const TYPE_LABELS: Record<ProductType, string> = {
@@ -211,17 +211,17 @@ export function ProductThumb({
  * `partially-refunded` is amber rather than red: money came back but the sale
  * stands, and colouring it as a failure overstates what happened.
  */
-const SALE_TONES: Record<SaleStatus, BadgeTone> = {
+const SALE_TONES: Record<SaleStatus, BadgeVariant> = {
   paid: "success",
   pending: "warning",
-  refunded: "neutral",
+  refunded: "default",
   "partially-refunded": "warning",
-  failed: "danger",
+  failed: "error",
 };
 
 export function SaleStatusBadge({ status }: { status: SaleStatus }) {
   return (
-    <Badge tone={SALE_TONES[status]} size="sm" className="normal-case">
+    <Badge variant={SALE_TONES[status]} size="sm" casing="none">
       {SALE_STATUSES.find((item) => item.value === status)?.label ?? status}
     </Badge>
   );
@@ -233,18 +233,18 @@ export function SaleStatusBadge({ status }: { status: SaleStatus }) {
  * The label comes from `FULFILLMENT_LABEL`, so a booking reads *Scheduled* and
  * a download reads *Access granted* - neither is ever told it has been packed.
  */
-const FULFILLMENT_TONES: Partial<Record<FulfillmentStatus, BadgeTone>> = {
+const FULFILLMENT_TONES: Partial<Record<FulfillmentStatus, BadgeVariant>> = {
   delivered: "success",
   "access-granted": "success",
   completed: "success",
-  cancelled: "danger",
+  cancelled: "error",
   "payment-pending": "warning",
   pending: "warning",
 };
 
 export function FulfillmentBadge({ status }: { status: FulfillmentStatus }) {
   return (
-    <Badge tone={FULFILLMENT_TONES[status] ?? "info"} size="sm" className="normal-case">
+    <Badge variant={FULFILLMENT_TONES[status] ?? "info"} size="sm" casing="none">
       {FULFILLMENT_LABEL[status]}
     </Badge>
   );
@@ -257,16 +257,16 @@ export function FulfillmentBadge({ status }: { status: FulfillmentStatus }) {
  * scans for. Inactive stays neutral rather than red: a lapsed customer is an
  * opportunity, not an error.
  */
-const CUSTOMER_TONES: Record<CustomerType, BadgeTone> = {
+const CUSTOMER_TONES: Record<CustomerType, BadgeVariant> = {
   new: "info",
   repeat: "success",
-  vip: "brand",
-  inactive: "neutral",
+  vip: "primary",
+  inactive: "default",
 };
 
 export function CustomerTypeBadge({ type }: { type: CustomerType }) {
   return (
-    <Badge tone={CUSTOMER_TONES[type]} size="sm" className="normal-case">
+    <Badge variant={CUSTOMER_TONES[type]} size="sm" casing="none">
       {CUSTOMER_TYPES.find((item) => item.value === type)?.label ?? type}
     </Badge>
   );
@@ -281,7 +281,7 @@ export function CustomerTypeBadge({ type }: { type: CustomerType }) {
  */
 export function VariantStatusBadge({ status }: { status: VariantStatus }) {
   return (
-    <Badge tone={status === "active" ? "success" : "neutral"} size="sm">
+    <Badge variant={status === "active" ? "success" : "default"} size="sm">
       {status}
     </Badge>
   );
@@ -298,10 +298,10 @@ export function VariantStatusBadge({ status }: { status: VariantStatus }) {
  * Amber for out of stock rather than red: a shirt that sold out is a good
  * problem, and a table of red rows trains a merchant to stop reading the colour.
  */
-const AVAILABILITY: Record<VariantAvailability, { tone: BadgeTone; label: string }> = {
+const AVAILABILITY: Record<VariantAvailability, { tone: BadgeVariant; label: string }> = {
   active: { tone: "success", label: "Active" },
   "out-of-stock": { tone: "warning", label: "Out of stock" },
-  disabled: { tone: "neutral", label: "Disabled" },
+  disabled: { tone: "default", label: "Disabled" },
 };
 
 export function VariantAvailabilityBadge({
@@ -311,7 +311,7 @@ export function VariantAvailabilityBadge({
 }) {
   const { tone, label } = AVAILABILITY[availability];
   return (
-    <Badge tone={tone} size="sm" className="normal-case">
+    <Badge variant={tone} size="sm" casing="none">
       {label}
     </Badge>
   );
@@ -327,8 +327,7 @@ export function VariantAvailabilityBadge({
  */
 export function VariantCountBadge({ count }: { count: number }) {
   return (
-    <Badge tone="brand" size="sm" className="normal-case">
-      <Layers className="size-3" aria-hidden />
+    <Badge variant="primary" size="sm" casing="none" icon={<Layers aria-hidden />}>
       {count} {count === 1 ? "variant" : "variants"}
     </Badge>
   );

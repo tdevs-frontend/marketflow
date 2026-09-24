@@ -122,7 +122,7 @@ export function PaymentMethodSelector({
                   {gateway.name}
                 </span>
                 {gateway.configured ? null : (
-                  <Badge tone="neutral" size="sm" className="normal-case">
+                  <Badge variant="default" size="sm" casing="none">
                     Not connected
                   </Badge>
                 )}

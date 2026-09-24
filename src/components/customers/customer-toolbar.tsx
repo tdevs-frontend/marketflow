@@ -2,6 +2,7 @@
 
 import { X } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
@@ -53,18 +54,25 @@ export function ActiveFilterChips({
       <ul className="flex flex-wrap items-center gap-1.5">
         {chips.map((chip) => (
           <li key={chip.key}>
-            <span className="inline-flex items-center gap-1 rounded-full border border-primary-border bg-primary-soft py-0.5 pr-1 pl-2.5 text-sm font-medium text-primary-dark">
+            <Badge
+              variant="primary"
+              casing="none"
+              className="border border-primary-border pr-1 pl-2.5"
+              iconPosition="end"
+              icon={
+                <button
+                  type="button"
+                  onClick={() => onRemove(chip.key)}
+                  aria-label={`Remove ${chip.label} filter`}
+                  className="grid size-4 place-items-center rounded-full text-primary/70 transition-colors hover:bg-primary-soft-hover hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
+                >
+                  <X className="size-3" aria-hidden />
+                </button>
+              }
+            >
               <span className="text-primary/70">{chip.label}:</span>
               {chip.value}
-              <button
-                type="button"
-                onClick={() => onRemove(chip.key)}
-                aria-label={`Remove ${chip.label} filter`}
-                className="grid size-4 place-items-center rounded-full text-primary/70 transition-colors hover:bg-primary-soft-hover hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
-              >
-                <X className="size-3" aria-hidden />
-              </button>
-            </span>
+            </Badge>
           </li>
         ))}
       </ul>

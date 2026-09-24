@@ -177,14 +177,13 @@ export function UserMenu() {
               that the pill's edge disappears against the header. The border is
               what makes it read as a chip rather than as a highlighted word. */}
           <Badge
-            tone="brand"
+            variant="primary"
             size="xs"
-            /* Only what `Badge` does not already set. The size is a rung on its
-               scale rather than utilities passed in here: `cn()` is a plain
-               join, so a `text-xs` and a tighter padding would race the
-               component's own `text-meta` and `py-0.5` on stylesheet order
-               instead of beating them. */
-            className="border border-primary-border font-medium"
+            /* The 12px rung with its padding pulled in: sitting *beneath* the
+               name rather than beside it, a full-height pill reads as a second
+               line of equal weight. The 1px block padding gives the 16px
+               height that keeps the chip inside the header's rhythm. */
+            className="border border-primary-border px-1.5 py-[1px]"
           >
             {plan?.name ?? subscription.planId} Plan
           </Badge>
@@ -408,9 +407,15 @@ function Row({
       <Icon className="size-4.5 shrink-0" aria-hidden />
       <span className="flex-1 truncate">{item.label}</span>
       {item.badge ? (
-        <span className="rounded-full bg-primary-soft px-1.5 py-0.5 text-xs font-bold text-primary-dark tabular-nums">
+        <Badge
+          variant="primary"
+          size="xs"
+          weight="bold"
+          casing="none"
+          className="px-1.5 tabular-nums"
+        >
           {item.badge}
-        </span>
+        </Badge>
       ) : null}
     </>
   );

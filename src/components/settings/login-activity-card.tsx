@@ -95,7 +95,7 @@ export function LoginActivityCard() {
       action={
         state.status === "ready" && events.length > 0 ? (
           <Badge
-            tone={recentFailures > 0 ? "warning" : "neutral"}
+            variant={recentFailures > 0 ? "warning" : "default"}
             className="whitespace-nowrap"
           >
             {events.length} recent
@@ -163,7 +163,7 @@ function ActivityRow({ event }: { event: SignInEvent }) {
     <SettingsRow
       className="border-b border-border last:border-b-0"
       actions={
-        <Badge tone={failed ? "danger" : "success"} size="sm">
+        <Badge variant={failed ? "error" : "success"} size="sm">
           {failed ? "Failed" : "Successful"}
         </Badge>
       }

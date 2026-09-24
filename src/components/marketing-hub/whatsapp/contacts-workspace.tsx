@@ -441,7 +441,7 @@ export function ContactsWorkspace() {
                           <ul className="flex flex-wrap gap-1">
                             {contact.tags.slice(0, 2).map((item) => (
                               <li key={item}>
-                                <Badge tone="neutral">{item}</Badge>
+                                <Badge variant="default">{item}</Badge>
                               </li>
                             ))}
                             {contact.tags.length > 2 ? (
@@ -522,7 +522,7 @@ export function ContactsWorkspace() {
                     <div className="flex flex-wrap items-center gap-1.5">
                       <ContactStatusBadge status={contact.status} />
                       {contact.tags.slice(0, 2).map((item) => (
-                        <Badge key={item} tone="neutral">
+                        <Badge key={item} variant="default">
                           {item}
                         </Badge>
                       ))}

@@ -713,7 +713,7 @@ export function SmsAnalytics({ range = DEFAULT_RANGE }: SmsAnalyticsProps) {
                         {formatPercent(template.replyRate)}
                       </TD>
                       <TD align="center">
-                        <Badge tone={segments > 1 ? "warning" : "neutral"} size="sm">
+                        <Badge variant={segments > 1 ? "warning" : "default"} size="sm">
                           {segments}
                         </Badge>
                       </TD>
@@ -742,7 +742,7 @@ export function SmsAnalytics({ range = DEFAULT_RANGE }: SmsAnalyticsProps) {
                   <p className="mt-1 flex flex-wrap items-center gap-x-1.5 text-sm text-text-muted tabular-nums">
                     {formatNumber(template.usageCount)} sends ·{" "}
                     {formatPercent(template.deliveryRate)} delivered
-                    <Badge tone={segments > 1 ? "warning" : "neutral"} size="sm">
+                    <Badge variant={segments > 1 ? "warning" : "default"} size="sm">
                       {segments} segment{segments === 1 ? "" : "s"}
                     </Badge>
                   </p>

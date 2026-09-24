@@ -1,5 +1,7 @@
 import { MessageCircle, Tag } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
+
 import { ProductFrame } from "./feature-section";
 
 /**
@@ -115,21 +117,30 @@ export function CrmVisual() {
                 Zara Boutique · +880 1712 345678
               </p>
             </div>
-            <span className="hidden shrink-0 items-center gap-1 rounded-full bg-whatsapp-soft px-2 py-1 text-[11px] font-semibold text-whatsapp-dark sm:inline-flex">
-              <MessageCircle className="size-3" aria-hidden />
+            <Badge
+              variant="whatsapp"
+              size="xs"
+              weight="semibold"
+              casing="none"
+              icon={<MessageCircle aria-hidden />}
+              className="hidden shrink-0 py-1 text-[11px] sm:inline-flex"
+            >
               WhatsApp
-            </span>
+            </Badge>
           </div>
 
           <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-border pt-2.5">
             <Tag className="size-3 text-text-muted" aria-hidden />
             {["VIP", "Repeat buyer", "Dhaka"].map((tag) => (
-              <span
+              <Badge
                 key={tag}
-                className="rounded-full border border-border px-2 py-0.5 text-[11px] font-medium text-text-secondary"
+                variant="outline"
+                size="xs"
+                casing="none"
+                className="text-[11px]"
               >
                 {tag}
-              </span>
+              </Badge>
             ))}
             <span className="ml-auto text-[11px] text-text-muted">
               In journey · Post-purchase

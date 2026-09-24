@@ -135,7 +135,7 @@ export function CreateApiKeyDialog({
               <dt className="shrink-0 text-sm text-text-muted">Scopes</dt>
               <dd className="flex min-w-0 flex-wrap justify-end gap-1.5">
                 {created.key.scopes.map((scope) => (
-                  <Badge key={scope} size="sm" className="normal-case">
+                  <Badge key={scope} size="sm" casing="none">
                     {scope}
                   </Badge>
                 ))}

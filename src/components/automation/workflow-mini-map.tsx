@@ -1,5 +1,6 @@
 import { ChevronDown } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { NODE_META } from "@/constants/automation";
 import { cn } from "@/lib/utils";
 import type { TemplateStep, Workflow } from "@/types/workflow";
@@ -154,12 +155,9 @@ export function WorkflowMiniMapRow({
           {step.branches ? (
             <div className="mt-auto flex flex-wrap gap-1 pt-1">
               {step.branches.map((label) => (
-                <span
-                  key={label}
-                  className="rounded-full border border-dashed border-border-strong px-2 py-0.5 text-sm font-medium text-text-secondary"
-                >
+                <Badge key={label} variant="dashed" casing="none" className="px-2">
                   {label}
-                </span>
+                </Badge>
               ))}
             </div>
           ) : null}

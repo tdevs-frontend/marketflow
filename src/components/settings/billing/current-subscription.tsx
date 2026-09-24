@@ -63,7 +63,7 @@ export function CurrentSubscription({
       <SettingsSection
         title="Current subscription"
         description="What this workspace subscribes to today."
-        action={<Badge tone={status.tone}>{status.label}</Badge>}
+        action={<Badge variant={status.tone}>{status.label}</Badge>}
         bodyClassName="space-y-5"
         footer={
           <SubscriptionActions canManage={canManage} onManagePlan={onManagePlan} />
@@ -148,7 +148,7 @@ function PendingPayment({
       title="Payment awaiting verification"
       description="Submitted here. The plan starts once an administrator confirms the money arrived."
       action={
-        <Badge tone="warning">
+        <Badge variant="warning">
           <Clock aria-hidden />
           Pending
         </Badge>

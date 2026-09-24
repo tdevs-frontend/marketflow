@@ -12,6 +12,7 @@ import {
 
 import { PageHeader } from "@/components/layout/page-header";
 import { Avatar } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -584,16 +585,12 @@ export function LeadsBoard() {
                         {column.label}
                       </h3>
                       <div className="flex items-center gap-1">
-                        <span
-                          className={cn(
-                            "rounded-full px-1.5 py-0.5 text-sm font-medium tabular-nums",
-                            column.stage === "won"
-                              ? "bg-success-soft text-success-text"
-                              : "bg-surface text-text-secondary",
-                          )}
+                        <Badge
+                          variant={column.stage === "won" ? "success" : "surface-plain"}
+                          className="px-1.5 tabular-nums"
                         >
                           {column.items.length}
-                        </span>
+                        </Badge>
                         <Tooltip content={`New lead in ${column.label}`}>
                           <button
                             type="button"

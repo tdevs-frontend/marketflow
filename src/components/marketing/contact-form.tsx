@@ -3,12 +3,12 @@
 import { useRef, useState, type FormEvent } from "react";
 import { ArrowRight, CheckCircle2, Send } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { BrandIcon } from "@/components/ui/brand-icon";
 import { Button } from "@/components/ui/button";
 import { CheckboxField } from "@/components/ui/checkbox";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { footerSocials } from "@/constants";
-import { SectionEyebrow } from "@/components/marketing/section-eyebrow";
 
 /**
  * The message form, under the three contact cards.
@@ -141,7 +141,15 @@ export function ContactForm() {
         <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-16">
           {/* ------------------------------------------------------ left */}
           <div className="pt-2">
-            <SectionEyebrow text="Contact us" icon={Send} />
+            <Badge
+              as="p"
+              variant="primary-outline"
+              size="lg"
+              casing="none"
+              icon={<Send aria-hidden />}
+            >
+              Contact us
+            </Badge>
 
             <h2
               id="contact-form-title"

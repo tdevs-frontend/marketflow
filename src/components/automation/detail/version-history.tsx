@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ArrowLeftRight, Eye, History, RotateCcw } from "lucide-react";
 
 import { Avatar } from "@/components/ui/avatar";
-import { Badge, type BadgeTone } from "@/components/ui/badge";
+import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Dialog } from "@/components/ui/dialog";
@@ -29,10 +29,10 @@ import type { VersionState, Workflow } from "@/types/workflow";
  * safety feature, it is a second way to cause the incident.
  */
 
-const STATE: Record<VersionState, { label: string; tone: BadgeTone }> = {
+const STATE: Record<VersionState, { label: string; tone: BadgeVariant }> = {
   draft: { label: "Draft", tone: "warning" },
   published: { label: "Published", tone: "success" },
-  superseded: { label: "Superseded", tone: "neutral" },
+  superseded: { label: "Superseded", tone: "default" },
 };
 
 export function VersionHistoryDialog({
@@ -96,9 +96,9 @@ export function VersionHistoryDialog({
                     <p className="text-sm font-semibold text-text-primary">
                       Version {version.version}
                     </p>
-                    <Badge tone={state.tone}>{state.label}</Badge>
+                    <Badge variant={state.tone}>{state.label}</Badge>
                     {version.state === "superseded" && version.activeContacts > 0 ? (
-                      <Badge tone="info">
+                      <Badge variant="info">
                         {formatCount(version.activeContacts)} still running
                       </Badge>
                     ) : null}
@@ -182,18 +182,20 @@ export function VersionHistoryDialog({
               key={item.text}
               className="flex items-start gap-2.5 rounded-panel border border-border px-3 py-2.5"
             >
-              <span
-                className={cn(
-                  "mt-0.5 rounded-full px-1.5 py-0.5 text-sm font-bold uppercase",
+              <Badge
+                variant={
                   item.change === "added"
-                    ? "bg-success-soft text-success-text"
+                    ? "success"
                     : item.change === "removed"
-                      ? "bg-error-soft text-error-text"
-                      : "bg-warning-soft text-warning-text",
-                )}
+                      ? "error"
+                      : "warning"
+                }
+                weight="bold"
+                casing="uppercase"
+                className="mt-0.5 px-1.5"
               >
                 {item.change}
-              </span>
+              </Badge>
               <span className="min-w-0 flex-1 text-text-secondary">{item.text}</span>
             </li>
           ))}
