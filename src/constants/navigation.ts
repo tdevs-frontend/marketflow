@@ -82,8 +82,8 @@ export const dashboardNav: NavSection[] = [
     /*
      * Five entries, matching the five questions a merchant asks:
      * what do I sell, what needs processing, how much did I sell, what stock
-     * do I have, how do I promote. Who bought from me is the Customers tab on
-     * Contacts.
+     * do I have, how do I promote. Who bought from me is the Customers page
+     * in the Customers group.
      *
      * Categories and Product Catalog are gone from here - not removed, moved.
      * Both are views of the same product dataset and are reached from the strip
@@ -208,7 +208,7 @@ export const dashboardNav: NavSection[] = [
   {
     title: "Customers",
     items: [
-      { title: "Customers", href: "/dashboard/contacts", icon: "users" },
+      { title: "Customers", href: "/dashboard/customers", icon: "users" },
       { title: "Leads", href: "/dashboard/leads", icon: "target" },
       { title: "Segments", href: "/dashboard/segments", icon: "layers" },
       { title: "Tags", href: "/dashboard/tags", icon: "tag" },

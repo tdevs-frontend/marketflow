@@ -83,7 +83,7 @@ export function ActivityTable({
 
                 <TD>
                   <Link
-                    href="/dashboard/contacts"
+                    href="/dashboard/customers"
                     onClick={(event) => event.stopPropagation()}
                     className="inline-block max-w-48 rounded-btn focus-visible:shadow-focus focus-visible:outline-none"
                   >

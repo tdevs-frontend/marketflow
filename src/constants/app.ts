@@ -74,7 +74,8 @@ export const APP_ROUTES = {
    * to) and from Customers (as a way to group people), and the two entries
    * keep the sidebar's active state honest on both.
    */
-  contacts: "/dashboard/contacts",
+  /* Named for the contact records it lists; the page itself is Customers. */
+  contacts: "/dashboard/customers",
   leads: "/dashboard/leads",
   customerSegments: "/dashboard/segments",
   tags: "/dashboard/tags",

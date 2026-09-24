@@ -237,7 +237,7 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
         </dt>
         <dd className="mt-1 truncate text-sm font-medium">
           <ButtonLink
-            href="/dashboard/contacts"
+            href="/dashboard/customers"
             variant="text"
             size="inline"
             className="gap-1 whitespace-nowrap"

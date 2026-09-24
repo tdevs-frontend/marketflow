@@ -31,16 +31,18 @@ const nextConfig: NextConfig = {
         destination: "/dashboard/settings/profile",
         permanent: false,
       },
-      /* Customers is no longer a page of its own - it is the Customers tab
-         of Contacts. Both of its old addresses land on that tab. */
+      /* The Customers page lives at /dashboard/customers. It used to be
+         Contacts at /dashboard/contacts, and before that Customers sat under
+         Sales - both old addresses land here. Query strings carry over, so
+         a filtered contact link still opens filtered. */
       {
-        source: "/dashboard/customers",
-        destination: "/dashboard/contacts?view=customers",
+        source: "/dashboard/contacts",
+        destination: "/dashboard/customers",
         permanent: false,
       },
       {
         source: "/dashboard/sales/customers",
-        destination: "/dashboard/contacts?view=customers",
+        destination: "/dashboard/customers",
         permanent: false,
       },
     ];

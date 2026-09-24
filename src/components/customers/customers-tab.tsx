@@ -42,7 +42,7 @@ import { FilterTabs, type FilterTab } from "@/components/commerce/filter-tabs";
  * It used to be its own page at `/dashboard/customers`. It is a tab now
  * because it was never a second list of people: every row is a contact from
  * the tab beside it, read through the order book. Both old URLs redirect to
- * `/dashboard/contacts?view=customers`.
+ * `/dashboard/customers`.
  *
  * The single most important thing about this view is what it is *not*: a second
  * customer database. Every row is a projection of a contact that already exists
