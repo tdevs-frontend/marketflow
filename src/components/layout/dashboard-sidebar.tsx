@@ -48,7 +48,7 @@ const ALL_HREFS = dashboardNav.flatMap((section) =>
  *   `/dashboard/settings/billing`  → `/dashboard/settings` *and*
  *                                    `/dashboard/settings/billing` match, and
  *                                    the longer one wins. Billing lights alone.
- *   `/dashboard/sales/customers`   → Customers, not Sales.
+ *   `/dashboard/marketing/campaigns` → Campaigns, not Overview.
  *   `/dashboard/integrations/email`→ nothing deeper is listed, so the module
  *                                    row stays lit across all seven pages.
  *

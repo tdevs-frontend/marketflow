@@ -9,11 +9,13 @@ export const metadata: Metadata = {
 };
 
 /**
- * Paying customers, nested under Sales because that is where the data is.
+ * Paying customers - the one canonical Customers page.
  *
- * The sidebar lists it as Commerce → Customers. The route says `sales/customers`
- * because these records *are* the sales ledger grouped by buyer - there is no
+ * The sidebar lists it as Customers → Customers, beside Contacts and Leads.
+ * The records are still the sales ledger grouped by buyer - there is no
  * customer table behind it, only the CRM contacts and the orders they placed.
+ * It used to live at `/dashboard/sales/customers`, which now redirects here
+ * (see `next.config.ts`).
  */
 export default function CommerceCustomersPage() {
   return <CommerceCustomersWorkspace />;

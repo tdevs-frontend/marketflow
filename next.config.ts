@@ -31,6 +31,13 @@ const nextConfig: NextConfig = {
         destination: "/dashboard/settings/profile",
         permanent: false,
       },
+      /* Customers moved out of Commerce into the Customers group. Old
+         bookmarks and links land on the one canonical page. */
+      {
+        source: "/dashboard/sales/customers",
+        destination: "/dashboard/customers",
+        permanent: false,
+      },
     ];
   },
 };

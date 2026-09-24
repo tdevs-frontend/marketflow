@@ -76,6 +76,7 @@ export const APP_ROUTES = {
    */
   contacts: "/dashboard/contacts",
   leads: "/dashboard/leads",
+  customers: "/dashboard/customers",
   customerSegments: "/dashboard/segments",
   tags: "/dashboard/tags",
   customerJourney: "/dashboard/customer-journey",
