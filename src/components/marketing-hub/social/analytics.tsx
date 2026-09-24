@@ -677,7 +677,7 @@ export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps)
                 <TD>
                   <span className="flex items-center gap-2.5">
                     <PlatformMark platform={row.key} size="sm" />
-                    <span className="font-bold text-text-primary">
+                    <span className="font-semibold text-text-primary">
                       {PLATFORM_THEME[row.key].label}
                     </span>
                   </span>

@@ -513,7 +513,7 @@ export function EmailSendersWorkspace() {
                 <TR key={sender.id}>
                   <TD>
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="font-bold text-text-primary">{sender.name}</p>
+                      <p className="font-semibold text-text-primary">{sender.name}</p>
                       {sender.isDefault ? <Badge variant="primary">Default</Badge> : null}
                     </div>
                     <p className="text-sm text-text-muted">{sender.email}</p>

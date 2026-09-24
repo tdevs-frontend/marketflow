@@ -534,7 +534,7 @@ export function WorkflowsWorkspace() {
                         href={AUTOMATION_ROUTES.workflow(workflow.id)}
                         className="block max-w-64 rounded-btn focus-visible:shadow-focus focus-visible:outline-none"
                       >
-                        <span className="block truncate text-sm font-bold text-text-primary transition-colors hover:text-primary">
+                        <span className="block truncate text-sm font-semibold text-text-primary transition-colors hover:text-primary">
                           {workflow.name}
                         </span>
                         <span className="block truncate text-sm text-text-muted">

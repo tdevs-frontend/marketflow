@@ -354,7 +354,7 @@ export function TagsWorkspace() {
                           >
                             <TagDot color={tag.color} />
                             <span className="min-w-0">
-                              <span className="block text-sm font-bold text-text-primary">
+                              <span className="block text-sm font-semibold text-text-primary">
                                 {tag.name}
                               </span>
                               {tag.description ? (

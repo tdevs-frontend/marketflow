@@ -186,7 +186,7 @@ export function InventoryWorkspace() {
                         <ProductThumb size="sm" />
                         <Link
                           href={`${APP_ROUTES.products}/${item.productId}`}
-                          className="truncate font-bold text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
+                          className="truncate font-semibold text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
                         >
                           {item.productName}
                         </Link>

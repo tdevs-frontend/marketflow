@@ -261,7 +261,7 @@ export function CampaignTable({ campaigns, selection, sort, compact = false }: P
                   <TD>
                     <Link
                       href={APP_ROUTES.marketingCampaigns}
-                      className="block max-w-64 truncate font-bold text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
+                      className="block max-w-64 truncate font-semibold text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
                     >
                       {campaign.name}
                     </Link>

@@ -143,7 +143,7 @@ export function SmsSendersWorkspace() {
                 <TR key={sender.id}>
                   <TD>
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-mono font-bold text-text-primary">
+                      <span className="font-mono font-semibold text-text-primary">
                         {sender.value}
                       </span>
                       {sender.isDefault ? (

@@ -302,7 +302,7 @@ export function OrdersWorkspace() {
                         </TD>
 
                         <TD>
-                          <p className="font-bold text-text-primary">
+                          <p className="font-semibold text-text-primary">
                             {order.customer.name}
                           </p>
                           {order.sourceCampaign ? (

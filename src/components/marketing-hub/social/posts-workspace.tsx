@@ -574,7 +574,7 @@ export function SocialPostsWorkspace() {
                           >
                             <PostThumb post={post} />
                             <span className="min-w-0">
-                              <span className="block max-w-52 truncate font-bold text-text-primary">
+                              <span className="block max-w-52 truncate font-semibold text-text-primary">
                                 {post.title}
                               </span>
                               {/* The caption moves up here from the column it

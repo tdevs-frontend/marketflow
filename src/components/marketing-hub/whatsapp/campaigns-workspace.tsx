@@ -293,7 +293,7 @@ export function WhatsAppCampaignsWorkspace() {
                         </TD>
 
                         <TD>
-                          <p className="max-w-56 truncate font-bold text-text-primary">
+                          <p className="max-w-56 truncate font-semibold text-text-primary">
                             {campaign.name}
                           </p>
                           {campaign.description ? (

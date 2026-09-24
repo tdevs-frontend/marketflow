@@ -513,7 +513,7 @@ export function ProductDetail({
                       <TD>
                         <Link
                           href={APP_ROUTES.contacts}
-                          className="font-bold text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
+                          className="font-semibold text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
                         >
                           {customer.name}
                         </Link>

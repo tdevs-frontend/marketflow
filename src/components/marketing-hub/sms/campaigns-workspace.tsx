@@ -432,7 +432,7 @@ export function SmsCampaignsWorkspace() {
                             onClick={() => setPreview(campaign)}
                             className="max-w-56 text-left focus-visible:shadow-focus focus-visible:outline-none"
                           >
-                            <p className="truncate font-bold text-text-primary">
+                            <p className="truncate font-semibold text-text-primary">
                               {campaign.name}
                             </p>
                             <p className="truncate font-mono text-sm text-text-muted">

@@ -786,7 +786,7 @@ export function CustomerSegmentsWorkspace() {
                           onClick={() => setActive(segment)}
                           className="block max-w-72 rounded-btn text-left focus-visible:shadow-focus focus-visible:outline-none"
                         >
-                          <span className="flex items-center gap-1.5 text-sm font-bold text-text-primary">
+                          <span className="flex items-center gap-1.5 text-sm font-semibold text-text-primary">
                             <span className="truncate">{segment.name}</span>
                             {segment.system ? (
                               <Lock

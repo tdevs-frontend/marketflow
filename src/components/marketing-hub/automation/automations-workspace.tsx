@@ -413,7 +413,7 @@ export function AutomationsWorkspace({ channel }: { channel: MessagingChannel })
                 {rows.map((flow) => (
                   <TR key={flow.id}>
                     <TD>
-                      <p className="max-w-56 truncate font-bold text-text-primary">
+                      <p className="max-w-56 truncate font-semibold text-text-primary">
                         {flow.name}
                       </p>
                       <p className="max-w-56 truncate text-sm text-text-muted">

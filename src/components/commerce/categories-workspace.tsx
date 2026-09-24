@@ -180,7 +180,7 @@ export function CategoriesWorkspace() {
                         <FolderTree className="size-4" aria-hidden />
                       </span>
                       <div className="min-w-0">
-                        <p className="truncate font-bold text-text-primary">
+                        <p className="truncate font-semibold text-text-primary">
                           {item.name}
                         </p>
                         <p className="font-mono text-sm text-text-muted">

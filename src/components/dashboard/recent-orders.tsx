@@ -250,7 +250,7 @@ export function RecentOrders({ className }: { className?: string }) {
                       <Link
                         href={APP_ROUTES.orders}
                         title={`${order.id} · ${CHANNEL_LABEL[order.channel]}`}
-                        className="inline-flex items-center gap-1.5 font-bold tabular-nums text-text-primary transition-colors hover:text-primary group-hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
+                        className="inline-flex items-center gap-1.5 font-semibold tabular-nums text-text-primary transition-colors hover:text-primary group-hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
                       >
                         <ChannelIcon
                           className="size-3.5 shrink-0 text-text-muted"
@@ -265,7 +265,7 @@ export function RecentOrders({ className }: { className?: string }) {
 
                     <TD className="w-1/2 max-w-0 text-text-primary">
                       <span
-                        className="block text-sm font-bold truncate"
+                        className="block text-sm font-semibold truncate"
                         title={order.customer}
                       >
                         {order.customer}

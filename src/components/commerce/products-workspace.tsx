@@ -668,7 +668,7 @@ export function ProductsWorkspace({
                             <div className="min-w-0">
                               <Link
                                 href={detailHref(item.id)}
-                                className="block truncate font-bold text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
+                                className="block truncate font-semibold text-text-primary transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
                               >
                                 {item.name}
                               </Link>

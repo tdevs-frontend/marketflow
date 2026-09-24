@@ -467,7 +467,7 @@ export function SmsAnalytics({ range = DEFAULT_RANGE }: SmsAnalyticsProps) {
                     return (
                       <TR key={campaign.id}>
                         <TD>
-                          <p className="max-w-56 truncate font-bold text-text-primary">
+                          <p className="max-w-56 truncate font-semibold text-text-primary">
                             {campaign.name}
                           </p>
                           <p className="max-w-56 truncate text-sm text-text-muted">
@@ -624,7 +624,7 @@ export function SmsAnalytics({ range = DEFAULT_RANGE }: SmsAnalyticsProps) {
                 {AUDIENCE_RESPONSE.map((row) => (
                   <TR key={row.label}>
                     <TD>
-                      <p className="max-w-44 truncate font-bold text-text-primary">
+                      <p className="max-w-44 truncate font-semibold text-text-primary">
                         {row.label}
                       </p>
                     </TD>
@@ -696,7 +696,7 @@ export function SmsAnalytics({ range = DEFAULT_RANGE }: SmsAnalyticsProps) {
                   return (
                     <TR key={template.id}>
                       <TD>
-                        <p className="max-w-44 truncate font-bold text-text-primary">
+                        <p className="max-w-44 truncate font-semibold text-text-primary">
                           {template.name}
                         </p>
                       </TD>

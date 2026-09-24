@@ -318,7 +318,7 @@ export function EmailAnalytics({ range = DEFAULT_RANGE }: EmailAnalyticsProps) {
                     return (
                       <TR key={campaign.id}>
                         <TD>
-                          <p className="max-w-64 truncate font-bold text-text-primary">
+                          <p className="max-w-64 truncate font-semibold text-text-primary">
                             {campaign.name}
                           </p>
                           <p className="max-w-64 truncate text-sm text-text-muted">
@@ -442,7 +442,7 @@ export function EmailAnalytics({ range = DEFAULT_RANGE }: EmailAnalyticsProps) {
                   {templates.map((template) => (
                     <TR key={template.id}>
                       <TD>
-                        <p className="max-w-64 truncate font-bold text-text-primary">
+                        <p className="max-w-64 truncate font-semibold text-text-primary">
                           {template.name}
                         </p>
                         <p className="max-w-64 truncate text-sm text-text-muted">
