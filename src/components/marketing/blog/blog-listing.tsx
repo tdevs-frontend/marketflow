@@ -134,6 +134,7 @@ export function BlogListing() {
                clicked - the dashboard's 32px footer scale is too small to be
                the last thing a marketing page asks somebody to hit. */
             size="lg"
+            showRange={false}
           />
         </div>
       </div>

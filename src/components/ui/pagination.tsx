@@ -78,6 +78,7 @@ export function Pagination({
   /** Names what is being paged, for the "1–8 of 12" line. */
   noun = "results",
   size = "sm",
+  showRange = true,
   summary,
 }: {
   page: number;
@@ -92,6 +93,12 @@ export function Pagination({
    * the active page's indigo and the behaviour are the same at all three.
    */
   size?: PaginationSize;
+  /**
+   * The "Showing 1–8 of 12" line on the left. On by default, for a table
+   * footer. Off, the controls stand alone and sit centred - for a marketing
+   * page, where a result count reads as dashboard furniture.
+   */
+  showRange?: boolean;
   /**
    * A second line under the range, in the same left slot.
    *
@@ -151,7 +158,28 @@ export function Pagination({
   );
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
+    <div
+      className={cn(
+        "flex flex-wrap items-center gap-3 pt-4",
+        showRange ? "justify-between" : "justify-center",
+      )}
+    >
+      {showRange ? (
+        <div className="min-w-0">
+          <p className="text-sm text-text-muted">
+            Showing{" "}
+            <span className="font-medium text-text-secondary">
+              {first}–{last}
+            </span>{" "}
+            of <span className="font-medium text-text-secondary">{total}</span>{" "}
+            {noun}
+          </p>
+          {summary ? (
+            <p className="mt-0.5 text-sm text-text-muted">{summary}</p>
+          ) : null}
+        </div>
+      ) : null}
+
       <nav
         aria-label="Pagination"
         className={cn("flex items-center", scale.gap)}
