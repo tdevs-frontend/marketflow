@@ -7,6 +7,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { Logo } from "@/components/ui/logo";
 import { APP_ROUTES, marketingNav } from "@/constants";
 import { cn, isActiveRoute } from "@/lib/utils";
+import { MobileNavigation } from "./mobile-navigation";
 
 /**
  * The marketing header.
@@ -28,12 +29,12 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface/85 backdrop-blur">
-      <div className="custom-container mx-auto flex h-18 max-w-6xl items-center justify-between gap-6">
+      <div className="max-w-[1320px] mx-auto flex h-18 max-w-6xl items-center justify-between gap-6 px-5 xl:px-0">
         <Link href={APP_ROUTES.home} className="inline-flex items-center">
           <Logo height={32} priority />
         </Link>
 
-        <nav className="hidden items-center gap-6 text-[15px] md:flex">
+        <nav className="hidden items-center gap-6 text-[15px] nav:flex">
           {marketingNav.map((item) => {
             const current = isActiveRoute(pathname, item.href);
 
@@ -59,7 +60,9 @@ export function SiteHeader() {
           })}
         </nav>
 
-        <div className="flex items-center gap-3">
+        {/* Below `nav` (868px) the two buttons live in the drawer, beside the links
+            they belong with, and the bar is the logo and the menu button. */}
+        <div className="hidden items-center gap-3 nav:flex">
           <ButtonLink
             href={APP_ROUTES.login}
             variant="ghost"
@@ -72,6 +75,8 @@ export function SiteHeader() {
             Start Free
           </ButtonLink>
         </div>
+
+        <MobileNavigation />
       </div>
     </header>
   );

@@ -503,7 +503,7 @@ body.mobile-menu-show {
 }
 
 .burger-menu span {
-  @apply block w-6.5 h-0.5 bg-white transition-all duration-300 ease-[ease-in-out];
+  @apply block w-6.5 h-0.5 bg-current transition-all duration-300 ease-[ease-in-out];
 }
 
 .burger-menu.active span:nth-child(1) {

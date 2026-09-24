@@ -75,7 +75,13 @@
   
     /* Medium Devices (tablets, large phones in landscape, 768px) */
     --breakpoint-md: 48rem;
-  
+
+    /* The marketing header's switch, 868px: the full link bar from here up,
+       the mobile menu below it. Its own step because six links and two
+       buttons do not fit a 768px bar. `nav:` in the header, and mirrored as
+       a literal in `mobile-navigation.tsx`'s `matchMedia`. */
+    --breakpoint-nav: 54.25rem;
+
     /* Large Devices (tablets landscape, small laptops, 1024px) */
     --breakpoint-lg: 64rem;
   

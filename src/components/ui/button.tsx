@@ -37,7 +37,7 @@ const BASE = [
   "inline-flex select-none items-center justify-center whitespace-nowrap rounded-btn font-medium",
   // `transition-all` on the project's 200ms ease default - the softer curve.
   "transition-all",
-  "focus-visible:outline-none focus-visible:shadow-focus",
+  "focus-visible:outline-none focus-visible:shadow-focus",  
   /* A disabled button keeps its pointer events so the `not-allowed` cursor
      has something to paint on - `pointer-events-none` makes the element stop
      being the hit target, so the cursor resolves from the parent instead and no

@@ -54,7 +54,7 @@ export function PageHero({
       />
 
       <div className="custom-container">
-        <div className="py-16 lg:py-18">
+        <div className="py-14 lg:py-18">
           <div className="mx-auto max-w-4xl text-center">
             <Badge
               as="p"
