@@ -13,7 +13,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
 import { BrandIcon } from "@/components/ui/brand-icon";
-import { CommonTextButton } from "@/components/ui/text-button";
 import { APP_ROUTES } from "@/constants";
 import { cn } from "@/lib/utils";
 import { TRUST_STATS } from "./trust-stats";
@@ -159,13 +158,10 @@ function ReasonCard({ icon: Icon, title, description, tint, href }: Reason) {
        * lines, and with the grid stretching every card to its row's height the
        * links would otherwise sit at six different heights across a row.
        */}
-      <CommonTextButton
-        label="Learn more"
-        href={href}
-        size="sm"
-        color="text-text-primary"
-        className="mt-auto pt-4"
-      />
+      <ButtonLink href={href} variant="arrow" size="inline" className="mt-auto pt-4">
+        Learn more
+        <ArrowRight aria-hidden />
+      </ButtonLink>
     </article>
   );
 }

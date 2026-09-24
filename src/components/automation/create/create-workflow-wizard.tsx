@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 
@@ -243,13 +242,15 @@ export function CreateWorkflowWizard() {
 
   return (
     <>
-      <Link
+      <ButtonLink
         href={AUTOMATION_ROUTES.workflows}
-        className="inline-flex w-fit items-center gap-1.5 rounded-btn text-[15px] font-medium text-text-muted transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
+        variant="subtle"
+        size="inline"
+        className="w-fit text-[15px]"
       >
-        <ChevronLeft className="size-4" aria-hidden />
+        <ChevronLeft aria-hidden />
         Back to Workflows
-      </Link>
+      </ButtonLink>
 
       <PageHeader
         title="Create Automation"

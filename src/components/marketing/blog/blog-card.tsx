@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Clock3 } from "lucide-react";
+import { ArrowRight, Clock3 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { CommonTextButton } from "@/components/ui/text-button";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatArticleDate, type BlogArticle } from "@/constants/blog";
 
@@ -99,11 +99,16 @@ export function BlogCard({
             </div>
 
             {/* No `href`: the whole card is already the link. */}
-            <CommonTextButton
-              label="Read article"
-              size="md"
-              color="text-text-primary"
-            />
+            <span
+              className={buttonVariants({
+                variant: "arrow",
+                size: "inline",
+                className: "text-base",
+              })}
+            >
+              Read article
+              <ArrowRight aria-hidden />
+            </span>
           </div>
         </div>
       </Link>

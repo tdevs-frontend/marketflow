@@ -60,7 +60,6 @@ export function WebhookDetailDrawer({
             variant="ghost"
             size="compact"
             onClick={() => onDelete(webhook)}
-            className="text-error hover:bg-error-soft hover:text-error"
           >
             <Trash2 aria-hidden />
             Delete

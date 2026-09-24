@@ -16,7 +16,7 @@ import {
   X,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button, IconButton } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Dialog } from "@/components/ui/dialog";
@@ -499,18 +499,19 @@ export function SegmentsWorkspace() {
                       {index === 0 ? "If" : "And"}
                     </p>
                     {draftRules.length > 1 && !editing?.system ? (
-                      <button
-                        type="button"
+                      <IconButton
                         onClick={() =>
-                          setDraftRules((current) =>
-                            current.filter((item) => item.id !== rule.id),
-                          )
+                        setDraftRules((current) =>
+                        current.filter((item) => item.id !== rule.id),
+                        )
                         }
-                        aria-label={`Remove rule ${index + 1}`}
-                        className="grid size-5 place-items-center rounded text-text-muted transition-colors hover:text-error focus-visible:shadow-focus focus-visible:outline-none"
+                        label={`Remove rule ${index + 1}`}
+                        size="xs"
+                        variant="quiet"
+                        className="size-5 rounded hover:bg-transparent hover:text-error"
                       >
                         <X className="size-3.5" aria-hidden />
-                      </button>
+                      </IconButton>
                     ) : null}
                   </div>
 

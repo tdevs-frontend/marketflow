@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Plus, Trash2, X } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button, IconButton } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MAX_VARIANT_OPTIONS, VARIANT_OPTION_PRESETS } from "@/constants/commerce";
 import { containsValue, moveItem, nextOptionName } from "@/lib/variants";
@@ -38,38 +38,11 @@ function suggestionsFor(type: ProductType, options: VariantOption[]): string[] {
   );
 }
 
-/** A square icon button at table density - reorder and remove controls. */
-function IconButton({
-  label,
-  onClick,
-  disabled,
-  tone = "muted",
-  children,
-}: {
-  label: string;
-  onClick: () => void;
-  disabled?: boolean;
-  tone?: "muted" | "danger";
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      title={label}
-      onClick={onClick}
-      disabled={disabled}
-      className={cn(
-        "grid size-7 shrink-0 place-items-center rounded-btn transition-colors focus-visible:shadow-focus focus-visible:outline-none disabled:pointer-events-none disabled:opacity-35",
-        tone === "danger"
-          ? "text-text-muted hover:bg-error-soft hover:text-error-text"
-          : "text-text-muted hover:bg-surface-secondary hover:text-text-primary",
-      )}
-    >
-      {children}
-    </button>
-  );
-}
+/**
+ * The reorder and remove controls, at table density: the quiet icon button a
+ * step under its `sm` rung, and fully faded when there is nowhere to move.
+ */
+const ROW_ACTION = "size-7 shrink-0 disabled:pointer-events-none disabled:opacity-35";
 
 /* -------------------------------------------------------------------------- */
 /* Values                                                                     */
@@ -99,6 +72,10 @@ function ValueChip({
             label={`Move ${value} earlier`}
             onClick={() => onMove(index, index - 1)}
             disabled={index === 0}
+            size="xs"
+            variant="quiet"
+            title={`Move ${value} earlier`}
+            className={ROW_ACTION}
           >
             <ChevronLeft className="size-3.5" aria-hidden />
           </IconButton>
@@ -106,13 +83,24 @@ function ValueChip({
             label={`Move ${value} later`}
             onClick={() => onMove(index, index + 1)}
             disabled={index === total - 1}
+            size="xs"
+            variant="quiet"
+            title={`Move ${value} later`}
+            className={ROW_ACTION}
           >
             <ChevronRight className="size-3.5" aria-hidden />
           </IconButton>
         </>
       ) : null}
 
-      <IconButton label={`Remove ${value}`} onClick={onRemove} tone="danger">
+      <IconButton
+        label={`Remove ${value}`}
+        onClick={onRemove}
+        size="xs"
+        variant="quiet-danger"
+        title={`Remove ${value}`}
+        className={cn(ROW_ACTION, "hover:text-error-text")}
+      >
         <X className="size-3.5" aria-hidden />
       </IconButton>
     </li>
@@ -304,6 +292,10 @@ export function VariantOptionsEditor({
                         label={`Move ${option.name || "option"} up`}
                         onClick={() => moveOption(index, index - 1)}
                         disabled={index === 0}
+                        size="sm"
+                        variant="quiet"
+                        title={`Move ${option.name || "option"} up`}
+                        className={ROW_ACTION}
                       >
                         <ChevronUp className="size-4" aria-hidden />
                       </IconButton>
@@ -311,6 +303,10 @@ export function VariantOptionsEditor({
                         label={`Move ${option.name || "option"} down`}
                         onClick={() => moveOption(index, index + 1)}
                         disabled={index === options.length - 1}
+                        size="sm"
+                        variant="quiet"
+                        title={`Move ${option.name || "option"} down`}
+                        className={ROW_ACTION}
                       >
                         <ChevronDown className="size-4" aria-hidden />
                       </IconButton>
@@ -319,7 +315,10 @@ export function VariantOptionsEditor({
                   <IconButton
                     label={`Delete ${option.name || "option"}`}
                     onClick={() => onRequestRemoveOption(index)}
-                    tone="danger"
+                    size="sm"
+                    variant="quiet-danger"
+                    title={`Delete ${option.name || "option"}`}
+                    className={cn(ROW_ACTION, "hover:text-error-text")}
                   >
                     <Trash2 className="size-4" aria-hidden />
                   </IconButton>

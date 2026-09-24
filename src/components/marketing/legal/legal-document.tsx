@@ -1,8 +1,8 @@
-import { ChevronDown, Scale } from "lucide-react";
+import { ArrowRight, ChevronDown, Scale } from "lucide-react";
 
 import { PageBreadcrumb } from "@/components/marketing/page-breadcrumb";
 import { Badge } from "@/components/ui/badge";
-import { CommonTextButton } from "@/components/ui/text-button";
+import { ButtonLink } from "@/components/ui/button";
 import { APP_ROUTES } from "@/constants";
 import {
   LEGAL_PLACEHOLDERS,
@@ -156,12 +156,10 @@ export function LegalDocument({
                   {LEGAL_PLACEHOLDERS.lastUpdated}
                 </span>
               </p>
-              <CommonTextButton
-                label={related.label}
-                href={related.href}
-                size="sm"
-                color="text-text-primary"
-              />
+              <ButtonLink href={related.href} variant="arrow" size="inline">
+                {related.label}
+                <ArrowRight aria-hidden />
+              </ButtonLink>
             </footer>
           </div>
         </div>

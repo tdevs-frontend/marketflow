@@ -4,6 +4,7 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import type { ReactNode, RefObject } from "react";
 import { MoreHorizontal } from "lucide-react";
 
+import { IconButton } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export interface MenuItem {
@@ -102,23 +103,35 @@ export function Menu({
 
   return (
     <div ref={wrapperRef} className="relative inline-flex">
-      <button
-        ref={triggerRef}
-        type="button"
-        aria-label={label}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        aria-controls={open ? menuId : undefined}
-        onClick={() => setOpen((value) => !value)}
-        className={cn(
-          "rounded-btn transition-colors focus-visible:shadow-focus focus-visible:outline-none",
-          trigger
-            ? "inline-flex"
-            : "grid size-8 place-items-center text-text-muted hover:bg-surface-secondary hover:text-text-primary",
-        )}
-      >
-        {trigger ?? <MoreHorizontal className="size-4" aria-hidden />}
-      </button>
+      {/* A custom trigger draws itself, so the button around it is only a
+          focusable shell; the default is the quiet "more" icon button. */}
+      {trigger ? (
+        <button
+          ref={triggerRef}
+          type="button"
+          aria-label={label}
+          aria-haspopup="menu"
+          aria-expanded={open}
+          aria-controls={open ? menuId : undefined}
+          onClick={() => setOpen((value) => !value)}
+          className="inline-flex rounded-btn transition-colors focus-visible:shadow-focus focus-visible:outline-none"
+        >
+          {trigger}
+        </button>
+      ) : (
+        <IconButton
+          ref={triggerRef}
+          label={label}
+          size="sm"
+          variant="quiet"
+          aria-haspopup="menu"
+          aria-expanded={open}
+          aria-controls={open ? menuId : undefined}
+          onClick={() => setOpen((value) => !value)}
+        >
+          <MoreHorizontal aria-hidden />
+        </IconButton>
+      )}
 
       {open ? (
         <div

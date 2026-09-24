@@ -7,7 +7,7 @@ import { Bell, BellOff } from "lucide-react";
 
 import { NotificationItem } from "@/components/notifications/notification-item";
 import { Badge } from "@/components/ui/badge";
-import { IconButton } from "@/components/ui/button";
+import { Button, IconButton } from "@/components/ui/button";
 import { useDismissable } from "@/components/ui/menu";
 import { APP_ROUTES } from "@/constants/app";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
@@ -212,19 +212,17 @@ function Header({
           "Mark all as read" on an already-read feed is a control that teaches
           the reader their click did nothing. */}
       {unread > 0 ? (
-        <button
+        <Button
           type="button"
           onClick={onMarkAll}
-          /* Underline on hover and nothing else - the same treatment every
-             other inline link in the product carries. The colour shift it
-             replaced made this read as a second state of the text rather than
-             as a link answering the pointer, and `transition-colors` went with
-             it: `text-decoration-line` does not animate, so there was nothing
-             left for it to do. */
-          className="rounded-btn text-sm font-semibold text-primary underline-offset-2 hover:underline focus-visible:shadow-focus focus-visible:outline-none"
+          /* `link`: an underline on hover and nothing else, the treatment
+             every inline link in the product carries. */
+          variant="link"
+          size="inline"
+          className="font-semibold"
         >
           Mark all as read
-        </button>
+        </Button>
       ) : null}
     </div>
   );

@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 import { X } from "lucide-react";
 
+import { IconButton } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface BaseProps {
@@ -68,14 +69,15 @@ function Header({
           <p className="mt-1 text-sm text-text-secondary font-medium">{description}</p>
         ) : null}
       </div>
-      <button
-        type="button"
+      <IconButton
         onClick={onClose}
-        aria-label="Close"
-        className="-mt-1 -mr-1 grid size-8 shrink-0 place-items-center rounded-btn text-text-muted transition-colors hover:bg-surface-secondary hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
+        label="Close"
+        size="sm"
+        variant="quiet"
+        className="-mt-1 -mr-1 shrink-0"
       >
         <X className="size-4" aria-hidden />
-      </button>
+      </IconButton>
     </div>
   );
 }

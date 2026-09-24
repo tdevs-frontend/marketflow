@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ExternalLink, MessageCircle, Phone, Plus, Reply, X } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button, IconButton } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -349,19 +349,20 @@ export function TemplateFormDialog({
                   <span className="shrink-0 text-sm text-text-muted">
                     {button.type}
                   </span>
-                  <button
-                    type="button"
-                    aria-label={`Remove ${button.label}`}
+                  <IconButton
+                    label={`Remove ${button.label}`}
                     onClick={() =>
-                      set(
-                        "buttons",
-                        draft.buttons.filter((item) => item.label !== button.label),
-                      )
+                    set(
+                    "buttons",
+                    draft.buttons.filter((item) => item.label !== button.label),
+                    )
                     }
-                    className="grid size-6 shrink-0 place-items-center rounded-btn text-text-muted transition-colors hover:bg-surface-secondary hover:text-error focus-visible:shadow-focus focus-visible:outline-none"
+                    size="xs"
+                    variant="quiet"
+                    className="shrink-0 hover:text-error"
                   >
                     <X className="size-3.5" aria-hidden />
-                  </button>
+                  </IconButton>
                 </li>
               ))}
             </ul>

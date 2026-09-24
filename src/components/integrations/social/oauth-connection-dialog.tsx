@@ -456,18 +456,19 @@ function PermissionsStep({
        * are legitimate, and only one of them belongs in the default view.
        */}
       <div className="mt-4">
-        <button
+        <Button
           type="button"
           onClick={onToggleScopes}
           aria-expanded={showScopes}
-          className="inline-flex items-center gap-1.5 rounded-btn text-sm font-medium text-text-muted transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
+          variant="subtle"
+          size="inline"
         >
           <ChevronDown
             className={cn("size-4 transition-transform", showScopes && "rotate-180")}
             aria-hidden
           />
           Advanced - provider scopes
-        </button>
+        </Button>
 
         {showScopes ? (
           <ul className="mt-2 flex flex-wrap gap-1.5">

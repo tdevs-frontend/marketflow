@@ -1,6 +1,6 @@
 import { ArrowRight, TrendingUp } from "lucide-react";
-import Link from "next/link";
 
+import { ButtonLink } from "@/components/ui/button";
 import { APP_ROUTES } from "@/constants";
 import { cn } from "@/lib/utils";
 
@@ -41,16 +41,18 @@ export function GrowthInsight({ className }: { className?: string }) {
         </div>
       </div>
 
-      <Link
+      <ButtonLink
         href={APP_ROUTES.campaigns}
-        className="group inline-flex shrink-0 items-center gap-1.5 self-start rounded-btn text-sm font-medium text-primary-dark transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none sm:self-center"
+        variant="text"
+        size="inline"
+        className="group shrink-0 self-start text-primary-dark hover:text-primary sm:self-center"
       >
         View Campaign Performance
         <ArrowRight
           className="size-4 transition-transform group-hover:translate-x-0.5"
           aria-hidden
         />
-      </Link>
+      </ButtonLink>
     </section>
   );
 }

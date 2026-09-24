@@ -88,28 +88,6 @@
   }
 
   /*
-   * Google sign-in button - reproduces `Button variant="outline" size="lg"` as
-   * its own class. Keep in step with `SIZES.lg` / `VARIANTS.outline` in
-   * `components/ui/button.tsx`.
-   */
-  .btn-google {
-    @apply inline-flex w-full select-none items-center justify-center gap-2.5 whitespace-nowrap;
-    @apply h-12 rounded-btn px-7 text-base font-semibold;
-    @apply border border-border bg-surface text-text-secondary shadow-btn;
-    @apply transition-all;
-    @apply hover:-translate-y-px hover:border-border-strong hover:bg-surface-secondary hover:text-text-primary hover:shadow-card-hover;
-    @apply active:translate-y-0 active:bg-surface-secondary active:shadow-btn;
-    @apply focus-visible:shadow-focus focus-visible:outline-none;
-    @apply disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none;
-    @apply motion-reduce:transition-none motion-reduce:hover:translate-y-0;
-  }
-
-  /* Matches the `[&_svg]` rules the button component applies to its icons. */
-  .btn-google svg {
-    @apply pointer-events-none size-5 shrink-0;
-  }
-
-  /*
    * The landing page's section typography, as two classes.
    *
    * Both carry type and nothing else - no colour, no margin, no decoration.

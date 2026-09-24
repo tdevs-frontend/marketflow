@@ -285,18 +285,19 @@ export function CredentialInput({
           }
         />
         {spec.kind === "secret" ? (
-          <button
-            type="button"
+          <IconButton
             onClick={() => setVisible((open) => !open)}
-            aria-label={visible ? `Hide ${spec.label}` : `Show ${spec.label}`}
-            className="absolute top-1/2 right-1.5 grid size-8 -translate-y-1/2 place-items-center rounded-btn text-text-muted transition-colors hover:bg-surface-secondary hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
+            label={visible ? `Hide ${spec.label}` : `Show ${spec.label}`}
+            size="sm"
+            variant="quiet"
+            className="absolute top-1/2 right-1.5 -translate-y-1/2 motion-reduce:hover:-translate-y-1/2"
           >
             {visible ? (
               <EyeOff className="size-4" aria-hidden />
             ) : (
               <Eye className="size-4" aria-hidden />
             )}
-          </button>
+          </IconButton>
         ) : null}
       </div>
     </Field>

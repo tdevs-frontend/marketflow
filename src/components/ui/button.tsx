@@ -6,7 +6,7 @@ import type {
   ReactNode,
 } from "react";
 
-import { cn } from "@/lib/utils";
+import { mergeClasses } from "@/lib/merge-classes";
 
 export type ButtonVariant =
   | "primary"
@@ -15,8 +15,16 @@ export type ButtonVariant =
   | "outline"
   | "ghost"
   | "danger"
-  | "inverse";
-export type ButtonSize = "sm" | "compact" | "md" | "lg" | "icon";
+  | "inverse"
+  /* Borderless icon actions - close, remove, reveal. */
+  | "quiet"
+  | "quiet-danger"
+  /* Text actions, for `size="inline"`. */
+  | "link"
+  | "text"
+  | "subtle"
+  | "arrow";
+export type ButtonSize = "sm" | "compact" | "md" | "lg" | "icon" | "inline";
 
 /**
  * Shared shell: geometry, motion, focus and icon rules.
@@ -142,6 +150,59 @@ const VARIANTS: Record<ButtonVariant, string> = {
     "active:translate-y-0 active:bg-error-hover active:shadow-btn",
     "disabled:bg-error",
   ].join(" "),
+
+  /*
+   * The icon action that sits inside something else - a dialog's close, a
+   * toast's dismiss, a field's reveal toggle, a row's remove.
+   *
+   * No resting ground, unlike `IconButton`'s grey toolbar tile: inside a card
+   * or a dialog header a filled square competes with the content it closes.
+   * The tint only arrives on hover, and `transition-colors` replaces the
+   * shell's `transition-all` because nothing here moves. Disabled restates
+   * the resting look, since `:hover` still matches a disabled button.
+   */
+  quiet: [
+    "text-text-muted transition-colors",
+    "hover:bg-surface-secondary hover:text-text-primary",
+    "disabled:bg-transparent disabled:text-text-muted",
+  ].join(" "),
+  /* `quiet`, for a remove or delete: the hover says what the click will do. */
+  "quiet-danger": [
+    "text-text-muted transition-colors",
+    "hover:bg-error-soft hover:text-error",
+    "disabled:bg-transparent disabled:text-text-muted",
+  ].join(" "),
+
+  /*
+   * The text actions. All four are for `size="inline"`, which drops the box -
+   * a text action is read as part of the line it sits on, and a 44px hit
+   * area around "Mark all as read" would push the heading beside it apart.
+   *
+   * - `link` is the inline link: primary ink, an underline on hover and
+   *   nothing else. No transition, because `text-decoration-line` does not
+   *   animate and a fading focus ring on a link reads as lag.
+   * - `text` is the primary-ink action whose colour deepens on hover instead -
+   *   the "open this record" links in a detail panel.
+   * - `subtle` is the muted one - "Back to products", "Advanced options" -
+   *   that should not compete with the page's real actions.
+   * - `arrow` is the card-footer call to action, "Read article" and "Learn
+   *   more": a heavier label whose trailing arrow nudges forward on hover, of
+   *   the link itself or of a `group` card around it. The arrow is the
+   *   treatment, so its size and gap live here rather than in `inline`.
+   */
+  link: [
+    "rounded-btn text-primary underline-offset-2 transition-none",
+    "hover:underline",
+  ].join(" "),
+  text: "text-primary transition-colors hover:text-primary-dark",
+  subtle: "text-text-muted transition-colors hover:text-text-primary",
+  arrow: [
+    "w-fit shrink-0 gap-1 rounded-sm font-semibold text-text-primary",
+    "transition-colors duration-200 hover:text-primary group-hover:text-primary",
+    "[&_svg]:size-4.5 [&_svg]:transition-[translate] [&_svg]:duration-200",
+    "hover:[&_svg]:translate-x-0.5 group-hover:[&_svg]:translate-x-0.5",
+    "motion-reduce:[&_svg]:transition-none motion-reduce:hover:[&_svg]:translate-x-0 motion-reduce:group-hover:[&_svg]:translate-x-0",
+  ].join(" "),
 };
 
 /**
@@ -155,6 +216,15 @@ const SIZES: Record<ButtonSize, string> = {
   md: "h-11 gap-2 px-5 text-sm [&_svg]:size-4",
   lg: "h-12 gap-2.5 px-6 text-base [&_svg]:size-5",
   icon: "size-11 gap-0 p-0 [&_svg]:size-4",
+  /*
+   * No box at all: auto height, no padding, the body's 14px. For the text
+   * variants, which sit in a line of copy rather than in a row of controls,
+   * so the label wraps and can be selected like the text around it - the
+   * shell's `whitespace-nowrap` and `select-none` are for boxed buttons.
+   * The icon rule carries no specificity, so an icon that has always been
+   * its own size keeps its own class.
+   */
+  inline: "h-auto gap-1.5 p-0 text-sm whitespace-normal select-auto [:where(&)_svg]:size-4",
 };
 
 export interface ButtonVariantProps {
@@ -166,14 +236,20 @@ export interface ButtonVariantProps {
 /**
  * Builds the class string on its own, for the cases where a button's styling
  * has to sit on an element this file doesn't render (a third-party trigger,
- * an `<a>` to an external URL).
+ * an `<a>` to an external URL, the `<span>` inside a card that is already
+ * one link).
+ *
+ * Layered with `mergeClasses` rather than joined: the size can restate the
+ * shell's geometry, the variant can restate the size's (the `arrow` glyph),
+ * and `className` has the last word on all three - a `px-7` passed in
+ * replaces the size's `px-6` instead of racing it on stylesheet order.
  */
 export function buttonVariants({
   variant = "primary",
   size = "md",
   className,
 }: ButtonVariantProps = {}) {
-  return cn(BASE, VARIANTS[variant], SIZES[size], className);
+  return mergeClasses(BASE, SIZES[size], VARIANTS[variant], className);
 }
 
 export type ButtonProps = ButtonVariantProps &
@@ -243,8 +319,12 @@ export function ButtonLink({
 const TOOLBAR =
   "bg-gray-soft text-gray-ink hover:bg-gray hover:text-text-primary active:bg-gray-strong";
 
-/* `compact` has no entry: IconButton's `md` is already the 40px control. */
-const ICON_SIZES: Record<Exclude<ButtonSize, "icon" | "compact">, string> = {
+/* `compact` has no entry: IconButton's `md` is already the 40px control.
+   `xs` is the 24px control inside a toast, a chip row or a rule builder. */
+type IconButtonSize = "xs" | "sm" | "md" | "lg";
+
+const ICON_SIZES: Record<IconButtonSize, string> = {
+  xs: "size-6 [&_svg]:size-3.5",
   sm: "size-8 [&_svg]:size-4",
   md: "size-10 [&_svg]:size-4.5",
   lg: "size-11 [&_svg]:size-5",
@@ -253,7 +333,7 @@ const ICON_SIZES: Record<Exclude<ButtonSize, "icon" | "compact">, string> = {
 export type IconButtonProps = {
   /** Accessible name - the button has no visible label. */
   label: string;
-  size?: Exclude<ButtonSize, "icon" | "compact">;
+  size?: IconButtonSize;
   /** Defaults to the neutral toolbar treatment; opt into a full variant here. */
   variant?: ButtonVariant;
   className?: string;
@@ -281,10 +361,10 @@ export function IconButton({
     <button
       type="button"
       aria-label={label}
-      className={cn(
+      className={mergeClasses(
         BASE,
-        variant ? VARIANTS[variant] : TOOLBAR,
         ICON_SIZES[size],
+        variant ? VARIANTS[variant] : TOOLBAR,
         className,
       )}
       {...props}

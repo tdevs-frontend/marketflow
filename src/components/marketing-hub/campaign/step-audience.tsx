@@ -3,6 +3,7 @@
 import { Share2, ShieldCheck, TriangleAlert, Users } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { CheckboxField } from "@/components/ui/checkbox";
 import { PlatformMark } from "../shared/channel-badge";
 import {
@@ -282,13 +283,15 @@ function SocialAudience({ derived, goTo }: StepProps) {
           A social campaign publishes to the accounts you pick on the Details
           step, not to a contact segment.
         </p>
-        <button
+        <Button
           type="button"
           onClick={() => goTo("campaign")}
-          className="mt-3 text-sm font-bold text-primary underline-offset-2 hover:underline focus-visible:shadow-focus focus-visible:outline-none"
+          variant="link"
+          size="inline"
+          className="mt-3 rounded-none font-bold"
         >
           Back to details
-        </button>
+        </Button>
       </div>
     );
   }

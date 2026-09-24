@@ -2,7 +2,7 @@
 
 import { Plus, Users, X } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button, IconButton } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Tooltip } from "@/components/ui/tooltip";
@@ -165,14 +165,15 @@ export function RuleGroupEditor({
 
         {onRemove && !disabled ? (
           <Tooltip content="Remove this group">
-            <button
-              type="button"
+            <IconButton
               onClick={onRemove}
-              aria-label="Remove this group"
-              className="ml-auto grid size-6 place-items-center rounded-btn text-text-muted transition-colors hover:bg-error-soft hover:text-error focus-visible:shadow-focus focus-visible:outline-none"
+              label="Remove this group"
+              size="xs"
+              variant="quiet-danger"
+              className="ml-auto"
             >
               <X className="size-3.5" aria-hidden />
-            </button>
+            </IconButton>
           </Tooltip>
         ) : null}
       </div>
@@ -244,20 +245,21 @@ export function RuleGroupEditor({
 
               {disabled ? null : (
                 <Tooltip content="Remove condition">
-                  <button
-                    type="button"
+                  <IconButton
                     onClick={() =>
-                      patch({
-                        conditions: rule.conditions.filter(
-                          (item) => item.id !== condition.id,
-                        ),
-                      })
+                    patch({
+                    conditions: rule.conditions.filter(
+                    (item) => item.id !== condition.id,
+                    ),
+                    })
                     }
-                    aria-label={`Remove condition ${index + 1}`}
-                    className="mt-1 grid size-8 shrink-0 place-items-center rounded-btn text-text-muted transition-colors hover:bg-error-soft hover:text-error focus-visible:shadow-focus focus-visible:outline-none"
+                    label={`Remove condition ${index + 1}`}
+                    size="sm"
+                    variant="quiet-danger"
+                    className="mt-1 shrink-0"
                   >
                     <X className="size-4" aria-hidden />
-                  </button>
+                  </IconButton>
                 </Tooltip>
               )}
             </div>

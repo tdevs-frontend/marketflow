@@ -1,16 +1,17 @@
 import {
+  ArrowRight,
   GraduationCap,
   HeartPulse,
   House,
   LayoutGrid,
+  type LucideIcon,
   ShoppingBag,
   Store,
   UsersRound,
-  type LucideIcon,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { CommonTextButton } from "@/components/ui/text-button";
+import { ButtonLink } from "@/components/ui/button";
 
 /* ------------------------------------------------------------------ tokens */
 
@@ -209,13 +210,15 @@ export function SolutionCard({ card }: { card: SolutionCardData }) {
           ))}
         </ul>
 
-        <CommonTextButton
-          label="Learn More"
+        <ButtonLink
           href={card.href}
-          size="md"
-          color="text-text-primary"
-          className="mt-auto pt-4.5"
-        />
+          variant="arrow"
+          size="inline"
+          className="mt-auto pt-4.5 text-base"
+        >
+          Learn More
+          <ArrowRight aria-hidden />
+        </ButtonLink>
       </div>
     </article>
   );

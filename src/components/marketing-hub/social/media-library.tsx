@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, IconButton } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Dialog } from "@/components/ui/dialog";
@@ -285,18 +285,19 @@ export function MediaLibrary() {
             {/* Folders are real records in the shared store now, so this
                 creates one rather than announcing that it did. A folder made
                 here is immediately a destination in the upload dialog. */}
-            <button
-              type="button"
+            <IconButton
               onClick={() => {
-                setFolderDraft("");
-                setFolderError(null);
-                setFolderOpen(true);
+              setFolderDraft("");
+              setFolderError(null);
+              setFolderOpen(true);
               }}
-              aria-label="New folder"
-              className="grid size-5 place-items-center rounded text-text-muted transition-colors hover:text-primary focus-visible:shadow-focus focus-visible:outline-none"
+              label="New folder"
+              size="xs"
+              variant="quiet"
+              className="size-5 rounded hover:bg-transparent hover:text-primary"
             >
               <Plus className="size-3.5" aria-hidden />
-            </button>
+            </IconButton>
           </div>
 
           <ul className="mt-2.5 space-y-0.5">

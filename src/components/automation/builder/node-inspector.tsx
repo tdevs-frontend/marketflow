@@ -1,7 +1,6 @@
 "use client";
 
 import { useId, useMemo, useState } from "react";
-import Link from "next/link";
 import {
   AlertTriangle,
   ChevronDown,
@@ -12,7 +11,7 @@ import {
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button, IconButton } from "@/components/ui/button";
+import { Button, ButtonLink, IconButton } from "@/components/ui/button";
 import { CheckboxField } from "@/components/ui/checkbox";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { Select, type SelectOption } from "@/components/ui/select";
@@ -1307,13 +1306,10 @@ export function NodeInspector({
           />
 
           {link ? (
-            <Link
-              href={link.href}
-              className="inline-flex items-center gap-1.5 rounded-btn text-sm font-medium text-primary transition-colors hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
-            >
+            <ButtonLink href={link.href} variant="text" size="inline">
               <ExternalLink className="size-3.5" aria-hidden />
               {link.label}
-            </Link>
+            </ButtonLink>
           ) : null}
 
           <p className="text-sm text-text-muted">
@@ -1338,7 +1334,7 @@ export function NodeInspector({
             size="compact"
             variant="outline"
             onClick={() => onDelete(draft.id)}
-            className="text-error hover:border-error hover:bg-error-soft hover:text-error-text"
+            className="hover:border-error"
           >
             <Trash2 aria-hidden />
             Delete

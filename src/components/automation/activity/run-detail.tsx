@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 
+import { ButtonLink } from "@/components/ui/button";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useToast } from "@/components/ui/toast";
@@ -27,13 +27,15 @@ export function RunDetail({ run }: { run: WorkflowRun }) {
 
   return (
     <>
-      <Link
+      <ButtonLink
         href={AUTOMATION_ROUTES.activity}
-        className="inline-flex w-fit items-center gap-1.5 rounded-btn text-[15px] font-medium text-text-muted transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
+        variant="subtle"
+        size="inline"
+        className="w-fit text-[15px]"
       >
-        <ChevronLeft className="size-4" aria-hidden />
+        <ChevronLeft aria-hidden />
         Back to Activity
-      </Link>
+      </ButtonLink>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">

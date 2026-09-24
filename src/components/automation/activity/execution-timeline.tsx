@@ -1,10 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { AlertTriangle, ExternalLink } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { NODE_META } from "@/constants/automation";
 import { CHANNEL_THEME } from "@/constants/channels";
 import { AUTOMATION_ROUTES } from "@/constants/automation";
@@ -237,13 +236,15 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
           Contact
         </dt>
         <dd className="mt-1 truncate text-sm font-medium">
-          <Link
+          <ButtonLink
             href="/dashboard/contacts"
-            className="inline-flex items-center gap-1 rounded-btn text-primary transition-colors hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
+            variant="text"
+            size="inline"
+            className="gap-1 whitespace-nowrap"
           >
             {run.contactName}
             <ExternalLink className="size-3" aria-hidden />
-          </Link>
+          </ButtonLink>
         </dd>
       </div>
 
@@ -252,13 +253,15 @@ export function ExecutionSummary({ run }: { run: WorkflowRun }) {
           Workflow
         </dt>
         <dd className="mt-1 truncate text-sm font-medium">
-          <Link
+          <ButtonLink
             href={AUTOMATION_ROUTES.workflow(run.workflowId)}
-            className="inline-flex items-center gap-1 rounded-btn text-primary transition-colors hover:text-primary-dark focus-visible:shadow-focus focus-visible:outline-none"
+            variant="text"
+            size="inline"
+            className="gap-1 whitespace-nowrap"
           >
             {run.workflowName}
             <ExternalLink className="size-3" aria-hidden />
-          </Link>
+          </ButtonLink>
         </dd>
       </div>
 

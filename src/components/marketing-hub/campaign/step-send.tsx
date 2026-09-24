@@ -171,13 +171,15 @@ export function SendStep({
           <ul className="mt-2 space-y-1.5">
             {blockers.map((issue) => (
               <li key={issue.id}>
-                <button
+                <Button
                   type="button"
                   onClick={() => goTo(issue.step)}
-                  className="text-left text-sm font-medium text-error-text underline-offset-2 hover:underline focus-visible:shadow-focus focus-visible:outline-none"
+                  variant="link"
+                  size="inline"
+                  className="rounded-none text-left text-error-text"
                 >
                   {issue.message}
-                </button>
+                </Button>
               </li>
             ))}
           </ul>

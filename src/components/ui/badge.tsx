@@ -1,5 +1,6 @@
 import type { HTMLAttributes, ReactNode } from "react";
 
+import { mergeClasses } from "@/lib/merge-classes";
 import { cn } from "@/lib/utils";
 
 /**
@@ -16,7 +17,7 @@ import { cn } from "@/lib/utils";
  *
  * `className` is for placement (margin, position, responsive visibility) and,
  * rarely, a padding a single badge has always had. It is a real override: see
- * `mergeBadgeClasses` below.
+ * `mergeClasses` in `lib/merge-classes.ts`.
  */
 
 export type BadgeVariant =
@@ -149,74 +150,6 @@ const CASINGS: Record<BadgeCasing, string> = {
 
 const BASE = "inline-flex items-center rounded-full [&_svg]:shrink-0";
 
-/**
- * Which utilities fight over one property.
- *
- * Only the groups the badge itself sets are listed - colour is not, because
- * colour comes from `variant` or `palette`, never from `className`.
- */
-const GROUPS: [string, RegExp][] = [
-  ["display", /^(hidden|block|inline-block|inline-flex|flex|grid|inline-grid)$/],
-  ["gap", /^gap-/],
-  ["font-size", /^text-(xs|sm|meta|base|lg|\[\d)/],
-  ["weight", /^font-(normal|medium|semibold|bold)$/],
-  ["casing", /^(capitalize|uppercase|lowercase|normal-case)$/],
-  ["radius", /^rounded(-|$)/],
-  ["tracking", /^tracking-/],
-];
-
-/* Padding is compared by side rather than by prefix, so the eyebrow's
-   `pr-4` can be replaced by a `pr-3.5` without also losing its `pl-3`. */
-const PADDING_SIDES: Record<string, string[]> = {
-  p: ["t", "r", "b", "l"],
-  px: ["r", "l"],
-  py: ["t", "b"],
-  pt: ["t"],
-  pr: ["r"],
-  pb: ["b"],
-  pl: ["l"],
-};
-
-/** The property slots one utility occupies - a group name, or padding sides. */
-function slotsOf(token: string): string[] {
-  if (token.includes(":")) return [];
-
-  const padding = token.match(/^(p|px|py|pt|pr|pb|pl)-/);
-  if (padding) return PADDING_SIDES[padding[1]].map((side) => `padding-${side}`);
-
-  const group = GROUPS.find(([, pattern]) => pattern.test(token));
-  return group ? [group[0]] : [];
-}
-
-/**
- * The badge's own classes, minus any a `className` replaces.
- *
- * Without this a `px-3` passed in would sit beside the size's `px-2` and
- * whichever Tailwind happens to emit later would win - which, for padding, is
- * the larger number, so a tighter badge could never be asked for at all. Here
- * the call site's class always wins, because the one it replaces is dropped.
- *
- * Classes are only ever dropped, never rewritten: Tailwind generates what it
- * finds written in the source, so a `pl-2` synthesised here from a `px-2`
- * would have no rule behind it. A one-sided override of a two-sided rung
- * therefore replaces both sides, and the call site states both.
- *
- * Only unprefixed tokens replace anything: `sm:inline-flex` qualifies the
- * badge's display at a breakpoint, it does not remove it.
- */
-function mergeBadgeClasses(own: string, override?: string): string {
-  if (!override) return own;
-
-  const replaced = new Set(override.split(/\s+/).flatMap(slotsOf));
-
-  const kept = own
-    .split(/\s+/)
-    .filter((token) => token && !slotsOf(token).some((slot) => replaced.has(slot)))
-    .join(" ");
-
-  return cn(kept, override);
-}
-
 export type BadgeProps = Omit<HTMLAttributes<HTMLElement>, "className"> & {
   variant?: BadgeVariant;
   size?: BadgeSize;
@@ -259,7 +192,7 @@ export function Badge({
   );
 
   return (
-    <Element className={mergeBadgeClasses(own, className)} {...rest}>
+    <Element className={mergeClasses(own, className)} {...rest}>
       {iconPosition === "start" ? icon : null}
       {children}
       {iconPosition === "end" ? icon : null}

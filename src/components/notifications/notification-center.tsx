@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { PageHeader } from "@/components/layout/page-header";
 import { NotificationSettings } from "@/components/settings";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabPanel, type TabItem } from "@/components/ui/tabs";
 import { APP_ROUTES } from "@/constants/app";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
@@ -91,13 +92,15 @@ export function NotificationCenter() {
              the Preferences tab it would act on a list that is not even in
              view. */
           tab === "activity" && unread > 0 ? (
-            <button
+            <Button
               type="button"
               onClick={() => dispatch(markAllRead())}
-              className="rounded-btn text-sm font-semibold text-primary underline-offset-2 hover:underline focus-visible:shadow-focus focus-visible:outline-none"
+              variant="link"
+              size="inline"
+              className="font-semibold"
             >
               Mark all as read
-            </button>
+            </Button>
           ) : undefined
         }
       />

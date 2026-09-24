@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 
 import { ProductEditor } from "@/components/commerce";
 import { ProductStatusBadge } from "@/components/commerce/commerce-badges";
 import { PageHeader } from "@/components/layout/page-header";
+import { ButtonLink } from "@/components/ui/button";
 import { APP_ROUTES } from "@/constants";
 import { COMMERCE_PRODUCTS, commerceProductById } from "@/lib/commerce-fixtures";
 
@@ -32,13 +32,15 @@ export default async function EditProductPage({
 
   return (
     <>
-      <Link
+      <ButtonLink
         href={APP_ROUTES.products}
-        className="inline-flex w-fit items-center gap-1.5 rounded-btn text-[15px] font-medium text-text-muted transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
+        variant="subtle"
+        size="inline"
+        className="w-fit text-[15px]"
       >
-        <ChevronLeft className="size-4" aria-hidden />
+        <ChevronLeft aria-hidden />
         Back to products
-      </Link>
+      </ButtonLink>
 
       <PageHeader
         title={product.name}

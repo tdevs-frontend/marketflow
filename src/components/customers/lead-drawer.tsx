@@ -217,7 +217,7 @@ export function LeadDrawer({
                 size="sm"
                 variant="ghost"
                 onClick={() => setConfirmDelete(true)}
-                className="ml-auto text-error hover:bg-error-soft"
+                className="ml-auto"
               >
                 <Trash2 className="size-4" />
                 Delete

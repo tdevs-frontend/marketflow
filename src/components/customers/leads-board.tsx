@@ -13,7 +13,7 @@ import {
 import { PageHeader } from "@/components/layout/page-header";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, IconButton } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { FilterBar } from "@/components/ui/filter-bar";
@@ -592,14 +592,15 @@ export function LeadsBoard() {
                           {column.items.length}
                         </Badge>
                         <Tooltip content={`New lead in ${column.label}`}>
-                          <button
-                            type="button"
-                            aria-label={`New lead in ${column.label}`}
+                          <IconButton
+                            label={`New lead in ${column.label}`}
                             onClick={() => setCreating(column.stage)}
-                            className="grid size-5 place-items-center rounded-btn text-text-muted transition-colors hover:bg-surface hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
+                            size="xs"
+                            variant="quiet"
+                            className="size-5 hover:bg-surface"
                           >
                             <Plus className="size-3.5" aria-hidden />
-                          </button>
+                          </IconButton>
                         </Tooltip>
                       </div>
                     </div>

@@ -4,6 +4,7 @@ import { createContext, useCallback, useContext, useMemo, useState } from "react
 import type { ReactNode } from "react";
 import { AlertCircle, CheckCircle2, Info, X } from "lucide-react";
 
+import { IconButton } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export type ToastTone = "success" | "error" | "info";
@@ -76,14 +77,15 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             >
               <Icon className={cn("mt-0.5 size-4 shrink-0", className)} aria-hidden />
               <p className="min-w-0 flex-1 text-sm text-text-primary">{item.message}</p>
-              <button
-                type="button"
+              <IconButton
                 onClick={() => dismiss(item.id)}
-                aria-label="Dismiss notification"
-                className="-mt-0.5 -mr-1 grid size-6 shrink-0 place-items-center rounded-btn text-text-muted transition-colors hover:bg-surface-secondary hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
+                label="Dismiss notification"
+                size="xs"
+                variant="quiet"
+                className="-mt-0.5 -mr-1 shrink-0"
               >
                 <X className="size-3.5" aria-hidden />
-              </button>
+              </IconButton>
             </div>
           );
         })}

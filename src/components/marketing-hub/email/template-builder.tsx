@@ -22,7 +22,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, IconButton } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { SegmentedControl } from "@/components/ui/segmented-control";
@@ -257,24 +257,26 @@ export function EmailTemplateBuilder({ template }: { template: EmailTemplate }) 
 
                 {locked ? null : (
                   <span className="flex shrink-0 flex-col">
-                    <button
-                      type="button"
+                    <IconButton
                       onClick={() => move(block.id, -1)}
                       disabled={index === 0}
-                      aria-label={`Move ${meta.label} up`}
-                      className="grid size-4 place-items-center rounded text-text-muted transition-colors hover:text-text-primary disabled:opacity-30 focus-visible:shadow-focus focus-visible:outline-none"
+                      label={`Move ${meta.label} up`}
+                      size="xs"
+                      variant="quiet"
+                      className="size-4 rounded hover:bg-transparent disabled:cursor-default disabled:opacity-30 [&_svg]:size-3"
                     >
                       <ArrowUp className="size-3" aria-hidden />
-                    </button>
-                    <button
-                      type="button"
+                    </IconButton>
+                    <IconButton
                       onClick={() => move(block.id, 1)}
                       disabled={index === blocks.length - 1}
-                      aria-label={`Move ${meta.label} down`}
-                      className="grid size-4 place-items-center rounded text-text-muted transition-colors hover:text-text-primary disabled:opacity-30 focus-visible:shadow-focus focus-visible:outline-none"
+                      label={`Move ${meta.label} down`}
+                      size="xs"
+                      variant="quiet"
+                      className="size-4 rounded hover:bg-transparent disabled:cursor-default disabled:opacity-30 [&_svg]:size-3"
                     >
                       <ArrowDown className="size-3" aria-hidden />
-                    </button>
+                    </IconButton>
                   </span>
                 )}
               </li>

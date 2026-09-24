@@ -269,7 +269,6 @@ function SubscriptionActions({
         <Button
           variant="ghost"
           size="compact"
-          className="text-error-text"
           disabled={state.status === "saving"}
           onClick={() => setConfirming(true)}
         >

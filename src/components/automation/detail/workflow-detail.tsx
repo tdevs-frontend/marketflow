@@ -1,7 +1,6 @@
 "use client";
 
 import { useId, useState } from "react";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   ChevronLeft,
@@ -20,7 +19,7 @@ import {
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button, IconButton } from "@/components/ui/button";
+import { Button, ButtonLink, IconButton } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Menu } from "@/components/ui/menu";
 import { TabPanel, Tabs, type TabItem } from "@/components/ui/tabs";
@@ -189,13 +188,15 @@ export function WorkflowDetail({ workflow }: { workflow: Workflow }) {
 
   return (
     <>
-      <Link
+      <ButtonLink
         href={AUTOMATION_ROUTES.workflows}
-        className="inline-flex w-fit items-center gap-1.5 rounded-btn text-[15px] font-medium text-text-muted transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
+        variant="subtle"
+        size="inline"
+        className="w-fit text-[15px]"
       >
-        <ChevronLeft className="size-4" aria-hidden />
+        <ChevronLeft aria-hidden />
         Back to Workflows
-      </Link>
+      </ButtonLink>
 
       <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0">

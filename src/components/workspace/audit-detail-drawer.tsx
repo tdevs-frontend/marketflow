@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
 import { Avatar } from "@/components/ui/avatar";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { Drawer } from "@/components/ui/dialog";
 import { AUDIT_MODULE_LABEL } from "@/constants/workspace";
 import { formatDateTime, formatRelativeTime } from "@/lib/format";
@@ -92,13 +92,15 @@ export function AuditDetailDrawer({
       <div className="mt-5 rounded-panel border border-border px-3.5 py-3">
         <p className="text-meta font-medium text-text-muted">Target resource</p>
         {event.resourceHref ? (
-          <Link
+          <ButtonLink
             href={event.resourceHref}
-            className="mt-1 inline-flex items-center gap-1 rounded-btn text-sm font-semibold text-primary underline-offset-2 hover:underline focus-visible:shadow-focus focus-visible:outline-none"
+            variant="link"
+            size="inline"
+            className="mt-1 gap-1 font-semibold"
           >
             {event.resourceName}
             <ChevronRight className="size-3.5 shrink-0" aria-hidden />
-          </Link>
+          </ButtonLink>
         ) : (
           <p className="mt-1 text-sm font-semibold text-text-primary">
             {event.resourceName}
@@ -134,18 +136,19 @@ export function AuditDetailDrawer({
 
       {event.metadata && Object.keys(event.metadata).length > 0 ? (
         <section className="mt-6">
-          <button
+          <Button
             type="button"
             onClick={() => setAdvanced((value) => !value)}
             aria-expanded={advanced}
-            className="inline-flex items-center gap-1.5 rounded-btn text-sm font-medium text-text-muted transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none"
+            variant="subtle"
+            size="inline"
           >
             <ChevronDown
               className={cn("size-4 transition-transform", advanced && "rotate-180")}
               aria-hidden
             />
             Advanced details
-          </button>
+          </Button>
 
           {advanced ? (
             <dl className="mt-2.5 space-y-2 rounded-panel bg-surface-secondary px-3.5 py-3">

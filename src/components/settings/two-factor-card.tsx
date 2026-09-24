@@ -101,7 +101,6 @@ export function TwoFactorCard() {
             <Button
               variant="outline"
               size="compact"
-              className="text-error-text"
               onClick={() => setDisableOpen(true)}
             >
               <ShieldOff aria-hidden />

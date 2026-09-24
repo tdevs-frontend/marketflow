@@ -222,15 +222,23 @@ export function LoginForm() {
           <span aria-hidden className="h-px flex-1 bg-border" />
         </div>
 
-        {/* `btn-google` is in `styles/globals.css`. */}
-        <button type="button" className="btn-google" onClick={handleGoogle}>
+        {/* The outline `lg` button, a touch wider and heavier. While the form
+            is busy it fades as a whole rather than taking the outline's
+            disabled colours, so the spinner inside it still reads. */}
+        <Button
+          type="button"
+          variant="outline"
+          size="lg"
+          onClick={handleGoogle}
+          className="w-full px-7 font-semibold disabled:pointer-events-none disabled:border-border disabled:text-text-secondary disabled:opacity-50"
+        >
           {pending === "google" ? (
             <Loader2 className="animate-spin" aria-hidden />
           ) : (
             <GoogleIcon />
           )}
           Continue with Google
-        </button>
+        </Button>
       </fieldset>
 
       {/* Announces the busy state - a label change alone is not announced. */}

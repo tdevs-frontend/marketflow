@@ -290,13 +290,15 @@ export function OrdersWorkspace() {
                     return (
                       <TR key={order.id}>
                         <TD>
-                          <button
+                          <Button
                             type="button"
                             onClick={() => setActive(order)}
-                            className="font-mono text-sm font-medium text-primary hover:underline focus-visible:shadow-focus focus-visible:outline-none"
+                            variant="link"
+                            size="inline"
+                            className="rounded-none font-mono underline-offset-auto"
                           >
                             {order.reference}
-                          </button>
+                          </Button>
                         </TD>
 
                         <TD>

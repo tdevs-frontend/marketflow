@@ -27,4 +27,3 @@ export * from "./progress";
 export * from "./stats-card";
 export * from "./filter-bar";
 export * from "./date-range";
-export * from "./text-button";

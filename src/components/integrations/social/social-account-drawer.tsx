@@ -83,7 +83,6 @@ export function SocialAccountDrawer({
             variant="ghost"
             size="compact"
             onClick={() => onDisconnect(account)}
-            className="text-error hover:bg-error-soft hover:text-error"
           >
             <Unlink aria-hidden />
             Disconnect

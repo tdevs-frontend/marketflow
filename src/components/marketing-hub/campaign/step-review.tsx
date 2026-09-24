@@ -3,6 +3,7 @@
 import { AlertCircle, CheckCircle2, ChevronRight, TriangleAlert } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { CheckboxField } from "@/components/ui/checkbox";
 import { Field, Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -287,23 +288,25 @@ function TrackingSection({ draft, set, derived }: StepProps) {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="text-sm font-bold text-text-secondary">UTM parameters</p>
             {tracking.utmTouched ? (
-              <button
+              <Button
                 type="button"
                 onClick={() =>
-                  set("tracking", {
-                    ...tracking,
-                    utmTouched: false,
-                    utm: {
-                      ...tracking.utm,
-                      source: suggestedSource,
-                      medium: UTM_MEDIUM[draft.channel],
-                    },
-                  })
+                set("tracking", {
+                ...tracking,
+                utmTouched: false,
+                utm: {
+                ...tracking.utm,
+                source: suggestedSource,
+                medium: UTM_MEDIUM[draft.channel],
+                },
+                })
                 }
-                className="text-sm font-medium text-primary underline-offset-2 hover:underline focus-visible:shadow-focus focus-visible:outline-none"
+                variant="link"
+                size="inline"
+                className="rounded-none"
               >
                 Reset to channel defaults
-              </button>
+              </Button>
             ) : (
               <span className="text-sm font-medium text-text-muted">
                 Following the channel

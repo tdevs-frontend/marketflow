@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ChevronRight, MailCheck, XCircle } from "lucide-react";
 
 import { Avatar } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { Drawer } from "@/components/ui/dialog";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Icon } from "@/components/ui/icon";
@@ -195,13 +195,15 @@ export function MemberDetailDrawer({
                 </div>
               ))}
           </dl>
-          <Link
+          <ButtonLink
             href={WORKSPACE_ROUTES.roles}
-            className="mt-2 inline-flex items-center gap-1 rounded-btn text-sm font-medium text-primary underline-offset-2 hover:underline focus-visible:shadow-focus focus-visible:outline-none"
+            variant="link"
+            size="inline"
+            className="mt-2 gap-1"
           >
             View {role.name} permissions
             <ChevronRight className="size-3.5" aria-hidden />
-          </Link>
+          </ButtonLink>
         </section>
       ) : null}
 
@@ -322,13 +324,15 @@ export function MemberDetailDrawer({
           </ul>
         )}
 
-        <Link
+        <ButtonLink
           href={`${WORKSPACE_ROUTES.activity}?member=${member.id}`}
-          className="mt-3 inline-flex items-center gap-1 rounded-btn text-sm font-medium text-primary underline-offset-2 hover:underline focus-visible:shadow-focus focus-visible:outline-none"
+          variant="link"
+          size="inline"
+          className="mt-3 gap-1"
         >
           View all activity by {member.name.split(" ")[0]}
           <ChevronRight className="size-3.5" aria-hidden />
-        </Link>
+        </ButtonLink>
       </section>
     </Drawer>
   );
