@@ -91,7 +91,7 @@ export function TriggerTable({
                 </Link>
               </TD>
 
-              <TD className="text-sm whitespace-nowrap text-text-secondary">
+              <TD className="whitespace-nowrap text-text-secondary">
                 {trigger.source}
               </TD>
 
@@ -130,7 +130,7 @@ export function TriggerTable({
                 ) : null}
               </TD>
 
-              <TD className="text-sm whitespace-nowrap text-text-muted">
+              <TD className="whitespace-nowrap text-text-muted">
                 {trigger.lastEventAt ? formatRelativeTime(trigger.lastEventAt) : "Never"}
               </TD>
 

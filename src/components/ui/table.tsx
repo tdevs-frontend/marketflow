@@ -1,14 +1,21 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { ArrowDown, ArrowUp, ChevronsUpDown } from "lucide-react";
 
+import { mergeClasses } from "@/lib/merge-classes";
 import { cn } from "@/lib/utils";
 
 /**
- * A compact data table.
+ * A compact data table - the one table system in the product.
  *
  * The wrapper owns the horizontal scroll so a wide table never widens the
  * page. `minWidth` sets where scrolling starts - below it the columns would
  * crush rather than wrap.
+ *
+ * The cell type lives here and nowhere else: `TH` and `TD` set the size and
+ * the weight, and a call site brings only what its column means - an ink
+ * token, `tabular-nums`, a width, a no-wrap. `className` goes through
+ * `mergeClasses`, so an override replaces the cell's own class instead of
+ * racing it on stylesheet order.
  */
 export function Table({
   minWidth = "56rem",
@@ -91,7 +98,7 @@ export function TH({
   return (
     <th
       scope="col"
-      className={cn(
+      className={mergeClasses(
         "px-3 py-2.5 text-sm font-medium whitespace-nowrap first:pl-0 last:pr-0",
         align === "right" && "text-right",
         align === "center" && "text-center",
@@ -112,7 +119,7 @@ export function TD({
 }: { align?: "left" | "right" | "center" } & ComponentPropsWithoutRef<"td">) {
   return (
     <td
-      className={cn(
+      className={mergeClasses(
         "px-3 py-3 align-middle text-sm font-medium first:pl-0 last:pr-0",
         align === "right" && "text-right",
         align === "center" && "text-center",
@@ -130,6 +137,11 @@ export type SortDirection = "asc" | "desc";
 /**
  * A sortable column header. `aria-sort` is what actually tells a screen reader
  * the state - the arrow is decoration on top of it.
+ *
+ * The padding moves from the cell onto the button, so the whole header is the
+ * hit target, and it moves exactly: `px-3 py-2.5`, flush at the row's two ends
+ * the way `TH` is. The label therefore sits on the same line as the plain
+ * headers beside it and the cells below it.
  */
 export function SortableTH<T extends string>({
   field,
@@ -153,13 +165,14 @@ export function SortableTH<T extends string>({
     <TH
       align={align}
       aria-sort={active ? (direction === "asc" ? "ascending" : "descending") : "none"}
-      className="p-0 first:pl-0 last:pr-0"
+      className="p-0"
     >
       <button
         type="button"
         onClick={() => onSort(field)}
         className={cn(
           "inline-flex w-full items-center gap-1.5 px-3 py-2.5 text-sm font-medium transition-colors hover:text-text-primary focus-visible:shadow-focus focus-visible:outline-none",
+          "[th:first-child>&]:pl-0 [th:last-child>&]:pr-0",
           align === "right" && "justify-end",
           active ? "text-text-primary" : "text-text-muted",
         )}

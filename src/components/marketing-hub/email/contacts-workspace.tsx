@@ -453,7 +453,7 @@ export function EmailContactsWorkspace() {
                           </Badge>
                         </TD>
 
-                        <TD className="text-sm text-text-secondary">
+                        <TD className="text-text-secondary">
                           {contact.source}
                         </TD>
 
@@ -472,7 +472,7 @@ export function EmailContactsWorkspace() {
                           {formatNumber(contact.clicks)}
                         </TD>
 
-                        <TD className="text-sm whitespace-nowrap text-text-muted">
+                        <TD className="whitespace-nowrap text-text-muted">
                           {formatRelativeTime(contact.lastActivityAt)}
                         </TD>
 

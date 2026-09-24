@@ -482,7 +482,7 @@ export function SmsCampaignsWorkspace() {
                           </Badge>
                         </TD>
 
-                        <TD align="right" className="font-bold text-text-primary tabular-nums">
+                        <TD align="right" className="text-text-primary tabular-nums">
                           {campaign.cost === 0 ? (
                             <span className="font-normal text-text-muted">-</span>
                           ) : (
@@ -494,7 +494,7 @@ export function SmsCampaignsWorkspace() {
                           <SmsCampaignStatusBadge status={campaign.status} />
                         </TD>
 
-                        <TD className="text-sm whitespace-nowrap text-text-muted">
+                        <TD className="whitespace-nowrap text-text-muted">
                           {formatDate(campaign.createdAt)}
                         </TD>
 

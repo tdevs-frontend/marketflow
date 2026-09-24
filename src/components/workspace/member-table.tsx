@@ -233,9 +233,7 @@ export function MemberTable({
               <MemberStatusBadge status={member.status} />
             </TD>
 
-            <TD
-              className={cn(
-                "font-normal",
+            <TD className={cn(
                 member.lastActiveAt ? "text-text-secondary" : "text-text-muted",
               )}
             >
@@ -244,7 +242,7 @@ export function MemberTable({
                 : "Never signed in"}
             </TD>
 
-            <TD className="font-normal text-text-secondary">
+            <TD className="text-text-secondary">
               {member.joinedAt ? (
                 formatDate(member.joinedAt)
               ) : (

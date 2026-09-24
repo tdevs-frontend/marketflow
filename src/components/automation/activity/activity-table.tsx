@@ -129,7 +129,7 @@ export function ActivityTable({
 
                 <TD
                   align="right"
-                  className="text-sm whitespace-nowrap text-text-muted tabular-nums"
+                  className="whitespace-nowrap text-text-muted tabular-nums"
                 >
                   {formatDuration(row.durationMs)}
                 </TD>

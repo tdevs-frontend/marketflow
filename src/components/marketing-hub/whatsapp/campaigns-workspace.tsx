@@ -351,7 +351,7 @@ export function WhatsAppCampaignsWorkspace() {
                           <CampaignStatusBadge status={campaign.status} />
                         </TD>
 
-                        <TD className="text-sm whitespace-nowrap text-text-muted">
+                        <TD className="whitespace-nowrap text-text-muted">
                           {formatDate(campaign.createdAt)}
                         </TD>
 

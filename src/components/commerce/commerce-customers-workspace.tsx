@@ -276,12 +276,12 @@ export function CommerceCustomersWorkspace() {
 
                       <TD
                         align="right"
-                        className="tabular-nums whitespace-nowrap font-normal text-text-secondary"
+                        className="tabular-nums whitespace-nowrap text-text-secondary"
                       >
                         {formatCurrency(customer.averageOrderValue)}
                       </TD>
 
-                      <TD className="whitespace-nowrap font-normal text-text-secondary">
+                      <TD className="whitespace-nowrap text-text-secondary">
                         {formatRelativeTime(customer.lastPurchaseAt, COMMERCE_NOW_MS)}
                       </TD>
 

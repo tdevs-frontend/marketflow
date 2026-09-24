@@ -465,7 +465,7 @@ export function EmailCampaignsWorkspace() {
                           <EmailCampaignStatusBadge status={campaign.status} />
                         </TD>
 
-                        <TD className="text-sm whitespace-nowrap text-text-muted">
+                        <TD className="whitespace-nowrap text-text-muted">
                           {formatDate(campaign.scheduledAt ?? campaign.createdAt)}
                         </TD>
 

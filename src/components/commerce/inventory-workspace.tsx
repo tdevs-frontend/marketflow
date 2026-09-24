@@ -197,12 +197,12 @@ export function InventoryWorkspace() {
                         <span className="text-text-muted">-</span>
                       )}
                     </TD>
-                    <TD className="font-mono text-sm text-text-muted">
+                    <TD className="font-mono text-text-muted">
                       {item.sku}
                     </TD>
                     <TD
                       align="right"
-                      className="font-bold text-text-primary tabular-nums"
+                      className="text-text-primary tabular-nums"
                     >
                       {item.stock}
                     </TD>
@@ -215,7 +215,7 @@ export function InventoryWorkspace() {
                     <TD
                       align="right"
                       className={cn(
-                        "font-medium tabular-nums",
+                        "tabular-nums",
                         available <= 0 ? "text-error" : "text-text-primary",
                       )}
                     >
@@ -230,7 +230,7 @@ export function InventoryWorkspace() {
                     <TD>
                       <StockBadge status={state} variant="health" />
                     </TD>
-                    <TD className="text-sm whitespace-nowrap text-text-muted">
+                    <TD className="whitespace-nowrap text-text-muted">
                       {formatRelativeTime(item.updatedAt)}
                     </TD>
                   </TR>

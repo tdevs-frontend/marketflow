@@ -85,7 +85,7 @@ export function ChannelPerformanceTable({ rows }: { rows: ChannelRow[] }) {
                 </span>
               </TD>
 
-              <TD align="right" className="font-bold text-text-primary tabular-nums">
+              <TD align="right" className="text-text-primary tabular-nums">
                 {formatCurrency(row.revenue)}
               </TD>
 

@@ -677,7 +677,7 @@ export function ContactsWorkspace() {
                       </button>
                     </TD>
 
-                    <TD className="text-sm whitespace-nowrap text-text-secondary">
+                    <TD className="whitespace-nowrap text-text-secondary">
                       {item.phone ?? "-"}
                     </TD>
 
@@ -702,18 +702,18 @@ export function ContactsWorkspace() {
 
                     <TD
                       align="right"
-                      className="text-sm font-bold whitespace-nowrap text-text-primary tabular-nums"
+                      className="whitespace-nowrap text-text-primary tabular-nums"
                     >
                       {item.lifetimeValue ? formatCurrency(item.lifetimeValue) : "-"}
                     </TD>
 
-                    <TD className="text-sm whitespace-nowrap text-text-muted">
+                    <TD className="whitespace-nowrap text-text-muted">
                       {item.lastContactedAt
                         ? formatRelativeTime(item.lastContactedAt)
                         : "Never"}
                     </TD>
 
-                    <TD className="text-sm whitespace-nowrap text-text-muted">
+                    <TD className="whitespace-nowrap text-text-muted">
                       {formatDate(item.createdAt)}
                     </TD>
 

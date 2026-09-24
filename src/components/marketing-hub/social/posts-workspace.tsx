@@ -605,7 +605,7 @@ export function SocialPostsWorkspace() {
                         {/* One column for the moment that matters: when it
                             went out if it did, when it is due if it has not,
                             and an honest dash for a draft with no slot. */}
-                        <TD className="text-sm whitespace-nowrap text-text-secondary">
+                        <TD className="whitespace-nowrap text-text-secondary">
                           {post.status === "draft" ? (
                             <span className="text-text-muted">Not scheduled</span>
                           ) : (
@@ -647,7 +647,7 @@ export function SocialPostsWorkspace() {
                         {/* Author rides along under the date rather than
                             taking an eighth column - "who wrote this and
                             when" is one question. */}
-                        <TD className="text-sm whitespace-nowrap text-text-secondary">
+                        <TD className="whitespace-nowrap text-text-secondary">
                           {post.createdAt.slice(0, 10)}
                           <span className="block max-w-32 truncate text-sm text-text-muted">
                             {post.author}

@@ -691,7 +691,7 @@ export function SocialAnalytics({ range = DEFAULT_RANGE }: SocialAnalyticsProps)
                 <TD align="right" className="text-text-secondary tabular-nums">
                   {formatNumber(row.shares)}
                 </TD>
-                <TD align="right" className="font-bold text-text-primary tabular-nums">
+                <TD align="right" className="text-text-primary tabular-nums">
                   {formatNumber(row.total)}
                 </TD>
                 <TD align="right" className="text-text-secondary tabular-nums">

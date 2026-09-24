@@ -686,10 +686,10 @@ export function LeadsBoard() {
                       onClick={() => setActive(lead)}
                       className="cursor-pointer"
                     >
-                      <TD className="text-sm font-bold text-text-primary">
+                      <TD className="text-text-primary">
                         {lead.title}
                       </TD>
-                      <TD className="text-sm text-text-secondary">
+                      <TD className="text-text-secondary">
                         {contact ? contactName(contact) : "-"}
                       </TD>
                       <TD>
@@ -700,17 +700,17 @@ export function LeadsBoard() {
                       </TD>
                       <TD
                         align="right"
-                        className="text-sm font-bold whitespace-nowrap text-text-primary tabular-nums"
+                        className="whitespace-nowrap text-text-primary tabular-nums"
                       >
                         {formatCurrency(lead.value)}
                       </TD>
                       <TD>
                         <SourceBadge source={lead.source} />
                       </TD>
-                      <TD className="text-sm whitespace-nowrap text-text-secondary">
+                      <TD className="whitespace-nowrap text-text-secondary">
                         {ownerName(lead.ownerId)}
                       </TD>
-                      <TD className="text-sm whitespace-nowrap text-text-muted">
+                      <TD className="whitespace-nowrap text-text-muted">
                         {formatRelativeTime(lead.lastActivityAt)}
                       </TD>
                     </TR>

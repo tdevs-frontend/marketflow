@@ -175,7 +175,7 @@ export function SmsSendersWorkspace() {
                     </Badge>
                   </TD>
 
-                  <TD className="text-sm text-text-secondary">
+                  <TD className="text-text-secondary">
                     {sender.countries.join(", ")}
                   </TD>
 

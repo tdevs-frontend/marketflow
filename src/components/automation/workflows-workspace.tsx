@@ -545,7 +545,7 @@ export function WorkflowsWorkspace() {
                     <TD>
                       <WorkflowStatusBadge status={workflow.status} />
                     </TD>
-                    <TD className="text-sm whitespace-nowrap text-text-secondary">
+                    <TD className="whitespace-nowrap text-text-secondary">
                       {workflow.triggerLabel}
                     </TD>
                     <TD>
@@ -553,7 +553,7 @@ export function WorkflowsWorkspace() {
                     </TD>
                     <TD
                       align="right"
-                      className="text-sm font-bold whitespace-nowrap text-text-primary tabular-nums"
+                      className="whitespace-nowrap text-text-primary tabular-nums"
                     >
                       {workflow.stats.running > 0 ? (
                         formatCount(workflow.stats.running)
@@ -561,16 +561,16 @@ export function WorkflowsWorkspace() {
                         <span className="text-text-muted">-</span>
                       )}
                     </TD>
-                    <TD align="right" className="text-sm font-bold text-text-primary tabular-nums">
+                    <TD align="right" className="text-text-primary tabular-nums">
                       {formatCount(workflow.stats.entered)}
                     </TD>
-                    <TD align="right" className="text-sm text-text-secondary tabular-nums">
+                    <TD align="right" className="text-text-secondary tabular-nums">
                       {formatCount(workflow.stats.completed)}
                       <span className="ml-1 text-text-muted">
                         ({formatPercent(completionRate(workflow), 0)})
                       </span>
                     </TD>
-                    <TD align="right" className="text-sm font-medium text-primary tabular-nums">
+                    <TD align="right" className="text-primary tabular-nums">
                       {formatPercent(conversionRate(workflow))}
                     </TD>
                     <TD>
@@ -583,7 +583,7 @@ export function WorkflowsWorkspace() {
                         </span>
                       </Tooltip>
                     </TD>
-                    <TD className="text-sm whitespace-nowrap text-text-muted">
+                    <TD className="whitespace-nowrap text-text-muted">
                       {formatRelativeTime(workflow.updatedAt)}
                     </TD>
                     <TD align="right">

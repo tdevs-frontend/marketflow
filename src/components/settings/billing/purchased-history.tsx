@@ -132,7 +132,7 @@ function PurchaseRow({ purchase }: { purchase: Purchase }) {
 
   return (
     <TR>
-      <TD className="font-semibold text-text-primary">{purchase.planName}</TD>
+      <TD className="text-text-primary">{purchase.planName}</TD>
       <TD className="text-text-secondary">
         {purchase.period === "yearly" ? "Yearly" : "Monthly"}
       </TD>

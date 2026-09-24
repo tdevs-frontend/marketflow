@@ -459,10 +459,10 @@ export function ProductDetail({
                     <TBody>
                       {topVariants.map((variant) => (
                         <TR key={variant.id}>
-                          <TD className="font-bold text-text-primary">
+                          <TD className="text-text-primary">
                             {variantName(variant.optionValues)}
                           </TD>
-                          <TD className="font-mono text-sm text-text-muted">
+                          <TD className="font-mono text-text-muted">
                             {variant.sku}
                           </TD>
                           <TD align="right" className="tabular-nums">
@@ -470,7 +470,7 @@ export function ProductDetail({
                           </TD>
                           <TD
                             align="right"
-                            className="font-bold text-text-primary tabular-nums"
+                            className="text-text-primary tabular-nums"
                           >
                             {formatCurrency(variant.sales?.revenue ?? 0)}
                           </TD>
@@ -526,7 +526,7 @@ export function ProductDetail({
                       </TD>
                       <TD
                         align="right"
-                        className="font-bold text-text-primary tabular-nums"
+                        className="text-text-primary tabular-nums"
                       >
                         {formatCurrency(customer.spent)}
                       </TD>
@@ -680,10 +680,10 @@ export function ProductDetail({
                     <TBody>
                       {variants.map((variant) => (
                         <TR key={variant.id}>
-                          <TD className="font-bold text-text-primary">
+                          <TD className="text-text-primary">
                             {variantName(variant.optionValues)}
                           </TD>
-                          <TD className="font-mono text-sm text-text-muted">
+                          <TD className="font-mono text-text-muted">
                             {variant.sku}
                           </TD>
                           <TD align="right" className="tabular-nums">
@@ -698,7 +698,7 @@ export function ProductDetail({
                           <TD
                             align="right"
                             className={cn(
-                              "font-bold tabular-nums",
+                              "tabular-nums",
                               availableOf(variant) <= 0
                                 ? "text-error"
                                 : "text-text-primary",
@@ -751,10 +751,10 @@ export function ProductDetail({
                   <TBody>
                     {variants.map((variant) => (
                       <TR key={variant.id}>
-                        <TD className="font-bold text-text-primary">
+                        <TD className="text-text-primary">
                           {variantName(variant.optionValues)}
                         </TD>
-                        <TD className="font-mono text-sm text-text-secondary">
+                        <TD className="font-mono text-text-secondary">
                           {variant.fileName ?? "-"}
                           {variant.fileSizeMb ? (
                             <span className="ml-1.5 text-text-muted">
@@ -815,7 +815,7 @@ export function ProductDetail({
                   <TBody>
                     {variants.map((variant) => (
                       <TR key={variant.id}>
-                        <TD className="font-bold text-text-primary">
+                        <TD className="text-text-primary">
                           {variantName(variant.optionValues)}
                         </TD>
                         <TD className="text-text-secondary">

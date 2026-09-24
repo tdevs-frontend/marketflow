@@ -66,11 +66,11 @@ export function ApiKeyTable({
                 </span>
               </TD>
 
-              <TD className="font-normal text-text-secondary">
+              <TD className="text-text-secondary">
                 {formatDate(key.createdAt)}
               </TD>
 
-              <TD className="font-normal text-text-secondary">
+              <TD className="text-text-secondary">
                 {key.lastUsedAt
                   ? formatRelativeTime(key.lastUsedAt, INTEGRATIONS_NOW_MS)
                   : "Never"}

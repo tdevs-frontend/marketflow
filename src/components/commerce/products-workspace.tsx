@@ -695,7 +695,7 @@ export function ProductsWorkspace({
                         </TD>
 
                         <TD className="text-text-secondary">{item.categoryName}</TD>
-                        <TD className="font-mono text-sm text-text-muted">{item.sku}</TD>
+                        <TD className="font-mono text-text-muted">{item.sku}</TD>
 
                         {/* A product that sells at more than one price says so.
                             Showing only the cheapest variant is how a customer
@@ -763,7 +763,7 @@ export function ProductsWorkspace({
                           </div>
                         </TD>
 
-                        <TD className="text-sm whitespace-nowrap text-text-muted">
+                        <TD className="whitespace-nowrap text-text-muted">
                           {formatDate(item.updatedAt)}
                         </TD>
 

@@ -331,7 +331,7 @@ export function SalesWorkspace() {
                           </Badge>
                         </TD>
 
-                        <TD className="font-normal text-text-secondary">
+                        <TD className="text-text-secondary">
                           {CHANNEL_LABEL[sale.channel as SalesChannel]}
                         </TD>
 

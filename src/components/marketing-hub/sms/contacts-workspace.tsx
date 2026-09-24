@@ -435,7 +435,7 @@ export function SmsContactsWorkspace() {
                           </button>
                         </TD>
 
-                        <TD className="text-sm whitespace-nowrap text-text-secondary">
+                        <TD className="whitespace-nowrap text-text-secondary">
                           {contact.country}
                         </TD>
 
@@ -443,7 +443,7 @@ export function SmsContactsWorkspace() {
                           <TagList tags={contact.tags} />
                         </TD>
 
-                        <TD className="text-sm text-text-secondary">
+                        <TD className="text-text-secondary">
                           {contact.leadStatus}
                         </TD>
 
@@ -468,7 +468,7 @@ export function SmsContactsWorkspace() {
                           ) : null}
                         </TD>
 
-                        <TD className="text-sm whitespace-nowrap text-text-muted">
+                        <TD className="whitespace-nowrap text-text-muted">
                           {formatRelativeTime(contact.lastActivityAt)}
                         </TD>
 

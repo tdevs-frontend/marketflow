@@ -263,7 +263,7 @@ export function RecentOrders({ className }: { className?: string }) {
                       </Link>
                     </TD>
 
-                    <TD className="w-1/2 max-w-0 font-bold text-text-primary">
+                    <TD className="w-1/2 max-w-0 text-text-primary">
                       <span
                         className="block text-sm font-bold truncate"
                         title={order.customer}

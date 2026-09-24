@@ -639,7 +639,7 @@ export function SmsAnalytics({ range = DEFAULT_RANGE }: SmsAnalyticsProps) {
                     </TD>
                     <TD
                       align="right"
-                      className="font-bold text-text-primary tabular-nums"
+                      className="text-text-primary tabular-nums"
                     >
                       {formatPercent(rate(row.replies, row.delivered))}
                     </TD>
@@ -708,7 +708,7 @@ export function SmsAnalytics({ range = DEFAULT_RANGE }: SmsAnalyticsProps) {
                       </TD>
                       <TD
                         align="right"
-                        className="font-bold text-text-primary tabular-nums"
+                        className="text-text-primary tabular-nums"
                       >
                         {formatPercent(template.replyRate)}
                       </TD>

@@ -89,7 +89,7 @@ export function ApiLogs({
                     </span>
                   </TD>
 
-                  <TD className="font-normal text-text-muted">{entry.keyName}</TD>
+                  <TD className="text-text-muted">{entry.keyName}</TD>
 
                   <TD>
                     <HttpStatusBadge code={entry.status} />

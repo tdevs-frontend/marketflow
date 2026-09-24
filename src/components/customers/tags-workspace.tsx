@@ -368,27 +368,27 @@ export function TagsWorkspace() {
 
                         <TD
                           align="right"
-                          className="text-sm text-text-secondary tabular-nums"
+                          className="text-text-secondary tabular-nums"
                         >
                           {formatNumber(counts.contacts)}
                         </TD>
 
                         <TD
                           align="right"
-                          className="text-sm text-text-secondary tabular-nums"
+                          className="text-text-secondary tabular-nums"
                         >
                           {formatNumber(counts.leads)}
                         </TD>
 
-                        <TD className="text-sm text-text-muted">
+                        <TD className="text-text-muted">
                           {dependants(tag) === 0 ? "-" : dependantSummary(tag)}
                         </TD>
 
-                        <TD className="text-sm whitespace-nowrap text-text-muted">
+                        <TD className="whitespace-nowrap text-text-muted">
                           {formatDate(tag.createdAt)}
                         </TD>
 
-                        <TD className="text-sm whitespace-nowrap text-text-muted">
+                        <TD className="whitespace-nowrap text-text-muted">
                           {tag.lastUsedAt
                             ? formatRelativeTime(tag.lastUsedAt)
                             : "Never"}

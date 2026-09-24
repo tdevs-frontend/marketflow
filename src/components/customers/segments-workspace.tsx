@@ -805,17 +805,17 @@ export function CustomerSegmentsWorkspace() {
                       </TD>
                       <TD
                         align="right"
-                        className="text-sm font-bold text-text-primary tabular-nums"
+                        className="text-text-primary tabular-nums"
                       >
                         {formatNumber(members)}
                       </TD>
                       <TD
                         align="right"
-                        className="text-sm text-text-secondary tabular-nums"
+                        className="text-text-secondary tabular-nums"
                       >
                         {conditions || "-"}
                       </TD>
-                      <TD className="text-sm whitespace-nowrap text-text-muted">
+                      <TD className="whitespace-nowrap text-text-muted">
                         {formatRelativeTime(segment.updatedAt)}
                       </TD>
                       <TD>

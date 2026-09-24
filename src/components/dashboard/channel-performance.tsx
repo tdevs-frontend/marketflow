@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import { TBody, TD, TH, THead, TR, Table } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { ChannelPerformanceChart } from "./charts/channel-performance-chart";
 
@@ -98,41 +99,38 @@ export function ChannelPerformance({ className }: { className?: string }) {
        * it is a table because four labelled measures across three channels is
        * tabular data, not something a second chart would read better.
        */}
-      <div className="mt-5 -mx-1 overflow-x-auto border-t border-border pt-4">
-        <table className="w-full min-w-76 text-left text-sm">
+      <div className="mt-5 border-t border-border pt-4">
+        <Table minWidth="19rem">
           <caption className="sr-only">
             Channel metrics for WhatsApp, Email and SMS
           </caption>
-          <thead>
-            <tr className="text-sm font-medium text-text-muted">
-              <th scope="col" className="pb-2 font-medium">
-                Metric
-              </th>
-              {CHANNELS.map((channel) => (
-                <th key={channel.name} scope="col" className="pb-2 text-right font-medium">
-                  {channel.name}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
+          <THead>
+            <TH>Metric</TH>
+            {CHANNELS.map((channel) => (
+              <TH key={channel.name} align="right">
+                {channel.name}
+              </TH>
+            ))}
+          </THead>
+          <TBody>
             {METRIC_ROWS.map((row) => (
-              <tr key={row.key}>
-                <th scope="row" className="py-2 font-medium text-text-secondary">
+              <TR key={row.key}>
+                <TH scope="row" className="text-text-secondary">
                   {row.label}
-                </th>
+                </TH>
                 {CHANNELS.map((channel) => (
-                  <td
+                  <TD
                     key={channel.name}
-                    className="py-2 text-right font-bold text-text-primary tabular-nums"
+                    align="right"
+                    className="text-text-primary tabular-nums"
                   >
                     {channel[row.key]}
-                  </td>
+                  </TD>
                 ))}
-              </tr>
+              </TR>
             ))}
-          </tbody>
-        </table>
+          </TBody>
+        </Table>
       </div>
     </Card>
   );

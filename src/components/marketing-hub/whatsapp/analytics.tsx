@@ -309,7 +309,7 @@ export function WhatsAppAnalytics({ range }: { range?: TrendWindow } = {}) {
                    */}
                   <TD
                     align="right"
-                    className="font-bold text-whatsapp-dark tabular-nums"
+                    className="text-whatsapp-dark tabular-nums"
                   >
                     {formatPercent(rate(template.replies, template.delivered))}
                   </TD>
@@ -359,7 +359,7 @@ export function WhatsAppAnalytics({ range }: { range?: TrendWindow } = {}) {
           <TBody>
             {AGENT_ROWS.map((agent) => (
               <TR key={agent.name}>
-                <TD className="font-semibold text-text-primary">{agent.name}</TD>
+                <TD className="text-text-primary">{agent.name}</TD>
                 <TD align="right" className="tabular-nums">
                   {formatNumber(agent.handled)}
                 </TD>
@@ -373,7 +373,7 @@ export function WhatsAppAnalytics({ range }: { range?: TrendWindow } = {}) {
                 </TD>
                 <TD
                   align="right"
-                  className="font-bold text-whatsapp-dark tabular-nums"
+                  className="text-whatsapp-dark tabular-nums"
                 >
                   {formatPercent(agent.resolutionRate)}
                 </TD>

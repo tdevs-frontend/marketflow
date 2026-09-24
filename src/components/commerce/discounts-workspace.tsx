@@ -232,13 +232,13 @@ export function DiscountsWorkspace() {
                     </button>
                   </TD>
 
-                  <TD className="font-bold text-text-primary">{discount.name}</TD>
+                  <TD className="text-text-primary">{discount.name}</TD>
 
                   <TD className="text-text-secondary">
                     {DISCOUNT_TYPES.find((item) => item.value === discount.type)?.label}
                   </TD>
 
-                  <TD align="right" className="font-bold text-text-primary">
+                  <TD align="right" className="text-text-primary">
                     {valueLabel(discount)}
                   </TD>
 
@@ -254,11 +254,11 @@ export function DiscountsWorkspace() {
                     <DiscountStatusBadge status={discount.status} />
                   </TD>
 
-                  <TD className="text-sm whitespace-nowrap text-text-muted">
+                  <TD className="whitespace-nowrap text-text-muted">
                     {formatDate(discount.startsAt)}
                   </TD>
 
-                  <TD className="text-sm whitespace-nowrap text-text-muted">
+                  <TD className="whitespace-nowrap text-text-muted">
                     {discount.endsAt ? formatDate(discount.endsAt) : "No end date"}
                   </TD>
 

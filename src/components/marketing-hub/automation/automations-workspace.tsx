@@ -432,7 +432,7 @@ export function AutomationsWorkspace({ channel }: { channel: MessagingChannel })
                       {countSteps(flow.steps)}
                     </TD>
 
-                    <TD align="right" className="font-bold text-text-primary tabular-nums">
+                    <TD align="right" className="text-text-primary tabular-nums">
                       {formatNumber(flow.contactsProcessed)}
                     </TD>
 
@@ -453,7 +453,7 @@ export function AutomationsWorkspace({ channel }: { channel: MessagingChannel })
                       <Badge variant={STATUS_TONES[flow.status]}>{flow.status}</Badge>
                     </TD>
 
-                    <TD className="text-sm whitespace-nowrap text-text-muted">
+                    <TD className="whitespace-nowrap text-text-muted">
                       {formatRelativeTime(flow.lastActivityAt)}
                     </TD>
 

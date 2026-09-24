@@ -622,17 +622,17 @@ export function JourneyWorkspace() {
                         </TD>
                         <TD
                           align="right"
-                          className="text-sm text-text-secondary tabular-nums"
+                          className="text-text-secondary tabular-nums"
                         >
                           {journey.touchpoints}
                         </TD>
                         <TD
                           align="right"
-                          className="text-sm whitespace-nowrap text-text-secondary tabular-nums"
+                          className="whitespace-nowrap text-text-secondary tabular-nums"
                         >
                           {journey.durationDays}d
                         </TD>
-                        <TD className="text-sm whitespace-nowrap text-text-muted">
+                        <TD className="whitespace-nowrap text-text-muted">
                           {formatRelativeTime(journey.lastActivityAt)}
                         </TD>
                       </TR>

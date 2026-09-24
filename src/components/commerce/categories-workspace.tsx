@@ -207,7 +207,7 @@ export function CategoriesWorkspace() {
                     <CategoryStatusBadge status={item.status} />
                   </TD>
 
-                  <TD className="text-sm whitespace-nowrap text-text-muted">
+                  <TD className="whitespace-nowrap text-text-muted">
                     {formatDate(item.updatedAt)}
                   </TD>
 

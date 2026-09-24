@@ -462,11 +462,11 @@ export function ContactsWorkspace() {
                           )}
                         </TD>
 
-                        <TD className="text-sm whitespace-nowrap text-text-muted">
+                        <TD className="whitespace-nowrap text-text-muted">
                           {formatRelativeTime(contact.lastActivityAt)}
                         </TD>
 
-                        <TD className="text-sm whitespace-nowrap text-text-muted">
+                        <TD className="whitespace-nowrap text-text-muted">
                           {formatDate(contact.createdAt)}
                         </TD>
 
