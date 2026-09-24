@@ -201,10 +201,10 @@ export function IntegrationsSection() {
                   </span>
 
                   <span className="block">
-                    <span className="block text-sm font-semibold text-text-primary">
+                    <span className="block text-base font-semibold text-text-primary">
                       {mark.name}
                     </span>
-                    <span className="mt-0.5 block text-xs text-text-muted">
+                    <span className="mt-0.5 block text-sm text-text-muted">
                       {mark.category}
                     </span>
                   </span>

@@ -19,6 +19,7 @@ export * from "./solutions-section";
 export * from "./integrations-section";
 export * from "./how-it-works";
 export * from "./faq-accordion";
+export * from "./faq-section";
 export * from "./cta-section";
 export * from "./section-eyebrow";
 export * from "./page-breadcrumb";

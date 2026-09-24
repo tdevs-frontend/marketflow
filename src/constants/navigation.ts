@@ -401,6 +401,7 @@ export const footerNav: FooterColumn[] = [
       { title: "Solutions", href: APP_ROUTES.solutions },
       { title: "Pricing", href: APP_ROUTES.pricing },
       { title: "Integrations", href: `${APP_ROUTES.features}#integrations` },
+      { title: "FAQ", href: APP_ROUTES.faq },
     ],
   },
   {

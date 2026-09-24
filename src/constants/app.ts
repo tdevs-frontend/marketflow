@@ -5,6 +5,7 @@ export const APP_ROUTES = {
   pricing: "/pricing",
   blog: "/blog",
   contact: "/contact",
+  faq: "/faq",
   legalPrivacy: "/legal/privacy",
   legalTerms: "/legal/terms",
   /* Auth lives under one `/auth` segment, so sign-in, sign-up and password

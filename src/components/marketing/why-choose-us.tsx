@@ -135,12 +135,12 @@ function ReasonCard({ icon: Icon, title, description, tint, href }: Reason) {
     <article className="group flex h-full flex-col rounded-card border border-border bg-surface p-5 shadow-card transition-[border-color,box-shadow,translate] hover:-translate-y-0.5 hover:border-border-strong hover:shadow-card-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0">
       <span
         className={cn(
-          "grid size-12 shrink-0 place-items-center rounded-panel border",
+          "grid size-11 shrink-0 place-items-center rounded-panel border",
           tint,
         )}
       >
         {Icon ? (
-          <Icon className="size-6" aria-hidden />
+          <Icon className="size-5" aria-hidden />
         ) : (
           <BrandIcon name="whatsapp" className="size-6" />
         )}

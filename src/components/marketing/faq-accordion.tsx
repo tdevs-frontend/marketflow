@@ -3,12 +3,10 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Minus, Plus } from "lucide-react";
 
+import type { FaqEntry } from "@/constants/faq";
 import { cn } from "@/lib/utils";
 
-export interface FaqEntry {
-  q: string;
-  a: string;
-}
+export type { FaqEntry };
 
 /**
  * The accordion itself, with no copy of its own.
@@ -20,9 +18,8 @@ export interface FaqEntry {
  * minus by rotation rather than by being swapped out. A duplicate of all that
  * drifts on the first change to either page.
  *
- * `features-faq` still carries its own copy of this and is deliberately
- * untouched - it is on a different route, and migrating it belongs in a change
- * that can be reviewed against `/features`.
+ * Every FAQ on the site renders through this: `/features`, `/pricing`, and
+ * `/faq` by way of `FaqSection`.
  *
  * A client component: this was a `<details>` set until the open and close had
  * to animate. `<details>` toggles its content between rendered and not, so
@@ -179,7 +176,7 @@ export function FaqAccordion({
   items,
   className,
 }: {
-  items: FaqEntry[];
+  items: readonly FaqEntry[];
   className?: string;
 }) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
