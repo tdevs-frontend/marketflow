@@ -57,7 +57,7 @@ export function DonutChart({
               value: {
                 show: true,
                 offsetY: -16,
-                color: "#17212b",
+                color: CHART_COLORS.ink,
                 fontSize: "22px",
                 fontWeight: 700,
                 formatter: () => centerValue ?? "",

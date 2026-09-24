@@ -35,7 +35,7 @@ function Check({ color, size = 18 }: { color: string; size?: number }) {
       <path
         d="M5.9 10.3l2.6 2.6 5.6-5.8"
         fill="none"
-        stroke="#fff"
+        className="stroke-white"
         strokeWidth="2.1"
         strokeLinecap="round"
         strokeLinejoin="round"

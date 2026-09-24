@@ -223,12 +223,12 @@ function DocumentIcon({ className }: IconProps) {
       />
       <path
         d="M13.8 2v4.7a1.5 1.5 0 0 0 1.5 1.5H20"
-        fill="#fff"
+        className="fill-white"
         fillOpacity=".4"
       />
       <path
         d="M8 12.5h8M8 16.5h8"
-        stroke="#fff"
+        className="stroke-white"
         strokeWidth="1.7"
         strokeLinecap="round"
       />

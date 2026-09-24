@@ -93,14 +93,14 @@ const MARKS: IntegrationMark[] = [
     category: "Social",
     href: INTEGRATION_ROUTES.social,
     brand: "facebook",
-    className: "text-[#1877f2]",
+    className: "text-facebook",
   },
   {
     name: "LinkedIn",
     category: "Social",
     href: INTEGRATION_ROUTES.social,
     brand: "linkedin",
-    className: "text-[#0a66c2]",
+    className: "text-linkedin",
   },
   {
     name: "X",

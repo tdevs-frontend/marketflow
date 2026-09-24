@@ -13,8 +13,6 @@ import type { ApexOptions } from "apexcharts";
  */
 export const CHART_COLORS = {
   primary: "#4f46e5",
-  primaryDark: "#4338ca",
-  primaryLight: "#818cf8",
   accent: "#06b6d4",
   /* The two hues the growth chart takes when it is not plotting leads. They
      mirror `--color-success` and `--color-sms`; see `METRICS` in
@@ -31,6 +29,9 @@ export const CHART_COLORS = {
      tint recedes exactly as far as it should. */
   gridSoft: "#f1f5f9",
   surface: "#ffffff",
+  /* The donut's centre figure. No token counterpart - it is one step off
+     `--color-text-primary` and only a plot label ever reads it. */
+  ink: "#17212b",
   textMuted: "#64748b",
   textSecondary: "#475569",
   error: "#dc2626",

@@ -58,40 +58,38 @@
    --text-meta: 0.8125rem;
    --text-meta--line-height: 1.25rem;
 
-   /* --------------------------------------------------------- Breakpoints */
-
-   /* Tiny Devices (very small phones, e.g., iPhone SE / 320px) */
-   --breakpoint-xxs: 20rem;
-
-   /* Extra Small Devices (small phones, e.g., 360px) */
-   --breakpoint-xsm: 22.5rem;
-
-   /* Small Devices (standard smartphones, e.g., 480px) */
-   --breakpoint-3xsm: 30rem;
-
-   /* Extra Small Devices (smaller smartphones, e.g., 576px) */
-   --breakpoint-xs: 36rem;
-
-   /* Small Devices (modern smartphones, e.g., 640px) */
-   --breakpoint-sm: 40rem;
-
-   /* Medium Devices (tablets, large phones in landscape, 768px) */
-   --breakpoint-md: 48rem;
-
-   /* Large Devices (tablets landscape, small laptops, 1024px) */
-   --breakpoint-lg: 64rem;
-
-   /* Extra Large Devices (laptops, desktops, 1280px) */
-   --breakpoint-xl: 80rem;
-
-   /* 2x Large Devices (large desktops, high-res monitors, 1536px) */
-   --breakpoint-2xl: 96rem;
-
-   /* 3x Large Devices (ultrawide monitors, TVs, 1600px) */
-   --breakpoint-3xl: 100rem;
-
-   /* 4x Large Devices (4K displays, TVs, 2560px) */
-   --breakpoint-4xl: 160rem;
+   /* --------------------------------------------------------- Breakpoints *//* Tiny Devices (very small phones, e.g., iPhone SE / 320px) */
+    --breakpoint-xxs: 20rem;
+  
+    /* Extra Small Devices (small phones, e.g., 360px) */
+    --breakpoint-xsm: 22.5rem;
+  
+    /* Small Devices (standard smartphones, e.g., 480px) */
+    --breakpoint-3xsm: 30rem;
+  
+    /* Extra Small Devices (smaller smartphones, e.g., 576px) */
+    --breakpoint-xs: 36rem;
+  
+    /* Small Devices (modern smartphones, e.g., 640px) */
+    --breakpoint-sm: 40rem;
+  
+    /* Medium Devices (tablets, large phones in landscape, 768px) */
+    --breakpoint-md: 48rem;
+  
+    /* Large Devices (tablets landscape, small laptops, 1024px) */
+    --breakpoint-lg: 64rem;
+  
+    /* Extra Large Devices (laptops, desktops, 1280px) */
+    --breakpoint-xl: 80rem;
+  
+    /* 2x Large Devices (large desktops, high-res monitors, 1536px) */
+    --breakpoint-2xl: 96rem;
+  
+    /* 3x Large Devices (ultrawide monitors, TVs, 1600px) */
+    --breakpoint-3xl: 100rem;
+  
+    /* 4x Large Devices (4K displays, TVs, 2560px) */
+    --breakpoint-4xl: 160rem;
 
    /* -------------------------------------------------------------- Brand */
    --color-current: currentColor;
@@ -131,8 +129,6 @@
 
    --color-primary: #4f46e5;
    --color-primary-dark: #4338ca;
-   --color-primary-darker: #3730a3;
-   --color-primary-light: #818cf8;
    --color-primary-soft: #eef2ff;
    --color-primary-subtle: #f5f3ff;
    --color-primary-soft-hover: #e0e7ff;
@@ -162,11 +158,10 @@
    * Lavender - ink for a brand-gradient ground, where the brand ramp itself is
    * the background and cannot also be the highlight.
    *
-   * All three clear AA-large against every stop of that ramp (3.8:1 at the
-   * worst point, on #7c3aed), which is what they are for: one highlighted
-   * phrase in a section heading. They are not body-text colours.
+   * Both clear AA-large against every stop of that ramp (3.8:1 at the worst
+   * point, on #7c3aed), which is what they are for: one highlighted phrase in
+   * a section heading. They are not body-text colours.
    */
-   --color-lavender-deep: #c7d2fe;
    --color-lavender: #ddd6fe;
    --color-lavender-pale: #ede9fe;
    /* The deepest rung the set goes to - violet-300, 3.1:1 on the brand ramp's
@@ -184,7 +179,6 @@
    */
    --color-dark: #0f1f2e;
    --color-dark-soft: #162a3a;
-   --color-dark-border: #294052;
    /* Ink for those surfaces. Named for the scheme rather than borrowed from
      the border ramp, so a dark section never styles text with a border token. */
    --color-dark-text: #cbd5e1;
@@ -288,8 +282,8 @@
    /* Typography - deep blue-slate, not near-black. */
    --color-text-primary: #111827;
    --color-text-secondary: #475569;
-   /* --color-text-secondary: #4f4f4f; */
-   --color-text-muted: #64748b;
+  /* --color-text-secondary: #4f4f4f; */
+     --color-text-muted: #64748b;
 
 
    /* ------------------------------------------------------------- Status */
@@ -360,24 +354,16 @@
    --color-tint-slate-soft: #f8fafc;
    --color-tint-slate-ink: #334155;
 
-   /* Added with the Solutions industry grid, which needs six hues that are
-     told apart at a glance. Teal rather than a second blue: cobalt and blue
-     already sit next to each other in that grid, and a third would make the
-     healthcare card and the agency card read as the same family. */
-   --color-tint-teal-soft: #f0fdfa;
-   --color-tint-teal-ink: #0f766e;
-
 
    /* ------------------------------------------------------------- Charts */
    /*
-   * Four hues from four different families, so an analytics panel reads as a
-   * business tool rather than a brand showcase. Positive and negative come
-   * from the status ramp below, which already owns those meanings.
+   * Three hues from three different families, so an analytics panel reads as
+   * a business tool rather than a brand showcase. Positive and negative come
+   * from the status ramp above, which already owns those meanings.
    */
    --color-chart-1: #4f46e5;
    --color-chart-2: #06b6d4;
    --color-chart-3: #f59e0b;
-   --color-chart-4: #10b981;
    --color-chart-neutral: #cbd5e1;
    /*
    * The comparison series, one step up the same slate ramp.
@@ -390,11 +376,6 @@
    */
    --color-chart-neutral-strong: #94a3b8;
    --color-chart-grid: #e2e8f0;
-   /* One per channel, for the four-way comparison charts. */
-   --color-chart-whatsapp: #059669;
-   --color-chart-email: #2563eb;
-   --color-chart-sms: #7c3aed;
-   --color-chart-social: #64748b;
 
 
    /* -------------------------------------------------------- Landing Page */
