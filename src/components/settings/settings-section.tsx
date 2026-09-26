@@ -210,7 +210,7 @@ export function DetailList({
     >
       {items.map((item) => (
         <div key={item.label} className="min-w-0">
-          <dt className="text-meta font-semibold tracking-wide text-text-muted uppercase">
+          <dt className="text-meta font-semibold text-text-muted capitalize">
             {item.label}
           </dt>
           <dd className="mt-1 text-sm font-medium break-words text-text-primary">

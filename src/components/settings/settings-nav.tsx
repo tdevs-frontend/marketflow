@@ -70,7 +70,7 @@ function DesktopNav({ active }: { active: string | null }) {
       <div className="space-y-6">
         {SETTINGS_NAV.map((group) => (
           <div key={group.title}>
-            <p className="px-3 text-meta font-semibold tracking-wide text-text-muted uppercase">
+            <p className="px-3 text-meta font-semibold text-text-muted capitalize">
               {group.title}
             </p>
 

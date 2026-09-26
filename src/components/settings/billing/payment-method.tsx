@@ -26,11 +26,18 @@ import { UnavailableAction } from "./shared";
  * be charged against, and it is stored. Two different questions, which is why
  * they are two components and not one reused twice.
  */
-export function PaymentMethod({ canManage }: { canManage: boolean }) {
+export function PaymentMethod({
+  canManage,
+  className,
+}: {
+  canManage: boolean;
+  className?: string;
+}) {
   const { paymentMethod } = useSubscription();
 
   return (
     <SettingsSection
+      className={className}
       title="Payment method"
       description="Charged when the subscription renews."
     >

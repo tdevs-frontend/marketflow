@@ -323,12 +323,13 @@ function SubscriptionActions({
  * and it is the reason a merchant arrives at the pricing tab already knowing
  * whether they need it.
  */
-export function PlanUsage() {
+export function PlanUsage({ className }: { className?: string }) {
   const subscription = useSubscription();
   const metrics = usageMetrics(subscription.planId);
 
   return (
     <SettingsSection
+      className={className}
       title="Plan usage"
       description="Counted from this workspace. No limits are being enforced yet."
       bodyClassName="space-y-5"
@@ -357,7 +358,7 @@ function UsageMeter({ metric }: { metric: UsageMetric }) {
     return (
       <div>
         <div className="flex items-baseline justify-between gap-3">
-          <p className="truncate text-sm font-medium text-text-secondary">
+          <p className="text-base font-medium text-text-primary">
             {metric.label}
           </p>
           <p className="shrink-0 text-sm font-bold text-text-primary tabular-nums">

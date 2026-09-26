@@ -177,8 +177,14 @@ export function BillingSettings() {
             canManage={canManage}
             onManagePlan={() => setTab("plans")}
           />
-          <PlanUsage />
-          <PaymentMethod canManage={canManage} />
+          {/* Side by side from `lg`, stacked below it. `grid` on each section
+              is what lets its card fill the row: the grid stretches the
+              section to the taller of the two, and a one-cell grid stretches
+              its only child - the card - to match. */}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <PlanUsage className="grid" />
+            <PaymentMethod canManage={canManage} className="grid" />
+          </div>
           <BillingContact />
         </TabPanel>
       ) : tab === "plans" ? (
