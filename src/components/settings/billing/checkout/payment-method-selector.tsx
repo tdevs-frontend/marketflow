@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Banknote, Check, CreditCard, Wallet } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -108,7 +109,19 @@ export function PaymentMethodSelector({
                   : "bg-surface-secondary text-text-secondary",
               )}
             >
-              <Icon className="size-4.5" />
+              {/* The provider's own mark where it has one, in its own
+                  colours - never recoloured to the brand purple. */}
+              {gateway.logo ? (
+                <Image
+                  src={gateway.logo}
+                  alt={gateway.name}
+                  width={22}
+                  height={22}
+                  className="size-5.5 object-contain"
+                />
+              ) : (
+                <Icon className="size-4.5" />
+              )}
             </span>
 
             <span className="min-w-0 flex-1">

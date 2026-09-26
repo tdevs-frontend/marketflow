@@ -489,6 +489,8 @@ export interface PaymentGateway {
   configured: boolean;
   /** Shown where the method is chosen and again where it would be charged. */
   unavailableReason?: string;
+  /** The provider's official mark, a path under `public/`. */
+  logo?: string;
 }
 
 /** Exactly what the manual payment form submits. */

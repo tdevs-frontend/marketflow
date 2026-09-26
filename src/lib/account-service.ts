@@ -831,6 +831,7 @@ export async function listPaymentGateways(): Promise<
       description: gateway.description,
       configured: gateway.configured,
       unavailableReason: gateway.unavailableReason,
+      logo: gateway.logo,
     })),
   );
 }

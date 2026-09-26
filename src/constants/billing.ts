@@ -37,6 +37,15 @@ export interface PaymentGatewayDef {
   configured: boolean;
   /** Said at the point of use when `configured` is false. */
   unavailableReason?: string;
+  /**
+   * The method's image, served from `public/payment-methods` - stored
+   * locally, never hotlinked. Stripe's and PayPal's are their official marks
+   * (stripeassets.com, paypalobjects.com). Manual payment has no brand, so it
+   * uses a bank icon: Fluent UI System Icons "Building Bank" (Microsoft, MIT),
+   * recoloured with the brand gradient so it sits with the product's palette.
+   * A method without one falls back to its icon in the selector.
+   */
+  logo?: string;
 }
 
 /**
@@ -63,6 +72,7 @@ export const PAYMENT_GATEWAYS: PaymentGatewayDef[] = [
       "Pay by card through Stripe's secure checkout. Card details go to Stripe, never to MarketFlow.",
     configured: STRIPE_KEY.length > 0,
     unavailableReason: NOT_CONNECTED,
+    logo: "/payment-methods/stripe.svg",
   },
   {
     id: "paypal",
@@ -71,6 +81,7 @@ export const PAYMENT_GATEWAYS: PaymentGatewayDef[] = [
     description: "Approve the subscription from your PayPal balance or card.",
     configured: PAYPAL_CLIENT_ID.length > 0,
     unavailableReason: NOT_CONNECTED,
+    logo: "/payment-methods/paypal.svg",
   },
   {
     id: "manual",
@@ -81,6 +92,7 @@ export const PAYMENT_GATEWAYS: PaymentGatewayDef[] = [
     /* No third party to connect. The form, the upload and the pending record
        are all this method needs, and all three exist. */
     configured: true,
+    logo: "/payment-methods/bank-transfer.svg",
   },
 ];
 

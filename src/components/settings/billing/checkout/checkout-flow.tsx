@@ -86,10 +86,10 @@ export function CheckoutFlow({
    * Where the result screen's button goes.
    *
    * Closing onto the pricing grid would leave a merchant who has just
-   * submitted a payment looking at the tier they did *not* get, with the
-   * record of what they did do one tab away and unmentioned. The outcome
-   * lives on Billing Information, so the button that says "View billing"
-   * takes them there.
+   * submitted a payment looking at the tier they did *not* get. The payment
+   * they just made is the top row of Purchased History - pending until it is
+   * verified - so the button opens that tab (`?tab=history`), through the
+   * same URL-backed tab switch the strip uses, so Back returns to the plans.
    */
   onViewBilling: () => void;
 }) {
@@ -433,7 +433,7 @@ function Footer({
       );
     }
 
-    return <Button onClick={onViewBilling}>View billing</Button>;
+    return <Button onClick={onViewBilling}>View purchase history</Button>;
   }
 
   return (

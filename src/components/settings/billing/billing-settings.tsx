@@ -191,7 +191,7 @@ export function BillingSettings() {
         <TabPanel idBase={idBase} value="plans" className="space-y-6">
           <PlansAndPricing
             canManage={canManage}
-            onViewBilling={() => setTab("billing")}
+            onViewBilling={() => setTab("history")}
           />
         </TabPanel>
       ) : (

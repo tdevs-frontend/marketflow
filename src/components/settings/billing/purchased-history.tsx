@@ -51,7 +51,10 @@ const PLAN_STATE: Record<
   active: { label: "Active", tone: "success" },
   ended: { label: "Ended", tone: "default" },
   cancelled: { label: "Cancelled", tone: "default" },
-  pending: { label: "Pending", tone: "warning" },
+  /* The same words the Payment submitted screen uses, so the row it sends the
+     merchant to agrees with it. Both states share the label on purpose: the
+     duplicate check below then shows one badge, not "Pending · Pending". */
+  pending: { label: "Pending verification", tone: "warning" },
 };
 
 /** What became of the money. */
@@ -60,7 +63,7 @@ const PAYMENT_STATE: Record<
   { label: string; tone: BadgeVariant }
 > = {
   paid: { label: "Paid", tone: "info" },
-  pending: { label: "Pending", tone: "warning" },
+  pending: { label: "Pending verification", tone: "warning" },
   failed: { label: "Failed", tone: "error" },
   refunded: { label: "Refunded", tone: "default" },
 };
@@ -154,11 +157,14 @@ function PurchaseRow({ purchase }: { purchase: Purchase }) {
           otherwise read "Pending · Pending", which says nothing twice.
         */}
         <span className="flex flex-wrap items-center gap-1.5">
-          <Badge variant={plan.tone} size="sm">
+          {/* `casing="none"`: the labels are already written as they should
+              read, and title-casing turned "Pending verification" into a
+              different phrase from the one the payment screen shows. */}
+          <Badge variant={plan.tone} size="sm" casing="none">
             {plan.label}
           </Badge>
           {payment.label === plan.label ? null : (
-            <Badge variant={payment.tone} size="sm">
+            <Badge variant={payment.tone} size="sm" casing="none">
               {payment.label}
             </Badge>
           )}
