@@ -20,21 +20,23 @@ export function WhatsAppAutomation() {
     >
       <div className="custom-container">
         {/*
-         * Six and six from `xl`, stacked below it.
+         * Six and six from `lg`, stacked below it.
          *
          * `items-center` is what centres each half against the other, and it
          * is also what lets the monitor set the row height - the copy is the
          * shorter of the two at every width.
          *
-         * The split starts at `xl` rather than `lg` because an equal half of
-         * the `lg` container is 452px, and the workspace drops its whole inbox
-         * column below a 520px screen. Stacked, the same viewport gives the
-         * monitor its full 650px and every panel survives; a 6/6 that costs a
-         * panel is not the 6/6 worth having.
+         * Known cost at `lg`: a half of the 960px container is ~456px, and the
+         * workspace drops its inbox column below a 520px screen, so from
+         * 1024-1279px the monitor shows rail, conversation and flow only. The
+         * annotation cards stay in their wrap under the monitor until `xl`,
+         * where the gutters are wide enough to pin them to its edges.
          */}
-        <div className="grid items-center gap-14 xl:grid-cols-12 xl:gap-16">
-          {/* Message */}
-          <div className="xl:col-span-6">
+        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-12 lg:gap-12 xl:gap-16">
+          {/* Message. `max-w-2xl` only bites while stacked - it keeps the
+              paragraph to a readable measure across the full container; a
+              half is already narrower. */}
+          <div className="max-w-2xl lg:col-span-6">
             <Badge
               as="p"
               variant="glass"
@@ -49,9 +51,14 @@ export function WhatsAppAutomation() {
             >
               WhatsApp-first automation
             </Badge>
+            {/* `xl` only: at 1280-1535px "Into Automated Journeys" runs to
+                the column's edge, where the monitor's left annotation cards
+                hang 76px into a 64px gap. Two rem back, the title balances
+                onto three lines and clears them; from `2xl` the column is
+                wide enough that it never reaches that far. */}
             <h2
               id="whatsapp-automation-title"
-              className="section-title mt-6 text-white text-balance"
+              className="section-title mt-6 text-white text-balance xl:max-w-[calc(100%-2rem)] 2xl:max-w-none"
             >
               Turn WhatsApp Chats Into Automated Journeys
             </h2>
@@ -94,7 +101,7 @@ export function WhatsAppAutomation() {
            * the positioning parent's parent and nothing more: everything the
            * cards are measured against is the wrapper one level in.
            */}
-          <div className="flex w-full items-center justify-center xl:col-span-6">
+          <div className="flex w-full items-center justify-center lg:col-span-6">
             <AutomationVisual />
           </div>
         </div>

@@ -84,7 +84,10 @@ export function AutomationFlowPanel() {
       </ol>
 
       {/* Two live numbers, pushed to the bottom of the panel. */}
-      <div className="mt-auto hidden flex-col gap-1 border-t border-border px-2 py-2 @[440px]:flex @[440px]:gap-1.5 @[440px]:px-2.5">
+      {/* From 460px, not the panel's usual 440px step: at a 440px screen the
+          16:10 glass is ~243px tall under the title bar and the header, five
+          steps and this footer need ~254px, so the footer was cut in half. */}
+      <div className="mt-auto hidden flex-col gap-1 border-t border-border px-2 py-2 @[460px]:flex @[440px]:gap-1.5 @[440px]:px-2.5">
         {FLOW_METRICS.map((metric) => (
           <span
             key={metric.label}

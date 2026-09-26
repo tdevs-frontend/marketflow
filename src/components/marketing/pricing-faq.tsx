@@ -26,7 +26,7 @@ export function PricingFaq() {
       className="section-space-py scroll-mt-32 bg-background"
     >
       <div className="custom-container">
-        <div className="grid gap-10 md:grid-cols-[3fr_3fr] md:gap-10 lg:grid-cols-[6fr_13fr] lg:gap-16">
+        <div className="grid gap-10 md:gap-10 lg:grid-cols-[6fr_13fr] lg:gap-16">
           <header className="md:pt-1">
             <Badge
               as="p"

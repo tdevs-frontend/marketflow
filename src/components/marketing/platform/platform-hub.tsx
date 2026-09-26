@@ -3,7 +3,8 @@ import { siteConfig } from "@/config/site";
 import { OrbitNode } from "./orbit-node";
 import { ORBIT_FEATURES } from "./platform-features";
 
-/** Clockwise from twelve o'clock, one step per satellite. */
+/** Clockwise, one step per satellite, starting half a step past twelve
+ *  o'clock - see `ORBIT_RADIUS` for why the ring is offset. */
 const STEP = (2 * Math.PI) / ORBIT_FEATURES.length;
 
 /** The brand mark's rendered size, in px. Fixed: it is the one element in the
@@ -69,7 +70,7 @@ export function PlatformHub() {
         <OrbitNode
           key={feature.title}
           feature={feature}
-          angle={index * STEP - Math.PI / 2}
+          angle={(index + 0.5) * STEP - Math.PI / 2}
         />
       ))}
 

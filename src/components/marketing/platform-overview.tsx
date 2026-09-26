@@ -86,7 +86,7 @@ export function PlatformOverview() {
       {/* Ecosystem - its own, slightly wider container from `xl` up, so the two
           360px rails and a roomy centre fit without crowding the hub. */}
       <div className="custom-container-wide">
-        <div className="grid items-stretch gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)_minmax(0,1fr)] lg:gap-10 xl:grid-cols-[360px_minmax(0,1fr)_360px]">
+        <div className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)_minmax(0,1fr)] lg:gap-10 xl:grid-cols-[360px_minmax(0,1fr)_360px]">
           <FeatureRail
             features={INBOUND_FEATURES}
             side="left"
@@ -96,7 +96,7 @@ export function PlatformOverview() {
           {/* `ConnectionLines` before the hub, so the hub's vignette paints over
               the curve ends. It overhangs this column by the grid gap on each
               side. */}
-          <div className="relative order-1 flex items-center justify-center lg:order-2">
+          <div className="relative order-1 flex items-center justify-center pb-3 lg:order-2 lg:pb-0">
             <ConnectionLines />
             <PlatformHub />
           </div>

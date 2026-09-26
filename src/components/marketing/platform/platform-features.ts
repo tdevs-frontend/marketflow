@@ -230,8 +230,11 @@ export const RAIL_ROWS = [12.5, 37.5, 62.5, 87.5];
  * 84% diameter, so 42% radius), which is what makes the satellites read as
  * sitting *on* the orbit rather than floating near it.
  *
- * 42 is also the smallest radius that clears the core's caption at the narrow
- * end of the range: the two satellites on the lower diagonals pass either side
- * of "Marketing Operating System", and at 40 they clip it on a 320px phone.
+ * The ring starts half a step past twelve o'clock (see `PlatformHub`), so no
+ * satellite sits on a lower diagonal. There, the caption "Marketing Operating
+ * System" (~155px wide) needs a hub of ~335px to clear them - wider than the
+ * hub gets on a phone or in the `lg` centre column (~285px). Offset, the lower
+ * satellites sit either below the caption or outside its width at any hub
+ * size the layout produces.
  */
 export const ORBIT_RADIUS = 42;

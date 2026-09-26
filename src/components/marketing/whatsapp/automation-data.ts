@@ -178,10 +178,12 @@ export type AnnotationCardData = {
  * card outside, half over the frame, and no pixel offsets, so the overlap is
  * still half a card when the monitor is 520px wide instead of 630px.
  *
- * The right card translates 45% rather than 50%. At exactly 1280px the monitor
- * fills its column and the column ends 70px from the edge of the screen, which
- * is 6px less than half a card; 45% is 68px, and the difference is invisible
- * where a clipped corner would not be.
+ * The right card translates 35% rather than 50%. At 1280px the monitor fills
+ * its column and the column ends 70px from the edge of the screen - but only
+ * 62px where a classic 15px scrollbar takes its share (Windows, Linux), which
+ * clipped the old 45% (68px). 35% is 53px, inside either gutter. The extra
+ * 15px it lays onto the glass falls in the empty band described below, so it
+ * covers nothing.
  *
  * The heights are measured, not chosen. Half a card lands 68px onto the glass,
  * and 68px is more than the width of anything that can be given up, so each
@@ -212,7 +214,7 @@ export const ANNOTATION_CARDS: AnnotationCardData[] = [
     detail: "Scheduled",
     icon: Clock3,
     tile: "bg-primary-subtle text-secondary",
-    pin: "top-[58.5%] right-0 translate-x-[45%]",
+    pin: "top-[58.5%] right-0 translate-x-[35%]",
     drift: "animate-drift-card-mid",
   },
   {

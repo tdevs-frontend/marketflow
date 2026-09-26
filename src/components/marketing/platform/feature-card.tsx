@@ -111,7 +111,7 @@ export function FeatureRail({
   return (
     <div
       className={cn(
-        "grid gap-5 3xsm:grid-cols-2 lg:h-full lg:grid-cols-1 lg:grid-rows-4 lg:gap-0",
+        "grid grid-cols-1 gap-5 3xsm:grid-cols-2 lg:h-full lg:grid-cols-1 lg:grid-rows-4 lg:gap-0",
         className,
       )}
     >

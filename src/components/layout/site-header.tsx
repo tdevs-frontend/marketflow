@@ -29,7 +29,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface/85 backdrop-blur">
-      <div className="max-w-[1320px] mx-auto flex h-18 max-w-6xl items-center justify-between gap-6 px-5 xl:px-0">
+      <div className="max-w-[1320px] mx-auto flex h-18 max-w-6xl items-center justify-between gap-6 px-4 xl:px-0">
         <Link href={APP_ROUTES.home} className="inline-flex items-center">
           <Logo height={32} priority />
         </Link>

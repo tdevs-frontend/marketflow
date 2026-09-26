@@ -2,7 +2,6 @@
 
 import { Menu, Search } from "lucide-react";
 
-import { IconButton } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NotificationPopover } from "@/components/layout/notification-popover";
 import { UserMenu } from "@/components/layout/user-menu";
@@ -29,17 +28,23 @@ export function DashboardHeader() {
 
   return (
     <header className="sticky top-0 z-30 flex h-18 items-center gap-3 border-b border-border bg-surface/85 px-4 backdrop-blur">
-      <IconButton
-        label="Open navigation"
+      <button
+        type="button"
+        aria-label="Open navigation"
         onClick={() => dispatch(setMobileNavOpen(true))}
-        className="lg:hidden"
+        className="inline-flex size-10 shrink-0 items-center justify-center rounded-btn bg-black/7 text-text-primary transition-colors hover:bg-primary-soft-hover focus-visible:outline-none focus-visible:shadow-focus lg:hidden"
       >
-        <Menu className="h-5 w-5" />
-      </IconButton>
+        <Menu className="size-5" aria-hidden />
+      </button>
 
       <div className="relative hidden max-w-sm flex-1 sm:block">
         <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
-        <Input size="sm" placeholder="Search contacts, campaigns…" className="pl-9" aria-label="Search" />
+        <Input
+          size="sm"
+          placeholder="Search contacts, campaigns…"
+          className="pl-9"
+          aria-label="Search"
+        />
       </div>
 
       <div className="ml-auto flex items-center gap-2">

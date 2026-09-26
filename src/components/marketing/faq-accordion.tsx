@@ -95,7 +95,7 @@ function FaqItem({
         onClick={onToggle}
         aria-expanded={isOpen}
         aria-controls={panelId}
-        className="group flex w-full cursor-pointer items-center justify-between gap-5 py-5 text-left text-xl leading-relaxed font-semibold text-text-primary focus-visible:shadow-focus focus-visible:outline-none sm:gap-6"
+        className="group flex w-full cursor-pointer items-center justify-between gap-4 py-5 text-left text-lg leading-snug font-semibold text-text-primary focus-visible:shadow-focus focus-visible:outline-none sm:gap-6 sm:text-xl sm:leading-relaxed"
       >
         {/* Its own flex item rather than loose text, so it can be told to wrap.
             `min-w-0` is the load-bearing half: a flex item's floor is its

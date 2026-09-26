@@ -15,12 +15,13 @@ import { FEATURES_FAQ_IDS, pickFaqs } from "@/constants/faq";
  * The copy is not here: it is eight entries from `FAQ_ITEMS`, the same list
  * `/faq` renders in full, and the open-and-close is the shared `FaqAccordion`.
  *
- * Two columns from `md`: the heading holds the left rail and the list runs down
+ * Two columns from `lg`: the heading holds the left rail and the list runs down
  * the right. Eight items centred under a centred heading is a very long, very
  * narrow ribbon; splitting it gives the list a shorter measure and puts the
- * section's title in the reader's eye for the whole scroll. Below `md` the
- * grid collapses to heading, description, list - which is the reading order
- * already written into the source.
+ * section's title in the reader's eye for the whole scroll. Below `lg` the
+ * grid collapses to heading, description, list at full width - the reading
+ * order already written into the source. A tablet half is too narrow for
+ * either: the title wraps a word a line and the answers run to a thin column.
  */
 const FAQS = pickFaqs(FEATURES_FAQ_IDS);
 
@@ -33,12 +34,12 @@ export function FeaturesFaq() {
     >
       <div className="custom-container">
         {/*
-         * Roughly 35/65 from `lg`, a gentler 40/60 at `md` with a tighter gap -
-         * the heading needs more of a tablet's width than it does a desktop's
-         * before it starts wrapping every second word.
+         * Roughly 30/70 from `lg`; stacked at full width below it.
+         * `minmax(0, …)` so a long unbroken string in an answer can never
+         * widen its track past the container.
          */}
-        <div className="grid gap-10 md:grid-cols-[3fr_3fr] md:gap-10 lg:grid-cols-[6fr_13fr] lg:gap-16">
-          <header className="md:pt-1">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,6fr)_minmax(0,13fr)] lg:gap-16">
+          <header className="lg:pt-1">
             <Badge
               as="p"
               variant="primary-outline"
