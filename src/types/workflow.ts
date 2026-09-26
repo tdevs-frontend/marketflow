@@ -379,6 +379,11 @@ export interface WorkflowStart {
   type: StartTypeKey;
   /** Event-based: the registry key it subscribes to. */
   eventKey?: string;
+  /**
+   * Event-based on `form.submitted`: the one form it listens to. Absent means
+   * every form in the workspace raises it.
+   */
+  formId?: string;
   /** Criteria-based: the rule a contact has to match to be enrolled. */
   criteria?: CriteriaGroup;
   /** Schedule-based: the cadence, in the workspace's words. */

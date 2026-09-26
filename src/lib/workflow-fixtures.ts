@@ -547,6 +547,55 @@ const SEEDS: WorkflowSeed[] = [
       ["update_stage", "Update Lead Stage", "Qualified"],
     ],
   },
+  /* The two journeys the Forms module's sample forms are connected to -
+     see `lib/form-fixtures`. Both listen for `form.submitted`. */
+  {
+    id: "wf-newsletter-welcome",
+    name: "Newsletter Welcome",
+    description:
+      "Welcome confirmed newsletter subscribers and send the best of the blog a few days later.",
+    status: "active",
+    triggerKey: "form.submitted",
+    triggerLabel: "Form Submitted",
+    channels: ["email"],
+    ownerId: "own-2",
+    entered: 1320,
+    completion: 88.4,
+    conversion: 6.2,
+    updatedAt: daysAgo(12),
+    createdAt: daysAgo(160),
+    specs: [
+      ["trigger", "Form Submitted", "Newsletter Signup"],
+      ["add_tag", "Add Tag", "Newsletter"],
+      ["send_email", "Welcome Email", "newsletter_welcome"],
+      ["wait", "Wait", "3 days"],
+      ["send_email", "Best Of The Blog", "newsletter_digest"],
+    ],
+  },
+  {
+    id: "wf-inquiry-routing",
+    name: "Inquiry Routing",
+    description:
+      "Acknowledge product and wholesale enquiries on WhatsApp and hand them to the sales team.",
+    status: "active",
+    triggerKey: "form.submitted",
+    triggerLabel: "Form Submitted",
+    channels: ["whatsapp", "email"],
+    ownerId: "own-1",
+    entered: 2480,
+    completion: 76.5,
+    conversion: 18.3,
+    goal: { enabled: true, type: "lead_converted", windowDays: 30 },
+    updatedAt: daysAgo(4),
+    createdAt: daysAgo(118),
+    specs: [
+      ["trigger", "Form Submitted", "Product Inquiry, Wholesale Quote Request"],
+      ["add_segment", "Add to Segment", "New Leads"],
+      ["send_whatsapp", "Send WhatsApp", "inquiry_received"],
+      ["send_email", "Send Email", "inquiry_confirmation"],
+      ["assign_owner", "Assign Lead", "Round robin - Sales team"],
+    ],
+  },
   {
     id: "wf-whatsapp-inquiry",
     name: "WhatsApp Inquiry Follow-up",
@@ -1177,6 +1226,7 @@ export function createDraftWorkflow({
   ownerId = "own-1",
   template,
   start,
+  triggerSummary,
 }: {
   name: string;
   description: string;
@@ -1186,6 +1236,8 @@ export function createDraftWorkflow({
   template?: AutomationTemplate;
   /** What the creation wizard chose. Defaults to an event-based start. */
   start?: WorkflowStart;
+  /** The trigger node's one line - a form's name, for a Form Submitted start. */
+  triggerSummary?: string;
 }): Workflow {
   const id = localId("wf-draft");
   const now = AUTOMATION_NOW;
@@ -1199,9 +1251,20 @@ export function createDraftWorkflow({
             }
           : ([templateStep.kind, templateStep.title, templateStep.summary] as StepSpec),
       )
-    : [["trigger", triggerLabel, "Not configured"] as StepSpec];
+    : [["trigger", triggerLabel, triggerSummary ?? "Not configured"] as StepSpec];
 
-  const { nodes, edges } = build(id, specs, 0);
+  const built = build(id, specs, 0);
+  const { edges } = built;
+
+  /* A start scoped to one form carries that scope onto the trigger node, so
+     the inspector opens on the form that was chosen in the wizard. */
+  const nodes = start?.formId
+    ? built.nodes.map((node) =>
+        node.kind === "trigger"
+          ? { ...node, config: { ...node.config, eventKey: triggerKey, formId: start.formId } }
+          : node,
+      )
+    : built.nodes;
 
   return {
     id,
