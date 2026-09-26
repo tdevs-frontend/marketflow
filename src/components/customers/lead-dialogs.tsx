@@ -112,7 +112,7 @@ export function NewLeadDialog({
       description="Deals sit on a pipeline and always belong to a contact."
       footer={
         <>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="cancel" onClick={onClose}>
             Cancel
           </Button>
           <Button onClick={submit}>Create lead</Button>

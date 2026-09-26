@@ -439,7 +439,7 @@ function Footer({
   return (
     <>
       {step === "plan" ? (
-        <Button variant="ghost" onClick={onClose} disabled={busy}>
+        <Button variant="cancel" onClick={onClose} disabled={busy}>
           Cancel
         </Button>
       ) : (

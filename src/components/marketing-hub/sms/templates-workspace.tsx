@@ -386,7 +386,7 @@ export function SmsTemplatesWorkspace() {
         size="lg"
         footer={
           <>
-            <Button variant="outline" size="compact" onClick={() => setEditorOpen(false)}>
+            <Button variant="cancel" size="compact" onClick={() => setEditorOpen(false)}>
               Cancel
             </Button>
             <Button

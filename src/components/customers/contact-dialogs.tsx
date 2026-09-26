@@ -184,7 +184,7 @@ export function ContactFormDialog({
       }
       footer={
         <>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="cancel" onClick={onClose}>
             Cancel
           </Button>
           <Button onClick={submit}>
@@ -470,7 +470,7 @@ export function TagPickerDialog({
       title="Add tags"
       footer={
         <>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="cancel" onClick={onClose}>
             Cancel
           </Button>
           <Button
@@ -562,7 +562,7 @@ export function SegmentPickerDialog({
       title="Add to segment"
       footer={
         <>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="cancel" onClick={onClose}>
             Cancel
           </Button>
           <Button

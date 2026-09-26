@@ -747,7 +747,7 @@ export function EmailContactsWorkspace() {
         description="A single contact. Use Import for a list."
         footer={
           <>
-            <Button variant="outline" size="compact" onClick={() => setAddOpen(false)}>
+            <Button variant="cancel" size="compact" onClick={() => setAddOpen(false)}>
               Cancel
             </Button>
             <Button
@@ -806,7 +806,7 @@ export function EmailContactsWorkspace() {
         footer={
           <>
             <Button
-              variant="outline"
+              variant="cancel"
               size="compact"
               onClick={() => setImportOpen(false)}
             >

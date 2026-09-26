@@ -719,7 +719,7 @@ export function MediaLibrary() {
         title="Rename file"
         footer={
           <>
-            <Button variant="outline" size="compact" onClick={() => setRenaming(null)}>
+            <Button variant="cancel" size="compact" onClick={() => setRenaming(null)}>
               Cancel
             </Button>
             <Button
@@ -763,7 +763,7 @@ export function MediaLibrary() {
         footer={
           <>
             <Button
-              variant="outline"
+              variant="cancel"
               size="compact"
               onClick={() => setFolderOpen(false)}
             >
@@ -826,7 +826,7 @@ export function MediaLibrary() {
         footer={
           <>
             <Button
-              variant="outline"
+              variant="cancel"
               size="compact"
               onClick={() => setUploadOpen(false)}
               disabled={uploading > 0}

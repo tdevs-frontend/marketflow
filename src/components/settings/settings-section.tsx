@@ -368,7 +368,7 @@ export function SaveBar({
       </Button>
 
       {onCancel && dirty && !saving ? (
-        <Button variant="ghost" onClick={onCancel}>
+        <Button variant="cancel" onClick={onCancel}>
           Cancel
         </Button>
       ) : null}

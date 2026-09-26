@@ -86,7 +86,7 @@ export function BulkPricingDialog({
       description={`Applies to ${count} selected ${count === 1 ? "variant" : "variants"}. Empty fields are left unchanged.`}
       footer={
         <>
-          <Button variant="outline" size="compact" onClick={onClose}>
+          <Button variant="cancel" size="compact" onClick={onClose}>
             Cancel
           </Button>
           <Button size="compact" disabled={nothingToDo} onClick={apply}>
@@ -220,7 +220,7 @@ export function BulkInventoryDialog({
       description={`Applies to ${count} selected ${count === 1 ? "variant" : "variants"}. Empty fields are left unchanged.`}
       footer={
         <>
-          <Button variant="outline" size="compact" onClick={onClose}>
+          <Button variant="cancel" size="compact" onClick={onClose}>
             Cancel
           </Button>
           <Button size="compact" disabled={nothingToDo} onClick={apply}>
@@ -400,7 +400,7 @@ export function VariantMediaDialog({
       description="Variants show the product image unless they are given one of their own."
       footer={
         <>
-          <Button variant="outline" size="compact" onClick={onClose}>
+          <Button variant="cancel" size="compact" onClick={onClose}>
             Cancel
           </Button>
           <Button

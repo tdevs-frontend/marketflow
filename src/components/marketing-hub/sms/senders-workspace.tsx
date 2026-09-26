@@ -253,7 +253,7 @@ export function SmsSendersWorkspace() {
         description="New senders start pending until the carriers confirm the registration."
         footer={
           <>
-            <Button variant="outline" size="compact" onClick={() => setAddOpen(false)}>
+            <Button variant="cancel" size="compact" onClick={() => setAddOpen(false)}>
               Cancel
             </Button>
             <Button

@@ -389,7 +389,7 @@ export function DiscountsWorkspace() {
         size="lg"
         footer={
           <>
-            <Button variant="outline" size="compact" onClick={() => setOpen(false)}>
+            <Button variant={editing ? "cancel" : "outline"} size="compact" onClick={() => setOpen(false)}>
               {editing ? "Cancel" : "Save Draft"}
             </Button>
             <Button size="compact" onClick={validate}>

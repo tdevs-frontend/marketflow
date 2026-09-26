@@ -141,7 +141,7 @@ export function OAuthConnectionDialog({
         ) : (
           <div className="flex w-full items-center justify-between gap-2.5">
             <Button
-              variant="ghost"
+              variant={step === 0 ? "cancel" : "ghost"}
               size="compact"
               disabled={authorizing}
               onClick={() =>

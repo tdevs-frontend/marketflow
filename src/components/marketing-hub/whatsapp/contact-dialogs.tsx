@@ -344,7 +344,7 @@ export function ContactFormDialog({
       size="lg"
       footer={
         <>
-          <Button variant="outline" size="compact" onClick={onClose}>
+          <Button variant="cancel" size="compact" onClick={onClose}>
             Cancel
           </Button>
           <Button size="compact" onClick={submit}>

@@ -733,7 +733,7 @@ export function SmsContactsWorkspace() {
         description="Numbers must be in international format."
         footer={
           <>
-            <Button variant="outline" size="compact" onClick={() => setAddOpen(false)}>
+            <Button variant="cancel" size="compact" onClick={() => setAddOpen(false)}>
               Cancel
             </Button>
             <Button
@@ -791,7 +791,7 @@ export function SmsContactsWorkspace() {
         footer={
           <>
             <Button
-              variant="outline"
+              variant="cancel"
               size="compact"
               onClick={() => setImportOpen(false)}
             >

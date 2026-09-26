@@ -110,7 +110,7 @@ export function InviteMemberDialog({
       description="They receive an email with a link to join this workspace."
       footer={
         <>
-          <Button variant="outline" size="compact" onClick={onClose}>
+          <Button variant="cancel" size="compact" onClick={onClose}>
             Cancel
           </Button>
           <Button size="compact" onClick={submit}>
@@ -227,7 +227,7 @@ export function ChangeRoleDialog({
       description={member.email}
       footer={
         <>
-          <Button variant="outline" size="compact" onClick={onClose}>
+          <Button variant="cancel" size="compact" onClick={onClose}>
             Cancel
           </Button>
           <Button
@@ -376,7 +376,7 @@ export function RemoveMemberDialog({
       }
       footer={
         <>
-          <Button variant="outline" size="compact" onClick={onClose}>
+          <Button variant="cancel" size="compact" onClick={onClose}>
             Cancel
           </Button>
           <Button

@@ -209,7 +209,7 @@ export function TemplatesWorkspace() {
         description={deleting?.name}
         footer={
           <>
-            <Button variant="outline" size="compact" onClick={() => setDeleting(null)}>
+            <Button variant="cancel" size="compact" onClick={() => setDeleting(null)}>
               Cancel
             </Button>
             <Button

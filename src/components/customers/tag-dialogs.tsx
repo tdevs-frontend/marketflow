@@ -78,7 +78,7 @@ export function TagFormDialog({
       }
       footer={
         <>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="cancel" onClick={onClose}>
             Cancel
           </Button>
           <Button onClick={submit}>

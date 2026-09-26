@@ -102,7 +102,7 @@ export function CreateWebhookDialog({
           </Button>
         ) : (
           <>
-            <Button variant="outline" size="compact" onClick={onClose}>
+            <Button variant="cancel" size="compact" onClick={onClose}>
               Cancel
             </Button>
             <Button size="compact" onClick={submit}>

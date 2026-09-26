@@ -573,7 +573,7 @@ export function ContactsWorkspace() {
         footer={
           <>
             <Button
-              variant="outline"
+              variant="cancel"
               size="compact"
               onClick={() => setConfirmDelete(false)}
             >

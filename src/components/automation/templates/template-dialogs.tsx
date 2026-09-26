@@ -56,7 +56,7 @@ export function CreateTemplateDialog({
       description="Save an existing workflow so your team can launch it again in one click."
       footer={
         <>
-          <Button variant="outline" size="compact" onClick={onClose}>
+          <Button variant="cancel" size="compact" onClick={onClose}>
             Cancel
           </Button>
           <Button

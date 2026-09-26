@@ -208,7 +208,7 @@ function DisableDialog({
       description="This will remove the additional security layer from your account."
       footer={
         <>
-          <Button variant="outline" size="compact" onClick={close} disabled={busy}>
+          <Button variant="cancel" size="compact" onClick={close} disabled={busy}>
             Cancel
           </Button>
           <Button
@@ -318,7 +318,7 @@ function RegenerateDialog({
           </Button>
         ) : (
           <>
-            <Button variant="outline" size="compact" onClick={close} disabled={busy}>
+            <Button variant="cancel" size="compact" onClick={close} disabled={busy}>
               Cancel
             </Button>
             <Button

@@ -249,7 +249,7 @@ function MediaDialog({
       description="The workspace library. Anything you upload here is available to every campaign and post."
       footer={
         <>
-          <Button variant="outline" size="compact" onClick={onClose}>
+          <Button variant="cancel" size="compact" onClick={onClose}>
             Cancel
           </Button>
           <Button

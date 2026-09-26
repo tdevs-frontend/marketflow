@@ -648,7 +648,7 @@ export function EmailSendersWorkspace() {
         }
         footer={
           <>
-            <Button variant="outline" size="compact" onClick={() => setEditing(null)}>
+            <Button variant="cancel" size="compact" onClick={() => setEditing(null)}>
               Cancel
             </Button>
             <Button size="compact" onClick={save}>

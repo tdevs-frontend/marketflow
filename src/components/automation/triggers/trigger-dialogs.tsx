@@ -85,7 +85,7 @@ export function CustomTriggerDialog({
       description="Register an event your product raises, so workflows can start from it."
       footer={
         <>
-          <Button variant="outline" size="compact" onClick={onClose}>
+          <Button variant="cancel" size="compact" onClick={onClose}>
             Cancel
           </Button>
           <Button

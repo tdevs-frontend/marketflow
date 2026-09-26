@@ -333,7 +333,7 @@ export function PostComposer({
         footer={
           <>
             <Button
-              variant="outline"
+              variant="cancel"
               size="compact"
               onClick={onClose}
               disabled={saving === "saving"}
@@ -800,7 +800,7 @@ export function PostComposer({
         footer={
           <>
             <Button
-              variant="outline"
+              variant="cancel"
               size="compact"
               onClick={() => setMediaOpen(false)}
             >

@@ -148,7 +148,7 @@ export function ConnectDrawer({
       footer={
         <div className="flex items-center justify-between gap-2.5">
           <Button
-            variant="ghost"
+            variant={step === 0 ? "cancel" : "ghost"}
             size="compact"
             onClick={() => (step === 0 ? onClose() : setStep((s) => (s - 1) as StepIndex))}
           >

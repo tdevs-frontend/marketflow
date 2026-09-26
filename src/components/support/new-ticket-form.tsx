@@ -204,7 +204,7 @@ export function NewTicketForm() {
           ) : null}
 
           <div className="flex flex-wrap items-center justify-end gap-2.5 border-t border-border pt-5">
-            <ButtonLink href={SUPPORT_ROUTES.center} variant="outline" size="compact">
+            <ButtonLink href={SUPPORT_ROUTES.center} variant="cancel" size="compact">
               Cancel
             </ButtonLink>
             <Button size="compact" onClick={submit} disabled={sending}>

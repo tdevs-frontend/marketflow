@@ -207,7 +207,7 @@ function SegmentBuilderDialog({
       }
       footer={
         <>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="cancel" onClick={onClose}>
             {readOnly ? "Close" : "Cancel"}
           </Button>
           {readOnly ? null : (

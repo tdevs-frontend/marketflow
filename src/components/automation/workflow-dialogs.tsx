@@ -45,7 +45,7 @@ export function RenameWorkflowDialog({
       title="Rename workflow"
       footer={
         <>
-          <Button variant="outline" size="compact" onClick={onClose}>
+          <Button variant="cancel" size="compact" onClick={onClose}>
             Cancel
           </Button>
           <Button
@@ -105,7 +105,7 @@ export function ImportWorkflowDialog({
       description="Bring a workflow in from another workspace as a MarketFlow JSON export."
       footer={
         <>
-          <Button variant="outline" size="compact" onClick={onClose}>
+          <Button variant="cancel" size="compact" onClick={onClose}>
             Cancel
           </Button>
           <Button

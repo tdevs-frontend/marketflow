@@ -304,7 +304,7 @@ function TestDialog({
       description="Goes to one destination only. The campaign audience is not touched."
       footer={
         <>
-          <Button variant="outline" size="compact" onClick={onClose}>
+          <Button variant="cancel" size="compact" onClick={onClose}>
             Cancel
           </Button>
           <Button

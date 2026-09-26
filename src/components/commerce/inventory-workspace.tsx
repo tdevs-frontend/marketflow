@@ -301,7 +301,7 @@ export function InventoryWorkspace() {
         footer={
           <>
             <Button
-              variant="outline"
+              variant="cancel"
               size="compact"
               onClick={() => setOpen(false)}
             >

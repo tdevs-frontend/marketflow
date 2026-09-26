@@ -417,7 +417,7 @@ export function SegmentsWorkspace() {
         footer={
           <>
             <Button
-              variant="outline"
+              variant="cancel"
               size="compact"
               onClick={() => setBuilderOpen(false)}
             >

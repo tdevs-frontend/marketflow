@@ -306,7 +306,7 @@ export function CategoriesWorkspace() {
         description="Categories group products for filters, catalogs and reporting."
         footer={
           <>
-            <Button variant="outline" size="compact" onClick={() => setOpen(false)}>
+            <Button variant="cancel" size="compact" onClick={() => setOpen(false)}>
               Cancel
             </Button>
             <Button size="compact" onClick={save}>

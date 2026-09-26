@@ -92,7 +92,7 @@ export function AddTagDialog({
       description="From Customers → Tags. Applied to the contact this submission is linked to."
       footer={
         <>
-          <Button variant="outline" size="compact" onClick={close}>
+          <Button variant="cancel" size="compact" onClick={close}>
             Cancel
           </Button>
           <Button
@@ -143,7 +143,7 @@ export function AssignLeadDialog({
       description={lead?.title}
       footer={
         <>
-          <Button variant="outline" size="compact" onClick={close}>
+          <Button variant="cancel" size="compact" onClick={close}>
             Cancel
           </Button>
           <Button

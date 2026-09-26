@@ -629,7 +629,7 @@ export function SmsCampaignsWorkspace() {
         footer={
           <>
             <Button
-              variant="outline"
+              variant="cancel"
               size="compact"
               onClick={() => setComposeOpen(false)}
             >

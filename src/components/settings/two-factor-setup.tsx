@@ -118,7 +118,7 @@ export function TwoFactorSetupDialog({
       footer={
         step === "scan" ? (
           <>
-            <Button variant="outline" size="compact" onClick={close}>
+            <Button variant="cancel" size="compact" onClick={close}>
               Cancel
             </Button>
             <Button

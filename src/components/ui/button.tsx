@@ -13,6 +13,8 @@ export type ButtonVariant =
   | "dark"
   | "secondary"
   | "outline"
+  /* A dialog's dismiss - grey at rest, the brand tint on hover. */
+  | "cancel"
   | "ghost"
   | "danger"
   | "inverse"
@@ -53,9 +55,11 @@ const BASE = [
 ].join(" ");
 
 /**
- * Hover lifts the button 1px and deepens the shadow; active drops it back to
- * rest so a press reads as a press. Ghost stays flat - it has no elevation to
- * begin with.
+ * Hover lifts the button 1px - with no extra shadow, which read as a smudge
+ * under light buttons - and active drops it back to rest so a press reads as a
+ * press. The light variants (outline, secondary, cancel) all hover to the same
+ * `primary-soft` ground, so every non-filled button answers the pointer in the
+ * brand's own tint. Ghost stays flat - it has no elevation to begin with.
  */
 const VARIANTS: Record<ButtonVariant, string> = {
   /*
@@ -78,7 +82,7 @@ const VARIANTS: Record<ButtonVariant, string> = {
    */
   primary: [
     "brand-gradient text-white shadow-btn",
-    "hover:-translate-y-px hover:brand-gradient-hover hover:shadow-btn-hover",
+    "hover:-translate-y-px hover:brand-gradient-hover",
     "active:translate-y-0 active:shadow-btn",
     /* `opacity-100` countermands the shell's `disabled:opacity-50`: that rule
        exists to mute a solid fill, and stacking it on an already-neutral
@@ -97,7 +101,7 @@ const VARIANTS: Record<ButtonVariant, string> = {
    */
   dark: [
     "bg-dark text-white shadow-btn",
-    "hover:-translate-y-px hover:bg-dark-soft hover:shadow-card-hover",
+    "hover:-translate-y-px hover:bg-dark-soft",
     "active:translate-y-0 active:bg-dark active:shadow-btn",
     "disabled:bg-dark",
   ].join(" "),
@@ -105,12 +109,13 @@ const VARIANTS: Record<ButtonVariant, string> = {
     /* Neutral resting border, brand colour only on hover: a secondary CTA
        outlined in the brand competes with the primary button beside it. */
     "border border-border-strong bg-surface text-primary shadow-btn",
-    "hover:-translate-y-px hover:border-primary hover:bg-primary-soft hover:text-primary-dark hover:shadow-btn-hover",
+    "hover:-translate-y-px hover:border-primary hover:bg-primary-soft hover:text-primary-dark",
     "active:translate-y-0 active:bg-primary-soft-hover active:shadow-btn",
     "disabled:border-border-strong disabled:bg-surface disabled:text-primary",
   ].join(" "),
   /*
-   * The quiet neutral action - a border and a label, nothing else.
+   * The quiet neutral action - a border and a label at rest, the shared
+   * `primary-soft` tint on hover.
    *
    * Disabled follows `primary` in dropping the shell's `opacity-50`. An outline
    * button is already the lightest object on the page, so halving it took the
@@ -123,9 +128,25 @@ const VARIANTS: Record<ButtonVariant, string> = {
    */
   outline: [
     "border border-border bg-surface text-text-secondary shadow-btn",
-    "hover:-translate-y-px hover:border-border-strong hover:bg-surface-secondary hover:text-text-primary hover:shadow-card-hover",
-    "active:translate-y-0 active:bg-surface-secondary active:shadow-btn",
+    "hover:-translate-y-px hover:border-primary-border hover:bg-primary-soft hover:text-primary-dark",
+    "active:translate-y-0 active:bg-primary-soft-hover active:shadow-btn",
     "disabled:border-border-strong disabled:bg-surface disabled:text-text-muted disabled:opacity-100",
+  ].join(" "),
+  /*
+   * The dismiss beside a dialog's real action - Cancel, Keep editing.
+   *
+   * Neutral grey at rest, so the eye goes to the primary button next to it
+   * first; the brand's light tint on hover - the same `primary-soft` ground and
+   * `primary-dark` ink the ghost and secondary variants hover to - so it still
+   * answers the pointer like every other control in the product. Geometry,
+   * motion and focus are the shell's and the size's, exactly as `outline`'s
+   * were, so swapping a Cancel onto it moves nothing by a pixel.
+   */
+  cancel: [
+    "border border-border bg-surface-secondary text-text-secondary shadow-btn",
+    "hover:-translate-y-px hover:border-primary-border hover:bg-primary-soft hover:text-primary-dark",
+    "active:translate-y-0 active:bg-primary-soft-hover active:shadow-btn",
+    "disabled:border-border disabled:bg-surface-secondary disabled:text-text-muted disabled:opacity-100",
   ].join(" "),
   ghost: [
     "bg-transparent text-primary",
@@ -146,7 +167,7 @@ const VARIANTS: Record<ButtonVariant, string> = {
   ].join(" "),
   danger: [
     "bg-error text-white shadow-btn focus-visible:shadow-focus-error",
-    "hover:-translate-y-px hover:bg-error-hover hover:shadow-card-hover",
+    "hover:-translate-y-px hover:bg-error-hover",
     "active:translate-y-0 active:bg-error-hover active:shadow-btn",
     "disabled:bg-error",
   ].join(" "),

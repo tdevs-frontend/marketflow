@@ -171,7 +171,7 @@ export function CreateRoleDrawer({
       footer={
         <div className="flex items-center justify-between gap-2.5">
           <Button
-            variant="ghost"
+            variant={step === 0 ? "cancel" : "ghost"}
             size="compact"
             onClick={() =>
               step === 0 ? onClose() : setStep((s) => (s - 1) as StepIndex)
@@ -451,7 +451,7 @@ export function ChangeSummaryDialog({
       description={`${deltas.length} permission ${deltas.length === 1 ? "change" : "changes"}`}
       footer={
         <>
-          <Button variant="outline" size="compact" onClick={onClose}>
+          <Button variant="cancel" size="compact" onClick={onClose}>
             Cancel
           </Button>
           <Button
@@ -609,7 +609,7 @@ export function DeleteRoleDialog({
       }
       footer={
         <>
-          <Button variant="outline" size="compact" onClick={onClose}>
+          <Button variant="cancel" size="compact" onClick={onClose}>
             Cancel
           </Button>
           <Button
@@ -878,7 +878,7 @@ export function CopyPermissionsDialog({
       description={`Overwrite part of ${target.name} with another role's grants.`}
       footer={
         <>
-          <Button variant="outline" size="compact" onClick={onClose}>
+          <Button variant="cancel" size="compact" onClick={onClose}>
             Cancel
           </Button>
           <Button
