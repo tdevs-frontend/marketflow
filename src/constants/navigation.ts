@@ -373,40 +373,41 @@ export interface SocialLink {
 }
 
 /**
- * The footer's link groups, in display order. Every href is a route that has a
- * page in `app/(marketing)` or `app/auth`, taken from `APP_ROUTES` so there is
- * one spelling of each.
+ * The footer's link groups, in display order - three, because the footer lays
+ * out a brand cell and three link columns. Every href is a route with a page in
+ * `app/(marketing)` or `app/auth`, or an `id` that page actually renders, taken
+ * from `APP_ROUTES` so there is one spelling of each.
  *
  * Integrations has no page of its own; it points at the `#integrations`
- * section `/features` renders, which is the product's actual account of them.
- * The individual modules (CRM, WhatsApp, commerce...) are not listed: they
- * have neither pages nor anchors, and a link that lands on the top of
- * `/features` is Features again under another name.
+ * section `/features` renders. Solutions has no per-industry pages or anchors -
+ * the industry cards on `/solutions` carry no ids - so the column links to the
+ * sections that exist: the overview, the `#industries` grid and the `#journey`
+ * walkthrough. Docs, help, guides and public templates are not listed because
+ * none of them has a route yet; add them here when they do.
  *
- * Account is its own group so signing in never reads as a marketing page.
- * Legal is not a column - it sits in the small print, see `footerLegal`.
+ * Each destination appears once. Legal is not a column - it sits in the small
+ * print, see `footerLegal`.
  */
 export const footerNav: FooterColumn[] = [
   {
     title: "Product",
     items: [
       { title: "Features", href: APP_ROUTES.features },
-      { title: "Solutions", href: APP_ROUTES.solutions },
       { title: "Pricing", href: APP_ROUTES.pricing },
       { title: "Integrations", href: `${APP_ROUTES.features}#integrations` },
       { title: "FAQ", href: APP_ROUTES.faq },
+      { title: "Blog", href: "/blog" },
     ],
   },
   {
     title: "Solutions",
     items: [
-      { title: "Small & Medium Business", href: "/solutions/small-business" },
-      { title: "E-commerce", href: "/solutions/ecommerce" },
-      { title: "Marketing Agencies", href: "/solutions/agencies" },
-      { title: "Real Estate", href: "/solutions/real-estate" },
-      { title: "Education", href: "/solutions/education" },
-      { title: "Clinics & Salons", href: "/solutions/clinics-and-salons" },
-      { title: "Restaurants", href: "/solutions/restaurants" },
+      { title: "All Solutions", href: APP_ROUTES.solutions },
+      {
+        title: "Industries We Serve",
+        href: `${APP_ROUTES.solutions}#industries`,
+      },
+      { title: "How It Works", href: `${APP_ROUTES.solutions}#journey` },
     ],
   },
   {
@@ -414,9 +415,7 @@ export const footerNav: FooterColumn[] = [
     items: [
       { title: "Documentation", href: "/docs" },
       { title: "Help Center", href: "/help" },
-      { title: "Blog", href: "/blog" },
       { title: "Guides", href: "/guides" },
-      { title: "Automation Templates", href: "/resources/templates" },
       { title: "API Documentation", href: "/docs/api" },
     ],
   },

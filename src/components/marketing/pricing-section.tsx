@@ -35,7 +35,7 @@ export function PricingSection() {
             id="pricing-title"
             className="section-title mt-5 text-balance"
           >
-            Everything you need to turn customer conversations growth
+            Everything you need to turn customer conversations into growth
           </h2>
           <p className="section-subtitle mx-auto max-w-2xl">
             Choose a plan that fits your business and scale your marketing,
