@@ -1,43 +1,47 @@
-import { Google_Sans_Flex, Stack_Sans_Notch } from "next/font/google";
+import localFont from "next/font/local";
 
 /*
  * The two typefaces, self-hosted.
  *
- * `next/font/google` downloads these at build time and serves the woff2 files
- * from this site's own origin, with an `@font-face` per weight and a preload
- * for the Latin subset. They used to come from a runtime `<link>` to
- * fonts.googleapis.com, which Firefox's Enhanced Tracking Protection (strict),
- * privacy add-ons and "block remote fonts" settings refuse - and every one of
- * them left the page in `system-ui`. A first-party font file is not a
- * third-party request, so there is nothing for them to block.
+ * The woff2 files live in `./_fonts` and are served from this site's own
+ * origin, with an `@font-face` each and a preload. They used to come from a
+ * runtime `<link>` to fonts.googleapis.com, which Firefox's Enhanced Tracking
+ * Protection (strict), privacy add-ons and "block remote fonts" settings
+ * refuse - and every one of them left the page in `system-ui`. A first-party
+ * font file is not a third-party request, so there is nothing for them to
+ * block.
  *
- * The weights are the same four the old link asked for - 400 body, 500 labels,
- * 600 semibold, 700 headings - so each `font-*` weight utility lands on a real
- * face and no browser synthesizes one. Only `wght` is requested: Google Sans
- * Flex also has `opsz`, `wdth`, `slnt`, `GRAD` and `ROND` axes, and asking for
- * `opsz` would switch on automatic optical sizing and change the look.
+ * Why `next/font/local` and not `next/font/google`: the Google loader takes
+ * its fallback metrics from a precalculated table that has neither family, so
+ * every build warned "Failed to find font override values", and Turbopack's
+ * loader warns even with `adjustFontFallback: false`. The local loader reads
+ * the metrics from the file itself, so it builds a real size-adjusted Arial
+ * fallback and the swap barely shifts the layout.
  *
- * The preload is what keeps the swap short: the Latin files are requested
- * alongside the HTML rather than after the CSS is parsed, so the `system-ui`
- * fallback is on screen for less time than it was behind a second origin.
- * (next/font has no metrics for these two families, so it emits no
- * size-adjusted fallback face and says so as a build warning; `--font-fallback`
- * is still the next rung.)
+ * Each file is the Latin subset of the variable font, fetched from Google
+ * Fonts' css2 API with only the `wght` axis (400..700) requested. That covers
+ * the four weights the type system uses - 400 body, 500 labels, 600 semibold,
+ * 700 headings - so no browser has to synthesize one. Google Sans Flex's other
+ * axes (`opsz`, `wdth`, `slnt`, `GRAD`, `ROND`) are pinned to their defaults
+ * in that file; turning `opsz` on would switch on automatic optical sizing and
+ * change the look. To refresh a file, request
+ * `https://fonts.googleapis.com/css2?family=<Family>:wght@400..700` with a
+ * browser user agent and download the `/* latin *\/` src.
  *
  * Each exposes its family name as a CSS variable on `<html>`. `font-themes.css`
  * reads them into `--font-notch` / `--font-gsans`, and everything else in the
  * type system hangs off those two tokens.
  */
-export const stackSansNotch = Stack_Sans_Notch({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+export const stackSansNotch = localFont({
+  src: "./_fonts/stack-sans-notch-latin.woff2",
+  weight: "400 700",
   display: "swap",
   variable: "--font-face-notch",
 });
 
-export const googleSansFlex = Google_Sans_Flex({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+export const googleSansFlex = localFont({
+  src: "./_fonts/google-sans-flex-latin.woff2",
+  weight: "400 700",
   display: "swap",
   variable: "--font-face-gsans",
 });
