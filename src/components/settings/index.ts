@@ -11,7 +11,6 @@ export * from "./recovery-codes";
 export * from "./security-settings";
 export * from "./service-notice";
 export * from "./settings-nav";
-export * from "./settings-overview";
 export * from "./settings-section";
 export * from "./settings-skeleton";
 export * from "./two-factor-card";

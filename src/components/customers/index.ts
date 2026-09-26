@@ -19,4 +19,3 @@ export * from "./segments-workspace";
 export * from "./tags-workspace";
 export * from "./tag-dialogs";
 export * from "./journey-workspace";
-export * from "./customers-tab";
