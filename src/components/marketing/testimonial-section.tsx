@@ -36,6 +36,13 @@ import { cn } from "@/lib/utils";
  * real transparency, and whatever the section paints behind them - ground,
  * bloom and wedge alike - is what shows through. The ground is now named once,
  * on the section itself.
+ *
+ * Which is why the cards carry no `backdrop-blur`. Firefox does not clip a
+ * `backdrop-filter` element by an ancestor's `mask-image`, so a blurred card's
+ * frosted fill escaped the fade and stopped at a hard line at both ends of the
+ * wall while only its text faded. The blur had nothing to blur anyway - the
+ * ground behind the cards is flat and the bloom is already blurred - and
+ * without it Chromium renders the same pixels, give or take text antialiasing.
  */
 
 interface Testimonial {
@@ -128,7 +135,7 @@ const DRIFT = [
 
 function ReviewCard({ testimonial }: { testimonial: Testimonial }) {
   return (
-    <article className="rounded-card border border-white/10 bg-white/[0.07] p-5 backdrop-blur-sm">
+    <article className="rounded-card border border-white/10 bg-white/[0.07] p-5">
       <div className="flex items-center gap-3">
         <span className="grid size-10 shrink-0 place-items-center rounded-full brand-gradient-accent text-sm font-semibold text-white">
           {testimonial.initials}
