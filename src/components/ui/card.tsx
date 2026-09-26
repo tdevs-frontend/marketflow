@@ -85,28 +85,58 @@ export function Card({
  * That is also the honest reading of a non-text heading: a loading placeholder
  * is not an `<h3>`, and announcing a grey bar as one is noise.
  */
+/*
+ * The two header type scales.
+ *
+ * `compact` is the default and is what every existing call site renders.
+ * `section` is the dashboard's section-card heading exactly as `PanelCard` and
+ * `ChartCard` set it - an `h2` at `text-base sm:text-lg` in the global heading
+ * weight, over a medium secondary-ink description - for a page whose cards are
+ * its sections, so a Workspace card and a Dashboard card read as one family.
+ * Only the type changes: the band, its padding and its rule stay the same.
+ */
+const HEADER_TYPE = {
+  compact: {
+    Heading: "h3",
+    title: "text-sm font-semibold",
+    description: "text-sm text-text-muted",
+  },
+  section: {
+    Heading: "h2",
+    /* The weight and ink restate the global `h2` rule so a non-text title,
+       which renders as a `div`, is set identically. */
+    title: "text-base font-bold text-text-primary sm:text-lg",
+    description: "text-sm font-medium text-text-secondary",
+  },
+} as const;
+
 export function CardHeader({
   title,
   description,
   action,
+  size = "compact",
 }: {
   title: ReactNode;
   description?: ReactNode;
   action?: ReactNode;
+  size?: keyof typeof HEADER_TYPE;
 }) {
+  const type = HEADER_TYPE[size];
+  const Heading = type.Heading;
+
   return (
     <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-4">
       <div className="space-y-1">
         {typeof title === "string" ? (
-          <h3 className="text-sm font-semibold">{title}</h3>
+          <Heading className={type.title}>{title}</Heading>
         ) : (
-          <div className="text-sm font-semibold">{title}</div>
+          <div className={type.title}>{title}</div>
         )}
         {description ? (
           typeof description === "string" ? (
-            <p className="text-sm text-text-muted">{description}</p>
+            <p className={type.description}>{description}</p>
           ) : (
-            <div className="text-sm text-text-muted">{description}</div>
+            <div className={type.description}>{description}</div>
           )
         ) : null}
       </div>

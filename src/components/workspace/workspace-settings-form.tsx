@@ -409,6 +409,7 @@ function GeneralSection({
   return (
     <Card>
       <CardHeader
+        size="section"
         title="General"
         description="How this workspace identifies itself and formats what it shows."
       />
@@ -528,6 +529,7 @@ function BusinessSection({
   return (
     <Card>
       <CardHeader
+        size="section"
         title="Business"
         description="Used on outgoing messages and wherever MarketFlow needs to identify you to a customer."
       />
@@ -658,6 +660,7 @@ function BrandingSection({
   return (
     <Card>
       <CardHeader
+        size="section"
         title="Branding"
         description="What your customers see on messages sent from this workspace."
       />
@@ -801,6 +804,7 @@ function DefaultsSection({
   return (
     <Card>
       <CardHeader
+        size="section"
         title="Defaults"
         description="Pre-filled whenever someone creates something new. Each one can still be changed at the point of use."
       />
@@ -942,6 +946,7 @@ function DataSection({
   return (
     <Card>
       <CardHeader
+        size="section"
         title="Data & Preferences"
         description="How MarketFlow handles imported records and what it keeps."
       />

@@ -294,6 +294,7 @@ export function RolesWorkspace() {
 
           <Card className="max-xl:hidden">
             <CardHeader
+              size="section"
               title="Roles"
               description={`${active.length} active · ${TOTAL_PERMISSIONS} permissions`}
             />
@@ -782,7 +783,8 @@ function RoleHeader({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <h2 className="text-base font-semibold">{role.name}</h2>
+            {/* The dashboard section-card heading - see `CardHeader`'s `section` scale. */}
+            <h2 className="text-base sm:text-lg">{role.name}</h2>
             <RoleTypeBadge type={role.type} />
             {role.status === "archived" ? (
               <Badge size="sm" casing="none">
@@ -790,7 +792,7 @@ function RoleHeader({
               </Badge>
             ) : null}
           </div>
-          <p className="mt-1 max-w-xl text-sm text-text-secondary">
+          <p className="mt-1 max-w-xl text-sm font-medium text-text-secondary">
             {role.description}
           </p>
           <p className="mt-1.5 text-meta text-text-muted">
@@ -924,6 +926,7 @@ function RoleMembers({
   return (
     <Card>
       <CardHeader
+        size="section"
         title={`${members.length} ${members.length === 1 ? "member" : "members"}`}
         description="Everyone who gains or loses access when this role changes."
         action={
@@ -986,6 +989,7 @@ function RoleActivity({ roleId }: { roleId: string }) {
   return (
     <Card>
       <CardHeader
+        size="section"
         title="Role history"
         description="Permission and membership changes, newest first."
         action={
