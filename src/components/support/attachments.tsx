@@ -10,7 +10,7 @@ import { formatBytes } from "@/lib/media-store";
 import {
   attachmentUrl,
   validateAttachments,
-  type SupportActor,
+  type MerchantActor,
 } from "@/lib/support-service";
 import { cn } from "@/lib/utils";
 import type { SupportAttachment } from "@/types/support";
@@ -126,17 +126,15 @@ function FileGlyph({ type }: { type: string }) {
 
 /**
  * A message's files. Opening one goes through `attachmentUrl`, which checks the
- * viewer may see the message it belongs to; sample files have a record but no
- * stored bytes, and say so instead of offering a dead link.
+ * file belongs to one of this workspace's tickets; sample files have a record
+ * but no stored bytes, and say so instead of offering a dead link.
  */
 export function MessageAttachments({
   actor,
   attachments,
-  tone = "default",
 }: {
-  actor: SupportActor;
+  actor: MerchantActor;
   attachments: SupportAttachment[];
-  tone?: "default" | "note";
 }) {
   if (attachments.length === 0) return null;
 
@@ -144,10 +142,8 @@ export function MessageAttachments({
     <ul className="mt-3 flex flex-wrap gap-2">
       {attachments.map((attachment) => {
         const url = attachmentUrl(actor, attachment);
-        const chip = cn(
-          "flex max-w-full items-center gap-2 rounded-btn border px-2.5 py-1.5 text-sm",
-          tone === "note" ? "border-warning/30 bg-surface" : "border-border bg-surface",
-        );
+        const chip =
+          "flex max-w-full items-center gap-2 rounded-btn border border-border bg-surface px-2.5 py-1.5 text-sm";
         const body = (
           <>
             <FileGlyph type={attachment.fileType} />

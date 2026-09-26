@@ -61,13 +61,7 @@ export function KpiStrip({
     <div
       className={cn(
         "grid gap-4 sm:grid-cols-2",
-        /* Six is two even rows of three rather than five and a straggler, and
-           one row only where the screen is wide enough to hold it. */
-        items.length >= 6
-          ? "xl:grid-cols-3 2xl:grid-cols-6"
-          : items.length >= 5
-            ? "xl:grid-cols-5"
-            : "xl:grid-cols-4",
+        items.length >= 5 ? "xl:grid-cols-5" : "xl:grid-cols-4",
         className,
       )}
     >

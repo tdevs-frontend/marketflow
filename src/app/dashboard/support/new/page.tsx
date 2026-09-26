@@ -17,7 +17,7 @@ export default function NewTicketPage() {
       </ButtonLink>
       <PageHeader
         title="Create Ticket"
-        description="Tell us what is going wrong. We reply here, and you get a notification when we do."
+        description="Tell us what is going wrong. The support team replies on the ticket."
       />
       <NewTicketForm />
     </>

@@ -7,43 +7,31 @@ import type {
 } from "@/types/support";
 
 /**
- * The Support module's vocabulary, shared by both sides of the desk so a
- * merchant and an agent read the same ticket in the same words.
+ * The merchant Support Center's vocabulary. The status and priority names are
+ * the ones the separate Admin dashboard uses, so a merchant and an agent quote
+ * the same ticket in the same words.
  */
 
 export const SUPPORT_ROUTES = {
-  /* Merchant - inside the dashboard. */
   center: "/dashboard/support",
   create: "/dashboard/support/new",
   ticket: (number: string) => `/dashboard/support/${number}`,
-  /* Admin - a separate area, outside `/dashboard` and its sidebar. */
-  desk: "/admin/support",
-  deskTicket: (number: string) => `/admin/support/${number}`,
 } as const;
+
+/** How a support reply is signed when the API sends no agent name. */
+export const SUPPORT_TEAM_NAME = "MarketFlow Support";
 
 export const TICKET_STATUSES: { value: TicketStatus; label: string }[] = [
   { value: "open", label: "Open" },
   { value: "in_progress", label: "In Progress" },
-  { value: "waiting_support", label: "Waiting for Support" },
   { value: "waiting_merchant", label: "Waiting for Merchant" },
+  { value: "waiting_support", label: "Waiting for Support" },
   { value: "resolved", label: "Resolved" },
   { value: "closed", label: "Closed" },
 ];
 
 export const statusLabel = (status: TicketStatus) =>
   TICKET_STATUSES.find((item) => item.value === status)?.label ?? status;
-
-/**
- * What the merchant reads for the two waiting states - the same fact, said
- * from their side of the desk. "Waiting for Merchant" is how an agent files
- * it; to the merchant it is a ticket waiting on *them*.
- */
-export const merchantStatusLabel = (status: TicketStatus) =>
-  status === "waiting_merchant"
-    ? "Waiting for You"
-    : status === "waiting_support"
-      ? "Waiting for Support"
-      : statusLabel(status);
 
 export const STATUS_TONE: Record<TicketStatus, BadgeVariant> = {
   open: "info",
@@ -61,21 +49,6 @@ export const ACTIVE_STATUSES: readonly TicketStatus[] = [
   "waiting_support",
   "waiting_merchant",
 ];
-
-/**
- * Where an agent may move a ticket from each status.
- *
- * Closed is terminal except for reopening, and reopening always lands in
- * Waiting for Support - the merchant came back, so the next move is ours.
- */
-export const STATUS_TRANSITIONS: Record<TicketStatus, readonly TicketStatus[]> = {
-  open: ["in_progress", "waiting_merchant", "resolved", "closed"],
-  in_progress: ["waiting_merchant", "waiting_support", "resolved", "closed"],
-  waiting_support: ["in_progress", "waiting_merchant", "resolved", "closed"],
-  waiting_merchant: ["in_progress", "waiting_support", "resolved", "closed"],
-  resolved: ["closed", "waiting_support"],
-  closed: ["waiting_support"],
-};
 
 export const TICKET_PRIORITIES: { value: TicketPriority; label: string }[] = [
   { value: "low", label: "Low" },

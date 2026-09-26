@@ -9,6 +9,7 @@ import { Button, ButtonLink } from "@/components/ui/button";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { Field, Input, Textarea } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { useToast } from "@/components/ui/toast";
 import {
   MESSAGE_MAX,
   MESSAGE_MIN,
@@ -26,7 +27,7 @@ import { createTicket } from "@/lib/support-service";
 import { WORKFLOWS } from "@/lib/workflow-fixtures";
 import type { RelatedResourceType, TicketCategory, TicketPriority } from "@/types/support";
 import { AttachmentPicker } from "./attachments";
-import { useMerchantActor, useSupportEffects } from "./use-support";
+import { useMerchantActor } from "./use-support";
 
 /**
  * Opening a ticket - four questions and an optional pointer.
@@ -54,7 +55,7 @@ const RESOURCES: Record<RelatedResourceType, { value: string; label: string }[]>
 export function NewTicketForm() {
   const router = useRouter();
   const actor = useMerchantActor();
-  const { toast } = useSupportEffects();
+  const toast = useToast();
 
   const [subject, setSubject] = useState("");
   const [category, setCategory] = useState<TicketCategory>("technical");
@@ -100,7 +101,7 @@ export function NewTicketForm() {
       setError(result.error);
       return;
     }
-    toast(`Ticket #${result.ticketNumber} created - we'll reply here and in your notifications`, "success");
+    toast(`Ticket #${result.ticketNumber} created - the support team will reply here`, "success");
     router.push(SUPPORT_ROUTES.ticket(result.ticketNumber));
   }
 

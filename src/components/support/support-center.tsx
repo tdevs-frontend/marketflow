@@ -6,7 +6,6 @@ import { CheckCircle2, Clock, Eye, Inbox, Plus, UserRound } from "lucide-react";
 
 import { ActiveFilterChips, type FilterChip } from "@/components/customers/customer-toolbar";
 import { PageHeader } from "@/components/layout/page-header";
-import { ServiceNotice } from "@/components/settings/service-notice";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -22,21 +21,20 @@ import {
   TICKET_PRIORITIES,
   TICKET_STATUSES,
   categoryLabel,
-  merchantStatusLabel,
 } from "@/constants/support";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useTableState } from "@/hooks/useTableState";
 import { formatDate, formatDateTime } from "@/lib/format";
-import { isActive, useMerchantTickets } from "@/lib/support-service";
+import { useSupportTickets } from "@/lib/support-service";
 import { WORKSPACE_NOW_MS } from "@/lib/workspace-clock";
-import type { MerchantTicketView } from "@/types/support";
+import type { SupportTicketDetail } from "@/types/support";
 import { PriorityBadge, TicketStatusBadge } from "./support-badges";
 import { useMerchantActor } from "./use-support";
 
 /**
  * The merchant's Support Center: this workspace's tickets, and nothing else.
  *
- * `useMerchantTickets` is the service's workspace-scoped read - the list below
+ * `useSupportTickets` is the service's workspace-scoped read - the list below
  * never sees another merchant's ticket to filter out. Filters live in the URL
  * and run before pagination, like every table in the dashboard.
  */
@@ -57,15 +55,12 @@ export function withinDays(at: string, days: string) {
   return WORKSPACE_NOW_MS - new Date(at).getTime() <= Number(days) * 86_400_000;
 }
 
-const MERCHANT_STATUS_OPTIONS = TICKET_STATUSES.map((item) => ({
-  value: item.value,
-  label: merchantStatusLabel(item.value),
-}));
+const DONE = new Set(["resolved", "closed"]);
 
 export function SupportCenter() {
   const router = useRouter();
   const actor = useMerchantActor();
-  const tickets = useMerchantTickets(actor);
+  const tickets = useSupportTickets(actor);
   const table = useTableState<FilterKey>(FILTERS);
   const { filters } = table;
 
@@ -97,7 +92,7 @@ export function SupportCenter() {
   const kpis: Kpi[] = [
     {
       label: "Open Tickets",
-      value: String(tickets.filter((ticket) => isActive(ticket.status)).length),
+      value: String(tickets.filter((ticket) => !DONE.has(ticket.status)).length),
       icon: Inbox,
       tone: "brand",
       hint: "Everything not yet resolved",
@@ -131,7 +126,7 @@ export function SupportCenter() {
     list.find((item) => item.value === value)?.label ?? value;
 
   const chips: FilterChip[] = [
-    filters.status !== "all" ? { key: "status", label: "Status", value: labelIn(MERCHANT_STATUS_OPTIONS, filters.status) } : null,
+    filters.status !== "all" ? { key: "status", label: "Status", value: labelIn(TICKET_STATUSES, filters.status) } : null,
     filters.priority !== "all" ? { key: "priority", label: "Priority", value: labelIn(TICKET_PRIORITIES, filters.priority) } : null,
     filters.category !== "all" ? { key: "category", label: "Category", value: labelIn(TICKET_CATEGORIES, filters.category) } : null,
     filters.date !== "all" ? { key: "date", label: "Created", value: labelIn(DATE_RANGES, filters.date) } : null,
@@ -142,9 +137,9 @@ export function SupportCenter() {
     table.clearAll();
   }
 
-  const open = (ticket: MerchantTicketView) => router.push(SUPPORT_ROUTES.ticket(ticket.ticketNumber));
-  const lastReply = (ticket: MerchantTicketView) =>
-    `${formatDateTime(ticket.lastReplyAt)} · ${ticket.lastReplyBy === "agent" ? "Support" : ticket.lastReplyBy === "system" ? "MarketFlow" : "You"}`;
+  const open = (ticket: SupportTicketDetail) => router.push(SUPPORT_ROUTES.ticket(ticket.ticketNumber));
+  const lastReply = (ticket: SupportTicketDetail) =>
+    `${formatDateTime(ticket.lastReplyAt)} · ${ticket.lastReplyBy === "support" ? "Support" : "You"}`;
 
   return (
     <>
@@ -182,7 +177,7 @@ export function SupportCenter() {
               activeCount={chips.length}
               onReset={clearEverything}
             >
-              <Select label="Filter by status" size="sm" value={filters.status} onChange={(next) => table.setFilter("status", next)} options={[{ value: "all", label: "All statuses" }, ...MERCHANT_STATUS_OPTIONS]} className="lg:w-44" />
+              <Select label="Filter by status" size="sm" value={filters.status} onChange={(next) => table.setFilter("status", next)} options={[{ value: "all", label: "All statuses" }, ...TICKET_STATUSES]} className="lg:w-44" />
               <Select label="Filter by priority" size="sm" value={filters.priority} onChange={(next) => table.setFilter("priority", next)} options={[{ value: "all", label: "All priorities" }, ...TICKET_PRIORITIES]} className="lg:w-36" />
               <Select label="Filter by category" size="sm" value={filters.category} onChange={(next) => table.setFilter("category", next)} options={[{ value: "all", label: "All categories" }, ...TICKET_CATEGORIES]} className="lg:w-40" />
               <Select label="Filter by created date" size="sm" value={filters.date} onChange={(next) => table.setFilter("date", next)} options={[{ value: "all", label: "Any date" }, ...DATE_RANGES]} className="lg:w-36" />
@@ -229,7 +224,7 @@ export function SupportCenter() {
                         </TD>
                         <TD className="whitespace-nowrap text-text-secondary">{categoryLabel(ticket.category)}</TD>
                         <TD><PriorityBadge priority={ticket.priority} /></TD>
-                        <TD><TicketStatusBadge status={ticket.status} audience="merchant" /></TD>
+                        <TD><TicketStatusBadge status={ticket.status} /></TD>
                         <TD className="whitespace-nowrap text-text-muted">{lastReply(ticket)}</TD>
                         <TD className="whitespace-nowrap text-text-muted">{formatDate(ticket.createdAt)}</TD>
                         <TD align="right">
@@ -256,7 +251,7 @@ export function SupportCenter() {
                             <span className="block font-mono text-sm text-text-muted">#{ticket.ticketNumber}</span>
                             <span className="block text-sm font-semibold text-text-primary">{ticket.subject}</span>
                           </span>
-                          <TicketStatusBadge status={ticket.status} audience="merchant" />
+                          <TicketStatusBadge status={ticket.status} />
                         </span>
                         <span className="mt-2 flex flex-wrap items-center gap-2 text-sm text-text-muted">
                           <PriorityBadge priority={ticket.priority} />
@@ -273,11 +268,6 @@ export function SupportCenter() {
           </Card>
         </>
       )}
-
-      <ServiceNotice tone="session" title="Support runs in preview mode">
-        Tickets and replies you add are kept for this browser session - the
-        support service they will be sent to is not connected in this build.
-      </ServiceNotice>
     </>
   );
 }
