@@ -90,13 +90,13 @@ export const NODE_CATEGORY: Record<NodeCategory, CategoryTheme> = {
     label: "Messaging",
     tile: "bg-whatsapp-soft text-whatsapp",
     rail: "bg-whatsapp",
-    text: "text-whatsapp",
+    text: "text-whatsapp-dark",
   },
   crm: {
     label: "CRM",
     tile: "bg-accent-soft text-accent",
     rail: "bg-accent",
-    text: "text-accent",
+    text: "text-accent-dark",
   },
   /* Marketing borrows the brand's second stop - near the CRM cyan but clearly
      not it, which is the distinction between updating a record and acting on a

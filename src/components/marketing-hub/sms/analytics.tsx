@@ -499,7 +499,7 @@ export function SmsAnalytics({ range = DEFAULT_RANGE }: SmsAnalyticsProps) {
                         </TD>
 
                         <TD align="right" className="tabular-nums">
-                          <span className="font-bold text-text-primary">
+                          <span className="font-semibold text-text-primary">
                             {formatNumber(campaign.replies)}
                           </span>
                           {campaign.optOuts > 0 ? (

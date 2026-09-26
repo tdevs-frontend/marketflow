@@ -77,10 +77,12 @@ export function campaignHealth(
 /* -------------------------------------------------------------------------- */
 
 /** The band the score falls in, which is the only thing that colours the ring. */
-function band(score: number): { ink: string; label: string } {
-  if (score >= 85) return { ink: "text-success", label: "Healthy" };
-  if (score >= 70) return { ink: "text-warning", label: "Watch" };
-  return { ink: "text-error", label: "At risk" };
+function band(score: number): { ink: string; text: string; label: string } {
+  /* `ink` colours the ring; `text` is the same hue's text-safe shade for the
+     word under the score - the fill greens and ambers are under AA as text. */
+  if (score >= 85) return { ink: "text-success", text: "text-success-text", label: "Healthy" };
+  if (score >= 70) return { ink: "text-warning", text: "text-warning-text", label: "Watch" };
+  return { ink: "text-error", text: "text-error-text", label: "At risk" };
 }
 
 /**
@@ -136,7 +138,7 @@ function HealthRing({ score, size = 104 }: { score: number; size?: number }) {
           <p className="text-2xl leading-none font-bold text-text-primary tabular-nums">
             {score}
           </p>
-          <p className={cn("mt-1 text-meta font-bold", tone.ink)}>{tone.label}</p>
+          <p className={cn("mt-1 text-meta font-bold", tone.text)}>{tone.label}</p>
         </div>
       </div>
     </div>

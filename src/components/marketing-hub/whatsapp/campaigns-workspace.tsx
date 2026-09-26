@@ -319,7 +319,7 @@ export function WhatsAppCampaignsWorkspace() {
                         </TD>
 
                         <TD align="right" className="tabular-nums">
-                          <span className="font-bold text-text-primary">
+                          <span className="font-semibold text-text-primary">
                             {formatNumber(campaign.opened)}
                           </span>
                           {campaign.delivered > 0 ? (
@@ -339,7 +339,7 @@ export function WhatsAppCampaignsWorkspace() {
                             nothing went wrong. */}
                         <TD align="right" className="tabular-nums">
                           {campaign.failed > 0 ? (
-                            <span className="font-bold text-error">
+                            <span className="font-semibold text-error">
                               {formatNumber(campaign.failed)}
                             </span>
                           ) : (

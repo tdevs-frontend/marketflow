@@ -458,7 +458,7 @@ export function SmsContactsWorkspace() {
                         </TD>
 
                         <TD align="right" className="tabular-nums">
-                          <span className="font-bold text-text-primary">
+                          <span className="font-semibold text-text-primary">
                             {formatNumber(contact.replies)}
                           </span>
                           {contact.messages > 0 ? (

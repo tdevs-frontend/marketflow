@@ -27,7 +27,11 @@ export function Table({
   children: ReactNode;
 }) {
   return (
-    <div className={cn("-mx-5 overflow-x-auto px-5", className)}>
+    /* `relative` makes the wrapper the containing block for anything absolutely
+       positioned inside the table - a `sr-only` header label, a tooltip - so
+       the scroll clips it too. Without it those escape the overflow and widen
+       the page on a phone even though the table itself scrolls. */
+    <div className={cn("relative -mx-5 overflow-x-auto px-5", className)}>
       <table className="w-full text-left text-sm" style={{ minWidth }}>
         {children}
       </table>

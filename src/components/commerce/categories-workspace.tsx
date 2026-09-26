@@ -197,7 +197,7 @@ export function CategoriesWorkspace() {
                   </TD>
 
                   <TD align="right">
-                    <span className="inline-flex items-center gap-1.5 font-bold text-text-primary tabular-nums">
+                    <span className="inline-flex items-center gap-1.5 font-semibold text-text-primary tabular-nums">
                       <Package className="size-3.5 text-text-muted" aria-hidden />
                       {item.productCount}
                     </span>

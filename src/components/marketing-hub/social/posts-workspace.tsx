@@ -369,7 +369,7 @@ export function SocialPostsWorkspace() {
                 const published = post.status === "published";
 
                 return (
-                  <li key={post.id}>
+                  <li key={post.id} className="min-w-0">
                     {/* `selected` rather than a class: the tint has to come
                         from the component, or `bg-surface` outranks it and the
                         card stays white. Same treatment the table row uses, so
@@ -621,7 +621,7 @@ export function SocialPostsWorkspace() {
 
                         <TD align="right" className="tabular-nums">
                           {post.status === "published" ? (
-                            <span className="font-bold text-text-primary">
+                            <span className="font-semibold text-text-primary">
                               {formatNumber(post.engagement.reach)}
                             </span>
                           ) : (
@@ -632,7 +632,7 @@ export function SocialPostsWorkspace() {
                         <TD align="right" className="tabular-nums">
                           {post.status === "published" ? (
                             <>
-                              <span className="font-bold text-text-primary">
+                              <span className="font-semibold text-text-primary">
                                 {formatNumber(interactions(post))}
                               </span>
                               <span className="block text-sm text-text-muted">

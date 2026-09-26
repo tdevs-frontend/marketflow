@@ -51,7 +51,9 @@ export const CHANNEL_THEME: Record<Channel, ChannelTheme> = {
     label: "WhatsApp",
     icon: "message-circle",
     accent: "bg-whatsapp",
-    text: "text-whatsapp",
+    /* The dark shade for text: the fill green is 3.8:1 on white, under AA for
+       a label. Fills, dots and charts keep the brighter channel green. */
+    text: "text-whatsapp-dark",
     soft: "bg-whatsapp-soft",
     border: "border-whatsapp-border",
     solid: "bg-whatsapp text-white",

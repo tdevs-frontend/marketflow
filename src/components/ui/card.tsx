@@ -42,7 +42,11 @@ export function Card({
     <div
       ref={ref}
       className={cn(
-        "rounded-card border shadow-card transition-all",
+        /* `min-w-0`: a card inside a grid or flex row would otherwise take its
+           content's min-content width - a wide table, a long URL - and push the
+           page sideways on a phone. With it, the card keeps to its column and
+           the table's own scroll wrapper does the scrolling. */
+        "min-w-0 rounded-card border shadow-card transition-all",
         selected
           ? "border-primary bg-primary-subtle"
           : "border-border bg-surface",

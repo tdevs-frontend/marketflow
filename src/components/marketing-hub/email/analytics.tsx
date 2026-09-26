@@ -331,7 +331,7 @@ export function EmailAnalytics({ range = DEFAULT_RANGE }: EmailAnalyticsProps) {
                         </TD>
 
                         <TD className="w-36">
-                          <p className="text-sm font-bold text-text-primary tabular-nums">
+                          <p className="text-sm font-semibold text-text-primary tabular-nums">
                             {formatPercent(openRate)}
                           </p>
                           <ProgressBar
@@ -344,7 +344,7 @@ export function EmailAnalytics({ range = DEFAULT_RANGE }: EmailAnalyticsProps) {
                         </TD>
 
                         <TD className="w-36">
-                          <p className="text-sm font-bold text-text-primary tabular-nums">
+                          <p className="text-sm font-semibold text-text-primary tabular-nums">
                             {formatPercent(clickRate)}
                           </p>
                           <ProgressBar
@@ -451,7 +451,7 @@ export function EmailAnalytics({ range = DEFAULT_RANGE }: EmailAnalyticsProps) {
                       </TD>
 
                       <TD align="right" className="tabular-nums">
-                        <span className="font-bold text-text-primary">
+                        <span className="font-semibold text-text-primary">
                           {formatNumber(template.usageCount)}
                         </span>
                         <span className="block text-sm text-text-muted">
@@ -460,7 +460,7 @@ export function EmailAnalytics({ range = DEFAULT_RANGE }: EmailAnalyticsProps) {
                       </TD>
 
                       <TD className="w-40">
-                        <p className="text-sm font-bold text-text-primary tabular-nums">
+                        <p className="text-sm font-semibold text-text-primary tabular-nums">
                           {formatPercent(template.openRate)}
                         </p>
                         <ProgressBar
@@ -473,7 +473,7 @@ export function EmailAnalytics({ range = DEFAULT_RANGE }: EmailAnalyticsProps) {
                       </TD>
 
                       <TD className="w-40">
-                        <p className="text-sm font-bold text-text-primary tabular-nums">
+                        <p className="text-sm font-semibold text-text-primary tabular-nums">
                           {formatPercent(template.clickRate)}
                         </p>
                         <ProgressBar

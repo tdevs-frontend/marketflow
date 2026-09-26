@@ -730,7 +730,7 @@ export function ProductsWorkspace({
                           * is "Untracked".
                           */}
                         <TD align="right">
-                          <span className="font-bold tabular-nums text-text-primary">
+                          <span className="font-semibold tabular-nums text-text-primary">
                             {formatNumber(item.sales?.unitsSold ?? 0)}
                           </span>
                           <span className="ml-1 text-sm font-medium text-text-muted">

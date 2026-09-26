@@ -180,7 +180,7 @@ export function SmsSendersWorkspace() {
                   </TD>
 
                   <TD align="right" className="tabular-nums">
-                    <span className="font-bold text-text-primary">
+                    <span className="font-semibold text-text-primary">
                       {formatNumber(sender.sent30d)}
                     </span>
                     <span className="block text-sm text-text-muted">

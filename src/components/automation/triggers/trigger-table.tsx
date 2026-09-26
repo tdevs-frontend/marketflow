@@ -120,7 +120,7 @@ export function TriggerTable({
               </TD>
 
               <TD align="right" className="whitespace-nowrap">
-                <span className="text-sm font-bold text-text-primary tabular-nums">
+                <span className="text-sm font-semibold text-text-primary tabular-nums">
                   {formatCount(trigger.events24h)}
                 </span>
                 {trigger.failed24h > 0 ? (

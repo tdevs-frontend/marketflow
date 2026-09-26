@@ -458,7 +458,7 @@ export function EmailContactsWorkspace() {
                         </TD>
 
                         <TD align="right" className="tabular-nums">
-                          <span className="font-bold text-text-primary">
+                          <span className="font-semibold text-text-primary">
                             {formatNumber(contact.opens)}
                           </span>
                           {contact.campaigns > 0 ? (

@@ -12,6 +12,7 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import { ButtonLink } from "@/components/ui/button";
+import { APP_ROUTES } from "@/constants";
 
 /* ------------------------------------------------------------------ tokens */
 
@@ -50,6 +51,8 @@ function Check({ color, size = 18 }: { color: string; size?: number }) {
 export interface SolutionCardData {
   title: string;
   desc: string;
+  /* A real route. There are no per-industry pages, so "Learn More" goes to
+     the features overview rather than to a 404. */
   href: string;
   bullets: string[];
   bg: string;
@@ -64,7 +67,7 @@ export const SOLUTION_CARDS: SolutionCardData[] = [
   {
     title: "E-commerce",
     desc: "Turn conversations into customers and grow your online store.",
-    href: "/solutions/ecommerce",
+    href: APP_ROUTES.features,
     bullets: [
       "Recover abandoned carts",
       "Send order updates automatically",
@@ -81,7 +84,7 @@ export const SOLUTION_CARDS: SolutionCardData[] = [
   {
     title: "Small & Medium Business",
     desc: "Grow your local business, engage customers and drive more sales.",
-    href: "/solutions/small-business",
+    href: APP_ROUTES.features,
     bullets: [
       "Capture leads from multiple channels",
       "Automate follow-ups",
@@ -98,7 +101,7 @@ export const SOLUTION_CARDS: SolutionCardData[] = [
   {
     title: "Marketing Agencies",
     desc: "Manage multiple clients and campaigns with ease.",
-    href: "/solutions/agencies",
+    href: APP_ROUTES.features,
     bullets: [
       "Handle multiple workspaces",
       "Create and manage campaigns",
@@ -115,7 +118,7 @@ export const SOLUTION_CARDS: SolutionCardData[] = [
   {
     title: "Real Estate",
     desc: "Capture more inquiries, nurture leads and close deals faster.",
-    href: "/solutions/real-estate",
+    href: APP_ROUTES.features,
     bullets: [
       "Capture property inquiries",
       "Automate follow-ups",
@@ -132,7 +135,7 @@ export const SOLUTION_CARDS: SolutionCardData[] = [
   {
     title: "Education",
     desc: "Engage students from inquiry to enrollment.",
-    href: "/solutions/education",
+    href: APP_ROUTES.features,
     bullets: [
       "Capture student inquiries",
       "Send automated updates",
@@ -149,7 +152,7 @@ export const SOLUTION_CARDS: SolutionCardData[] = [
   {
     title: "Healthcare",
     desc: "Simplify communication and provide better patient experiences.",
-    href: "/solutions/clinics-and-salons",
+    href: APP_ROUTES.features,
     bullets: [
       "Appointment reminders",
       "Patient follow-ups",

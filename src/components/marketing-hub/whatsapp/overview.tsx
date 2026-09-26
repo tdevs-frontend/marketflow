@@ -159,13 +159,13 @@ const STATS: StatItem[] = [
  * `--color-instagram` at a tenth opacity, the one rose in the ramp.
  */
 const AGENT_TONES: Record<string, string> = {
-  "Nadia Karim": "bg-whatsapp-soft text-whatsapp",
+  "Nadia Karim": "bg-whatsapp-soft text-whatsapp-dark",
   "Imran Hossain": "bg-info-soft text-info-text",
   "Tanvir Alam": "bg-sms-soft text-sms",
   "Sarah Ahmed": "bg-warning-soft text-warning-text",
   "Maria Gomez": "bg-instagram/10 text-instagram",
   "John Smith": "bg-primary-soft text-primary",
-  "Priya Nair": "bg-accent-soft text-accent",
+  "Priya Nair": "bg-accent-soft text-accent-dark",
 };
 
 /**
@@ -416,7 +416,7 @@ export function WhatsAppOverview() {
         </PanelCard>
 
         <PanelCard
-          title="Whatsapp Inbox"
+          title="WhatsApp Inbox"
           description="The queue as it stands, and who is carrying it."
           action={
             <ButtonLink

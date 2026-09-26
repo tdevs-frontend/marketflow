@@ -292,7 +292,7 @@ export function AutomationsWorkspace({ channel }: { channel: MessagingChannel })
               const open = expanded === flow.id;
 
               return (
-                <li key={flow.id}>
+                <li key={flow.id} className="min-w-0">
                   <Card className="flex h-full flex-col p-5">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex min-w-0 items-start gap-3">
@@ -437,7 +437,7 @@ export function AutomationsWorkspace({ channel }: { channel: MessagingChannel })
                     </TD>
 
                     <TD className="w-40">
-                      <p className="text-sm font-bold text-text-primary tabular-nums">
+                      <p className="text-sm font-semibold text-text-primary tabular-nums">
                         {formatPercent(flow.successRate)}
                       </p>
                       <ProgressBar

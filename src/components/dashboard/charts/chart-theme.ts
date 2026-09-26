@@ -32,7 +32,8 @@ export const CHART_COLORS = {
   /* The donut's centre figure. No token counterpart - it is one step off
      `--color-text-primary` and only a plot label ever reads it. */
   ink: "#17212b",
-  textMuted: "#64748b",
+  /* Mirrors --color-text-muted (Apex cannot read CSS variables). */
+  textMuted: "#5c6b80",
   textSecondary: "#475569",
   error: "#dc2626",
 } as const;
@@ -66,7 +67,7 @@ export const BASE_GRID: ApexOptions["grid"] = {
  * Axis ticks, on secondary ink rather than muted.
  *
  * At 11px an axis label is the smallest type on the page, and `textMuted`
- * (#64748b) put the smallest type on the lowest contrast the ramp has - 5.0:1,
+ * (#5c6b80) put the smallest type on the lowest contrast the ramp has - 5.4:1,
  * which passes and still reads as a smudge under a chart. `textSecondary`
  * (#475569) is 7.5:1 at no cost in weight, size or layout.
  */

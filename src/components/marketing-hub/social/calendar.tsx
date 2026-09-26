@@ -454,7 +454,9 @@ export function SocialCalendar() {
       */}
       {view === "month" ? (
         <Card className="overflow-hidden p-0">
-          <div className="overflow-x-auto">
+          {/* `relative`, so the day cells' `sr-only` labels are clipped by this
+              scroll rather than widening the page - see `ui/table`. */}
+          <div className="relative overflow-x-auto">
             <div className="min-w-[52rem]">
               <div className="grid grid-cols-7 border-b border-border bg-surface-secondary">
                 {WEEKDAYS.map((day) => (

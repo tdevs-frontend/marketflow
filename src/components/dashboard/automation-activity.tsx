@@ -74,7 +74,7 @@ const ACTIVITY: ActivityItem[] = [
     time: "8 min ago",
     status: "Sent",
     icon: MessageCircle,
-    tone: "bg-whatsapp-soft text-whatsapp",
+    tone: "bg-whatsapp-soft text-whatsapp-dark",
   },
   {
     title: "Product inquiry received",

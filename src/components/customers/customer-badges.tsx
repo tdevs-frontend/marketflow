@@ -190,7 +190,7 @@ const CHANNEL_META: Record<
   whatsapp: {
     label: "WhatsApp",
     icon: MessageCircle,
-    tone: "bg-whatsapp-soft text-whatsapp",
+    tone: "bg-whatsapp-soft text-whatsapp-dark",
   },
   email: { label: "Email", icon: Mail, tone: "bg-email-soft text-email" },
   sms: { label: "SMS", icon: Smartphone, tone: "bg-sms-soft text-sms" },
@@ -352,7 +352,7 @@ export const ACTIVITY_META: Record<
 > = {
   whatsapp: {
     icon: MessageCircle,
-    tone: "bg-whatsapp-soft text-whatsapp",
+    tone: "bg-whatsapp-soft text-whatsapp-dark",
     label: "WhatsApp",
   },
   email: { icon: Mail, tone: "bg-email-soft text-email", label: "Email" },

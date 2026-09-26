@@ -118,7 +118,7 @@ export function FilterBar({
         {trailing ? (
           /* `ml-auto` rather than a spacer, so it still sits right when the
              filters collapse and the row holds only search. */
-          <div className="ml-auto flex items-center gap-2.5">{trailing}</div>
+          <div className="ml-auto flex flex-wrap items-center justify-end gap-2.5">{trailing}</div>
         ) : null}
       </div>
 

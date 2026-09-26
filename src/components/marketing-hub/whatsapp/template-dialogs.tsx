@@ -92,7 +92,7 @@ export function TemplatePreviewDialog({
 
                   return (
                     <li key={button.label}>
-                      <span className="flex items-center justify-center gap-1.5 rounded-btn py-1.5 text-sm font-medium text-accent">
+                      <span className="flex items-center justify-center gap-1.5 rounded-btn py-1.5 text-sm font-medium text-accent-dark">
                         <Icon className="size-3.5" aria-hidden />
                         {button.label}
                       </span>
