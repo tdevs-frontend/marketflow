@@ -1,7 +1,8 @@
 import { DEFAULT_BEHAVIOR, DEFAULT_DESIGN } from "@/constants/forms";
-import { CONTACTS, LEADS, contactById } from "@/lib/customer-fixtures";
+import { ACTIVITY, CONTACTS, LEADS, contactById } from "@/lib/customer-fixtures";
 import { WORKFLOWS } from "@/lib/workflow-fixtures";
 import { WORKSPACE_NOW_MS } from "@/lib/workspace-clock";
+import type { ContactChannel } from "@/types/contact";
 import type {
   ConsentState,
   Form,
@@ -99,7 +100,10 @@ export const FORMS: Form[] = [
       field("channel", "radio", "How should we reach you?", false, {
         options: ["WhatsApp", "Email", "Phone call"],
       }),
-      field("consent", "consent", CONSENT_EMAIL, true),
+      field("consent", "consent", CONSENT_EMAIL, true, { consentChannel: "email" }),
+      field("consent-wa", "consent", "Send me demo reminders on WhatsApp.", false, {
+        consentChannel: "whatsapp",
+      }),
     ],
     design: {
       ...DEFAULT_DESIGN,
@@ -112,9 +116,8 @@ export const FORMS: Form[] = [
       ...DEFAULT_BEHAVIOR,
       createLead: true,
       tags: ["Hot Lead"],
-      segmentIds: ["seg-new-leads"],
+      leadStage: "qualified",
       duplicates: "ignore",
-      consentChannels: ["email", "whatsapp"],
     },
     automation: { workflowId: "wf-landing-lead" },
     ownerId: "own-3",
@@ -133,7 +136,7 @@ export const FORMS: Form[] = [
     fields: [
       field("email", "email", "Email", true),
       field("first", "first_name", "First name"),
-      field("consent", "consent", CONSENT_EMAIL, true),
+      field("consent", "consent", CONSENT_EMAIL, true, { consentChannel: "email" }),
     ],
     design: {
       ...DEFAULT_DESIGN,
@@ -173,15 +176,15 @@ export const FORMS: Form[] = [
         options: ["Starter plan", "Growth plan", "Enterprise", "Not sure yet"],
       }),
       field("message", "message", "How can we help?", true),
-      field("consent", "consent", CONSENT_EMAIL),
+      field("consent", "consent", CONSENT_EMAIL, false, { consentChannel: "email" }),
     ],
     design: { ...DEFAULT_DESIGN, buttonLabel: "Send enquiry" },
     behavior: {
       ...DEFAULT_BEHAVIOR,
       createLead: true,
-      segmentIds: ["seg-new-leads"],
+      tags: ["Product Interest"],
     },
-    automation: { workflowId: "wf-inquiry-routing" },
+    automation: { workflowId: "wf-product-inquiry" },
     ownerId: "own-1",
     views: 146,
     weeklyViews: [14, 16, 15, 19, 18, 21, 20, 23],
@@ -220,10 +223,12 @@ export const FORMS: Form[] = [
     behavior: {
       ...DEFAULT_BEHAVIOR,
       createContact: false,
+      createLead: true,
+      leadSource: "website",
+      leadStage: "contacted",
       tags: ["Wholesale"],
-      segmentIds: ["seg-wholesale"],
     },
-    automation: { workflowId: "wf-inquiry-routing" },
+    automation: {},
     ownerId: "own-4",
     views: 92,
     weeklyViews: [8, 9, 11, 10, 12, 14, 13, 15],
@@ -251,6 +256,7 @@ export const FORMS: Form[] = [
         "consent",
         "I agree to receive WhatsApp messages from MarketFlow.",
         true,
+        { consentChannel: "whatsapp" },
       ),
     ],
     design: {
@@ -262,7 +268,7 @@ export const FORMS: Form[] = [
     behavior: {
       ...DEFAULT_BEHAVIOR,
       createLead: true,
-      consentChannels: ["whatsapp"],
+      leadSource: "whatsapp",
     },
     automation: {},
     ownerId: "own-1",
@@ -286,7 +292,7 @@ export const FORMS: Form[] = [
       field("sessions", "checkbox", "Which sessions will you attend?", false, {
         options: ["Automation basics", "WhatsApp at scale", "Live Q&A"],
       }),
-      field("consent", "consent", CONSENT_EMAIL),
+      field("consent", "consent", CONSENT_EMAIL, false, { consentChannel: "email" }),
     ],
     design: {
       ...DEFAULT_DESIGN,
@@ -399,7 +405,14 @@ function valuesFor(
       const value = identity[item.kind];
       if (value) values[item.id] = value;
     } else if (item.kind === "consent") {
-      values[item.id] = consent !== "not_given";
+      /* The main box follows the overall consent; a second channel's box is
+         only ticked where the seed says so. */
+      values[item.id] =
+        answers[item.id] !== undefined
+          ? answers[item.id] === true
+          : item.consentChannel === "email" || !item.consentChannel
+            ? consent !== "not_given"
+            : false;
     } else if (answers[item.id] !== undefined) {
       values[item.id] = answers[item.id];
     }
@@ -421,6 +434,7 @@ interface SubmissionSeed {
   /** The submission created the contact rather than matching it. */
   created?: boolean;
   answers?: Record<string, SubmissionValue>;
+  utm?: FormSubmission["utm"];
 }
 
 const PAGES: Record<string, string> = {
@@ -435,9 +449,9 @@ const PAGES: Record<string, string> = {
 const SEEDS: SubmissionSeed[] = [
   /* Request a Demo */
   { id: "sub-101", formId: "fm-demo", at: "2026-07-14T12:26:00Z", who: "con-6", leadId: "led-4", answers: { team: "6-20", channel: "Phone call" } },
-  { id: "sub-102", formId: "fm-demo", at: "2026-08-24T10:05:00Z", who: "con-3", leadId: "led-7", source: "landing_page", pageUrl: "https://marketflow.app/lp/summer-growth", answers: { team: "1-5", channel: "Email" } },
+  { id: "sub-102", formId: "fm-demo", at: "2026-08-24T10:05:00Z", who: "con-3", leadId: "led-7", source: "landing_page", pageUrl: "https://marketflow.app/lp/summer-growth", utm: { source: "google", medium: "cpc", campaign: "summer-growth" }, answers: { team: "1-5", channel: "Email" } },
   { id: "sub-103", formId: "fm-demo", at: "2026-08-27T09:00:00Z", who: "con-24", leadId: "led-10", created: true, answers: { team: "6-20", channel: "WhatsApp" } },
-  { id: "sub-104", formId: "fm-demo", at: "2026-08-30T08:47:00Z", who: "con-5", leadId: "led-8", answers: { team: "21-50", channel: "WhatsApp" } },
+  { id: "sub-104", formId: "fm-demo", at: "2026-08-30T08:47:00Z", who: "con-5", leadId: "led-8", answers: { team: "21-50", channel: "WhatsApp", "consent-wa": true } },
   { id: "sub-105", formId: "fm-demo", at: "2026-08-30T08:52:00Z", who: "con-5", status: "duplicate", answers: { team: "21-50", channel: "WhatsApp" } },
   { id: "sub-106", formId: "fm-demo", at: "2026-09-01T11:15:00Z", who: "con-11", leadId: "led-6", created: true, answers: { team: "51+", channel: "Email" } },
   { id: "sub-107", formId: "fm-demo", at: "2026-09-12T03:14:00Z", who: stranger("Test", "Test", "test@mailinator.com", { company: "asdf" }), status: "spam", consent: "not_given", answers: { team: "1-5" } },
@@ -460,7 +474,7 @@ const SEEDS: SubmissionSeed[] = [
   { id: "sub-301", formId: "fm-product-inquiry", at: "2026-08-11T14:20:00Z", who: "con-17", leadId: "led-17", answers: { interest: "Growth plan", message: "We'd like to move our flower subscriptions onto WhatsApp reminders." } },
   { id: "sub-302", formId: "fm-product-inquiry", at: "2026-08-19T10:35:00Z", who: "con-20", leadId: "led-15", answers: { interest: "Enterprise", message: "Looking for bulk messaging for 40 club shops before the season." } },
   { id: "sub-303", formId: "fm-product-inquiry", at: "2026-09-04T09:12:00Z", who: "con-16", leadId: "led-9", answers: { interest: "Starter plan", message: "One café, want to send the weekly specials on WhatsApp." } },
-  { id: "sub-304", formId: "fm-product-inquiry", at: "2026-09-09T12:00:00Z", who: "con-10", leadId: "led-2", source: "landing_page", pageUrl: "https://marketflow.app/lp/food-brands", answers: { interest: "Growth plan", message: "Can we run a four-week pilot across two of our brands?" } },
+  { id: "sub-304", formId: "fm-product-inquiry", at: "2026-09-09T12:00:00Z", who: "con-10", leadId: "led-2", source: "landing_page", pageUrl: "https://marketflow.app/lp/food-brands", utm: { source: "facebook", medium: "paid_social", campaign: "food-brands-q3" }, answers: { interest: "Growth plan", message: "Can we run a four-week pilot across two of our brands?" } },
   { id: "sub-305", formId: "fm-product-inquiry", at: "2026-09-13T04:02:00Z", who: stranger("SEO", "Services", "rank1@seo-boost.biz", { company: "SEO Boost" }), status: "spam", consent: "not_given", answers: { interest: "Not sure yet", message: "We can get you to page one of Google in 7 days!!!" } },
 
   /* Wholesale Quote Request - reviewed by sales before anything is created */
@@ -498,6 +512,9 @@ export const FORM_SUBMISSIONS: FormSubmission[] = SEEDS.map((seed) => {
     typeof seed.who === "string" &&
     (status === "processed" || status === "duplicate");
 
+  const values = valuesFor(seed.formId, person, consent, seed.answers);
+  const contact = linked ? contactById(seed.who as string) : undefined;
+
   return {
     id: seed.id,
     formId: seed.formId,
@@ -505,16 +522,67 @@ export const FORM_SUBMISSIONS: FormSubmission[] = SEEDS.map((seed) => {
     source: seed.source ?? "website",
     pageUrl:
       seed.pageUrl ?? (seed.source === "qr_code" ? undefined : PAGES[seed.formId]),
-    values: valuesFor(seed.formId, person, consent, seed.answers),
+    utm: seed.utm,
+    values,
     status,
     consent,
-    contactId: linked ? (seed.who as string) : undefined,
-    contactCreated: linked ? Boolean(seed.created) : undefined,
+    optIns: optInsOf(form, values, consent),
+    contactId: contact?.id,
+    contactCreated: contact ? Boolean(seed.created) : undefined,
     leadId: seed.leadId,
-    /* A duplicate ran nothing, so it tagged nothing. */
-    tags: status === "processed" ? [...(form?.behavior.tags ?? [])] : [],
+    /* What this submission tagged - only tags the contact still carries, so
+       the drawer can never claim a tag that Customers does not show. A
+       duplicate ran nothing, so it tagged nothing. */
+    tags:
+      status === "processed" && contact
+        ? (form?.behavior.tags ?? []).filter((tag) => contact.tags.includes(tag))
+        : [],
   };
 });
+
+/*
+ * Every processed, linked submission is on its contact's timeline - the same
+ * minute, kind `form`. Checked here rather than trusted, because the timeline
+ * entries are written out in `customer-fixtures` (see `FORM_ACTIVITY` there)
+ * and a submission added on one side only would quietly break the story the
+ * contact drawer tells. A fixture mistake fails the build, not a demo.
+ */
+for (const submission of FORM_SUBMISSIONS) {
+  if (submission.status !== "processed" || !submission.contactId) continue;
+  const logged = ACTIVITY.some(
+    (entry) =>
+      entry.kind === "form" &&
+      entry.contactId === submission.contactId &&
+      entry.at === submission.submittedAt,
+  );
+  if (!logged) {
+    throw new Error(
+      `form-fixtures: ${submission.id} has no "form" entry on ${submission.contactId}'s timeline`,
+    );
+  }
+}
+
+/**
+ * The channels a submission's consent boxes opted in to.
+ *
+ * One box, one channel - never all three off a single tick. Email waits while
+ * a double opt-in is pending: the visitor has asked, but has not yet proved the
+ * address is theirs.
+ */
+export function optInsOf(
+  form: Form | undefined,
+  values: Record<string, SubmissionValue>,
+  consent: ConsentState,
+): ContactChannel[] {
+  const channels = new Set<ContactChannel>();
+  for (const item of form?.fields ?? []) {
+    if (item.kind !== "consent" || values[item.id] !== true) continue;
+    const channel = item.consentChannel ?? "email";
+    if (channel === "email" && consent === "pending") continue;
+    channels.add(channel);
+  }
+  return [...channels];
+}
 
 /* -------------------------------------------------------------------------- */
 /* Reads                                                                      */

@@ -188,6 +188,17 @@ export const CUSTOMER_TAGS: CustomerTag[] = [
     usedByAutomations: 0,
     usedByCampaigns: 0,
   },
+  {
+    id: "tag-product-interest",
+    name: "Product Interest",
+    color: "blue",
+    description: "Asked about a product through the Product Inquiry form.",
+    createdAt: "2026-05-14T15:00:00Z",
+    lastUsedAt: "2026-09-09T12:00:00Z",
+    usedBySegments: 0,
+    usedByAutomations: 1,
+    usedByCampaigns: 0,
+  },
 ];
 
 export const tagByName = (name: string) =>
@@ -468,7 +479,7 @@ export const CONTACTS: CustomerContact[] = [
     company: "Bello Foods",
     lifecycle: "qualified",
     source: "whatsapp",
-    tags: ["Hot Lead"],
+    tags: ["Hot Lead", "Product Interest"],
     optedInChannels: ["whatsapp", "email"],
     segmentIds: [],
     ownerId: "own-3",
@@ -541,7 +552,7 @@ export const CONTACTS: CustomerContact[] = [
     company: "Morales Café",
     lifecycle: "lead",
     source: "manual",
-    tags: [],
+    tags: ["Product Interest"],
     optedInChannels: ["email"],
     segmentIds: [],
     ownerId: "own-1",
@@ -553,7 +564,7 @@ export const CONTACTS: CustomerContact[] = [
     company: "Dubois Fleurs",
     lifecycle: "customer",
     source: "website",
-    tags: ["Newsletter"],
+    tags: ["Newsletter", "Product Interest"],
     optedInChannels: ["email", "sms"],
     segmentIds: ["seg-high-engagement"],
     ownerId: "own-2",
@@ -590,7 +601,7 @@ export const CONTACTS: CustomerContact[] = [
     company: "Bianchi Sport",
     lifecycle: "customer",
     source: "whatsapp",
-    tags: ["Wholesale"],
+    tags: ["Wholesale", "Product Interest"],
     optedInChannels: ["whatsapp"],
     segmentIds: ["seg-wholesale"],
     ownerId: "own-1",
@@ -1644,8 +1655,61 @@ export interface CustomerActivity {
   sourceName?: string;
 }
 
+/**
+ * Form submissions, as timeline entries.
+ *
+ * One per processed submission in `lib/form-fixtures`, at the same minute and
+ * under the form's own name, so the contact drawer, the lead drawer and the
+ * form's Submissions tab tell one story. Written out here rather than derived,
+ * because the form fixtures read `CONTACTS` from this file and a derivation
+ * would make the two modules import each other - `form-fixtures` checks the
+ * pairing instead, and fails loudly if a submission has no entry.
+ */
+const formActivity = (
+  submissionId: string,
+  contactId: string,
+  form: string,
+  at: string,
+  detail?: string,
+): CustomerActivity => ({
+  id: `act-form-${submissionId}`,
+  contactId,
+  kind: "form",
+  title: `Submitted ${form} form`,
+  detail,
+  at,
+  sourceName: form,
+});
+
+const FORM_ACTIVITY: CustomerActivity[] = [
+  formActivity("sub-102", "con-3", "Request a Demo", "2026-08-24T10:05:00Z", "Team of 1-5, prefers email"),
+  formActivity("sub-103", "con-24", "Request a Demo", "2026-08-27T09:00:00Z", "New contact created from the form"),
+  formActivity("sub-106", "con-11", "Request a Demo", "2026-09-01T11:15:00Z", "New contact created from the form"),
+  formActivity("sub-201", "con-2", "Newsletter Signup", "2026-07-22T19:10:00Z"),
+  formActivity("sub-202", "con-9", "Newsletter Signup", "2026-07-30T07:40:00Z"),
+  formActivity("sub-203", "con-19", "Newsletter Signup", "2026-08-06T12:15:00Z"),
+  formActivity("sub-204", "con-17", "Newsletter Signup", "2026-08-18T18:30:00Z"),
+  formActivity("sub-205", "con-25", "Newsletter Signup", "2026-08-25T08:55:00Z"),
+  formActivity("sub-206", "con-13", "Newsletter Signup", "2026-09-02T13:05:00Z", "Scanned the in-store QR code"),
+  formActivity("sub-207", "con-5", "Newsletter Signup", "2026-09-05T20:20:00Z"),
+  formActivity("sub-301", "con-17", "Product Inquiry", "2026-08-11T14:20:00Z", "Interested in the Growth plan"),
+  formActivity("sub-302", "con-20", "Product Inquiry", "2026-08-19T10:35:00Z", "Interested in Enterprise"),
+  formActivity("sub-303", "con-16", "Product Inquiry", "2026-09-04T09:12:00Z", "Interested in the Starter plan"),
+  formActivity("sub-401", "con-7", "Wholesale Quote Request", "2026-07-28T09:30:00Z", "Around 1,200 units"),
+  formActivity("sub-402", "con-8", "Wholesale Quote Request", "2026-08-14T15:45:00Z", "$18k per month"),
+  formActivity("sub-501", "con-1", "WhatsApp Lead Form", "2026-07-24T17:05:00Z", "Asked about pricing"),
+  formActivity("sub-502", "con-23", "WhatsApp Lead Form", "2026-08-09T11:40:00Z", "Asked about wholesale"),
+  formActivity("sub-503", "con-15", "WhatsApp Lead Form", "2026-08-20T16:25:00Z", "Asked about delivery times"),
+  formActivity("sub-601", "con-18", "Webinar Registration", "2026-08-20T08:10:00Z"),
+  formActivity("sub-602", "con-12", "Webinar Registration", "2026-08-22T12:40:00Z"),
+  formActivity("sub-603", "con-27", "Webinar Registration", "2026-08-28T09:25:00Z"),
+  formActivity("sub-604", "con-19", "Webinar Registration", "2026-09-01T14:00:00Z"),
+  formActivity("sub-605", "con-9", "Webinar Registration", "2026-09-07T10:50:00Z"),
+];
+
 /** `GET /contacts/:id/activity`. Newest first is applied at read time. */
 export const ACTIVITY: CustomerActivity[] = [
+  ...FORM_ACTIVITY,
   {
     id: "act-1",
     contactId: "con-1",
@@ -1761,7 +1825,9 @@ export const ACTIVITY: CustomerActivity[] = [
     id: "act-15",
     contactId: "con-10",
     kind: "form",
-    title: "Submitted pilot request",
+    title: "Submitted Product Inquiry form",
+    detail: "Submitted pilot request",
+    sourceName: "Product Inquiry",
     at: "2026-09-09T12:00:00Z",
   },
   {
@@ -1844,7 +1910,9 @@ export const ACTIVITY: CustomerActivity[] = [
     id: "act-26",
     contactId: "con-21",
     kind: "form",
-    title: "Requested a trade account",
+    title: "Submitted Wholesale Quote Request form",
+    detail: "Requested a trade account",
+    sourceName: "Wholesale Quote Request",
     at: "2026-09-04T10:52:00Z",
   },
   {
@@ -1987,7 +2055,9 @@ export const ACTIVITY: CustomerActivity[] = [
     id: "act-45",
     contactId: "con-5",
     kind: "form",
-    title: "Filled the pricing form",
+    title: "Submitted Request a Demo form",
+    detail: "Filled the pricing form",
+    sourceName: "Request a Demo",
     at: "2026-08-30T08:47:00Z",
   },
   {
@@ -2034,7 +2104,9 @@ export const ACTIVITY: CustomerActivity[] = [
     id: "act-51",
     contactId: "con-6",
     kind: "form",
-    title: "Requested a partner call",
+    title: "Submitted Request a Demo form",
+    detail: "Requested a partner call",
+    sourceName: "Request a Demo",
     at: "2026-07-14T12:26:00Z",
   },
   {

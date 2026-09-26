@@ -1,4 +1,5 @@
 import type { ContactChannel } from "./contact";
+import type { LeadSource, LeadStage } from "./lead";
 
 /**
  * The Forms & Lead Capture module's data model.
@@ -65,6 +66,15 @@ export interface FormField {
   helpText?: string;
   /** Dropdown, radio and checkbox-group choices. */
   options?: string[];
+  /**
+   * The one channel a consent box grants.
+   *
+   * Consent is per channel, never blanket: a visitor who ticks "email me" has
+   * not agreed to WhatsApp, and a form that subscribes them to every channel
+   * off one box is exactly the thing the WhatsApp and SMS policies forbid. A
+   * form that asks for two channels has two consent fields.
+   */
+  consentChannel?: ContactChannel;
 }
 
 export type FormLayout = "stacked" | "two_column";
@@ -105,6 +115,10 @@ export interface FormBehavior {
   /** Match by email, then phone; create the contact only when nothing matches. */
   createContact: boolean;
   createLead: boolean;
+  /** Written on the lead, for attribution in the pipeline. */
+  leadSource: LeadSource;
+  /** The pipeline stage a new lead opens in. */
+  leadStage: LeadStage;
   /** Tag names from Customers → Tags. */
   tags: string[];
   /** Segment ids from Customers → Segments. */
@@ -117,8 +131,6 @@ export interface FormBehavior {
    * Neither ever creates a second contact - dedupe is by identity, always.
    */
   duplicates: "update" | "ignore";
-  /** Channels a ticked consent box grants. */
-  consentChannels: ContactChannel[];
   /**
    * Email double opt-in: the contact is not subscribed until they click the
    * confirmation link, and the submission waits in `awaiting_confirmation`.
@@ -197,10 +209,22 @@ export interface FormSubmission {
   source: SubmissionSource;
   /** The page it was submitted from, where the embed reported one. */
   pageUrl?: string;
+  /**
+   * The UTM parameters on that page's URL, which the embed forwards - the same
+   * three the campaign wizard writes onto its links, so a campaign's clicks
+   * and the leads they produced carry one campaign name.
+   */
+  utm?: { source: string; medium: string; campaign: string };
   /** Keyed by `FormField.id`. */
   values: Record<string, SubmissionValue>;
   status: SubmissionStatus;
+  /** Marketing consent overall: granted, pending double opt-in, or not given. */
   consent: ConsentState;
+  /**
+   * The channels this submission opted in to, from its consent boxes. Email
+   * is left out while a double opt-in is still pending.
+   */
+  optIns: ContactChannel[];
   /**
    * The contact this submission resolved to. Unset until it is linked.
    * `contactCreated` says whether this submission made the record or matched
@@ -237,5 +261,8 @@ export interface SessionLead {
   id: string;
   contactId: string;
   title: string;
+  source: LeadSource;
+  stage: LeadStage;
+  ownerId?: string;
   createdAt: string;
 }

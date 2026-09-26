@@ -477,6 +477,7 @@ export type TriggerCategory =
   | "whatsapp"
   | "commerce"
   | "marketing"
+  | "forms"
   | "datetime"
   | "developer";
 

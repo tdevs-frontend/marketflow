@@ -2,13 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
-import { Check, ChevronLeft, ChevronRight, Clock, Loader2, Send } from "lucide-react";
+import { ChevronLeft, ChevronRight, Clock, Loader2, Send } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/toast";
 import { APP_ROUTES } from "@/constants";
-import { cn } from "@/lib/utils";
 import type { CampaignDraft, MarketingChannel, WizardStep } from "@/types/marketing";
 import type { SocialPlatform } from "@/types/social";
 import {
@@ -17,6 +16,7 @@ import {
   deriveDraft,
   syncUtmCampaign,
 } from "./draft";
+import { WizardStepper } from "./shared";
 import { DetailsStep } from "./step-details";
 import { AudienceStep } from "./step-audience";
 import { ContentStep } from "./step-content";
@@ -326,7 +326,12 @@ export function CampaignWizard({ channel }: { channel?: MarketingChannel }) {
 
   return (
     <Card className="p-5">
-      <Stepper active={index} furthest={furthest} onJump={setIndex} />
+      <WizardStepper
+        steps={STEPS}
+        active={index}
+        furthest={furthest}
+        onJump={setIndex}
+      />
 
       <div className="mt-6 border-t border-border pt-6">
         {step === "campaign" ? <DetailsStep {...stepProps} /> : null}
@@ -444,101 +449,5 @@ export function CampaignWizard({ channel }: { channel?: MarketingChannel }) {
         </div>
       </div>
     </Card>
-  );
-}
-
-/* -------------------------------------------------------------------------- */
-/* Stepper                                                                    */
-/* -------------------------------------------------------------------------- */
-
-function Stepper({
-  active,
-  furthest,
-  onJump,
-}: {
-  active: number;
-  furthest: number;
-  onJump: (index: number) => void;
-}) {
-  return (
-    /* `py-1` keeps the focus ring off the scroll container's clip edge - with
-       `overflow-x-auto` the browser clips vertically too, and a ring drawn at
-       the button's exact bounds loses its top and bottom. */
-    <ol className="flex items-center gap-1 overflow-x-auto py-1">
-      {STEPS.map((step, index) => {
-        const done = index < furthest;
-        const current = index === active;
-        /* Only steps already reached are clickable - jumping ahead would skip
-           the validation that gates each one. */
-        const reachable = index <= furthest;
-
-        return (
-          <li key={step.value} className="flex shrink-0 items-center">
-            <button
-              type="button"
-              onClick={() => reachable && onJump(index)}
-              disabled={!reachable}
-              aria-current={current ? "step" : undefined}
-              className={cn(
-                /* Every state carries a border, transparent where it is not
-                   wanted, so the active pill cannot nudge its neighbours by a
-                   pixel when the selection moves. */
-                "inline-flex items-center gap-2.5 rounded-lg border px-3 py-1.5 transition-colors focus-visible:shadow-focus focus-visible:outline-none",
-                current
-                  ? "border-primary-border bg-primary-soft"
-                  : reachable
-                    ? "border-transparent hover:bg-surface-secondary"
-                    : "cursor-not-allowed border-transparent",
-              )}
-            >
-              <span
-                className={cn(
-                  "grid size-5.5 shrink-0 place-items-center rounded-full border text-xs font-bold tabular-nums leading-none",
-                  current
-                    ? "border-primary bg-primary text-white"
-                    : done
-                      ? "border-primary-border bg-primary-soft text-primary"
-                      : reachable
-                        ? "border-border bg-surface-secondary text-text-secondary"
-                        : "border-border bg-surface-secondary text-text-muted",
-                )}
-              >
-                {done ? (
-                  <Check className="size-4" strokeWidth={3} aria-hidden />
-                ) : (
-                  index + 1
-                )}
-              </span>
-
-              {/* Three weights, three inks: the step you are on, the ones you
-                  have finished, and the ones ahead. A label that reads at the
-                  same strength in all three states is a stepper that tells you
-                  nothing about where you are. */}
-              <span
-                className={cn(
-                  "text-base font-medium whitespace-nowrap leading-none",
-                  current
-                    ? "font-semibold text-text-primary"
-                    : done
-                      ? "font-medium text-text-primary"
-                      : reachable
-                        ? "font-medium text-text-secondary"
-                        : "font-medium text-text-muted",
-                )}
-              >
-                {step.label}
-              </span>
-            </button>
-
-            {index < STEPS.length - 1 ? (
-              <ChevronRight
-                className="ml-2 size-5 shrink-0 text-text-muted"
-                aria-hidden
-              />
-            ) : null}
-          </li>
-        );
-      })}
-    </ol>
   );
 }

@@ -2,6 +2,8 @@
 
 import type { ReactNode } from "react";
 
+import { Check, ChevronRight } from "lucide-react";
+
 import { CheckboxField } from "@/components/ui/checkbox";
 import { Tag } from "@/components/ui/tag";
 import { cn } from "@/lib/utils";
@@ -288,5 +290,107 @@ export function WarningNote({ children }: { children: ReactNode }) {
     <p className="rounded-panel border border-warning/30 bg-warning-soft px-3.5 py-2.5 text-sm text-warning-text">
       {children}
     </p>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Stepper                                                                    */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The numbered step rail - the Campaign Wizard's, shared so the Form Builder
+ * walks its steps in exactly the same control rather than a lookalike.
+ */
+export function WizardStepper({
+  steps,
+  active,
+  furthest,
+  onJump,
+}: {
+  steps: readonly { label: string }[];
+  active: number;
+  furthest: number;
+  onJump: (index: number) => void;
+}) {
+  return (
+    /* `py-1` keeps the focus ring off the scroll container's clip edge - with
+       `overflow-x-auto` the browser clips vertically too, and a ring drawn at
+       the button's exact bounds loses its top and bottom. */
+    <ol className="flex items-center gap-1 overflow-x-auto py-1">
+      {steps.map((step, index) => {
+        const done = index < furthest;
+        const current = index === active;
+        /* Only steps already reached are clickable - jumping ahead would skip
+           the validation that gates each one. */
+        const reachable = index <= furthest;
+
+        return (
+          <li key={step.label} className="flex shrink-0 items-center">
+            <button
+              type="button"
+              onClick={() => reachable && onJump(index)}
+              disabled={!reachable}
+              aria-current={current ? "step" : undefined}
+              className={cn(
+                /* Every state carries a border, transparent where it is not
+                   wanted, so the active pill cannot nudge its neighbours by a
+                   pixel when the selection moves. */
+                "inline-flex items-center gap-2.5 rounded-lg border px-3 py-1.5 transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+                current
+                  ? "border-primary-border bg-primary-soft"
+                  : reachable
+                    ? "border-transparent hover:bg-surface-secondary"
+                    : "cursor-not-allowed border-transparent",
+              )}
+            >
+              <span
+                className={cn(
+                  "grid size-5.5 shrink-0 place-items-center rounded-full border text-xs font-bold tabular-nums leading-none",
+                  current
+                    ? "border-primary bg-primary text-white"
+                    : done
+                      ? "border-primary-border bg-primary-soft text-primary"
+                      : reachable
+                        ? "border-border bg-surface-secondary text-text-secondary"
+                        : "border-border bg-surface-secondary text-text-muted",
+                )}
+              >
+                {done ? (
+                  <Check className="size-4" strokeWidth={3} aria-hidden />
+                ) : (
+                  index + 1
+                )}
+              </span>
+
+              {/* Three weights, three inks: the step you are on, the ones you
+                  have finished, and the ones ahead. A label that reads at the
+                  same strength in all three states is a stepper that tells you
+                  nothing about where you are. */}
+              <span
+                className={cn(
+                  "text-base font-medium whitespace-nowrap leading-none",
+                  current
+                    ? "font-semibold text-text-primary"
+                    : done
+                      ? "font-medium text-text-primary"
+                      : reachable
+                        ? "font-medium text-text-secondary"
+                        : "font-medium text-text-muted",
+                )}
+              >
+                {step.label}
+              </span>
+            </button>
+
+            {index < steps.length - 1 ? (
+              <ChevronRight
+                className="ml-2 size-5 shrink-0 text-text-muted"
+                aria-hidden
+              />
+            ) : null}
+          </li>
+        );
+      })}
+    </ol>
   );
 }

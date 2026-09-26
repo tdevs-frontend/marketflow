@@ -764,7 +764,13 @@ export const TRIGGER_CATEGORIES: {
     value: "marketing",
     label: "Marketing",
     icon: "Megaphone",
-    description: "Form submissions and campaign engagement",
+    description: "Campaign opens, clicks and replies",
+  },
+  {
+    value: "forms",
+    label: "Forms & Lead Capture",
+    icon: "ClipboardList",
+    description: "Submissions from embedded and hosted forms",
   },
   {
     value: "datetime",

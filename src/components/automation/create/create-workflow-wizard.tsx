@@ -23,6 +23,7 @@ import {
 import { OWNERS, emptyGroup, type RuleGroup } from "@/lib/customer-fixtures";
 import { formatCount } from "@/lib/format";
 import { AUTOMATION_TRIGGERS, createDraftWorkflow } from "@/lib/workflow-fixtures";
+import { useForms } from "@/lib/form-store";
 import { cn } from "@/lib/utils";
 import type { StartTypeKey, TriggerCategory } from "@/types/workflow";
 import { EventKey } from "../automation-badges";
@@ -110,21 +111,46 @@ function Steps({ step }: { step: 1 | 2 }) {
   );
 }
 
-export function CreateWorkflowWizard() {
+/**
+ * `initialEvent` and `initialFormId` come from the URL - Forms links here with
+ * `?event=form.submitted&form=…` when someone picks "Create new workflow" - and
+ * open the wizard on step two with that event, and that form, already chosen.
+ */
+export function CreateWorkflowWizard({
+  initialEvent,
+  initialFormId,
+}: {
+  initialEvent?: string;
+  initialFormId?: string;
+} = {}) {
   const router = useRouter();
   const toast = useToast();
+  const forms = useForms();
 
-  const [step, setStep] = useState<1 | 2>(1);
-  const [startType, setStartType] = useState<StartTypeKey | null>(null);
+  const presetTrigger = initialEvent
+    ? AUTOMATION_TRIGGERS.find((item) => item.eventKey === initialEvent)
+    : undefined;
+  const presetForm = forms.find((form) => form.id === initialFormId);
 
-  const [name, setName] = useState("");
+  const [step, setStep] = useState<1 | 2>(presetTrigger ? 2 : 1);
+  const [startType, setStartType] = useState<StartTypeKey | null>(
+    presetTrigger ? "event" : null,
+  );
+
+  const [name, setName] = useState(
+    presetTrigger ? `${presetForm?.name ?? presetTrigger.name} follow-up` : "",
+  );
   const [description, setDescription] = useState("");
   const [ownerId, setOwnerId] = useState(OWNERS[0]?.id ?? "own-1");
   const [touched, setTouched] = useState(false);
 
   /* Event-based */
-  const [category, setCategory] = useState<TriggerCategory>("leads");
-  const [eventKey, setEventKey] = useState("lead.created");
+  const [category, setCategory] = useState<TriggerCategory>(
+    presetTrigger?.category ?? "leads",
+  );
+  const [eventKey, setEventKey] = useState(presetTrigger?.eventKey ?? "lead.created");
+  /* Form Submitted only: the one form it listens to, or every form. */
+  const [formId, setFormId] = useState(presetForm?.id ?? "");
   const [entryFilter, setEntryFilter] = useState<RuleGroup>(emptyGroup("entry", "all"));
 
   /* Criteria-based */
@@ -215,6 +241,11 @@ export function CreateWorkflowWizard() {
             ? `date.${schedule}`
             : "segment.entered";
 
+    const scopedForm =
+      startType === "event" && eventKey === "form.submitted"
+        ? forms.find((form) => form.id === formId)
+        : undefined;
+
     const workflow = createDraftWorkflow({
       name: name.trim(),
       description:
@@ -222,9 +253,14 @@ export function CreateWorkflowWizard() {
       triggerKey: key,
       triggerLabel: label,
       ownerId,
+      triggerSummary:
+        startType === "event" && eventKey === "form.submitted"
+          ? (scopedForm?.name ?? "Any form")
+          : undefined,
       start: {
         type: startType,
         eventKey: startType === "event" ? eventKey : undefined,
+        formId: scopedForm?.id,
         criteria: startType === "criteria" ? criteria : undefined,
         schedule:
           startType === "schedule"
@@ -360,6 +396,26 @@ export function CreateWorkflowWizard() {
                       );
                     })}
                   </ul>
+
+                  {eventKey === "form.submitted" ? (
+                    <Field
+                      label="Form"
+                      htmlFor="wizard-form"
+                      hint="Scope the journey to one form, or run it for every form in the workspace."
+                    >
+                      <Select
+                        id="wizard-form"
+                        hideLabel={false}
+                        label="Form"
+                        value={formId}
+                        onChange={setFormId}
+                        options={[
+                          { value: "", label: "Any form" },
+                          ...forms.map((form) => ({ value: form.id, label: form.name })),
+                        ]}
+                      />
+                    </Field>
+                  ) : null}
                 </CardBody>
               </Card>
             ) : null}
@@ -570,6 +626,14 @@ export function CreateWorkflowWizard() {
                         {trigger?.name ?? "-"}
                       </span>
                     </div>
+                    {eventKey === "form.submitted" ? (
+                      <div className="flex items-start justify-between gap-3">
+                        <span className="text-sm text-text-muted">Form</span>
+                        <span className="text-right text-sm font-medium text-text-primary">
+                          {forms.find((form) => form.id === formId)?.name ?? "Any form"}
+                        </span>
+                      </div>
+                    ) : null}
                     <div className="flex items-start justify-between gap-3">
                       <span className="text-sm text-text-muted">Traffic</span>
                       <span className="text-right text-sm text-text-secondary tabular-nums">

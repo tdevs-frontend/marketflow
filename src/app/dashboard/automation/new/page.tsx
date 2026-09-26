@@ -16,6 +16,18 @@ export const metadata: Metadata = {
  * where something substantial gets made. A static segment, so it takes
  * precedence over the sibling `[workflowId]` route.
  */
-export default function CreateAutomationPage() {
-  return <CreateWorkflowWizard />;
+export default async function CreateAutomationPage({
+  searchParams,
+}: PageProps<"/dashboard/automation/new">) {
+  /* Forms links here with the event and the form already chosen. Both are
+     plain strings; the wizard validates them against the registry and the
+     form list, so a hand-edited URL falls back to the first step. */
+  const { event, form } = await searchParams;
+
+  return (
+    <CreateWorkflowWizard
+      initialEvent={typeof event === "string" ? event : undefined}
+      initialFormId={typeof form === "string" ? form : undefined}
+    />
+  );
 }

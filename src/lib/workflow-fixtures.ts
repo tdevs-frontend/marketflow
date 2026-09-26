@@ -396,6 +396,8 @@ interface WorkflowSeed {
   draftChanges?: boolean;
   triggerKey: string;
   triggerLabel: string;
+  /** A `form.submitted` journey scoped to one form - see `WorkflowStart`. */
+  formId?: string;
   channels: MarketingChannel[];
   ownerId: string;
   entered: number;
@@ -525,6 +527,7 @@ const SEEDS: WorkflowSeed[] = [
   },
   {
     id: "wf-landing-lead",
+    formId: "fm-demo",
     name: "Landing Page Lead Capture",
     description:
       "Tag, segment and nurture every lead that arrives from a landing page form.",
@@ -551,6 +554,7 @@ const SEEDS: WorkflowSeed[] = [
      see `lib/form-fixtures`. Both listen for `form.submitted`. */
   {
     id: "wf-newsletter-welcome",
+    formId: "fm-newsletter",
     name: "Newsletter Welcome",
     description:
       "Welcome confirmed newsletter subscribers and send the best of the blog a few days later.",
@@ -572,15 +576,22 @@ const SEEDS: WorkflowSeed[] = [
       ["send_email", "Best Of The Blog", "newsletter_digest"],
     ],
   },
+  /*
+   * The worked example of a form-driven journey. The form has already matched
+   * or created the contact and opened the lead before `form.submitted` fires,
+   * so the workflow starts by *qualifying* them - it never creates a second
+   * contact. Every step is an existing node kind.
+   */
   {
-    id: "wf-inquiry-routing",
-    name: "Inquiry Routing",
+    id: "wf-product-inquiry",
+    formId: "fm-product-inquiry",
+    name: "Product Inquiry Follow-up",
     description:
-      "Acknowledge product and wholesale enquiries on WhatsApp and hand them to the sales team.",
+      "Tag and segment every product enquiry, welcome them on WhatsApp, follow up a day later and hand the lead to sales.",
     status: "active",
     triggerKey: "form.submitted",
     triggerLabel: "Form Submitted",
-    channels: ["whatsapp", "email"],
+    channels: ["whatsapp"],
     ownerId: "own-1",
     entered: 2480,
     completion: 76.5,
@@ -589,11 +600,15 @@ const SEEDS: WorkflowSeed[] = [
     updatedAt: daysAgo(4),
     createdAt: daysAgo(118),
     specs: [
-      ["trigger", "Form Submitted", "Product Inquiry, Wholesale Quote Request"],
+      ["trigger", "Form Submitted", "Product Inquiry"],
+      ["update_contact", "Update Contact", "Source: Product Inquiry form"],
+      ["update_stage", "Set Lead Stage", "New Lead"],
+      ["add_tag", "Add Tag", "Product Interest"],
       ["add_segment", "Add to Segment", "New Leads"],
-      ["send_whatsapp", "Send WhatsApp", "inquiry_received"],
-      ["send_email", "Send Email", "inquiry_confirmation"],
-      ["assign_owner", "Assign Lead", "Round robin - Sales team"],
+      ["send_whatsapp", "WhatsApp Welcome", "inquiry_welcome"],
+      ["wait", "Wait", "1 day"],
+      ["send_whatsapp", "Follow-up", "inquiry_follow_up"],
+      ["assign_owner", "Assign to Sales Agent", "Round robin - Sales team"],
     ],
   },
   {
@@ -1113,7 +1128,23 @@ function versionHistory(seed: WorkflowSeed): WorkflowVersion[] {
 
 /** `GET /automation/workflows`. */
 export const WORKFLOWS: Workflow[] = SEEDS.map((seed) => {
-  const { nodes, edges } = build(seed.id, seed.specs, seed.entered);
+  const built = build(seed.id, seed.specs, seed.entered);
+  const { edges } = built;
+  /* The trigger node carries the event it listens for (and, for a form
+     journey, the form), so the inspector opens on the real configuration
+     rather than an empty Event field. */
+  const nodes = built.nodes.map((node) =>
+    node.kind === "trigger" && (seed.startType ?? "event") === "event"
+      ? {
+          ...node,
+          config: {
+            ...node.config,
+            eventKey: seed.triggerKey,
+            ...(seed.formId ? { formId: seed.formId } : {}),
+          },
+        }
+      : node,
+  );
   const completed = Math.round((seed.entered * seed.completion) / 100);
   const converted = Math.round((seed.entered * seed.conversion) / 100);
 
@@ -1149,6 +1180,7 @@ export const WORKFLOWS: Workflow[] = SEEDS.map((seed) => {
     start: {
       type: startType,
       eventKey: startType === "event" ? seed.triggerKey : undefined,
+      formId: seed.formId,
       schedule: seed.schedule,
     },
     triggerKey: seed.triggerKey,
@@ -1347,6 +1379,33 @@ export const AUTOMATION_TEMPLATES: AutomationTemplate[] = [
     requiredIntegrations: ["WhatsApp Business API"],
     requiredMessageTemplates: ["welcome_new_lead"],
     installs: 412,
+  },
+  {
+    id: "tpl-form-lead-nurture",
+    goal: "The lead replies or moves past New Lead",
+    name: "Form Lead Nurture",
+    category: "lead-nurture",
+    description:
+      "Follow up every form submission: tag it, open the lead, welcome them on WhatsApp and check in a day later.",
+    channels: ["whatsapp"],
+    complexity: "starter",
+    setupMinutes: 4,
+    bestFor: [
+      "Contact, demo and quote forms on your website",
+      "Teams who want every form lead answered within minutes",
+    ],
+    triggerKey: "form.submitted",
+    steps: [
+      step("trigger", "Form Submitted", "Choose the form after installing"),
+      step("add_tag", "Add Tag", "Hot Lead"),
+      step("update_stage", "Create Lead", "New Lead"),
+      step("send_whatsapp", "Send WhatsApp", "form_lead_welcome"),
+      step("wait", "Wait", "1 day"),
+      step("condition", "Did they reply?", "Inbound message", ["Assign agent", "Send follow-up"]),
+    ],
+    requiredIntegrations: ["WhatsApp Business API"],
+    requiredMessageTemplates: ["form_lead_welcome"],
+    installs: 96,
   },
   {
     id: "tpl-lead-nurture",
@@ -1889,17 +1948,44 @@ const TRIGGER_SEEDS: TriggerSeed[] = [
     payload: { order_id: "OR-5521", product_id: "PR-118", sku: "MF-CANDLE-01", quantity: 2 },
   },
 
-  /* Marketing */
+  /* Forms & Lead Capture. Raised once per submission, after the form's own
+     CRM steps have run - so `contact_id` and `lead_id` are already resolved
+     and a workflow never has to create the contact itself. The payload is
+     `lib/form-fixtures` `formSubmittedPayload`, field for field. */
   {
     name: "Form Submitted",
     eventKey: "form.submitted",
-    category: "marketing",
+    category: "forms",
     source: "Forms",
-    description: "A landing page or embedded form is submitted.",
+    description:
+      "An embedded or hosted form is submitted. Filter by form, form type or source.",
     events24h: 312,
     lastEventMinutes: 4,
-    payload: { form_id: "FM-22", contact_id: "CT-8451", fields: { company: "Bright Retail" } },
+    payload: {
+      form_id: "fm-product-inquiry",
+      form_name: "Product Inquiry",
+      form_type: "contact",
+      submission_id: "sub-304",
+      submitted_at: "2026-09-09T12:00:00Z",
+      contact_id: "con-10",
+      contact_created: false,
+      lead_id: "led-2",
+      source: "landing_page",
+      page_url: "https://marketflow.app/lp/food-brands",
+      utm: { source: "facebook", medium: "paid_social", campaign: "food-brands-q3" },
+      fields: {
+        first_name: "Aisha",
+        last_name: "Bello",
+        email: "aisha@bellofoods.ng",
+        interest: "Growth plan",
+      },
+      tags: ["Product Interest"],
+      consent: "granted",
+      opt_in: { email: true, whatsapp: true, sms: false },
+    },
   },
+
+  /* Marketing */
   {
     name: "Campaign Opened",
     eventKey: "campaign.opened",

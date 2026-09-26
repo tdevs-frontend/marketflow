@@ -41,7 +41,7 @@ export function FormStatusBadge({ status }: { status: FormStatus }) {
   const { tone, icon: Icon, label } = FORM_STATE[status];
 
   return (
-    <Badge variant={tone} icon={<Icon aria-hidden />}>
+    <Badge variant={tone} icon={<Icon aria-hidden />} className="whitespace-nowrap">
       {label}
     </Badge>
   );
@@ -59,7 +59,7 @@ export function SubmissionStatusBadge({ status }: { status: SubmissionStatus }) 
   const { tone, icon: Icon } = SUBMISSION_STATE[status];
 
   return (
-    <Badge variant={tone} casing="none" icon={<Icon aria-hidden />}>
+    <Badge variant={tone} casing="none" icon={<Icon aria-hidden />} className="whitespace-nowrap">
       {submissionStatusLabel(status)}
     </Badge>
   );
@@ -75,7 +75,7 @@ export function ConsentBadge({ consent }: { consent: ConsentState }) {
   const { tone, icon: Icon } = CONSENT_STATE[consent];
 
   return (
-    <Badge variant={tone} casing="none" icon={<Icon aria-hidden />}>
+    <Badge variant={tone} casing="none" icon={<Icon aria-hidden />} className="whitespace-nowrap">
       {CONSENT_LABEL[consent]}
     </Badge>
   );

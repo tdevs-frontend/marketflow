@@ -8,9 +8,11 @@ import {
   FORMS,
   FORM_SUBMISSIONS,
   capturedIdentity,
+  formWorkflowById,
   leadById,
   matchContact,
   openLeadForContact,
+  optInsOf,
 } from "@/lib/form-fixtures";
 import type { LeadStage } from "@/types/lead";
 import type {
@@ -43,6 +45,12 @@ export interface FormState {
   submissions: FormSubmission[];
   contacts: SessionContact[];
   leads: SessionLead[];
+  /**
+   * Owners assigned from a submission, by lead id. Kept apart from the lead
+   * records because the Leads board reads the CRM's own - see the session
+   * notice on the Submissions tab.
+   */
+  assignments: Record<string, string>;
 }
 
 const INITIAL: FormState = {
@@ -50,6 +58,7 @@ const INITIAL: FormState = {
   submissions: FORM_SUBMISSIONS,
   contacts: [],
   leads: [],
+  assignments: {},
 };
 
 /* The server renders the fixtures, so the first client snapshot has to be the
@@ -434,12 +443,24 @@ export function linkLead(submissionId: string): LeadLinkResult {
     id: mintId("led"),
     contactId: submission.contactId,
     title: `${who} - ${form?.name ?? "Form"}`,
+    source: form?.behavior.leadSource ?? "website",
+    stage: form?.behavior.leadStage ?? "new",
     createdAt: now(),
   };
 
   snapshot = { ...snapshot, leads: [lead, ...snapshot.leads] };
   patchSubmission(submissionId, { leadId: lead.id });
   return { outcome: "created", leadId: lead.id };
+}
+
+/** Hands a submission's lead to a team member. */
+export function assignLead(leadId: string, ownerId: string) {
+  commit({
+    leads: snapshot.leads.map((lead) =>
+      lead.id === leadId ? { ...lead, ownerId } : lead,
+    ),
+    assignments: { ...snapshot.assignments, [leadId]: ownerId },
+  });
 }
 
 /** Tags a submission applied. Mirrored onto a session contact it created. */
@@ -476,8 +497,9 @@ export function recordPreviewSubmission(
   const form = snapshot.forms.find((item) => item.id === formId);
   if (!form) return null;
 
-  const consentField = form.fields.find((item) => item.kind === "consent");
-  const consentGiven = consentField ? values[consentField.id] === true : false;
+  const consentGiven = form.fields.some(
+    (item) => item.kind === "consent" && values[item.id] === true,
+  );
 
   const submission: FormSubmission = {
     id: mintId("sub"),
@@ -491,8 +513,10 @@ export function recordPreviewSubmission(
       : form.behavior.doubleOptIn
         ? "pending"
         : "granted",
+    optIns: [],
     tags: form.behavior.createContact ? [...form.behavior.tags] : [],
   };
+  submission.optIns = optInsOf(form, values, submission.consent);
 
   if (form.behavior.createContact && form.behavior.doubleOptIn && consentGiven) {
     submission.status = "awaiting_confirmation";
@@ -569,6 +593,7 @@ export interface ResolvedLead {
   id: string;
   title: string;
   stage: LeadStage;
+  ownerId?: string;
   session: boolean;
 }
 
@@ -576,10 +601,80 @@ export function resolveLead(state: FormState, id?: string): ResolvedLead | null 
   if (!id) return null;
 
   const crm = leadById(id);
-  if (crm) return { id, title: crm.title, stage: crm.stage, session: false };
+  if (crm) {
+    return {
+      id,
+      title: crm.title,
+      stage: crm.stage,
+      ownerId: state.assignments[id] ?? crm.ownerId,
+      session: false,
+    };
+  }
 
   const made = state.leads.find((item) => item.id === id);
-  return made ? { id, title: made.title, stage: "new", session: true } : null;
+  return made
+    ? { id, title: made.title, stage: made.stage, ownerId: made.ownerId, session: true }
+    : null;
+}
+
+/**
+ * The `form.submitted` event, as Automation receives it.
+ *
+ * One builder, so the payload a merchant inspects on a submission is the
+ * payload the trigger registry documents and a workflow's variables read. It
+ * is raised after the form's CRM steps, which is why `contact_id` and
+ * `lead_id` are already resolved: the workflow listening for it acts on a
+ * known person rather than creating one. Field answers are keyed by field
+ * label, lower-snake-cased, since that is what a merchant writes a condition
+ * against.
+ */
+export function formSubmittedPayload(state: FormState, submission: FormSubmission) {
+  const form = state.forms.find((item) => item.id === submission.formId);
+  const fields: Record<string, SubmissionValue> = {};
+  for (const item of form?.fields ?? []) {
+    if (item.kind === "consent" || submission.values[item.id] === undefined) continue;
+    const key = item.label
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "_")
+      .replace(/^_+|_+$/g, "");
+    fields[key || item.id] = submission.values[item.id];
+  }
+
+  return {
+    event: "form.submitted",
+    form_id: submission.formId,
+    form_name: form?.name ?? null,
+    form_type: form?.type ?? null,
+    submission_id: submission.id,
+    submitted_at: submission.submittedAt,
+    contact_id: submission.contactId ?? null,
+    contact_created: submission.contactCreated ?? false,
+    lead_id: submission.leadId ?? null,
+    source: submission.source,
+    page_url: submission.pageUrl ?? null,
+    utm: submission.utm ?? null,
+    fields,
+    tags: submission.tags,
+    consent: submission.consent,
+    opt_in: {
+      email: submission.optIns.includes("email"),
+      whatsapp: submission.optIns.includes("whatsapp"),
+      sms: submission.optIns.includes("sms"),
+    },
+  };
+}
+
+/**
+ * The workflow a submission's event is delivered to, if any.
+ *
+ * Spam and duplicates raise nothing - a duplicate the form ignores must not
+ * re-enrol someone into the journey they are already on - and neither does a
+ * submission still waiting on its double opt-in.
+ */
+export function listeningWorkflow(state: FormState, submission: FormSubmission) {
+  if (submission.status !== "processed" && submission.status !== "new") return null;
+  const form = state.forms.find((item) => item.id === submission.formId);
+  return formWorkflowById(form?.automation.workflowId) ?? null;
 }
 
 /* -------------------------------------------------------------------------- */

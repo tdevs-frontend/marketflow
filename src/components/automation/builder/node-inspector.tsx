@@ -21,6 +21,7 @@ import {
   VARIABLE_SOURCES,
 } from "@/constants/automation";
 import { APP_ROUTES } from "@/constants/app";
+import { FORM_TYPES, SUBMISSION_SOURCES } from "@/constants/forms";
 import { AUTOMATION_ROUTES } from "@/constants/automation";
 import {
   CUSTOMER_SEGMENTS,
@@ -33,6 +34,7 @@ import {
   TEMPLATES as WHATSAPP_TEMPLATES,
   TEMPLATE_LANGUAGES,
 } from "@/lib/whatsapp-fixtures";
+import { useForms } from "@/lib/form-store";
 import { AUTOMATION_TRIGGERS } from "@/lib/workflow-fixtures";
 import { cn } from "@/lib/utils";
 import type { NodeKind, VariableBinding, WorkflowNode } from "@/types/workflow";
@@ -218,8 +220,29 @@ const OFFSET_DIRECTIONS = [
   option("after", "after"),
 ];
 
-/** The controls one node kind needs, beyond its name. */
-function fieldsFor(kind: NodeKind): FieldSpec[] {
+/* Form Submitted's own filters. Shown only when the trigger listens for
+   `form.submitted`; empty means "any", so an unfiltered trigger reads as such. */
+const FORM_EVENT = "form.submitted";
+const onFormEvent = (config: Record<string, unknown>) => config.eventKey === FORM_EVENT;
+const FORM_TYPE_OPTIONS = [
+  option("", "Any form type"),
+  ...FORM_TYPES.map((item) => option(item.value, item.label)),
+];
+const FORM_SOURCE_OPTIONS = [
+  option("", "Any source"),
+  /* A preview test is not traffic, so no workflow is ever scoped to it. */
+  ...SUBMISSION_SOURCES.filter((item) => item.value !== "preview").map((item) =>
+    option(item.value, item.label),
+  ),
+];
+
+/**
+ * The controls one node kind needs, beyond its name.
+ *
+ * `forms` is the live form list, passed in by the panel because it comes from
+ * the Forms store - a form created this session can be picked here too.
+ */
+function fieldsFor(kind: NodeKind, forms: SelectOption[] = []): FieldSpec[] {
   switch (kind) {
     case "trigger":
       return [
@@ -237,10 +260,34 @@ function fieldsFor(kind: NodeKind): FieldSpec[] {
           hint: "What puts a contact into this workflow.",
         },
         {
+          type: "select",
+          key: "formId",
+          label: "Form",
+          options: [option("", "Any form"), ...forms],
+          hint: "Scope it to one form, or run for every form in the workspace.",
+          when: onFormEvent,
+        },
+        {
+          type: "select",
+          key: "formType",
+          label: "Form type",
+          options: FORM_TYPE_OPTIONS,
+          hint: "Optional. Narrows “Any form” to one kind of form.",
+          when: (config) => onFormEvent(config) && !config.formId,
+        },
+        {
+          type: "select",
+          key: "formSource",
+          label: "Source",
+          options: FORM_SOURCE_OPTIONS,
+          hint: "Optional. Where the submission came from.",
+          when: onFormEvent,
+        },
+        {
           type: "text",
           key: "filter",
           label: "Entry filter",
-          hint: "Optional. Only contacts matching this enter.",
+          hint: "Optional. Only contacts matching this enter - a tag, or a field value such as interest is Enterprise.",
         },
       ];
 
@@ -574,13 +621,25 @@ const labelOf = (options: SelectOption[], value: unknown) =>
  * never disagree with the inspector - and so the validator, which reads the
  * summary, is reading the configuration.
  */
-function summaryOf(kind: NodeKind, config: Record<string, unknown>): string {
+function summaryOf(
+  kind: NodeKind,
+  config: Record<string, unknown>,
+  forms: SelectOption[] = [],
+): string {
   const value = (key: string) => (config[key] ? String(config[key]) : "");
   const fallback = NODE_META[kind]?.defaultSummary ?? "";
 
   switch (kind) {
     case "trigger": {
       const trigger = AUTOMATION_TRIGGERS.find((item) => item.eventKey === config.eventKey);
+      if (config.eventKey === FORM_EVENT) {
+        const scope = config.formId
+          ? labelOf(forms, config.formId) || "One form"
+          : config.formType
+            ? `Any ${labelOf(FORM_TYPE_OPTIONS, config.formType)} form`
+            : "Any form";
+        return value("filter") ? `${scope} · ${value("filter")}` : scope;
+      }
       return value("filter") || trigger?.eventKey || fallback;
     }
 
@@ -832,8 +891,17 @@ export function NodeInspector({
     setDraft(node);
   }
 
+  const forms = useForms();
+  const formOptions = useMemo(
+    () => forms.map((form) => option(form.id, form.name)),
+    [forms],
+  );
+
   const kind = draft?.kind;
-  const fields = useMemo(() => (kind ? fieldsFor(kind) : []), [kind]);
+  const fields = useMemo(
+    () => (kind ? fieldsFor(kind, formOptions) : []),
+    [kind, formOptions],
+  );
 
   const tokens = useMemo(() => (draft ? requiredTokens(draft) : []), [draft]);
   const bindings = draft ? bindingsOf(draft) : {};
@@ -899,7 +967,7 @@ export function NodeInspector({
 
   function save() {
     if (!draft) return;
-    onChange({ ...draft, summary: summaryOf(draft.kind, draft.config) });
+    onChange({ ...draft, summary: summaryOf(draft.kind, draft.config, formOptions) });
   }
 
   function renderField(field: FieldSpec) {

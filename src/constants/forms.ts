@@ -21,6 +21,11 @@ import type {
  * trigger picker - all say "Request a Quote" and have to say it the same way.
  */
 
+/** The detail page's tabs. Here, not in the client component, so the server
+    page can validate `?tab=` against the real list. */
+export const FORM_TABS = ["overview", "submissions", "form", "automation", "settings"] as const;
+export type FormTab = (typeof FORM_TABS)[number];
+
 export const FORM_ROUTES = {
   list: "/dashboard/forms",
   create: "/dashboard/forms/new",
@@ -135,7 +140,9 @@ export const FIELD_KINDS: FieldKindMeta[] = [
   { kind: "dropdown", label: "Dropdown", hasOptions: true, group: "input" },
   { kind: "radio", label: "Radio", hasOptions: true, group: "input" },
   { kind: "checkbox", label: "Checkbox", hasOptions: true, group: "input" },
-  { kind: "consent", label: "Consent Checkbox", unique: true, group: "input" },
+  /* Not unique: consent is per channel, so a form asking for email and
+     WhatsApp carries one box for each. */
+  { kind: "consent", label: "Consent Checkbox", group: "input" },
 ];
 
 export const fieldKindMeta = (kind: FormFieldKind) =>
@@ -198,9 +205,10 @@ export const DEFAULT_BEHAVIOR: FormBehavior = {
   onSuccess: "message",
   createContact: true,
   createLead: false,
+  leadSource: "website",
+  leadStage: "new",
   tags: [],
   segmentIds: [],
   duplicates: "update",
-  consentChannels: ["email"],
   doubleOptIn: false,
 };

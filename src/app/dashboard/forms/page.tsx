@@ -1,30 +1,16 @@
 import type { Metadata } from "next";
 
-import { ModulePlaceholder } from "@/components/layout/module-placeholder";
-import { ButtonLink } from "@/components/ui/button";
+import { FormsWorkspace } from "@/components/forms";
 
-export const metadata: Metadata = { title: "Forms" };
+export const metadata: Metadata = {
+  title: "Forms",
+  description: "Create embeddable forms to capture leads and trigger automated workflows.",
+};
 
 /**
- * Forms had a sidebar link under Growth and no route behind it - a 404 from
- * the navigation. The link moved to Marketing in the cleanup; this makes it
- * resolve.
+ * The Forms list. The header lives in the workspace because Import and the
+ * row actions open dialogs it owns - the same shape as Customers.
  */
 export default function FormsPage() {
-  return (
-    <ModulePlaceholder
-      title="Forms"
-      description="Capture leads from your site and route them straight into a workflow."
-      summary="Forms will let you build a capture form, embed it, and have every submission raise the Form Submitted trigger. Until then, the trigger already exists and any workflow can listen for it."
-      action={
-        <ButtonLink
-          href="/dashboard/automation/triggers/trg-form-submitted"
-          size="sm"
-          variant="outline"
-        >
-          See the Form Submitted trigger
-        </ButtonLink>
-      }
-    />
-  );
+  return <FormsWorkspace />;
 }
