@@ -25,15 +25,6 @@ export interface DashboardNavItem {
 export interface NavSection {
   title: string;
   items: DashboardNavItem[];
-  /**
-   * Makes the section label itself a link - the module's home page.
-   *
-   * For a module whose landing page is an overview of the rows beneath it
-   * (Marketing): the label opens it, so the sidebar needs no separate
-   * "Overview" row, and the label lights for pages in the module that have no
-   * row of their own.
-   */
-  href?: string;
 }
 
 export const marketingNav: NavItem[] = [
@@ -122,11 +113,9 @@ export const dashboardNav: NavSection[] = [
      * Social Planner, whose landing page is the Calendar - that is where a
      * content team actually starts.
      */
-    /* The label opens the Marketing overview - see `NavSection.href` - so
-       there is no separate Overview row. */
     title: "Marketing",
-    href: "/dashboard/marketing",
     items: [
+      { title: "Overview", href: "/dashboard/marketing", icon: "megaphone" },
       {
         title: "Campaigns",
         href: "/dashboard/marketing/campaigns",
@@ -198,16 +187,17 @@ export const dashboardNav: NavSection[] = [
         items: [
           { title: "Calendar", href: "/dashboard/marketing/social/calendar" },
           { title: "Posts", href: "/dashboard/marketing/social/posts" },
-          /* The media library lives here, in the module's own order, rather
-             than as a top-level row: it is Social Planner's asset store, and
-             the campaign wizard's media picker opens it in place. */
-          { title: "Media", href: "/dashboard/marketing/social/media" },
           { title: "Accounts", href: "/dashboard/marketing/social/accounts" },
           { title: "Analytics", href: "/dashboard/marketing/social/analytics" },
         ],
       },
-      /* Marketing's view of the shared segments - which channels each one
-         can reach. Customers → Segments is where they are built. */
+      /* Promoted out of the old Content group: every channel draws on it, so
+         it belongs beside the channels rather than inside Social Planner. */
+      {
+        title: "Media Library",
+        href: "/dashboard/marketing/social/media",
+        icon: "image",
+      },
       {
         title: "Audience Segments",
         href: "/dashboard/marketing/segments",
@@ -230,15 +220,24 @@ export const dashboardNav: NavSection[] = [
     ],
   },
   {
-    /*
-     * One row for one product. Workflows, Templates, Triggers and Activity are
-     * the module's own tab strip - see `AUTOMATION_PAGES` in
-     * `constants/automation` - and this row stays lit on every one of them,
-     * because `/dashboard/automation` prefix-matches the whole module.
-     */
     title: "Automation",
     items: [
-      { title: "Automation", href: "/dashboard/automation", icon: "workflow" },
+      { title: "Workflows", href: "/dashboard/automation", icon: "workflow" },
+      {
+        title: "Templates",
+        href: "/dashboard/automation/templates",
+        icon: "layout-template",
+      },
+      {
+        title: "Triggers",
+        href: "/dashboard/automation/triggers",
+        icon: "zap",
+      },
+      {
+        title: "Activity Logs",
+        href: "/dashboard/automation/activity",
+        icon: "scroll-text",
+      },
     ],
   },
   /*

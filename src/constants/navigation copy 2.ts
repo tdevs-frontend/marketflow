@@ -34,6 +34,11 @@ export interface NavSection {
    * row of their own.
    */
   href?: string;
+  /**
+   * Pinned to the foot of the sidebar, outside the scrolling list - for the
+   * utility destination that should be reachable without scrolling (Support).
+   */
+  pinned?: boolean;
 }
 
 export const marketingNav: NavItem[] = [
@@ -206,13 +211,12 @@ export const dashboardNav: NavSection[] = [
           { title: "Analytics", href: "/dashboard/marketing/social/analytics" },
         ],
       },
-      /* Marketing's view of the shared segments - which channels each one
-         can reach. Customers → Segments is where they are built. */
-      {
-        title: "Audience Segments",
-        href: "/dashboard/marketing/segments",
-        icon: "layers",
-      },
+      /*
+       * No Audience Segments row. Segments has one sidebar destination, under
+       * Customers. The Marketing view of the same segments - which channels
+       * each one can reach - stays at /dashboard/marketing/segments and is
+       * linked from the Marketing overview; the label above lights for it.
+       */
     ],
   },
   {
@@ -352,12 +356,15 @@ export const dashboardNav: NavSection[] = [
         href: "/dashboard/settings/api",
         icon: "terminal",
       },
-      /* Help from MarketFlow itself, at the foot of the utility group. */
-      {
-        title: "Support Center",
-        href: "/dashboard/support",
-        icon: "life-buoy",
-      },
+    ],
+  },
+  /* Help from MarketFlow itself, pinned to the foot of the sidebar so it is
+     reachable without scrolling. */
+  {
+    title: "Help",
+    pinned: true,
+    items: [
+      { title: "Support Center", href: "/dashboard/support", icon: "life-buoy" },
     ],
   },
 ];

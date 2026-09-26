@@ -69,10 +69,9 @@ export const APP_ROUTES = {
    * app directory so they can share a loading and error boundary â the group
    * is not part of the URL, so these paths are what they have always been.
    *
-   * `customerSegments` is deliberately distinct from `segments` above: the
-   * same audience builder is reachable from Marketing (as something to send
-   * to) and from Customers (as a way to group people), and the two entries
-   * keep the sidebar's active state honest on both.
+   * `customerSegments` is the canonical Segments page and the one sidebar
+   * destination. `segments` above is Marketing's view of the same segments -
+   * which channels each can reach - with its own row under Marketing.
    */
   /* Named for the contact records it lists; the page itself is Customers. */
   contacts: "/dashboard/customers",

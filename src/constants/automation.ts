@@ -44,6 +44,19 @@ export const AUTOMATION_ROUTES = {
   run: (id: string) => `/dashboard/automation/activity/${id}`,
 } as const;
 
+/**
+ * The module's own tab strip - rendered by `AutomationNav` on the four index
+ * pages. These used to be four sidebar rows; they are one product, so the
+ * sidebar has one Automation row and the module carries its pages, the way
+ * Integrations and the Marketing channels already do.
+ */
+export const AUTOMATION_PAGES = [
+  { title: "Workflows", href: AUTOMATION_ROUTES.workflows },
+  { title: "Templates", href: AUTOMATION_ROUTES.templates },
+  { title: "Triggers", href: AUTOMATION_ROUTES.triggers },
+  { title: "Activity", href: AUTOMATION_ROUTES.activity },
+] as const;
+
 /* -------------------------------------------------------------------------- */
 /* Node categories                                                            */
 /* -------------------------------------------------------------------------- */

@@ -16,12 +16,16 @@ import { cn, isActiveRoute, slugify } from "@/lib/utils";
 /* Active matching                                                            */
 /* -------------------------------------------------------------------------- */
 
-const ALL_HREFS = dashboardNav.flatMap((section) =>
-  section.items.flatMap((item) => [
+/* Section hrefs take part too: a label that links to its module's home
+   (Marketing) lights for that page and for module pages with no row of their
+   own, and loses to any deeper row that does match. */
+const ALL_HREFS = dashboardNav.flatMap((section) => [
+  ...(section.href ? [section.href] : []),
+  ...section.items.flatMap((item) => [
     ...(item.href ? [item.href] : []),
     ...(item.items?.map((child) => child.href) ?? []),
   ]),
-);
+]);
 
 /**
  * The one row the current route belongs to: the longest href that matches it.
@@ -214,6 +218,44 @@ function NavItemRow({
 /* Sidebar                                                                    */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * A section's label. Plain text, or - for a section with an `href` - a link to
+ * the module's home page, in the same small caps so the sidebar reads the same,
+ * with a hover and an active ink that say it is clickable and where you are.
+ */
+function SectionLabel({
+  section,
+  activeHref,
+  onNavigate,
+}: {
+  section: (typeof dashboardNav)[number];
+  activeHref: string | null;
+  onNavigate: () => void;
+}) {
+  const base = "block px-2.5 text-xs font-medium uppercase";
+
+  if (!section.href) {
+    return <p className={cn(base, "text-text-muted")}>{section.title}</p>;
+  }
+
+  const current = activeHref === section.href;
+  return (
+    <Link
+      href={section.href}
+      onClick={onNavigate}
+      aria-current={current ? "page" : undefined}
+      title={`${section.title} overview`}
+      className={cn(
+        base,
+        "w-fit rounded-btn py-0.5 transition-colors focus-visible:shadow-focus focus-visible:outline-none",
+        current ? "font-semibold text-primary" : "text-text-muted hover:text-primary",
+      )}
+    >
+      {section.title}
+    </Link>
+  );
+}
+
 export function DashboardSidebar() {
   const pathname = usePathname();
   const activeHref = useActiveHref(pathname);
@@ -251,9 +293,11 @@ export function DashboardSidebar() {
         >
           {dashboardNav.map((section) => (
             <div key={section.title}>
-              <p className="px-2.5 text-xs font-medium  text-text-muted uppercase">
-                {section.title}
-              </p>
+              <SectionLabel
+                section={section}
+                activeHref={activeHref}
+                onNavigate={closeMobileNav}
+              />
               <ul className="mt-2 space-y-1">
                 {section.items.map((item) => (
                   <NavItemRow
