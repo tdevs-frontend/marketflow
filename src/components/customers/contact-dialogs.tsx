@@ -404,7 +404,7 @@ export function ContactFormDialog({
                     }
                     label={`Add to ${segment.name}`}
                   />
-                  <span className="flex-1 truncate text-sm text-text-secondary">
+                  <span className="flex-1 truncate text-sm font-medium text-text-primary">
                     {segment.name}
                   </span>
                   <span className="text-sm text-text-muted tabular-nums">

@@ -168,7 +168,7 @@ export function PermissionMatrix({
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-2.5">
-        <label className="inline-flex items-center gap-2 text-sm font-medium text-text-secondary">
+        <label className="inline-flex items-center gap-2 text-sm font-medium text-text-primary">
           <Checkbox
             checked={showAdvanced}
             onCheckedChange={setShowAdvanced}

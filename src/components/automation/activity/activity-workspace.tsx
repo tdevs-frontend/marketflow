@@ -231,7 +231,7 @@ export function ActivityWorkspace({
           activeCount={chips.length}
           onReset={clearEverything}
           trailing={
-            <label className="flex items-center gap-2 text-sm text-text-secondary max-sm:hidden">
+            <label className="flex items-center gap-2 text-sm font-medium text-text-primary max-sm:hidden">
               <Checkbox
                 checked={errorsOnly}
                 onCheckedChange={(checked) =>

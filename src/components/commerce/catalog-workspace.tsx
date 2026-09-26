@@ -411,7 +411,7 @@ function CreateCatalogDialog({
                     <span className="block truncate text-[15px] font-semibold text-text-primary">
                       {product.name}
                     </span>
-                    <span className="block text-sm text-text-muted">
+                    <span className="block text-sm text-text-secondary">
                       {product.categoryName}
                     </span>
                   </span>

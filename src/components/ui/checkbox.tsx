@@ -10,6 +10,8 @@ export interface CheckboxProps {
   /** Accessible name. Pass `labelledBy` instead when a visible label names it. */
   label?: string;
   labelledBy?: string;
+  /** The id of a description to announce with the label. */
+  describedBy?: string;
   /** The dash state a select-all header shows when only some rows are on. */
   indeterminate?: boolean;
   disabled?: boolean;
@@ -30,6 +32,7 @@ export function Checkbox({
   onCheckedChange,
   label,
   labelledBy,
+  describedBy,
   indeterminate = false,
   disabled = false,
   id,
@@ -45,6 +48,7 @@ export function Checkbox({
       aria-checked={state}
       aria-label={labelledBy ? undefined : label}
       aria-labelledby={labelledBy}
+      aria-describedby={describedBy}
       disabled={disabled}
       onClick={() => onCheckedChange(!checked)}
       onKeyDown={(event) => {
@@ -86,6 +90,7 @@ export function CheckboxField({
   hint?: string;
 }) {
   const labelId = `${id ?? label.replace(/\s+/g, "-").toLowerCase()}-label`;
+  const hintId = `${labelId}-hint`;
 
   return (
     <div className={cn("flex items-start gap-2.5", className)}>
@@ -94,22 +99,31 @@ export function CheckboxField({
         checked={checked}
         onCheckedChange={onCheckedChange}
         labelledBy={labelId}
+        describedBy={hint ? hintId : undefined}
         disabled={disabled}
         className="mt-0.5"
       />
-      <span className="min-w-0">
-        <span
-          id={labelId}
-          onClick={() => !disabled && onCheckedChange(!checked)}
-          className={cn(
-            "block cursor-pointer text-sm font-medium text-text-secondary select-none",
-            disabled && "cursor-not-allowed opacity-60",
-          )}
-        >
+      {/*
+       * The whole text block is the hit target - title and description both -
+       * the way a `<label>` would be. Title in primary ink at medium weight,
+       * description in secondary ink: the two lines a person actually reads to
+       * decide, and muted grey was too faint for either. Disabled dims both
+       * together, so the pair stays legible and reads as one unavailable item.
+       */}
+      <span
+        onClick={() => !disabled && onCheckedChange(!checked)}
+        className={cn(
+          "min-w-0 select-none",
+          disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
+        )}
+      >
+        <span id={labelId} className="block text-sm leading-5 font-medium text-text-primary">
           {label}
         </span>
         {hint ? (
-          <span className="block text-sm font-medium text-text-muted">{hint}</span>
+          <span id={hintId} className="block text-sm leading-5 text-text-secondary">
+            {hint}
+          </span>
         ) : null}
       </span>
     </div>

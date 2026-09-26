@@ -107,7 +107,7 @@ export function SocialAccountSelector({
               <span className="block truncate text-sm font-medium text-text-primary">
                 {provider.label} - {account.name}
               </span>
-              <span className="block truncate text-meta text-text-muted">
+              <span className="block truncate text-meta text-text-secondary">
                 {account.username}
               </span>
             </span>

@@ -350,11 +350,11 @@ function ToggleRow({
       <div className="min-w-0">
         <label
           htmlFor={id}
-          className="block cursor-pointer text-sm font-bold text-text-secondary"
+          className="block cursor-pointer text-sm font-medium text-text-primary"
         >
           {label}
         </label>
-        <p className="mt-0.5 text-meta font-medium text-text-muted">{hint}</p>
+        <p className="mt-0.5 text-meta text-text-secondary">{hint}</p>
       </div>
       <Checkbox id={id} checked={checked} onCheckedChange={onChange} label={label} />
     </div>
