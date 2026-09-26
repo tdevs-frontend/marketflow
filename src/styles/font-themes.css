@@ -6,19 +6,18 @@
  *
  *  Either - one attribute, no rebuild:
  *      <html data-font="satoshi">       (in `app/layout.tsx`)
- *      <html data-font="legacy">        Circular Std
  *
  *  Or - permanently, in THE SWITCH block below: point `--font-active-body`
  *  and `--font-active-display` at that theme's stack.
  *
  *  Nothing else, either way. No component, no Tailwind class, no utility.
- *  Every old kit is still installed; nothing was deleted to make room.
+ *  The Satoshi kit is still installed for exactly this.
  * ─────────────────────────────────────────────────────────────────────────
  *
  * Two variables where there used to be four, and that is the whole story of
  * this file's rewrite.
  *
- * The old kits ship as discrete static cuts - `SatoshiMedium` is a *family*,
+ * The old kit ships as discrete static cuts - `SatoshiMedium` is a *family*,
  * not a weight - so the project spent weight as a family name and a theme had
  * to move four families at once. The typefaces now come from Google Fonts as
  * single variable families carrying real 400/500/600/700, so `font-medium` is
@@ -28,7 +27,7 @@
  *
  * The old cut-families are still declared and still resolve - nothing that
  * names `SatoshiBold` broke - but nothing in the active theme names them. They
- * are fallback assets, serving the `data-font` switches at the bottom of this
+ * are a fallback asset, serving the `data-font` switch at the bottom of this
  * file and nothing else.
  *
  * Which of the two faces a given page may spend is not decided here but in THE
@@ -38,29 +37,24 @@
 :root {
   /* ------------------------------------------------- The faces, by name */
   /*
-   * Loaded in `app/layout.tsx` from Google Fonts. Named here and nowhere else,
-   * so the typeface is one edit rather than a search across the codebase.
+   * Self-hosted by `next/font` in `app/fonts.ts`, which puts each family
+   * name on `<html>` - this same element - as `--font-face-*`. Named here and
+   * nowhere else, so the typeface is one edit rather than a search across the
+   * codebase.
    */
-  --font-notch: "Stack Sans Notch";
-  --font-gsans: "Google Sans Flex";
+  --font-notch: var(--font-face-notch);
+  --font-gsans: var(--font-face-gsans);
 
   /*
-   * The old kits, exactly as `satoshi-fonts.css` and `circular-std-fonts.css`
-   * declare them: one family per cut, each a static face. Nothing in the active
-   * theme names them - they are here for the `data-font` switches below, and
-   * because deleting a still-installed typeface's names helps nobody.
+   * The old kit, exactly as `satoshi-fonts.css` declares it: one family per
+   * cut, each a static face. Nothing in the active theme names them - they are
+   * here for the `data-font` switch below.
    */
   --font-satoshi-book: "SatoshiRegular";
   --font-satoshi-medium: "SatoshiMedium";
   --font-satoshi-bold: "SatoshiBold";
   --font-satoshi-black: "SatoshiBlack";
-  /* No token points here - Satoshi has a Light cut, Circular Std does not. */
   --font-satoshi-light: "SatoshiLight";
-
-  --font-legacy-book: "CircularStdBook";
-  --font-legacy-medium: "CircularStdMedium";
-  --font-legacy-bold: "CircularStdBold";
-  --font-legacy-black: "CircularStdBlack";
 
   /* ------------------------------------------------------- THE SWITCH */
 
@@ -73,7 +67,7 @@
   /*
    * The last rung, and the only one. The generic stack stays because a
    * `font-family` with a single name and nothing after it has nowhere to go
-   * while the webfont is in flight, or if Google Fonts is unreachable - the
+   * while the webfont is in flight, or if its file fails to load - the
    * browser picks its default serif, which is the one outcome nobody wants.
    */
   --font-fallback: system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -137,28 +131,20 @@
 /*
  * Runtime switching.
  *
- * Put `data-font="legacy"` on `<html>` and the whole app renders in Circular
- * Std without a rebuild - useful for comparing typefaces side by side, and the
+ * Put `data-font="satoshi"` on `<html>` and the whole app renders in Satoshi
+ * without a rebuild - useful for comparing typefaces side by side, and the
  * shape a user-facing appearance setting would plug into later. The attribute
  * selector outranks the bare `:root` above, so the CSS default stands until
  * something explicitly asks otherwise.
  *
- * Neither of these has a display face, so headings and body share one typeface
- * - which is exactly how the product looked before Stack Sans Notch arrived.
+ * It has no display face, so headings and body share one typeface.
  *
- * Both name a *cut*, because that is all these kits are: static faces with no
+ * It names a *cut*, because that is all this kit is: static faces with no
  * weight axis. Headings take the Bold cut and body the Book, and the weight
  * utilities in between are synthesized by the browser rather than drawn by the
- * typeface. Acceptable for a comparison switch, and the reason neither is the
+ * typeface. Acceptable for a comparison switch, and the reason it is not the
  * active theme.
  */
-:root[data-font="legacy"] {
-  --font-active-name: "Circular Std";
-
-  --font-active-display: var(--font-legacy-bold), var(--font-fallback);
-  --font-active-body: var(--font-legacy-book), var(--font-fallback);
-}
-
 :root[data-font="satoshi"] {
   --font-active-name: "Satoshi";
 

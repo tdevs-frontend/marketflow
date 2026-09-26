@@ -10,12 +10,10 @@
  *
  * That happens to be exactly how this project already spends type - see the
  * `--font-*` tokens in `variables.css`, where Tailwind's `font-medium` and
- * `font-bold` resolve to families rather than weights. Circular Std is built
- * the same way, which is why the two are interchangeable.
+ * `font-bold` resolve to families rather than weights.
  *
  * Paths are absolute from `public/`, so the files are served as-is rather than
- * hashed through the bundler. `circular-std-fonts.css` still uses bundler
- * paths; both work, and this one follows the kit's own convention.
+ * hashed through the bundler, following the kit's own convention.
  */
 
 @font-face {
