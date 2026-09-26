@@ -100,6 +100,7 @@ export const AUDIT_MODULE_LABEL: Record<AuditModule, string> = {
   commerce: "Commerce",
   settings: "Settings",
   security: "Security",
+  support: "Support",
 };
 
 export const AUDIT_SEVERITY_LABEL: Record<AuditSeverity, string> = {

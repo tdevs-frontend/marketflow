@@ -14,6 +14,7 @@ import {
   UserCheck,
   UserPlus,
   CreditCard,
+  LifeBuoy,
   FileText,
   FolderTree,
   Funnel,
@@ -123,6 +124,7 @@ const ICONS: Record<string, LucideIcon> = {
   user: User,
   bell: Bell,
   "credit-card": CreditCard,
+  "life-buoy": LifeBuoy,
   lock: Lock,
   terminal: Terminal,
 

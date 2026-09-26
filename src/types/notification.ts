@@ -54,7 +54,9 @@ export type NotificationModule =
   | "automation"
   | "integration"
   | "workspace"
-  | "billing";
+  | "billing"
+  /* Replies and status changes on this workspace's support tickets. */
+  | "support";
 
 /**
  * How much the reader should care, which decides the icon's colour and nothing

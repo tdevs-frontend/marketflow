@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ClipboardList,
@@ -93,11 +93,12 @@ export function FormsWorkspace() {
 
   const [searchDraft, setSearchDraft] = useState(table.search);
   const debounced = useDebounce(searchDraft, 250);
-  const [lastPushed, setLastPushed] = useState(table.search);
-  if (debounced !== lastPushed) {
-    setLastPushed(debounced);
-    table.setSearch(debounced);
-  }
+  /* The URL follows the debounced draft - in an effect, because writing it
+     updates the router, which must not happen while this component renders. */
+  const { search: urlSearch, setSearch } = table;
+  useEffect(() => {
+    if (debounced !== urlSearch) setSearch(debounced);
+  }, [debounced, urlSearch, setSearch]);
 
   const [embedFor, setEmbedFor] = useState<string | null>(null);
   const [previewFor, setPreviewFor] = useState<string | null>(null);

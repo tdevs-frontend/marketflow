@@ -11,6 +11,7 @@ import {
   ShoppingCart,
   Users,
   Workflow,
+  LifeBuoy,
   type LucideIcon,
 } from "lucide-react";
 
@@ -50,6 +51,7 @@ const MODULE_ICON: Record<NotificationModule, LucideIcon> = {
   workspace: Users,
   billing: CreditCard,
   security: ShieldCheck,
+  support: LifeBuoy,
 };
 
 const TONES: Record<NotificationTone, string> = {

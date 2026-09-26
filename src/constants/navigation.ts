@@ -351,6 +351,12 @@ export const dashboardNav: NavSection[] = [
         href: "/dashboard/settings/api",
         icon: "terminal",
       },
+      /* Help from MarketFlow itself, at the foot of the utility group. */
+      {
+        title: "Support Center",
+        href: "/dashboard/support",
+        icon: "life-buoy",
+      },
     ],
   },
 ];

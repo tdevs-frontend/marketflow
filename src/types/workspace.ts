@@ -294,7 +294,9 @@ export type AuditModule =
   | "customers"
   | "commerce"
   | "settings"
-  | "security";
+  | "security"
+  /* Help-desk tickets this workspace opened: created, assigned, status. */
+  | "support";
 
 /**
  * One field that changed, as before and after.
